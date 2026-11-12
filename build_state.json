@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "lastUpdated": "2026-11-12T15:31:32+05:30",
+  "lastUpdated": "2026-11-12T15:46:05+05:30",
   "phase": "PHASE 1: build",
-  "milestone": "M3",
-  "resumeHere": "M3 progress core is done. Next: XP ledger, job titles, streaks, kudos, spaced repetition, career dashboard.",
+  "milestone": "M4",
+  "resumeHere": "M3 is done and committed. Start M4: keyboard and screen reader audit.",
   "statusValues": [
     "planned",
     "content_written",
@@ -35,16 +35,22 @@
     "M3-01 H2 + Flyway progress store; progress survives restarts",
     "M3-02 mastery, hint gating, solution unlock, reset to skeleton",
     "M3-03 native file watcher: save to checks in under 1 s",
-    "M2 follow-ups: fill-blank prompt, spacing check on real pages, Impeccable v4.8.2"
+    "M2 follow-ups: fill-blank prompt, spacing check on real pages, Impeccable v4.8.2",
+    "M3-04 XP ledger and job-title levels",
+    "M3-05 streaks with freezes",
+    "M3-06 kudos",
+    "M3-07 spaced repetition and weak list",
+    "M3-08 career dashboard, review page, promotion and toasts",
+    "M3-09 export and import progress"
   ],
-  "nextTask": "M3-04: XP ledger and job-title levels",
+  "nextTask": "M4-01: keyboard and screen reader audit",
   "openDecisions": [],
   "blockers": [],
   "milestones": {
     "M1": "done",
     "M2": "done",
-    "M3": "in_progress",
-    "M4": "planned",
+    "M3": "done",
+    "M4": "in_progress",
     "M5": "planned",
     "C00": "planned",
     "C01": "planned",
@@ -131,7 +137,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T15:30:54+05:30"
+            "verifiedAt": "2026-11-12T15:46:05+05:30"
           }
         },
         {

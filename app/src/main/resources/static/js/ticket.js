@@ -72,7 +72,7 @@ export async function renderTicket(view, catalog, id, initialTab) {
     if (rendered.has(key)) return;
     rendered.add(key);
     try {
-      if (key === "kb") disposers.push(renderKb(panels.kb, topic.lessonHtml, chat));
+      if (key === "kb") disposers.push(renderKb(panels.kb, topic.lessonHtml, chat, id));
       if (key === "check") await renderQuiz(panels.check, id, chat, showSection, refreshState);
       if (key === "fix") disposers.push(await renderFix(panels.fix, topic, chat, refreshState));
     } catch (error) {

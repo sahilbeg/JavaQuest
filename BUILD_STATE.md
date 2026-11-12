@@ -2,11 +2,11 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-12T15:31:32+05:30
+- **Last updated:** 2026-11-12T15:45:38+05:30
 - **Phase:** PHASE 1: build
-- **Milestone:** M3
-- **Resume here:** M3 progress core is done. Next: XP ledger, job titles, streaks, kudos, spaced repetition, career dashboard.
-- **Next task:** M3-04: XP ledger and job-title levels
+- **Milestone:** M4
+- **Resume here:** M3 is done and committed. Start M4: keyboard and screen reader audit.
+- **Next task:** M4-01: keyboard and screen reader audit
 
 ## Completed tasks
 
@@ -33,6 +33,12 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - M3-02 mastery, hint gating, solution unlock, reset to skeleton
 - M3-03 native file watcher: save to checks in under 1 s
 - M2 follow-ups: fill-blank prompt, spacing check on real pages, Impeccable v4.8.2
+- M3-04 XP ledger and job-title levels
+- M3-05 streaks with freezes
+- M3-06 kudos
+- M3-07 spaced repetition and weak list
+- M3-08 career dashboard, review page, promotion and toasts
+- M3-09 export and import progress
 
 ## Decisions
 
@@ -72,8 +78,8 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | M0 | done |
 | M1 | done |
 | M2 | done |
-| M3 | in_progress |
-| M4 | planned |
+| M3 | done |
+| M4 | in_progress |
 | M5 | planned |
 | M6 | planned |
 

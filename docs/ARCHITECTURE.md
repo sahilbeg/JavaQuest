@@ -131,12 +131,12 @@ H2 file database at `~/.javaquest/progress.mv.db` (set `--javaquest.data-dir` to
 - `topic_progress(topic_id, quiz_best, quiz_attempts, tests_passed, failed_runs, hints_used, failed_runs_at_last_hint, solution_viewed, mastered_at, last_seen)`
 - `quiz_attempt(id, topic_id, seed, score, passed, weak_concepts, created_at)`
 - `test_run(id, topic_id, source, outcome, passed, total, duration_ms, result_json, created_at)` where `source` is `BROWSER` or `IDE`. The latest row feeds the checks panel after a restart.
-- `review_card(topic_id, ease, interval_days, due_on, repetitions)` for spaced repetition
-- `xp_event(id, kind, amount, topic_id, created_at)`, the ledger that XP totals derive from
-- `badge(id, earned_at)`
-- `streak(day)`, one row per active day
+- `review_card(topic_id, ease, interval_days, repetitions, due_on, last_result)` for spaced repetition (SM-2)
+- `xp_event(id, kind, amount, topic_id, dedupe_key, earned_on, created_at)`, the ledger that XP totals derive from. `dedupe_key` is unique, so first-time XP is never paid twice.
+- `kudos(id, earned_at)`
+- `player`, one row: current and longest streak, last active day, streak freezes, spot-the-bug count
 
-Export and import as JSON from the settings page give you a backup.
+Export and import as JSON from the career page give you a backup. Dates export as plain `yyyy-MM-dd` so a backup never shifts a day across time zones.
 
 ## Accessibility and UI
 

@@ -30,18 +30,18 @@ Each milestone ends with: project checks green, both state files updated, one co
 - [x] Content checker: prerequisites exist, Java blocks compile, snippets run, predict-output answers
 - [ ] "Reset to skeleton" with a pristine copy (moved to M3)
 
-## M3: Progress and gamification
+## M3: Progress and gamification (done)
 
 - [x] "Reset to skeleton" with a pristine `skeleton/` copy
 - [x] Hint gating (hint 2 after 2 failed runs, hint 3 after 4) and solution unlock
 - [x] H2 and Flyway schema
 - [x] Mastery rules, mastery percent, progress survives restarts
 - [x] Native file watcher (save to checks under 1 s)
-- [ ] XP ledger, levels, streaks, badges
-- [ ] Spaced repetition and weak-topic list
-- [ ] Career dashboard, ticket board, "Continue where you left off"
-- [ ] Mascot art (SVG) and celebrations, reduced-motion aware
-- [ ] Export and import progress
+- [x] XP ledger, job-title levels, streaks with freezes, kudos
+- [x] Spaced repetition (SM-2) and weak-topic list
+- [x] Career dashboard, ticket board, "Continue where you left off"
+- [x] Byte SVG, dock animation, toasts, promotion dialog, reduced-motion aware
+- [x] Export and import progress
 
 ## M4: Accessibility and polish pass
 

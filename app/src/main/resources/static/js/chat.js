@@ -2,6 +2,7 @@ import { h, icon } from "./dom.js";
 import { byte } from "./byte.js";
 import { api } from "./api.js";
 
+
 export function createChat(container, topic) {
   const log = h("div", { class: "chat-log", role: "log", "aria-live": "polite", "aria-label": "Messages from Byte" });
   let used = 0;

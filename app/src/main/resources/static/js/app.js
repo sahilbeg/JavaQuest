@@ -1,6 +1,9 @@
 import { api } from "./api.js";
 import { renderBoard } from "./board.js";
 import { renderTicket } from "./ticket.js";
+import { renderCareer } from "./career.js";
+import { renderReview } from "./review.js";
+import { refreshRewards } from "./rewards.js";
 import { h } from "./dom.js";
 import { bus } from "./events.js";
 
@@ -12,6 +15,9 @@ function parseRoute() {
   const params = new URLSearchParams(query);
   const ticket = path.match(/^\/t\/(module-[^/]+\/[^/]+)$/);
   if (ticket) return { name: "ticket", id: ticket[1], tab: params.get("tab") ?? "kb" };
+  const review = path.match(/^\/review\/(module-[^/]+\/[^/]+)$/);
+  if (review) return { name: "review", id: review[1] };
+  if (path === "/career") return { name: "career" };
   return { name: "board" };
 }
 
@@ -19,14 +25,16 @@ async function route() {
   cleanup();
   cleanup = () => {};
   const current = parseRoute();
-  const boardLink = document.querySelector('[data-nav="board"]');
-  if (current.name === "board") boardLink.setAttribute("aria-current", "page");
-  else boardLink.removeAttribute("aria-current");
+  for (const link of document.querySelectorAll("[data-nav]")) {
+    if (link.dataset.nav === current.name) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  }
   view.replaceChildren(h("p", { class: "loading" }, "Loading…"));
   try {
     const catalog = await api.catalog();
-    cleanup = current.name === "ticket"
-      ? await renderTicket(view, catalog, current.id, current.tab)
+    cleanup = current.name === "ticket" ? await renderTicket(view, catalog, current.id, current.tab)
+      : current.name === "review" ? await renderReview(view, catalog, current.id)
+      : current.name === "career" ? await renderCareer(view)
       : await renderBoard(view, catalog);
   } catch (error) {
     view.replaceChildren(h("div", { class: "error-panel", role: "alert" },
@@ -61,9 +69,11 @@ function setupEvents() {
   for (const name of ["run-started", "run-finished"]) {
     source.addEventListener(name, (e) => bus.dispatchEvent(new CustomEvent(name, { detail: JSON.parse(e.data) })));
   }
+  bus.addEventListener("run-finished", () => refreshRewards());
 }
 
 setupTheme();
 setupEvents();
+refreshRewards();
 addEventListener("hashchange", route);
 route();

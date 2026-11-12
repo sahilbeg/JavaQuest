@@ -33,6 +33,14 @@ export const api = {
     fetch(`${topicPath(id)}/source`, { method: "PUT", headers: WRITE_HEADERS, body: JSON.stringify({ path, content }) }).then(parse),
   submit: (id) => fetch(`${topicPath(id)}/submit`, { method: "POST", headers: WRITE_HEADERS }).then(parse),
   runMain: (id) => fetch(`${topicPath(id)}/run`, { method: "POST", headers: WRITE_HEADERS }).then(parse),
+  career: () => fetch("/api/career").then(parse),
+  read: (id) => fetch(`${topicPath(id)}/read`, { method: "POST", headers: WRITE_HEADERS }).then(parse),
+  review: (id) => fetch(`/api/reviews/${id}`).then(parse),
+  gradeReview: (id, seed, answers) =>
+    fetch(`/api/reviews/${id}`, { method: "POST", headers: WRITE_HEADERS, body: JSON.stringify({ seed, answers }) }).then(parse),
+  exportProgress: () => fetch("/api/progress/export").then(parse),
+  importProgress: (data) =>
+    fetch("/api/progress/import", { method: "POST", headers: WRITE_HEADERS, body: JSON.stringify(data) }).then(parse),
   runSnippet: (code) =>
     fetch("/api/snippets/run", { method: "POST", headers: WRITE_HEADERS, body: JSON.stringify({ code }) }).then(parse),
 };

@@ -2,10 +2,11 @@ import { h, icon } from "./dom.js";
 import { api } from "./api.js";
 import { loadMonaco, editorTheme, isDark, colorizeJava, EDITOR_OPTIONS } from "./monaco.js";
 import { bus } from "./events.js";
+import { refreshRewards } from "./rewards.js";
 
 const CALLOUT_LABELS = { tip: "Tip", warning: "Careful", analogy: "Think of it like", jargon: "New word" };
 
-export function renderKb(container, lessonHtml, chat) {
+export function renderKb(container, lessonHtml, chat, topicId) {
   container.innerHTML = lessonHtml;
   container.classList.add("kb");
 
@@ -15,6 +16,17 @@ export function renderKb(container, lessonHtml, chat) {
   container.querySelectorAll(".snippet").forEach((snippet) => enhanceSnippet(snippet, chat));
 
   const disposers = [];
+  const recap = container.querySelector("#recap");
+  if (recap) {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        observer.disconnect();
+        api.read(topicId).then(refreshRewards).catch(() => {});
+      }
+    });
+    observer.observe(recap);
+    disposers.push(() => observer.disconnect());
+  }
   loadMonaco().then(async (monaco) => {
     for (const code of container.querySelectorAll("pre > code.language-java")) {
       code.dataset.source ??= code.textContent;

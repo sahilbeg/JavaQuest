@@ -1,7 +1,8 @@
 import { h, icon } from "./dom.js";
 import { api } from "./api.js";
+import { refreshRewards } from "./rewards.js";
 
-const TYPE_LABELS = {
+export const TYPE_LABELS = {
   "mcq": "Pick one",
   "fill-blank": "Fill in the blank",
   "predict-output": "Predict the output",
@@ -17,29 +18,20 @@ export async function renderQuiz(container, topicId, chat, showSection, onProgre
   const form = h("form", { class: "quiz", onsubmit: submit },
     h("p", { class: "quiz-intro" },
       `${attempt.questions.length} questions. You need ${attempt.passPercent}% to pass. Each try shows a fresh mix, so retrying is fine.`),
-    attempt.questions.map((q, i) => {
-      const { node, read } = QUESTION[q.type](q, i);
-      readers.set(q.id, read);
-      return h("fieldset", { class: "question", "data-qid": q.id },
-        h("legend", {}, `${i + 1}. ${q.type === "fill-blank" ? "Fill in the missing part of this line." : q.prompt} `,
-          h("span", { class: "question-type" }, TYPE_LABELS[q.type])), node);
-    }),
+    attempt.questions.map((q, i) => questionFieldset(q, i, readers)),
     h("button", { type: "submit", class: "button button-primary" }, icon("send"), "Check my answers"));
   container.replaceChildren(form);
 
   async function submit(event) {
     event.preventDefault();
-    const answers = {};
-    for (const [id, read] of readers) {
-      const value = read();
-      if (value !== undefined) answers[id] = value;
-    }
+    const answers = readAnswers(readers);
     const button = form.querySelector("button[type=submit]");
     button.disabled = true;
     try {
       const { result, progress } = await api.gradeQuiz(topicId, attempt.seed, answers);
       showResult(result, progress);
       onProgress();
+      refreshRewards();
     } catch (error) {
       chat.say(`I couldn't grade that: ${error.message}`, { mood: "encouraging" });
       button.disabled = false;
@@ -76,7 +68,24 @@ export async function renderQuiz(container, topicId, chat, showSection, onProgre
   }
 }
 
-const QUESTION = {
+export function questionFieldset(q, i, readers) {
+  const { node, read } = QUESTION[q.type](q, i);
+  readers.set(q.id, read);
+  return h("fieldset", { class: "question", "data-qid": q.id },
+    h("legend", {}, `${i + 1}. ${q.type === "fill-blank" ? "Fill in the missing part of this line." : q.prompt} `,
+      h("span", { class: "question-type" }, TYPE_LABELS[q.type])), node);
+}
+
+export function readAnswers(readers) {
+  const answers = {};
+  for (const [id, read] of readers) {
+    const value = read();
+    if (value !== undefined) answers[id] = value;
+  }
+  return answers;
+}
+
+export const QUESTION = {
   "mcq": (q, i) => {
     const name = `q${i}`;
     const looksLikeCode = q.choices.some((choice) => /[;(){}"=]|^\w+\.\w+$/.test(choice));

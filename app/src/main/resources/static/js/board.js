@@ -63,7 +63,16 @@ export async function renderBoard(view, catalog) {
           : h("p", { class: "empty" }, "No tickets in this project yet."));
     }));
 
+  const career = await api.career().catch(() => null);
+  const due = career?.reviewsDue ?? [];
+  const reviewStrip = due.length > 0 && h("section", { class: "review-strip", "aria-labelledby": "due-title" },
+    icon("rotate-ccw"),
+    h("h2", { id: "due-title" }, `${due.length} ${due.length === 1 ? "review" : "reviews"} due today`),
+    h("p", {}, "Three quick questions each, from tickets you closed. They keep what you learned from fading."),
+    h("a", { class: "button button-primary", href: `#/review/${due[0].id}` }, "Start review", icon("arrow-right")));
+
   view.replaceChildren(h("div", { class: "board" },
+    reviewStrip,
     h("div", { class: "board-greeting" },
       byte("idle"),
       h("p", {}, h("strong", {}, "Byte: "), currentModule?.mascotIntro ?? "Welcome to Spoke!")),
