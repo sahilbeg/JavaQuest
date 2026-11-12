@@ -1,5 +1,6 @@
 package dev.javaquest.progress;
 
+import dev.javaquest.career.CareerService;
 import dev.javaquest.content.QuizSession;
 import dev.javaquest.content.Topic;
 import dev.javaquest.content.TopicMeta.PracticeKind;
@@ -29,11 +30,13 @@ public class ProgressService {
     private final ProgressStore store;
     private final JsonMapper json;
     private final Clock clock;
+    private final CareerService career;
 
-    public ProgressService(ProgressStore store, JsonMapper json, Clock clock) {
+    public ProgressService(ProgressStore store, JsonMapper json, Clock clock, CareerService career) {
         this.store = store;
         this.json = json;
         this.clock = clock;
+        this.career = career;
     }
 
     public TopicProgress progress(Topic topic) {
@@ -48,9 +51,20 @@ public class ProgressService {
         store.addTestRun(topic.id(), practice.source().name(), result.outcome().name(), (int) result.passedCount(),
                 result.tests().size(), result.duration().toMillis(), json.writeValueAsString(practice), now);
         var row = store.row(topic.id());
-        store.save(withMastery(topic, new ProgressStore.Row(row.topicId(), row.quizBest(), row.quizAttempts(),
+        var updated = withMastery(topic, new ProgressStore.Row(row.topicId(), row.quizBest(), row.quizAttempts(),
                 row.testsPassed() || passed, row.failedRuns() + (passed ? 0 : 1), row.hintsUsed(),
-                row.failedRunsAtLastHint(), row.solutionViewed(), row.masteredAt()), now), now);
+                row.failedRunsAtLastHint(), row.solutionViewed(), row.masteredAt()), now);
+        store.save(updated, now);
+        if (passed && !row.testsPassed()) {
+            career.onChecksPassedFirstTime(topic, row.hintsUsed(), row.solutionViewed());
+        }
+        notifyIfNewlyMastered(topic, row, updated);
+    }
+
+    private void notifyIfNewlyMastered(Topic topic, ProgressStore.Row before, ProgressStore.Row after) {
+        if (before.masteredAt() == null && after.masteredAt() != null) {
+            career.onMastered(topic);
+        }
     }
 
     public Optional<PracticeResult> latestRun(String topicId) {
@@ -66,6 +80,8 @@ public class ProgressService {
                 row.quizAttempts() + 1, row.testsPassed(), row.failedRuns(), row.hintsUsed(), row.failedRunsAtLastHint(),
                 row.solutionViewed(), row.masteredAt()), now);
         store.save(updated, now);
+        career.onQuizGraded(topic, result);
+        notifyIfNewlyMastered(topic, row, updated);
         return view(topic, updated);
     }
 

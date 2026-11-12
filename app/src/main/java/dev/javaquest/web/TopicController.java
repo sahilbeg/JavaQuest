@@ -10,7 +10,6 @@ import dev.javaquest.practice.PracticeResult;
 import dev.javaquest.practice.PracticeResult.Source;
 import dev.javaquest.practice.PracticeService;
 import dev.javaquest.practice.ProgramRun;
-import dev.javaquest.progress.LockedException;
 import dev.javaquest.progress.ProgressService;
 import dev.javaquest.progress.ProgressService.TopicProgress;
 import java.io.IOException;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -60,7 +57,6 @@ public class TopicController {
 
     public record Snippet(String code) {}
 
-    public record Problem(String message) {}
 
     /** Seeds travel through JavaScript, whose numbers hold integers exactly only up to 2^53 - 1. */
     static final long MAX_BROWSER_SAFE_SEED = (1L << 53) - 1;
@@ -177,18 +173,6 @@ public class TopicController {
     @GetMapping(path = "/events", produces = "text/event-stream")
     public SseEmitter events() {
         return events.subscribe();
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Problem badRequest(IllegalArgumentException e) {
-        return new Problem(e.getMessage());
-    }
-
-    @ExceptionHandler(LockedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public Problem locked(LockedException e) {
-        return new Problem(e.getMessage());
     }
 
     private TopicSummary summary(Topic t) {

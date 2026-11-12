@@ -24,7 +24,7 @@ public final class QuizSession {
 
     public record Presented(String id, String type, String prompt, String code, List<String> choices, List<String> items) {}
 
-    public record Graded(String id, boolean correct, String concept, String expected, String explain, String reteach) {}
+    public record Graded(String id, String type, boolean correct, String concept, String expected, String explain, String reteach) {}
 
     public record Result(int scorePercent, boolean passed, List<Graded> questions, List<String> weakConcepts) {}
 
@@ -104,7 +104,30 @@ public final class QuizSession {
     }
 
     private static Graded graded(Question q, boolean correct, String expected) {
-        return new Graded(q.id(), correct, q.concept(), expected, q.explain(), q.reteach());
+        return new Graded(q.id(), typeName(q), correct, q.concept(), expected, q.explain(), q.reteach());
+    }
+
+    static String typeName(Question question) {
+        return switch (question) {
+            case Mcq m -> "mcq";
+            case FillBlank f -> "fill-blank";
+            case PredictOutput p -> "predict-output";
+            case Order o -> "order";
+            case SpotTheBug b -> "spot-the-bug";
+        };
+    }
+
+    /** Draws a smaller attempt from the same pool, for spaced-repetition reviews. */
+    public static List<Presented> draw(Quiz quiz, long seed, int count) {
+        return draw(sized(quiz, count), seed);
+    }
+
+    public static Result grade(Quiz quiz, long seed, int count, Map<String, Object> answers) {
+        return grade(sized(quiz, count), seed, answers);
+    }
+
+    private static Quiz sized(Quiz quiz, int count) {
+        return new Quiz(quiz.topic(), Math.min(count, quiz.questions().size()), quiz.passPercent(), quiz.questions());
     }
 
     public static String normalizeOutput(String output) {
