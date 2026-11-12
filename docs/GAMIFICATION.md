@@ -39,8 +39,8 @@ For quiz-only topics, the quiz is the full 100.
 | Quiz 100%, first time | +20 bonus |
 | Coding tests pass, first time | `xp.code` (default 100) |
 | Pass with no hints | +25 |
-| Boss bronze / silver / gold | 300 / +100 / +100 (not built yet: no incidents exist) |
-| Mini-project complete | 400 (not built yet) |
+| Incident bronze / silver / gold | 300 / +100 / +100 |
+| Feature (mini-project) complete | 400, halved if the solution was opened first |
 | Review card answered correctly | 15 |
 | Daily streak day | 5 times the streak length, capped at 50, once per day |
 
@@ -88,9 +88,11 @@ Badges appear as kudos from teammates.
 | Unstoppable | 30-day streak |
 | Project Shipped: N | Master every unit in module N (one per module) |
 | Memory Palace | 50 good reviews |
-| Java Pro | Finish the capstone (added with the capstone) |
+| Incident resolved | Pass the bronze checks of any incident |
+| Gold standard | Pass the gold checks of any incident |
+| Java Pro | Master `module-10-professional/topic-06-capstone` |
 
-Boss Slayer and Gold Standard come back when incidents exist. The rules live in `Kudos.java`.
+The rules live in `Kudos.java`. A project only counts as shipped once its incident exists in the content.
 
 ## Byte, chat and feedback
 

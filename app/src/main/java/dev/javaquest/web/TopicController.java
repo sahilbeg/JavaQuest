@@ -39,7 +39,8 @@ public class TopicController {
     public record Catalog(List<ModuleInfo> modules, List<TopicSummary> topics) {}
 
     public record TopicDetail(TopicSummary summary, int minutes, String mainClass, String lessonHtml,
-                              int hintCount, String previousId, String nextId, List<String> sourceFiles) {}
+                              int hintCount, String previousId, String nextId, List<String> sourceFiles,
+                              boolean hasQuiz, String kind) {}
 
     public record QuizAttempt(long seed, int passPercent, List<QuizSession.Presented> questions) {}
 
@@ -90,7 +91,8 @@ public class TopicController {
                 lessons.render(Files.readString(found.lessonFile())), found.meta().hints().size(),
                 index > 0 ? all.get(index - 1).id() : null,
                 index < all.size() - 1 ? all.get(index + 1).id() : null,
-                practice.sourceFiles(found));
+                practice.sourceFiles(found), found.hasQuiz(),
+                found.meta().isBoss() ? "incident" : found.meta().isFeature() ? "feature" : "ticket");
     }
 
     @GetMapping("/topics/{module}/{topic}/hints")
@@ -125,14 +127,14 @@ public class TopicController {
 
     @GetMapping("/topics/{module}/{topic}/quiz")
     public QuizAttempt quiz(@PathVariable String module, @PathVariable String topic, @RequestParam(required = false) Long seed) {
-        Topic found = find(module, topic);
+        Topic found = withQuiz(find(module, topic));
         long chosen = seed != null ? seed : ThreadLocalRandom.current().nextLong(1, MAX_BROWSER_SAFE_SEED);
         return new QuizAttempt(chosen, found.quiz().passPercent(), QuizSession.draw(found.quiz(), chosen));
     }
 
     @PostMapping("/topics/{module}/{topic}/quiz")
     public QuizGraded gradeQuiz(@PathVariable String module, @PathVariable String topic, @RequestBody QuizAnswers answers) {
-        Topic found = find(module, topic);
+        Topic found = withQuiz(find(module, topic));
         var result = QuizSession.grade(found.quiz(), answers.seed(), answers.answers());
         return new QuizGraded(result, progress.recordQuiz(found, answers.seed(), result));
     }
@@ -178,6 +180,13 @@ public class TopicController {
     private TopicSummary summary(Topic t) {
         return new TopicSummary(t.id(), t.meta().moduleId(), t.meta().title(), t.meta().practice().kind().name(),
                 t.meta().ticket(), practice.latest(t.id()).orElse(null), progress.progress(t));
+    }
+
+    public static Topic withQuiz(Topic topic) {
+        if (!topic.hasQuiz()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, topic.id() + " has no onboarding check");
+        }
+        return topic;
     }
 
     private Topic find(String module, String topic) {

@@ -12,7 +12,7 @@ class KudosTest {
 
     private static Kudos.Stats stats(Set<String> mastered, int noHints, int perfect, int bugs, int ide, int streak, int reviews) {
         return new Kudos.Stats(mastered, noHints > 0, noHints, perfect, bugs, ide, streak, reviews,
-                Map.of("module-00-foundations", List.of(Kudos.HELLO_WORLD_TOPIC, "module-00-foundations/topic-06-git-basics")));
+                Map.of("module-00-foundations", List.of(Kudos.HELLO_WORLD_TOPIC, "module-00-foundations/topic-06-git-basics")), 0, 0);
     }
 
     @Test
@@ -42,5 +42,14 @@ class KudosTest {
     @Test
     void thirtyDayStreakAlsoKeepsTheSevenDayKudos() {
         assertTrue(Kudos.earned(stats(Set.of(), 0, 0, 0, 0, 30, 0)).containsAll(Set.of("on-fire", "unstoppable")));
+    }
+
+    @Test
+    void incidentAndCapstoneKudos() {
+        var base = stats(Set.of(Kudos.CAPSTONE_TOPIC), 0, 0, 0, 0, 0, 0);
+        var withBosses = new Kudos.Stats(base.masteredTopics(), false, 0, 0, 0, 0, 0, 0, base.unitsByModule(), 1, 0);
+        assertEquals(Set.of("java-pro", "boss-slayer"), Kudos.earned(withBosses));
+        var withGold = new Kudos.Stats(Set.of(), false, 0, 0, 0, 0, 0, 0, Map.of(), 1, 1);
+        assertEquals(Set.of("boss-slayer", "gold-standard"), Kudos.earned(withGold));
     }
 }

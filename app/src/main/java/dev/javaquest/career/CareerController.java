@@ -57,14 +57,14 @@ public class CareerController {
 
     @GetMapping("/reviews/{module}/{topic}")
     public ReviewAttempt review(@PathVariable String module, @PathVariable String topic) {
-        Topic found = find(module, topic);
+        Topic found = dev.javaquest.web.TopicController.withQuiz(find(module, topic));
         long seed = ThreadLocalRandom.current().nextLong(1, MAX_BROWSER_SAFE_SEED);
         return new ReviewAttempt(seed, QuizSession.draw(found.quiz(), seed, CareerService.REVIEW_QUESTIONS));
     }
 
     @PostMapping("/reviews/{module}/{topic}")
     public ReviewResult gradeReview(@PathVariable String module, @PathVariable String topic, @RequestBody ReviewAnswers answers) {
-        Topic found = find(module, topic);
+        Topic found = dev.javaquest.web.TopicController.withQuiz(find(module, topic));
         var result = QuizSession.grade(found.quiz(), answers.seed(), CareerService.REVIEW_QUESTIONS, answers.answers());
         return new ReviewResult(result, career.recordReview(found, result));
     }

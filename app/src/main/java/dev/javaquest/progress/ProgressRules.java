@@ -18,11 +18,17 @@ public final class ProgressRules {
         return testsPassed || (hintsUsed >= hintCount && failedRuns > failedRunsAtLastHint);
     }
 
-    public static boolean mastered(int quizBest, int passPercent, boolean testsPassed, boolean codeTopic) {
+    public static boolean mastered(int quizBest, int passPercent, boolean testsPassed, boolean codeTopic, boolean hasQuiz) {
+        if (!hasQuiz) {
+            return testsPassed;
+        }
         return quizBest >= passPercent && (testsPassed || !codeTopic);
     }
 
-    public static int masteryPercent(int quizBest, int passPercent, boolean testsPassed, boolean codeTopic) {
+    public static int masteryPercent(int quizBest, int passPercent, boolean testsPassed, boolean codeTopic, boolean hasQuiz) {
+        if (!hasQuiz) {
+            return testsPassed ? 100 : 0;
+        }
         int quizPart = Math.min(100, quizBest * 100 / passPercent);
         if (!codeTopic) {
             return quizPart;

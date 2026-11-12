@@ -37,22 +37,30 @@ class ProgressRulesTest {
 
     @Test
     void codeTopicNeedsTheQuizAndTheChecks() {
-        assertFalse(ProgressRules.mastered(100, 80, false, true));
-        assertFalse(ProgressRules.mastered(79, 80, true, true));
-        assertTrue(ProgressRules.mastered(80, 80, true, true));
+        assertFalse(ProgressRules.mastered(100, 80, false, true, true));
+        assertFalse(ProgressRules.mastered(79, 80, true, true, true));
+        assertTrue(ProgressRules.mastered(80, 80, true, true, true));
     }
 
     @Test
     void quizTopicNeedsOnlyTheQuiz() {
-        assertTrue(ProgressRules.mastered(80, 80, false, false));
+        assertTrue(ProgressRules.mastered(80, 80, false, false, true));
     }
 
     @Test
     void masteryPercentSplitsQuizAndChecksEvenly() {
-        assertEquals(0, ProgressRules.masteryPercent(0, 80, false, true));
-        assertEquals(25, ProgressRules.masteryPercent(40, 80, false, true));
-        assertEquals(50, ProgressRules.masteryPercent(0, 80, true, true));
-        assertEquals(100, ProgressRules.masteryPercent(100, 80, true, true));
-        assertEquals(50, ProgressRules.masteryPercent(40, 80, false, false));
+        assertEquals(0, ProgressRules.masteryPercent(0, 80, false, true, true));
+        assertEquals(25, ProgressRules.masteryPercent(40, 80, false, true, true));
+        assertEquals(50, ProgressRules.masteryPercent(0, 80, true, true, true));
+        assertEquals(100, ProgressRules.masteryPercent(100, 80, true, true, true));
+        assertEquals(50, ProgressRules.masteryPercent(40, 80, false, false, true));
+    }
+
+    @Test
+    void incidentsAndFeaturesNeedOnlyTheirChecks() {
+        assertTrue(ProgressRules.mastered(0, 100, true, true, false));
+        assertFalse(ProgressRules.mastered(100, 100, false, true, false));
+        assertEquals(100, ProgressRules.masteryPercent(0, 100, true, true, false));
+        assertEquals(0, ProgressRules.masteryPercent(0, 100, false, true, false));
     }
 }

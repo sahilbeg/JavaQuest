@@ -46,7 +46,7 @@ public final class CheckContent {
                     problems.add(topic.id() + " lesson.md line " + block.line() + ": " + problem);
                 }
             }
-            for (Quiz.Question question : topic.quiz().questions()) {
+            for (Quiz.Question question : topic.hasQuiz() ? topic.quiz().questions() : List.<Quiz.Question>of()) {
                 if (question instanceof Quiz.PredictOutput predict) {
                     String problem = checkPrediction(runner, predict);
                     if (problem != null) {

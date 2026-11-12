@@ -20,7 +20,7 @@ public final class ContentCatalog {
     private static final YAMLMapper YAML = YAMLMapper.builder()
             .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .build();
-    private static final List<String> REQUIRED_TOPIC_FILES = List.of("meta.yaml", "lesson.md", "quiz.yaml");
+    private static final List<String> REQUIRED_TOPIC_FILES = List.of("meta.yaml", "lesson.md");
 
     private final List<ModuleInfo> modules;
     private final Map<String, Topic> topics;
@@ -37,10 +37,12 @@ public final class ContentCatalog {
             ModuleInfo module = read(moduleDir.resolve("module.yaml"), ModuleInfo.class);
             requireMatchesFolder(module.id(), moduleDir.getFileName().toString(), moduleDir);
             modules.add(module);
+            var moduleTopics = new ArrayList<Topic>();
             for (Path topicDir : sortedSubdirectories(moduleDir)) {
-                Topic topic = loadTopic(contentDir, practiceDir, topicDir);
-                topics.put(topic.id(), topic);
+                moduleTopics.add(loadTopic(contentDir, practiceDir, topicDir));
             }
+            moduleTopics.sort(Comparator.comparingInt((Topic t) -> t.meta().order()).thenComparing(Topic::id));
+            moduleTopics.forEach(topic -> topics.put(topic.id(), topic));
         }
         return new ContentCatalog(modules, topics);
     }
@@ -62,8 +64,17 @@ public final class ContentCatalog {
                 }
             }
         }
-        Quiz quiz = read(topicDir.resolve("quiz.yaml"), Quiz.class);
-        if (!quiz.topic().equals(meta.id())) {
+        boolean quizless = meta.isBoss() || meta.isFeature();
+        if (quizless) {
+            if (Files.exists(topicDir.resolve("quiz.yaml"))) {
+                throw new InvalidContentException(topicDir.resolve("quiz.yaml"), "incidents and features have no onboarding check");
+            }
+            if (meta.practice().kind() != TopicMeta.PracticeKind.CODE) {
+                throw new InvalidContentException(topicDir.resolve("meta.yaml"), "incidents and features are graded by code checks");
+            }
+        }
+        Quiz quiz = quizless ? null : read(topicDir.resolve("quiz.yaml"), Quiz.class);
+        if (quiz != null && !quiz.topic().equals(meta.id())) {
             throw new InvalidContentException(topicDir.resolve("quiz.yaml"), "topic '" + quiz.topic() + "' does not match '" + meta.id() + "'");
         }
         return new Topic(meta, quiz, topicDir, practice);

@@ -74,7 +74,7 @@ public class CareerReport {
             var ticket = topic.meta().ticket();
             topics.add(new TopicView(topic.id(), ticket.key(), ticket.title(), p.masteryPercent(), p.mastered()));
             String reason = again.contains(topic.id()) ? "Your last review missed some questions."
-                    : p.quizAttempts() >= 2 && p.quizBest() < topic.quiz().passPercent() ? "The onboarding check isn't passed yet."
+                    : p.quizAttempts() >= 2 && p.quizBest() < topic.passPercent() ? "The onboarding check isn't passed yet."
                     : null;
             if (reason != null) {
                 weak.add(new WeakView(topic.id(), ticket.key(), ticket.title(), reason, store.lastWeakConcepts(topic.id())));

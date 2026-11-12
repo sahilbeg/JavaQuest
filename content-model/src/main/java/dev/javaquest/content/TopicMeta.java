@@ -68,6 +68,14 @@ public record TopicMeta(
         xp = xp == null ? new Xp(50, 100) : xp;
     }
 
+    public boolean isBoss() {
+        return id.endsWith("/boss");
+    }
+
+    public boolean isFeature() {
+        return id.endsWith("/mini-project");
+    }
+
     public String moduleId() {
         return id.substring(0, id.indexOf('/'));
     }

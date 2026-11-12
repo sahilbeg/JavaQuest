@@ -23,6 +23,9 @@ public class CareerService {
     public static final int NO_HINTS_BONUS = 25;
     public static final int GOOD_REVIEW_XP = 15;
     public static final int REVIEW_QUESTIONS = 3;
+    public static final int BOSS_BRONZE_XP = 300;
+    public static final int BOSS_TIER_BONUS = 100;
+    public static final int FEATURE_XP = 400;
 
     private final CareerStore store;
     private final ContentCatalog catalog;
@@ -41,10 +44,30 @@ public class CareerService {
 
     @Transactional
     public void onChecksPassedFirstTime(Topic topic, int hintsUsed, boolean solutionViewed) {
+        if (topic.meta().isBoss()) {
+            return;
+        }
+        if (topic.meta().isFeature()) {
+            award("feature", solutionViewed ? FEATURE_XP / 2 : FEATURE_XP, topic, "feature:" + topic.id());
+            refreshKudos();
+            return;
+        }
         int xp = topic.meta().xp().code();
         award("code", solutionViewed ? xp / 2 : xp, topic, "code:" + topic.id());
         if (hintsUsed == 0) {
             award("code-no-hints", NO_HINTS_BONUS, topic, "no-hints:" + topic.id());
+        }
+        refreshKudos();
+    }
+
+    @Transactional
+    public void onBossTiers(Topic topic, java.util.Set<dev.javaquest.progress.BossTiers.Tier> tiers) {
+        for (var tier : tiers) {
+            switch (tier) {
+                case BRONZE -> award("boss", BOSS_BRONZE_XP, topic, "boss:" + topic.id());
+                case SILVER -> award("boss-silver", BOSS_TIER_BONUS, topic, "boss-silver:" + topic.id());
+                case GOLD -> award("boss-gold", BOSS_TIER_BONUS, topic, "boss-gold:" + topic.id());
+            }
         }
         refreshKudos();
     }
@@ -66,7 +89,7 @@ public class CareerService {
 
     @Transactional
     public void onMastered(Topic topic) {
-        if (topic.meta().review() && store.card(topic.id()).isEmpty()) {
+        if (topic.hasQuiz() && topic.meta().review() && store.card(topic.id()).isEmpty()) {
             store.saveCard(topic.id(), Card.fresh(today()), null);
         }
         refreshKudos();
@@ -106,7 +129,7 @@ public class CareerService {
         var mastered = store.masteredTopics();
         var stats = new Kudos.Stats(mastered, store.countXp("code") > 0, store.countXp("code-no-hints"),
                 store.countXp("quiz-perfect"), store.spotBugsCorrect(), store.idePasses(), store.streak().longest(),
-                store.countXp("review"), completeModules());
+                store.countXp("review"), completeModules(), store.countXp("boss"), store.countXp("boss-gold"));
         var have = store.kudos();
         for (String id : Kudos.earned(stats)) {
             if (!have.contains(id)) {

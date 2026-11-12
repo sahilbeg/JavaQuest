@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "lastUpdated": "2026-11-12T15:46:05+05:30",
+  "lastUpdated": "2026-11-12T15:53:21+05:30",
   "phase": "PHASE 1: build",
   "milestone": "M4",
   "resumeHere": "M3 is done and committed. Start M4: keyboard and screen reader audit.",
@@ -41,7 +41,8 @@
     "M3-06 kudos",
     "M3-07 spaced repetition and weak list",
     "M3-08 career dashboard, review page, promotion and toasts",
-    "M3-09 export and import progress"
+    "M3-09 export and import progress",
+    "M3-10 incident tiers, feature XP, Boss/Gold/Java Pro kudos, quiz-less units, catalog ordered by meta order"
   ],
   "nextTask": "M4-01: keyboard and screen reader audit",
   "openDecisions": [],
@@ -137,7 +138,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T15:46:05+05:30"
+            "verifiedAt": "2026-11-12T15:53:21+05:30"
           }
         },
         {
@@ -2078,6 +2079,7 @@
     "UI looks like Spoke's internal workplace tools; topics are tickets, bosses are incidents",
     "Content check with: ./mvnw -q -pl tools dependency:properties exec:java@check-content",
     "Each practice topic has a committed skeleton/ copy; verification and Reset use it",
-    "File watcher: directory-watcher (native FSEvents), measured 0.36 to 0.39 s save to start"
+    "File watcher: directory-watcher (native FSEvents), measured 0.36 to 0.39 s save to start",
+    "Incident tiers come from test class names ending BronzeTest, SilverTest, GoldTest"
   ]
 }

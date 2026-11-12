@@ -192,10 +192,24 @@ function renderChecks(container, practice) {
   }[r.outcome];
 
   container.replaceChildren(...[head(chip),
+    tierRow(r.tests),
     rows.length && h("ul", { class: "check-list" }, rows),
     extra && h("p", { class: "checks-empty" }, extra),
     r.output && h("p", { class: "console-label" }, "Your program printed"),
     r.output && h("pre", { class: "console-out" }, r.output)].filter(Boolean));
+}
+
+const TIERS = ["Bronze", "Silver", "Gold"];
+
+function tierRow(tests) {
+  const tiers = TIERS.map((tier) => {
+    const own = tests.filter((t) => t.className.endsWith(`${tier}Test`));
+    return { tier, own, passed: own.length > 0 && own.every((t) => t.passed) };
+  }).filter((t) => t.own.length > 0);
+  if (!tiers.length) return null;
+  return h("ul", { class: "tier-row", "aria-label": "Incident tiers" }, tiers.map((t) =>
+    h("li", { class: `tier tier-${t.tier.toLowerCase()} ${t.passed ? "is-passed" : ""}` },
+      icon(t.passed ? "circle-check" : "circle-x"), `${t.tier}: ${t.own.filter((x) => x.passed).length} of ${t.own.length}`)));
 }
 
 function narrate(chat, practice) {
@@ -205,6 +219,12 @@ function narrate(chat, practice) {
     chat.say(`${where}All checks pass!`, { mood: "cheering" });
   } else if (r.outcome === "COMPILE_ERROR") {
     chat.say(`${where}Java can't compile this yet. Start with the first error, line ${r.compileErrors[0]?.line}.`, { mood: "encouraging" });
+  } else if (r.outcome === "FAILED" && r.tests.some((t) => t.className.endsWith("BronzeTest"))) {
+    const open = TIERS.filter((tier) => r.tests.some((t) => t.className.endsWith(`${tier}Test`) && !t.passed));
+    chat.say(open.includes("Bronze")
+      ? `${where}The bronze checks still fail, so the incident is still open. Start with those.`
+      : `${where}Bronze passes, so the incident is resolved. ${open.join(" and ")} still ${open.length === 1 ? "has" : "have"} a failing check if you want the bonus.`,
+      { mood: open.includes("Bronze") ? "encouraging" : "cheering" });
   } else if (r.outcome === "FAILED") {
     const passed = r.tests.filter((t) => t.passed).length;
     chat.say(`${where}${passed} of ${r.tests.length} checks pass. Read the first red one: it says what it expected.`, { mood: "encouraging" });

@@ -202,4 +202,11 @@ Verification, recorded in `build_state.json` per topic by `./mvnw -q -pl tools d
 
 ## Boss and mini-project folders
 
-Same layout as a topic. A boss is shown as an incident with key `INC-MM`, raised by Theo. A mini-project is a feature with key `FEAT-MM`, asked for by Priya. `meta.yaml` has no quiz, and may hold several source files. A boss has 5 to 10 tests in tiers (`@Tag("bronze")`, `silver`, `gold`). Passing all bronze tests beats the boss. Silver and gold earn bonus XP.
+Same layout as a topic, with these differences:
+
+- A boss is shown as an incident with key `INC-MM`, raised by Theo. A mini-project is a feature with key `FEAT-MM`, asked for by Priya.
+- There is no `quiz.yaml`. The catalog rejects one. The checks are the whole task, so mastery is the checks alone.
+- `practice.kind` must be `code`. Use `order: 99` for the boss and `order: 100` for the mini-project so they come after the topics. The catalog sorts by `order`, not by folder name.
+- `review: false`. Incidents and features are not reviewed.
+
+Boss tiers come from test class names. Put the bronze checks in a class whose name ends in `BronzeTest`, silver in `SilverTest`, gold in `GoldTest`, for example `KioskBronzeTest`. A tier passes when it has at least one check and all of its checks pass. Passing bronze resolves the incident. Silver and gold earn bonus XP. The solution must pass all three tiers, and the skeleton must fail.

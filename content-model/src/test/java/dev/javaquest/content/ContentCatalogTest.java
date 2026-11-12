@@ -126,4 +126,34 @@ class ContentCatalogTest {
         var error = assertThrows(InvalidContentException.class, () -> ContentCatalog.load(content, practice));
         assertTrue(error.getMessage().contains("skeleton"), error.getMessage());
     }
+
+    @Test
+    void topicsFollowTheirOrderFieldNotTheirFolderNames() throws IOException {
+        Path boss = Files.createDirectories(content.resolve("module-01-basics/boss"));
+        Files.writeString(boss.resolve("meta.yaml"), META.replace("module-01-basics/topic-01-variables", "module-01-basics/boss")
+                .replace("order: 1", "order: 99").replace("SPK-0101", "INC-01"));
+        Files.writeString(boss.resolve("lesson.md"), "## Hook\n");
+        for (String folder : List.of("src", "skeleton", "solution", "test")) {
+            Files.createDirectories(practice.resolve("module-01-basics/boss").resolve(folder));
+        }
+
+        var ids = ContentCatalog.load(content, practice).topics().stream().map(Topic::id).toList();
+
+        assertEquals(List.of("module-01-basics/topic-01-variables", "module-01-basics/boss"), ids);
+    }
+
+    @Test
+    void incidentWithAQuizIsRejected() throws IOException {
+        Path boss = Files.createDirectories(content.resolve("module-01-basics/boss"));
+        Files.writeString(boss.resolve("meta.yaml"), META.replace("module-01-basics/topic-01-variables", "module-01-basics/boss")
+                .replace("SPK-0101", "INC-01"));
+        Files.writeString(boss.resolve("lesson.md"), "## Hook\n");
+        Files.writeString(boss.resolve("quiz.yaml"), QUIZ);
+        for (String folder : List.of("src", "skeleton", "solution", "test")) {
+            Files.createDirectories(practice.resolve("module-01-basics/boss").resolve(folder));
+        }
+
+        var error = assertThrows(InvalidContentException.class, () -> ContentCatalog.load(content, practice));
+        assertTrue(error.getMessage().contains("no onboarding check"), error.getMessage());
+    }
 }

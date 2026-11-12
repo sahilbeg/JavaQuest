@@ -2,7 +2,7 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-12T15:45:38+05:30
+- **Last updated:** 2026-11-12T15:53:19+05:30
 - **Phase:** PHASE 1: build
 - **Milestone:** M4
 - **Resume here:** M3 is done and committed. Start M4: keyboard and screen reader audit.
@@ -39,6 +39,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - M3-07 spaced repetition and weak list
 - M3-08 career dashboard, review page, promotion and toasts
 - M3-09 export and import progress
+- M3-10 incident tiers, feature XP, Boss/Gold/Java Pro kudos, quiz-less units, catalog ordered by meta order
 
 ## Decisions
 
@@ -55,6 +56,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - Content check with: ./mvnw -q -pl tools dependency:properties exec:java@check-content
 - Each practice topic has a committed skeleton/ copy; verification and Reset use it
 - File watcher: directory-watcher (native FSEvents), measured 0.36 to 0.39 s save to start
+- Incident tiers come from test class names ending BronzeTest, SilverTest, GoldTest
 
 ## Blockers
 

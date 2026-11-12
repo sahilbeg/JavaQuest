@@ -31,7 +31,9 @@ export async function renderTicket(view, catalog, id, initialTab) {
     stateChip.className = `chip ${state.chip}`;
     stateChip.textContent = state.label;
     if (fresh.progress.mastered && !wasMastered) {
-      chat.say(["Ticket closed! You passed the check and the code checks.", `${person.name.split(" ")[0]} will be pleased.`], { mood: "cheering" });
+      chat.say([topic.kind === "incident" ? "Incident resolved! Riders can use the kiosk again."
+        : topic.hasQuiz ? "Ticket closed! You passed the check and the code checks." : "Feature shipped! Every check passes.",
+        `${person.name.split(" ")[0]} will be pleased.`], { mood: "cheering" });
       toast(`${summary.ticket.key} closed. Nice work!`);
     } else if (fresh.progress.testsPassed && !fresh.progress.mastered && fresh.progress.quizBest < 80) {
       chat.say("Your code passes! Take the onboarding check to close the ticket.", { mood: "cheering" });
@@ -42,10 +44,11 @@ export async function renderTicket(view, catalog, id, initialTab) {
   const chatBox = h("aside", { class: "chat", id: "byte-chat", tabindex: "-1", "aria-label": "Chat with Byte" });
   const chat = createChat(chatBox, topic);
 
-  const panels = Object.fromEntries(TABS.map((t) =>
+  const tabs = TABS.filter((t) => t.key !== "check" || topic.hasQuiz);
+  const panels = Object.fromEntries(tabs.map((t) =>
     [t.key, h("div", { role: "tabpanel", id: `panel-${t.key}`, "aria-labelledby": `tab-${t.key}`, tabindex: "0", hidden: true })]));
   const rendered = new Set();
-  const tabButtons = TABS.map((t) => h("button", {
+  const tabButtons = tabs.map((t) => h("button", {
     type: "button", role: "tab", class: "tab", id: `tab-${t.key}`, "aria-controls": `panel-${t.key}`,
     "aria-selected": "false", tabindex: "-1", onclick: () => select(t.key, true),
   }, icon(t.icon), t.label));
@@ -54,15 +57,15 @@ export async function renderTicket(view, catalog, id, initialTab) {
     const index = tabButtons.indexOf(document.activeElement);
     if (index < 0 || !["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
     e.preventDefault();
-    const next = e.key === "Home" ? 0 : e.key === "End" ? TABS.length - 1
-      : (index + (e.key === "ArrowRight" ? 1 : -1) + TABS.length) % TABS.length;
-    select(TABS[next].key, true);
+    const next = e.key === "Home" ? 0 : e.key === "End" ? tabs.length - 1
+      : (index + (e.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+    select(tabs[next].key, true);
     tabButtons[next].focus();
   });
 
   async function select(key, updateUrl) {
     if (!panels[key]) key = "kb";
-    TABS.forEach((t, i) => {
+    tabs.forEach((t, i) => {
       const on = t.key === key;
       tabButtons[i].setAttribute("aria-selected", String(on));
       tabButtons[i].tabIndex = on ? 0 : -1;
@@ -98,7 +101,14 @@ export async function renderTicket(view, catalog, id, initialTab) {
       !after && icon(iconName), `${label}: ${target.ticket.key}`, after && icon(iconName));
   };
 
+  const kindBanner = topic.kind === "incident"
+    ? h("p", { class: "incident-banner", role: "note" }, icon("triangle-alert"),
+        "Incident: riders are affected right now. Bronze checks resolve it. Silver and gold make the fix solid.")
+    : topic.kind === "feature"
+      ? h("p", { class: "feature-banner", role: "note" }, icon("sparkles"), "Feature: a bigger build for this project. Every check must pass.")
+      : null;
   const main = h("div", { class: "ticket-main" },
+    kindBanner,
     h("header", { class: "ticket-head" },
       h("div", { class: "ticket-head-row" },
         h("span", { class: "key" }, summary.ticket.key),
@@ -128,7 +138,9 @@ export async function renderTicket(view, catalog, id, initialTab) {
 
   view.replaceChildren(h("div", { class: "ticket-page" }, sideNav, main, chatBox));
   chat.say([`This one is from ${person.name.split(" ")[0]}.`,
-    "Read the KB page, pass the onboarding check, then fix the code. I'm here if you need a hint."], { fresh: false });
+    topic.hasQuiz
+      ? "Read the KB page, pass the onboarding check, then fix the code. I'm here if you need a hint."
+      : "Read the KB page, then fix the code until the checks pass. I'm here if you need a hint."], { fresh: false });
   await select(initialTab, false);
   view.focus({ preventScroll: true });
   return () => disposers.forEach((dispose) => dispose());

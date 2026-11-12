@@ -37,18 +37,19 @@ public final class JUnitReportParser {
 
     private static TestCaseResult toResult(Element testCase) {
         String name = displayName(testCase);
+        String className = testCase.getAttribute("classname");
         Element problem = firstChild(testCase, "failure");
         if (problem == null) {
             problem = firstChild(testCase, "error");
         }
         if (problem == null) {
-            return new TestCaseResult(name, true, "");
+            return new TestCaseResult(className, name, true, "");
         }
         String message = problem.getAttribute("message");
         if ("error".equals(problem.getTagName())) {
             message = simpleName(problem.getAttribute("type")) + (message.isEmpty() ? "" : ": " + message);
         }
-        return new TestCaseResult(name, false, message);
+        return new TestCaseResult(className, name, false, message);
     }
 
     private static String displayName(Element testCase) {

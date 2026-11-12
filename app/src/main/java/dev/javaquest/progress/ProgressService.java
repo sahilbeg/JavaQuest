@@ -47,7 +47,8 @@ public class ProgressService {
     public void recordTestRun(Topic topic, PracticeResult practice) {
         Instant now = clock.instant();
         var result = practice.result();
-        boolean passed = result.outcome() == Outcome.PASSED;
+        var tiers = BossTiers.passed(result.tests());
+        boolean passed = topic.meta().isBoss() ? tiers.contains(BossTiers.Tier.BRONZE) : result.outcome() == Outcome.PASSED;
         store.addTestRun(topic.id(), practice.source().name(), result.outcome().name(), (int) result.passedCount(),
                 result.tests().size(), result.duration().toMillis(), json.writeValueAsString(practice), now);
         var row = store.row(topic.id());
@@ -57,6 +58,9 @@ public class ProgressService {
         store.save(updated, now);
         if (passed && !row.testsPassed()) {
             career.onChecksPassedFirstTime(topic, row.hintsUsed(), row.solutionViewed());
+        }
+        if (topic.meta().isBoss()) {
+            career.onBossTiers(topic, tiers);
         }
         notifyIfNewlyMastered(topic, row, updated);
     }
@@ -134,7 +138,7 @@ public class ProgressService {
     }
 
     private ProgressStore.Row withMastery(Topic topic, ProgressStore.Row row, Instant now) {
-        boolean mastered = ProgressRules.mastered(row.quizBest(), topic.quiz().passPercent(), row.testsPassed(), isCode(topic));
+        boolean mastered = ProgressRules.mastered(row.quizBest(), topic.passPercent(), row.testsPassed(), isCode(topic), topic.hasQuiz());
         if (!mastered || row.masteredAt() != null) {
             return row;
         }
@@ -144,12 +148,12 @@ public class ProgressService {
 
     private TopicProgress view(Topic topic, ProgressStore.Row row) {
         int hintCount = topic.meta().hints().size();
-        int passPercent = topic.quiz().passPercent();
+        int passPercent = topic.passPercent();
         return new TopicProgress(row.quizBest(), row.quizAttempts(), row.testsPassed(), row.failedRuns(), row.hintsUsed(),
                 ProgressRules.hintsAvailable(row.failedRuns(), hintCount), hintCount,
                 ProgressRules.solutionAvailable(row.testsPassed(), row.hintsUsed(), hintCount, row.failedRuns(), row.failedRunsAtLastHint()),
                 row.solutionViewed(), row.masteredAt() != null,
-                ProgressRules.masteryPercent(row.quizBest(), passPercent, row.testsPassed(), isCode(topic)));
+                ProgressRules.masteryPercent(row.quizBest(), passPercent, row.testsPassed(), isCode(topic), topic.hasQuiz()));
     }
 
     private static boolean isCode(Topic topic) {

@@ -29,6 +29,7 @@ class PracticeRunnerTest {
         TestRunResult result = run("passing");
 
         assertEquals(Outcome.PASSED, result.outcome());
+        assertEquals("fx.AdderTest", result.tests().getFirst().className());
         assertEquals(List.of("add puts two numbers together", "add works with negative numbers"),
                 result.tests().stream().map(TestRunResult.TestCaseResult::name).sorted().toList());
     }

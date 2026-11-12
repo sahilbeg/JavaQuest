@@ -12,7 +12,7 @@ public record TestRunResult(
 
     public enum Outcome { PASSED, FAILED, COMPILE_ERROR, TIMED_OUT, CRASHED }
 
-    public record TestCaseResult(String name, boolean passed, String message) {}
+    public record TestCaseResult(String className, String name, boolean passed, String message) {}
 
     public record CompileError(String file, long line, String message) {}
 
