@@ -1,0 +1,126 @@
+topic: module-05-advanced-java/topic-12-sealed-types
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: sealed-permits
+    variants:
+      - { prompt: "What does the permits clause on a sealed interface do?", choices: ["It lists every type allowed to implement the interface", "It lists the methods the interface allows", "It gives other packages permission to read the interface", "It makes the interface run faster"], answer: 0 }
+      - { prompt: "A class not named in a sealed interface's permits list writes implements on it. What happens?", choices: ["The code does not compile", "It compiles but prints a warning", "It compiles and the class is ignored at runtime", "It throws an exception when the program starts"], answer: 0 }
+    explain: "A sealed type names its whole family after permits. Anything else that tries to join gets a compile error."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: sealed-permits
+    prompt: "public ___ interface DockEvent permits BikeDocked, BikeUndocked, Fault { }"
+    answers: ["sealed"]
+    explain: "The word sealed closes the interface. The permits clause then lists the family."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: subclass-modifiers
+    prompt: "A permitted class should allow anyone at all to extend it. Which modifier does it need?"
+    choices: ["non-sealed", "final", "sealed", "abstract"]
+    answer: 0
+    explain: "non-sealed opens that branch again. final stops it, and sealed gives it its own fixed list."
+    reteach: "## Concept"
+
+  - id: q04
+    type: spot-the-bug
+    concept: subclass-modifiers
+    code: |
+      sealed class Bike permits ClassicBike, EBike { }
+      final class ClassicBike extends Bike { }
+      class EBike extends Bike { }
+    bugLine: 3
+    explain: "Every permitted class must say final, sealed or non-sealed. EBike says none of them, so javac reports: sealed, non-sealed or final modifiers expected."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: mcq
+    concept: records-as-permitted
+    prompt: "Why do records fit so well as permitted types of a sealed interface?"
+    choices: ["Records are automatically final, so they need no extra modifier", "Records can extend any sealed class", "Records are always sealed themselves", "Records skip the permits check"]
+    answer: 0
+    explain: "A record is final already. It implements the interface and carries its own data, which is all a permitted type needs."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: records-as-permitted
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(DockEvent.class.isSealed());
+              System.out.println(DockEvent.class.getPermittedSubclasses().length);
+              System.out.println(Note.class.isSealed());
+          }
+      }
+
+      sealed interface DockEvent permits BikeDocked, Fault { }
+      record BikeDocked(String station, String bikeId) implements DockEvent { }
+      record Fault(String station, String code) implements DockEvent { }
+      interface Note { }
+    answer: "true\n2\nfalse"
+    explain: "DockEvent is sealed and permits two records. Note is a plain interface, so isSealed() is false."
+    reteach: "## Concept"
+
+  - id: q07
+    type: predict-output
+    concept: closed-hierarchy
+    code: |
+      public class Main {
+          static String describe(DockEvent e) {
+              if (e instanceof BikeDocked d) {
+                  return d.bikeId() + " docked at " + d.station();
+              } else if (e instanceof Fault f) {
+                  return "Fault " + f.code() + " at " + f.station();
+              }
+              return "unknown";
+          }
+
+          public static void main(String[] args) {
+              System.out.println(describe(new Fault("Harbor", "E7")));
+              System.out.println(describe(new BikeUndocked("Harbor", "B-1042")));
+          }
+      }
+
+      sealed interface DockEvent permits BikeDocked, BikeUndocked, Fault { }
+      record BikeDocked(String station, String bikeId) implements DockEvent { }
+      record BikeUndocked(String station, String bikeId) implements DockEvent { }
+      record Fault(String station, String code) implements DockEvent { }
+    answer: "Fault E7 at Harbor\nunknown"
+    explain: "The if chain has no branch for BikeUndocked. Sealing stops strangers joining, but an instanceof chain still cannot spot a missing branch."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: mcq
+    concept: closed-hierarchy
+    prompt: "What does the compiler gain when DockEvent is sealed?"
+    choices: ["It knows every possible kind of DockEvent", "It can skip type checks at runtime", "It makes every DockEvent immutable", "It lets any package add new events safely"]
+    answer: 0
+    explain: "A closed list means the compiler knows all the cases. The next topic uses this to make switches exhaustive."
+    reteach: "## Concept"
+
+  - id: q09
+    type: mcq
+    concept: sealed-vs-enum
+    variants:
+      - { prompt: "Each kind of dock message carries different data: a bike id for docking, a code for a fault. Which fits best?", choices: ["A sealed interface with one record per kind", "An enum with one constant per kind", "A plain open interface", "A String field holding the kind's name"], answer: 0 }
+      - { prompt: "The bike types classic, e-bike and cargo all hold the same fields. Which fits best?", choices: ["An enum", "A sealed interface with three records", "Three unrelated classes", "A non-sealed class"], answer: 0 }
+    explain: "Use an enum when every member looks the same. Use a sealed type when each kind holds its own data."
+    reteach: "## Concept"
+
+  - id: q10
+    type: order
+    concept: subclass-modifiers
+    prompt: "Put the declarations in order, from the top of the family down to the last branch."
+    items:
+      - "sealed interface Vehicle permits Bike { }"
+      - "sealed class Bike implements Vehicle permits CargoBike { }"
+      - "final class CargoBike extends Bike { }"
+    explain: "Vehicle is the top. Bike is sealed again with its own list. CargoBike is final, so the branch stops there."
+    reteach: "## Concept"

@@ -1,0 +1,24 @@
+id: module-05-advanced-java/boss
+title: "INC-05: Double unlock at rush hour"
+order: 99
+minutes: 12
+prerequisites: [module-05-advanced-java/topic-13-pattern-matching]
+concepts: [race-conditions, concurrent-collections, atomics, deadlock]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m05.incident.UnlockService
+  timeoutSeconds: 30
+ticket:
+  key: INC-05
+  from: sam
+  title: "Double unlock at rush hour"
+  body: >
+    At 8:02 two riders unlocked bike B-1042 at Harbor at the same moment, and both were charged.
+    The payment count on the dashboard is also lower than the bank's.
+    And this morning the rebalancing screen froze until we restarted the server.
+hints:
+  - "Bronze: checking and then putting is two steps, and another thread can run between them. ConcurrentHashMap.putIfAbsent does both in one atomic step."
+  - "Silver: payments++ reads, adds and writes. Make the counter an AtomicInteger and use incrementAndGet."
+  - "Gold: one thread locks Riverside then Harbor while the other locks Harbor then Riverside. Always lock the station whose name comes first alphabetically, first."
+review: false

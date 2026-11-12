@@ -113,6 +113,18 @@
                 <source>module-04-dsa/topic-10-heaps/src</source>
                 <source>module-04-dsa/topic-11-graphs/src</source>
                 <source>module-04-dsa/topic-12-dynamic-programming/src</source>
+                <source>module-05-advanced-java/boss/src</source>
+                <source>module-05-advanced-java/mini-project/src</source>
+                <source>module-05-advanced-java/topic-01-threads/src</source>
+                <source>module-05-advanced-java/topic-02-synchronization/src</source>
+                <source>module-05-advanced-java/topic-03-executors/src</source>
+                <source>module-05-advanced-java/topic-04-completable-future/src</source>
+                <source>module-05-advanced-java/topic-05-virtual-threads/src</source>
+                <source>module-05-advanced-java/topic-06-concurrent-collections/src</source>
+                <source>module-05-advanced-java/topic-10-reflection/src</source>
+                <source>module-05-advanced-java/topic-11-annotations/src</source>
+                <source>module-05-advanced-java/topic-12-sealed-types/src</source>
+                <source>module-05-advanced-java/topic-13-pattern-matching/src</source>
               </sources>
             </configuration>
           </execution>
@@ -185,6 +197,18 @@
                 <source>module-04-dsa/topic-10-heaps/test</source>
                 <source>module-04-dsa/topic-11-graphs/test</source>
                 <source>module-04-dsa/topic-12-dynamic-programming/test</source>
+                <source>module-05-advanced-java/boss/test</source>
+                <source>module-05-advanced-java/mini-project/test</source>
+                <source>module-05-advanced-java/topic-01-threads/test</source>
+                <source>module-05-advanced-java/topic-02-synchronization/test</source>
+                <source>module-05-advanced-java/topic-03-executors/test</source>
+                <source>module-05-advanced-java/topic-04-completable-future/test</source>
+                <source>module-05-advanced-java/topic-05-virtual-threads/test</source>
+                <source>module-05-advanced-java/topic-06-concurrent-collections/test</source>
+                <source>module-05-advanced-java/topic-10-reflection/test</source>
+                <source>module-05-advanced-java/topic-11-annotations/test</source>
+                <source>module-05-advanced-java/topic-12-sealed-types/test</source>
+                <source>module-05-advanced-java/topic-13-pattern-matching/test</source>
               </sources>
             </configuration>
           </execution>

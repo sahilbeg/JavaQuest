@@ -1,0 +1,131 @@
+topic: module-05-advanced-java/topic-04-completable-future
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: fill-blank
+    concept: supply-async
+    prompt: "CompletableFuture<String> payment = CompletableFuture.___(() -> charge(\"r1\"));"
+    answers: ["supplyAsync"]
+    explain: "supplyAsync runs a Supplier on another thread and returns a CompletableFuture straight away."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: supply-async
+    variants:
+      - { prompt: "What is the difference between join() and get() on a CompletableFuture?", choices: ["join() throws only unchecked exceptions, get() throws checked ones", "join() does not wait for the result", "get() starts the task, join() stops it", "join() works only on the main thread"], answer: 0 }
+      - { prompt: "Why do the tests in this topic call join() instead of get()?", choices: ["join() needs no try block, because its exceptions are unchecked", "join() is faster than get()", "get() never returns a value", "join() runs the task again"], answer: 0 }
+    explain: "Both wait for the result. get() declares InterruptedException and ExecutionException, while join() throws an unchecked CompletionException."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: then-apply-compose
+    prompt: "The next step returns a CompletableFuture<String>. Which method keeps the result flat?"
+    choices: ["thenCompose", "thenApply", "allOf", "exceptionally"]
+    answer: 0
+    explain: "thenCompose flattens an async next step into one future. thenApply would give CompletableFuture<CompletableFuture<String>>."
+    reteach: "## Common mistakes"
+
+  - id: q04
+    type: predict-output
+    concept: then-apply-compose
+    code: |
+      import java.util.concurrent.CompletableFuture;
+
+      public class Main {
+          public static void main(String[] args) {
+              String line = CompletableFuture.supplyAsync(() -> 12)
+                      .thenApply(docks -> docks * 5)
+                      .thenApply(total -> total + " docks")
+                      .join();
+              System.out.println(line);
+          }
+      }
+    answer: "60 docks"
+    explain: "12 becomes 60, then 60 becomes the text \"60 docks\". join() waits for the last step."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: then-combine
+    code: |
+      import java.util.concurrent.CompletableFuture;
+
+      public class Main {
+          public static void main(String[] args) {
+              CompletableFuture<String> payment = CompletableFuture.supplyAsync(() -> "P-r1");
+              CompletableFuture<String> lock = CompletableFuture.supplyAsync(() -> "released B-1042");
+              System.out.println(lock.thenCombine(payment, (l, p) -> l + " | " + p).join());
+          }
+      }
+    answer: "released B-1042 | P-r1"
+    explain: "thenCombine waits for both futures, then calls the lambda with the lock result first and the payment second."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: all-of
+    prompt: "What does CompletableFuture.allOf(a, b, c).join() give you?"
+    choices: ["Nothing useful: it only waits until a, b and c are all done", "A list of the three results", "The result of the fastest one", "The result of c"]
+    answer: 0
+    explain: "allOf returns CompletableFuture<Void>. After it finishes, read each value with a.join(), b.join() and c.join()."
+    reteach: "## Concept"
+
+  - id: q07
+    type: predict-output
+    concept: error-handling
+    code: |
+      import java.util.concurrent.CompletableFuture;
+
+      public class Main {
+          public static void main(String[] args) {
+              String line = CompletableFuture.supplyAsync(() -> "P-r1")
+                      .handle((id, ex) -> {
+                          if (ex != null) {
+                              return "no payment";
+                          }
+                          return "paid " + id;
+                      })
+                      .join();
+              System.out.println(line);
+          }
+      }
+    answer: "paid P-r1"
+    explain: "handle always runs. Here there was no exception, so ex is null and the value branch runs."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: then-apply-compose
+    prompt: "Which line will not compile?"
+    code: |
+      CompletableFuture<String> payment = CompletableFuture.supplyAsync(() -> "P-r1");
+      CompletableFuture<String> receipt =
+              payment.thenApply(id -> CompletableFuture.supplyAsync(() -> "receipt for " + id));
+      System.out.println(receipt.join());
+    bugLine: 3
+    explain: "The lambda returns a future, so thenApply makes a future inside a future. Use thenCompose."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: custom-executor
+    prompt: "Why pass your own ExecutorService to supplyAsync for slow payment calls?"
+    choices: ["So slow network calls do not fill up the shared common pool", "Because supplyAsync cannot run without one", "To make the call return a checked exception", "To run the call on the main thread"]
+    answer: 0
+    explain: "Without a second argument, supplyAsync uses the shared common pool. Your own pool keeps slow calls apart."
+    reteach: "## Concept"
+
+  - id: q10
+    type: order
+    concept: error-handling
+    prompt: "Put the lines in order to print a fallback when payment fails."
+    items:
+      - "String line = CompletableFuture.supplyAsync(() -> charge(\"BLOCKED\"))"
+      - "        .exceptionally(ex -> \"unlock failed\")"
+      - "        .join();"
+      - "System.out.println(line);"
+    explain: "Start the work, attach the fallback, wait with join(), then print."
+    reteach: "## Concept"

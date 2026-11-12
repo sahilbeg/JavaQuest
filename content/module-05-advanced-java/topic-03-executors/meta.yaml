@@ -1,0 +1,25 @@
+id: module-05-advanced-java/topic-03-executors
+title: "Executors and thread pools"
+order: 3
+minutes: 9
+prerequisites: [module-05-advanced-java/topic-02-synchronization]
+concepts: [thread-pool, executor-service, callable-future, invoke-all, shutdown, task-exceptions]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m05.executors.SensorPool
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0503
+  from: priya
+  title: "Kiosk slows to a crawl at rush hour"
+  body: >
+    Your sensor check from SPK-0501 starts one thread per dock. Now that Depot is live we have 60 docks.
+    This morning the Uptown kiosk slowed to a crawl at 8:15, starting 60 threads every few seconds.
+    Can the check reuse a few threads instead of making 60 new ones every time?
+    Also, one broken sensor should show up as failed instead of crashing the whole check.
+hints:
+  - "Make the pool once with Executors.newFixedThreadPool(poolSize). Submit one Callable per dock, and keep every Future in a list."
+  - "Loop over the futures in the same order you submitted them and call get() on each. For the thread names, make a HashSet. Inside each task, write synchronized (names) { names.add(Thread.currentThread().getName()); }."
+  - "In checkAllSafely, wrap future.get() in try { ... } catch (ExecutionException e) { results.add(id + \": failed (\" + e.getCause().getMessage() + \")\"); }"
+review: true

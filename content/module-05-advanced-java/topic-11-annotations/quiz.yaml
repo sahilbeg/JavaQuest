@@ -1,0 +1,144 @@
+topic: module-05-advanced-java/topic-11-annotations
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: built-in-annotations
+    variants:
+      - { prompt: "Which annotation makes the compiler check that a method really replaces a parent method?", choices: ["@Override", "@Deprecated", "@FunctionalInterface", "@Retention"], answer: 0 }
+      - { prompt: "Which annotation makes the compiler warn anyone who still calls an old method?", choices: ["@Deprecated", "@Override", "@Target", "@FunctionalInterface"], answer: 0 }
+    explain: "@Override checks overriding. @Deprecated marks code that should no longer be used, and callers get a warning."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: declaring-annotations
+    prompt: "public ___ NotBlank { }"
+    answers: ["@interface"]
+    explain: "@interface declares a new annotation type."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: annotation-elements
+    prompt: "Range declares int min() default 0; and int max() default 100;. What does @Range on a field mean?"
+    choices: ["min is 0 and max is 100", "The code does not compile", "min and max are both 0", "There is no range at all"]
+    answer: 0
+    explain: "Elements left out take their default values, so the field gets 0 to 100."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: retention-and-target
+    prompt: "@Retention(RetentionPolicy.___)"
+    answers: ["RUNTIME"]
+    explain: "RUNTIME keeps the annotation while the program runs, so reflection can read it."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: retention-and-target
+    code: |
+      import java.lang.annotation.Retention;
+      import java.lang.annotation.RetentionPolicy;
+
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(Kiosk.class.isAnnotationPresent(Checked.class));
+              System.out.println(Kiosk.class.isAnnotationPresent(Plain.class));
+          }
+      }
+
+      @Retention(RetentionPolicy.RUNTIME)
+      @interface Checked {
+      }
+
+      @interface Plain {
+      }
+
+      @Checked
+      @Plain
+      class Kiosk {
+      }
+    answer: "true\nfalse"
+    explain: "Checked is kept at run time. Plain uses the default CLASS retention, so reflection cannot see it."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: reading-annotations
+    code: |
+      import java.lang.annotation.Retention;
+      import java.lang.annotation.RetentionPolicy;
+      import java.lang.reflect.Field;
+
+      public class Main {
+          public static void main(String[] args) throws Exception {
+              Field field = Kiosk.class.getDeclaredField("docks");
+              Range range = field.getAnnotation(Range.class);
+              System.out.println(range.min() + "-" + range.max());
+          }
+      }
+
+      @Retention(RetentionPolicy.RUNTIME)
+      @interface Range {
+          int min() default 0;
+          int max() default 99;
+      }
+
+      class Kiosk {
+          @Range(min = 1) int docks = 12;
+      }
+    answer: "1-99"
+    explain: "min is set to 1 on the field. max is left out, so it takes the default 99."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: reading-annotations
+    prompt: "What does field.getAnnotation(Range.class) return when the field has no @Range?"
+    choices: ["null", "An empty Range", "It throws an exception", "false"]
+    answer: 0
+    explain: "getAnnotation returns null for a missing annotation. Check for null before you call min() or max()."
+    reteach: "## Concept"
+
+  - id: q08
+    type: order
+    concept: reading-annotations
+    prompt: "Put the lines in order to print the max of every field that has a @Range."
+    items:
+      - "for (Field field : type.getDeclaredFields()) {"
+      - "    Range range = field.getAnnotation(Range.class);"
+      - "    if (range != null) {"
+      - "        System.out.println(range.max());"
+      - "    }"
+      - "}"
+    explain: "Loop over the fields, ask each one for its Range, skip the null ones, and read max() from the label."
+    reteach: "## Concept"
+
+  - id: q09
+    type: spot-the-bug
+    concept: annotation-elements
+    prompt: "Which line fails to compile?"
+    code: |
+      @interface Range {
+          int min();
+          int max();
+      }
+
+      class Kiosk {
+          @Range(min = 1) int docks;
+      }
+    bugLine: 7
+    explain: "max has no default, so every @Range must set it. Line 7 leaves it out."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: annotation-processing
+    prompt: "Lombok writes getters for you when you put @Getter on a field. When does it do this?"
+    choices: ["While javac compiles the code", "While the program runs, through reflection", "When the JVM loads the class", "Only inside the IDE"]
+    answer: 0
+    explain: "Lombok is a compile-time annotation processor. It runs inside the compiler and changes what gets compiled."
+    reteach: "## Concept"

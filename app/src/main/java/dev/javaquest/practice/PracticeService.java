@@ -4,6 +4,7 @@ import dev.javaquest.content.Topic;
 import dev.javaquest.progress.ProgressService;
 import dev.javaquest.practice.PracticeResult.Source;
 import dev.javaquest.runner.PracticeRunner;
+import dev.javaquest.runner.TestRunResult;
 import dev.javaquest.web.EventHub;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -49,7 +50,7 @@ public class PracticeService {
         try {
             events.publish("run-started", Map.of("topicId", topic.id(), "source", source));
             var result = new PracticeResult(topic.id(), source,
-                    runner.run(topic.practiceSources(), topic.practiceTests()));
+                    runTests(topic));
             progress.recordTestRun(topic, result);
             events.publish("run-finished", result);
             return result;
@@ -57,6 +58,14 @@ public class PracticeService {
             parallelRuns.release();
             lock.unlock();
         }
+    }
+
+    private TestRunResult runTests(Topic topic) throws IOException, InterruptedException {
+        Integer seconds = topic.meta().practice().timeoutSeconds();
+        if (seconds == null) {
+            return runner.run(topic.practiceSources(), topic.practiceTests());
+        }
+        return runner.run(topic.practiceSources(), topic.practiceTests(), Duration.ofSeconds(seconds));
     }
 
     public ProgramRun runMain(Topic topic, String mainClass) throws IOException, InterruptedException {

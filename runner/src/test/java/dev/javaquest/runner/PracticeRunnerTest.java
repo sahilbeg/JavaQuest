@@ -63,6 +63,15 @@ class PracticeRunnerTest {
     }
 
     @Test
+    void aPerRunTimeLimitReplacesTheDefault() throws Exception {
+        Path root = FIXTURES.resolve("infinite-loop");
+        TestRunResult result = runner.run(root.resolve("src"), root.resolve("test"), Duration.ofSeconds(1));
+
+        assertEquals(Outcome.TIMED_OUT, result.outcome());
+        assertTrue(result.duration().compareTo(Duration.ofSeconds(4)) < 0, () -> "took " + result.duration());
+    }
+
+    @Test
     void systemExitCountsAsACrash() throws Exception {
         assertEquals(Outcome.CRASHED, run("exits").outcome());
     }

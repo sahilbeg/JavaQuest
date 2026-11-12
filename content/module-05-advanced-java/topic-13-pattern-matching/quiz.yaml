@@ -1,0 +1,150 @@
+topic: module-05-advanced-java/topic-13-pattern-matching
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: type-patterns-in-switch
+    prompt: "In case Fault f -> f.code(), what is f?"
+    choices: ["A variable of type Fault, set only when the value is a Fault", "The name of the switch", "A new Fault object the case creates", "A label that jumps to another case"]
+    answer: 0
+    explain: "Fault f is a type pattern. On a match, f holds the same object, typed as a Fault."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: exhaustive-switch
+    variants:
+      - { prompt: "A switch over a sealed DockEvent has a case for every permitted record. What else does it need?", choices: ["Nothing: it is exhaustive, so no default is needed", "A default case, or it will not compile", "A case null, or it will not compile", "A break after every case"], answer: 0 }
+      - { prompt: "You add a new record to DockEvent's permits list. A switch over DockEvent has no default and no case for it. What happens?", choices: ["The switch stops compiling: it does not cover all possible input values", "The new record is silently skipped", "The switch returns null for the new record", "The program crashes at startup"], answer: 0 }
+    explain: "The compiler knows every permitted type. A switch without a default must cover them all, so a missing case is a compile error."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: exhaustive-switch
+    prompt: "Why can a default case be a bad idea in a switch over a sealed type?"
+    choices: ["It quietly catches new types, so the compiler no longer warns you", "It makes the switch slower", "It is not allowed with record patterns", "It turns the switch into a statement"]
+    answer: 0
+    explain: "With a default, every new type has a place to land. The missing-case compile error never appears."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: record-patterns
+    prompt: "case BikeDocked(var station, ___ bikeId) -> bikeId + \" docked at \" + station;"
+    answers: ["var", "String"]
+    explain: "Each record component gets a variable. Write its type, String, or let Java infer it with var."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: record-patterns
+    code: |
+      public class Main {
+          static String describe(DockEvent e) {
+              return switch (e) {
+                  case BikeDocked(var station, var bikeId) -> bikeId + " docked at " + station;
+                  case Rebalanced(var from, var to, var bikes) -> bikes + " bikes " + from + " to " + to;
+              };
+          }
+
+          public static void main(String[] args) {
+              System.out.println(describe(new Rebalanced("Uptown", "Depot", 7)));
+              System.out.println(describe(new BikeDocked("Old Mill", "B-1042")));
+          }
+      }
+
+      sealed interface DockEvent permits BikeDocked, Rebalanced { }
+      record BikeDocked(String station, String bikeId) implements DockEvent { }
+      record Rebalanced(String from, String to, int bikes) implements DockEvent { }
+    answer: "7 bikes Uptown to Depot\nB-1042 docked at Old Mill"
+    explain: "Each record pattern unpacks the fields in the order the record declares them."
+    reteach: "## Worked example"
+
+  - id: q06
+    type: predict-output
+    concept: guards
+    code: |
+      public class Main {
+          static int priority(DockEvent e) {
+              return switch (e) {
+                  case Fault f when f.code().startsWith("E") -> 1;
+                  case Fault f -> 2;
+                  case Rebalanced r when r.bikes() > 10 -> 3;
+                  default -> 4;
+              };
+          }
+
+          public static void main(String[] args) {
+              System.out.println(priority(new Fault("Harbor", "W2")));
+              System.out.println(priority(new Rebalanced("Riverside", "Harbor", 10)));
+              System.out.println(priority(new Fault("Harbor", "E9")));
+          }
+      }
+
+      sealed interface DockEvent permits Fault, Rebalanced { }
+      record Fault(String station, String code) implements DockEvent { }
+      record Rebalanced(String from, String to, int bikes) implements DockEvent { }
+    answer: "2\n4\n1"
+    explain: "W2 fails the guard, so the plain Fault case gives 2. 10 bikes is not more than 10, so default gives 4. E9 passes the guard and gives 1."
+    reteach: "## Worked example"
+
+  - id: q07
+    type: spot-the-bug
+    concept: guards
+    prompt: "This switch does not compile. Which line does javac complain about?"
+    code: |
+      static int priority(DockEvent e) {
+          return switch (e) {
+              case Fault f -> 2;
+              case Fault f when f.code().startsWith("E") -> 1;
+              default -> 4;
+          };
+      }
+    bugLine: 4
+    explain: "The plain Fault case above already catches every Fault. javac reports that the guarded case is dominated by a preceding case label. Move it up."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: case-null
+    variants:
+      - { prompt: "A switch has no case null, and its value is null. What happens?", choices: ["It throws a NullPointerException", "It runs the default case", "It returns null", "It skips the switch"], answer: 0 }
+      - { prompt: "Which case makes a switch handle a null value without crashing?", choices: ["case null -> ...", "default -> ...", "case Object o -> ...", "case \"\" -> ..."], answer: 0 }
+    explain: "default does not catch null. Only case null does; without it the switch throws a NullPointerException."
+    reteach: "## Concept"
+
+  - id: q09
+    type: predict-output
+    concept: case-null
+    code: |
+      public class Main {
+          static String kind(Object o) {
+              return switch (o) {
+                  case null -> "no event";
+                  case String s -> "text " + s;
+                  default -> "unknown: " + o.getClass().getSimpleName();
+              };
+          }
+
+          public static void main(String[] args) {
+              System.out.println(kind(null));
+              System.out.println(kind("Harbor"));
+              System.out.println(kind(12));
+          }
+      }
+    answer: "no event\ntext Harbor\nunknown: Integer"
+    explain: "case null catches null. The String pattern catches the text. The number 12 is boxed to an Integer and falls to default."
+    reteach: "## Concept"
+
+  - id: q10
+    type: order
+    concept: guards
+    prompt: "Put the cases in an order that compiles and gives E faults priority 1."
+    items:
+      - "case Fault f when f.code().startsWith(\"E\") -> 1;"
+      - "case Fault f -> 2;"
+      - "default -> 4;"
+    explain: "The guarded case must come before the plain Fault case, and default always goes last."
+    reteach: "## Concept"

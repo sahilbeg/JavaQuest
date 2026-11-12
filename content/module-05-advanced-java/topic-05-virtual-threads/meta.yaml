@@ -1,0 +1,25 @@
+id: module-05-advanced-java/topic-05-virtual-threads
+title: "Virtual threads"
+order: 5
+minutes: 9
+prerequisites: [module-05-advanced-java/topic-04-completable-future]
+concepts: [platform-vs-virtual, starting-virtual-threads, virtual-executor, when-to-use, pinning]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m05.virtualthreads.MarathonPayments
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0505
+  from: theo
+  title: "Marathon riders stuck in the payment queue"
+  body: >
+    Sunday is the city marathon and we expect about 10,000 riders to unlock bikes along the route.
+    Each payment waits on the slow payment service. The fixed pool from SPK-0503 only has a few threads.
+    So riders queue at the Harbor kiosk.
+    Can every rider get their own thread without melting the server?
+hints:
+  - "Open a virtual-thread executor with try-with-resources: try (ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor()) { ... }. Leaving the try block waits for every task."
+  - "In payAll, submit one task per rider that calls pay(rider) and, if it returns true, calls paid.incrementAndGet() on an AtomicInteger. In payNamed, keep the Future of each submit in a list and call get() on them in order."
+  - "For ranOnVirtualThread, use a boolean[] seen = new boolean[1]; then Thread t = Thread.ofVirtual().start(() -> { task.run(); seen[0] = Thread.currentThread().isVirtual(); }); t.join(); return seen[0];"
+review: true

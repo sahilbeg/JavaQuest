@@ -1,0 +1,132 @@
+topic: module-05-advanced-java/topic-08-garbage-collection
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: reachability
+    variants:
+      - { prompt: "When is an object garbage?", choices: ["When no chain of references leads to it from a GC root", "When it is older than one minute", "When its fields are all null", "When you call System.gc()"], answer: 0 }
+      - { prompt: "Which of these is a GC root?", choices: ["A static field of a loaded class", "An object inside a list that nothing refers to", "A field of an unreachable object", "A WeakReference"], answer: 0 }
+    explain: "The GC starts at roots such as live local variables and static fields. Anything it cannot reach from them is garbage."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: reachability
+    prompt: "Ride a refers to Ride b, but nothing refers to a. What happens to b, if nothing else refers to it?"
+    choices: ["Both a and b are garbage", "b stays alive because a refers to it", "a stays alive because it refers to b", "Neither can ever be freed"]
+    answer: 0
+    explain: "A reference from garbage does not keep anything alive. Neither object is reachable from a root."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: generations
+    prompt: "Why does the JVM split the heap into young and old generations?"
+    choices: ["Most objects die young, so cleaning only the young part is cheap", "Old objects are faster to read", "Threads may only use the young part", "Classes live in the old part"]
+    answer: 0
+    explain: "Most new objects become garbage quickly. A minor collection of the young generation frees a lot for little work."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: gc-pauses
+    variants:
+      - { prompt: "What happens during a stop-the-world pause?", choices: ["Every thread of your program stops until the collector finishes", "Only the main thread stops", "The JVM restarts", "The program keeps running at full speed"], answer: 0 }
+      - { prompt: "Which collection usually pauses the longest?", choices: ["A full collection of a crowded heap", "A minor collection of the young generation", "A collection with no garbage", "A call to WeakReference.get()"], answer: 0 }
+    explain: "Stop-the-world pauses halt all threads. A full collection checks the whole heap at once, so it usually takes longest."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: collectors
+    prompt: "Theo wants the shortest possible pauses at the Uptown kiosk. Which collector fits best?"
+    choices: ["ZGC", "No collector at all", "A collector chosen with -Xss", "System.gc() after every ride"]
+    answer: 0
+    explain: "ZGC does most of its work while your threads run, so its pauses stay very short."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: collectors
+    prompt: "What does System.gc() do?"
+    choices: ["It asks the JVM to collect, and the JVM may ignore it", "It always frees every unreachable object at once", "It deletes the object you pass in", "It switches to the G1 collector"]
+    answer: 0
+    explain: "System.gc() is only a request. Never build program logic on it."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: gc-leaks
+    prompt: "Which of these causes a memory leak in Java?"
+    choices: ["A screen that registers a listener and never removes it", "A local variable that goes out of scope", "A temporary String inside a loop", "Setting a variable to null"]
+    answer: 0
+    explain: "The event source keeps a reference to every registered listener, so old screens stay reachable."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: fill-blank
+    concept: collectors
+    prompt: "java ___ Main.java    // print a line for each collection"
+    answers: ["-Xlog:gc"]
+    explain: "-Xlog:gc logs every garbage collection with its pause time."
+    reteach: "## Concept"
+
+  - id: q09
+    type: fill-blank
+    concept: weak-references
+    prompt: "___<Ride> weak = new WeakReference<>(ride);"
+    answers: ["WeakReference"]
+    explain: "A WeakReference refers to an object without keeping it alive."
+    reteach: "## Worked example"
+
+  - id: q10
+    type: predict-output
+    concept: weak-references
+    code: |
+      import java.lang.ref.WeakReference;
+
+      public class Main {
+          public static void main(String[] args) {
+              String bike = "B-1042";
+              WeakReference<String> weak = new WeakReference<>(bike);
+              System.gc();
+              System.out.println(weak.get());
+              System.out.println(bike.equals(weak.get()));
+          }
+      }
+    answer: "B-1042\ntrue"
+    explain: "The local variable bike still refers to the string, so it stays reachable and get() returns it."
+    reteach: "## Worked example"
+
+  - id: q11
+    type: predict-output
+    concept: gc-leaks
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          static final List<String> LISTENERS = new ArrayList<>();
+
+          public static void main(String[] args) {
+              for (int i = 0; i < 3; i++) {
+                  String screen = "screen-" + i;
+                  LISTENERS.add(screen);
+              }
+              System.gc();
+              System.out.println(LISTENERS.size());
+          }
+      }
+    answer: "3"
+    explain: "The static list is a GC root. All three screens stay reachable through it, so the GC cannot free them."
+    reteach: "## Worked example"
+
+  - id: q12
+    type: order
+    concept: reachability
+    prompt: "Put the steps of a collection in order."
+    items: ["Start from the GC roots", "Follow references to mark every reachable object", "Treat every unmarked object as garbage", "Reuse the memory the garbage took up (G1 copies live objects out first)"]
+    explain: "The GC finds what is reachable first. Only then can it free the rest."
+    reteach: "## Concept"

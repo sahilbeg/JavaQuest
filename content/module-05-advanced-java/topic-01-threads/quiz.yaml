@@ -1,0 +1,113 @@
+topic: module-05-advanced-java/topic-01-threads
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: thread
+    variants:
+      - { prompt: "What is a thread?", choices: ["One path of work running through a program", "A copy of the whole program with its own memory", "A method that runs twice", "A file the JVM reads at startup"], answer: 0 }
+      - { prompt: "What do threads in one program share?", choices: ["The same memory, so they can see the same objects", "Nothing at all", "Only their names", "Only the main method"], answer: 0 }
+    explain: "A thread is one path of work. All threads in one program share the same memory."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: start-vs-run
+    prompt: "You call worker.run() on a Thread object. Which thread runs the job?"
+    choices: ["The thread that called run()", "A brand new thread", "The thread named sensor-worker, always", "No thread: run() does nothing"]
+    answer: 0
+    explain: "run() is a normal method call. Only start() begins a new thread."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: start-vs-run
+    prompt: "worker.___();   // begin a new thread"
+    answers: ["start"]
+    explain: "start() asks Java to begin a new thread that calls the job's run()."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: runnable
+    prompt: "___ job = () -> System.out.println(\"check\");"
+    answers: ["Runnable", "java.lang.Runnable"]
+    explain: "Runnable is the functional interface for a job that takes nothing and returns nothing."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: start-vs-run
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Thread worker = new Thread(() -> System.out.println(Thread.currentThread().getName()), "sensor-worker");
+              worker.run();
+          }
+      }
+    answer: "main"
+    explain: "run() was called directly, so the job ran on the main thread."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: predict-output
+    concept: join
+    code: |
+      public class Main {
+          public static void main(String[] args) throws InterruptedException {
+              Thread worker = new Thread(() -> System.out.println("Harbor-3: ok"), "sensor-worker");
+              worker.start();
+              worker.join();
+              System.out.println("All done");
+          }
+      }
+    answer: "Harbor-3: ok\nAll done"
+    explain: "join() makes main wait until the worker has printed, so All done comes last."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: join
+    prompt: "Two threads each print one line. main starts both, then joins both. What do you know about the order of the two lines?"
+    choices: ["It can change from run to run", "The first thread started always prints first", "The second thread always prints first", "They print on the same line"]
+    answer: 0
+    explain: "Java and the operating system decide which thread goes when. The order is not fixed."
+    reteach: "## Concept"
+
+  - id: q08
+    type: order
+    concept: join
+    prompt: "Put the lines in order to run a job on a new thread and wait for it."
+    items:
+      - "Runnable job = () -> System.out.println(\"check\");"
+      - "Thread worker = new Thread(job, \"sensor-worker\");"
+      - "worker.start();"
+      - "worker.join();"
+    explain: "Write the job, wrap it in a thread, start it, then wait for it."
+    reteach: "## Concept"
+
+  - id: q09
+    type: spot-the-bug
+    concept: start-vs-run
+    code: |
+      public class Main {
+          public static void main(String[] args) throws InterruptedException {
+              Thread worker = new Thread(() -> System.out.println("check"), "sensor-worker");
+              worker.start();
+              worker.join();
+              worker.start();
+          }
+      }
+    bugLine: 6
+    explain: "A Thread object can start only once. The second start() throws IllegalThreadStateException."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: thread-names
+    prompt: "Which line creates a thread named sensor-worker?"
+    choices: ["new Thread(job, \"sensor-worker\")", "new Thread(\"sensor-worker\").start(job)", "Thread.currentThread(\"sensor-worker\")", "new Runnable(job, \"sensor-worker\")"]
+    answer: 0
+    explain: "The second argument of the Thread constructor is the thread's name."
+    reteach: "## Concept"

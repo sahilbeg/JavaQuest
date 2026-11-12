@@ -1,0 +1,138 @@
+topic: module-05-advanced-java/topic-09-classloading
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: order
+    concept: class-lifecycle
+    prompt: "Put the steps in the life of a class in order."
+    items: ["Load the bytes of the .class file", "Link: verify the bytecode and prepare static fields", "Initialize: run the static initializers", "Use the class"]
+    explain: "A class is loaded, then linked, then initialized. Only then can your code use it."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: static-initializers
+    variants:
+      - { prompt: "When does a class's static { } block run?", choices: ["Once, the first time the class is used", "Every time you create an object", "When javac compiles the class", "Every time the class's static method is called"], answer: 0 }
+      - { prompt: "A class is never used by the program. What happens to its static block?", choices: ["It never runs", "It runs when the program starts", "It runs when the program ends", "It runs when javac compiles it"], answer: 0 }
+    explain: "Classes load lazily. The static block runs once, on first use, and never if the class is not used."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: class-loaders
+    prompt: "What does String.class.getClassLoader() return?"
+    choices: ["null, because the bootstrap loader loaded String", "The application loader", "The platform loader", "It throws ClassNotFoundException"]
+    answer: 0
+    explain: "The bootstrap loader is built into the JVM, so Java code sees it as null."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: class-loaders
+    prompt: "Which loader loads your own classes from the classpath?"
+    choices: ["The application loader", "The bootstrap loader", "The platform loader", "The garbage collector"]
+    answer: 0
+    explain: "The application loader, also called the system loader, searches the classpath."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: parent-delegation
+    prompt: "The application loader is asked for java.util.ArrayList. What does it do first?"
+    choices: ["It asks its parent loader", "It searches the classpath", "It throws ClassNotFoundException", "It compiles ArrayList.java"]
+    answer: 0
+    explain: "With parent delegation, a loader always asks its parent first. The bootstrap loader finds ArrayList."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: class-errors
+    variants:
+      - { prompt: "Code compiled fine, but at run time a class it uses is missing. What does the JVM throw?", choices: ["NoClassDefFoundError", "ClassNotFoundException", "StackOverflowError", "IllegalArgumentException"], answer: 0 }
+      - { prompt: "Class.forName(\"jq.kiosk.Missing\") finds no class. What is thrown?", choices: ["ClassNotFoundException", "NoClassDefFoundError", "NullPointerException", "OutOfMemoryError"], answer: 0 }
+    explain: "Loading by name throws ClassNotFoundException. A direct use from compiled code throws NoClassDefFoundError."
+    reteach: "## Worked example"
+
+  - id: q07
+    type: mcq
+    concept: classpath
+    prompt: "The Old Mill kiosk compiled against fares.jar but fails with NoClassDefFoundError. What is the likely fix?"
+    choices: ["Add fares.jar to the -cp list when running java", "Run javac again", "Raise the heap with -Xmx", "Add a static block to Kiosk"]
+    answer: 0
+    explain: "The run-time classpath must include every jar the code needs. Compiling fine says nothing about run time."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: fill-blank
+    concept: class-errors
+    prompt: "Class<?> type = Class.___(\"java.util.ArrayList\");"
+    answers: ["forName"]
+    explain: "Class.forName loads a class by its full name."
+    reteach: "## Worked example"
+
+  - id: q09
+    type: fill-blank
+    concept: classpath
+    prompt: "java ___ build/classes jq.kiosk.Kiosk"
+    answers: ["-cp", "-classpath", "--class-path"]
+    explain: "-cp sets the classpath the application loader searches."
+    reteach: "## Concept"
+
+  - id: q10
+    type: predict-output
+    concept: static-initializers
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println("Kiosk starting");
+              System.out.println(Station.name());
+              System.out.println(Station.name());
+          }
+      }
+
+      class Station {
+          static {
+              System.out.println("Station loaded");
+          }
+
+          static String name() {
+              return "Old Mill";
+          }
+      }
+    answer: "Kiosk starting\nStation loaded\nOld Mill\nOld Mill"
+    explain: "Station initializes on its first use, after Kiosk starting. Its static block runs only once."
+    reteach: "## Concept"
+
+  - id: q11
+    type: predict-output
+    concept: class-loaders
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(Integer.class.getClassLoader());
+              System.out.println(ClassLoader.getSystemClassLoader().getName());
+          }
+      }
+    answer: "null\napp"
+    explain: "Integer is core Java, loaded by the bootstrap loader, shown as null. The system loader is named app."
+    reteach: "## Concept"
+
+  - id: q12
+    type: predict-output
+    concept: class-errors
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              try {
+                  Class.forName("jq.kiosk.FareTable");
+                  System.out.println("found");
+              } catch (ClassNotFoundException e) {
+                  System.out.println("Missing: " + e.getMessage());
+              }
+          }
+      }
+    answer: "Missing: jq.kiosk.FareTable"
+    explain: "No loader can find jq.kiosk.FareTable, so Class.forName throws ClassNotFoundException with the name as its message."
+    reteach: "## Worked example"

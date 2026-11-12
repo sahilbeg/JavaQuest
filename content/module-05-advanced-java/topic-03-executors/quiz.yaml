@@ -1,0 +1,138 @@
+topic: module-05-advanced-java/topic-03-executors
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: thread-pool
+    variants:
+      - { prompt: "Why does a thread pool help when 60 docks need checking?", choices: ["It reuses a few threads instead of creating 60 new ones", "It makes each sensor read faster", "It runs the checks without any threads", "It removes the need to wait for results"], answer: 0 }
+      - { prompt: "What does starting a brand new thread for every task cost?", choices: ["Memory for its stack and time to create and destroy it", "Nothing, threads are free", "Only disk space", "One extra line of output"], answer: 0 }
+    explain: "Each thread needs its own stack memory and setup work. A pool keeps a few threads alive and gives them task after task."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: executor-service
+    prompt: "ExecutorService pool = Executors.___(4);"
+    answers: ["newFixedThreadPool"]
+    explain: "Executors.newFixedThreadPool(4) makes a pool with exactly 4 threads."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: callable-future
+    prompt: "What is the difference between a Runnable and a Callable<String>?"
+    choices: ["A Callable returns a value and may throw a checked exception", "A Runnable returns a String", "A Callable can only run on the main thread", "There is no difference"]
+    answer: 0
+    explain: "Runnable gives nothing back. Callable<String> gives back a String, which you collect with Future.get()."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: callable-future
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+      import java.util.concurrent.ExecutorService;
+      import java.util.concurrent.Executors;
+      import java.util.concurrent.Future;
+
+      public class Main {
+          public static void main(String[] args) throws Exception {
+              List<Future<Integer>> futures = new ArrayList<>();
+              try (ExecutorService pool = Executors.newFixedThreadPool(2)) {
+                  for (int dock = 1; dock <= 3; dock++) {
+                      int d = dock;
+                      futures.add(pool.submit(() -> d * 10));
+                  }
+                  for (Future<Integer> f : futures) {
+                      System.out.println(f.get());
+                  }
+              }
+          }
+      }
+    answer: "10\n20\n30"
+    explain: "The tasks may finish in any order, but the loop calls get() on the futures in the order they were submitted."
+    reteach: "## Worked example"
+
+  - id: q05
+    type: predict-output
+    concept: task-exceptions
+    code: |
+      import java.util.concurrent.ExecutionException;
+      import java.util.concurrent.ExecutorService;
+      import java.util.concurrent.Executors;
+      import java.util.concurrent.Future;
+
+      public class Main {
+          public static void main(String[] args) throws InterruptedException {
+              try (ExecutorService pool = Executors.newFixedThreadPool(1)) {
+                  Future<String> f = pool.submit(() -> {
+                      if (true) {
+                          throw new IllegalStateException("sensor offline");
+                      }
+                      return "ok";
+                  });
+                  try {
+                      System.out.println(f.get());
+                  } catch (ExecutionException e) {
+                      System.out.println("failed: " + e.getCause().getMessage());
+                  }
+              }
+          }
+      }
+    answer: "failed: sensor offline"
+    explain: "get() throws an ExecutionException. Its cause is the IllegalStateException the task threw."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: task-exceptions
+    prompt: "A task throws IllegalStateException. What does future.get() throw?"
+    choices: ["ExecutionException, with the IllegalStateException as its cause", "IllegalStateException directly", "Nothing, it returns null", "InterruptedException"]
+    answer: 0
+    explain: "The pool keeps the task's exception and wraps it in an ExecutionException when you call get()."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: mcq
+    concept: shutdown
+    prompt: "What happens at the closing brace of try (ExecutorService pool = ...) { } in Java 21?"
+    choices: ["close() shuts the pool down and waits for every task to finish", "The pool is thrown away while tasks are still running", "Nothing, you still have to call shutdown()", "The program exits at once"]
+    answer: 0
+    explain: "Since Java 19, so in your Java 21, ExecutorService is AutoCloseable. Its close() calls shutdown and waits for the tasks."
+    reteach: "## Concept"
+
+  - id: q08
+    type: order
+    concept: shutdown
+    prompt: "Put the steps in order to run tasks on a pool and wait for them without try-with-resources."
+    items:
+      - "ExecutorService pool = Executors.newFixedThreadPool(4);"
+      - "pool.submit(task);"
+      - "pool.shutdown();"
+      - "pool.awaitTermination(5, TimeUnit.SECONDS);"
+    explain: "Make the pool, give it work, stop it from taking new work, then wait for the work to finish."
+    reteach: "## Concept"
+
+  - id: q09
+    type: fill-blank
+    concept: invoke-all
+    prompt: "List<Future<String>> futures = pool.___(tasks);"
+    answers: ["invokeAll"]
+    explain: "invokeAll submits a list of callables, waits for all of them, and returns the futures in the same order."
+    reteach: "## Concept"
+
+  - id: q10
+    type: spot-the-bug
+    concept: callable-future
+    prompt: "This task should hand back a result line. Which line will not compile?"
+    code: |
+      try (ExecutorService pool = Executors.newFixedThreadPool(2)) {
+          Runnable task = () -> "Harbor-1: ok";
+          Future<?> f = pool.submit(task);
+      }
+    bugLine: 2
+    explain: "A Runnable returns nothing, so its lambda cannot hand back a String. Use Callable<String> task = () -> \"Harbor-1: ok\";"
+    reteach: "## Concept"

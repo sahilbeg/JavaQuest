@@ -1,0 +1,24 @@
+id: module-05-advanced-java/mini-project
+title: "FEAT-05: Bike telemetry ingester"
+order: 100
+minutes: 12
+prerequisites: [module-05-advanced-java/topic-13-pattern-matching]
+concepts: [sealed-types, pattern-matching, executors, concurrent-collections]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m05.feature.TelemetryIngester
+  timeoutSeconds: 30
+ticket:
+  key: FEAT-05
+  from: theo
+  title: "Ingest bike telemetry in parallel"
+  body: >
+    Every bike now sends a line of telemetry each minute: battery level, GPS position or a fault code.
+    At rush hour that is thousands of lines a minute, and one thread cannot keep up.
+    Please build an ingester that spreads the work over several threads and gives the ops team one report.
+hints:
+  - "parse splits on | and returns a Battery, Gps or Fault record. Anything else throws IllegalArgumentException."
+  - "Split the lines into one chunk per worker and submit each chunk to a fixed thread pool. Wait for every Future before you build the report."
+  - "Put shared results in ConcurrentHashMap with merge, and counters in AtomicInteger. Merging with Math::min keeps the lowest battery, whatever order the threads run in."
+review: false

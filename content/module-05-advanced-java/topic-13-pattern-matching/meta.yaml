@@ -1,0 +1,24 @@
+id: module-05-advanced-java/topic-13-pattern-matching
+title: "Pattern matching for instanceof, switch and records"
+order: 13
+minutes: 10
+prerequisites: [module-05-advanced-java/topic-12-sealed-types]
+concepts: [type-patterns-in-switch, exhaustive-switch, record-patterns, guards, case-null]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m05.patternmatching.EventHandler
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0513
+  from: theo
+  title: "Event handler should shout when a message type is missing"
+  body: >
+    The dock event handler from SPK-0512 is one long chain of instanceof checks. We're adding a
+    Rebalanced event for the truck that moves bikes from Riverside to Harbor at rush hour. I want the
+    compiler to tell us if any handler forgets about it, before a rider finds out the hard way.
+hints:
+  - "A switch over a sealed type needs no default if every permitted record has its own case."
+  - "Unpack a record right in the case: case Rebalanced(var from, var to, var bikes) -> ... . For priority, put the guarded Fault case before the plain Fault case."
+  - "Try: case Fault f when f.code().startsWith(\"E\") -> 1; then case Fault f -> 2; and in describeOrNone start with case null -> \"no event\";"
+review: true

@@ -1,0 +1,120 @@
+topic: module-05-advanced-java/topic-06-concurrent-collections
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: unsafe-collections
+    variants:
+      - { prompt: "Many dock sensor threads update one HashMap. What can happen?", choices: ["Updates get lost or a ConcurrentModificationException is thrown", "The compiler refuses to build the program", "Java turns it into a ConcurrentHashMap for you", "Each thread gets its own copy of the map"], answer: 0 }
+      - { prompt: "Why is an ArrayList shared by four threads risky?", choices: ["add is not thread-safe, so items can go missing", "ArrayList cannot hold more than 1,000 items", "Only the main thread may call add", "ArrayList sorts itself after every add"], answer: 0 }
+    explain: "HashMap and ArrayList are not thread-safe. Shared changes race and can break the collection."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: copy-on-write
+    prompt: "Which collection suits a list of map screens that is read thousands of times and changed once a day?"
+    choices: ["CopyOnWriteArrayList", "LinkedBlockingQueue", "ArrayList", "AtomicInteger"]
+    answer: 0
+    explain: "CopyOnWriteArrayList copies on every write, which is slow, but reads never lock and loops never throw ConcurrentModificationException."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: blocking-queue
+    prompt: "What does take() do on an empty LinkedBlockingQueue?"
+    choices: ["It waits until another thread puts an item", "It returns null", "It throws NoSuchElementException", "It returns an empty string"]
+    answer: 0
+    explain: "take() blocks until an item arrives. That is what makes the producer-consumer pattern work."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: concurrent-hash-map
+    prompt: "docks.___(\"Harbor\", 1, Integer::sum);"
+    answers: ["merge"]
+    explain: "merge stores the value if the key is missing, or combines it with the old value in one atomic step."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: atomics
+    prompt: "int now = rides.___();   // read the value without changing it"
+    answers: ["get", "intValue"]
+    explain: "AtomicInteger reads with get() and changes safely with methods such as incrementAndGet()."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: atomics
+    code: |
+      import java.util.concurrent.atomic.AtomicInteger;
+
+      public class Main {
+          public static void main(String[] args) {
+              AtomicInteger free = new AtomicInteger(12);
+              free.decrementAndGet();
+              System.out.println(free.compareAndSet(12, 5));
+              System.out.println(free.compareAndSet(11, 5));
+              System.out.println(free.get());
+          }
+      }
+    answer: "false\ntrue\n5"
+    explain: "After the decrement the value is 11. The first swap expects 12, so it fails. The second expects 11, so it sets 5."
+    reteach: "## Concept"
+
+  - id: q07
+    type: predict-output
+    concept: concurrent-hash-map
+    code: |
+      import java.util.Map;
+      import java.util.concurrent.ConcurrentHashMap;
+
+      public class Main {
+          public static void main(String[] args) {
+              Map<String, Integer> docks = new ConcurrentHashMap<>();
+              docks.merge("Harbor", 3, Integer::sum);
+              docks.merge("Harbor", -1, Integer::sum);
+              System.out.println(docks.get("Harbor"));
+              System.out.println(docks.getOrDefault("Uptown", 0));
+          }
+      }
+    answer: "2\n0"
+    explain: "The first merge stores 3, the second adds -1. Uptown is missing, so getOrDefault returns 0."
+    reteach: "## Concept"
+
+  - id: q08
+    type: order
+    concept: blocking-queue
+    prompt: "Put the lines in order: a sensor thread sends one message and main prints it."
+    items:
+      - "BlockingQueue<String> q = new LinkedBlockingQueue<>();"
+      - "Thread sensor = new Thread(() -> q.add(\"Harbor:dock-1\"));"
+      - "sensor.start();"
+      - "System.out.println(q.take());"
+    explain: "Create the queue, create and start the producer, then take the item. take() waits if the item has not arrived yet."
+    reteach: "## Worked example"
+
+  - id: q09
+    type: spot-the-bug
+    concept: concurrent-hash-map
+    prompt: "Eight threads call dockEvent at once. Which line can write over another thread's update?"
+    code: |
+      Map<String, Integer> docks = new ConcurrentHashMap<>();
+      void dockEvent(String station, int change) {
+          int old = docks.getOrDefault(station, 0);
+          docks.put(station, old + change);
+      }
+    bugLine: 4
+    explain: "The read on line 3 and the put on line 4 are two steps. Another thread can update in between, and the put overwrites it. Use docks.merge(station, change, Integer::sum)."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: unsafe-collections
+    prompt: "What is Collections.synchronizedList(new ArrayList<>())?"
+    choices: ["An older thread-safe wrapper that locks on every method call", "A list that copies itself on every write", "A queue whose take() waits for items", "A faster replacement for ConcurrentHashMap"]
+    answer: 0
+    explain: "It wraps each call in synchronized. It works, but the java.util.concurrent collections usually do the job better."
+    reteach: "## Concept"

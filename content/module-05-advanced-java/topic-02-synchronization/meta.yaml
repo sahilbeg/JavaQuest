@@ -1,0 +1,24 @@
+id: module-05-advanced-java/topic-02-synchronization
+title: "Race conditions, synchronized, locks"
+order: 2
+minutes: 10
+prerequisites: [module-05-advanced-java/topic-01-threads]
+concepts: [race-condition, synchronized, reentrant-lock, check-then-act, deadlock]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m05.synchronization.Dock
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0502
+  from: sam
+  title: "Two riders unlocked the same last bike"
+  body: >
+    At rush hour two riders at Harbor both got "unlocked" for the last bike, B-1042. One of them
+    walked to an empty dock and called me, pretty upset. Also, yesterday's unlock counter says fewer
+    unlocks than we have payments. Something is losing count when lots of riders tap at once.
+hints:
+  - "Two threads must never be inside increment() or tryUnlock() at the same moment. The keyword synchronized does that."
+  - "In tryUnlock, the check (bikes > 0) and the change (bikes--) must happen inside the same synchronized method or block."
+  - "For unlockMany: make one Thread per rider. Each thread calls dock.tryUnlock() and, when it returns true, increments a shared UnlockCounter. Join them all and return counter.get()."
+review: true

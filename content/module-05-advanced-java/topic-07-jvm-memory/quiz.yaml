@@ -1,0 +1,130 @@
+topic: module-05-advanced-java/topic-07-jvm-memory
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: stack
+    variants:
+      - { prompt: "How many stacks does a program with 4 threads have?", choices: ["4, one per thread", "1, shared by all threads", "2, one for main and one for the rest", "None, only the heap"], answer: 0 }
+      - { prompt: "What does a stack frame hold?", choices: ["One method call's parameters and local variables", "Every object the program created", "The bytecode of every class", "The maximum heap size"], answer: 0 }
+    explain: "Each thread gets its own stack. Each method call pushes a frame that holds its parameters and local variables."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: heap
+    prompt: "Where does the object from new Ride(\"B-1042\", \"Harbor\", \"classic\", 12) live?"
+    choices: ["On the heap", "In the current stack frame", "In metaspace", "Inside the variable as a copy"]
+    answer: 0
+    explain: "Every object created with new lives on the heap. The variable on the stack only holds a reference."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: metaspace
+    prompt: "Which area holds class data such as a class's methods and bytecode?"
+    choices: ["Metaspace", "The heap", "The stack", "The kiosk's disk"]
+    answer: 0
+    explain: "Metaspace stores the description of each loaded class."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: stack
+    prompt: "A method calls itself with no base case. What does the JVM throw?"
+    choices: ["StackOverflowError", "OutOfMemoryError: Java heap space", "NullPointerException", "ClassNotFoundException"]
+    answer: 0
+    explain: "Each call pushes a frame. Without a base case the stack runs out of room."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: memory-leak
+    prompt: "A static List adds every ride and never removes any. What happens over many nights?"
+    choices: ["The heap fills up and the JVM throws OutOfMemoryError: Java heap space", "The stack overflows", "The JVM frees the old rides automatically", "Metaspace grows until the class is reloaded"]
+    answer: 0
+    explain: "The static list keeps every ride reachable, so none can be freed. The heap fills up."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: memory-flags
+    variants:
+      - { prompt: "Which flag sets the maximum heap size?", choices: ["-Xmx", "-Xss", "-Xlog", "-cp"], answer: 0 }
+      - { prompt: "Which flag sets the stack size of each thread?", choices: ["-Xss", "-Xmx", "-Xlog", "-cp"], answer: 0 }
+    explain: "-Xmx sets the maximum heap. -Xss sets each thread's stack size."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: memory-leak
+    prompt: "Theo doubles the Harbor kiosk's heap with -Xmx, but the leak stays. What happens?"
+    choices: ["The kiosk crashes later with the same error", "The kiosk never crashes again", "The kiosk crashes sooner", "The error turns into StackOverflowError"]
+    answer: 0
+    explain: "A bigger heap only gives the leak more room. The list still grows until the heap is full."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: fill-blank
+    concept: heap
+    prompt: "long max = Runtime.getRuntime().___();"
+    answers: ["maxMemory"]
+    explain: "maxMemory() returns the largest heap the JVM will try to use, in bytes."
+    reteach: "## Worked example"
+
+  - id: q09
+    type: fill-blank
+    concept: memory-flags
+    prompt: "java ___ Main.java    // allow at most 512 MB of heap"
+    answers: ["-Xmx512m", "-Xmx512M"]
+    explain: "-Xmx512m sets the maximum heap to 512 megabytes."
+    reteach: "## Concept"
+
+  - id: q10
+    type: predict-output
+    concept: references
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> docks = new ArrayList<>();
+              List<String> other = docks;
+              other.add("Dock 1");
+              other.add("Dock 2");
+              System.out.println(docks.size());
+              System.out.println(docks == other);
+          }
+      }
+    answer: "2\ntrue"
+    explain: "Both variables hold a reference to the same list on the heap, so docks sees both adds."
+    reteach: "## Concept"
+
+  - id: q11
+    type: predict-output
+    concept: references
+    code: |
+      public class Main {
+          static void addMinutes(int minutes) {
+              minutes = minutes + 10;
+          }
+
+          public static void main(String[] args) {
+              int minutes = 12;
+              addMinutes(minutes);
+              System.out.println(minutes);
+          }
+      }
+    answer: "12"
+    explain: "The int is copied into the new frame. Changing the copy in addMinutes leaves main's minutes alone."
+    reteach: "## Concept"
+
+  - id: q12
+    type: order
+    concept: stack
+    prompt: "main calls fare, and fare calls unlockFee. Put the stack events in order."
+    items: ["Push the frame for main", "Push the frame for fare", "Push the frame for unlockFee", "Pop the frame for unlockFee", "Pop the frame for fare"]
+    explain: "Frames follow last in, first out. The last method called is the first to return."
+    reteach: "## Concept"

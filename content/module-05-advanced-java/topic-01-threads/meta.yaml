@@ -1,0 +1,24 @@
+id: module-05-advanced-java/topic-01-threads
+title: "Threads and Runnable"
+order: 1
+minutes: 9
+prerequisites: [module-04-dsa/boss]
+concepts: [thread, runnable, start-vs-run, join, thread-names]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m05.threads.SensorCheck
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0501
+  from: theo
+  title: "Kiosk takes 40 seconds to check its docks"
+  body: >
+    Every morning at 8 the Harbor kiosk checks its 12 dock sensors one after another.
+    Each check waits on the network, so riders stand there for about 40 seconds before they can unlock.
+    A rider in a suit asked me if the kiosk was broken. Can the checks happen at the same time?
+hints:
+  - "Make one Thread per dock id, start them all, and only then wait for them with join()."
+  - "Create a String array the size of dockIds. Thread number i writes its result into slot i, so the order stays right."
+  - "Inside the loop, write int slot = i; and String id = dockIds.get(slot);. Then write threads[i] = new Thread(() -> results[slot] = readSensor(id));. For runOnNewThread, make a String[] holder of size 1. Inside the thread named \"sensor-worker\", set holder[0] = Thread.currentThread().getName();."
+review: true

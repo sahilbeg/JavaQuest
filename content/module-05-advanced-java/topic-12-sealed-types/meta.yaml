@@ -1,0 +1,25 @@
+id: module-05-advanced-java/topic-12-sealed-types
+title: "Sealed types"
+order: 12
+minutes: 9
+prerequisites: [module-05-advanced-java/topic-11-annotations]
+concepts: [sealed-permits, subclass-modifiers, records-as-permitted, closed-hierarchy, sealed-vs-enum]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m05.sealedtypes.EventLog
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0512
+  from: maya
+  title: "Dock sensor handler ignored a mystery message"
+  body: >
+    A dock sensor at Harbor only ever sends three messages: BikeDocked, BikeUndocked and Fault.
+    Last week someone added a fourth message class in another package, and our handler skipped it
+    without a word. Bike B-1042 sat in a dock for an hour while the app said the dock was free.
+    Can you lock the message family down so that can't happen again?
+hints:
+  - "The interface needs two new words: one that closes it, and one that lists who may implement it."
+  - "describe() is an if / else if chain. Each branch uses instanceof with a pattern variable, like e instanceof BikeDocked d."
+  - "Try: public sealed interface DockEvent permits BikeDocked, BikeUndocked, Fault { } and in freeDocksChange add -1 for BikeDocked and +1 for BikeUndocked."
+review: true

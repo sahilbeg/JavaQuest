@@ -1,0 +1,22 @@
+id: module-05-advanced-java/topic-09-classloading
+title: "Class loading"
+order: 9
+minutes: 9
+prerequisites: [module-05-advanced-java/topic-08-garbage-collection]
+concepts: [class-lifecycle, static-initializers, class-loaders, parent-delegation, classpath, class-errors]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0509
+  from: maya
+  title: "New kiosk build dies at start-up with NoClassDefFoundError"
+  body: >
+    The new build compiled fine on my laptop, but the Old Mill kiosk dies at start-up with
+    "NoClassDefFoundError: jq/kiosk/FareTable". Half the team says "it's the classpath" and
+    nobody can explain what that means. Can you work out how Java finds classes at run time?
+hints:
+  - "Compiling and running are separate steps. Each one looks for classes on its own path."
+  - "The application class loader searches the classpath you pass with -cp."
+  - "NoClassDefFoundError means a class was there at compile time but is missing or broken at run time. Check the run-time classpath."
+review: true

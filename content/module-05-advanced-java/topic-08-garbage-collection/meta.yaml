@@ -1,0 +1,22 @@
+id: module-05-advanced-java/topic-08-garbage-collection
+title: "Garbage collection"
+order: 8
+minutes: 9
+prerequisites: [module-05-advanced-java/topic-07-jvm-memory]
+concepts: [reachability, generations, gc-pauses, collectors, gc-leaks, weak-references]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0508
+  from: theo
+  title: "Uptown kiosk freezes for a moment every hour"
+  body: >
+    About once an hour the Uptown kiosk freezes for a second. A rider tapping "unlock" just sees
+    a spinner. The logs show a line with "GC pause" right at that time. What is GC, and why does
+    it stop our kiosk?
+hints:
+  - "The garbage collector frees objects that nothing can reach any more."
+  - "Start from the GC roots: live stack variables and static fields. Anything you cannot reach from them is garbage."
+  - "Long pauses come from big collections of the old generation. Objects that pile up there make those pauses worse."
+review: true

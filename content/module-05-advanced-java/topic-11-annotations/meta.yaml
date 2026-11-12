@@ -1,0 +1,25 @@
+id: module-05-advanced-java/topic-11-annotations
+title: "Annotations and a tiny processor"
+order: 11
+minutes: 10
+prerequisites: [module-05-advanced-java/topic-10-reflection]
+concepts: [built-in-annotations, declaring-annotations, annotation-elements, retention-and-target, reading-annotations, annotation-processing]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m05.annotations.Validator
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0511
+  from: priya
+  title: "Kiosk settings that check themselves"
+  body: >
+    Every new kiosk setting comes with a hand-written check: the station name must not be empty,
+    and the dock count must be between 1 and 12. Last week someone set Uptown to 40 docks and no
+    check caught it, because the check was never updated. Can the rules live right next to the
+    settings, so they cannot drift apart?
+hints:
+  - "An annotation is invisible at run time unless it says so. Put @Retention(RetentionPolicy.RUNTIME) above both @interface declarations."
+  - "In validate, loop over settings.getClass().getDeclaredFields(), call field.setAccessible(true) and read Object value = field.get(settings) inside try and catch."
+  - "Use field.isAnnotationPresent(NotBlank.class) with value == null || value.toString().isBlank(). For the range, Range range = field.getAnnotation(Range.class); then check value instanceof Integer number and compare number with range.min() and range.max()."
+review: true

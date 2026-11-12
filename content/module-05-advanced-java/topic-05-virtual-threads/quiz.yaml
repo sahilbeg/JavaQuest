@@ -1,0 +1,125 @@
+topic: module-05-advanced-java/topic-05-virtual-threads
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: platform-vs-virtual
+    variants:
+      - { prompt: "What happens to a virtual thread while it waits on the payment service?", choices: ["The JVM parks it and frees its carrier thread", "It keeps its OS thread busy until the answer arrives", "The JVM stops it and starts it again from the top", "It turns into a platform thread"], answer: 0 }
+      - { prompt: "Why can you start far more virtual threads than platform threads?", choices: ["Each platform thread holds an expensive OS thread, and virtual threads share a few carriers", "Virtual threads skip the run method", "Virtual threads run only one at a time", "Platform threads are not allowed to sleep"], answer: 0 }
+    explain: "A platform thread holds one OS thread for its whole life. Virtual threads ride on a few carrier threads and get parked while they wait."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: when-to-use
+    prompt: "Which job gains the most from virtual threads?"
+    choices: ["5,000 calls to a slow payment service", "Counting primes below 50 million", "Sorting one huge array", "Adding up fares in a tight loop"]
+    answer: 0
+    explain: "Virtual threads help when tasks spend their time waiting (I/O). CPU-heavy work keeps a carrier busy, so it runs no faster."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: pinning
+    prompt: "On Java 21, which code risks pinning a virtual thread to its carrier?"
+    choices: ["A slow network call inside a synchronized block", "A call to Thread.sleep outside any lock", "Calling isVirtual()", "Submitting a task to newVirtualThreadPerTaskExecutor"]
+    answer: 0
+    explain: "Waiting inside synchronized code can pin the virtual thread, so its carrier stays blocked."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: virtual-executor
+    prompt: "try (ExecutorService pool = Executors.___()) {"
+    answers: ["newVirtualThreadPerTaskExecutor"]
+    explain: "newVirtualThreadPerTaskExecutor starts one new virtual thread for each submitted task."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: starting-virtual-threads
+    prompt: "Thread t = Thread.___().start(() -> pay(7));"
+    answers: ["ofVirtual"]
+    explain: "Thread.ofVirtual() returns a builder, and start(...) creates and starts the virtual thread."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: platform-vs-virtual
+    code: |
+      public class Main {
+          public static void main(String[] args) throws InterruptedException {
+              Thread t = Thread.ofVirtual().start(() ->
+                  System.out.println("inside: " + Thread.currentThread().isVirtual()));
+              t.join();
+              System.out.println("main: " + Thread.currentThread().isVirtual());
+          }
+      }
+    answer: "inside: true\nmain: false"
+    explain: "The lambda runs on the virtual thread. The last line runs on main, which is a platform thread. join() makes the order fixed."
+    reteach: "## Concept"
+
+  - id: q07
+    type: predict-output
+    concept: virtual-executor
+    code: |
+      import java.util.concurrent.ExecutorService;
+      import java.util.concurrent.Executors;
+      import java.util.concurrent.atomic.AtomicInteger;
+
+      public class Main {
+          public static void main(String[] args) {
+              AtomicInteger paid = new AtomicInteger();
+              try (ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor()) {
+                  for (int i = 0; i < 500; i++) {
+                      pool.submit(() -> paid.incrementAndGet());
+                  }
+              }
+              System.out.println(paid.get());
+          }
+      }
+    answer: "500"
+    explain: "Closing the executor at the end of the try block waits for all 500 tasks. AtomicInteger never loses an update."
+    reteach: "## Concept"
+
+  - id: q08
+    type: order
+    concept: virtual-executor
+    prompt: "Put the lines in order to pay three riders on virtual threads and then print done."
+    items:
+      - "try (ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor()) {"
+      - "    for (int r = 1; r <= 3; r++) {"
+      - "        int rider = r;"
+      - "        pool.submit(() -> pay(rider));"
+      - "    }"
+      - "}"
+      - "System.out.println(\"done\");"
+    explain: "Open the executor, submit inside the loop, close the block so it waits, then print."
+    reteach: "## Worked example"
+
+  - id: q09
+    type: spot-the-bug
+    concept: starting-virtual-threads
+    prompt: "This program should print working and then true. Which line gives the wrong answer?"
+    code: |
+      public class Main {
+          public static void main(String[] args) throws InterruptedException {
+              Thread t = Thread.startVirtualThread(() -> System.out.println("working"));
+              t.join();
+              System.out.println(Thread.currentThread().isVirtual());
+          }
+      }
+    bugLine: 5
+    explain: "Thread.currentThread() on line 5 is main, a platform thread, so it prints false. Use t.isVirtual() instead."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: virtual-executor
+    prompt: "What does close() do on a virtual-thread executor at the end of try-with-resources?"
+    choices: ["Waits for every submitted task to finish, then shuts the executor down", "Stops all running tasks at once", "Returns the number of finished tasks", "Nothing, virtual executors never need closing"]
+    answer: 0
+    explain: "close() waits for all submitted tasks and then shuts down, so code after the block sees every result."
+    reteach: "## Concept"

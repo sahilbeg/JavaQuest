@@ -1,0 +1,25 @@
+id: module-05-advanced-java/topic-10-reflection
+title: "Reflection"
+order: 10
+minutes: 10
+prerequisites: [module-05-advanced-java/topic-09-classloading]
+concepts: [class-objects, reading-fields, invoking-methods, creating-objects, record-components, reflection-costs]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m05.reflection.DebugPrinter
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0510
+  from: sam
+  title: "One debug screen for every Spoke object"
+  body: >
+    A rider at Old Mill swears bike B-1042 showed 80 percent battery and then died. To check, I
+    need to see every field of the Bike, the Station and the Ride, and right now each class needs
+    its own printer. Could the debug screen show the fields of any object without someone writing
+    a printer for each class?
+hints:
+  - "Start describe with Class<?> type = o.getClass(); and loop: for (Field field : type.getDeclaredFields()). Skip a field when Modifier.isStatic(field.getModifiers()) is true."
+  - "Private fields need field.setAccessible(true) before field.get(o). field.get throws IllegalAccessException, so wrap it in try and catch (IllegalAccessException e). Collect \"name=value\" texts in a list and finish with type.getSimpleName() + \"{\" + String.join(\", \", parts) + \"}\"."
+  - "create is Class.forName(className).getDeclaredConstructor().newInstance() inside try. Catch ReflectiveOperationException and throw new IllegalArgumentException(\"No class called \" + className). callNoArg is target.getClass().getMethod(methodName).invoke(target)."
+review: true

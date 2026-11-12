@@ -46,6 +46,10 @@ public final class PracticeRunner {
     }
 
     public TestRunResult run(Path mainSources, Path testSources) throws IOException, InterruptedException {
+        return run(mainSources, testSources, limits.timeout());
+    }
+
+    public TestRunResult run(Path mainSources, Path testSources, Duration timeout) throws IOException, InterruptedException {
         mainSources = mainSources.toAbsolutePath().normalize();
         testSources = testSources.toAbsolutePath().normalize();
         long started = System.nanoTime();
@@ -62,7 +66,7 @@ public final class PracticeRunner {
             if (!errors.isEmpty()) {
                 return new TestRunResult(Outcome.COMPILE_ERROR, List.of(), errors, "", elapsedSince(started));
             }
-            return runTests(workDir, mainClasses, testClasses, started);
+            return runTests(workDir, mainClasses, testClasses, started, timeout);
         } finally {
             deleteRecursively(workDir);
         }
@@ -115,7 +119,7 @@ public final class PracticeRunner {
             if (!errors.isEmpty()) {
                 return new ProgramResult(ProgramResult.Status.COMPILE_ERROR, errors, "", elapsedSince(started));
             }
-            Finished run = spawn(jvmCommand(workDir, List.of(classes), List.of(mainClass)), workDir);
+            Finished run = spawn(jvmCommand(workDir, List.of(classes), List.of(mainClass)), workDir, limits.timeout());
             ProgramResult.Status status = !run.inTime() ? ProgramResult.Status.TIMED_OUT
                     : run.exitCode() == 0 ? ProgramResult.Status.COMPLETED : ProgramResult.Status.EXCEPTION;
             return new ProgramResult(status, List.of(), run.output(), elapsedSince(started));
@@ -136,7 +140,7 @@ public final class PracticeRunner {
         }
     }
 
-    private TestRunResult runTests(Path workDir, Path mainClasses, Path testClasses, long started)
+    private TestRunResult runTests(Path workDir, Path mainClasses, Path testClasses, long started, Duration timeout)
             throws IOException, InterruptedException {
         Path reportsDir = workDir.resolve("reports");
         var classpath = new ArrayList<>(testRuntimeClasspath);
@@ -146,7 +150,7 @@ public final class PracticeRunner {
                 "org.junit.platform.console.ConsoleLauncher", "execute",
                 "--scan-classpath", testClasses.toString(),
                 "--reports-dir", reportsDir.toString(),
-                "--disable-banner", "--details=none", "--disable-ansi-colors")), workDir);
+                "--disable-banner", "--details=none", "--disable-ansi-colors")), workDir, timeout);
         String text = LauncherOutput.withoutSummary(run.output());
         Duration duration = elapsedSince(started);
         if (!run.inTime()) {
@@ -183,7 +187,7 @@ public final class PracticeRunner {
 
     private record Finished(boolean inTime, int exitCode, String output) {}
 
-    private Finished spawn(List<String> command, Path workDir) throws IOException, InterruptedException {
+    private Finished spawn(List<String> command, Path workDir, Duration timeout) throws IOException, InterruptedException {
         Process process = new ProcessBuilder(command)
                 .directory(workDir.toFile())
                 .redirectErrorStream(true)
@@ -191,7 +195,7 @@ public final class PracticeRunner {
         process.getOutputStream().close();
         var output = new CappedOutput(process.getInputStream(), limits.maxOutputBytes());
         Thread reader = Thread.ofVirtual().start(output::drain);
-        boolean finished = process.waitFor(limits.timeout().toMillis(), TimeUnit.MILLISECONDS);
+        boolean finished = process.waitFor(timeout.toMillis(), TimeUnit.MILLISECONDS);
         if (!finished) {
             process.descendants().forEach(ProcessHandle::destroyForcibly);
             process.destroyForcibly();

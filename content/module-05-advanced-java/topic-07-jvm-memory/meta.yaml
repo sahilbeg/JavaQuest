@@ -1,0 +1,22 @@
+id: module-05-advanced-java/topic-07-jvm-memory
+title: "JVM memory: stack, heap, metaspace"
+order: 7
+minutes: 9
+prerequisites: [module-05-advanced-java/topic-06-concurrent-collections]
+concepts: [stack, heap, metaspace, references, memory-flags, memory-leak]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0507
+  from: priya
+  title: "The Harbor kiosk ran out of memory overnight"
+  body: >
+    The Harbor kiosk crashed at 3 a.m. and the log says "java.lang.OutOfMemoryError: Java heap space".
+    Theo wants to buy bigger kiosks with more memory. Before I sign that order, I want to know what
+    actually ran out and whether more memory would even fix it.
+hints:
+  - "Think about where each thing lives: local variables in a frame, objects somewhere shared."
+  - "Every new object goes on the heap. A frame on the stack only holds references to it."
+  - "Heap space errors mean too many objects stay reachable. A static list that never shrinks is a classic cause."
+review: true

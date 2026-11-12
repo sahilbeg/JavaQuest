@@ -1,0 +1,24 @@
+id: module-05-advanced-java/topic-04-completable-future
+title: "CompletableFuture"
+order: 4
+minutes: 10
+prerequisites: [module-05-advanced-java/topic-03-executors]
+concepts: [supply-async, then-apply-compose, then-combine, all-of, error-handling, custom-executor]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m05.completablefuture.UnlockFlow
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0504
+  from: maya
+  title: "Unlocking a bike waits on three services in a row"
+  body: >
+    When a rider taps unlock at Riverside, the kiosk calls payment, then the lock, then the receipt service.
+    Each call waits for the one before it. At rush hour payment is slow, so the lock sits there doing nothing.
+    A rider missed her train this morning waiting for B-1042. Can payment and the lock run at the same time?
+hints:
+  - "Start charge(riderId) and releaseLock(bikeId) with two CompletableFuture.supplyAsync calls, so both run at once."
+  - "Chain the receipt on the payment with thenCompose, then join it with the lock using thenCombine. For the fallback, add .exceptionally(...) to the result of unlock."
+  - "In unlockOrFallback, the exception is wrapped: use if (ex instanceof CompletionException && ex.getCause() != null) to reach the real message. In unlockAll, build a list of futures, call CompletableFuture.allOf(...).join(), then join each one in order."
+review: true

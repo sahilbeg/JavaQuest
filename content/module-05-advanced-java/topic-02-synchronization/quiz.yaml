@@ -1,0 +1,135 @@
+topic: module-05-advanced-java/topic-02-synchronization
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: race-condition
+    variants:
+      - { prompt: "Why can count++ lose updates when two threads run it?", choices: ["It is three steps: read, add, write, and another thread can slip in between", "Java skips ++ on threads", "int cannot hold big numbers", "count++ only works in the main thread"], answer: 0 }
+      - { prompt: "What is a race condition?", choices: ["A bug whose result depends on which thread happens to run first", "A thread that runs faster than the others", "A loop that never ends", "A compile error about threads"], answer: 0 }
+    explain: "count++ reads, adds and writes. Two threads can both read the same old value, so one update is lost."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: synchronized
+    prompt: "What does marking a method synchronized do?"
+    choices: ["Only one thread at a time can run synchronized methods on that object", "The method runs on a new thread", "The method runs twice as fast", "The method can no longer be called from main"]
+    answer: 0
+    explain: "A synchronized method takes the object's intrinsic lock, and only one thread can hold it."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: synchronized
+    prompt: "___ void increment() { count++; }"
+    answers: ["synchronized", "public synchronized", "synchronized public"]
+    explain: "The synchronized keyword makes the method take the object's lock."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: synchronized
+    code: |
+      public class Main {
+          public static void main(String[] args) throws InterruptedException {
+              Counter c = new Counter();
+              Runnable job = () -> {
+                  for (int i = 0; i < 1000; i++) {
+                      c.increment();
+                  }
+              };
+              Thread a = new Thread(job);
+              Thread b = new Thread(job);
+              a.start();
+              b.start();
+              a.join();
+              b.join();
+              System.out.println(c.get());
+          }
+      }
+
+      class Counter {
+          private int count = 0;
+
+          synchronized void increment() {
+              count++;
+          }
+
+          synchronized int get() {
+              return count;
+          }
+      }
+    answer: "2000"
+    explain: "Both methods are synchronized, and main joins both threads, so no update is lost."
+    reteach: "## Concept"
+
+  - id: q05
+    type: order
+    concept: reentrant-lock
+    prompt: "Put the lines in order to protect count with a ReentrantLock."
+    items:
+      - "lock.lock();"
+      - "try {"
+      - "    count++;"
+      - "} finally {"
+      - "    lock.unlock();"
+      - "}"
+    explain: "Take the lock, do the work in try, and give the lock back in finally."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: reentrant-lock
+    prompt: "Why does lock.unlock() go inside a finally block?"
+    choices: ["So the lock is given back even if the work throws an exception", "Because unlock() only compiles inside finally", "So the work runs on a new thread", "To make the lock reentrant"]
+    answer: 0
+    explain: "finally always runs. Without it, an exception would leave the lock held forever."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: spot-the-bug
+    concept: check-then-act
+    prompt: "Which line is missing a keyword that would stop two riders getting the last bike?"
+    code: |
+      class Dock {
+          private int bikes = 1;
+
+          boolean tryUnlock() {
+              if (bikes > 0) {
+                  bikes--;
+                  return true;
+              }
+              return false;
+          }
+      }
+    bugLine: 4
+    explain: "tryUnlock is not synchronized, so two threads can both pass the check before either takes the bike. Add synchronized to line 4."
+    reteach: "## Concept"
+
+  - id: q08
+    type: mcq
+    concept: deadlock
+    prompt: "Thread A locks Harbor then Uptown. Thread B locks Uptown then Harbor. What can happen?"
+    choices: ["A deadlock: each holds one lock and waits forever for the other", "Both finish faster", "A compile error", "The count goes negative"]
+    answer: 0
+    explain: "Taking two locks in opposite order can leave each thread waiting for the other forever."
+    reteach: "## Concept"
+
+  - id: q09
+    type: mcq
+    concept: deadlock
+    prompt: "What is the usual fix for a deadlock caused by two locks?"
+    choices: ["Every thread takes the locks in the same fixed order", "Call Thread.sleep before each lock", "Remove all locks", "Start the threads in a different order"]
+    answer: 0
+    explain: "If every thread takes lock 1 before lock 2, no thread can hold lock 2 while waiting for lock 1."
+    reteach: "## Concept"
+
+  - id: q10
+    type: fill-blank
+    concept: check-then-act
+    prompt: "synchronized (___) { if (bikes > 0) { bikes--; } }   // lock (the current object)"
+    answers: ["this"]
+    explain: "A synchronized block names the object whose lock it takes. Inside an instance method, this is the usual choice."
+    reteach: "## Concept"

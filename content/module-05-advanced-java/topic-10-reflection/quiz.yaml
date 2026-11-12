@@ -1,0 +1,148 @@
+topic: module-05-advanced-java/topic-10-reflection
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: class-objects
+    variants:
+      - { prompt: "Which line gets a Class object from text at run time?", choices: ["Class.forName(\"jq.m05.reflection.Bike\")", "Bike.class", "bike.getClass()", "new Class(\"Bike\")"], answer: 0 }
+      - { prompt: "You only know the class name as a String read from a settings file. Which call gives you its Class object?", choices: ["Class.forName(name)", "name.getClass()", "name.class", "Class.of(name)"], answer: 0 }
+    explain: "Class.forName takes the fully qualified name as text. Bike.class and getClass() need the class or an object in your code."
+    reteach: "## Concept"
+
+  - id: q02
+    type: predict-output
+    concept: class-objects
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Bike bike = new Bike();
+              System.out.println(bike.getClass().getSimpleName());
+              System.out.println(bike.getClass() == Bike.class);
+          }
+      }
+
+      class Bike {
+      }
+    answer: "Bike\ntrue"
+    explain: "getSimpleName() gives the class name without the package. The JVM keeps one Class object per class, so both ways give the same object."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: reading-fields
+    code: |
+      import java.lang.reflect.Field;
+
+      public class Main {
+          public static void main(String[] args) throws Exception {
+              Station station = new Station();
+              Field field = Station.class.getDeclaredField("docks");
+              field.setAccessible(true);
+              System.out.println(field.getName() + "=" + field.get(station));
+          }
+      }
+
+      class Station {
+          private String name = "Uptown";
+          private int docks = 12;
+      }
+    answer: "docks=12"
+    explain: "getDeclaredField finds the private field by name. setAccessible(true) allows the read, and get returns 12."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: reading-fields
+    prompt: "field.___(true);"
+    answers: ["setAccessible"]
+    explain: "setAccessible(true) switches off the private check so get can read the field."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: reading-fields
+    prompt: "What does getDeclaredFields() return?"
+    choices: ["Every field written in this class, private ones included", "Only the public fields, inherited ones included", "Only the static fields", "The values of the fields"]
+    answer: 0
+    explain: "Declared means written in this class. Private fields count, inherited ones do not. getFields() is the one that gives public fields."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: invoking-methods
+    code: |
+      import java.lang.reflect.Method;
+
+      public class Main {
+          public static void main(String[] args) throws Exception {
+              Bike bike = new Bike();
+              Method method = Bike.class.getMethod("isLow");
+              System.out.println(method.invoke(bike));
+          }
+      }
+
+      class Bike {
+          private int battery = 15;
+
+          public boolean isLow() {
+              return battery < 20;
+          }
+      }
+    answer: "true"
+    explain: "invoke calls isLow on the bike. The battery is 15, which is below 20."
+    reteach: "## Concept"
+
+  - id: q07
+    type: fill-blank
+    concept: creating-objects
+    prompt: "Object station = type.___().newInstance();"
+    answers: ["getDeclaredConstructor"]
+    explain: "getDeclaredConstructor() with no arguments finds the no-arg constructor, even when it is not public. newInstance() then calls it."
+    reteach: "## Concept"
+
+  - id: q08
+    type: order
+    concept: creating-objects
+    prompt: "Put the lines in order to build an object from its name and call one method."
+    items:
+      - "Class<?> type = Class.forName(\"Station\");"
+      - "Object station = type.getDeclaredConstructor().newInstance();"
+      - "Method method = type.getMethod(\"freeDocks\");"
+      - "System.out.println(method.invoke(station));"
+    explain: "You need the Class first, then an object, then the Method, and only then can you invoke it on the object."
+    reteach: "## Concept"
+
+  - id: q09
+    type: mcq
+    concept: record-components
+    prompt: "Which call lists the parts of a record in the order of its header?"
+    choices: ["getRecordComponents()", "getDeclaredMethods()", "getParts()", "getDeclaredConstructors()"]
+    answer: 0
+    explain: "getRecordComponents() returns one RecordComponent per part, in header order. Each one knows its name and its accessor method."
+    reteach: "## Concept"
+
+  - id: q10
+    type: spot-the-bug
+    concept: reflection-costs
+    prompt: "The class Bike has a public method isLow(). Which line crashes at run time?"
+    code: |
+      import java.lang.reflect.Method;
+
+      public class Main {
+          public static void main(String[] args) throws Exception {
+              Bike bike = new Bike();
+              Method method = Bike.class.getMethod("isLowBattery");
+              System.out.println(method.invoke(bike));
+          }
+      }
+
+      class Bike {
+          public boolean isLow() {
+              return false;
+          }
+      }
+    bugLine: 6
+    explain: "The method name is misspelled. The compiler cannot check text, so line 6 throws NoSuchMethodException at run time. That is one cost of reflection."
+    reteach: "## Concept"
