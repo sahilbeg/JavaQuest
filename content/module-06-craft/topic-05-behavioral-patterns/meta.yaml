@@ -1,0 +1,24 @@
+id: module-06-craft/topic-05-behavioral-patterns
+title: "Behavioral patterns: strategy, observer, command"
+order: 5
+minutes: 10
+prerequisites: [module-06-craft/topic-04-structural-patterns]
+concepts: [strategy, observer, unsubscribe, command, undo-history]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0605
+  from: priya
+  title: "Prices that change with the weather, and an undo button"
+  body: >
+    When it rains we want half price, and on marathon day Uptown needs a surge, so pricing has to
+    switch without a redeploy. When a ride on B-1042 ends, the app, the email service and the dashboard
+    all need to hear about it. And Sam's team set Harbor to 2 docks by mistake last week, so admins need
+    an undo.
+hints:
+  - "Each pricing class has one job. RainDiscount and Surge do not know the fare rule: they ask the strategy they wrap."
+  - "RideEvents needs a List<Consumer<String>>. The Runnable that subscribe returns can be a lambda that removes the same subscriber."
+  - "SetDocks.execute saves station.docks() in a field before calling setDocks. CommandHistory keeps an ArrayDeque: push in run, pop in undo, and return false if it is empty."
+review: true

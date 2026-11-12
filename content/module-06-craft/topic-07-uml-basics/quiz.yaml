@@ -1,0 +1,120 @@
+topic: module-06-craft/topic-07-uml-basics
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: class-box
+    prompt: "In what order does a UML class box list its parts, from top to bottom?"
+    choices: ["Name, fields, methods", "Methods, fields, name", "Name, methods, fields", "Fields, name, methods"]
+    answer: 0
+    explain: "The name goes on top, then the fields, then the methods."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: visibility
+    variants:
+      - { prompt: "In a class box, what does -int minutes mean?", choices: ["A private int field called minutes", "A public int field called minutes", "A protected int field called minutes", "A method that subtracts minutes"], answer: 0 }
+      - { prompt: "In a class box, what does +fareCents() long mean?", choices: ["A public method fareCents that returns a long", "A private method fareCents that returns a long", "A protected field called fareCents", "A method that adds a long to the fare"], answer: 0 }
+      - { prompt: "Which mark means protected in a class box?", choices: ["#", "+", "-", "*"], answer: 0 }
+    explain: "+ means public, - means private and # means protected."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: relationships
+    variants:
+      - { prompt: "A station holds bikes, and a bike survives when it rides away to Uptown. Which line fits?", choices: ["Aggregation, a hollow diamond at Station", "Composition, a filled diamond at Station", "Inheritance, a hollow triangle at Station", "Realization, a dashed triangle at Station"], answer: 0 }
+      - { prompt: "A ride creates its own receipt, and the receipt means nothing without the ride. Which line fits?", choices: ["Composition, a filled diamond at Ride", "Aggregation, a hollow diamond at Ride", "Inheritance, a hollow triangle at Ride", "A dashed dependency arrow"], answer: 0 }
+    explain: "Parts that live on their own are aggregation (hollow). Parts that die with the whole are composition (filled)."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: relationships
+    prompt: "Which Mermaid line says that Card implements the PaymentMethod interface?"
+    choices: ["PaymentMethod <|.. Card", "PaymentMethod <|-- Card", "PaymentMethod *-- Card", "PaymentMethod o-- Card"]
+    answer: 0
+    explain: "A dashed line with a hollow triangle is realization, which is implements in Java."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: relationships
+    prompt: "What Java does Bike <|-- EBike describe?"
+    choices: ["class EBike extends Bike", "class Bike extends EBike", "class EBike implements Bike", "class Bike has a field of type EBike"]
+    answer: 0
+    explain: "A solid line with a hollow triangle is inheritance. The triangle sits at the parent."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: multiplicity
+    variants:
+      - { prompt: "The diagram says Rider \"1\" --> \"*\" Ride. What field fits in Rider?", choices: ["List<Ride> rides", "Ride ride", "Optional<Ride> ride", "Rider[] riders"], answer: 0 }
+      - { prompt: "The diagram says Ride \"*\" --> \"1\" Bike. What field fits in Ride?", choices: ["Bike bike", "List<Bike> bikes", "Optional<Bike> bike", "No field at all"], answer: 0 }
+    explain: "The mark next to a class says how many of it there are. * becomes a list, 1 becomes a plain field."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: multiplicity
+    prompt: "What does 0..1 mean next to PaymentMethod?"
+    choices: ["None or one payment method", "Exactly one payment method", "At least one payment method", "Between zero and one cent"]
+    answer: 0
+    explain: "0..1 means the object may be missing, or there is exactly one."
+    reteach: "## Concept"
+
+  - id: q08
+    type: mcq
+    concept: sequence-diagram
+    variants:
+      - { prompt: "In a sequence diagram, what does a dashed arrow (-->>) show?", choices: ["A return value coming back to the caller", "A new object being created", "A class that implements an interface", "A loop"], answer: 0 }
+      - { prompt: "In a sequence diagram, what does a solid arrow (->>) show?", choices: ["A call where the caller waits for the answer", "A return value", "Inheritance", "A comment"], answer: 0 }
+    explain: "Solid arrows are synchronous calls. Dashed arrows are returns."
+    reteach: "## Concept"
+
+  - id: q09
+    type: mcq
+    concept: sequence-diagram
+    prompt: "What does the thin activation bar on PaymentService's lifeline show?"
+    choices: ["The time PaymentService is busy working", "How much money was charged", "That PaymentService is an interface", "How many objects exist"]
+    answer: 0
+    explain: "An activation runs from the call that starts the work to the return that ends it."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: fragments
+    variants:
+      - { prompt: "Which fragment shows 'authorize succeeded' and 'card declined' as two branches?", choices: ["alt", "loop", "par", "note"], answer: 0 }
+      - { prompt: "Which fragment shows the app checking the lock status again and again?", choices: ["loop", "alt", "else", "participant"], answer: 0 }
+    explain: "alt is like if and else. loop is like a Java loop."
+    reteach: "## Concept"
+
+  - id: q11
+    type: order
+    concept: sequence-diagram
+    prompt: "Put the arrows of the unlock sequence in order, top to bottom."
+    items:
+      - "Rider->>App: tapUnlock(\"B-1042\")"
+      - "App->>PaymentService: authorize(riderId)"
+      - "PaymentService-->>App: true"
+      - "App->>Lock: open()"
+      - "Lock-->>App: opened"
+      - "App-->>Rider: \"Ride started\""
+    explain: "Time runs down. The app must hear back from payments before it opens the lock."
+    reteach: "## Worked example"
+
+  - id: q12
+    type: order
+    concept: class-box
+    prompt: "Put the lines of a Mermaid class box for Ride in order."
+    items:
+      - "class Ride {"
+      - "    -int minutes"
+      - "    +fareCents() long"
+      - "}"
+    explain: "Name first, then fields, then methods, then the closing brace."
+    reteach: "## Concept"

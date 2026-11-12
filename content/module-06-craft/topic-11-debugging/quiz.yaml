@@ -1,0 +1,118 @@
+topic: module-06-craft/topic-11-debugging
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: stack-trace
+    variants:
+      - { prompt: "A trace has frames from java.base, then jq.m06.debugging.RideParser.parse, then Main.main. Which line should you read first?", choices: ["The RideParser.parse line, the first one in your own code", "The very last line, Main.main", "The first java.base line", "None, rerun the program instead"], answer: 0 }
+      - { prompt: "In a stack trace, what does the top at line show?", choices: ["Where the exception happened", "Where the program started", "The line that caught the exception", "The newest commit"], answer: 0 }
+    explain: "The top frame is where the exception happened. The first frame from your own package is usually where the bug lives."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: null-pointer
+    prompt: "The message says: Cannot invoke \"java.lang.Integer.intValue()\" because the return value of \"java.util.Map.get(Object)\" is null. What happened?"
+    choices: ["The map had no entry for that key, and Java unboxed the null into an int", "The map itself was null", "The key was null", "intValue() has a bug in the JDK"]
+    answer: 0
+    explain: "map.get returns null for a missing key. Returning it as an int makes Java call intValue() on null."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: stepping
+    variants:
+      - { prompt: "You are paused on a line that calls parse(line). Which button takes you inside parse?", choices: ["Step into", "Step over", "Step out", "Resume"], answer: 0 }
+      - { prompt: "You are deep inside a helper method and want to get back to the caller. Which button?", choices: ["Step out", "Step into", "Step over", "Add breakpoint"], answer: 0 }
+    explain: "Step into enters a call, step over runs it in one go, step out finishes the current method."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: breakpoints
+    prompt: "A loop imports 10,000 ride lines and only the line for B-1042 crashes. What helps most?"
+    choices: ["A conditional breakpoint with line.startsWith(\"B-1042\")", "A plain breakpoint, then pressing Resume 10,000 times", "Deleting the loop", "Reading the JDK source of split"]
+    answer: 0
+    explain: "A conditional breakpoint only pauses when its expression is true."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: bug-hunting
+    prompt: "The fare was right in last month's release and is wrong today, with 200 commits in between. Which tool finds the commit that broke it?"
+    choices: ["git bisect", "git log --oneline", "A breakpoint on main", "A rubber duck"]
+    answer: 0
+    explain: "git bisect does a binary search over commits. About 8 checks cover 200 commits."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: bug-hunting
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              long paid = 280;
+              int lost = 6;
+              int total = 12;
+              System.out.println(paid * (lost / total));
+              System.out.println(paid * lost / total);
+          }
+      }
+    answer: "0\n140"
+    explain: "6 / 12 in int maths is 0. Multiplying first gives 1680 / 12, which is 140."
+    reteach: "## Worked example"
+
+  - id: q07
+    type: predict-output
+    concept: stack-trace
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String[] parts = "B-1042,Harbor,12,".split(",");
+              String[] all = "B-1042,Harbor,12,".split(",", -1);
+              System.out.println(parts.length);
+              System.out.println(all.length);
+          }
+      }
+    answer: "3\n4"
+    explain: "split drops empty strings at the end. A limit of -1 keeps them."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: fill-blank
+    concept: null-pointer
+    prompt: "return freeDocks.___(station, 0);"
+    answers: ["getOrDefault"]
+    explain: "getOrDefault returns 0 when the station is missing, so nothing null gets unboxed."
+    reteach: "## Concept"
+
+  - id: q09
+    type: order
+    concept: reproduce-first
+    prompt: "Put the steps for fixing a crash report in order."
+    items:
+      - "Read the trace and find the first line in your own code"
+      - "Write a test that fails the same way as the report"
+      - "Debug the failing test with a breakpoint on that line"
+      - "Change the code"
+      - "Run the test and see it pass"
+    explain: "Find the spot, reproduce it, understand it, fix it, then prove the fix."
+    reteach: "## Concept"
+
+  - id: q10
+    type: spot-the-bug
+    concept: stack-trace
+    prompt: "When this method fails, its stack trace hides the real reason. Which line causes that?"
+    code: |
+      int readMinutes(String line) {
+          try {
+              return Integer.parseInt(line.split(",")[2]);
+          } catch (NumberFormatException e) {
+              throw new IllegalStateException("bad minutes in " + line);
+          }
+      }
+    bugLine: 5
+    explain: "The new exception drops e, so the trace loses its Caused by. Pass e as the second argument."
+    reteach: "## Common mistakes"

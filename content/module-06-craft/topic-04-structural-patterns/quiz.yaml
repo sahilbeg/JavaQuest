@@ -1,0 +1,173 @@
+topic: module-06-craft/topic-04-structural-patterns
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: adapter
+    variants:
+      - { prompt: "Which pattern makes a class you cannot change fit your own interface?", choices: ["Adapter", "Decorator", "Facade", "Singleton"], answer: 0 }
+      - { prompt: "OldLock has engage() and disengage() but your app expects Lock with open() and close(). What do you write?", choices: ["An adapter that implements Lock and holds an OldLock", "A decorator that extends OldLock", "A facade with one static method", "A new enum for every lock"], answer: 0 }
+    explain: "An adapter implements your interface and translates each call to the foreign object it holds."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: adapter
+    prompt: "public boolean open(String bikeId) { return old.disengage(bikeId) ___ 0; }"
+    answers: ["=="]
+    explain: "The old lock returns 0 for ok. Comparing the code with == 0 turns it into true or false."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: decorator
+    prompt: "What makes a class a decorator?"
+    choices: ["It implements an interface and wraps another object of the same interface", "It extends the class it changes", "It has only static methods", "It hides several different subsystems"]
+    answer: 0
+    explain: "Same interface outside, same interface inside. That is why decorators can be stacked."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: decorator
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Counter outer = new Counter(new Retry(new Flaky()));
+              System.out.println(outer.open("B-1042"));
+              System.out.println(outer.count);
+          }
+      }
+
+      interface Lock { boolean open(String id); }
+
+      class Flaky implements Lock {
+          int tries = 0;
+          public boolean open(String id) {
+              tries++;
+              return tries > 1;
+          }
+      }
+
+      class Retry implements Lock {
+          private final Lock inner;
+          Retry(Lock inner) { this.inner = inner; }
+          public boolean open(String id) {
+              if (inner.open(id)) {
+                  return true;
+              }
+              return inner.open(id);
+          }
+      }
+
+      class Counter implements Lock {
+          private final Lock inner;
+          int count = 0;
+          Counter(Lock inner) { this.inner = inner; }
+          public boolean open(String id) {
+              count++;
+              return inner.open(id);
+          }
+      }
+    answer: "true\n1"
+    explain: "The counter sits outside the retry, so it sees one call. The retry hides the first failure."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: decorator
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Counter inner = new Counter(new Flaky());
+              Lock outer = new Retry(inner);
+              System.out.println(outer.open("B-1042"));
+              System.out.println(inner.count);
+          }
+      }
+
+      interface Lock { boolean open(String id); }
+
+      class Flaky implements Lock {
+          int tries = 0;
+          public boolean open(String id) {
+              tries++;
+              return tries > 1;
+          }
+      }
+
+      class Retry implements Lock {
+          private final Lock inner;
+          Retry(Lock inner) { this.inner = inner; }
+          public boolean open(String id) {
+              if (inner.open(id)) {
+                  return true;
+              }
+              return inner.open(id);
+          }
+      }
+
+      class Counter implements Lock {
+          private final Lock inner;
+          int count = 0;
+          Counter(Lock inner) { this.inner = inner; }
+          public boolean open(String id) {
+              count++;
+              return inner.open(id);
+          }
+      }
+    answer: "true\n2"
+    explain: "This time the counter sits inside the retry, so it sees both attempts."
+    reteach: "## Concept"
+
+  - id: q06
+    type: spot-the-bug
+    concept: delegation
+    prompt: "Lock is an interface with one method, open. This decorator compiles but crashes with a StackOverflowError. Which line is wrong?"
+    code: |
+      class LoudLock implements Lock {
+          private final Lock inner;
+          LoudLock(Lock inner) { this.inner = inner; }
+          public boolean open(String id) {
+              System.out.println("opening " + id);
+              return open(id);
+          }
+      }
+    bugLine: 6
+    explain: "open calls itself forever and ends in a StackOverflowError. It should call inner.open(id)."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: mcq
+    concept: facade
+    prompt: "What does a facade give its callers?"
+    choices: ["One simple method in front of several parts", "A copy of every part's methods", "A way to change a class without wrapping it", "Exactly one object for the whole program"]
+    answer: 0
+    explain: "A facade hides the steps. The kiosk calls unlock once, and the facade checks the rider and opens the lock."
+    reteach: "## Concept"
+
+  - id: q08
+    type: mcq
+    concept: composition
+    prompt: "Why do these patterns prefer composition over inheritance?"
+    choices: ["You can choose and combine the inner object while the program runs", "Composition makes code run faster", "Java does not allow inheritance from interfaces", "Inheritance cannot call methods"]
+    answer: 0
+    explain: "A field can hold any object of the right type, so you can stack and swap wrappers. extends is fixed at compile time."
+    reteach: "## Concept"
+
+  - id: q09
+    type: order
+    concept: composition
+    prompt: "Put the lines in order to write a decorator that delegates to the lock it wraps. Put the field first, then the constructor, then open."
+    items:
+      - "class LoudLock implements Lock {"
+      - "    private final Lock inner;"
+      - "    LoudLock(Lock inner) { this.inner = inner; }"
+      - "    public boolean open(String id) {"
+      - "        System.out.println(\"opening \" + id);"
+      - "        return inner.open(id);"
+      - "    }"
+      - "}"
+    explain: "The field holds the inner lock, the constructor receives it, and open adds its line before it delegates."
+    reteach: "## Concept"

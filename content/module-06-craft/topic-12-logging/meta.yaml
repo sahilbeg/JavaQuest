@@ -1,0 +1,25 @@
+id: module-06-craft/topic-12-logging
+title: "Logging with SLF4J"
+order: 12
+minutes: 10
+prerequisites: [module-06-craft/topic-11-debugging]
+concepts: [println-vs-logging, slf4j-logback, log-levels, parameterized-messages, logging-exceptions, masking-secrets]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m06.logging.Checkout
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0612
+  from: sam
+  title: "Night shift cannot find kiosk errors, and a card number leaked"
+  body: >
+    Last night a rider at Old Mill was charged twice, and the night shift scrolled through ten
+    thousand println lines without finding the error. Worse, one of those lines showed a rider's
+    full card number. Can the kiosk log properly, with errors that stand out and only the last 4
+    digits of any card?
+hints:
+  - "Create the logger once at the top of Checkout: private static final Logger log = LoggerFactory.getLogger(Checkout.class);"
+  - "Use {} in the message and pass the values after it, like log.info(\"payment ok for {} card {} amount {}\", riderId, masked, cents);"
+  - "Check for a null card first: log.error(\"payment failed for {}\", riderId, new IllegalArgumentException(\"card number is missing\")); then return false. Mask the card with PaymentLog.mask before any other log line."
+review: true

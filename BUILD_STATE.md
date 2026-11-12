@@ -4,9 +4,9 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 
 - **Last updated:** 2026-11-12T17:03:59+05:30
 - **Phase:** PHASE 1: build
-- **Milestone:** C06
-- **Resume here:** C05 is committed at status ui_wired. Next: C06 (Engineering craft, 12 topics + INC-06 + FEAT-06). Modules 0 to 5 still need your read-through to reach done.
-- **Next task:** C06-01: module 6 topic 01 clean-code
+- **Milestone:** C07
+- **Resume here:** C06 is committed at status ui_wired. Next: C07 (Build and tooling). Modules 0 to 6 still need your read-through to reach done.
+- **Next task:** C07-01: module 7 topic 01 maven
 
 ## Completed tasks
 
@@ -80,8 +80,8 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | C03 | done |
 | C04 | done |
 | C05 | done |
-| C06 | in_progress |
-| C07 | planned |
+| C06 | done |
+| C07 | in_progress |
 | C08 | planned |
 | C09 | planned |
 | C10 | planned |
@@ -103,7 +103,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-03-core-java | Ride data | 18 | ui_wired |
 | module-04-dsa | Moving bikes around | 14 | ui_wired |
 | module-05-advanced-java | Rush hour | 15 | ui_wired |
-| module-06-craft | Paying off debt | 14 | planned |
+| module-06-craft | Paying off debt | 14 | ui_wired |
 | module-07-tooling | Shipping safely | 7 | planned |
 | module-08-backend | The Spoke API | 14 | planned |
 | module-09-architecture | Growing up | 10 | planned |

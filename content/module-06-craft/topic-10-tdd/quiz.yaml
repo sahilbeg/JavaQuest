@@ -1,0 +1,125 @@
+topic: module-06-craft/topic-10-tdd
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: order
+    concept: red-green-refactor
+    prompt: "Put one lap of the TDD loop in order."
+    items: ["Write one small test", "Run it and watch it fail", "Write the simplest code that passes", "Run the tests and see them pass", "Tidy the code while the tests stay green"]
+    explain: "Red comes first, then green, then refactor. The loop then starts again with the next test."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: red-green-refactor
+    variants:
+      - { prompt: "Why should you watch a new test fail before writing the code?", choices: ["It proves the test can catch a problem", "It makes the test run faster", "JUnit refuses to run a test that never failed", "It saves the failure in a log file"], answer: 0 }
+      - { prompt: "In TDD, what may you change during the refactor step?", choices: ["The shape of the code, while every test stays green", "The expected values in the tests until they pass", "Nothing, refactoring comes only at the end of the project", "Only the test names"], answer: 0 }
+    explain: "A test that never failed might check nothing. Refactoring changes the shape of code, and the green tests prove the behaviour stayed the same."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: triangulation
+    prompt: "Your only test expects discountedCents(1000, 1) to be 1000, and the code says return 1000;. What should the next test do?"
+    choices: ["Use a different fare, such as 1500, so the fake answer fails", "Use the same fare again with a new message", "Delete the first test", "Check that return 1000; is on line 3"]
+    answer: 0
+    explain: "Triangulation adds a second example with new numbers. The fake can pass one example, but not both."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: triangulation
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(check(1000, fake(1000)));
+              System.out.println(check(1500, fake(1500)));
+          }
+
+          static long fake(long fareCents) {
+              return 1000;
+          }
+
+          static String check(long expected, long actual) {
+              if (expected == actual) {
+                  return "PASS";
+              }
+              return "FAIL expected " + expected + " but was " + actual;
+          }
+      }
+    answer: "PASS\nFAIL expected 1500 but was 1000"
+    explain: "The fake always returns 1000. The second example uses 1500, so the fake is caught."
+    reteach: "## Worked example"
+
+  - id: q05
+    type: mcq
+    concept: baby-steps
+    prompt: "Why does TDD use baby steps?"
+    choices: ["When a test fails, the cause is in the last few lines you typed", "Small steps make Java compile faster", "JUnit runs only one test at a time", "Big steps are not allowed by the compiler"]
+    answer: 0
+    explain: "Each step is tiny, so a new red test points straight at the change you just made."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: design-pressure
+    prompt: "How does writing the test first tend to change your design?"
+    choices: ["It pushes you toward small units with clear inputs and outputs", "It makes every class bigger", "It forces you to put all code in main", "It removes the need for interfaces"]
+    answer: 0
+    explain: "You must call the code from a test before it exists, so you design it to be easy to call."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: when-tdd-is-awkward
+    prompt: "Where does TDD fit worst?"
+    choices: ["Checking whether a screen layout looks right", "A fare rule with exact cent values", "A discount that throws on bad input", "A method that rounds down to whole cents"]
+    answer: 0
+    explain: "Whether a screen looks right has no simple assertEquals. Test the logic behind it, and check the look by eye."
+    reteach: "## Concept"
+
+  - id: q08
+    type: predict-output
+    concept: smallest-failing-test
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              long fareCents = 1234;
+              System.out.println(fareCents * 80 / 100);
+              System.out.println(fareCents * (80 / 100));
+          }
+      }
+    answer: "987\n0"
+    explain: "1234 * 80 is 98720, and 98720 / 100 drops the fraction to give 987. In the second line, 80 / 100 is 0 in integer math."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: spot-the-bug
+    concept: red-green-refactor
+    prompt: "The red test says: three riders get 20 percent off ==> expected: <800> but was: <1000>. Which line is wrong?"
+    code: |
+      static long discountedCents(long fareCents, int groupSize) {
+          if (groupSize < 1) {
+              throw new IllegalArgumentException("group size must be at least 1");
+          }
+          if (groupSize >= 5) {
+              return fareCents * 70 / 100;
+          }
+          if (groupSize > 3) {
+              return fareCents * 80 / 100;
+          }
+          return fareCents;
+      }
+    bugLine: 8
+    explain: "groupSize > 3 is false for exactly 3 riders, so they fall through to the full fare. Use groupSize >= 3."
+    reteach: "## Worked example"
+
+  - id: q10
+    type: fill-blank
+    concept: red-green-refactor
+    prompt: "___(IllegalArgumentException.class, () -> groups.discountedCents(1000, 0));"
+    answers: ["assertThrows", "Assertions.assertThrows"]
+    explain: "assertThrows passes only when the code inside the lambda throws that exception type."
+    reteach: "## Worked example"

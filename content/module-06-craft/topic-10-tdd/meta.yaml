@@ -1,0 +1,24 @@
+id: module-06-craft/topic-10-tdd
+title: "Test-driven development"
+order: 10
+minutes: 10
+prerequisites: [module-06-craft/topic-09-mockito]
+concepts: [red-green-refactor, smallest-failing-test, triangulation, baby-steps, design-pressure, when-tdd-is-awkward]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0610
+  from: priya
+  title: "Group ride discount has to be right on day one"
+  body: >
+    Marketing already announced it: 3 or more riders who start a ride together get 20 percent
+    off each fare, and 5 or more get 30 percent. Any half cent rounds down, in the rider's favour.
+    We cannot quietly patch this after launch, because every rider will check their receipt. Please
+    build it test first, so the checks prove every rule before the code goes live.
+hints:
+  - "Start with one tiny check, such as a solo rider paying the full fare. Make it pass, then add the next."
+  - "Pick numbers that tell the bugs apart: groups of 2, 3, 4 and 5, and a fare like 1234 cents that leaves a fraction of a cent."
+  - "In Groups, check groupSize < 1 first and throw. Then return fareCents * 70 / 100 for 5 or more, fareCents * 80 / 100 for 3 or more, and fareCents otherwise."
+review: true

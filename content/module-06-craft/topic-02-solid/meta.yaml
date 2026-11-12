@@ -1,0 +1,25 @@
+id: module-06-craft/topic-02-solid
+title: "SOLID principles"
+order: 2
+minutes: 10
+prerequisites: [module-06-craft/topic-01-clean-code]
+concepts: [single-responsibility, open-closed, liskov-substitution, interface-segregation, dependency-inversion]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m06.solid.PaymentProcessor
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0602
+  from: theo
+  title: "Every new payment method breaks the old ones"
+  body: >
+    The city wants riders at Uptown to pay with their transit pass next month. Every new payment method
+    means another case in the big switch inside PaymentProcessor. Last week the wallet change broke card
+    payments for a whole morning, and the Riverside kiosk took no money at all. Can we add the transit pass
+    without touching card and wallet again?
+hints:
+  - "Each payment class needs implements PaymentMethod on its class line. Then the processor can treat them all the same."
+  - "Save the constructor's list in a private final field. In pay, loop over it and compare name() with the method you were given."
+  - "Inside the loop: if (candidate.name().equals(method)) { return candidate.pay(cents); } and after the loop: throw new IllegalArgumentException(\"unknown payment method: \" + method);"
+review: true

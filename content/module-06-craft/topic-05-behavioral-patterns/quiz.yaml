@@ -1,0 +1,142 @@
+topic: module-06-craft/topic-05-behavioral-patterns
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: strategy
+    variants:
+      - { prompt: "Rain discount, marathon surge and normal pricing must be swappable at run time. Which pattern fits?", choices: ["Strategy", "Observer", "Command", "Singleton"], answer: 0 }
+      - { prompt: "You want to pick one of several fare rules while the app runs, without an if chain. Which pattern fits?", choices: ["Observer", "Strategy", "Command", "Builder"], answer: 1 }
+    explain: "Strategy puts each version of a rule behind one interface, so the caller can swap the rule."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: strategy
+    prompt: "PricingStrategy free = minutes ___ 0;"
+    answers: ["->"]
+    explain: "PricingStrategy has one abstract method, so a lambda written with -> can be a strategy."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: strategy
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Pricing standard = minutes -> 100 + 15 * minutes;
+              Pricing rain = minutes -> standard.price(minutes) / 2;
+              System.out.println(standard.price(2));
+              System.out.println(rain.price(1));
+          }
+      }
+
+      interface Pricing {
+          long price(int minutes);
+      }
+    answer: "130\n57"
+    explain: "Two minutes cost 100 + 30 = 130. One minute costs 115, and half of 115 as a long is 57, because division drops the half cent."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: observer
+    prompt: "In the observer pattern, what does the subject do when the event happens?"
+    choices: ["It calls every subscriber in its list", "It calls only the newest subscriber", "It returns the list so the caller can pick one", "It deletes all subscribers"]
+    answer: 0
+    explain: "The subject walks its list of subscribers and notifies each one."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: unsubscribe
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+      import java.util.function.Consumer;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<Consumer<String>> subscribers = new ArrayList<>();
+              Consumer<String> app = id -> System.out.println("app " + id);
+              Consumer<String> email = id -> System.out.println("email " + id);
+              subscribers.add(app);
+              subscribers.add(email);
+              subscribers.remove(app);
+              for (Consumer<String> s : subscribers) {
+                  s.accept("B-1042");
+              }
+          }
+      }
+    answer: "email B-1042"
+    explain: "The app subscriber was removed before the event, so only the email subscriber hears it."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: unsubscribe
+    prompt: "A dashboard screen subscribes to ride events and is closed, but never unsubscribes. What happens?"
+    choices: ["The subject still points to it, so the garbage collector cannot free it", "Java unsubscribes it automatically when the screen closes", "The program fails to compile", "The subject throws an exception on the next event"]
+    answer: 0
+    explain: "The subject's list holds a reference to the listener. The listener stays in memory as long as the subject lives. This is a listener leak."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: command
+    prompt: "Why does the command pattern make undo possible?"
+    choices: ["Each action is an object that can be stored and has its own undo method", "Commands run faster than plain method calls", "Commands can only be run once", "Commands make every field final"]
+    answer: 0
+    explain: "Because the action is an object, you can keep it in a history and call its undo later."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: command
+    prompt: "After execute and then undo, Harbor still has the new docks value. Which line is wrong?"
+    code: |
+      public void execute() {
+          oldDocks = newDocks;
+          station.setDocks(newDocks);
+      }
+
+      public void undo() {
+          station.setDocks(oldDocks);
+      }
+    bugLine: 2
+    explain: "oldDocks stores the new value instead of the current one. Read station.docks() before calling setDocks."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: order
+    concept: undo-history
+    prompt: "Put the steps of CommandHistory.undo in order."
+    items:
+      - "Check whether the stack is empty"
+      - "Return false if it is empty"
+      - "Pop the newest command"
+      - "Call undo on that command"
+      - "Return true"
+    explain: "Check first so an empty history does not crash, then pop the newest command and reverse it."
+    reteach: "## Concept"
+
+  - id: q10
+    type: predict-output
+    concept: undo-history
+    code: |
+      import java.util.ArrayDeque;
+      import java.util.Deque;
+
+      public class Main {
+          public static void main(String[] args) {
+              Deque<String> done = new ArrayDeque<>();
+              done.push("set Harbor to 10");
+              done.push("set Harbor to 2");
+              System.out.println("Undo: " + done.pop());
+              System.out.println(done.size());
+          }
+      }
+    answer: "Undo: set Harbor to 2\n1"
+    explain: "A stack is last in, first out. The newest command comes off first, and one command stays."
+    reteach: "## Concept"

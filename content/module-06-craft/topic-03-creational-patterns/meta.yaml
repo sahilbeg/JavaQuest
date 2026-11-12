@@ -1,0 +1,23 @@
+id: module-06-craft/topic-03-creational-patterns
+title: "Creational patterns: factory, builder, singleton"
+order: 3
+minutes: 10
+prerequisites: [module-06-craft/topic-02-solid]
+concepts: [static-factory, simple-factory, builder, singleton, dependency-injection]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0603
+  from: priya
+  title: "Ride from Uptown to Harbor showed up as Harbor to Uptown"
+  body: >
+    Rider r1 rode from Harbor to Uptown, but her receipt says Uptown to Harbor. Someone swapped two
+    arguments in the nine-parameter Ride constructor, and nothing caught it. Also, the app builds a brand
+    new PriceTable for every single request. Can you make tickets hard to build wrong?
+hints:
+  - "Start with TODO 1 to 4 in RideTicket.Builder: each setter stores its value in a field and returns this."
+  - "In build(), check bike, from, to and rider in that order. Throw new IllegalStateException(\"missing required field: bike\") for the first one that is null. Also reject minutes below 0."
+  - "Turn PriceTable into: public enum PriceTable { INSTANCE; public int centsPerMinute(String type) { ... } }. In BikeFactory, use a switch on the type and throw IllegalArgumentException in the default branch."
+review: true

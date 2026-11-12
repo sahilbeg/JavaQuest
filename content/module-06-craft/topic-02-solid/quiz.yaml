@@ -1,0 +1,158 @@
+topic: module-06-craft/topic-02-solid
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: single-responsibility
+    variants:
+      - { prompt: "A RideService class computes fares, formats receipts and saves rides. Which principle does it break?", choices: ["Single responsibility", "Liskov substitution", "Interface segregation", "Dependency inversion"], answer: 0 }
+      - { prompt: "A class changes whenever prices, receipt wording or the database change. Which principle does it break?", choices: ["Single responsibility", "Open/closed", "Liskov substitution", "Interface segregation"], answer: 0 }
+    explain: "The class has three reasons to change. Single responsibility asks for one."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: open-closed
+    prompt: "Spoke adds a transit pass payment. Which design follows the open/closed principle?"
+    choices: ["Write a new TransitPassPayment class that implements PaymentMethod", "Add a new case to the switch in PaymentProcessor", "Copy PaymentProcessor and edit the copy", "Add an if for \"transit\" at the top of pay"]
+    answer: 0
+    explain: "New behaviour arrives as new code. The processor and the old payment classes stay untouched."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: open-closed
+    prompt: "class TransitPassPayment ___ PaymentMethod {"
+    answers: ["implements"]
+    explain: "A class joins an interface's family with implements."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: open-closed
+    code: |
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<PaymentMethod> methods = List.of(new Card(), new Wallet());
+              for (PaymentMethod m : methods) {
+                  System.out.println(m.name() + " " + m.pay(100));
+              }
+          }
+      }
+
+      interface PaymentMethod {
+          String name();
+          String pay(long cents);
+      }
+
+      class Card implements PaymentMethod {
+          public String name() { return "card"; }
+          public String pay(long cents) { return "charged " + cents; }
+      }
+
+      class Wallet implements PaymentMethod {
+          public String name() { return "wallet"; }
+          public String pay(long cents) { return "charged " + (cents + 5); }
+      }
+    answer: "card charged 100\nwallet charged 105"
+    explain: "The loop calls each object's own methods. Wallet adds 5 to the cents before printing."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: liskov-substitution
+    prompt: "TransitRefund implements Refundable, but its refund method always throws UnsupportedOperationException. Which principle does it break?"
+    choices: ["Liskov substitution", "Single responsibility", "Open/closed", "Dependency inversion"]
+    answer: 0
+    explain: "Code that trusts Refundable crashes on this subtype. A subtype must keep its parent's promises."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: dependency-inversion
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Checkout a = new Checkout(new Card());
+              Checkout b = new Checkout(new Wallet());
+              System.out.println(a.finish());
+              System.out.println(b.finish());
+          }
+      }
+
+      interface PaymentMethod {
+          String pay(long cents);
+      }
+
+      class Card implements PaymentMethod {
+          public String pay(long cents) { return "card " + cents; }
+      }
+
+      class Wallet implements PaymentMethod {
+          public String pay(long cents) { return "wallet " + cents; }
+      }
+
+      class Checkout {
+          private final PaymentMethod payment;
+
+          Checkout(PaymentMethod payment) {
+              this.payment = payment;
+          }
+
+          String finish() {
+              return payment.pay(250);
+          }
+      }
+    answer: "card 250\nwallet 250"
+    explain: "Checkout depends only on the interface. Each checkout uses whatever payment method was handed to its constructor."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: interface-segregation
+    prompt: "A dock sensor must implement printReceipt and scanCard just to report docks. What is the best fix?"
+    choices: ["Split the big interface into small ones such as DockSensor, ReceiptPrinter and CardReader", "Make printReceipt and scanCard throw exceptions", "Add more methods to the big interface", "Make the dock sensor extend the kiosk class"]
+    answer: 0
+    explain: "Interface segregation says no class should be forced to write methods it does not use."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: interface-segregation
+    prompt: "The code does not compile. Which line breaks the interface rules?"
+    code: |
+      interface DockSensor {
+          boolean isDocked(String bikeId);
+      }
+      class HarborSensor implements DockSensor {
+          boolean isDocked(String bikeId) { return true; }
+      }
+    bugLine: 5
+    explain: "Interface methods are public. The class must write public boolean isDocked, or javac reports weaker access privileges."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: order
+    concept: dependency-inversion
+    prompt: "Put the lines in order to build a class that receives its payment method through the constructor. Put the field first, then the constructor."
+    items:
+      - "class Checkout {"
+      - "    private final PaymentMethod payment;"
+      - "    Checkout(PaymentMethod payment) {"
+      - "        this.payment = payment;"
+      - "    }"
+      - "}"
+    explain: "The field holds the interface type. The constructor receives the real object and stores it."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: dependency-inversion
+    prompt: "Which line follows dependency inversion inside a Checkout class?"
+    choices: ["Checkout(PaymentMethod payment) { this.payment = payment; }", "private final CardPayment card = new CardPayment();", "private final WalletPayment wallet = new WalletPayment();", "static CardPayment card = new CardPayment();"]
+    answer: 0
+    explain: "Depending on the interface, handed in through the constructor, lets any payment method be used."
+    reteach: "## Concept"

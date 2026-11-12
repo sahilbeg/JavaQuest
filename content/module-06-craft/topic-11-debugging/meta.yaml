@@ -1,0 +1,23 @@
+id: module-06-craft/topic-11-debugging
+title: "Debugging with breakpoints and stack traces"
+order: 11
+minutes: 10
+prerequisites: [module-06-craft/topic-10-tdd]
+concepts: [stack-trace, null-pointer, breakpoints, stepping, bug-hunting, reproduce-first]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0611
+  from: sam
+  title: "Three crash reports from last night's import"
+  body: >
+    Support has three crash reports from last night, and each one came with a stack trace. One is a
+    Harbor ride for bike B-1042, one is the new Depot station, and one is a rider who got a 0 cent
+    refund. The developer who wrote this code is on holiday. Can you track them down?
+hints:
+  - "Start at the first line of each trace that points into jq.m06.debugging. That is the line that broke."
+  - "Try \"B-1042,Harbor,12,\".split(\",\") in a scratch program and count the parts. For Depot, ask what map.get returns for a missing key. For the refund, work out 6 / 12 with ints."
+  - "Use csv.split(\",\", -1) and check parts.length. Use freeDocks.getOrDefault(station, 0). Multiply before you divide: paidCents * minutesLost / totalMinutes."
+review: true

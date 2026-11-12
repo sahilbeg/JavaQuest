@@ -1,0 +1,23 @@
+id: module-06-craft/topic-08-junit
+title: "Testing with JUnit"
+order: 8
+minutes: 10
+prerequisites: [module-06-craft/topic-07-uml-basics]
+concepts: [unit-test, assertions, arrange-act-assert, test-lifecycle, parameterized-tests, edge-cases]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0608
+  from: maya
+  title: "The fare code has no tests, so nobody dares touch it"
+  body: >
+    Before we start the billing rewrite, I want a safety net under StandardFare. Right now a typo could
+    charge every PRO rider at Uptown for their free hour, and we would only hear about it from Sam's inbox.
+    Please write checks that pass on today's fare rule and shout the moment someone breaks it.
+hints:
+  - "Each check should pick a ride, work out the right fare by hand in cents, and compare it with assertEquals."
+  - "Bugs hide at the edges. Try minute 30 and minute 31 for PLUS, minute 60 and 61 for PRO, and a ride of -1 minutes."
+  - "For example: assertEquals(15, calc.fareCents(\"classic\", 31, \"PLUS\"), \"PLUS pays from minute 31\"); and assertThrows(IllegalArgumentException.class, () -> calc.fareCents(\"classic\", -1, \"BASIC\"));"
+review: true

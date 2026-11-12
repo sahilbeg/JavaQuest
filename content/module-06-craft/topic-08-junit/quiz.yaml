@@ -1,0 +1,128 @@
+topic: module-06-craft/topic-08-junit
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: unit-test
+    prompt: "What is a unit test?"
+    choices:
+      - "A small piece of code that calls one method or class and checks the answer"
+      - "A person who clicks through the app before a release"
+      - "The main method of a program"
+      - "A file that lists every class in a project"
+    answer: 0
+    explain: "A unit test runs one small piece of your code and checks the result with an assertion."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: unit-test
+    prompt: "@___ void plusRiderPaysFromMinute31() {"
+    answers: ["Test"]
+    explain: "The @Test annotation tells JUnit to run the method as a test."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: assertions
+    code: |
+      import static org.junit.jupiter.api.Assertions.assertEquals;
+
+      public class Main {
+          public static void main(String[] args) {
+              try {
+                  assertEquals(250, 150, "fare");
+                  System.out.println("passed");
+              } catch (AssertionError e) {
+                  System.out.println(e.getMessage());
+              }
+          }
+      }
+    answer: "fare ==> expected: <250> but was: <150>"
+    explain: "assertEquals throws an AssertionFailedError. Its message starts with your text, then shows expected and actual."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: assertions
+    code: |
+      import static org.junit.jupiter.api.Assertions.assertThrows;
+
+      public class Main {
+          public static void main(String[] args) {
+              try {
+                  assertThrows(IllegalArgumentException.class, () -> Math.max(0, -1));
+                  System.out.println("threw");
+              } catch (AssertionError e) {
+                  System.out.println("nothing thrown");
+              }
+          }
+      }
+    answer: "nothing thrown"
+    explain: "Math.max(0, -1) returns 0 and throws nothing, so assertThrows fails with an AssertionError."
+    reteach: "## Concept"
+
+  - id: q05
+    type: order
+    concept: arrange-act-assert
+    prompt: "Put the lines of the test body in arrange, act, assert order."
+    items:
+      - "FareCalculator calc = new StandardFare();"
+      - "long fare = calc.fareCents(\"cargo\", 10, \"BASIC\");"
+      - "assertEquals(350, fare);"
+    explain: "Arrange the object, act by calling the method once, then assert on the result."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: test-lifecycle
+    variants:
+      - prompt: "When does a method marked @BeforeEach run?"
+        choices: ["Before every test method in the class", "Once, before the first test only", "After every test method", "Only when a test fails"]
+        answer: 0
+      - prompt: "Why put new StandardFare() in a @BeforeEach method?"
+        choices: ["Every test gets a fresh calculator, so one test cannot spoil another", "It makes the tests run in parallel", "It skips tests that are slow", "It lets the test return a value"]
+        answer: 0
+    explain: "@BeforeEach runs before each test, so every test starts from the same clean setup."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: parameterized-tests
+    prompt: "A @ParameterizedTest has a @CsvSource with 4 rows. How many tests appear in the report?"
+    choices: ["4", "1", "5", "0, until you add @Test"]
+    answer: 0
+    explain: "JUnit runs the method once per row, so 4 rows give 4 tests."
+    reteach: "## Concept"
+
+  - id: q08
+    type: mcq
+    concept: edge-cases
+    prompt: "PLUS riders get 30 free minutes. Which pair of rides best pins that boundary?"
+    choices: ["30 minutes and 31 minutes", "10 minutes and 40 minutes", "0 minutes and 100 minutes", "45 minutes and 50 minutes"]
+    answer: 0
+    explain: "The last free minute and the first paid minute sit right on the edge. A bug at 29 or 31 shows up there."
+    reteach: "## Concept"
+
+  - id: q09
+    type: spot-the-bug
+    concept: assertions
+    prompt: "This test should check that -1 minutes is rejected. Which line is wrong?"
+    code: |
+      @Test
+      void rejectsNegativeMinutes() {
+          FareCalculator calc = new StandardFare();
+          assertThrows(IllegalArgumentException.class, calc.fareCents("classic", -1, "BASIC"));
+      }
+    bugLine: 4
+    explain: "assertThrows needs a lambda: () -> calc.fareCents(...). Without it, the call runs first and returns a long."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: fill-blank
+    concept: parameterized-tests
+    prompt: "@___({ \"classic, 10, BASIC, 250\", \"ebike, 10, BASIC, 400\" })"
+    answers: ["CsvSource"]
+    explain: "@CsvSource gives a parameterized test its rows as comma-separated text."
+    reteach: "## Concept"

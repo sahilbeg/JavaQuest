@@ -1,0 +1,24 @@
+id: module-06-craft/boss
+title: "INC-06: Refactor the legacy billing module safely"
+order: 99
+minutes: 12
+prerequisites: [module-06-craft/topic-12-logging]
+concepts: [refactoring, characterization-tests, floating-point-money, side-effects]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m06.incident.Billing
+ticket:
+  key: INC-06
+  from: maya
+  title: "Invoices changed after the billing refactor"
+  body: >
+    Last sprint someone refactored the billing module, and the tests that existed still pass.
+    Since the release, PRO riders pay an unlock fee and some invoices are a cent short.
+    The ride history screen also shows rides in a strange order.
+    The old code is still in LegacyBilling. Make the new code behave exactly like it.
+hints:
+  - "Bronze: compare the unlock fee rule in Billing with LegacyBilling. Which memberships skip the fee?"
+  - "Silver: 3 minutes at 0.15 dollars is 44.99999 cents in double arithmetic, and a cast to long cuts it to 44. Keep money in whole cents as long."
+  - "Gold: invoice sorts the list it was given. Copy the list first, then sort the copy, as LegacyBilling does."
+review: false

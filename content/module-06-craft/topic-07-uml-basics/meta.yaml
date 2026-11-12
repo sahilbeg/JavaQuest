@@ -1,0 +1,23 @@
+id: module-06-craft/topic-07-uml-basics
+title: "UML class and sequence diagrams"
+order: 7
+minutes: 9
+prerequisites: [module-06-craft/topic-06-refactoring]
+concepts: [class-box, visibility, relationships, multiplicity, sequence-diagram, fragments]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0607
+  from: theo
+  title: "Draw billing before anyone rewrites it"
+  body: >
+    Before Maya's team rewrites billing, I want one picture that everyone agrees on. The last
+    whiteboard photo from the Riverside meeting was a blur of arrows nobody could read. Can you
+    draw how riders, rides, bikes and payments fit together, and what happens when someone taps
+    unlock?
+hints:
+  - "A class box has three parts: the name, the fields, then the methods."
+  - "A filled diamond means the part dies with the whole. A hollow diamond means the part can live on its own."
+  - "In a sequence diagram, time runs down the page. A solid arrow is a call, a dashed arrow is the answer coming back."
+review: true

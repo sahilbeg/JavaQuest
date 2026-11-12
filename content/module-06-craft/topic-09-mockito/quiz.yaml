@@ -1,0 +1,134 @@
+topic: module-06-craft/topic-09-mockito
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: test-doubles
+    variants:
+      - prompt: "Which test double records the calls made on it, so the test can check them afterwards?"
+        choices: ["A mock", "A dummy", "A fake", "A record"]
+        answer: 0
+      - prompt: "Which test double is passed in only to fill a parameter and is never used?"
+        choices: ["A dummy", "A mock", "A spy", "A stub"]
+        answer: 0
+    explain: "A dummy fills a gap. A stub answers. A fake works simply. A mock records calls. A spy wraps a real object."
+    reteach: "## Concept"
+
+  - id: q02
+    type: predict-output
+    concept: stubbing
+    code: |
+      import static org.mockito.Mockito.mock;
+      import static org.mockito.Mockito.when;
+
+      public class Main {
+          public static void main(String[] args) {
+              BikeLock lock = mock(BikeLock.class);
+              when(lock.open("B-1042")).thenReturn(true);
+              System.out.println(lock.open("B-1042"));
+              System.out.println(lock.open("B-2001"));
+          }
+      }
+
+      interface BikeLock { boolean open(String bikeId); }
+    answer: "true\nfalse"
+    explain: "The stub answers true only for B-1042. Any other call gets the default value, false."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: stubbing
+    prompt: "when(gateway.charge(\"rider-9\", 100)).___(new PaymentDeclinedException(\"declined\"));"
+    answers: ["thenThrow"]
+    explain: "thenThrow makes the stubbed call throw, which is how you test a declined card."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: verification
+    prompt: "verify(lock, ___).open(anyString());"
+    answers: ["never()", "times(0)"]
+    explain: "never() checks that the call did not happen at all. times(0) means the same."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: verification
+    code: |
+      import static org.mockito.Mockito.mock;
+      import static org.mockito.Mockito.times;
+      import static org.mockito.Mockito.verify;
+
+      public class Main {
+          public static void main(String[] args) {
+              Receipts receipts = mock(Receipts.class);
+              receipts.send("rider-7", "pay-1");
+              receipts.send("rider-7", "pay-1");
+              try {
+                  verify(receipts, times(1)).send("rider-7", "pay-1");
+                  System.out.println("once");
+              } catch (AssertionError e) {
+                  System.out.println("not once");
+              }
+          }
+      }
+
+      interface Receipts { void send(String riderId, String paymentId); }
+    answer: "not once"
+    explain: "The receipt went out twice, so times(1) fails. Mockito's verification errors are AssertionErrors."
+    reteach: "## Concept"
+
+  - id: q06
+    type: spot-the-bug
+    concept: argument-matchers
+    code: |
+      PaymentGateway gateway = mock(PaymentGateway.class);
+      when(gateway.charge(anyString(), 100)).thenReturn("pay-1");
+      String id = gateway.charge("rider-7", 100);
+      System.out.println(id);
+    bugLine: 2
+    explain: "One argument uses a matcher and the other a plain value. Use eq(100L) or plain values for both."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: mcq
+    concept: argument-captor
+    prompt: "A test wants to read the payment id that UnlockService passed to receipts.send. What should it use?"
+    choices: ["An ArgumentCaptor", "thenReturn", "never()", "@BeforeEach"]
+    answer: 0
+    explain: "An ArgumentCaptor grabs the value passed to a mock, and getValue() hands it back."
+    reteach: "## Concept"
+
+  - id: q08
+    type: order
+    concept: argument-captor
+    prompt: "The captor ArgumentCaptor<String> id already exists. Put the lines in order to check the payment id on the receipt."
+    items:
+      - "service.unlock(\"rider-7\", \"B-1042\");"
+      - "verify(receipts).send(eq(\"rider-7\"), id.capture());"
+      - "assertEquals(\"pay-42\", id.getValue());"
+    explain: "Act first, then capture the id during verify, then assert on the captured value."
+    reteach: "## Worked example"
+
+  - id: q09
+    type: mcq
+    concept: over-mocking
+    prompt: "Which object is the best one to keep real in an UnlockService test?"
+    choices: ["A record holding the rider id and bike id", "The card payment provider", "The lock on the dock", "The service that sends text messages"]
+    answer: 0
+    explain: "Mock the slow or costly edges. A small record is plain data, so mocking it only adds noise."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: over-mocking
+    prompt: "Why mock your own PaymentGateway interface instead of the bank's library?"
+    choices:
+      - "Your interface is small and shaped by what Spoke needs, so tests stay stable"
+      - "Mockito cannot mock classes from other libraries at all"
+      - "The bank's library runs faster in tests"
+      - "Interfaces you own never need tests"
+    answer: 0
+    explain: "A small interface you own changes only when you change it. A large outside library can shift under your tests."
+    reteach: "## Concept"

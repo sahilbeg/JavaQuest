@@ -19,12 +19,12 @@
   </properties>
 
   <dependencies>
-    <!-- One jar with the JUnit API, the engine and the console launcher, so the runner and the IDE share it. -->
+    <!-- One jar with the JUnit API, the engine and the console launcher, so the runner and the IDE share it.
+         Compile scope, because the check classes you write in module 6 live in src and use Assertions. -->
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-console-standalone</artifactId>
       <version>${junit.version}</version>
-      <scope>test</scope>
     </dependency>
     <!-- Module 6 mocks with Mockito. The JUnit jars it would pull in are already inside the standalone jar. -->
     <dependency>
@@ -148,6 +148,19 @@
                 <source>module-05-advanced-java/topic-11-annotations/src</source>
                 <source>module-05-advanced-java/topic-12-sealed-types/src</source>
                 <source>module-05-advanced-java/topic-13-pattern-matching/src</source>
+                <source>module-06-craft/boss/src</source>
+                <source>module-06-craft/mini-project/src</source>
+                <source>module-06-craft/topic-01-clean-code/src</source>
+                <source>module-06-craft/topic-02-solid/src</source>
+                <source>module-06-craft/topic-03-creational-patterns/src</source>
+                <source>module-06-craft/topic-04-structural-patterns/src</source>
+                <source>module-06-craft/topic-05-behavioral-patterns/src</source>
+                <source>module-06-craft/topic-06-refactoring/src</source>
+                <source>module-06-craft/topic-08-junit/src</source>
+                <source>module-06-craft/topic-09-mockito/src</source>
+                <source>module-06-craft/topic-10-tdd/src</source>
+                <source>module-06-craft/topic-11-debugging/src</source>
+                <source>module-06-craft/topic-12-logging/src</source>
               </sources>
             </configuration>
           </execution>
@@ -232,6 +245,19 @@
                 <source>module-05-advanced-java/topic-11-annotations/test</source>
                 <source>module-05-advanced-java/topic-12-sealed-types/test</source>
                 <source>module-05-advanced-java/topic-13-pattern-matching/test</source>
+                <source>module-06-craft/boss/test</source>
+                <source>module-06-craft/mini-project/test</source>
+                <source>module-06-craft/topic-01-clean-code/test</source>
+                <source>module-06-craft/topic-02-solid/test</source>
+                <source>module-06-craft/topic-03-creational-patterns/test</source>
+                <source>module-06-craft/topic-04-structural-patterns/test</source>
+                <source>module-06-craft/topic-05-behavioral-patterns/test</source>
+                <source>module-06-craft/topic-06-refactoring/test</source>
+                <source>module-06-craft/topic-08-junit/test</source>
+                <source>module-06-craft/topic-09-mockito/test</source>
+                <source>module-06-craft/topic-10-tdd/test</source>
+                <source>module-06-craft/topic-11-debugging/test</source>
+                <source>module-06-craft/topic-12-logging/test</source>
               </sources>
             </configuration>
           </execution>

@@ -1,0 +1,118 @@
+topic: module-06-craft/topic-06-refactoring
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: refactoring
+    variants:
+      - { prompt: "Which change is a refactoring?", choices: ["Renaming variable t to totalCents", "Giving PRO members 90 free minutes", "Fixing a wrong total on the invoice", "Adding a scooter bike type"], answer: 0 }
+      - { prompt: "Which change keeps the behaviour exactly the same?", choices: ["Adding a new discount", "Changing the unlock fee", "Extracting the money formatting into its own method", "Printing an extra line on the invoice"], answer: 2 }
+    explain: "Refactoring changes structure only. New rules, fixes and extra output all change behaviour."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: characterization-tests
+    prompt: "You write a golden-master test for the old invoice code before changing it. What should happen when you first run it?"
+    choices: ["It passes, because it records what the old code does today", "It fails, because the old code is messy", "It fails until you finish refactoring", "It does not compile until the refactoring is done"]
+    answer: 0
+    explain: "A characterization test pins current behaviour, so it passes on the old code. It only fails later if a change alters the output."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: characterization-tests
+    prompt: "Where should the expected text in a golden-master test come from?"
+    choices: ["The exact output of the old code, copied character by character", "What you think the invoice should look like", "The output of the new code after refactoring", "A short summary of the total"]
+    answer: 0
+    explain: "Run the old code and copy its real output, newlines included. Memory and guesses miss spaces and newlines."
+    reteach: "## Common mistakes"
+
+  - id: q04
+    type: order
+    concept: small-steps
+    prompt: "Put the safe refactoring loop in order."
+    items:
+      - "Pin the current output with characterization tests"
+      - "Make one small move"
+      - "Run the tests"
+      - "Undo the move if the tests turn red"
+    explain: "Pin first, then move in small steps with a test run after each, undoing any step that breaks behaviour."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: code-smells
+    variants:
+      - { prompt: "The code says if (minutes > 30) with no explanation of 30. Which move helps?", choices: ["Replace magic number with constant", "Inline", "Introduce parameter object", "Rename the class"], answer: 0 }
+      - { prompt: "The same if chain on bike type appears in three methods. Which move helps?", choices: ["Inline", "Replace conditional with polymorphism", "Extract variable", "Rename"], answer: 1 }
+    explain: "A magic number needs a named constant. A repeated type switch can become one method per type, such as an enum field."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: refactoring-moves
+    prompt: "private static ___ long UNLOCK_FEE_CENTS = 100;"
+    answers: ["final"]
+    explain: "A constant is static final, so it belongs to the class and never changes."
+    reteach: "## Concept"
+
+  - id: q07
+    type: fill-blank
+    concept: refactoring-moves
+    prompt: "___ InvoiceLine(String bikeId, String type, int minutes, long cents) { }"
+    answers: ["record", "public record"]
+    explain: "A parameter object that only carries values is a record. Java writes the fields, constructor and accessors."
+    reteach: "## Concept"
+
+  - id: q08
+    type: predict-output
+    concept: refactoring-moves
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(money(280));
+              System.out.println(money(5));
+          }
+
+          static String money(long cents) {
+              String pennies = String.valueOf(cents % 100);
+              if (pennies.length() == 1) {
+                  pennies = "0" + pennies;
+              }
+              return "$" + (cents / 100) + "." + pennies;
+          }
+      }
+    answer: "$2.80\n$0.05"
+    explain: "280 splits into 2 dollars and 80 cents. 5 cents is padded with a zero to 05."
+    reteach: "## Concept"
+
+  - id: q09
+    type: predict-output
+    concept: characterization-tests
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String before = "Total: $" + 19 + "." + 55 + "\n";
+              String after = "Total: $19.55";
+              System.out.println(before.equals(after));
+              System.out.println(before.strip().equals(after));
+          }
+      }
+    answer: "false\ntrue"
+    explain: "The old output ends with a newline, so an exact comparison fails. A golden master compares exactly, so even a missing newline counts."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: spot-the-bug
+    concept: small-steps
+    prompt: "This helper replaced the old money code during a refactor, and the golden master turned red. Which line uses pennies without padding it?"
+    code: |
+      static String money(long cents) {
+          String pennies = String.valueOf(cents % 100);
+          return "$" + (cents / 100) + "." + pennies;
+      }
+    bugLine: 3
+    explain: "The padding step was dropped during the refactor, so 5 cents prints as $0.5. That changes the output, so it is no longer a refactoring."
+    reteach: "## Common mistakes"

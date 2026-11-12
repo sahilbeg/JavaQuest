@@ -1,0 +1,131 @@
+topic: module-06-craft/topic-01-clean-code
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: meaningful-names
+    variants:
+      - { prompt: "Which variable name tells the reader the most?", choices: ["fareCents", "f", "temp", "data"], answer: 0 }
+      - { prompt: "Which method name reveals its intention best?", choices: ["freeDocksAt(String station)", "doIt(String s)", "calc(String x)", "process(String a)"], answer: 0 }
+    explain: "A good name says what the thing holds or does. fareCents even tells you the unit."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: named-constants
+    prompt: "static ___ long UNLOCK_FEE_CENTS = 100;"
+    answers: ["final"]
+    explain: "final stops the value from ever changing, which makes it a constant."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: named-constants
+    prompt: "Why is the 30 in `r = m * 30;` called a magic number?"
+    choices: ["It has no name, so nobody knows what it means or what else must change with it", "It is larger than 10", "Java treats it as a special keyword", "It can only be used once in a program"]
+    answer: 0
+    explain: "A magic number is a number with no name. A constant or an enum field gives it a name and one home."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: command-query-separation
+    code: |
+      public class Main {
+          static int count = 0;
+
+          static int nextTicket() {
+              count = count + 1;
+              return count;
+          }
+
+          public static void main(String[] args) {
+              System.out.println(nextTicket());
+              System.out.println(nextTicket());
+          }
+      }
+    answer: "1\n2"
+    explain: "nextTicket changes count and returns it. Each call gives a new answer, which is why mixing a command and a query surprises readers."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: mcq
+    concept: why-comments
+    prompt: "Which comment is worth keeping?"
+    choices: ["// The city charges PRO riders no unlock fee under the 2026 contract", "// add one to i", "// return the total", "// this is a loop"]
+    answer: 0
+    explain: "A good comment explains why. The others repeat what the code already says."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: guard-clauses
+    code: |
+      public class Main {
+          static String check(int minutes) {
+              if (minutes < 0) {
+                  return "invalid";
+              }
+              if (minutes == 0) {
+                  return "no ride";
+              }
+              return "ride of " + minutes;
+          }
+
+          public static void main(String[] args) {
+              System.out.println(check(-3));
+              System.out.println(check(0));
+              System.out.println(check(12));
+          }
+      }
+    answer: "invalid\nno ride\nride of 12"
+    explain: "Each guard clause returns early. Only a positive value reaches the last line."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: guard-clauses
+    prompt: "This guard clause should stop negative minutes. Which line lets them through?"
+    code: |
+      static long fareCents(int minutes) {
+          if (minutes < 0) {
+              System.out.println("bad minutes");
+          }
+          return 100 + minutes * 15;
+      }
+    bugLine: 3
+    explain: "The guard only prints a message and then carries on. It should throw an IllegalArgumentException so the method ends."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: order
+    concept: small-functions
+    prompt: "Put the lines in order to build a short fare method with a guard clause."
+    items:
+      - "static long fareCents(int minutes) {"
+      - "    if (minutes < 0) {"
+      - "        throw new IllegalArgumentException(\"negative minutes: \" + minutes);"
+      - "    }"
+      - "    return UNLOCK_FEE_CENTS + minuteCharge(minutes);"
+      - "}"
+    explain: "The guard comes first. The last line reads like a summary and hides the details in a helper."
+    reteach: "## Worked example"
+
+  - id: q09
+    type: mcq
+    concept: small-functions
+    prompt: "A method is called validateAndSaveAndEmailRide. What does that name suggest?"
+    choices: ["It does three things and should be split into smaller methods", "It is well named because it is long", "It must be static", "It should be turned into a constant"]
+    answer: 0
+    explain: "If a name needs \"and\", the method does more than one thing. Split it so each part has one job."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: command-query-separation
+    prompt: "Which method follows command-query separation?"
+    choices: ["long totalCents() that only returns the total", "int nextRide() that adds one to a counter and returns it", "boolean saveRide() that saves and returns whether the list is now full", "String removeBike() that removes a bike and returns a report"]
+    answer: 0
+    explain: "A query returns an answer and changes nothing. The other three both change state and return something."
+    reteach: "## Concept"

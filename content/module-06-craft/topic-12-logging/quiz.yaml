@@ -1,0 +1,121 @@
+topic: module-06-craft/topic-12-logging
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: println-vs-logging
+    prompt: "Why can the night shift not find errors among the kiosk's println lines?"
+    choices: ["Every println line looks the same, with no level, time or source", "println only works during the day", "println deletes old lines after ten thousand", "println cannot print text that contains the word error"]
+    answer: 0
+    explain: "A logger stamps each line with a level, a time and the class that wrote it, so errors stand out."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: slf4j-logback
+    variants:
+      - { prompt: "Which statement about SLF4J and Logback is true?", choices: ["Your code calls SLF4J, and Logback writes the lines behind it", "Your code calls Logback, and SLF4J writes the lines", "SLF4J and Logback are two names for the same jar", "Logback replaces System.out, so println becomes logging"], answer: 0 }
+      - { prompt: "What does it mean that SLF4J is a facade?", choices: ["It is a simple front door that hides the logging library behind it", "It only logs errors", "It draws a picture of the log file", "It needs no library behind it to print anything"], answer: 0 }
+    explain: "SLF4J is the facade your classes import. Logback is the implementation that formats and writes each line."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: slf4j-logback
+    prompt: "private static final Logger log = LoggerFactory.___(Checkout.class);"
+    answers: ["getLogger"]
+    explain: "LoggerFactory.getLogger(Checkout.class) makes a logger named after the class."
+    reteach: "## Concept"
+
+  - id: q04
+    type: order
+    concept: log-levels
+    prompt: "Order the levels from lowest to highest importance."
+    items: ["TRACE", "DEBUG", "INFO", "WARN", "ERROR"]
+    explain: "Setting a level shows that level and everything above it."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: log-levels
+    prompt: "A rider's payment is declined because the amount is too high. The kiosk handles it and shows a message. Which level fits?"
+    choices: ["WARN", "TRACE", "DEBUG", "ERROR"]
+    answer: 0
+    explain: "The event is odd but handled, which is WARN. ERROR is for failures that need a human."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: log-levels
+    code: |
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> levels = List.of("TRACE", "DEBUG", "INFO", "WARN", "ERROR");
+              int threshold = levels.indexOf("INFO");
+              for (String level : levels) {
+                  if (levels.indexOf(level) >= threshold) {
+                      System.out.println(level);
+                  }
+              }
+          }
+      }
+    answer: "INFO\nWARN\nERROR"
+    explain: "With the level set to INFO, you see INFO and every level above it."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: parameterized-messages
+    prompt: "Why use log.debug(\"ride {}\", ride) instead of log.debug(\"ride \" + ride)?"
+    choices: ["With {}, SLF4J skips building the text when DEBUG is switched off", "The + version does not compile", "The {} version also prints a stack trace", "The + version always logs at ERROR"]
+    answer: 0
+    explain: "Joining with + builds the text every time. Placeholders let SLF4J skip that work for hidden lines and keep one template."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: logging-exceptions
+    prompt: "The night shift sees the message but no stack trace. Which line causes it?"
+    code: |
+      try {
+          dock.unlock("B-1042");
+      } catch (IllegalStateException e) {
+          log.error("unlock failed: " + e.getMessage());
+      }
+    bugLine: 4
+    explain: "Only the message text is logged. Pass the exception itself as the last argument: log.error(\"unlock failed for {}\", \"B-1042\", e);"
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: predict-output
+    concept: masking-secrets
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(mask("4000 0566 5566 5556"));
+              System.out.println(mask("12"));
+          }
+
+          static String mask(String cardNumber) {
+              String digits = cardNumber.replaceAll("[^0-9]", "");
+              if (digits.length() < 4) {
+                  return "****";
+              }
+              return "**** **** **** " + digits.substring(digits.length() - 4);
+          }
+      }
+    answer: "**** **** **** 5556\n****"
+    explain: "mask keeps only the last 4 digits. With fewer than 4 digits it shows none at all."
+    reteach: "## Worked example"
+
+  - id: q10
+    type: mcq
+    concept: masking-secrets
+    prompt: "Which log line is safe to write for a card payment?"
+    choices: ["payment ok for R-17 card **** **** **** 4242", "payment ok for R-17 card 4242 4242 4242 4242", "payment ok for R-17 card 4242424242424242 cvc 123", "payment ok for R-17 card 4242 4242 **** ****"]
+    answer: 0
+    explain: "Only the last 4 digits may appear. Logs are copied and kept for months."
+    reteach: "## Concept"

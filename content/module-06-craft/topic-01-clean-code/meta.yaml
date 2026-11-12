@@ -1,0 +1,24 @@
+id: module-06-craft/topic-01-clean-code
+title: "Clean code: names, functions, comments"
+order: 1
+minutes: 10
+prerequisites: [module-05-advanced-java/boss]
+concepts: [meaningful-names, named-constants, small-functions, command-query-separation, why-comments, guard-clauses]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m06.cleancode.Billing
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0601
+  from: maya
+  title: "Nobody can read calc(int t, int m, int k)"
+  body: >
+    Our new hire spent two days inside calc(int t, int m, int k) just to change the e-bike price.
+    The change still went out wrong, and a rider at Old Mill was charged for minutes that should have been free.
+    Can you rewrite the fare code so the next person can change a price in one minute?
+hints:
+  - "Start with the enums. A field set through the enum constructor turns CLASSIC(15) into a price you can read."
+  - "In fareCents, check for negative minutes first and throw. Then add the unlock fee only when membership.paysUnlockFee() is true."
+  - "Paid minutes are Math.max(0, minutes - membership.freeMinutes()). calc becomes: return fareCents(BikeType.values()[t], m, Membership.values()[k]);"
+review: true

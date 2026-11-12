@@ -1,0 +1,23 @@
+id: module-06-craft/mini-project
+title: "FEAT-06: Pluggable promo engine"
+order: 100
+minutes: 12
+prerequisites: [module-06-craft/topic-12-logging]
+concepts: [strategy, open-closed, logging, unit-testing]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m06.feature.PromoEngine
+ticket:
+  key: FEAT-06
+  from: priya
+  title: "A promo engine marketing can extend"
+  body: >
+    Marketing invents a new promotion almost every week, and each one needs a code change in the fare method.
+    I want promotions as plug-ins: one class per promo, and an engine that picks the best one for each ride.
+    Please log every discount, so finance can see what each promo costs.
+hints:
+  - "Each promo is a class that implements Promo. The engine only knows the interface, so a new promo never changes PromoEngine."
+  - "best: keep the applicable promo with the largest discount. On a tie, keep the name that comes first alphabetically. Cap the discount at the fare."
+  - "Log with LOG.info(\"promo {} saved {} cents for {}\", name, discount, rider). Log nothing when no promo applies."
+review: false

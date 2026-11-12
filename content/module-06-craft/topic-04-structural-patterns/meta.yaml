@@ -1,0 +1,23 @@
+id: module-06-craft/topic-04-structural-patterns
+title: "Structural patterns: adapter, decorator, facade"
+order: 4
+minutes: 10
+prerequisites: [module-06-craft/topic-03-creational-patterns]
+concepts: [composition, adapter, decorator, facade, delegation]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0604
+  from: sam
+  title: "Second-hand bikes at Depot won't talk to our app"
+  body: >
+    We bought a second-hand fleet for Depot, and their locks speak a different language: engage and
+    disengage, with number codes. A rider at Depot waited ten minutes on B-9001 yesterday and we had no
+    record of what happened. Support needs every unlock logged and retried once, without touching the lock classes.
+hints:
+  - "Each class you write keeps another object in a private final field and calls it. OldLockAdapter keeps an OldLock. RetryingLock and RecordingLock keep a Lock."
+  - "OldLockAdapter.open returns old.disengage(bikeId) == 0. RetryingLock.open calls inner.open once, and if that gave false, calls it one more time and returns the second answer."
+  - "RecordingLock.open stores boolean ok = inner.open(bikeId); then history.add(\"open \" + bikeId + \": \" + ok); and returns ok. UnlockFacade checks registry.isAllowed(riderId) first, then lock.open(bikeId)."
+review: true

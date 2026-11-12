@@ -1,0 +1,142 @@
+topic: module-06-craft/topic-03-creational-patterns
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: static-factory
+    variants:
+      - { prompt: "What is a static factory method?", choices: ["A static method that creates and returns an object of its class", "A constructor with the word static in front", "A method that deletes old objects", "A class that holds only constants"], answer: 0 }
+      - { prompt: "Why does Ride.classic(\"B-1042\") read better than new Ride(\"B-1042\", \"classic\")?", choices: ["The method name says which kind of ride you get", "It runs faster than a constructor", "It skips the constructor completely", "It makes the Ride object mutable"], answer: 0 }
+    explain: "A static factory is a named constructor. The name tells the reader what comes back."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: static-factory
+    prompt: "___ Ride(String bikeId, String type) { this.bikeId = bikeId; this.type = type; }"
+    answers: ["private"]
+    explain: "A private constructor forces outside code to use the static factory methods."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: simple-factory
+    prompt: "BikeFactory.create(\"scooter\") gets a type it does not know. What should it do?"
+    choices: ["Throw an IllegalArgumentException", "Return a ClassicBike quietly", "Return null", "Print a warning and continue"]
+    answer: 0
+    explain: "A loud failure shows the typo at once. A quiet default hides it until a rider is billed wrong."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: simple-factory
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Bike b = create("cargo");
+              System.out.println(b.centsPerMinute());
+              System.out.println(b instanceof CargoBike);
+          }
+
+          static Bike create(String type) {
+              return switch (type) {
+                  case "ebike" -> new EBike();
+                  case "cargo" -> new CargoBike();
+                  default -> new ClassicBike();
+              };
+          }
+      }
+
+      interface Bike { int centsPerMinute(); }
+      class ClassicBike implements Bike { public int centsPerMinute() { return 15; } }
+      class EBike implements Bike { public int centsPerMinute() { return 30; } }
+      class CargoBike implements Bike { public int centsPerMinute() { return 25; } }
+    answer: "25\ntrue"
+    explain: "The word cargo picks CargoBike, which charges 25 cents a minute."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: builder
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Trip t = Trip.builder().to("Uptown").from("Harbor").build();
+              System.out.println(t.from() + " -> " + t.to() + " " + t.minutes());
+          }
+      }
+
+      record Trip(String from, String to, int minutes) {
+          static Builder builder() { return new Builder(); }
+
+          static class Builder {
+              private String from;
+              private String to;
+              private int minutes = 15;
+              Builder from(String from) { this.from = from; return this; }
+              Builder to(String to) { this.to = to; return this; }
+              Trip build() { return new Trip(from, to, minutes); }
+          }
+      }
+    answer: "Harbor -> Uptown 15"
+    explain: "Each value is stored by name, so the call order does not matter. minutes was never set, so it keeps its default of 15."
+    reteach: "## Worked example"
+
+  - id: q06
+    type: mcq
+    concept: builder
+    prompt: "Where should a builder check that the required fields are present?"
+    choices: ["In build(), before it creates the object", "In every setter", "In the static builder() method", "In the record's accessor methods"]
+    answer: 0
+    explain: "Only build() knows that the caller has finished. That is the moment to check for empty boxes."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: builder
+    prompt: "Which line will not compile?"
+    code: |
+      record Trip(String from, String to) {
+          static class Builder {
+              private String from;
+              private String to;
+              Builder from(String from) { this.from = from; return this; }
+              Builder to(String to) { this.to = to; }
+              Trip build() { return new Trip(from, to); }
+          }
+      }
+    bugLine: 6
+    explain: "The to setter promises to return a Builder but has no return statement. Add return this;."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: fill-blank
+    concept: singleton
+    prompt: "enum PriceTable { ___; int centsPerMinute(String type) { return 15; } }"
+    answers: ["INSTANCE"]
+    explain: "An enum singleton has exactly one constant. By convention it is called INSTANCE."
+    reteach: "## Concept"
+
+  - id: q09
+    type: mcq
+    concept: dependency-injection
+    prompt: "Why is a singleton often called a code smell?"
+    choices: ["Any class can reach it, so dependencies are hidden and hard to swap in tests", "It uses too much memory", "Java does not allow enums with methods", "It makes the program single-threaded"]
+    answer: 0
+    explain: "A global object hides who needs it. Passing it through the constructor makes the need visible."
+    reteach: "## Concept"
+
+  - id: q10
+    type: order
+    concept: dependency-injection
+    prompt: "Put the lines in order to write a FareService that receives its PriceTable. Put the field first, then the constructor."
+    items:
+      - "class FareService {"
+      - "    private final PriceTable prices;"
+      - "    FareService(PriceTable prices) {"
+      - "        this.prices = prices;"
+      - "    }"
+      - "}"
+    explain: "The field holds the dependency, and the constructor receives it from outside. That is dependency injection."
+    reteach: "## Concept"

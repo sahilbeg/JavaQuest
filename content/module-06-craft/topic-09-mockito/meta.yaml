@@ -1,0 +1,24 @@
+id: module-06-craft/topic-09-mockito
+title: "Mocks with Mockito"
+order: 9
+minutes: 10
+prerequisites: [module-06-craft/topic-08-junit]
+concepts: [test-doubles, stubbing, verification, argument-matchers, argument-captor, over-mocking]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0609
+  from: theo
+  title: "Unlock tests charge real cards and need a real bike"
+  body: >
+    Every run of the unlock tests charges my own card a dollar and clicks open dock 4 at Harbor.
+    Yesterday the lock jammed and the rider still got charged with no refund. Can you finish
+    UnlockService so it charges, unlocks, refunds on a stuck lock and sends receipts? The new tests use
+    Mockito mocks for the card and the lock, so nobody pays and nobody needs a bike in the room.
+hints:
+  - "Follow the order in the TODOs: charge first, then open the lock, then send the receipt."
+  - "Wrap gateway.charge(riderId, UNLOCK_FEE_CENTS) in try and catch PaymentDeclinedException. Return \"declined\" from the catch, before the lock is touched."
+  - "After the charge: if (!lock.open(bikeId)) { gateway.refund(paymentId); return \"lock failed\"; } then receipts.send(riderId, paymentId); return \"unlocked\";"
+review: true

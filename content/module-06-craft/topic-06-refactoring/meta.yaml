@@ -1,0 +1,24 @@
+id: module-06-craft/topic-06-refactoring
+title: "Refactoring safely"
+order: 6
+minutes: 10
+prerequisites: [module-06-craft/topic-05-behavioral-patterns]
+concepts: [refactoring, characterization-tests, small-steps, refactoring-moves, code-smells]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m06.refactoring.InvoiceGenerator
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0606
+  from: maya
+  title: "Untangle the invoice generator without changing a character"
+  body: >
+    The invoice method is one giant block with no tests, and every change breaks something. Last month
+    a rider's B-1042 receipt lost a zero and showed $2.8 instead of $2.80. Please clean it up, but riders must
+    not see a single character change on their invoices.
+hints:
+  - "Run the tests first. The three golden-master tests already pass. Keep them passing after every small step."
+  - "Start with InvoiceLine as a record. Then move the cents math out of generate into lines(), one ride at a time."
+  - "format(line) returns bikeId + \" | \" + type + \" | \" + minutes + \" min | \" + money(cents). Then generate loops over lines(...), appends format(line) + \"\\n\", and adds up the cents."
+review: true
