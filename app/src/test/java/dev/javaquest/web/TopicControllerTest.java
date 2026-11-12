@@ -27,13 +27,11 @@ class TopicControllerTest {
     @Autowired
     MockMvc mvc;
 
+    static Path repo;
+
     @DynamicPropertySource
     static void repository(DynamicPropertyRegistry registry) throws IOException {
-        Path classpathFile = Files.createTempFile("runner-classpath", ".txt");
-        Files.writeString(classpathFile, System.getProperty("junit.console.jar"));
-        registry.add("javaquest.root", () -> Path.of("..").toAbsolutePath().normalize().toString());
-        registry.add("javaquest.runner.classpath-file", classpathFile::toString);
-        registry.add("spring.datasource.url", () -> "jdbc:h2:mem:controller-test;DB_CLOSE_DELAY=-1");
+        repo = dev.javaquest.TestRepository.register(registry, "controller-test");
     }
 
     @Test

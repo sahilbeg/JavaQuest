@@ -28,13 +28,11 @@ class ProgressFlowTest {
     @Autowired
     MockMvc mvc;
 
+    static Path repo;
+
     @DynamicPropertySource
     static void repository(DynamicPropertyRegistry registry) throws IOException {
-        Path classpathFile = Files.createTempFile("runner-classpath", ".txt");
-        Files.writeString(classpathFile, System.getProperty("junit.console.jar"));
-        registry.add("javaquest.root", () -> Path.of("..").toAbsolutePath().normalize().toString());
-        registry.add("javaquest.runner.classpath-file", classpathFile::toString);
-        registry.add("spring.datasource.url", () -> "jdbc:h2:mem:progress-flow;DB_CLOSE_DELAY=-1");
+        repo = dev.javaquest.TestRepository.register(registry, "progress-flow");
     }
 
     private ResultActions write(String path) throws Exception {
@@ -80,7 +78,7 @@ class ProgressFlowTest {
 
     @Test
     void resetPutsTheSkeletonBackIntoSrc() throws Exception {
-        Path root = Path.of("..").toAbsolutePath().normalize().resolve("practice/module-00-foundations/topic-05-hello-world");
+        Path root = repo.resolve("practice/module-00-foundations/topic-05-hello-world");
         String file = "jq/m00/helloworld/Hello.java";
         String before = Files.readString(root.resolve("src").resolve(file));
         try {

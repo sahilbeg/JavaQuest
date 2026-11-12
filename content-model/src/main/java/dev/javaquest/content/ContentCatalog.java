@@ -23,11 +23,13 @@ public final class ContentCatalog {
     private static final List<String> REQUIRED_TOPIC_FILES = List.of("meta.yaml", "lesson.md");
 
     private final List<ModuleInfo> modules;
-    private final Map<String, Topic> topics;
+    private final List<Topic> orderedTopics;
+    private final Map<String, Topic> topicsById;
 
     private ContentCatalog(List<ModuleInfo> modules, Map<String, Topic> topics) {
         this.modules = List.copyOf(modules);
-        this.topics = Map.copyOf(topics);
+        this.orderedTopics = List.copyOf(topics.values());
+        this.topicsById = Map.copyOf(topics);
     }
 
     public static ContentCatalog load(Path contentDir, Path practiceDir) throws IOException {
@@ -109,10 +111,10 @@ public final class ContentCatalog {
     }
 
     public List<Topic> topics() {
-        return topics.values().stream().toList();
+        return orderedTopics;
     }
 
     public Optional<Topic> topic(String id) {
-        return Optional.ofNullable(topics.get(id));
+        return Optional.ofNullable(topicsById.get(id));
     }
 }

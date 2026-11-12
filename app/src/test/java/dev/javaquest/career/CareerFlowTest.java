@@ -29,11 +29,14 @@ class CareerFlowTest {
 
     private static final String TOPIC_ID = "module-00-foundations/topic-05-hello-world";
     private static final String TOPIC = "/api/topics/" + TOPIC_ID;
-    private static final Path PRACTICE = Path.of("..").toAbsolutePath().normalize().resolve("practice").resolve(TOPIC_ID);
     private static final String FILE = "jq/m00/helloworld/Hello.java";
 
     @Autowired
     MockMvc mvc;
+
+    private static Path practice() {
+        return repo.resolve("practice").resolve(TOPIC_ID);
+    }
 
     @Autowired
     ProgressService progress;
@@ -41,13 +44,11 @@ class CareerFlowTest {
     @Autowired
     ContentCatalog catalog;
 
+    static Path repo;
+
     @DynamicPropertySource
     static void repository(DynamicPropertyRegistry registry) throws IOException {
-        Path classpathFile = Files.createTempFile("runner-classpath", ".txt");
-        Files.writeString(classpathFile, System.getProperty("junit.console.jar"));
-        registry.add("javaquest.root", () -> Path.of("..").toAbsolutePath().normalize().toString());
-        registry.add("javaquest.runner.classpath-file", classpathFile::toString);
-        registry.add("spring.datasource.url", () -> "jdbc:h2:mem:career-flow;DB_CLOSE_DELAY=-1");
+        repo = dev.javaquest.TestRepository.register(registry, "career-flow");
     }
 
     @Test
@@ -59,15 +60,15 @@ class CareerFlowTest {
                 .andExpect(jsonPath("$.streak.current").value(1))
                 .andExpect(jsonPath("$.streak.activeToday").value(true));
 
-        String skeleton = Files.readString(PRACTICE.resolve("src").resolve(FILE));
+        String skeleton = Files.readString(practice().resolve("src").resolve(FILE));
         try {
-            Files.copy(PRACTICE.resolve("solution").resolve(FILE), PRACTICE.resolve("src").resolve(FILE),
+            Files.copy(practice().resolve("solution").resolve(FILE), practice().resolve("src").resolve(FILE),
                     java.nio.file.StandardCopyOption.REPLACE_EXISTING);
             mvc.perform(post(TOPIC + "/submit").header(LocalOnlyFilter.WRITE_HEADER, "1"))
                     .andExpect(jsonPath("$.result.outcome").value("PASSED"));
             mvc.perform(post(TOPIC + "/submit").header(LocalOnlyFilter.WRITE_HEADER, "1"));
         } finally {
-            Files.writeString(PRACTICE.resolve("src").resolve(FILE), skeleton);
+            Files.writeString(practice().resolve("src").resolve(FILE), skeleton);
         }
         mvc.perform(get("/api/career")).andExpect(jsonPath("$.level.xp").value(15 + 100 + 25));
 
