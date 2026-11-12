@@ -2,7 +2,7 @@
 
 Imagine you hire a robot chef. The robot is fast, but it only follows written recipes, word for word. If the recipe says "add salt", it adds salt. If you forget to write "turn off the oven", the oven stays on.
 
-A program is a recipe for a computer. Today you write your first one. It does one small thing: it shows the words **Hello, World!** on the screen. Programmers have started this way since the 1970s.
+A program is a recipe for a computer. Your first Spoke ticket asks for the smallest recipe there is: make the test kiosk show the words **Hello, World!** on its screen. If that works, your laptop can build and run Java, and you're ready for real tickets. Programmers have started this way since the 1970s.
 
 ## Concept
 

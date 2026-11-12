@@ -8,9 +8,10 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 - Inside a module, each topic needs the topic before it. Extra cross-module prerequisites are listed per topic.
 - Every topic follows: Hook -> Concept -> Worked example -> Try it -> Quiz -> Coding challenge -> Recap and common mistakes.
 - Practice `code` means a JUnit exercise in `practice/`. Practice `quiz` means quiz plus a guided activity (tool topics, theory topics). Mastery for `quiz` topics is the quiz alone.
-- Every module ends with a boss challenge (harder graded exercise) and a mini-project (larger, multi-file, graded by tests).
+- Every module ends with a boss challenge, shown as an incident (`INC-MM`), and a mini-project, shown as a feature (`FEAT-MM`). The story for each is in `docs/STORY.md`.
+- Every topic is shown as a ticket keyed `SPK-MMTT`, for example `SPK-0105`.
 
-## module-00-foundations: How computers and programs work (The Workshop)
+## module-00-foundations: How computers and programs work (project: Day one)
 
 | # | Topic ID | Title | Practice | Prerequisites |
 |---|---|---|---|---|
@@ -20,10 +21,10 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 4 | `module-00-foundations/topic-04-setup-jdk-ide` | Installing the JDK and an IDE | quiz | `module-00-foundations/topic-03-terminal-basics` |
 | 5 | `module-00-foundations/topic-05-hello-world` | Your first program: Hello, World | code | `module-00-foundations/topic-04-setup-jdk-ide` |
 | 6 | `module-00-foundations/topic-06-git-basics` | Git basics: init, add, commit, log | quiz | `module-00-foundations/topic-05-hello-world` |
-| boss | `module-00-foundations/boss` | Fix the broken Hello program and commit it | code | `module-00-foundations/topic-06-git-basics` |
-| mini-project | `module-00-foundations/mini-project` | Personal greeting card printer | code | `module-00-foundations/topic-06-git-basics` |
+| boss | `module-00-foundations/boss` | INC-00: The kiosk welcome screen is broken on launch day | code | `module-00-foundations/topic-06-git-basics` |
+| mini-project | `module-00-foundations/mini-project` | FEAT-00: A printed welcome card for new riders | code | `module-00-foundations/topic-06-git-basics` |
 
-## module-01-basics: Java basics (Village of Variables)
+## module-01-basics: Java basics (project: The fare kiosk)
 
 | # | Topic ID | Title | Practice | Prerequisites |
 |---|---|---|---|---|
@@ -39,10 +40,10 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 10 | `module-01-basics/topic-10-arrays` | Arrays and 2D arrays | code | `module-01-basics/topic-09-methods` |
 | 11 | `module-01-basics/topic-11-strings` | Strings and their methods | code | `module-01-basics/topic-10-arrays` |
 | 12 | `module-01-basics/topic-12-stringbuilder-formatting` | StringBuilder and text formatting | code | `module-01-basics/topic-11-strings` |
-| boss | `module-01-basics/boss` | Number-guessing game engine | code | `module-01-basics/topic-12-stringbuilder-formatting` |
-| mini-project | `module-01-basics/mini-project` | Grade calculator | code | `module-01-basics/topic-12-stringbuilder-formatting` |
+| boss | `module-01-basics/boss` | INC-01: The kiosk charges the wrong fare after midnight | code | `module-01-basics/topic-12-stringbuilder-formatting` |
+| mini-project | `module-01-basics/mini-project` | FEAT-01: Ride receipt printer | code | `module-01-basics/topic-12-stringbuilder-formatting` |
 
-## module-02-oop: Object-Oriented Programming (Object Forest)
+## module-02-oop: Object-Oriented Programming (project: Modelling the fleet)
 
 | # | Topic ID | Title | Practice | Prerequisites |
 |---|---|---|---|---|
@@ -58,10 +59,10 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 10 | `module-02-oop/topic-10-equals-hashcode-tostring` | equals, hashCode and toString | code | `module-02-oop/topic-09-composition` |
 | 11 | `module-02-oop/topic-11-records` | Records | code | `module-02-oop/topic-10-equals-hashcode-tostring` |
 | 12 | `module-02-oop/topic-12-enums` | Enums with fields and methods | code | `module-02-oop/topic-11-records` |
-| boss | `module-02-oop/boss` | Zoo simulator with animal hierarchy | code | `module-02-oop/topic-12-enums` |
-| mini-project | `module-02-oop/mini-project` | Bank account system | code | `module-02-oop/topic-12-enums` |
+| boss | `module-02-oop/boss` | INC-02: E-bikes are billed as normal bikes | code | `module-02-oop/topic-12-enums` |
+| mini-project | `module-02-oop/mini-project` | FEAT-02: The membership system | code | `module-02-oop/topic-12-enums` |
 
-## module-03-core-java: Core Java (Library of Collections)
+## module-03-core-java: Core Java (project: Ride data)
 
 | # | Topic ID | Title | Practice | Prerequisites |
 |---|---|---|---|---|
@@ -81,10 +82,10 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 14 | `module-03-core-java/topic-14-streams-basics` | Streams: filter, map, collect | code | `module-03-core-java/topic-13-functional-interfaces` |
 | 15 | `module-03-core-java/topic-15-streams-advanced` | Streams: grouping, reducing, flatMap | code | `module-03-core-java/topic-14-streams-basics` |
 | 16 | `module-03-core-java/topic-16-optional` | Optional | code | `module-03-core-java/topic-15-streams-advanced` |
-| boss | `module-03-core-java/boss` | Library catalogue search engine | code | `module-03-core-java/topic-16-optional` |
-| mini-project | `module-03-core-java/mini-project` | Expense tracker with CSV import | code | `module-03-core-java/topic-16-optional` |
+| boss | `module-03-core-java/boss` | INC-03: The monthly ride report is wrong | code | `module-03-core-java/topic-16-optional` |
+| mini-project | `module-03-core-java/mini-project` | FEAT-03: Ride-log analytics | code | `module-03-core-java/topic-16-optional` |
 
-## module-04-dsa: Data structures and algorithms (Algorithm Mountains)
+## module-04-dsa: Data structures and algorithms (project: Moving bikes around)
 
 | # | Topic ID | Title | Practice | Prerequisites |
 |---|---|---|---|---|
@@ -100,10 +101,10 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 10 | `module-04-dsa/topic-10-heaps` | Heaps and priority queues | code | `module-04-dsa/topic-09-trees-bst` |
 | 11 | `module-04-dsa/topic-11-graphs` | Graphs: BFS and DFS | code | `module-04-dsa/topic-10-heaps` |
 | 12 | `module-04-dsa/topic-12-dynamic-programming` | Dynamic programming basics | code | `module-04-dsa/topic-11-graphs` |
-| boss | `module-04-dsa/boss` | Maze solver | code | `module-04-dsa/topic-12-dynamic-programming` |
-| mini-project | `module-04-dsa/mini-project` | Autocomplete with a trie | code | `module-04-dsa/topic-12-dynamic-programming` |
+| boss | `module-04-dsa/boss` | INC-04: The route planner sends riders to full stations | code | `module-04-dsa/topic-12-dynamic-programming` |
+| mini-project | `module-04-dsa/mini-project` | FEAT-04: Rebalancing-truck planner | code | `module-04-dsa/topic-12-dynamic-programming` |
 
-## module-05-advanced-java: Advanced Java (Thread Citadel)
+## module-05-advanced-java: Advanced Java (project: Rush hour)
 
 | # | Topic ID | Title | Practice | Prerequisites |
 |---|---|---|---|---|
@@ -120,10 +121,10 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 11 | `module-05-advanced-java/topic-11-annotations` | Annotations and a tiny processor | code | `module-05-advanced-java/topic-10-reflection` |
 | 12 | `module-05-advanced-java/topic-12-sealed-types` | Sealed types | code | `module-05-advanced-java/topic-11-annotations` |
 | 13 | `module-05-advanced-java/topic-13-pattern-matching` | Pattern matching for instanceof, switch and records | code | `module-05-advanced-java/topic-12-sealed-types` |
-| boss | `module-05-advanced-java/boss` | Parallel web-page word counter (simulated) | code | `module-05-advanced-java/topic-13-pattern-matching` |
-| mini-project | `module-05-advanced-java/mini-project` | Mini task scheduler | code | `module-05-advanced-java/topic-13-pattern-matching` |
+| boss | `module-05-advanced-java/boss` | INC-05: Double unlock at rush hour | code | `module-05-advanced-java/topic-13-pattern-matching` |
+| mini-project | `module-05-advanced-java/mini-project` | FEAT-05: Bike telemetry ingester | code | `module-05-advanced-java/topic-13-pattern-matching` |
 
-## module-06-craft: Engineering craft (Craftsman's Guild)
+## module-06-craft: Engineering craft (project: Paying off debt)
 
 | # | Topic ID | Title | Practice | Prerequisites |
 |---|---|---|---|---|
@@ -139,10 +140,10 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 10 | `module-06-craft/topic-10-tdd` | Test-driven development | code | `module-06-craft/topic-09-mockito` |
 | 11 | `module-06-craft/topic-11-debugging` | Debugging with breakpoints and stack traces | code | `module-06-craft/topic-10-tdd` |
 | 12 | `module-06-craft/topic-12-logging` | Logging with SLF4J | code | `module-06-craft/topic-11-debugging` |
-| boss | `module-06-craft/boss` | Refactor a legacy invoice module under tests | code | `module-06-craft/topic-12-logging` |
-| mini-project | `module-06-craft/mini-project` | Pluggable discount engine | code | `module-06-craft/topic-12-logging` |
+| boss | `module-06-craft/boss` | INC-06: Refactor the legacy billing module safely | code | `module-06-craft/topic-12-logging` |
+| mini-project | `module-06-craft/mini-project` | FEAT-06: Pluggable promo engine | code | `module-06-craft/topic-12-logging` |
 
-## module-07-tooling: Build and tooling (Forge of Tools)
+## module-07-tooling: Build and tooling (project: Shipping safely)
 
 | # | Topic ID | Title | Practice | Prerequisites |
 |---|---|---|---|---|
@@ -151,10 +152,10 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 3 | `module-07-tooling/topic-03-git-workflow` | Git branches, merges, rebases, pull requests | quiz | `module-07-tooling/topic-02-gradle` |
 | 4 | `module-07-tooling/topic-04-ci-basics` | Continuous integration basics | quiz | `module-07-tooling/topic-03-git-workflow` |
 | 5 | `module-07-tooling/topic-05-docker-basics` | Docker basics: images and containers | quiz | `module-07-tooling/topic-04-ci-basics` |
-| boss | `module-07-tooling/boss` | Diagnose a broken build pipeline (scenario quiz) | code | `module-07-tooling/topic-05-docker-basics` |
-| mini-project | `module-07-tooling/mini-project` | Package a CLI app as a runnable JAR | code | `module-07-tooling/topic-05-docker-basics` |
+| boss | `module-07-tooling/boss` | INC-07: The release pipeline is red | code | `module-07-tooling/topic-05-docker-basics` |
+| mini-project | `module-07-tooling/mini-project` | FEAT-07: Package the kiosk as a runnable jar | code | `module-07-tooling/topic-05-docker-basics` |
 
-## module-08-backend: Backend engineering (Server Kingdom)
+## module-08-backend: Backend engineering (project: The Spoke API)
 
 | # | Topic ID | Title | Practice | Prerequisites |
 |---|---|---|---|---|
@@ -170,10 +171,10 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 10 | `module-08-backend/topic-10-transactions` | Transactions | code | `module-08-backend/topic-09-jpa-hibernate` |
 | 11 | `module-08-backend/topic-11-spring-security` | Security basics with Spring Security | code | `module-08-backend/topic-10-transactions` |
 | 12 | `module-08-backend/topic-12-api-docs-errors` | API docs, versioning and error design | code | `module-08-backend/topic-11-spring-security` |
-| boss | `module-08-backend/boss` | Todo REST API with persistence and tests | code | `module-08-backend/topic-12-api-docs-errors` |
-| mini-project | `module-08-backend/mini-project` | Bookstore backend | code | `module-08-backend/topic-12-api-docs-errors` |
+| boss | `module-08-backend/boss` | INC-08: Half-finished rentals after a crash | code | `module-08-backend/topic-12-api-docs-errors` |
+| mini-project | `module-08-backend/mini-project` | FEAT-08: The station availability API | code | `module-08-backend/topic-12-api-docs-errors` |
 
-## module-09-architecture: Architecture (Sky Architects)
+## module-09-architecture: Architecture (project: Growing up)
 
 | # | Topic ID | Title | Practice | Prerequisites |
 |---|---|---|---|---|
@@ -185,10 +186,10 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 6 | `module-09-architecture/topic-06-system-design` | System design basics | quiz | `module-09-architecture/topic-05-caching` |
 | 7 | `module-09-architecture/topic-07-performance-profiling` | Performance and profiling | code | `module-09-architecture/topic-06-system-design` |
 | 8 | `module-09-architecture/topic-08-observability` | Logs, metrics and traces | quiz | `module-09-architecture/topic-07-performance-profiling` |
-| boss | `module-09-architecture/boss` | Design a URL shortener (design + core code) | code | `module-09-architecture/topic-08-observability` |
-| mini-project | `module-09-architecture/mini-project` | Event-driven order service (in-process) | code | `module-09-architecture/topic-08-observability` |
+| boss | `module-09-architecture/boss` | INC-09: The live map falls over at peak | code | `module-09-architecture/topic-08-observability` |
+| mini-project | `module-09-architecture/mini-project` | FEAT-09: Event-driven billing | code | `module-09-architecture/topic-08-observability` |
 
-## module-10-professional: Professional skills (Hall of Pros)
+## module-10-professional: Professional skills (project: Full-time offer)
 
 | # | Topic ID | Title | Practice | Prerequisites |
 |---|---|---|---|---|
@@ -198,8 +199,8 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 4 | `module-10-professional/topic-04-estimation` | Estimation and planning | quiz | `module-10-professional/topic-03-documentation` |
 | 5 | `module-10-professional/topic-05-interview-prep` | Interview prep: coding and behavioural | code | `module-10-professional/topic-04-estimation` |
 | 6 | `module-10-professional/topic-06-capstone` | Capstone: full-stack Java service | code | `module-10-professional/topic-05-interview-prep` |
-| boss | `module-10-professional/boss` | Mock technical interview | code | `module-10-professional/topic-06-capstone` |
-| mini-project | `module-10-professional/mini-project` | Capstone (see topic) | code | `module-10-professional/topic-06-capstone` |
+| boss | `module-10-professional/boss` | INC-10: The mock interview loop | code | `module-10-professional/topic-06-capstone` |
+| mini-project | `module-10-professional/mini-project` | CAPSTONE: Capstone: launch Spoke in Bramford | code | `module-10-professional/topic-06-capstone` |
 
 ## Totals
 

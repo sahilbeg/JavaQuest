@@ -9,6 +9,13 @@ practice:
   runner: plain
   mainClass: jq.m00.helloworld.Hello
 xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0005
+  from: maya
+  title: "Make the dev kiosk say hello"
+  body: >
+    Welcome to Spoke! Every new engineer's first ticket is the same. Make the test kiosk print
+    Hello, World! so we know your laptop can build and run Java. Close it and you're officially on the team.
 hints:
   - "Text in Java goes inside double quotes, like \"this\"."
   - "greeting() needs return \"Hello, World!\"; and main needs System.out.println(...)."

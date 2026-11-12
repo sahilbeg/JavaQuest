@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "lastUpdated": "2026-11-12T13:26:32+05:30",
+  "lastUpdated": "2026-11-12T14:43:13+05:30",
   "phase": "PHASE 1: build",
   "milestone": "M2",
-  "resumeHere": "M1 is done and committed. Start M2 task M2-01: page shell with light and dark themes.",
+  "resumeHere": "Story and ticket format are committed. Next: record the UI direction contract, then build the page shell (M2-01).",
   "statusValues": [
     "planned",
     "content_written",
@@ -27,9 +27,10 @@
     "M1-05 runner timing measured",
     "M1-06 file watcher and SSE",
     "M1-07 practice verifier",
-    "M1-08 M1 tests"
+    "M1-08 M1 tests",
+    "M2-00 Spoke story, ticket format, PRODUCT.md"
   ],
-  "nextTask": "M2-01: page shell, light and dark themes, responsive layout",
+  "nextTask": "M2-01: page shell in Spoke's workplace-tool look, light and dark themes, responsive layout",
   "openDecisions": [],
   "blockers": [],
   "milestones": {
@@ -56,7 +57,6 @@
     {
       "id": "module-00-foundations",
       "title": "How computers and programs work",
-      "world": "The Workshop",
       "status": "in_progress",
       "topics": [
         {
@@ -143,7 +143,7 @@
         },
         {
           "id": "module-00-foundations/boss",
-          "title": "Fix the broken Hello program and commit it",
+          "title": "INC-00: The kiosk welcome screen is broken on launch day",
           "practice": "code",
           "prerequisites": [
             "module-00-foundations/topic-06-git-basics"
@@ -157,7 +157,7 @@
         },
         {
           "id": "module-00-foundations/mini-project",
-          "title": "Personal greeting card printer",
+          "title": "FEAT-00: A printed welcome card for new riders",
           "practice": "code",
           "prerequisites": [
             "module-00-foundations/topic-06-git-basics"
@@ -169,12 +169,12 @@
             "verifiedAt": null
           }
         }
-      ]
+      ],
+      "project": "Day one"
     },
     {
       "id": "module-01-basics",
       "title": "Java basics",
-      "world": "Village of Variables",
       "status": "planned",
       "topics": [
         {
@@ -347,7 +347,7 @@
         },
         {
           "id": "module-01-basics/boss",
-          "title": "Number-guessing game engine",
+          "title": "INC-01: The kiosk charges the wrong fare after midnight",
           "practice": "code",
           "prerequisites": [
             "module-01-basics/topic-12-stringbuilder-formatting"
@@ -361,7 +361,7 @@
         },
         {
           "id": "module-01-basics/mini-project",
-          "title": "Grade calculator",
+          "title": "FEAT-01: Ride receipt printer",
           "practice": "code",
           "prerequisites": [
             "module-01-basics/topic-12-stringbuilder-formatting"
@@ -373,12 +373,12 @@
             "verifiedAt": null
           }
         }
-      ]
+      ],
+      "project": "The fare kiosk"
     },
     {
       "id": "module-02-oop",
       "title": "Object-Oriented Programming",
-      "world": "Object Forest",
       "status": "planned",
       "topics": [
         {
@@ -551,7 +551,7 @@
         },
         {
           "id": "module-02-oop/boss",
-          "title": "Zoo simulator with animal hierarchy",
+          "title": "INC-02: E-bikes are billed as normal bikes",
           "practice": "code",
           "prerequisites": [
             "module-02-oop/topic-12-enums"
@@ -565,7 +565,7 @@
         },
         {
           "id": "module-02-oop/mini-project",
-          "title": "Bank account system",
+          "title": "FEAT-02: The membership system",
           "practice": "code",
           "prerequisites": [
             "module-02-oop/topic-12-enums"
@@ -577,12 +577,12 @@
             "verifiedAt": null
           }
         }
-      ]
+      ],
+      "project": "Modelling the fleet"
     },
     {
       "id": "module-03-core-java",
       "title": "Core Java",
-      "world": "Library of Collections",
       "status": "planned",
       "topics": [
         {
@@ -812,7 +812,7 @@
         },
         {
           "id": "module-03-core-java/boss",
-          "title": "Library catalogue search engine",
+          "title": "INC-03: The monthly ride report is wrong",
           "practice": "code",
           "prerequisites": [
             "module-03-core-java/topic-16-optional"
@@ -826,7 +826,7 @@
         },
         {
           "id": "module-03-core-java/mini-project",
-          "title": "Expense tracker with CSV import",
+          "title": "FEAT-03: Ride-log analytics",
           "practice": "code",
           "prerequisites": [
             "module-03-core-java/topic-16-optional"
@@ -838,12 +838,12 @@
             "verifiedAt": null
           }
         }
-      ]
+      ],
+      "project": "Ride data"
     },
     {
       "id": "module-04-dsa",
       "title": "Data structures and algorithms",
-      "world": "Algorithm Mountains",
       "status": "planned",
       "topics": [
         {
@@ -1017,7 +1017,7 @@
         },
         {
           "id": "module-04-dsa/boss",
-          "title": "Maze solver",
+          "title": "INC-04: The route planner sends riders to full stations",
           "practice": "code",
           "prerequisites": [
             "module-04-dsa/topic-12-dynamic-programming"
@@ -1031,7 +1031,7 @@
         },
         {
           "id": "module-04-dsa/mini-project",
-          "title": "Autocomplete with a trie",
+          "title": "FEAT-04: Rebalancing-truck planner",
           "practice": "code",
           "prerequisites": [
             "module-04-dsa/topic-12-dynamic-programming"
@@ -1043,12 +1043,12 @@
             "verifiedAt": null
           }
         }
-      ]
+      ],
+      "project": "Moving bikes around"
     },
     {
       "id": "module-05-advanced-java",
       "title": "Advanced Java",
-      "world": "Thread Citadel",
       "status": "planned",
       "topics": [
         {
@@ -1236,7 +1236,7 @@
         },
         {
           "id": "module-05-advanced-java/boss",
-          "title": "Parallel web-page word counter (simulated)",
+          "title": "INC-05: Double unlock at rush hour",
           "practice": "code",
           "prerequisites": [
             "module-05-advanced-java/topic-13-pattern-matching"
@@ -1250,7 +1250,7 @@
         },
         {
           "id": "module-05-advanced-java/mini-project",
-          "title": "Mini task scheduler",
+          "title": "FEAT-05: Bike telemetry ingester",
           "practice": "code",
           "prerequisites": [
             "module-05-advanced-java/topic-13-pattern-matching"
@@ -1262,12 +1262,12 @@
             "verifiedAt": null
           }
         }
-      ]
+      ],
+      "project": "Rush hour"
     },
     {
       "id": "module-06-craft",
       "title": "Engineering craft",
-      "world": "Craftsman's Guild",
       "status": "planned",
       "topics": [
         {
@@ -1441,7 +1441,7 @@
         },
         {
           "id": "module-06-craft/boss",
-          "title": "Refactor a legacy invoice module under tests",
+          "title": "INC-06: Refactor the legacy billing module safely",
           "practice": "code",
           "prerequisites": [
             "module-06-craft/topic-12-logging"
@@ -1455,7 +1455,7 @@
         },
         {
           "id": "module-06-craft/mini-project",
-          "title": "Pluggable discount engine",
+          "title": "FEAT-06: Pluggable promo engine",
           "practice": "code",
           "prerequisites": [
             "module-06-craft/topic-12-logging"
@@ -1467,12 +1467,12 @@
             "verifiedAt": null
           }
         }
-      ]
+      ],
+      "project": "Paying off debt"
     },
     {
       "id": "module-07-tooling",
       "title": "Build and tooling",
-      "world": "Forge of Tools",
       "status": "planned",
       "topics": [
         {
@@ -1547,7 +1547,7 @@
         },
         {
           "id": "module-07-tooling/boss",
-          "title": "Diagnose a broken build pipeline (scenario quiz)",
+          "title": "INC-07: The release pipeline is red",
           "practice": "code",
           "prerequisites": [
             "module-07-tooling/topic-05-docker-basics"
@@ -1561,7 +1561,7 @@
         },
         {
           "id": "module-07-tooling/mini-project",
-          "title": "Package a CLI app as a runnable JAR",
+          "title": "FEAT-07: Package the kiosk as a runnable jar",
           "practice": "code",
           "prerequisites": [
             "module-07-tooling/topic-05-docker-basics"
@@ -1573,12 +1573,12 @@
             "verifiedAt": null
           }
         }
-      ]
+      ],
+      "project": "Shipping safely"
     },
     {
       "id": "module-08-backend",
       "title": "Backend engineering",
-      "world": "Server Kingdom",
       "status": "planned",
       "topics": [
         {
@@ -1753,7 +1753,7 @@
         },
         {
           "id": "module-08-backend/boss",
-          "title": "Todo REST API with persistence and tests",
+          "title": "INC-08: Half-finished rentals after a crash",
           "practice": "code",
           "prerequisites": [
             "module-08-backend/topic-12-api-docs-errors"
@@ -1767,7 +1767,7 @@
         },
         {
           "id": "module-08-backend/mini-project",
-          "title": "Bookstore backend",
+          "title": "FEAT-08: The station availability API",
           "practice": "code",
           "prerequisites": [
             "module-08-backend/topic-12-api-docs-errors"
@@ -1779,12 +1779,12 @@
             "verifiedAt": null
           }
         }
-      ]
+      ],
+      "project": "The Spoke API"
     },
     {
       "id": "module-09-architecture",
       "title": "Architecture",
-      "world": "Sky Architects",
       "status": "planned",
       "topics": [
         {
@@ -1902,7 +1902,7 @@
         },
         {
           "id": "module-09-architecture/boss",
-          "title": "Design a URL shortener (design + core code)",
+          "title": "INC-09: The live map falls over at peak",
           "practice": "code",
           "prerequisites": [
             "module-09-architecture/topic-08-observability"
@@ -1916,7 +1916,7 @@
         },
         {
           "id": "module-09-architecture/mini-project",
-          "title": "Event-driven order service (in-process)",
+          "title": "FEAT-09: Event-driven billing",
           "practice": "code",
           "prerequisites": [
             "module-09-architecture/topic-08-observability"
@@ -1928,12 +1928,12 @@
             "verifiedAt": null
           }
         }
-      ]
+      ],
+      "project": "Growing up"
     },
     {
       "id": "module-10-professional",
       "title": "Professional skills",
-      "world": "Hall of Pros",
       "status": "planned",
       "topics": [
         {
@@ -2022,7 +2022,7 @@
         },
         {
           "id": "module-10-professional/boss",
-          "title": "Mock technical interview",
+          "title": "INC-10: The mock interview loop",
           "practice": "code",
           "prerequisites": [
             "module-10-professional/topic-06-capstone"
@@ -2036,7 +2036,7 @@
         },
         {
           "id": "module-10-professional/mini-project",
-          "title": "Capstone (see topic)",
+          "title": "CAPSTONE: Capstone: launch Spoke in Bramford",
           "practice": "code",
           "prerequisites": [
             "module-10-professional/topic-06-capstone"
@@ -2048,7 +2048,8 @@
             "verifiedAt": null
           }
         }
-      ]
+      ],
+      "project": "Full-time offer"
     }
   ],
   "decisions": [
@@ -2059,6 +2060,8 @@
     "Spring Boot 4.1.2, JUnit 6.1.3 (Jupiter API)",
     "Content formats are Java records that check themselves; no JSON Schema files",
     "JDK WatchService kept: measured under 2 s on macOS",
-    "Verify practice with: ./mvnw -q -pl tools dependency:properties exec:java"
+    "Verify practice with: ./mvnw -q -pl tools dependency:properties exec:java",
+    "Story: you are an intern at Spoke, a bike-sharing startup (docs/STORY.md)",
+    "UI looks like Spoke's internal workplace tools; topics are tickets, bosses are incidents"
   ]
 }

@@ -35,7 +35,7 @@ Each milestone ends with: project checks green, both state files updated, one co
 - [ ] Mastery, hints, solution unlock rules
 - [ ] XP ledger, levels, streaks, badges
 - [ ] Spaced repetition and weak-topic list
-- [ ] Dashboard, world map, "Continue where you left off"
+- [ ] Career dashboard, ticket board, "Continue where you left off"
 - [ ] Mascot art (SVG) and celebrations, reduced-motion aware
 - [ ] Export and import progress
 

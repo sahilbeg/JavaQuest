@@ -14,7 +14,7 @@ All content is written once, committed, and only read at runtime. The app valida
 ```yaml
 id: module-01-basics
 title: Java basics
-world: Village of Variables
+project: The fare kiosk
 summary: Store values, make decisions, repeat work, and package code into methods.
 unlockAfter: module-00-foundations/boss   # omit for module 0
 mascotIntro: "Every program starts with remembering things. Let's build some memory boxes!"
@@ -36,7 +36,14 @@ practice:
   timeoutSeconds: 10           # optional override
 # The runner finds test classes by scanning the compiled test/ folder, so no test class name is needed.
 xp: { quiz: 50, code: 100 }
-hints:                         # exactly 3, from gentle to explicit
+ticket:                        # the real-world problem, see docs/STORY.md
+  key: SPK-0101
+  from: maya                   # maya | theo | priya | sam
+  title: "Kiosk forgets how long a ride took"
+  body: >
+    Riders say the kiosk shows 0 minutes on every receipt. It needs to remember the ride length
+    so it can work out the fare. Can you take this one?
+hints:                         # exactly 3, from gentle to explicit, shown as messages from Byte
   - "A variable needs a type, a name, and a value."
   - "For whole numbers, use int. For text, use String."
   - "Try: int age = 15;"
@@ -194,4 +201,4 @@ Verification, recorded in `build_state.json` per topic by `./mvnw -q -pl tools d
 
 ## Boss and mini-project folders
 
-Same layout as a topic. `meta.yaml` adds `kind: boss` or `kind: mini-project`, has no quiz, and may hold several source files. A boss has 5 to 10 tests in tiers (`@Tag("bronze")`, `silver`, `gold`). Passing all bronze tests beats the boss. Silver and gold earn bonus XP.
+Same layout as a topic. A boss is shown as an incident with key `INC-MM`, raised by Theo. A mini-project is a feature with key `FEAT-MM`, asked for by Priya. `meta.yaml` has no quiz, and may hold several source files. A boss has 5 to 10 tests in tiers (`@Tag("bronze")`, `silver`, `gold`). Passing all bronze tests beats the boss. Silver and gold earn bonus XP.

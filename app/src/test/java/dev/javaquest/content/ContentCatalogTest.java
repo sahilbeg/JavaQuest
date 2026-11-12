@@ -19,6 +19,7 @@ class ContentCatalogTest {
             order: 1
             minutes: 8
             practice: { kind: code }
+            ticket: { key: SPK-0101, from: maya, title: Store the ride length, body: Riders see 0 minutes. }
             hints: [one, two, three]
             review: true
             """;
@@ -73,6 +74,14 @@ class ContentCatalogTest {
 
         var error = assertThrows(InvalidContentException.class, () -> ContentCatalog.load(content, practice));
         assertTrue(error.getMessage().contains("minutes"), error.getMessage());
+    }
+
+    @Test
+    void badTicketKeyIsRejectedWithTheReason() throws IOException {
+        Files.writeString(topicDir.resolve("meta.yaml"), META.replace("SPK-0101", "TICKET-1"));
+
+        var error = assertThrows(InvalidContentException.class, () -> ContentCatalog.load(content, practice));
+        assertTrue(error.getMessage().contains("ticket.key"), error.getMessage());
     }
 
     @Test

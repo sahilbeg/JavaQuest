@@ -2,12 +2,14 @@
 
 All rules here are pure functions in `progress/`, unit tested. Numbers are design choices to tune later, not measured values.
 
-## World map
+## The board
 
-- Each module is a world on the map (names in CURRICULUM.md). Topics are stops along a path.
-- States: locked (grey padlock), available (glowing), in progress (half ring), mastered (gold star), needs review (small clock).
-- A world unlocks when the previous world's boss is beaten. Inside a world, a stop unlocks when the previous stop is mastered.
-- A "Skip ahead" option unlocks any topic after a warning. Skipped topics earn no mastery until completed. This keeps an experienced learner from being stuck.
+The story is in `docs/STORY.md`. The game layer uses its words.
+
+- The home page is your ticket board. Each module is a project. Its tickets are the topics, then the incident (boss) and the feature (mini-project).
+- Ticket states: locked (not assigned yet), to do, in progress, done (mastered), and needs review (spaced repetition is due).
+- A project opens when the previous project's incident is resolved. Inside a project, a ticket is assigned when the ticket before it is done.
+- "Skip ahead" assigns any locked ticket after a warning. Skipped tickets earn no mastery until completed.
 
 ## Mastery
 
@@ -46,7 +48,7 @@ XP is a ledger (`xp_event`), never a stored total. A repeated action never award
 
 ## Levels
 
-Level `n` needs `100 * n * (n + 1) / 2` total XP: 100, 300, 600, 1000, and so on. Titles every 5 levels: Novice, Apprentice, Coder, Developer, Engineer, Senior Engineer, Architect, Java Pro.
+Level `n` needs `100 * n * (n + 1) / 2` total XP: 100, 300, 600, 1000, and so on. Each block of 5 levels has a job title: Intern, Junior Developer, Developer, Software Engineer, Senior Engineer, Staff Engineer, Architect, Principal Engineer. A new title shows as a promotion message from Maya.
 
 ## Streaks
 
@@ -69,7 +71,9 @@ A topic is weak when either is true:
 
 Weak topics list their missed concepts and link straight to the reteach sections.
 
-## Badges
+## Kudos (badges)
+
+Badges appear as kudos from teammates. The rules stay the same.
 
 | Badge | Rule |
 |---|---|
@@ -83,12 +87,12 @@ Weak topics list their missed concepts and link straight to the reteach sections
 | Unstoppable | 30-day streak |
 | Boss Slayer | Beat any boss |
 | Gold Standard | Gold tier on any boss |
-| World Clear: N | Master every unit in module N (one badge per module) |
+| Project Shipped: N | Master every unit in module N (one per module) |
 | Memory Palace | 50 good reviews |
 | Java Pro | Finish the capstone |
 
-## Mascot and feedback
+## Byte, chat and feedback
 
-- Mascot: **Byte**, a small owl. Byte appears in lesson callouts, on results, and on the empty dashboard.
-- Moods: idle, thinking (test run in progress), cheering (pass), encouraging (fail). Encouraging messages never blame. Example: "Close! 4 of 5 tests pass. Want hint 1?"
-- Celebrations: confetti on mastery, a level-up card, and a badge toast. All are skipped under reduced motion.
+- Byte is the team's owl mascot and lives in the team chat panel. Byte gives hints, explains failed checks, and cheers on done tickets.
+- Moods: idle, thinking (checks running), cheering (pass), encouraging (fail). Encouraging messages never blame. Example: "Close! 4 of 5 checks pass. Want a hint?"
+- Celebrations: a "ticket closed" moment on mastery, a promotion card on a new job title, and a kudos toast. All are skipped under reduced motion.

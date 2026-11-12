@@ -1,6 +1,6 @@
 package dev.javaquest.content;
 
-public record ModuleInfo(String id, String title, String world, String summary, String unlockAfter, String mascotIntro) {
+public record ModuleInfo(String id, String title, String project, String summary, String unlockAfter, String mascotIntro) {
 
     public ModuleInfo {
         if (id == null || !id.matches("module-\\d{2}-[a-z0-9-]+")) {
