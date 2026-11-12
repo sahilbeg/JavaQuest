@@ -2,11 +2,11 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-12T16:01:52+05:30
+- **Last updated:** 2026-11-12T16:15:20+05:30
 - **Phase:** PHASE 1: build
-- **Milestone:** M4
-- **Resume here:** M3 is done and committed. Start M4: keyboard and screen reader audit.
-- **Next task:** M4-01: keyboard and screen reader audit
+- **Milestone:** C00
+- **Resume here:** M4 is done. Start C00: write module 0 content (topics 01-04, 06, INC-00, FEAT-00); topic 05 exists.
+- **Next task:** C00-01: module 0 topic 01 how-computers-work (content + quiz)
 
 ## Completed tasks
 
@@ -41,6 +41,10 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - M3-09 export and import progress
 - M3-10 incident tiers, feature XP, Boss/Gold/Java Pro kudos, quiz-less units, catalog ordered by meta order
 - M4-00 tests run on a temporary repo copy; catalog keeps topic order (was hash order)
+- M4-01 keyboard and screen reader fixes
+- M4-02 contrast fixes, Lighthouse 100 in both themes
+- M4-03 error and empty states, connection banner
+- M4-04 server shutdown with open event streams
 
 ## Decisions
 
@@ -67,7 +71,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 
 | Milestone | Status |
 |---|---|
-| C00 | planned |
+| C00 | in_progress |
 | C01 | planned |
 | C02 | planned |
 | C03 | planned |
@@ -82,7 +86,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | M1 | done |
 | M2 | done |
 | M3 | done |
-| M4 | in_progress |
+| M4 | done |
 | M5 | planned |
 | M6 | planned |
 

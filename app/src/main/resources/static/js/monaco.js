@@ -49,15 +49,16 @@ function defineThemes(monaco) {
     inherit: true,
     rules: [
       { token: "keyword", foreground: "3046c8", fontStyle: "bold" },
-      { token: "string", foreground: "1f7a45" },
-      { token: "comment", foreground: "6b7385", fontStyle: "italic" },
-      { token: "number", foreground: "a24a1f" },
+      { token: "string", foreground: "17663a" },
+      { token: "comment", foreground: "565e6f", fontStyle: "italic" },
+      { token: "number", foreground: "8f3f18" },
       { token: "type", foreground: "7a3fb0" },
     ],
     colors: {
       "editor.background": "#fafbfc",
       "editor.lineHighlightBackground": "#eef1f8",
-      "editorLineNumber.foreground": "#9aa1b0",
+      "editorLineNumber.foreground": "#646b7a",
+      "editorLineNumber.activeForeground": "#1d2230",
       "editorCursor.foreground": "#3046c8",
     },
   });
@@ -74,7 +75,8 @@ function defineThemes(monaco) {
     colors: {
       "editor.background": "#1b1e26",
       "editor.lineHighlightBackground": "#232733",
-      "editorLineNumber.foreground": "#5d6475",
+      "editorLineNumber.foreground": "#9097a6",
+      "editorLineNumber.activeForeground": "#e6e8ee",
       "editorCursor.foreground": "#9fb1ff",
     },
   });

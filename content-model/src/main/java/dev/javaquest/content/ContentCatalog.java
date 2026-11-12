@@ -33,6 +33,9 @@ public final class ContentCatalog {
     }
 
     public static ContentCatalog load(Path contentDir, Path practiceDir) throws IOException {
+        if (!Files.isDirectory(contentDir)) {
+            throw new InvalidContentException(contentDir, "the content folder is missing. Start JavaQuest with ./run.sh from the repository folder");
+        }
         var modules = new ArrayList<ModuleInfo>();
         var topics = new LinkedHashMap<String, Topic>();
         for (Path moduleDir : sortedSubdirectories(contentDir)) {

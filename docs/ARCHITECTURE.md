@@ -77,6 +77,7 @@ flowchart LR
 
 - **Content catalog.** Reads `content/` once at startup, checks every file, and holds an in-memory index. A validation error stops startup with the file path and the problem. In dev mode a flag reloads content on change.
 - **Quiz service.** Picks question variants, grades answers, and records weak concepts. Grading is pure data comparison with no code execution.
+- **Event stream.** `/api/events` sends a `connected` comment at once, so the browser knows the stream is open and notices when the server goes away. On shutdown every stream is closed; before that fix the server waited for open streams and never exited (measured: still running 10 s after SIGTERM; after the fix it exits in 0.25 s).
 - **Practice runner.** Compiles and tests your code in a child JVM (see Sandboxing). One run at a time per topic. Queued runs for the same topic collapse into the latest one.
 - **File watcher.** Uses the `directory-watcher` library on `practice/`, which listens to native file events (FSEvents on macOS). A change to a `.java` file under a topic's `src/` waits 300 ms for more saves, then triggers a test run, pushed to the page over SSE. Measured with JDK 21.0.13 on macOS: the JDK `WatchService` took 2.2 to 2.5 s to notice a save, because it polls on macOS. The native watcher takes 0.36 to 0.39 s including the 300 ms wait (3 saves each). The test run then takes 0.35 to 0.56 s.
 - **Progress service.** Applies the rules in GAMIFICATION.md. All state changes go through it.
@@ -147,6 +148,8 @@ Export and import as JSON from the career page give you a backup. Dates export a
 - Error messages explain in plain words first. The raw compiler output sits behind a "Show details" toggle.
 
 ## Testing the app
+
+- Spring tests run against a temporary copy of `content/` and `practice/` (`TestRepository`). They must never write into the real repository, because a running JavaQuest records those saves as the learner's.
 
 - Unit tests for grading, mastery, XP and spaced repetition rules.
 - An integration test that runs the practice runner on a passing and a failing fixture.

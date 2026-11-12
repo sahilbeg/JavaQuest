@@ -43,11 +43,14 @@ Each milestone ends with: project checks green, both state files updated, one co
 - [x] Byte SVG, dock animation, toasts, promotion dialog, reduced-motion aware
 - [x] Export and import progress
 
-## M4: Accessibility and polish pass
+## M4: Accessibility and polish pass (done)
 
-- [ ] Keyboard and screen reader audit
-- [ ] Contrast check in both themes
-- [ ] Error and empty states
+- [x] Keyboard audit: every stop has a focus ring and a name; editor Tab escape is explained on screen
+- [x] Screen reader basics: page titles per route, focus moves to new content, names match visible labels, decorative owls hidden
+- [x] Contrast in both themes: Lighthouse 100 on every page, plus a measured script over graded, failing and career states
+- [x] Error and empty states: connection-lost banner, missing content folder message, all-tickets-closed board
+- [x] Server shuts down promptly with open event streams (was hanging forever)
+- [ ] Real screen reader pass with VoiceOver (needs a person)
 
 ## C00 to C10: Content, one module per milestone
 

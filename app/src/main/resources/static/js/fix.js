@@ -28,8 +28,13 @@ export async function renderFix(container, topic, chat, onResult) {
       h("code", {}, `practice/${id}/src/${path}`),
       ". Saving in your IDE runs the checks for you."),
     h("div", { class: "editor-frame" },
-      h("div", { class: "editor-bar" }, fileLabel, h("span", { class: "spacer" }), resetButton, solutionButton, saveButton, runButton, submitButton),
+      h("div", { class: "editor-bar" }, fileLabel, h("span", { class: "spacer" }), saveButton, runButton, submitButton),
       notice, host),
+    h("div", { class: "editor-foot" },
+      h("p", { class: "editor-keys" }, "Keyboard: Tab indents code inside the editor. Press ",
+        h("kbd", {}, navigator.platform.startsWith("Mac") ? "Ctrl Shift M" : "Ctrl M"),
+        " to make Tab move focus out of the editor instead."),
+      h("span", { class: "spacer" }), solutionButton, resetButton),
     checks,
     solutionPanel);
 

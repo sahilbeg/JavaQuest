@@ -32,10 +32,12 @@ async function route() {
   view.replaceChildren(h("p", { class: "loading" }, "Loading…"));
   try {
     const catalog = await api.catalog();
+    document.title = { board: "Board · Spoke", career: "Career · Spoke", review: "Review · Spoke" }[current.name] ?? "Spoke · JavaQuest";
     cleanup = current.name === "ticket" ? await renderTicket(view, catalog, current.id, current.tab)
       : current.name === "review" ? await renderReview(view, catalog, current.id)
       : current.name === "career" ? await renderCareer(view)
       : await renderBoard(view, catalog);
+    if (document.activeElement === document.body || !view.contains(document.activeElement)) view.focus({ preventScroll: true });
   } catch (error) {
     view.replaceChildren(h("div", { class: "error-panel", role: "alert" },
       h("h1", {}, "Something went wrong"),
@@ -66,6 +68,11 @@ function setupTheme() {
 
 function setupEvents() {
   const source = new EventSource("/api/events");
+  const banner = document.getElementById("connection");
+  source.addEventListener("open", () => { banner.hidden = true; });
+  source.addEventListener("error", () => {
+    if (source.readyState !== EventSource.OPEN) banner.hidden = false;
+  });
   for (const name of ["run-started", "run-finished"]) {
     source.addEventListener(name, (e) => bus.dispatchEvent(new CustomEvent(name, { detail: JSON.parse(e.data) })));
   }

@@ -42,7 +42,7 @@
   --pass-wash: oklch(95% 0.035 150);
   --fail: oklch(52% 0.19 27);
   --fail-wash: oklch(95.5% 0.03 27);
-  --running: oklch(56% 0.13 75);
+  --running: oklch(49% 0.12 70);
   --running-wash: oklch(95.5% 0.045 85);
   --code-ground: oklch(97.5% 0.004 250);
 
@@ -203,7 +203,7 @@ code, pre, kbd, .mono { font-family: var(--font-code); font-size: 0.9em; }
   display: inline-grid; place-items: center; flex: none;
   width: 28px; height: 28px; border-radius: 50%;
   background: color-mix(in oklch, var(--tint) 18%, var(--surface));
-  color: var(--tint); border: 1.5px solid color-mix(in oklch, var(--tint) 55%, transparent);
+  color: color-mix(in oklch, var(--tint) 70%, var(--ink)); border: 1.5px solid color-mix(in oklch, var(--tint) 55%, transparent);
   font-weight: 700; font-size: 0.72rem; letter-spacing: 0.02em;
 }
 .avatar-you { width: 30px; height: 30px; font-size: 0.68rem; }
@@ -381,7 +381,7 @@ pre.mermaid svg .node rect, pre.mermaid svg .node polygon { filter: none !import
 .fix-intro { max-width: 72ch; margin: 0 0 var(--space-4); color: var(--ink-soft); }
 .editor-frame { border: 1px solid var(--line); border-radius: var(--radius-s); overflow: hidden; background: var(--surface); }
 .editor-bar { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
-.editor-file { font-family: var(--font-code); font-size: 0.85rem; color: var(--ink-soft); }
+.editor-file { font-family: var(--font-code); font-size: 0.85rem; color: var(--ink-soft); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .editor-file[data-dirty="true"]::after { content: " · unsaved"; color: var(--running); }
 .editor-bar .spacer { flex: 1; }
 .editor-host { height: 380px; }
@@ -597,3 +597,9 @@ pre.mermaid svg .node rect, pre.mermaid svg .node polygon { filter: none !import
 .tier { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px 4px 8px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; background: var(--surface-sunk); color: var(--ink-soft); }
 .tier .icon { width: 16px; height: 16px; }
 .tier.is-passed { background: var(--pass-wash); color: var(--pass); }
+
+.editor-foot { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; margin-top: var(--space-2); }
+.editor-foot .spacer { flex: 1; }
+.editor-keys { margin: 0; font-size: 0.85rem; color: var(--ink-soft); max-width: 60ch; }
+kbd { font-family: var(--font-code); font-size: 0.8rem; padding: 1px 6px; border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 4px; background: var(--surface); }
+.connection-banner { margin: 0; padding: var(--space-2) var(--space-5); background: var(--fail-wash); color: var(--fail); font-weight: 700; text-align: center; }

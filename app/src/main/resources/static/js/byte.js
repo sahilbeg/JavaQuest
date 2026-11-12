@@ -8,7 +8,8 @@ const EYES = {
 export function byte(mood = "idle", label = "Byte the owl") {
   const wrap = document.createElement("span");
   wrap.className = "avatar avatar-byte";
-  wrap.innerHTML = `<svg class="byte-owl" viewBox="0 0 32 32" role="img" aria-label="${label}">
+  const a11y = label ? `role="img" aria-label="${label}"` : `aria-hidden="true"`;
+  wrap.innerHTML = `<svg class="byte-owl" viewBox="0 0 32 32" ${a11y}>
     <path d="M6 9 L8 3 L12 7 Z M26 9 L24 3 L20 7 Z" fill="currentColor"/>
     <rect x="5" y="6" width="22" height="23" rx="10" fill="currentColor" opacity="0.22"/>
     <circle cx="11" cy="13.5" r="4.6" fill="var(--surface)" stroke="currentColor" stroke-width="1.4"/>

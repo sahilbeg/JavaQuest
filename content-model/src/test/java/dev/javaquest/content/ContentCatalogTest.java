@@ -156,4 +156,10 @@ class ContentCatalogTest {
         var error = assertThrows(InvalidContentException.class, () -> ContentCatalog.load(content, practice));
         assertTrue(error.getMessage().contains("no onboarding check"), error.getMessage());
     }
+
+    @Test
+    void missingContentFolderSaysHowToStart() {
+        var error = assertThrows(InvalidContentException.class, () -> ContentCatalog.load(root.resolve("nowhere"), practice));
+        assertTrue(error.getMessage().contains("./run.sh"), error.getMessage());
+    }
 }

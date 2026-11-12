@@ -128,15 +128,17 @@ export async function renderTicket(view, catalog, id, initialTab) {
       pagerLink(topic.previousId, "Previous", "arrow-left", false),
       pagerLink(topic.nextId, "Next", "arrow-right", true)));
 
+  const wide = matchMedia("(min-width: 821px)").matches;
   const sideNav = h("nav", { class: "side-nav", "aria-label": module?.project ?? "Project" },
-    h("details", { open: matchMedia("(min-width: 821px)").matches },
-    h("summary", {}, h("h2", {}, module?.project ?? "Project")),
+    h("details", { open: wide },
+    h("summary", { tabindex: wide ? "-1" : null }, h("h2", {}, module?.project ?? "Project")),
     h("ol", {}, siblings.map((t) => h("li", {},
       h("a", { href: `#/t/${t.id}`, "aria-current": t.id === id ? "page" : null },
         h("span", { class: "key" }, t.ticket.key),
         h("span", {}, t.ticket.title)))))));
 
   view.replaceChildren(h("div", { class: "ticket-page" }, sideNav, main, chatBox));
+  document.title = `${summary.ticket.key} ${summary.ticket.title} · Spoke`;
   chat.say([`This one is from ${person.name.split(" ")[0]}.`,
     topic.hasQuiz
       ? "Read the KB page, pass the onboarding check, then fix the code. I'm here if you need a hint."
