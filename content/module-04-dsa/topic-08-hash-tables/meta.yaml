@@ -1,0 +1,24 @@
+id: module-04-dsa/topic-08-hash-tables
+title: "Build a hash table"
+order: 8
+minutes: 10
+prerequisites: [module-04-dsa/topic-07-stacks-queues]
+concepts: [hashing, buckets-chaining, load-factor-resize, equals-hashcode-contract, hash-costs]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0408
+  from: maya
+  title: "Why is HashMap fast, and why did BikeId make it slow?"
+  body: >
+    Last month someone wrote a BikeId class whose hashCode returned 1 for every bike. Looking up
+    B-1042 in the Uptown dock map went from instant to sluggish, and nobody could explain why.
+    I want the whole team to understand what HashMap does inside. Can you build a small one for
+    dock counts so we can all see it?
+hints:
+  - "Each slot of the buckets array holds the first Entry of a chain, or null. Every operation starts with int i = indexFor(key, buckets.length); and then walks the chain with entry = entry.next."
+  - "Compare keys with equals, never ==. In put, replace the value if you find the key. Otherwise add a new Entry at the front of the chain and add 1 to size. Resize when size > 0.75 * buckets.length."
+  - "To resize, make an Entry array twice as long. Walk every chain in the old array. Put each entry into the new array at indexFor(key, newLength). In remove, keep a previous pointer so you can link around the removed entry."
+review: true

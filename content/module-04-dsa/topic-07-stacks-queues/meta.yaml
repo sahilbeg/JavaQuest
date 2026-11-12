@@ -1,0 +1,24 @@
+id: module-04-dsa/topic-07-stacks-queues
+title: "Stacks and queues"
+order: 7
+minutes: 9
+prerequisites: [module-04-dsa/topic-06-linked-lists]
+concepts: [stack-lifo, queue-fifo, growing-array, array-deque, balanced-brackets]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0407
+  from: priya
+  title: "Undo undoes the wrong thing, and the repair line jumps the queue"
+  body: >
+    A rider at Harbor picked the wrong bike, tapped Undo, and the kiosk undid her login from
+    five steps earlier instead. Theo also says the repair queue fixes the bike reported a minute
+    ago before B-1042, which has waited since Monday. Undo should take back the newest action,
+    and repairs should go in the order they came in.
+hints:
+  - "ActionStack keeps a String[] and an int size. The top of the stack is the slot at size - 1."
+  - "In push, when size == items.length, make a new array twice as long and copy the old items across. Then store the new action at items[size] and add 1 to size. pop throws IllegalStateException when size is 0."
+  - "RepairQueue: report calls queue.offer(bikeId), next returns queue.poll(). In balanced, push each opening bracket. On a closing bracket, return false if the deque is empty or pop() is not its partner. At the end, return deque.isEmpty()."
+review: true

@@ -1,0 +1,23 @@
+id: module-04-dsa/boss
+title: "INC-04: The route planner sends riders to full stations"
+order: 99
+minutes: 10
+prerequisites: [module-04-dsa/topic-12-dynamic-programming]
+concepts: [graphs, breadth-first-search, maps]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m04.incident.RoutePlanner
+ticket:
+  key: INC-04
+  from: priya
+  title: "The route planner sends riders to full stations"
+  body: >
+    Riders at a full station ask the app for the nearest station with a free dock.
+    Last night it sent a rider from Harbor to Uptown, which was full too.
+    Then it crashed for every rider near the new Depot station.
+hints:
+  - "Bronze: a station with 0 free docks is full. Check the condition that decides whether a station is good enough."
+  - "Silver: Depot is missing from the free-docks map, so get returns null. Use getOrDefault with 0."
+  - "Gold: search one distance level at a time. Among the free stations at the nearest level, pick the most free docks, then the name that comes first alphabetically."
+review: false

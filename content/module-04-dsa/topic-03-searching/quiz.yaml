@@ -1,0 +1,147 @@
+topic: module-04-dsa/topic-03-searching
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: binary-search
+    variants:
+      - { prompt: "What must be true of an array before you run binary search on it?", choices: ["It must be sorted", "It must have an even length", "It must hold no duplicates", "It must have fewer than 1,000 items"], answer: 0 }
+      - { prompt: "Binary search on an unsorted array returns -1 for a value that is there. Why?", choices: ["It throws away the half it thinks cannot hold the value, and on unsorted data that guess is wrong", "Binary search only works on arrays of Strings", "The midpoint overflows on small arrays", "Binary search always returns -1 the first time"], answer: 0 }
+    explain: "Binary search decides which half to drop by comparing with the middle. That decision is only correct when the data is sorted."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: search-costs
+    prompt: "A sorted list doubles from 50,000 to 100,000 bike ids. About how many more looks does binary search need in the worst case?"
+    choices: ["About 1 more", "About 2 times as many", "About 50,000 more", "No change at all"]
+    answer: 0
+    explain: "Binary search is O(log n). Doubling the data adds one halving step."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: linear-search
+    prompt: "When does a linear search return -1?"
+    choices: ["After it has checked every item without a match", "When the first item does not match", "When the array is not sorted", "When the target is in the second half"]
+    answer: 0
+    explain: "The return -1 sits after the loop. The method reaches it only when no item matched."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: safe-midpoint
+    prompt: "int mid = low + (___) / 2;"
+    answers: ["high - low", "high-low"]
+    explain: "high - low is the size of the range, so it never overflows. Half of it added to low lands in the middle."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: binary-search
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int[] a = {3, 6, 9, 12, 15, 18, 21};
+              int low = 0;
+              int high = a.length - 1;
+              while (low <= high) {
+                  int mid = low + (high - low) / 2;
+                  System.out.println(a[mid]);
+                  if (a[mid] == 18) {
+                      break;
+                  } else if (a[mid] < 18) {
+                      low = mid + 1;
+                  } else {
+                      high = mid - 1;
+                  }
+              }
+          }
+      }
+    answer: "12\n18"
+    explain: "The first mid is index 3, value 12. 12 is less than 18, so low becomes 4. The next mid is index 5, value 18, so the loop stops."
+    reteach: "## Worked example"
+
+  - id: q06
+    type: predict-output
+    concept: linear-search
+    code: |
+      public class Main {
+          static int linear(int[] values, int target) {
+              for (int i = 0; i < values.length; i++) {
+                  if (values[i] == target) {
+                      return i;
+                  }
+              }
+              return -1;
+          }
+
+          public static void main(String[] args) {
+              int[] docks = {4, 8, 4, 2};
+              System.out.println(linear(docks, 4));
+              System.out.println(linear(docks, 5));
+          }
+      }
+    answer: "0\n-1"
+    explain: "Linear search returns the first match, index 0. The value 5 is missing, so the second call returns -1."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: binary-search
+    prompt: "This binary search misses the value when only one item is left in the range. Which line is wrong?"
+    code: |
+      static int binary(int[] sorted, int target) {
+          int low = 0;
+          int high = sorted.length - 1;
+          while (low < high) {
+              int mid = low + (high - low) / 2;
+              if (sorted[mid] == target) {
+                  return mid;
+              } else if (sorted[mid] < target) {
+                  low = mid + 1;
+              } else {
+                  high = mid - 1;
+              }
+          }
+          return -1;
+      }
+    bugLine: 4
+    explain: "With low < high, the loop stops when low equals high and never checks that last item. Use low <= high."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: order
+    concept: recursive-search
+    prompt: "Put the lines of the recursive helper in order."
+    items:
+      - "if (low > high) { return -1; }"
+      - "int mid = low + (high - low) / 2;"
+      - "if (sorted[mid] == target) {"
+      - "    return mid;"
+      - "} else if (sorted[mid] < target) {"
+      - "    return search(sorted, target, mid + 1, high);"
+      - "} else {"
+      - "    return search(sorted, target, low, mid - 1);"
+      - "}"
+    explain: "The base case comes first: an empty range means not found. Then compute mid and recurse into one half."
+    reteach: "## Concept"
+
+  - id: q09
+    type: mcq
+    concept: library-search
+    prompt: "Arrays.binarySearch(ids, 77) returns -4. What does that tell you?"
+    choices: ["77 is not in the array", "77 is at index 4", "77 is at index -4 counted from the end", "The array is empty"]
+    answer: 0
+    explain: "The library returns a negative number for a missing value. It is not always -1, so check with < 0."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: search-costs
+    prompt: "Sam searches one unsorted list of 200 ids exactly once. Which choice makes most sense?"
+    choices: ["A linear search, because sorting first would cost more than it saves", "Sort it, then binary search, because binary search is always faster", "Binary search without sorting", "Search it twice to be sure"]
+    answer: 0
+    explain: "Sorting takes time. Binary search pays off when you sort once and search many times."
+    reteach: "## Concept"

@@ -1,0 +1,24 @@
+id: module-04-dsa/topic-11-graphs
+title: "Graphs: BFS and DFS"
+order: 11
+minutes: 10
+prerequisites: [module-04-dsa/topic-10-heaps]
+concepts: [graph-basics, adjacency-list, bfs, shortest-path, dfs, graph-complexity]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m04.graphs.LaneMap
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0411
+  from: priya
+  title: "Show riders the route with the fewest stops"
+  body: >
+    A rider at Riverside asked how to reach Depot without zigzagging through every station.
+    The bike lanes already join our stations, so the app should be able to work out the route
+    with the fewest stops. Can you build the lane map and the route finder?
+hints:
+  - "Each lane goes in twice: b into a's list and a into b's list. Use computeIfAbsent to create a list the first time."
+  - "For fewestStops, use a Queue with offer and poll, a visited set, and a Map<String, String> of parents. Mark a station visited when it joins the queue."
+  - "When you poll the goal, walk back: start at to, add it, move to parent.get(step), stop at null, then Collections.reverse the list."
+review: true

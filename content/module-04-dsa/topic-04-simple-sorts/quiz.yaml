@@ -1,0 +1,138 @@
+topic: module-04-dsa/topic-04-simple-sorts
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: bubble-sort
+    variants:
+      - { prompt: "Bubble sort with an early stop runs on an array that is already sorted. How many passes does it make?", choices: ["1", "0", "n - 1", "n × n"], answer: 0 }
+      - { prompt: "Why can bubble sort stop after a pass with no swap?", choices: ["No neighbours were out of order, so the whole array is sorted", "The biggest value is at the end, so the rest must be sorted", "Every pass after the first does nothing", "The array has duplicates"], answer: 0 }
+    explain: "A pass with no swap proves every neighbour pair is in order. That means the array is sorted, so one pass is enough."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: selection-sort
+    prompt: "What does one round of selection sort do?"
+    choices: ["Finds the smallest value in the unsorted part and swaps it to the front of that part", "Swaps every pair of neighbours that is out of order", "Shifts bigger values right until the key fits", "Splits the array in half"]
+    answer: 0
+    explain: "Selection sort selects the smallest remaining value and makes one swap per round."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: stability
+    prompt: "Which of the three sorts is NOT stable?"
+    choices: ["Selection sort", "Bubble sort", "Insertion sort", "All three are stable"]
+    answer: 0
+    explain: "Selection sort's long swap can jump a value over an equal one. Bubble and insertion only move values past strictly bigger ones."
+    reteach: "## Worked example"
+
+  - id: q04
+    type: mcq
+    concept: nearly-sorted
+    prompt: "Yesterday's 500 sorted ride times get 3 new rides added at the end. Which sort is the best fit?"
+    choices: ["Insertion sort, because each new key only shifts a few places", "Selection sort, because it does few swaps", "Bubble sort without an early stop", "None of them can handle new items"]
+    answer: 0
+    explain: "On nearly sorted data the inner loop of insertion sort barely runs, so it costs close to O(n)."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: quadratic-time
+    prompt: "Selection sort takes 1 second on 10,000 ride times. About how long on 20,000?"
+    choices: ["About 4 seconds", "About 2 seconds", "About 1 second", "About 20 seconds"]
+    answer: 0
+    explain: "O(n²) means doubling n multiplies the work by 2 × 2 = 4."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: insertion-sort
+    prompt: "Stable version, keeps equal items in order: while (j >= 0 && a[j] ___ key) {"
+    answers: [">"]
+    explain: "Shift only values strictly bigger than the key. With >=, an equal value also shifts right, so the key lands in front of it. That swaps equal items and breaks stability."
+    reteach: "## Concept"
+
+  - id: q07
+    type: predict-output
+    concept: bubble-sort
+    code: |
+      import java.util.Arrays;
+
+      public class Main {
+          public static void main(String[] args) {
+              int[] a = {4, 3, 1};
+              for (int j = 0; j < a.length - 1; j++) {
+                  if (a[j] > a[j + 1]) {
+                      int temp = a[j];
+                      a[j] = a[j + 1];
+                      a[j + 1] = temp;
+                  }
+              }
+              System.out.println(Arrays.toString(a));
+          }
+      }
+    answer: "[3, 1, 4]"
+    explain: "This is one bubble pass. 4 and 3 swap, then 4 and 1 swap. The biggest value reaches the end, but 3 and 1 are still out of order."
+    reteach: "## Concept"
+
+  - id: q08
+    type: predict-output
+    concept: insertion-sort
+    code: |
+      import java.util.Arrays;
+
+      public class Main {
+          public static void main(String[] args) {
+              int[] a = {7, 2, 9, 4};
+              for (int i = 1; i < a.length; i++) {
+                  int key = a[i];
+                  int j = i - 1;
+                  while (j >= 0 && a[j] > key) {
+                      a[j + 1] = a[j];
+                      j--;
+                  }
+                  a[j + 1] = key;
+                  System.out.println(Arrays.toString(a));
+              }
+          }
+      }
+    answer: "[2, 7, 9, 4]\n[2, 7, 9, 4]\n[2, 4, 7, 9]"
+    explain: "Key 2 slides before 7. Key 9 stays put. Key 4 shifts 9 and 7 right and lands at index 1."
+    reteach: "## Concept"
+
+  - id: q09
+    type: order
+    concept: selection-sort
+    prompt: "Put the body of one selection sort round in order."
+    items:
+      - "int min = i;"
+      - "for (int j = i + 1; j < a.length; j++) {"
+      - "    if (a[j] < a[min]) {"
+      - "        min = j;"
+      - "    }"
+      - "}"
+      - "int temp = a[i];"
+      - "a[i] = a[min];"
+      - "a[min] = temp;"
+    explain: "First find the index of the smallest value. Then swap it into position i using temp."
+    reteach: "## Concept"
+
+  - id: q10
+    type: spot-the-bug
+    concept: bubble-sort
+    prompt: "This bubble pass crashes with ArrayIndexOutOfBoundsException. Which line is wrong?"
+    code: |
+      int[] a = {5, 2, 8, 1};
+      for (int j = 0; j < a.length; j++) {
+          if (a[j] > a[j + 1]) {
+              int temp = a[j];
+              a[j] = a[j + 1];
+              a[j + 1] = temp;
+          }
+      }
+    bugLine: 2
+    explain: "The loop lets j reach the last index, and then a[j + 1] is past the end. Stop at j < a.length - 1."
+    reteach: "## Common mistakes"

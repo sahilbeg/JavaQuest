@@ -1,0 +1,25 @@
+id: module-04-dsa/topic-09-trees-bst
+title: "Binary trees and BSTs"
+order: 9
+minutes: 10
+prerequisites: [module-04-dsa/topic-08-hash-tables]
+concepts: [tree-terms, bst-rule, bst-insert-search, traversals, tree-height, treemap]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m04.treesbst.BikeRegistry
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0409
+  from: theo
+  title: "Bike registry needs id order and fast lookups"
+  body: >
+    New bikes roll into the Harbor depot all day, and each one goes into the registry. I need the
+    registry listed in id order for the nightly count, and I need to find B-1042 fast when a rider
+    reports it. Right now we re-sort the whole list after every new bike. Can the registry stay in
+    order by itself?
+hints:
+  - "Every method has the same shape: look at one node, then go left or right. Write a private recursive helper that takes a Node, and let the public method call it with root."
+  - "For insert, the helper returns the node. If node is null, add 1 to size and return new Node(bike). Otherwise set node.left = insert(node.left, bike) or node.right = insert(node.right, bike). Then return node. Equal ids do nothing."
+  - "inOrder(node, list): if node is null, return. Otherwise call inOrder(node.left, list), then list.add(node.bike), then inOrder(node.right, list). height(node) is 0 for null. Otherwise it is 1 + Math.max(height(node.left), height(node.right)). For min, throw new NoSuchElementException() when root == null. Then walk node = node.left while node.left != null."
+review: true

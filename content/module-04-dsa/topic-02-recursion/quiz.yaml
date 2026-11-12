@@ -1,0 +1,117 @@
+topic: module-04-dsa/topic-02-recursion
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: base-case
+    variants:
+      - { prompt: "What does the base case of a recursive method do?", choices: ["Answers the smallest input without calling the method again", "Calls the method with a bigger input", "Runs a loop over the data", "Catches StackOverflowError"], answer: 0 }
+      - { prompt: "Which part of a recursive method stops the recursion?", choices: ["The base case", "The recursive case", "The call stack", "The return type"], answer: 0 }
+    explain: "The base case is the smallest input. It returns directly, so the calls stop piling up."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: stack-overflow
+    prompt: "A recursive method has no base case. What happens when you call it?"
+    choices: ["It throws StackOverflowError", "It returns 0", "It does not compile", "It runs forever without any error"]
+    answer: 0
+    explain: "Each call adds a note to the call stack. With no base case the stack fills up and Java throws StackOverflowError."
+    reteach: "## Common mistakes"
+
+  - id: q03
+    type: mcq
+    concept: repeated-work
+    prompt: "Why is the naive recursive fib(n) slow?"
+    choices: ["It works out the same smaller Fibonacci numbers again and again", "It has no base case", "Recursion is always slower than O(n^2)", "It stores every answer in a list"]
+    answer: 0
+    explain: "fib(5) calls fib(3) twice and fib(2) three times. The repeats make it O(2^n)."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: recursive-case
+    code: |
+      public class Main {
+          static int addUpTo(int n) {
+              if (n == 0) {
+                  return 0;
+              }
+              return n + addUpTo(n - 1);
+          }
+
+          public static void main(String[] args) {
+              System.out.println(addUpTo(4));
+          }
+      }
+    answer: "10"
+    explain: "addUpTo(4) is 4 + 3 + 2 + 1 + 0, which is 10."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: call-stack
+    code: |
+      public class Main {
+          static void show(int n) {
+              if (n == 0) {
+                  return;
+              }
+              show(n - 1);
+              System.out.println(n);
+          }
+
+          public static void main(String[] args) {
+              show(3);
+          }
+      }
+    answer: "1\n2\n3"
+    explain: "Each call waits for the smaller call to finish before it prints. show(1) prints first, then show(2), then show(3)."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: recursion-on-arrays
+    prompt: "return docks[index] + sumFrom(docks, ___);"
+    answers: ["index + 1", "index+1", "1 + index", "1+index"]
+    explain: "Each call handles one slot and moves the index one step toward the end."
+    reteach: "## Worked example"
+
+  - id: q07
+    type: spot-the-bug
+    concept: recursion-on-arrays
+    prompt: "sumFrom should add every slot of the array. Which line makes it drop the last station?"
+    code: |
+      static int sumFrom(int[] docks, int index) {
+          if (index == docks.length - 1) {
+              return 0;
+          }
+          return docks[index] + sumFrom(docks, index + 1);
+      }
+    bugLine: 2
+    explain: "The base case fires while standing on the last slot, so its docks are never added. Stop at index == docks.length."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: order
+    concept: base-case
+    prompt: "Put the lines in order to write a recursive factorial."
+    items:
+      - "static long factorial(int n) {"
+      - "    if (n <= 1) {"
+      - "        return 1;"
+      - "    }"
+      - "    return n * factorial(n - 1);"
+      - "}"
+    explain: "The base case comes first, then the recursive case that moves n toward 1."
+    reteach: "## Concept"
+
+  - id: q09
+    type: mcq
+    concept: call-stack
+    prompt: "factorial(4) is running. How many calls are waiting on the call stack when factorial(1) returns 1?"
+    choices: ["3", "1", "4", "0"]
+    answer: 0
+    explain: "factorial(4), factorial(3) and factorial(2) are all waiting for an answer. That is 3 calls."
+    reteach: "## Concept"

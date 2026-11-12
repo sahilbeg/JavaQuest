@@ -1,0 +1,140 @@
+topic: module-04-dsa/topic-12-dynamic-programming
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: overlapping-subproblems
+    variants:
+      - { prompt: "Why is naive recursive fib(40) so slow?", choices: ["It solves the same smaller fib calls again and again", "Addition of long values is slow", "Recursion cannot return long values", "It sorts the numbers first"], answer: 0 }
+      - { prompt: "What makes a problem a good fit for dynamic programming?", choices: ["The same smaller subproblems come up many times", "The input is already sorted", "The answer is always a String", "It has no smaller subproblems"], answer: 0 }
+    explain: "DP pays off when subproblems overlap. Each one is solved once and its answer is reused."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: memoization
+    prompt: "In a memoized method, when should you look in the memo?"
+    choices: ["Before doing any work for that n", "Only after both recursive calls", "Only when n is 0", "Never, you only write to it"]
+    answer: 0
+    explain: "Check the memo first. If the answer is there, return it and skip the work."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: memoization
+    prompt: "memo.___(n, answer);"
+    answers: ["put"]
+    explain: "put saves the new answer so the next call with the same n can reuse it."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: tabulation
+    prompt: "Which phrase describes tabulation?"
+    choices: ["Bottom-up: fill a table from the smallest case with a loop", "Top-down: recurse and save answers in a map", "Try every mix and keep the cheapest", "Sort the input, then search it"]
+    answer: 0
+    explain: "Tabulation builds answers upward from the base cases, with no recursion."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: tabulation
+    prompt: "table[i] = table[i - 1] + ___;"
+    answers: ["table[i - 2]", "table[i-2]"]
+    explain: "Each Fibonacci cell is the sum of the two cells before it."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: memoization
+    code: |
+      import java.util.HashMap;
+      import java.util.Map;
+
+      public class Main {
+          static int calls = 0;
+          static Map<Integer, Long> memo = new HashMap<>();
+
+          static long fib(int n) {
+              calls++;
+              if (n < 2) {
+                  return n;
+              }
+              if (memo.containsKey(n)) {
+                  return memo.get(n);
+              }
+              long answer = fib(n - 1) + fib(n - 2);
+              memo.put(n, answer);
+              return answer;
+          }
+
+          public static void main(String[] args) {
+              System.out.println(fib(6));
+              System.out.println(calls);
+          }
+      }
+    answer: "8\n11"
+    explain: "fib(6) is 8. Each n from 6 down to 2 does real work once, and the memo answers the repeats, so there are only 11 calls."
+    reteach: "## Concept"
+
+  - id: q07
+    type: predict-output
+    concept: tabulation
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int[] ways = new int[5];
+              ways[0] = 1;
+              ways[1] = 1;
+              for (int b = 2; b < 5; b++) {
+                  ways[b] = ways[b - 1] + ways[b - 2];
+              }
+              System.out.println(ways[3]);
+              System.out.println(ways[4]);
+          }
+      }
+    answer: "3\n5"
+    explain: "The table fills as 1, 1, 2, 3, 5. ways[3] is 3 and ways[4] is 5."
+    reteach: "## Concept"
+
+  - id: q08
+    type: order
+    concept: min-cost-cover
+    prompt: "Put the steps for cheapestCover in order."
+    items:
+      - "Return 0 if there are no ride days"
+      - "Mark the ride days and create cost with one cell per day up to the last ride day"
+      - "For each day, copy yesterday's cost or take the cheapest of the three passes"
+      - "Return the cost of the last ride day"
+    explain: "Handle the empty case, set up the table, fill it from day 1 upward, then read the final cell."
+    reteach: "## Worked example"
+
+  - id: q09
+    type: spot-the-bug
+    concept: tabulation
+    code: |
+      static long fib(int n) {
+          if (n < 2) {
+              return n;
+          }
+          long[] table = new long[n];
+          table[1] = 1;
+          for (int i = 2; i <= n; i++) {
+              table[i] = table[i - 1] + table[i - 2];
+          }
+          return table[n];
+      }
+    prompt: "fib(10) crashes with ArrayIndexOutOfBoundsException. Which line is wrong?"
+    bugLine: 5
+    explain: "The table needs cells 0 to n, which is n + 1 cells. Use new long[n + 1]."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: dp-complexity
+    prompt: "What is the Big-O of memoized fib(n)?"
+    choices: ["O(n)", "O(2^n)", "O(1)", "O(n^2)"]
+    answer: 0
+    explain: "Each value from 0 to n is worked out once, so the work grows in step with n."
+    reteach: "## Concept"

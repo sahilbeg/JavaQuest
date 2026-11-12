@@ -1,0 +1,24 @@
+id: module-04-dsa/topic-05-merge-quick-sort
+title: "Merge sort and quicksort"
+order: 5
+minutes: 10
+prerequisites: [module-04-dsa/topic-04-simple-sorts]
+concepts: [divide-and-conquer, merging, merge-sort, partition, quicksort, sort-costs]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m04.mergequicksort.FastSorts
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0405
+  from: theo
+  title: "Board report sort runs all night"
+  body: >
+    The board report sorts every ride from this year by minutes, using the insertion sort from
+    SPK-0404. With millions of rides it started at 6 pm and was still going when I came in.
+    The board meets Friday at Riverside. Can you give it a sort that finishes before coffee?
+hints:
+  - "Start with merge. Keep one index for left, one for right and one for the result, and always copy the smaller front item."
+  - "mergeSort stops when a.length < 2. Otherwise copy the halves with Arrays.copyOfRange(a, 0, mid) and Arrays.copyOfRange(a, mid, a.length). Sort both, merge, and copy back. quickSort(a) just calls quickSort(a, 0, a.length - 1)."
+  - "In partition, start with int pivot = a[high]; and int i = low;. Then loop for (int j = low; j < high; j++). Inside, if a[j] <= pivot, swap a[i] and a[j], then do i++. After the loop, swap a[i] and a[high] and return i."
+review: true

@@ -1,0 +1,23 @@
+id: module-04-dsa/topic-04-simple-sorts
+title: "Bubble, selection, insertion sort"
+order: 4
+minutes: 10
+prerequisites: [module-04-dsa/topic-03-searching]
+concepts: [bubble-sort, selection-sort, insertion-sort, quadratic-time, stability, nearly-sorted]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0404
+  from: maya
+  title: "Kiosk firmware has no sort"
+  body: >
+    Every night each dock sends its list of ride minutes to the kiosk, and Theo wants the
+    Riverside report sorted shortest to longest. The kiosk firmware is tiny and has no library
+    sort at all. We need a sort we write ourselves that runs right there on the device.
+hints:
+  - "Every sort here uses a swap: int temp = a[i]; a[i] = a[j]; a[j] = temp;. Bubble sort compares neighbours a[j] and a[j + 1] and swaps them when the left one is bigger."
+  - "Selection sort finds the index of the smallest value from i to the end, then swaps it into position i. Insertion sort takes a[i] as key and shifts bigger values one place right until key fits."
+  - "For bubblePasses, wrap the passes in a loop that counts each pass and keeps a boolean swapped = false. Set it to true on a swap, and stop with break after a pass where swapped is still false."
+review: true

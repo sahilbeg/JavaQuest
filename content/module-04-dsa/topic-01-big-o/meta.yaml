@@ -1,0 +1,24 @@
+id: module-04-dsa/topic-01-big-o
+title: "Complexity and Big-O"
+order: 1
+minutes: 9
+prerequisites: [module-03-core-java/boss]
+concepts: [counting-steps, growth-rates, dropping-constants, best-worst-case, space-complexity, collection-costs]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0401
+  from: theo
+  title: "Unlocking a bike takes seconds at Harbor"
+  body: >
+    Before the kiosk unlocks a bike, it checks "is this bike already out?" by scanning every
+    ride we logged this year. In January it felt instant. Now a rider at Harbor waits three
+    seconds to unlock B-1042, and the queue is growing. Can you find out why it gets slower
+    and make the check fast?
+hints:
+  - "Each method counts its own steps. Start a counter at 0 and add 1 every time the loop body runs."
+  - "For countHalving, keep dividing n by 2 while n is greater than 1, and count each division. For containsSlow, compare each id with equals."
+  - "countNested is a loop inside a loop. Write for (int i = 0; i < n; i++) around for (int j = 0; j < n; j++) { steps++; }. containsFast is just return ids.contains(id);"
+review: true

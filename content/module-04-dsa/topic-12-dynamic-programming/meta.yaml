@@ -1,0 +1,24 @@
+id: module-04-dsa/topic-12-dynamic-programming
+title: "Dynamic programming basics"
+order: 12
+minutes: 9
+prerequisites: [module-04-dsa/topic-11-graphs]
+concepts: [overlapping-subproblems, memoization, tabulation, dp-complexity, min-cost-cover]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m04.dp.Passes
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0412
+  from: maya
+  title: "Pass pricing tool freezes on a 30-day month"
+  body: >
+    Sam has a rider from Old Mill waiting on the cheapest mix of passes for her month.
+    Our pricing tool tries every mix with plain recursion, and it hangs for 30 days of rides.
+    Day passes are $3, week passes $10 and month passes $25. Can you make it remember its answers?
+hints:
+  - "Every method here fills an array from the smallest case upward. Make it one cell bigger than the largest index you need."
+  - "fib uses a long[] table with table[i] = table[i - 1] + table[i - 2]. waysToDock follows the same rule with ways[0] = 1 and ways[1] = 1."
+  - "For cheapestCover, take the smallest of three prices on a ride day d. They are cost[d - 1] + dayPrice, cost[Math.max(0, d - 7)] + weekPrice and cost[Math.max(0, d - 30)] + monthPrice. On other days, cost[d] = cost[d - 1]."
+review: true

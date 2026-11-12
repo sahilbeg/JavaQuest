@@ -1,0 +1,159 @@
+topic: module-04-dsa/topic-11-graphs
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: graph-basics
+    variants:
+      - { prompt: "In the Riverton lane map, what is a station?", choices: ["A node", "An edge", "A queue", "A parent"], answer: 0 }
+      - { prompt: "In the Riverton lane map, what is a bike lane?", choices: ["An edge", "A node", "A visited set", "A path"], answer: 0 }
+    explain: "Stations are the dots, called nodes. Lanes are the lines between them, called edges."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: graph-basics
+    prompt: "The graph is undirected and has a lane between Harbor and Uptown. Which is true?"
+    choices: ["Harbor is in Uptown's neighbour list, and Uptown is in Harbor's", "Only Uptown is in Harbor's neighbour list", "Only Harbor is in Uptown's neighbour list", "Neither station lists the other"]
+    answer: 0
+    explain: "An undirected edge works both ways, so each end lists the other."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: adjacency-list
+    prompt: "Map<String, ___> lanes = new LinkedHashMap<>();"
+    answers: ["List<String>", "ArrayList<String>"]
+    explain: "An adjacency list maps each station to a list of its neighbours."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: bfs
+    prompt: "Which helper makes BFS explore near stations before far ones?"
+    choices: ["A queue", "A stack", "A sorted list", "A parent map"]
+    answer: 0
+    explain: "A queue is first in, first out, so stations one lane away come out before stations two lanes away."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: bfs
+    code: |
+      import java.util.ArrayDeque;
+      import java.util.HashSet;
+      import java.util.List;
+      import java.util.Map;
+      import java.util.Queue;
+      import java.util.Set;
+
+      public class Main {
+          public static void main(String[] args) {
+              Map<String, List<String>> lanes = Map.of(
+                      "Uptown", List.of("Harbor", "Depot"),
+                      "Harbor", List.of("Uptown", "Riverside"),
+                      "Depot", List.of("Uptown"),
+                      "Riverside", List.of("Harbor"));
+              Set<String> visited = new HashSet<>();
+              Queue<String> queue = new ArrayDeque<>();
+              visited.add("Uptown");
+              queue.offer("Uptown");
+              while (!queue.isEmpty()) {
+                  String current = queue.poll();
+                  System.out.println(current);
+                  for (String next : lanes.get(current)) {
+                      if (!visited.contains(next)) {
+                          visited.add(next);
+                          queue.offer(next);
+                      }
+                  }
+              }
+          }
+      }
+    answer: "Uptown\nHarbor\nDepot\nRiverside"
+    explain: "Harbor and Depot are one lane from Uptown, so they come out first. Riverside is two lanes away."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: dfs
+    code: |
+      import java.util.HashSet;
+      import java.util.List;
+      import java.util.Map;
+      import java.util.Set;
+
+      public class Main {
+          static Map<String, List<String>> lanes = Map.of(
+                  "Uptown", List.of("Harbor", "Depot"),
+                  "Harbor", List.of("Uptown", "Riverside"),
+                  "Depot", List.of("Uptown"),
+                  "Riverside", List.of("Harbor"));
+
+          static void dfs(String station, Set<String> visited) {
+              if (visited.contains(station)) {
+                  return;
+              }
+              visited.add(station);
+              System.out.println(station);
+              for (String next : lanes.get(station)) {
+                  dfs(next, visited);
+              }
+          }
+
+          public static void main(String[] args) {
+              dfs("Uptown", new HashSet<>());
+          }
+      }
+    answer: "Uptown\nHarbor\nRiverside\nDepot"
+    explain: "DFS goes deep first: Uptown, then Harbor, then on to Riverside. Only then does it back up and visit Depot."
+    reteach: "## Try it"
+
+  - id: q07
+    type: order
+    concept: shortest-path
+    prompt: "Put the steps for finding the route with the fewest stops in order."
+    items:
+      - "Mark the start as visited and put it in the queue"
+      - "Poll the next station from the queue"
+      - "For each new neighbour, mark it visited, store its parent and offer it"
+      - "When the goal is reached, follow the parents back to the start"
+      - "Reverse the list of stations"
+    explain: "BFS spreads out and records parents. The parents give the route backwards, so you reverse it."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: fill-blank
+    concept: shortest-path
+    prompt: "parent.___(next, current);"
+    answers: ["put"]
+    explain: "The parent map stores, for each new station, the station you came from."
+    reteach: "## Concept"
+
+  - id: q09
+    type: spot-the-bug
+    concept: dfs
+    code: |
+      static void dfs(String station, Set<String> visited) {
+          if (visited.contains(station)) {
+              return;
+          }
+          visited.remove(station);
+          for (String next : lanes.get(station)) {
+              dfs(next, visited);
+          }
+      }
+    prompt: "This DFS never ends on a graph with a loop. Which line is wrong?"
+    bugLine: 5
+    explain: "Line 5 should be visited.add(station);. The set stays empty, so DFS walks around the loop until the stack overflows."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: graph-complexity
+    prompt: "BFS runs in O(V + E). What happens to the time if you double both the stations and the lanes?"
+    choices: ["It roughly doubles", "It stays the same", "It roughly squares", "It halves"]
+    answer: 0
+    explain: "O(V + E) grows in step with the number of stations plus lanes."
+    reteach: "## Concept"

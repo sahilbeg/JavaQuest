@@ -1,0 +1,148 @@
+topic: module-04-dsa/topic-06-linked-lists
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: nodes-references
+    prompt: "What does a node in a linked list hold?"
+    choices: ["One item and a reference to the next node", "Every item in the list", "Only an index number", "A copy of the whole list"]
+    answer: 0
+    explain: "A node holds its item plus a next reference. The chain of next references makes the list."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: list-costs
+    variants:
+      - { prompt: "A linked list keeps only head. What does addFirst cost?", choices: ["O(1)", "O(n)", "O(n^2)", "O(log n)"], answer: 0 }
+      - { prompt: "A linked list keeps only head. What does get(i) cost?", choices: ["O(n)", "O(1)", "O(n^2)", "O(log n)"], answer: 0 }
+    explain: "Adding at the front only changes a couple of references. Reaching index i means walking i nodes from head."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: list-costs
+    prompt: "Why is removing the front item slow in an ArrayList?"
+    choices: ["Every other item shifts one place left", "It has to sort the list first", "It copies the list into a linked list", "It walks from the end to the front"]
+    answer: 0
+    explain: "An ArrayList stores items side by side, so removing index 0 moves every other item. A linked list just moves head."
+    reteach: "## Hook"
+
+  - id: q04
+    type: predict-output
+    concept: add-remove
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Node head = null;
+              String[] names = {"Ana", "Ben", "Cleo"};
+              for (String name : names) {
+                  Node node = new Node(name);
+                  node.next = head;
+                  head = node;
+              }
+              Node current = head;
+              while (current != null) {
+                  System.out.println(current.item);
+                  current = current.next;
+              }
+          }
+      }
+
+      class Node {
+          String item;
+          Node next;
+
+          Node(String item) {
+              this.item = item;
+          }
+      }
+    answer: "Cleo\nBen\nAna"
+    explain: "Each name is added at the front, so the last one added becomes the head."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: traversal
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Node head = new Node(12);
+              head.next = new Node(30);
+              head.next.next = new Node(7);
+              int total = 0;
+              int count = 0;
+              Node current = head;
+              while (current != null) {
+                  total = total + current.minutes;
+                  count++;
+                  current = current.next;
+              }
+              System.out.println(count + " rides, " + total + " minutes");
+          }
+      }
+
+      class Node {
+          int minutes;
+          Node next;
+
+          Node(int minutes) {
+              this.minutes = minutes;
+          }
+      }
+    answer: "3 rides, 49 minutes"
+    explain: "The walk visits all three nodes: 12 + 30 + 7 is 49."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: traversal
+    prompt: "current = current.___;"
+    answers: ["next"]
+    explain: "Following the next reference moves the walker one node along."
+    reteach: "## Concept"
+
+  - id: q07
+    type: order
+    concept: add-remove
+    prompt: "Put the lines of addFirst in order. (size++ comes last)"
+    items:
+      - "Node<T> node = new Node<>(item);"
+      - "node.next = head;"
+      - "head = node;"
+    explain: "Link the new node to the old head before you move head, or the old list is lost."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: add-remove
+    prompt: "After addFirst runs on a non-empty list, the old first item has vanished. Which line is wrong?"
+    code: |
+      void addFirst(T item) {
+          Node<T> node = new Node<>(item);
+          node.next = head.next;
+          head = node;
+          size++;
+      }
+    bugLine: 3
+    explain: "head.next skips the old head node. The new node must point at the old head itself: node.next = head."
+    reteach: "## Concept"
+
+  - id: q09
+    type: mcq
+    concept: generic-list
+    prompt: "Why is Node declared as private static class Node<T> inside RiderList<T>?"
+    choices: ["Nodes stay hidden from outside code and do not need a list object to exist", "It makes get(i) run in O(1)", "Java forbids a class from having a field of its own type", "It stops the list from holding null"]
+    answer: 0
+    explain: "private hides nodes from callers. static means a Node only needs its item and next, with no link to an outer list object."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: nodes-references
+    prompt: "contains uses current.item == item. Why can it miss a rider who is in the list?"
+    choices: ["== checks for the same object, so an equal String made separately does not match", "== only works on numbers", "== skips the head node", "== throws a NullPointerException on Strings"]
+    answer: 0
+    explain: "== compares references. Use equals to compare the values inside the objects."
+    reteach: "## Common mistakes"

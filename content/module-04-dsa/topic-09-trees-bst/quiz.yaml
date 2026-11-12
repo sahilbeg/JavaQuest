@@ -1,0 +1,193 @@
+topic: module-04-dsa/topic-09-trees-bst
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: tree-terms
+    variants:
+      - { prompt: "What is a leaf in a tree?", choices: ["A node with no children", "The node at the top", "A node with two children", "The link between two nodes"], answer: 0 }
+      - { prompt: "What is the root of a tree?", choices: ["The single node with no parent", "Any node with no children", "The node with the largest value", "The last node inserted"], answer: 0 }
+    explain: "The root sits at the top and has no parent. A leaf sits at the bottom and has no children."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: bst-rule
+    prompt: "A BST has root 1042. Where does bike 1017 go when it is inserted?"
+    choices: ["Somewhere in the left subtree of 1042", "Somewhere in the right subtree of 1042", "It replaces the root", "At the end of a list under the root"]
+    answer: 0
+    explain: "1017 is smaller than 1042, and smaller values always go left."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: bst-insert-search
+    prompt: "node.left = ___(node.left, bike);"
+    answers: ["insert"]
+    explain: "The recursive insert returns the subtree with the new node in it, and the parent stores that link."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: traversals
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          static Node insert(Node node, int bike) {
+              if (node == null) {
+                  return new Node(bike);
+              }
+              if (bike < node.bike) {
+                  node.left = insert(node.left, bike);
+              } else if (bike > node.bike) {
+                  node.right = insert(node.right, bike);
+              }
+              return node;
+          }
+
+          static void inOrder(Node node, List<Integer> out) {
+              if (node == null) {
+                  return;
+              }
+              inOrder(node.left, out);
+              out.add(node.bike);
+              inOrder(node.right, out);
+          }
+
+          public static void main(String[] args) {
+              Node root = null;
+              int[] arrivals = {50, 30, 70, 30, 60, 10};
+              for (int bike : arrivals) {
+                  root = insert(root, bike);
+              }
+              List<Integer> out = new ArrayList<>();
+              inOrder(root, out);
+              System.out.println(out);
+          }
+      }
+
+      class Node {
+          int bike;
+          Node left;
+          Node right;
+
+          Node(int bike) {
+              this.bike = bike;
+          }
+      }
+    answer: "[10, 30, 50, 60, 70]"
+    explain: "In-order visits left, node, right, so a BST comes out sorted. The second 30 is a duplicate and is ignored."
+    reteach: "## Worked example"
+
+  - id: q05
+    type: predict-output
+    concept: tree-height
+    code: |
+      public class Main {
+          static Node insert(Node node, int bike) {
+              if (node == null) {
+                  return new Node(bike);
+              }
+              if (bike < node.bike) {
+                  node.left = insert(node.left, bike);
+              } else if (bike > node.bike) {
+                  node.right = insert(node.right, bike);
+              }
+              return node;
+          }
+
+          static int height(Node node) {
+              if (node == null) {
+                  return 0;
+              }
+              return 1 + Math.max(height(node.left), height(node.right));
+          }
+
+          public static void main(String[] args) {
+              Node sorted = null;
+              Node mixed = null;
+              int[] a = {1, 2, 3, 4};
+              int[] b = {3, 1, 4, 2};
+              for (int i = 0; i < 4; i++) {
+                  sorted = insert(sorted, a[i]);
+                  mixed = insert(mixed, b[i]);
+              }
+              System.out.println(height(sorted));
+              System.out.println(height(mixed));
+          }
+      }
+
+      class Node {
+          int bike;
+          Node left;
+          Node right;
+
+          Node(int bike) {
+              this.bike = bike;
+          }
+      }
+    answer: "4\n3"
+    explain: "Sorted input always goes right, so it builds a chain of 4. The mixed order puts 1 and 4 on both sides of 3, and 2 under 1, so the height is 3."
+    reteach: "## Try it"
+
+  - id: q06
+    type: mcq
+    concept: tree-height
+    prompt: "New bikes arrive in increasing id order: 1001, 1002, 1003, and so on. How long does a search take in a plain BST of n bikes?"
+    choices: ["O(n), because the tree becomes one long chain", "O(log n), because a BST is always fast", "O(1), because the newest bike is at the root", "O(n log n), because the tree must be sorted"]
+    answer: 0
+    explain: "Each new bike goes right of every other bike. The tree degenerates into a chain as tall as n."
+    reteach: "## Concept"
+
+  - id: q07
+    type: order
+    concept: traversals
+    prompt: "Put the body of an in-order traversal in the right order."
+    items:
+      - "if (node == null) { return; }"
+      - "inOrder(node.left, out);"
+      - "out.add(node.bike);"
+      - "inOrder(node.right, out);"
+    explain: "Check for null first. Then left subtree, the node itself, and the right subtree."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: bst-insert-search
+    code: |
+      static boolean contains(Node node, int bike) {
+          if (node == null) {
+              return true;
+          }
+          if (bike == node.bike) {
+              return true;
+          }
+          if (bike < node.bike) {
+              return contains(node.left, bike);
+          }
+          return contains(node.right, bike);
+      }
+    bugLine: 3
+    explain: "Reaching null means the search fell off the tree, so the bike is missing. Line 3 must return false, or every search says yes."
+    reteach: "## Concept"
+
+  - id: q09
+    type: mcq
+    concept: treemap
+    prompt: "You need bike ids kept in sorted order with O(log n) lookups, and you do not want to write a tree. What do you use?"
+    choices: ["TreeMap", "HashMap", "ArrayList", "LinkedList"]
+    answer: 0
+    explain: "TreeMap is a balanced search tree. Its keys stay sorted and get, put and containsKey are O(log n)."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: traversals
+    prompt: "Which traversal visits the node first, then its left subtree, then its right subtree?"
+    choices: ["Pre-order", "In-order", "Post-order", "Level order"]
+    answer: 0
+    explain: "Pre means before: the node comes before both subtrees."
+    reteach: "## Concept"

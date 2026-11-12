@@ -6,6 +6,8 @@ JavaQuest is told as one story. You join **Spoke**, a bike-sharing startup in th
 
 Spoke rents bikes from docking stations around Riverton. Riders unlock a bike at one station, ride, and dock it at another. Spoke charges by the minute and sells memberships. The company starts small, with a few stations and one kiosk, and grows with every module.
 
+The first stations are Riverside, Old Mill, Harbor and Uptown, with 12 docks each. Depot opens in module 4 as the fifth station. Bike ids look like B-1042.
+
 ## Cast
 
 | Character | Role | What they bring you |

@@ -99,6 +99,20 @@
                 <source>module-03-core-java/topic-14-streams-basics/src</source>
                 <source>module-03-core-java/topic-15-streams-advanced/src</source>
                 <source>module-03-core-java/topic-16-optional/src</source>
+                <source>module-04-dsa/boss/src</source>
+                <source>module-04-dsa/mini-project/src</source>
+                <source>module-04-dsa/topic-01-big-o/src</source>
+                <source>module-04-dsa/topic-02-recursion/src</source>
+                <source>module-04-dsa/topic-03-searching/src</source>
+                <source>module-04-dsa/topic-04-simple-sorts/src</source>
+                <source>module-04-dsa/topic-05-merge-quick-sort/src</source>
+                <source>module-04-dsa/topic-06-linked-lists/src</source>
+                <source>module-04-dsa/topic-07-stacks-queues/src</source>
+                <source>module-04-dsa/topic-08-hash-tables/src</source>
+                <source>module-04-dsa/topic-09-trees-bst/src</source>
+                <source>module-04-dsa/topic-10-heaps/src</source>
+                <source>module-04-dsa/topic-11-graphs/src</source>
+                <source>module-04-dsa/topic-12-dynamic-programming/src</source>
               </sources>
             </configuration>
           </execution>
@@ -157,6 +171,20 @@
                 <source>module-03-core-java/topic-14-streams-basics/test</source>
                 <source>module-03-core-java/topic-15-streams-advanced/test</source>
                 <source>module-03-core-java/topic-16-optional/test</source>
+                <source>module-04-dsa/boss/test</source>
+                <source>module-04-dsa/mini-project/test</source>
+                <source>module-04-dsa/topic-01-big-o/test</source>
+                <source>module-04-dsa/topic-02-recursion/test</source>
+                <source>module-04-dsa/topic-03-searching/test</source>
+                <source>module-04-dsa/topic-04-simple-sorts/test</source>
+                <source>module-04-dsa/topic-05-merge-quick-sort/test</source>
+                <source>module-04-dsa/topic-06-linked-lists/test</source>
+                <source>module-04-dsa/topic-07-stacks-queues/test</source>
+                <source>module-04-dsa/topic-08-hash-tables/test</source>
+                <source>module-04-dsa/topic-09-trees-bst/test</source>
+                <source>module-04-dsa/topic-10-heaps/test</source>
+                <source>module-04-dsa/topic-11-graphs/test</source>
+                <source>module-04-dsa/topic-12-dynamic-programming/test</source>
               </sources>
             </configuration>
           </execution>

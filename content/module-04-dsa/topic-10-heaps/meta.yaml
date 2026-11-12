@@ -1,0 +1,25 @@
+id: module-04-dsa/topic-10-heaps
+title: "Heaps and priority queues"
+order: 10
+minutes: 9
+prerequisites: [module-04-dsa/topic-09-trees-bst]
+concepts: [heap-property, heap-array-indexes, sift-up, sift-down, heap-costs, priority-queue]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m04.heaps.RepairPlanner
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0410
+  from: sam
+  title: "Repair list gets re-sorted on every report"
+  body: >
+    A rider at Uptown just reported B-1017 with no brakes, and the crew should fix it first. Our
+    repair tool re-sorts the whole list each time a report comes in, and on busy afternoons it
+    lags. The crew only ever needs the most urgent bike next. Is there a cheaper way to keep that
+    one on top?
+hints:
+  - "Draw the array as a tree. Index 0 is the top. For index i, the parent is (i - 1) / 2 and the children are 2 * i + 1 and 2 * i + 2."
+  - "Sift up: while index > 0 and items[index] < items[parent], swap them and move index to parent. Sift down: find the smaller child that exists. Check left < size and right < size. If that child is smaller than items[index], swap and move down. Otherwise stop."
+  - "In poll, throw new IllegalStateException(\"empty\") when size == 0. Then run: int top = items[0]; size--; items[0] = items[size]; siftDown(0); return top. For the planner, build Comparator.comparingInt(Repair::urgency).thenComparing(Repair::bikeId). Pass it to new PriorityQueue<>(comparator), call addAll, and poll in a while loop."
+review: true

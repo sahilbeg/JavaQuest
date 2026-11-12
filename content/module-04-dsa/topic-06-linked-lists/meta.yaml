@@ -1,0 +1,25 @@
+id: module-04-dsa/topic-06-linked-lists
+title: "Build a linked list"
+order: 6
+minutes: 9
+prerequisites: [module-04-dsa/topic-05-merge-quick-sort]
+concepts: [nodes-references, traversal, add-remove, list-costs, generic-list]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m04.linkedlists.RiderList
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0406
+  from: sam
+  title: "Waiting list at a full Harbor station"
+  body: >
+    When Harbor is full, riders wait to return their bikes, and the next free dock goes to
+    whoever is first in line. Riders join and leave the front all the time, so we need that to
+    be fast. The team also keeps asking what LinkedList really does inside. Could you build our
+    own RiderList so we can all see it?
+hints:
+  - "Every method starts from head and moves with a separate variable: Node<T> current = head; then current = current.next; until current is null."
+  - "addFirst links the new node to the old head, then makes it the head. addLast walks until current.next is null, but an empty list just sets head. Change size in every add and remove."
+  - "For reverse, loop while current != null: Node<T> next = current.next; current.next = previous; previous = current; current = next; then head = previous."
+review: true

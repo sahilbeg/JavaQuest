@@ -1,0 +1,128 @@
+topic: module-04-dsa/topic-08-hash-tables
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: hashing
+    variants:
+      - { prompt: "Why does a hash table use Math.floorMod instead of %?", choices: ["floorMod never gives a negative index when the bucket count is positive", "floorMod is the only way to divide in Java", "% only works on double values", "floorMod sorts the keys"], answer: 0 }
+      - { prompt: "\"Harbor\".hashCode() is negative. What does Math.floorMod(\"Harbor\".hashCode(), 8) return?", choices: ["A number from 0 to 7", "A negative number", "Always 0", "A number from 1 to 8"], answer: 0 }
+    explain: "hashCode can be negative. % keeps the sign, but floorMod always lands between 0 and the bucket count minus 1."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: buckets-chaining
+    prompt: "\"Aa\" and \"BB\" have the same hashCode. What happens when both go into a chained hash table?"
+    choices: ["Both are stored in the same bucket's chain, and equals tells them apart", "The second key replaces the first", "The table throws an exception", "The table resizes until they split"]
+    answer: 0
+    explain: "A collision just makes a chain longer. get walks the chain and uses equals to find the exact key."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: equals-hashcode-contract
+    prompt: "A BikeId class overrides equals but not hashCode. What usually happens with map.get(new BikeId(\"B-1042\"))?"
+    choices: ["It returns null, because the equal key hashes to a different bucket", "It finds the value, because equals is enough", "It does not compile", "It throws a NullPointerException"]
+    answer: 0
+    explain: "hashCode picks the bucket. Equal objects with different hash codes are looked for in the wrong bucket."
+    reteach: "## Common mistakes"
+
+  - id: q04
+    type: mcq
+    concept: hash-costs
+    prompt: "Every BikeId returns 1 from hashCode. How long does get take with n bikes stored?"
+    choices: ["O(n), because every bike sits in one long chain", "O(1), because hashCode is fast", "O(log n), like binary search", "O(n²), because of resizing"]
+    answer: 0
+    explain: "All keys share one bucket, so get walks a chain holding every entry. That is the worst case."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: hashing
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println("Aa".hashCode() == "BB".hashCode());
+              System.out.println(Math.floorMod(-3, 8));
+              System.out.println(-3 % 8);
+          }
+      }
+    answer: "true\n5\n-3"
+    explain: "Aa and BB share hash 2112. floorMod gives a non-negative remainder, while % keeps the minus sign."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: load-factor-resize
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int buckets = 8;
+              for (int size = 1; size <= 13; size++) {
+                  if (size > 0.75 * buckets) {
+                      buckets = buckets * 2;
+                      System.out.println(size + " -> " + buckets);
+                  }
+              }
+          }
+      }
+    answer: "7 -> 16\n13 -> 32"
+    explain: "0.75 times 8 is 6, so the 7th entry doubles to 16. 0.75 times 16 is 12, so the 13th entry doubles to 32."
+    reteach: "## Concept"
+
+  - id: q07
+    type: fill-blank
+    concept: hashing
+    prompt: "int index = Math.___(key.hashCode(), buckets.length);"
+    answers: ["floorMod"]
+    explain: "Math.floorMod turns any hash code into an index from 0 to buckets.length - 1."
+    reteach: "## Concept"
+
+  - id: q08
+    type: order
+    concept: buckets-chaining
+    prompt: "Put the steps of get(key) in order for a chained hash table."
+    items:
+      - "Work out the index with Math.floorMod(key.hashCode(), buckets.length)"
+      - "Start at the first entry in that bucket"
+      - "Compare the entry's key with equals"
+      - "Move to entry.next if it does not match"
+      - "Return null when the chain runs out"
+    explain: "Jump to one bucket, then walk only that chain."
+    reteach: "## Worked example"
+
+  - id: q09
+    type: spot-the-bug
+    concept: load-factor-resize
+    prompt: "After this resize, get cannot find keys that it found before. Which line is wrong?"
+    code: |
+      private void resize() {
+          Entry[] bigger = new Entry[buckets.length * 2];
+          for (int i = 0; i < buckets.length; i++) {
+              bigger[i] = buckets[i];
+          }
+          buckets = bigger;
+      }
+    bugLine: 4
+    explain: "Each key's index depends on the bucket count. Every entry must be rehashed into bigger at indexFor(key, bigger.length)."
+    reteach: "## Concept"
+
+  - id: q10
+    type: spot-the-bug
+    concept: buckets-chaining
+    prompt: "get misses keys that a rider typed in. Which line is wrong?"
+    code: |
+      Integer get(String key) {
+          int i = Math.floorMod(key.hashCode(), buckets.length);
+          for (Entry e = buckets[i]; e != null; e = e.next) {
+              if (e.key == key) {
+                  return e.value;
+              }
+          }
+          return null;
+      }
+    bugLine: 4
+    explain: "== checks for the same object. Compare keys with e.key.equals(key)."
+    reteach: "## Common mistakes"

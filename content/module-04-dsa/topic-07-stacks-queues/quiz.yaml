@@ -1,0 +1,143 @@
+topic: module-04-dsa/topic-07-stacks-queues
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: stack-lifo
+    variants:
+      - { prompt: "Which job needs a stack?", choices: ["Undo the newest kiosk action", "Serve riders in the order they arrived", "Fix bikes in the order they were reported", "Print rides from oldest to newest"], answer: 0 }
+      - { prompt: "What does LIFO mean for a stack?", choices: ["The last item added is the first removed", "The first item added is the first removed", "The smallest item is removed first", "Items are removed in a random order"], answer: 0 }
+    explain: "A stack is last in, first out. Undo must take back the newest action first."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: queue-fifo
+    prompt: "B-1042 is reported first, then B-2210, then B-3307. A queue serves which bike first?"
+    choices: ["B-1042", "B-3307", "B-2210", "Whichever has the smallest id"]
+    answer: 0
+    explain: "A queue is first in, first out. The first bike reported is the first one fixed."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: array-deque
+    prompt: "Why do Java programmers avoid the old Stack class?"
+    choices: ["It extends Vector, so code can reach into the middle, and it pays for locking", "It cannot hold String values", "It has no pop method", "It only works as a queue"]
+    answer: 0
+    explain: "Stack inherits get(index) from Vector and locks every call. ArrayDeque is the recommended replacement."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: stack-lifo
+    prompt: "What does this program print?"
+    code: |
+      import java.util.ArrayDeque;
+
+      public class Main {
+          public static void main(String[] args) {
+              ArrayDeque<String> undo = new ArrayDeque<>();
+              undo.push("log in");
+              undo.push("scan card");
+              undo.push("select bike");
+              System.out.println(undo.pop());
+              System.out.println(undo.peek());
+              System.out.println(undo.size());
+          }
+      }
+    answer: "select bike\nscan card\n2"
+    explain: "pop removes the newest action. peek shows the new top without removing it, so 2 items remain."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: queue-fifo
+    code: |
+      import java.util.ArrayDeque;
+
+      public class Main {
+          public static void main(String[] args) {
+              ArrayDeque<String> repairs = new ArrayDeque<>();
+              repairs.offer("B-1042");
+              repairs.offer("B-2210");
+              System.out.println(repairs.poll());
+              System.out.println(repairs.poll());
+              System.out.println(repairs.poll());
+          }
+      }
+    answer: "B-1042\nB-2210\nnull"
+    explain: "poll takes from the front in arrival order. On an empty queue it returns null."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: array-deque
+    prompt: "repairs.___(\"B-1042\"); // add the bike at the back of the queue"
+    answers: ["offer", "add", "addLast", "offerLast"]
+    explain: "offer adds an item at the back of the queue."
+    reteach: "## Concept"
+
+  - id: q07
+    type: fill-blank
+    concept: growing-array
+    prompt: "String[] bigger = new String[items.length ___];"
+    answers: ["* 2", "*2"]
+    explain: "When the array is full, make a new one twice as long."
+    reteach: "## Concept"
+
+  - id: q08
+    type: order
+    concept: growing-array
+    prompt: "Put the lines of push in order for a stack built on an array that grows."
+    items:
+      - "if (size == items.length) {"
+      - "    items = java.util.Arrays.copyOf(items, items.length * 2);"
+      - "}"
+      - "items[size] = action;"
+      - "size++;"
+    explain: "Make room first, then store at the next free slot, then count the new item."
+    reteach: "## Concept"
+
+  - id: q09
+    type: spot-the-bug
+    concept: balanced-brackets
+    prompt: "balanced(\"((\") returns true. Which line is wrong?"
+    code: |
+      static boolean balanced(String text) {
+          java.util.ArrayDeque<Character> open = new java.util.ArrayDeque<>();
+          for (char c : text.toCharArray()) {
+              if (c == '(') {
+                  open.push(c);
+              } else if (c == ')') {
+                  if (open.isEmpty()) {
+                      return false;
+                  }
+                  open.pop();
+              }
+          }
+          return true;
+      }
+    bugLine: 13
+    explain: "balanced(\"((\") returns true. The method must end with return open.isEmpty(); so unclosed brackets fail."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: spot-the-bug
+    concept: stack-lifo
+    prompt: "This undo stack prints log in instead of select bike. Which line is wrong?"
+    code: |
+      import java.util.ArrayDeque;
+
+      public class Main {
+          public static void main(String[] args) {
+              ArrayDeque<String> undo = new ArrayDeque<>();
+              undo.push("log in");
+              undo.offer("select bike");
+              System.out.println(undo.pop()); // should undo select bike
+          }
+      }
+    bugLine: 7
+    explain: "offer adds at the back, but pop takes from the front, so this prints log in. Use push for every stack item."
+    reteach: "## Common mistakes"

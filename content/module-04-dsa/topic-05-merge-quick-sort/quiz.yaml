@@ -1,0 +1,163 @@
+topic: module-04-dsa/topic-05-merge-quick-sort
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: divide-and-conquer
+    prompt: "What does divide and conquer mean?"
+    choices: ["Split a problem into smaller copies, solve them, then combine the answers", "Compare every item with every other item", "Sort only the first half of the data", "Pick a random answer and check it"]
+    answer: 0
+    explain: "Divide and conquer splits a big problem into smaller versions of itself and combines their answers."
+    reteach: "## Concept"
+
+  - id: q02
+    type: predict-output
+    concept: merging
+    code: |
+      import java.util.Arrays;
+
+      public class Main {
+          static int[] merge(int[] left, int[] right) {
+              int[] result = new int[left.length + right.length];
+              int i = 0;
+              int j = 0;
+              int k = 0;
+              while (i < left.length && j < right.length) {
+                  if (left[i] <= right[j]) {
+                      result[k] = left[i];
+                      i++;
+                  } else {
+                      result[k] = right[j];
+                      j++;
+                  }
+                  k++;
+              }
+              while (i < left.length) {
+                  result[k] = left[i];
+                  i++;
+                  k++;
+              }
+              while (j < right.length) {
+                  result[k] = right[j];
+                  j++;
+                  k++;
+              }
+              return result;
+          }
+
+          public static void main(String[] args) {
+              System.out.println(Arrays.toString(merge(new int[] {2, 8}, new int[] {5})));
+          }
+      }
+    answer: "[2, 5, 8]"
+    explain: "2 is smaller than 5, then 5 is smaller than 8. The right side runs out, so 8 is copied as a leftover."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: sort-costs
+    variants:
+      - { prompt: "What is merge sort's time for n items, in every case?", choices: ["O(n log n)", "O(n)", "O(n^2)", "O(log n)"], answer: 0 }
+      - { prompt: "What is quicksort's usual time for n items?", choices: ["O(n log n)", "O(1)", "O(n^2)", "O(log n)"], answer: 0 }
+    explain: "Both sorts do about n steps per level, and there are about log n levels of halving."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: quicksort
+    prompt: "Quicksort uses the last item as its pivot. Which input makes it O(n^2)?"
+    choices: ["An array that is already sorted", "An array of random numbers", "An empty array", "An array with one item"]
+    answer: 0
+    explain: "On sorted input the last item is the biggest, so each partition peels off only one item. An array where every item is equal does the same."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: merge-sort
+    prompt: "Which is true about merge sort?"
+    choices: ["It needs O(n) extra memory for the merged arrays", "It needs no extra memory at all", "It is O(n^2) on sorted input", "It changes the order of equal items"]
+    answer: 0
+    explain: "Each merge builds a new array, so merge sort uses O(n) extra space. It is stable and always O(n log n)."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: partition
+    code: |
+      import java.util.Arrays;
+
+      public class Main {
+          static int partition(int[] a, int low, int high) {
+              int pivot = a[high];
+              int i = low;
+              for (int j = low; j < high; j++) {
+                  if (a[j] <= pivot) {
+                      int temp = a[i];
+                      a[i] = a[j];
+                      a[j] = temp;
+                      i++;
+                  }
+              }
+              int temp = a[i];
+              a[i] = a[high];
+              a[high] = temp;
+              return i;
+          }
+
+          public static void main(String[] args) {
+              int[] a = {7, 2, 9, 4};
+              int p = partition(a, 0, 3);
+              System.out.println(p);
+              System.out.println(Arrays.toString(a));
+          }
+      }
+    answer: "1\n[2, 4, 9, 7]"
+    explain: "The pivot is 4. Only 2 is <= 4, so 2 moves to index 0 and the pivot lands at index 1."
+    reteach: "## Concept"
+
+  - id: q07
+    type: fill-blank
+    concept: partition
+    prompt: "int pivot = a[___];"
+    answers: ["high"]
+    explain: "Lomuto partition uses the last item of the range, a[high], as the pivot."
+    reteach: "## Concept"
+
+  - id: q08
+    type: order
+    concept: merge-sort
+    prompt: "Put the steps of merge sort in order."
+    items:
+      - "If the array has fewer than 2 items, stop"
+      - "Split it into a left half and a right half"
+      - "Merge sort each half"
+      - "Merge the two sorted halves"
+    explain: "Check the base case, split, sort each half, then merge."
+    reteach: "## Concept"
+
+  - id: q09
+    type: spot-the-bug
+    concept: quicksort
+    prompt: "This quicksort crashes with StackOverflowError on some arrays. Which line is wrong?"
+    code: |
+      static void quickSort(int[] a, int low, int high) {
+          if (low >= high) {
+              return;
+          }
+          int p = partition(a, low, high);
+          quickSort(a, low, p);
+          quickSort(a, p + 1, high);
+      }
+    bugLine: 6
+    explain: "The pivot at p is already in place. The left call must stop at p - 1, or it can repeat the same range until the stack overflows."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: merging
+    prompt: "In merge, why use left[i] <= right[j] instead of < ?"
+    choices: ["On a tie it takes the left item first, which keeps the sort stable", "It makes merge run in O(1)", "It stops an ArrayIndexOutOfBoundsException", "It removes duplicate items"]
+    answer: 0
+    explain: "Taking the left item on a tie keeps equal items in their original order. That is what stable means."
+    reteach: "## Concept"

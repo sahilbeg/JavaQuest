@@ -1,0 +1,119 @@
+topic: module-04-dsa/topic-01-big-o
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: growth-rates
+    variants:
+      - { prompt: "A method looks at every ride in a list once. What is its Big-O?", choices: ["O(n)", "O(1)", "O(log n)", "O(n^2)"], answer: 0 }
+      - { prompt: "A method compares every ride with every other ride using two nested loops. What is its Big-O?", choices: ["O(n^2)", "O(n)", "O(log n)", "O(1)"], answer: 0 }
+    explain: "One pass over n items is O(n). A loop of n inside a loop of n does n * n steps, which is O(n^2)."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: dropping-constants
+    prompt: "A method does 3n + 20 steps. What is its Big-O?"
+    choices: ["O(n)", "O(3n)", "O(3n + 20)", "O(20)"]
+    answer: 0
+    explain: "Big-O drops constant factors and smaller terms. 3n + 20 still doubles when n doubles, so it is O(n)."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: collection-costs
+    prompt: "Which check stays fast as the number of bikes that are out grows?"
+    choices: ["set.contains(id) on a HashSet", "list.contains(id) on an ArrayList", "A for loop over a List with equals", "Sorting the list, then a for loop"]
+    answer: 0
+    explain: "HashSet.contains is O(1) on average. The list options all read the ids one by one."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: best-worst-case
+    prompt: "You search a list of 500 bike ids for B-1042, and it is the first item. Which case is this?"
+    choices: ["The best case", "The worst case", "The average case", "Space complexity"]
+    answer: 0
+    explain: "Finding it on the first check is the luckiest outcome, so it is the best case. The worst case reads all 500."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: counting-steps
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int n = 3;
+              int steps = 0;
+              for (int i = 0; i < n; i++) {
+                  for (int j = 0; j < n; j++) {
+                      steps++;
+                  }
+              }
+              System.out.println(steps);
+          }
+      }
+    answer: "9"
+    explain: "The inner loop runs 3 times for each of the 3 outer passes, so 3 * 3 = 9."
+    reteach: "## Worked example"
+
+  - id: q06
+    type: predict-output
+    concept: growth-rates
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int n = 32;
+              int steps = 0;
+              while (n > 1) {
+                  n = n / 2;
+                  steps++;
+              }
+              System.out.println(steps);
+          }
+      }
+    answer: "5"
+    explain: "32 halves to 16, 8, 4, 2 and 1. That is 5 halvings, which is log2 of 32."
+    reteach: "## Try it"
+
+  - id: q07
+    type: fill-blank
+    concept: collection-costs
+    prompt: "Set<String> out = new ___<>(rides);"
+    answers: ["HashSet", "LinkedHashSet"]
+    explain: "A HashSet gives O(1) average contains, which fixes the slow unlock check."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: order
+    concept: growth-rates
+    prompt: "Put these from the slowest-growing to the fastest-growing."
+    items: ["O(1)", "O(log n)", "O(n)", "O(n log n)", "O(n^2)"]
+    explain: "At n = 1000 they are about 1, 10, 1000, 10,000 and 1,000,000 steps."
+    reteach: "## Concept"
+
+  - id: q09
+    type: spot-the-bug
+    concept: counting-steps
+    prompt: "countLinear(n) should return n, one step per loop pass. Which line makes it return the wrong count?"
+    code: |
+      static int countLinear(int n) {
+          int steps = 0;
+          for (int i = 0; i <= n; i++) {
+              steps++;
+          }
+          return steps;
+      }
+    bugLine: 3
+    explain: "i <= n runs the loop n + 1 times. Use i < n so the loop runs exactly n times."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: space-complexity
+    prompt: "A method copies a list of n rides into a new ArrayList. How much extra memory does it need?"
+    choices: ["O(n)", "O(1)", "O(log n)", "O(n^2)"]
+    answer: 0
+    explain: "The copy holds n items, so the extra space grows with n. That is O(n) space."
+    reteach: "## Concept"

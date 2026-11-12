@@ -1,0 +1,24 @@
+id: module-04-dsa/topic-02-recursion
+title: "Recursion"
+order: 2
+minutes: 10
+prerequisites: [module-04-dsa/topic-01-big-o]
+concepts: [base-case, recursive-case, call-stack, stack-overflow, recursion-on-arrays, repeated-work]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0402
+  from: priya
+  title: "Total free docks along an overflow chain"
+  body: >
+    When Riverside is full, the app sends riders on to Old Mill, then Harbor, then Uptown.
+    I want the app to show the total free docks along that chain. Our loop version keeps
+    getting the last station wrong. Could you write it so each station just adds its docks
+    to "the rest of the chain"?
+hints:
+  - "Every recursive method needs a base case that returns without calling itself. Ask: what is the smallest input?"
+  - "For sum, the helper takes the array and an index. When the index reaches docks.length, return 0. Otherwise return docks[index] plus the helper for index + 1."
+  - "factorial: if (n <= 1) return 1; return n * factorial(n - 1);  reverse: if (s.isEmpty()) return s; return reverse(s.substring(1)) + s.charAt(0);"
+review: true

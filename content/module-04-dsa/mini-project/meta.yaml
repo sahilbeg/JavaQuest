@@ -1,0 +1,22 @@
+id: module-04-dsa/mini-project
+title: "FEAT-04: Rebalancing-truck planner"
+order: 100
+minutes: 10
+prerequisites: [module-04-dsa/topic-12-dynamic-programming]
+concepts: [heaps, priority-queues, sorting]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m04.feature.TruckPlanner
+ticket:
+  key: FEAT-04
+  from: maya
+  title: "Plan the rebalancing truck's trips"
+  body: >
+    Every morning some stations overflow and others run empty. The truck driver plans the trips on paper.
+    I want the app to plan them: always move bikes from the station with the most spare bikes to the one that needs the most.
+hints:
+  - "surplus is bikes minus target. A positive surplus means too many bikes; a negative one means too few."
+  - "Keep two priority queues: stations with bikes to give and stations that need bikes. Order both by amount, largest first, then by name."
+  - "Each trip moves the smallest of three numbers: what the giver can spare, what the taker needs and the truck's capacity. Put a station back in its queue if it still has an amount left."
+review: false

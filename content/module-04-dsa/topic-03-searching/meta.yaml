@@ -1,0 +1,24 @@
+id: module-04-dsa/topic-03-searching
+title: "Linear and binary search"
+order: 3
+minutes: 9
+prerequisites: [module-04-dsa/topic-02-recursion]
+concepts: [linear-search, binary-search, safe-midpoint, recursive-search, search-costs, library-search]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0403
+  from: sam
+  title: "Looking up a retired bike takes forever"
+  body: >
+    A rider at Old Mill says B-1042 was swapped out last month, so I check the retired-bikes
+    list. It has 50,000 ids and our support tool reads them one by one from the top. The list
+    is already sorted, so surely it can jump straight to the right spot? Riders are on hold
+    while I wait.
+hints:
+  - "linear is a plain for loop that returns i as soon as values[i] == target, and -1 after the loop. For binary, keep two ints, low and high, that mark the part of the array still in play."
+  - "In binary, loop while low <= high. Count each pass in lastSteps. Work out mid = low + (high - low) / 2, then move low to mid + 1 or high to mid - 1."
+  - "binaryRecursive calls a private helper search(sorted, target, low, high) that returns -1 when low > high. firstAtLeast is a binary search that never stops early. Start with high = length and loop while low < high. When sortedMinutes[mid] >= minutes, set high = mid. Otherwise set low = mid + 1."
+review: true
