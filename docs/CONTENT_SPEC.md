@@ -94,6 +94,14 @@ Callout kinds: `tip`, `warning`, `analogy`, `jargon` (defines a term).
 
 Style rules: sentences under 25 words, second person, friendly, no unexplained jargon, reading time 5 to 10 minutes.
 
+Page style follows a textbook chapter crossed with a W3Schools page:
+
+- Topics read in order like textbook sections, with Previous and Next buttons at the top and bottom of every page.
+- A left sidebar lists every topic in the module, so any page is one click away, like a reference site.
+- Each new piece of syntax gets a "Syntax" box first, then a small example, then a "Try it Yourself" button that opens the snippet in the editor.
+- Examples are short. One idea per example, with many examples per page rather than one large one.
+- Every page ends with a short exercise box ("Fill in the missing part") before the full quiz.
+
 ## quiz.yaml
 
 A quiz has a pool of questions. Each attempt draws `drawCount` questions with a seed, at least one per concept where possible. A retry uses a new seed, so learners see different variants.

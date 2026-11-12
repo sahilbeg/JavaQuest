@@ -2,10 +2,10 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-12T12:58:44+05:30
+- **Last updated:** 2026-11-12T13:06:41+05:30
 - **Phase:** PHASE 0: planning
 - **Milestone:** M0
-- **Resume here:** M0 planning docs are written. Wait for plan approval, then start M1 task M1-01.
+- **Resume here:** Plan approved. Start M1 task M1-01.
 - **Next task:** M1-01: create Maven multi-module skeleton (app, content-tools, practice parent POM)
 
 ## Completed tasks
@@ -16,11 +16,14 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - M0-04 gamification
 - M0-05 roadmap
 - M0-06 state files
+- M0-07 plan approved
 
-## Open decisions
+## Decisions
 
-- Plan approval pending
-- Mascot name and art style (default: Byte the owl)
+- Mascot: Byte the owl
+- Skip ahead: kept
+- Platform: macOS only for now; Windows deferred
+- Page style: textbook order with W3Schools-style pages (Syntax box, Try it Yourself, prev/next, sidebar)
 
 ## Blockers
 

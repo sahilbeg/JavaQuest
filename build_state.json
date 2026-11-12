@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "lastUpdated": "2026-11-12T12:58:44+05:30",
+  "lastUpdated": "2026-11-12T13:06:41+05:30",
   "phase": "PHASE 0: planning",
   "milestone": "M0",
-  "resumeHere": "M0 planning docs are written. Wait for plan approval, then start M1 task M1-01.",
+  "resumeHere": "Plan approved. Start M1 task M1-01.",
   "statusValues": [
     "planned",
     "content_written",
@@ -18,13 +18,11 @@
     "M0-03 content spec",
     "M0-04 gamification",
     "M0-05 roadmap",
-    "M0-06 state files"
+    "M0-06 state files",
+    "M0-07 plan approved"
   ],
   "nextTask": "M1-01: create Maven multi-module skeleton (app, content-tools, practice parent POM)",
-  "openDecisions": [
-    "Plan approval pending",
-    "Mascot name and art style (default: Byte the owl)"
-  ],
+  "openDecisions": [],
   "blockers": [],
   "milestones": {
     "M1": "planned",
@@ -2044,5 +2042,11 @@
         }
       ]
     }
+  ],
+  "decisions": [
+    "Mascot: Byte the owl",
+    "Skip ahead: kept",
+    "Platform: macOS only for now; Windows deferred",
+    "Page style: textbook order with W3Schools-style pages (Syntax box, Try it Yourself, prev/next, sidebar)"
   ]
 }

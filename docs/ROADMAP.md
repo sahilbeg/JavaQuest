@@ -6,7 +6,7 @@ Each milestone ends with: project checks green, both state files updated, one co
 
 - [x] ARCHITECTURE.md, CURRICULUM.md, CONTENT_SPEC.md, GAMIFICATION.md, ROADMAP.md
 - [x] BUILD_STATE.md and build_state.json
-- [ ] Plan approved by you
+- [x] Plan approved: mascot Byte, Skip ahead kept, macOS only for now, textbook and W3Schools page style
 
 ## M1: App skeleton and practice runner
 
@@ -66,5 +66,6 @@ Large modules (12 or more topics) may split into two commits, one per half. The 
 
 ## M6: Release hardening
 
-- [ ] Fresh-clone test on macOS and Windows: one command start
+- [ ] Fresh-clone test on macOS: one command start
+- [ ] Windows support (`run.bat`) is deferred until requested
 - [ ] README with setup, troubleshooting and limits
