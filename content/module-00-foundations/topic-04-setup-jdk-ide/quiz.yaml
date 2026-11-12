@@ -1,0 +1,98 @@
+topic: module-00-foundations/topic-04-setup-jdk-ide
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: jdk-jre-jvm
+    variants:
+      - { prompt: "Which one do you install to build Java programs?", choices: ["The JDK", "The JRE", "The JVM", "A web browser"], answer: 0 }
+      - { prompt: "Which piece contains the javac compiler?", choices: ["The JDK", "The JRE", "The JVM", "The IDE settings file"], answer: 0 }
+    explain: "The JDK is the full toolbox. It holds javac, the compiler, and the JVM that runs code."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: jdk-jre-jvm
+    prompt: "What does the JVM do?"
+    choices: ["It runs Java programs", "It edits Java files", "It downloads JUnit", "It names your classes"]
+    answer: 0
+    explain: "The JVM is like the bike stand. It holds your program and runs it."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: lts-version
+    prompt: "Why does Spoke use Java 21?"
+    choices: ["It is an LTS version with years of updates", "It is the newest version ever", "It is the only free version", "It runs without a JVM"]
+    answer: 0
+    explain: "LTS means long-term support. An LTS version gets fixes and security updates for years."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: check-version
+    prompt: "java ___"
+    answers: ["-version", "--version"]
+    explain: "java -version prints the version of the JVM on your laptop."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: check-version
+    prompt: "javac -version prints javac 21.0.5. What does that tell you?"
+    choices: ["A full JDK 21 is installed", "Only the JRE is installed", "IntelliJ is installed", "Java 17 is installed"]
+    answer: 0
+    explain: "javac only comes with the JDK. Version 21 means you have the right one."
+    reteach: "## Worked example"
+
+  - id: q06
+    type: mcq
+    concept: install-jdk
+    prompt: "Which Homebrew command installs Temurin 21?"
+    choices: ["brew install --cask temurin@21", "brew install java-runtime", "brew open temurin", "brew install intellij@21"]
+    answer: 0
+    explain: "brew install --cask temurin@21 installs the Temurin build of JDK 21."
+    reteach: "## Concept"
+
+  - id: q07
+    type: order
+    concept: install-jdk
+    prompt: "Put the setup steps in order."
+    items:
+      - "Install Temurin 21 from adoptium.net"
+      - "Open a new Terminal window"
+      - "Run java -version and javac -version"
+      - "Open practice/pom.xml as a project in the IDE"
+    explain: "Install first, then check in a fresh Terminal, then open the project."
+    reteach: "## Try it"
+
+  - id: q08
+    type: spot-the-bug
+    concept: check-version
+    code: |
+      java -version
+      openjdk version "21.0.5" 2024-10-15 LTS
+      javac -verison
+      error: invalid flag: -verison
+    bugLine: 3
+    explain: "The word version is misspelled. Type javac -version."
+    reteach: "## Concept"
+
+  - id: q09
+    type: mcq
+    concept: ide-project
+    prompt: "Your IDE shows red errors under the JUnit imports. What is the likely fix?"
+    choices: ["Open practice/pom.xml as a project", "Delete the import lines", "Reinstall macOS", "Rename the file to .txt"]
+    answer: 0
+    explain: "Opening pom.xml as a project lets the IDE find JUnit."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: ide-project
+    prompt: "Where do you edit an exercise so JavaQuest runs the checks?"
+    choices: ["practice/<module>/<topic>/src", "practice/<module>/<topic>/solution", "The Downloads folder", "Inside the JDK folder"]
+    answer: 0
+    explain: "Saving a file in the topic's src folder makes JavaQuest run the checks."
+    reteach: "## Concept"

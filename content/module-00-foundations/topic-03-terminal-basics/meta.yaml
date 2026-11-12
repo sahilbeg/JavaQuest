@@ -1,0 +1,22 @@
+id: module-00-foundations/topic-03-terminal-basics
+title: "The terminal: files, folders, commands"
+order: 3
+minutes: 8
+prerequisites: [module-00-foundations/topic-02-what-is-a-program]
+concepts: [shell-basics, folder-tree, paths, navigation, file-commands, case-sensitivity]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0003
+  from: theo
+  title: "Find yesterday's ride log on the test server"
+  body: >
+    Morning! A rider says their ride yesterday never showed up on the bill. The test server keeps
+    a log file for every day, somewhere under the spoke folder. There's no mouse on that box, only a
+    terminal. Can you dig out yesterday's log and tell me what's in it?
+hints:
+  - "The terminal always works from one folder at a time. Ask it where you are first."
+  - "pwd shows where you are, ls lists what is here, and cd moves you into a folder."
+  - "Try: cd ~/spoke/logs, then ls, then cat 2026-11-11.txt"
+review: true

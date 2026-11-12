@@ -1,0 +1,22 @@
+id: module-00-foundations/topic-06-git-basics
+title: "Git basics: init, add, commit, log"
+order: 6
+minutes: 8
+prerequisites: [module-00-foundations/topic-05-hello-world]
+concepts: [version-control, repository, staging-area, commit, commit-history]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0006
+  from: theo
+  title: "Save the kiosk greeting fix in Git"
+  body: >
+    Nice work on the kiosk greeting. Before launch day, every change we make gets saved in Git, so the
+    whole team can see what changed and when. Practise on a small kiosk notes folder first. If something
+    breaks on launch morning, I want to roll back in seconds instead of guessing.
+hints:
+  - "Git saves work in two steps: first choose the files, then save them."
+  - "Use git add to choose files, then git commit -m with a short message."
+  - "Try: git init, then git add notes.txt, then git commit -m \"Add notes\", then git log --oneline."
+review: true

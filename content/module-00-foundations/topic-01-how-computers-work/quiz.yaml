@@ -1,0 +1,94 @@
+topic: module-00-foundations/topic-01-how-computers-work
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: cpu
+    prompt: "Which part follows instructions and does the actual work?"
+    choices: ["The CPU", "The RAM", "The SSD", "The screen"]
+    answer: 0
+    explain: "The CPU is the mechanic. It runs every instruction."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: memory
+    variants:
+      - { prompt: "The kiosk loses power. What happens to what was in RAM?", choices: ["It disappears", "It moves to storage", "It stays in RAM", "It prints on a receipt"], answer: 0 }
+      - { prompt: "Which part forgets everything when the power goes off?", choices: ["RAM", "The SSD", "The storage shed", "The card reader"], answer: 0 }
+    explain: "RAM is temporary. Anything not saved to storage is lost when power goes off."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: storage
+    prompt: "Where does the kiosk app stay while the kiosk is turned off?"
+    choices: ["In storage", "In RAM", "In the CPU", "On the touchscreen"]
+    answer: 0
+    explain: "Storage keeps files and apps even without power."
+    reteach: "## Worked example"
+
+  - id: q04
+    type: mcq
+    concept: input-output
+    prompt: "Which of these is an output device on a kiosk?"
+    choices: ["The receipt printer", "The touchscreen being tapped", "The card reader", "The keyboard"]
+    answer: 0
+    explain: "A printer sends results out, so it is output. The others send data in."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: memory
+    prompt: "RAM stands for Random Access ___"
+    answers: ["Memory", "memory"]
+    explain: "RAM is Random Access Memory, the computer's workbench."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: cpu
+    prompt: "CPU stands for Central ___ Unit"
+    answers: ["Processing", "processing"]
+    explain: "CPU is short for Central Processing Unit."
+    reteach: "## Concept"
+
+  - id: q07
+    type: order
+    concept: working-together
+    prompt: "Put the steps in order for a rider renting a bike at a kiosk."
+    items:
+      - "The app is copied from storage into RAM"
+      - "The rider taps Rent a bike on the screen"
+      - "The CPU runs the app's instructions"
+      - "The screen shows which dock to use"
+    explain: "The app loads into RAM first. Then input arrives, the CPU works, and output appears."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: mcq
+    concept: working-together
+    prompt: "In the workshop analogy, what is the workbench?"
+    choices: ["RAM", "The CPU", "Storage", "The printer"]
+    answer: 0
+    explain: "The workbench holds what the mechanic is using right now, just like RAM."
+    reteach: "## Hook"
+
+  - id: q09
+    type: mcq
+    concept: storage
+    prompt: "Your Mac has 16 GB of one part and 512 GB of another. Which is the 512 GB?"
+    choices: ["Storage", "RAM", "The CPU", "A CPU core"]
+    answer: 0
+    explain: "Storage is usually many times bigger than RAM."
+    reteach: "## Try it"
+
+  - id: q10
+    type: mcq
+    concept: memory
+    prompt: "Which change most helps when many open apps make your computer slow?"
+    choices: ["More RAM", "More storage", "A bigger screen", "A faster printer"]
+    answer: 0
+    explain: "More RAM is a bigger workbench, so more apps fit at once."
+    reteach: "## Common mistakes"

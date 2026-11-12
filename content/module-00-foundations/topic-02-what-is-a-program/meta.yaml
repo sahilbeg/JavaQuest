@@ -1,0 +1,22 @@
+id: module-00-foundations/topic-02-what-is-a-program
+title: "What a program is: source, compiler, bytecode, JVM"
+order: 2
+minutes: 8
+prerequisites: [module-00-foundations/topic-01-how-computers-work]
+concepts: [program, source-code, compiler, bytecode, jvm, compile-vs-run-errors]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0002
+  from: priya
+  title: "Why does the kiosk software need a build?"
+  body: >
+    The new station kiosks arrive next week. Every time I ask for a change, the team says they
+    need to "build" it first. I don't understand what a build does or why the code can't just run.
+    Could you find out and explain it to me in plain words?
+hints:
+  - "Think about who writes source code and who reads bytecode."
+  - "javac turns a .java file into a .class file. The JVM runs the .class file."
+  - "The order is: write Hello.java, run javac Hello.java, then run java Hello."
+review: true

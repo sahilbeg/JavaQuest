@@ -208,5 +208,6 @@ Same layout as a topic, with these differences:
 - There is no `quiz.yaml`. The catalog rejects one. The checks are the whole task, so mastery is the checks alone.
 - `practice.kind` must be `code`. Use `order: 99` for the boss and `order: 100` for the mini-project so they come after the topics. The catalog sorts by `order`, not by folder name.
 - `review: false`. Incidents and features are not reviewed.
+- Their `lesson.md` is a brief, not a full lesson. An incident uses `## What happened`, `## What you need`, `## The tiers`, `## Recap`, `## Common mistakes`. A feature uses `## The design`, `## What you build`, `## Recap`, `## Common mistakes`. Any new syntax gets a `### Syntax:` box.
 
 Boss tiers come from test class names. Put the bronze checks in a class whose name ends in `BronzeTest`, silver in `SilverTest`, gold in `GoldTest`, for example `KioskBronzeTest`. A tier passes when it has at least one check and all of its checks pass. Passing bronze resolves the incident. Silver and gold earn bonus XP. The solution must pass all three tiers, and the skeleton must fail.

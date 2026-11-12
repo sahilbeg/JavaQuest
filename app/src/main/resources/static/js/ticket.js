@@ -44,7 +44,7 @@ export async function renderTicket(view, catalog, id, initialTab) {
   const chatBox = h("aside", { class: "chat", id: "byte-chat", tabindex: "-1", "aria-label": "Chat with Byte" });
   const chat = createChat(chatBox, topic);
 
-  const tabs = TABS.filter((t) => t.key !== "check" || topic.hasQuiz);
+  const tabs = TABS.filter((t) => (t.key !== "check" || topic.hasQuiz) && (t.key !== "fix" || summary.practiceKind === "CODE"));
   const panels = Object.fromEntries(tabs.map((t) =>
     [t.key, h("div", { role: "tabpanel", id: `panel-${t.key}`, "aria-labelledby": `tab-${t.key}`, tabindex: "0", hidden: true })]));
   const rendered = new Set();
@@ -140,7 +140,9 @@ export async function renderTicket(view, catalog, id, initialTab) {
   view.replaceChildren(h("div", { class: "ticket-page" }, sideNav, main, chatBox));
   document.title = `${summary.ticket.key} ${summary.ticket.title} · Spoke`;
   chat.say([`This one is from ${person.name.split(" ")[0]}.`,
-    topic.hasQuiz
+    summary.practiceKind !== "CODE"
+      ? "Read the KB page and try the activity, then pass the onboarding check. I'm here if you need a hint."
+      : topic.hasQuiz
       ? "Read the KB page, pass the onboarding check, then fix the code. I'm here if you need a hint."
       : "Read the KB page, then fix the code until the checks pass. I'm here if you need a hint."], { fresh: false });
   await select(initialTab, false);

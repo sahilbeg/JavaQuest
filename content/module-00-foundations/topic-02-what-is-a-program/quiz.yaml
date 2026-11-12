@@ -1,0 +1,104 @@
+topic: module-00-foundations/topic-02-what-is-a-program
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: program
+    prompt: "What is a program?"
+    choices: ["A list of instructions a computer follows", "A picture of a computer screen", "A type of processor", "A folder full of files"]
+    answer: 0
+    explain: "A program is a list of instructions. The computer follows them in order."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: compiler
+    variants:
+      - { prompt: "What does javac do?", choices: ["It checks source code and turns it into bytecode", "It runs bytecode on your computer", "It draws the kiosk screen", "It deletes old .class files"], answer: 0 }
+      - { prompt: "Which tool turns Hello.java into Hello.class?", choices: ["javac", "the JVM", "the processor", "the text editor"], answer: 0 }
+    explain: "javac is the compiler. It reads a .java file and writes a .class file of bytecode."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: jvm
+    prompt: "Why can the same .class file run on Windows, Mac and Linux?"
+    choices: ["Each system has its own JVM that reads the same bytecode", "The processor reads .java files directly", "javac makes one file for each system", "Bytecode is plain English"]
+    answer: 0
+    explain: "Every system has a JVM. Each JVM reads the same bytecode, so you write once and run anywhere."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: source-code
+    prompt: "Which file holds the source code that you write?"
+    choices: ["Hello.java", "Hello.class", "Hello.jvm", "Hello.exe"]
+    answer: 0
+    explain: "Source code is the text people write. Java source code goes in a .java file."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: compiler
+    prompt: "___ Hello.java"
+    answers: ["javac"]
+    explain: "javac is the command that compiles a .java file."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: bytecode
+    prompt: "javac Hello.java makes Hello.___"
+    answers: ["class"]
+    explain: "The compiler writes bytecode into a .class file."
+    reteach: "## Concept"
+
+  - id: q07
+    type: order
+    concept: bytecode
+    prompt: "Put the steps in order, from writing code to seeing output."
+    items:
+      - "Write source code in Hello.java"
+      - "Run javac Hello.java"
+      - "Hello.class with bytecode appears"
+      - "Run java Hello to start the JVM"
+      - "The output appears on screen"
+    explain: "You write source, compile it to bytecode, then the JVM runs the bytecode."
+    reteach: "## Concept"
+
+  - id: q08
+    type: predict-output
+    concept: program
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println("Dock");
+              System.out.println("Ride");
+          }
+      }
+    answer: "Dock\nRide"
+    explain: "The JVM runs the instructions from top to bottom. Each println prints one line."
+    reteach: "## Worked example"
+
+  - id: q09
+    type: spot-the-bug
+    concept: compile-vs-run-errors
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println("Bike unlocked")
+          }
+      }
+    bugLine: 3
+    explain: "Line 3 has no semicolon. javac stops with a compile error, so no .class file is made."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: compile-vs-run-errors
+    prompt: "javac reports a missing semicolon. What kind of error is this?"
+    choices: ["A compile error", "A run-time error", "A JVM error", "A bytecode error"]
+    answer: 0
+    explain: "javac found the mistake before the program ran. That makes it a compile error."
+    reteach: "## Concept"

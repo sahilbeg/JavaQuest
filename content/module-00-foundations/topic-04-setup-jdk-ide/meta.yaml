@@ -1,0 +1,21 @@
+id: module-00-foundations/topic-04-setup-jdk-ide
+title: "Installing the JDK and an IDE"
+order: 4
+minutes: 8
+prerequisites: [module-00-foundations/topic-03-terminal-basics]
+concepts: [jdk-jre-jvm, lts-version, install-jdk, check-version, ide-project]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0004
+  from: maya
+  title: "Get your laptop ready for Java"
+  body: >
+    Before your first code ticket, your laptop needs Java 21 and a good editor. Once both work,
+    open the team's practice project so you can see the exercises. Ping me if anything looks odd.
+hints:
+  - "The JDK is the full toolbox. The JVM is only the part that runs programs."
+  - "To check your setup, ask each tool for its version in Terminal."
+  - "Type java -version and javac -version. Both should show 21."
+review: true

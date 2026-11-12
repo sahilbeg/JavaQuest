@@ -42,6 +42,8 @@
             <configuration>
               <sources>
                 <source>module-00-foundations/topic-05-hello-world/src</source>
+                <source>module-00-foundations/boss/src</source>
+                <source>module-00-foundations/mini-project/src</source>
               </sources>
             </configuration>
           </execution>
@@ -52,6 +54,8 @@
             <configuration>
               <sources>
                 <source>module-00-foundations/topic-05-hello-world/test</source>
+                <source>module-00-foundations/boss/test</source>
+                <source>module-00-foundations/mini-project/test</source>
               </sources>
             </configuration>
           </execution>

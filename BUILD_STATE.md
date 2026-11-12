@@ -2,11 +2,11 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-12T16:15:20+05:30
+- **Last updated:** 2026-11-12T16:26:01+05:30
 - **Phase:** PHASE 1: build
 - **Milestone:** C00
-- **Resume here:** M4 is done. Start C00: write module 0 content (topics 01-04, 06, INC-00, FEAT-00); topic 05 exists.
-- **Next task:** C00-01: module 0 topic 01 how-computers-work (content + quiz)
+- **Resume here:** C00 content is committed at status ui_wired. Next: your read-through of module 0 in the browser, then C01 (Java basics, 12 topics + INC-01 + FEAT-01).
+- **Next task:** C00-review: learner read-through of module 0; then C01-01 variables
 
 ## Completed tasks
 
@@ -45,6 +45,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - M4-02 contrast fixes, Lighthouse 100 in both themes
 - M4-03 error and empty states, connection banner
 - M4-04 server shutdown with open event streams
+- C00 module 0: 7 new units written, reviewed (22 findings fixed), content checks, quiz keys and practice verified
 
 ## Decisions
 
@@ -71,7 +72,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 
 | Milestone | Status |
 |---|---|
-| C00 | in_progress |
+| C00 | ui_wired |
 | C01 | planned |
 | C02 | planned |
 | C03 | planned |
@@ -94,7 +95,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 
 | Module | Project | Units | Status |
 |---|---|---|---|
-| module-00-foundations | Day one | 8 | in_progress |
+| module-00-foundations | Day one | 8 | ui_wired |
 | module-01-basics | The fare kiosk | 14 | planned |
 | module-02-oop | Modelling the fleet | 14 | planned |
 | module-03-core-java | Ride data | 18 | planned |
@@ -110,7 +111,14 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 
 | Topic | Status | Solution passes | Skeleton fails |
 |---|---|---|---|
-| module-00-foundations/topic-05-hello-world | tests_verified | True | True |
+| module-00-foundations/topic-01-how-computers-work | ui_wired | None | None |
+| module-00-foundations/topic-02-what-is-a-program | ui_wired | None | None |
+| module-00-foundations/topic-03-terminal-basics | ui_wired | None | None |
+| module-00-foundations/topic-04-setup-jdk-ide | ui_wired | None | None |
+| module-00-foundations/topic-05-hello-world | ui_wired | True | True |
+| module-00-foundations/topic-06-git-basics | ui_wired | None | None |
+| module-00-foundations/boss | ui_wired | True | True |
+| module-00-foundations/mini-project | ui_wired | True | True |
 
 ## Commands
 

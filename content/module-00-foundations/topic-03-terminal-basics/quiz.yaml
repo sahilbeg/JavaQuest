@@ -1,0 +1,97 @@
+topic: module-00-foundations/topic-03-terminal-basics
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: shell-basics
+    prompt: "What does the shell do?"
+    choices: ["It reads the commands you type and runs them", "It draws icons for your files", "It turns Java into bytecode", "It connects your Mac to Wi-Fi"]
+    answer: 0
+    explain: "The shell is the program inside the terminal. It reads each command and runs it."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: navigation
+    variants:
+      - { prompt: "Which command shows the folder you are in right now?", choices: ["pwd", "ls", "cd", "cat"], answer: 0 }
+      - { prompt: "Which command lists the files in your current folder?", choices: ["ls", "pwd", "mkdir", "touch"], answer: 0 }
+    explain: "pwd prints your current folder. ls lists what is inside it."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: paths
+    prompt: "Which one is an absolute path?"
+    choices: ["/Users/sam/spoke/logs", "logs/2026-11-11.txt", "../bikes", "./notes.txt"]
+    answer: 0
+    explain: "An absolute path starts with / at the top of the tree. The others start from your current folder."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: folder-tree
+    prompt: "You are in ~/spoke/logs. Where does cd .. take you?"
+    choices: ["~/spoke", "~", "~/spoke/logs/spoke", "The top of the whole disk"]
+    answer: 0
+    explain: ".. means the parent folder, one level up. The parent of logs is spoke."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: navigation
+    prompt: "___ logs   # move into the logs folder"
+    answers: ["cd"]
+    explain: "cd moves you into the folder you name."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: file-commands
+    prompt: "___ 2026-11-11.txt   # print what the file says"
+    answers: ["cat"]
+    explain: "cat prints the contents of a file to the screen."
+    reteach: "## Concept"
+
+  - id: q07
+    type: order
+    concept: file-commands
+    prompt: "Put the commands in order to make a folder, add a file to it, and list it."
+    items: ["mkdir logs", "cd logs", "touch today.txt", "ls"]
+    explain: "Make the folder first, move into it, create the file, then list what is there."
+    reteach: "## Try it"
+
+  - id: q08
+    type: spot-the-bug
+    concept: case-sensitivity
+    prompt: "You are on Spoke's Linux test server. Which line has the bug?"
+    code: |
+      % ls
+      bikes  logs
+      % cd Logs
+      % ls
+    bugLine: 3
+    explain: "The folder is called logs with a small l. Linux servers treat capitals as different letters, so Logs does not exist there."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: spot-the-bug
+    concept: paths
+    code: |
+      % pwd
+      /Users/sam
+      % cat 2026-11-11.txt
+      % cd spoke/logs
+    bugLine: 3
+    explain: "The log lives in spoke/logs. You must cd there first, or cat spoke/logs/2026-11-11.txt."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: shell-basics
+    prompt: "You typed the first letters of a folder name. Which key finishes the name for you?"
+    choices: ["Tab", "Enter", "Space", "Esc"]
+    answer: 0
+    explain: "Tab completion fills in the rest of the name and stops typos."
+    reteach: "## Concept"

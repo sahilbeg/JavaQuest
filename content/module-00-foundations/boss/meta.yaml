@@ -1,0 +1,22 @@
+id: module-00-foundations/boss
+title: "INC-00: The kiosk welcome screen is broken on launch day"
+order: 99
+minutes: 8
+prerequisites: [module-00-foundations/topic-06-git-basics]
+concepts: [strings, println, case-sensitivity]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m00.incident.KioskScreen
+ticket:
+  key: INC-00
+  from: theo
+  title: "Kiosk welcome screen is broken on launch day"
+  body: >
+    It's launch day and the kiosk at Riverside Station greets riders with a mess. The text is in the wrong case,
+    two lines are glued together, and the station name is missing. Riders are queueing. Please fix it before the morning rush.
+hints:
+  - "Bronze first: Java compares text exactly. Check every capital letter and the ! at the end."
+  - "Silver: System.out.print stays on the same line. System.out.println moves to a new line after printing."
+  - "Gold: add a third println that prints exactly Riverside Station."
+review: false

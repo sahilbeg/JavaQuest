@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "lastUpdated": "2026-11-12T16:15:20+05:30",
+  "lastUpdated": "2026-11-12T16:26:01+05:30",
   "phase": "PHASE 1: build",
   "milestone": "C00",
-  "resumeHere": "M4 is done. Start C00: write module 0 content (topics 01-04, 06, INC-00, FEAT-00); topic 05 exists.",
+  "resumeHere": "C00 content is committed at status ui_wired. Next: your read-through of module 0 in the browser, then C01 (Java basics, 12 topics + INC-01 + FEAT-01).",
   "statusValues": [
     "planned",
     "content_written",
@@ -47,11 +47,13 @@
     "M4-01 keyboard and screen reader fixes",
     "M4-02 contrast fixes, Lighthouse 100 in both themes",
     "M4-03 error and empty states, connection banner",
-    "M4-04 server shutdown with open event streams"
+    "M4-04 server shutdown with open event streams",
+    "C00 module 0: 7 new units written, reviewed (22 findings fixed), content checks, quiz keys and practice verified"
   ],
-  "nextTask": "C00-01: module 0 topic 01 how-computers-work (content + quiz)",
+  "nextTask": "C00-review: learner read-through of module 0; then C01-01 variables",
   "openDecisions": [
-    "A real VoiceOver pass needs a person; automated checks are done"
+    "A real VoiceOver pass needs a person; automated checks are done",
+    "Module 0 read-through by you before marking it done"
   ],
   "blockers": [],
   "milestones": {
@@ -60,7 +62,7 @@
     "M3": "done",
     "M4": "done",
     "M5": "planned",
-    "C00": "in_progress",
+    "C00": "ui_wired",
     "C01": "planned",
     "C02": "planned",
     "C03": "planned",
@@ -78,14 +80,14 @@
     {
       "id": "module-00-foundations",
       "title": "How computers and programs work",
-      "status": "in_progress",
+      "status": "ui_wired",
       "topics": [
         {
           "id": "module-00-foundations/topic-01-how-computers-work",
           "title": "How computers work (CPU, memory, storage)",
           "practice": "quiz",
           "prerequisites": [],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": null,
             "skeletonFails": null,
@@ -99,7 +101,7 @@
           "prerequisites": [
             "module-00-foundations/topic-01-how-computers-work"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": null,
             "skeletonFails": null,
@@ -113,7 +115,7 @@
           "prerequisites": [
             "module-00-foundations/topic-02-what-is-a-program"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": null,
             "skeletonFails": null,
@@ -127,7 +129,7 @@
           "prerequisites": [
             "module-00-foundations/topic-03-terminal-basics"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": null,
             "skeletonFails": null,
@@ -141,11 +143,11 @@
           "prerequisites": [
             "module-00-foundations/topic-04-setup-jdk-ide"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:13:23+05:30"
+            "verifiedAt": "2026-11-12T16:25:04+05:30"
           }
         },
         {
@@ -155,7 +157,7 @@
           "prerequisites": [
             "module-00-foundations/topic-05-hello-world"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": null,
             "skeletonFails": null,
@@ -169,11 +171,11 @@
           "prerequisites": [
             "module-00-foundations/topic-06-git-basics"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T16:25:02+05:30"
           }
         },
         {
@@ -183,11 +185,11 @@
           "prerequisites": [
             "module-00-foundations/topic-06-git-basics"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T16:25:03+05:30"
           }
         }
       ],

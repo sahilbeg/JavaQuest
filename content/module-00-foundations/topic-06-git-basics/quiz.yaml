@@ -1,0 +1,89 @@
+topic: module-00-foundations/topic-06-git-basics
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: version-control
+    prompt: "Why do teams use version control?"
+    choices: ["To keep a history of changes and go back if needed", "To make code run faster", "To check spelling in code", "To turn Java into bytecode"]
+    answer: 0
+    explain: "Version control records every saved change, so the team can see history and roll back."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: repository
+    variants:
+      - { prompt: "Which command turns a folder into a Git repository?", choices: ["git init", "git add", "git log", "git start"], answer: 0 }
+      - { prompt: "You made a new project folder. What do you run first to track it with Git?", choices: ["git init", "git commit", "git status", "git new"], answer: 0 }
+    explain: "git init creates a hidden .git folder, which makes the folder a repository."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: staging-area
+    prompt: "What does git add do?"
+    choices: ["Puts changes in the staging area for the next commit", "Saves a commit to the history", "Deletes a file", "Shows the list of commits"]
+    answer: 0
+    explain: "git add moves changes onto the parts tray. git commit saves the tray as a logbook entry."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: commit
+    prompt: "Which commit message is best?"
+    choices: ["Fix typo in kiosk greeting", "stuff", "changes", "asdf"]
+    answer: 0
+    explain: "A good message is short and says what changed."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: commit-history
+    prompt: "Which command shows each commit on one short line?"
+    choices: ["git log --oneline", "git status", "git add --oneline", "git commit --list"]
+    answer: 0
+    explain: "git log lists commits. The --oneline option shrinks each one to a short ID and its message."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: commit
+    prompt: "git ___ -m \"Fix greeting\""
+    answers: ["commit"]
+    explain: "git commit saves the staged changes, and -m adds the message."
+    reteach: "## Concept"
+
+  - id: q07
+    type: order
+    concept: commit-history
+    prompt: "Put the commands in order to start a repository, save a file and see the history."
+    items:
+      - "git init"
+      - "git add notes.txt"
+      - "git commit -m \"Add notes\""
+      - "git log --oneline"
+    explain: "Create the repository, stage the file, commit it, then read the history."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: spot-the-bug
+    concept: staging-area
+    code: |
+      git init
+      git commit -m "Add notes"
+      git add notes.txt
+      git log --oneline
+    bugLine: 2
+    explain: "The commit runs before git add, so nothing is staged yet. Run git add first."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: repository
+    prompt: "Git says \"fatal: not a git repository\". What is the likely cause?"
+    choices: ["You are in a folder without git init", "Your commit message is too long", "You forgot to save the file", "Your name is not set"]
+    answer: 0
+    explain: "Git commands only work inside a repository. Move into the right folder or run git init."
+    reteach: "## Common mistakes"

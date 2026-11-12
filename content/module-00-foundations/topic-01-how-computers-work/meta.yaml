@@ -1,0 +1,22 @@
+id: module-00-foundations/topic-01-how-computers-work
+title: "How computers work: CPU, memory and storage"
+order: 1
+minutes: 8
+prerequisites: []
+concepts: [cpu, memory, storage, input-output, working-together]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0001
+  from: maya
+  title: "Get to know the kiosk computer"
+  body: >
+    Welcome aboard! Before you touch any kiosk software, I want you to know what's inside the box.
+    The kiosk at Riverside Station has a small computer behind the touchscreen and card reader.
+    Read the KB page and pass the onboarding check, then we'll talk code.
+hints:
+  - "Think of the bike workshop: who does the work, where is the work laid out, and where are things kept?"
+  - "Memory (RAM) is fast and forgets when the power goes off. Storage is slower and keeps things."
+  - "The CPU does the work, RAM holds what is being used right now, and storage keeps files for later."
+review: true

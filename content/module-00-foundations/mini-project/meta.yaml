@@ -1,0 +1,22 @@
+id: module-00-foundations/mini-project
+title: "FEAT-00: A printed welcome card for new riders"
+order: 100
+minutes: 8
+prerequisites: [module-00-foundations/topic-06-git-basics]
+concepts: [println, strings, program-structure]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m00.feature.WelcomeCard
+ticket:
+  key: FEAT-00
+  from: priya
+  title: "Print a welcome card for new riders"
+  body: >
+    New riders get a paper card from the kiosk printer when they sign up. Marketing designed it,
+    and now it needs code. Please make the kiosk print the card exactly as designed, frame and all.
+hints:
+  - "The card is five lines. Each line is one System.out.println."
+  - "Copy each line of the design into its own println, inside double quotes. Count the spaces."
+  - "Make border() return the top line, and print border() at the top and the bottom of the card."
+review: false

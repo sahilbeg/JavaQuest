@@ -2,7 +2,7 @@
 
 Imagine you hire a robot chef. The robot is fast, but it only follows written recipes, word for word. If the recipe says "add salt", it adds salt. If you forget to write "turn off the oven", the oven stays on.
 
-A program is a recipe for a computer. Your first Spoke ticket asks for the smallest recipe there is: make the test kiosk show the words **Hello, World!** on its screen. If that works, your laptop can build and run Java, and you're ready for real tickets. Programmers have started this way since the 1970s.
+A program is a recipe for a computer. Your first code ticket asks for the smallest recipe there is: make the test kiosk show the words **Hello, World!** on its screen. If that works, your laptop can build and run Java, and you're ready for real tickets. Programmers have started this way since the 1970s.
 
 ## Concept
 
@@ -57,6 +57,30 @@ System.out.println("Hello, World!");
 - `System.out.println` prints text and then moves to a new line.
 - The text goes inside double quotes. Text in quotes is called a **String**.
 - Every instruction ends with a semicolon `;`. It works like a full stop at the end of a sentence.
+
+### Syntax: a method that gives back text
+
+Your exercise asks for one more thing: a method that gives back text instead of printing it.
+
+```java
+public class Hello {
+    public static String greeting() {
+        return "Hello, World!";
+    }
+
+    public static void main(String[] args) {
+        System.out.println(greeting());
+    }
+}
+```
+
+- `String` before the name means the method gives back text.
+- `return` hands that text back to whoever called the method.
+- `System.out.println(greeting());` calls the method and prints what it gives back.
+
+```callout jargon
+A **package** groups classes, like folders group files. The exercise file starts with `package jq.m00.helloworld;`. Leave that line exactly as it is.
+```
 
 ```mermaid
 flowchart LR
@@ -132,7 +156,7 @@ Java says: `package system does not exist`. Write `System` with a capital S.
 **Missing quotes around text.**
 
 ```java nocompile
-System.out.println(Hello, World!);
+System.out.println(Hello);
 ```
 
-Java says: `cannot find symbol`. Without quotes, Java thinks `Hello` is the name of something. Put the text inside `"double quotes"`.
+Java says: `cannot find symbol`. Without quotes, Java thinks `Hello` is the name of something. Put the text inside `"double quotes"`: `System.out.println("Hello");`

@@ -16,7 +16,7 @@ Spoke rents bikes from docking stations around Riverton. Riders unlock a bike at
 | **Priya Raman** | Product manager | Asks for features. Explains what riders need. |
 | **Sam Ortiz** | Rider support | Forwards rider complaints that turn into bug tickets. |
 
-Characters only appear in tickets, chat and incidents. Lessons stay plain teaching text.
+Characters speak only in tickets, chat and incidents. A lesson may name the teammate who sent the ticket for context, but teammates never do the teaching. The teaching itself stays plain text.
 
 ## Words used in the app
 
