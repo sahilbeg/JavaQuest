@@ -1,0 +1,130 @@
+topic: module-01-basics/topic-05-if-else
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: boolean-expressions
+    variants:
+      - { prompt: "Which values can a boolean hold?", choices: ["true and false", "Any whole number", "yes and no", "0 to 10"], answer: 0 }
+      - { prompt: "Which line stores a boolean correctly?", choices: ["boolean member = true;", "boolean member = \"true\";", "boolean member = yes;", "boolean member = 1;"], answer: 0 }
+    explain: "A boolean holds exactly one of two values, true or false, written without quotes."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: comparison-operators
+    prompt: "minutes is 30. Which expression is true?"
+    choices: ["minutes <= 30", "minutes < 30", "minutes > 30", "minutes != 30"]
+    answer: 0
+    explain: "<= means less than or equal to, and 30 is equal to 30."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: comparison-operators
+    prompt: "if (minutes ___ 0) { System.out.println(\"No ride\"); }"
+    answers: ["==", "<="]
+    explain: "`==` checks for exactly 0. `<=` also works, because it is true for 0 and anything below."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: if-else
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int minutes = 60;
+              if (minutes < 15) {
+                  System.out.println("short");
+              } else if (minutes < 60) {
+                  System.out.println("normal");
+              } else {
+                  System.out.println("long");
+              }
+          }
+      }
+    answer: "long"
+    explain: "60 is not less than 15 and not less than 60, so the else block runs."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: logical-operators
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              boolean member = true;
+              int minutes = 35;
+              System.out.println(member && minutes <= 30);
+              System.out.println(member || minutes <= 30);
+              System.out.println(!member);
+          }
+      }
+    answer: "false\ntrue\nfalse"
+    explain: "&& needs both sides true, || needs one, and ! flips true to false."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: logical-operators
+    prompt: "Which condition means a member riding 30 minutes or less?"
+    choices: ["member && minutes <= 30", "member || minutes <= 30", "!member && minutes <= 30", "member && minutes > 30"]
+    answer: 0
+    explain: "Both parts must be true, so you join them with &&."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: if-else
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int minutes = 30;
+              if (minutes = 30) {
+                  System.out.println("Half an hour");
+              }
+          }
+      }
+    bugLine: 4
+    explain: "One = stores a value. The condition needs == to compare."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: string-equals
+    prompt: "How should you check whether the String station holds the text Harbor?"
+    choices: ["station.equals(\"Harbor\")", "station == \"Harbor\"", "station = \"Harbor\"", "station.equals(Harbor)"]
+    answer: 0
+    explain: ".equals compares the letters. == checks whether both sides are the same object in memory."
+    reteach: "## Concept"
+
+  - id: q09
+    type: order
+    concept: if-else
+    prompt: "Put the lines in order so the program prints Free ride!"
+    items:
+      - "boolean member = true;"
+      - "if (member) {"
+      - "    System.out.println(\"Free ride!\");"
+      - "} else {"
+      - "    System.out.println(\"Pay $1.00\");"
+      - "}"
+    explain: "The variable comes first, then the if block, then the else block."
+    reteach: "## Concept"
+
+  - id: q10
+    type: spot-the-bug
+    concept: if-else
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int minutes = 5;
+              if (minutes > 30); {
+                  System.out.println("Long ride!");
+              }
+          }
+      }
+    bugLine: 4
+    explain: "The semicolon after the condition ends the if, so the braces always run."
+    reteach: "## Common mistakes"

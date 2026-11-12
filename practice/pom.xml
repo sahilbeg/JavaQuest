@@ -31,6 +31,15 @@
   <build>
     <plugins>
       <plugin>
+        <!-- IDEs reuse this argLine, so money like %.2f prints with a point on every Mac, as in JavaQuest's checks. -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.5.6</version>
+        <configuration>
+          <argLine>-Duser.language=en -Duser.country=US</argLine>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <version>3.8.0</version>
@@ -41,9 +50,23 @@
             <goals><goal>add-source</goal></goals>
             <configuration>
               <sources>
-                <source>module-00-foundations/topic-05-hello-world/src</source>
                 <source>module-00-foundations/boss/src</source>
                 <source>module-00-foundations/mini-project/src</source>
+                <source>module-00-foundations/topic-05-hello-world/src</source>
+                <source>module-01-basics/boss/src</source>
+                <source>module-01-basics/mini-project/src</source>
+                <source>module-01-basics/topic-01-variables/src</source>
+                <source>module-01-basics/topic-02-primitive-types/src</source>
+                <source>module-01-basics/topic-03-operators/src</source>
+                <source>module-01-basics/topic-04-console-io/src</source>
+                <source>module-01-basics/topic-05-if-else/src</source>
+                <source>module-01-basics/topic-06-switch/src</source>
+                <source>module-01-basics/topic-07-while-loops/src</source>
+                <source>module-01-basics/topic-08-for-loops/src</source>
+                <source>module-01-basics/topic-09-methods/src</source>
+                <source>module-01-basics/topic-10-arrays/src</source>
+                <source>module-01-basics/topic-11-strings/src</source>
+                <source>module-01-basics/topic-12-stringbuilder-formatting/src</source>
               </sources>
             </configuration>
           </execution>
@@ -53,9 +76,23 @@
             <goals><goal>add-test-source</goal></goals>
             <configuration>
               <sources>
-                <source>module-00-foundations/topic-05-hello-world/test</source>
                 <source>module-00-foundations/boss/test</source>
                 <source>module-00-foundations/mini-project/test</source>
+                <source>module-00-foundations/topic-05-hello-world/test</source>
+                <source>module-01-basics/boss/test</source>
+                <source>module-01-basics/mini-project/test</source>
+                <source>module-01-basics/topic-01-variables/test</source>
+                <source>module-01-basics/topic-02-primitive-types/test</source>
+                <source>module-01-basics/topic-03-operators/test</source>
+                <source>module-01-basics/topic-04-console-io/test</source>
+                <source>module-01-basics/topic-05-if-else/test</source>
+                <source>module-01-basics/topic-06-switch/test</source>
+                <source>module-01-basics/topic-07-while-loops/test</source>
+                <source>module-01-basics/topic-08-for-loops/test</source>
+                <source>module-01-basics/topic-09-methods/test</source>
+                <source>module-01-basics/topic-10-arrays/test</source>
+                <source>module-01-basics/topic-11-strings/test</source>
+                <source>module-01-basics/topic-12-stringbuilder-formatting/test</source>
               </sources>
             </configuration>
           </execution>

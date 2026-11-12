@@ -1,0 +1,24 @@
+id: module-01-basics/topic-08-for-loops
+title: "Counting loops: for, break, continue"
+order: 8
+minutes: 9
+prerequisites: [module-01-basics/topic-07-while-loops]
+concepts: [for-loop, counting-down, step-size, nested-loops, break, continue]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m01.forloops.DockList
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0108
+  from: maya
+  title: "Kiosk screen should list every dock"
+  body: >
+    Riders at Riverside keep walking down the row to find an empty dock. The kiosk screen should list
+    docks 1 to 12 so they can see the layout at a glance. I also want a fare total for a batch of rides,
+    so I can check the end-of-day report.
+hints:
+  - "A for loop puts the start, the test and the change on one line: for (int i = 1; i <= docks; i++)."
+  - "To avoid a trailing space, add the space before each number except the first: if (i > 1) { line = line + \" \"; }"
+  - "For firstFreeDock, set int free = -1; before the loop. Inside, write if (i > takenUpTo) { free = i; break; } and return free after the loop."
+review: true

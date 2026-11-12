@@ -1,0 +1,119 @@
+topic: module-01-basics/topic-03-operators
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: modulo
+    variants:
+      - { prompt: "What is the value of 17 % 5?", choices: ["2", "3", "3.4", "12"], answer: 0 }
+      - { prompt: "What is the value of 75 % 60?", choices: ["15", "1", "1.25", "135"], answer: 0 }
+    explain: "% gives what is left over after dividing. 17 is 3 fives with 2 left over. 75 is one 60 with 15 left over."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: arithmetic
+    prompt: "What does int result = 7 / 2; store in result?"
+    choices: ["3", "3.5", "4", "1"]
+    answer: 0
+    explain: "Both sides are ints, so Java does integer division and drops the .5."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: precedence
+    variants:
+      - { prompt: "What is the value of 2 + 3 * 4?", choices: ["14", "20", "24", "9"], answer: 0 }
+      - { prompt: "What is the value of (2 + 3) * 4?", choices: ["20", "14", "24", "9"], answer: 0 }
+    explain: "* runs before + unless brackets say otherwise. Brackets always run first."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: compound-assignment
+    prompt: "total ___ 0.15;   // same as total = total + 0.15;"
+    answers: ["+="]
+    explain: "+= adds the right side to the variable and stores the result back."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: increment
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int rides = 5;
+              rides++;
+              rides++;
+              rides--;
+              System.out.println(rides);
+          }
+      }
+    answer: "6"
+    explain: "5 goes up to 6, then 7, then back down to 6."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: string-concatenation
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println("Total: " + 1 + 2);
+              System.out.println("Total: " + (1 + 2));
+          }
+      }
+    answer: "Total: 12\nTotal: 3"
+    explain: "Without brackets, Java joins 1 and then 2 as text. With brackets, it adds them first."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: predict-output
+    concept: arithmetic
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int minutes = 20;
+              double fare = 1.00 + minutes * 0.15;
+              System.out.println("Fare: $" + fare);
+          }
+      }
+    answer: "Fare: $4.0"
+    explain: "20 * 0.15 is 3.0, and 1.00 + 3.0 is 4.0. A double always prints with a decimal point."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: order
+    concept: modulo
+    prompt: "Put the lines in order to print 1 h 15 min."
+    items:
+      - "int minutes = 75;"
+      - "int hours = minutes / 60;"
+      - "int left = minutes - hours * 60;"
+      - "System.out.println(hours + \" h \" + left + \" min\");"
+    explain: "You need minutes to find hours, and hours to find the minutes left. Print last. minutes % 60 gives the same 15 in one step."
+    reteach: "## Worked example"
+
+  - id: q09
+    type: spot-the-bug
+    concept: precedence
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int minutes = 10;
+              double fare = (1.00 + minutes) * 0.15;
+              System.out.println(fare);
+          }
+      }
+    bugLine: 4
+    explain: "The brackets add the unlock fee to the minutes first. The fare should be 1.00 + minutes * 0.15."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: fill-blank
+    concept: increment
+    prompt: "ridesToday___;   // adds one to ridesToday"
+    answers: ["++"]
+    explain: "++ adds one to a variable. It is the same as ridesToday += 1."
+    reteach: "## Concept"

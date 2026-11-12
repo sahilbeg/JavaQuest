@@ -1,0 +1,124 @@
+topic: module-01-basics/topic-08-for-loops
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: for-loop
+    variants:
+      - { prompt: "In for (int i = 1; i <= 5; i++), which part runs only once?", choices: ["int i = 1", "i <= 5", "i++", "The block"], answer: 0 }
+      - { prompt: "In for (int i = 0; i < 3; i++), which part is checked before every turn?", choices: ["i < 3", "int i = 0", "i++", "None of them"], answer: 0 }
+    explain: "The start runs once. The test is checked before every turn. The change runs after every turn."
+    reteach: "## Concept"
+
+  - id: q02
+    type: predict-output
+    concept: counting-down
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              for (int i = 3; i >= 1; i--) {
+                  System.out.println(i);
+              }
+              System.out.println("go");
+          }
+      }
+    answer: "3\n2\n1\ngo"
+    explain: "i starts at 3 and goes down by 1 while i >= 1 is true."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: continue
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              for (int dock = 1; dock <= 4; dock++) {
+                  if (dock == 2) {
+                      continue;
+                  }
+                  System.out.println(dock);
+              }
+          }
+      }
+    answer: "1\n3\n4"
+    explain: "continue skips the println for dock 2, and the loop carries on with dock 3."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: nested-loops
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              for (int row = 1; row <= 2; row++) {
+                  for (int col = 1; col <= 3; col++) {
+                      System.out.print("*");
+                  }
+                  System.out.println();
+              }
+          }
+      }
+    answer: "***\n***"
+    explain: "The inner loop prints 3 stars on each of the 2 turns of the outer loop."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: step-size
+    prompt: "Which loop prints 0 5 10 15 20?"
+    choices: ["for (int i = 0; i <= 20; i += 5)", "for (int i = 0; i < 20; i += 5)", "for (int i = 5; i <= 20; i += 5)", "for (int i = 0; i <= 20; i++)"]
+    answer: 0
+    explain: "Start at 0, step by 5, and use <= so 20 is included."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: break
+    prompt: "What is the difference between break and continue?"
+    choices: ["break leaves the loop; continue skips to the next turn", "break skips to the next turn; continue leaves the loop", "Both leave the loop", "Both restart the loop from the start"]
+    answer: 0
+    explain: "break ends the loop at once. continue only ends the current turn."
+    reteach: "## Concept"
+
+  - id: q07
+    type: fill-blank
+    concept: for-loop
+    prompt: "for (int i = 1; i <= 12; ___) {"
+    answers: ["i++", "++i", "i += 1", "i+=1", "i = i + 1", "i=i+1"]
+    explain: "The change part adds 1 to i after every turn."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: for-loop
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              for (int i = 1, i <= 3, i++) {
+                  System.out.println(i);
+              }
+          }
+      }
+    bugLine: 3
+    explain: "The parts of a for loop are separated by semicolons. Commas do not work there."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: order
+    concept: counting-down
+    prompt: "Put the lines in order to print 10, 8, 6, 4, 2."
+    items:
+      - "for (int i = 10; i >= 2; i -= 2) {"
+      - "    System.out.println(i);"
+      - "}"
+    explain: "Start at 10, keep going while i >= 2, and step down by 2."
+    reteach: "## Concept"
+
+  - id: q10
+    type: fill-blank
+    concept: continue
+    prompt: "if (dock == 4) { ___; }"
+    answers: ["continue", "continue;"]
+    explain: "continue skips the rest of this turn, so dock 4 is left out and the loop goes on."
+    reteach: "## Concept"

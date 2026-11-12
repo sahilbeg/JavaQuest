@@ -1,0 +1,22 @@
+id: module-01-basics/boss
+title: "INC-01: The kiosk charges the wrong fare after midnight"
+order: 99
+minutes: 10
+prerequisites: [module-01-basics/topic-12-stringbuilder-formatting]
+concepts: [operators, if-else, switch, formatting]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m01.incident.NightFares
+ticket:
+  key: INC-01
+  from: theo
+  title: "The kiosk charges the wrong fare after midnight"
+  body: >
+    Night riders at Harbor are getting crazy receipts. A ride from 23:50 to 00:20 shows minus 1410 minutes.
+    Members are being charged the unlock fee too. Sam has a queue of angry emails. Please fix the fare code tonight.
+hints:
+  - "Bronze: a day has 1440 minutes. When the end is smaller than the start, the ride crossed midnight."
+  - "Bronze: (end - start + 1440) % 1440 gives the right minutes in both cases. Silver: compare the member rule in SPK-0105 with the code."
+  - "Gold: String.format(\"%02d:%02d\", minuteOfDay / 60, minuteOfDay % 60) turns 1430 into 23:50."
+review: false

@@ -165,4 +165,17 @@ class PracticeRunnerTest {
 
         assertEquals(ProgramResult.Status.TIMED_OUT, result.status());
     }
+
+    @Test
+    void decimalsAlwaysUseAPointWhateverTheMacLocale() throws Exception {
+        ProgramResult result = runner.runSnippet("""
+                public class Main {
+                    public static void main(String[] args) {
+                        System.out.println(String.format("%.2f", 2.5));
+                    }
+                }
+                """);
+
+        assertEquals("2.50", result.output().strip());
+    }
 }

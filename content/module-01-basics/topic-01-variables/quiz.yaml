@@ -1,0 +1,119 @@
+topic: module-01-basics/topic-01-variables
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: declaration
+    prompt: "Which line declares a variable that holds a whole number?"
+    choices: ["int docks = 12;", "docks = 12;", "int = 12;", "12 = docks;"]
+    answer: 0
+    explain: "A declaration starts with a type (int), then a name (docks). Here it also assigns 12."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: int-and-string
+    prompt: "___ station = \"Riverside\";"
+    answers: ["String"]
+    explain: "Text in double quotes goes in a String variable, with a capital S."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: int-and-string
+    prompt: "___ minutes = 20;   // a whole number"
+    answers: ["int"]
+    explain: "20 is a whole number, and int is the type for whole numbers taught here."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: reassignment
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int minutes = 20;
+              minutes = 35;
+              System.out.println(minutes);
+          }
+      }
+    answer: "35"
+    explain: "minutes starts at 20, then gets 35. The old value is gone by the time println runs."
+    reteach: "## Worked example"
+
+  - id: q05
+    type: predict-output
+    concept: assignment
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String station = "Harbor";
+              System.out.println(station);
+              station = "Uptown";
+              System.out.println(station);
+              System.out.println("station");
+          }
+      }
+    answer: "Harbor\nUptown\nstation"
+    explain: "Without quotes, Java prints the value in the box. With quotes, it prints the word itself."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: naming
+    variants:
+      - { prompt: "Which name follows Java's camelCase habit?", choices: ["bikeId", "BikeId", "bike_id", "bikeid-1"], answer: 0 }
+      - { prompt: "Which variable name is valid and uses camelCase?", choices: ["startStation", "1stStation", "start station", "Start-Station"], answer: 0 }
+    explain: "camelCase starts lowercase and capitalises each new word. Names cannot start with a digit or contain spaces or dashes."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: int-and-string
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int bikeId = "B-1042";
+              System.out.println(bikeId);
+          }
+      }
+    bugLine: 3
+    explain: "\"B-1042\" is text, so it needs a String variable instead of an int."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: spot-the-bug
+    concept: reassignment
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int minutes = 20;
+              int minutes = 35;
+              System.out.println(minutes);
+          }
+      }
+    bugLine: 4
+    explain: "The box already exists. Reassign it without the type: minutes = 35;"
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: order
+    concept: assignment
+    prompt: "Put the lines in order so the program prints 35."
+    items:
+      - "int minutes;"
+      - "minutes = 20;"
+      - "minutes = 35;"
+      - "System.out.println(minutes);"
+    explain: "Declare the box first, then fill it, then change it, then print it."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: naming
+    prompt: "Are minutes and Minutes the same variable?"
+    choices: ["No, Java treats them as two different names", "Yes, Java ignores capital letters", "Yes, but only for int variables", "No, because Minutes is not allowed"]
+    answer: 0
+    explain: "Java is case sensitive, so a change in capital letters makes a different name."
+    reteach: "## Concept"

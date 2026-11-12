@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "lastUpdated": "2026-11-12T16:26:01+05:30",
+  "lastUpdated": "2026-11-12T16:45:38+05:30",
   "phase": "PHASE 1: build",
-  "milestone": "C00",
-  "resumeHere": "C00 content is committed at status ui_wired. Next: your read-through of module 0 in the browser, then C01 (Java basics, 12 topics + INC-01 + FEAT-01).",
+  "milestone": "C02",
+  "resumeHere": "C01 is committed at status ui_wired. Next: C02 (OOP, 12 topics + INC-02 + FEAT-02). Modules 0 and 1 still need your read-through to reach done.",
   "statusValues": [
     "planned",
     "content_written",
@@ -48,12 +48,13 @@
     "M4-02 contrast fixes, Lighthouse 100 in both themes",
     "M4-03 error and empty states, connection banner",
     "M4-04 server shutdown with open event streams",
-    "C00 module 0: 7 new units written, reviewed (22 findings fixed), content checks, quiz keys and practice verified"
+    "C00 module 0: 7 new units written, reviewed (22 findings fixed), content checks, quiz keys and practice verified",
+    "C01 module 1: 12 topics, INC-01, FEAT-01; 2 reviews (34 findings) fixed; all checks green"
   ],
-  "nextTask": "C00-review: learner read-through of module 0; then C01-01 variables",
+  "nextTask": "C02-01: module 2 topic 01 classes-objects",
   "openDecisions": [
-    "A real VoiceOver pass needs a person; automated checks are done",
-    "Module 0 read-through by you before marking it done"
+    "A real VoiceOver pass needs a person",
+    "Modules 0 and 1 read-through by you before marking them done"
   ],
   "blockers": [],
   "milestones": {
@@ -63,8 +64,8 @@
     "M4": "done",
     "M5": "planned",
     "C00": "ui_wired",
-    "C01": "planned",
-    "C02": "planned",
+    "C01": "ui_wired",
+    "C02": "in_progress",
     "C03": "planned",
     "C04": "planned",
     "C05": "planned",
@@ -147,7 +148,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:25:04+05:30"
+            "verifiedAt": "2026-11-12T16:43:58+05:30"
           }
         },
         {
@@ -175,7 +176,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:25:02+05:30"
+            "verifiedAt": "2026-11-12T16:43:57+05:30"
           }
         },
         {
@@ -189,7 +190,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:25:03+05:30"
+            "verifiedAt": "2026-11-12T16:43:57+05:30"
           }
         }
       ],
@@ -198,7 +199,7 @@
     {
       "id": "module-01-basics",
       "title": "Java basics",
-      "status": "planned",
+      "status": "ui_wired",
       "topics": [
         {
           "id": "module-01-basics/topic-01-variables",
@@ -207,11 +208,11 @@
           "prerequisites": [
             "module-00-foundations/boss"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T16:44+05:30"
           }
         },
         {
@@ -221,11 +222,11 @@
           "prerequisites": [
             "module-01-basics/topic-01-variables"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T16:44:01+05:30"
           }
         },
         {
@@ -235,11 +236,11 @@
           "prerequisites": [
             "module-01-basics/topic-02-primitive-types"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T16:44:01+05:30"
           }
         },
         {
@@ -249,11 +250,11 @@
           "prerequisites": [
             "module-01-basics/topic-03-operators"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T16:44:02+05:30"
           }
         },
         {
@@ -263,11 +264,11 @@
           "prerequisites": [
             "module-01-basics/topic-04-console-io"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T16:44:02+05:30"
           }
         },
         {
@@ -277,11 +278,11 @@
           "prerequisites": [
             "module-01-basics/topic-05-if-else"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T16:44:03+05:30"
           }
         },
         {
@@ -291,11 +292,11 @@
           "prerequisites": [
             "module-01-basics/topic-06-switch"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T16:44:04+05:30"
           }
         },
         {
@@ -305,11 +306,11 @@
           "prerequisites": [
             "module-01-basics/topic-07-while-loops"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T16:44:04+05:30"
           }
         },
         {
@@ -319,11 +320,11 @@
           "prerequisites": [
             "module-01-basics/topic-08-for-loops"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T16:44:05+05:30"
           }
         },
         {
@@ -333,11 +334,11 @@
           "prerequisites": [
             "module-01-basics/topic-09-methods"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T16:44:06+05:30"
           }
         },
         {
@@ -347,11 +348,11 @@
           "prerequisites": [
             "module-01-basics/topic-10-arrays"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T16:44:06+05:30"
           }
         },
         {
@@ -361,11 +362,11 @@
           "prerequisites": [
             "module-01-basics/topic-11-strings"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T16:44:07+05:30"
           }
         },
         {
@@ -375,11 +376,11 @@
           "prerequisites": [
             "module-01-basics/topic-12-stringbuilder-formatting"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T16:43:59+05:30"
           }
         },
         {
@@ -389,11 +390,11 @@
           "prerequisites": [
             "module-01-basics/topic-12-stringbuilder-formatting"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T16:43:59+05:30"
           }
         }
       ],

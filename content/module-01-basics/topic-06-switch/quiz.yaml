@@ -1,0 +1,138 @@
+topic: module-01-basics/topic-06-switch
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: switch-statement
+    prompt: "In a switch, when does the default case run?"
+    choices: ["When no case matches the value", "Always, before the other cases", "Only when the value is 0", "Never, it is just a comment"]
+    answer: 0
+    explain: "default works like the final else. It runs when no case label matches."
+    reteach: "## Concept"
+
+  - id: q02
+    type: predict-output
+    concept: break-fall-through
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int dock = 1;
+              switch (dock) {
+                  case 1:
+                      System.out.println("blue");
+                  case 2:
+                      System.out.println("green");
+                      break;
+                  default:
+                      System.out.println("grey");
+              }
+          }
+      }
+    answer: "blue\ngreen"
+    explain: "case 1 has no break, so Java falls through into case 2. The break there stops it."
+    reteach: "## Common mistakes"
+
+  - id: q03
+    type: fill-blank
+    concept: break-fall-through
+    prompt: "case \"classic\": price = 0.15; ___;"
+    answers: ["break"]
+    explain: "break jumps out of the switch so the next case does not run."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: switch-expression
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String type = "ebike";
+              double price = switch (type) {
+                  case "classic" -> 0.15;
+                  case "ebike" -> 0.30;
+                  default -> -1;
+              };
+              System.out.println(price);
+          }
+      }
+    answer: "0.3"
+    explain: "0.30 and 0.3 are the same double, and Java prints the shortest form: 0.3."
+    reteach: "## Worked example"
+
+  - id: q05
+    type: mcq
+    concept: switch-expression
+    variants:
+      - { prompt: "What does an arrow case (case x -> ...) never do?", choices: ["Fall through into the next case", "Give back a value", "Match a String", "Use default"], answer: 0 }
+      - { prompt: "Why does an arrow switch not need break?", choices: ["Each arrow case runs only its own code", "Java adds break at the end of the file", "Arrow cases cannot hold code", "default stops the switch"], answer: 0 }
+    explain: "Arrow cases run only their own code, so fall-through cannot happen."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: multiple-labels
+    prompt: "Which case matches docks 4, 5 and 6 in a switch expression?"
+    choices: ["case 4, 5, 6 -> \"green\";", "case 4 && 5 && 6 -> \"green\";", "case 4 to 6 -> \"green\";", "case (4 5 6) -> \"green\";"]
+    answer: 0
+    explain: "Put several labels on one case, separated by commas."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: switch-expression
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int dock = 7;
+              String color = switch (dock) {
+                  case 1, 2, 3 -> "blue";
+                  case 4, 5, 6 -> "green";
+              };
+              System.out.println(color);
+          }
+      }
+    prompt: "Which line does Java report?"
+    bugLine: 4
+    explain: "Java reports the error on the switch line: the switch does not cover every value. Add `default -> \"grey\";` before the closing brace."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: switch-on-strings
+    prompt: "type holds \"Cargo\" with a capital C. Which case does switch (type) pick?"
+    choices: ["default, because \"Cargo\" and \"cargo\" are different text", "case \"cargo\", because case does not matter", "The first case in the list", "None, so the program crashes"]
+    answer: 0
+    explain: "A String switch compares text exactly, like .equals. Capital letters matter."
+    reteach: "## Concept"
+
+  - id: q09
+    type: order
+    concept: switch-expression
+    prompt: "Put the lines in order to build a switch expression."
+    items:
+      - "String color = switch (dock) {"
+      - "    case 1, 2, 3 -> \"blue\";"
+      - "    default -> \"grey\";"
+      - "};"
+    explain: "The switch opens with the value, lists the cases, puts default last and ends with };"
+    reteach: "## Concept"
+
+  - id: q10
+    type: predict-output
+    concept: multiple-labels
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int dock = 9;
+              String color = switch (dock) {
+                  case 1, 2, 3 -> "blue";
+                  case 4, 5, 6 -> "green";
+                  default -> "grey";
+              };
+              System.out.println("Dock " + dock + " is " + color);
+          }
+      }
+    answer: "Dock 9 is grey"
+    explain: "9 is not in either list of labels, so default gives back \"grey\"."
+    reteach: "## Concept"

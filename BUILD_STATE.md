@@ -2,11 +2,11 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-12T16:26:01+05:30
+- **Last updated:** 2026-11-12T16:45:38+05:30
 - **Phase:** PHASE 1: build
-- **Milestone:** C00
-- **Resume here:** C00 content is committed at status ui_wired. Next: your read-through of module 0 in the browser, then C01 (Java basics, 12 topics + INC-01 + FEAT-01).
-- **Next task:** C00-review: learner read-through of module 0; then C01-01 variables
+- **Milestone:** C02
+- **Resume here:** C01 is committed at status ui_wired. Next: C02 (OOP, 12 topics + INC-02 + FEAT-02). Modules 0 and 1 still need your read-through to reach done.
+- **Next task:** C02-01: module 2 topic 01 classes-objects
 
 ## Completed tasks
 
@@ -46,6 +46,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - M4-03 error and empty states, connection banner
 - M4-04 server shutdown with open event streams
 - C00 module 0: 7 new units written, reviewed (22 findings fixed), content checks, quiz keys and practice verified
+- C01 module 1: 12 topics, INC-01, FEAT-01; 2 reviews (34 findings) fixed; all checks green
 
 ## Decisions
 
@@ -73,8 +74,8 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | Milestone | Status |
 |---|---|
 | C00 | ui_wired |
-| C01 | planned |
-| C02 | planned |
+| C01 | ui_wired |
+| C02 | in_progress |
 | C03 | planned |
 | C04 | planned |
 | C05 | planned |
@@ -96,7 +97,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | Module | Project | Units | Status |
 |---|---|---|---|
 | module-00-foundations | Day one | 8 | ui_wired |
-| module-01-basics | The fare kiosk | 14 | planned |
+| module-01-basics | The fare kiosk | 14 | ui_wired |
 | module-02-oop | Modelling the fleet | 14 | planned |
 | module-03-core-java | Ride data | 18 | planned |
 | module-04-dsa | Moving bikes around | 14 | planned |
@@ -119,6 +120,20 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-00-foundations/topic-06-git-basics | ui_wired | None | None |
 | module-00-foundations/boss | ui_wired | True | True |
 | module-00-foundations/mini-project | ui_wired | True | True |
+| module-01-basics/topic-01-variables | ui_wired | True | True |
+| module-01-basics/topic-02-primitive-types | ui_wired | True | True |
+| module-01-basics/topic-03-operators | ui_wired | True | True |
+| module-01-basics/topic-04-console-io | ui_wired | True | True |
+| module-01-basics/topic-05-if-else | ui_wired | True | True |
+| module-01-basics/topic-06-switch | ui_wired | True | True |
+| module-01-basics/topic-07-while-loops | ui_wired | True | True |
+| module-01-basics/topic-08-for-loops | ui_wired | True | True |
+| module-01-basics/topic-09-methods | ui_wired | True | True |
+| module-01-basics/topic-10-arrays | ui_wired | True | True |
+| module-01-basics/topic-11-strings | ui_wired | True | True |
+| module-01-basics/topic-12-stringbuilder-formatting | ui_wired | True | True |
+| module-01-basics/boss | ui_wired | True | True |
+| module-01-basics/mini-project | ui_wired | True | True |
 
 ## Commands
 

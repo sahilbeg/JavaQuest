@@ -1,0 +1,24 @@
+id: module-01-basics/topic-10-arrays
+title: "Arrays and 2D arrays"
+order: 10
+minutes: 9
+prerequisites: [module-01-basics/topic-09-methods]
+concepts: [array-creation, indexes, array-length, array-loops, index-out-of-bounds, two-d-arrays]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m01.arrays.DockMap
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0110
+  from: theo
+  title: "Kiosk can't tell which docks hold a bike"
+  body: >
+    The Riverside kiosk has 12 docks, and right now it just says "some bikes available".
+    This morning a rider walked the whole row looking for a bike that wasn't there.
+    The dock sensors give us true or false for each dock, so the kiosk should count the bikes and point to the first empty dock.
+hints:
+  - "Each method loops over the array. A for loop from 0 to array.length - 1 visits every element."
+  - "For countBikes, add 1 to a counter when docks[i] is true. For firstEmptyDock, return i + 1 as soon as docks[i] is false, and return -1 after the loop."
+  - "For bikesPerStation, create int[] counts = new int[stations.length]; then set counts[s] = countBikes(stations[s]); for each row s."
+review: true

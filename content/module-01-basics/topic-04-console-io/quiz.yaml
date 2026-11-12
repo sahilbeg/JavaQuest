@@ -1,0 +1,124 @@
+topic: module-01-basics/topic-04-console-io
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: print-vs-println
+    variants:
+      - { prompt: "Which method prints text and stays on the same line?", choices: ["System.out.print", "System.out.println", "System.in.print", "Scanner.print"], answer: 0 }
+      - { prompt: "Which method prints text and then moves to a new line?", choices: ["System.out.println", "System.out.print", "System.in.println", "Scanner.nextLine"], answer: 0 }
+    explain: "print stays on the line. println adds a new line after the text."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: scanner
+    prompt: "import java.util.___;"
+    answers: ["Scanner"]
+    explain: "Scanner lives in the java.util package, so you import java.util.Scanner."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: scanner
+    prompt: "Which line makes a Scanner that reads from the keyboard?"
+    choices: ["Scanner in = new Scanner(System.in);", "Scanner in = new Scanner(System.out);", "Scanner in = Scanner(System.in);", "Scanner in = new Scanner(keyboard);"]
+    answer: 0
+    explain: "System.in is the keyboard side of the console, and new creates the Scanner."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: reading-numbers
+    prompt: "int minutes = in.___();"
+    answers: ["nextInt"]
+    explain: "nextInt reads the next whole number."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: reading-lines
+    prompt: "The rider types   Old Mill   with spaces around it. Which line stores just \"Old Mill\"?"
+    choices: ["String s = in.nextLine().trim();", "String s = in.nextLine();", "String s = in.nextInt();", "String s = in.trim();"]
+    answer: 0
+    explain: "nextLine reads the whole line, and trim removes spaces at the start and end."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: print-vs-println
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.print("Harbor ");
+              System.out.print("has ");
+              System.out.println("12 docks");
+              System.out.println("Done");
+          }
+      }
+    answer: "Harbor has 12 docks\nDone"
+    explain: "The two print calls stay on one line. println ends that line, then Done goes on the next."
+    reteach: "## Concept"
+
+  - id: q07
+    type: predict-output
+    concept: reading-numbers
+    code: |
+      import java.util.Scanner;
+
+      public class Main {
+          public static void main(String[] args) {
+              Scanner in = new Scanner("30\n");
+              System.out.println("How many minutes did you ride?");
+              int minutes = in.nextInt();
+              System.out.println("Fare: $" + (1.00 + minutes * 0.15));
+          }
+      }
+    answer: "How many minutes did you ride?\nFare: $5.5"
+    explain: "The prompt prints first. Then nextInt reads 30, and 1.00 + 30 * 0.15 is 5.5."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: predict-output
+    concept: nextline-pitfall
+    code: |
+      import java.util.Scanner;
+
+      public class Main {
+          public static void main(String[] args) {
+              Scanner in = new Scanner("12\nUptown\n");
+              int minutes = in.nextInt();
+              String station = in.nextLine();
+              System.out.println("[" + station + "]");
+          }
+      }
+    answer: "[]"
+    explain: "nextInt stops before the Enter, so nextLine reads the empty rest of the first line."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: order
+    concept: prompts
+    prompt: "A Scanner called in already exists. Put the lines in order so the kiosk asks, reads, then shows the fare."
+    items:
+      - "System.out.println(\"How many minutes did you ride?\");"
+      - "int minutes = in.nextInt();"
+      - "System.out.println(\"Fare: $\" + (1.00 + minutes * 0.15));"
+    explain: "Ask first, so the rider knows what to type. Then read the answer, then use it."
+    reteach: "## Worked example"
+
+  - id: q10
+    type: spot-the-bug
+    concept: scanner
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Scanner in = new Scanner(System.in);
+              int minutes = in.nextInt();
+              System.out.println(minutes);
+          }
+      }
+    bugLine: 3
+    explain: "Scanner is used without import java.util.Scanner; so Java cannot find it on line 3."
+    reteach: "## Common mistakes"

@@ -1,0 +1,24 @@
+id: module-01-basics/topic-04-console-io
+title: "Input and output with the console"
+order: 4
+minutes: 9
+prerequisites: [module-01-basics/topic-03-operators]
+concepts: [print-vs-println, scanner, reading-numbers, reading-lines, prompts, nextline-pitfall]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m01.consoleio.KioskPrompt
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0104
+  from: theo
+  title: "Test kiosk should ask how long the ride was"
+  body: >
+    I'm testing the new kiosk at Old Mill and right now it just sits there. It should ask the rider
+    how many minutes they rode, then print the classic fare. Two lines on screen is all I need for
+    the field test on Friday.
+hints:
+  - "A Scanner reads what the rider types. nextInt() reads a whole number and nextLine() reads a full line."
+  - "In run, print the question first, then read the minutes, then print the fare with the same sum as last topic."
+  - "Try: System.out.println(\"How many minutes did you ride?\"); int minutes = readMinutes(in); System.out.println(\"Fare: $\" + (1.00 + minutes * 0.15));"
+review: true

@@ -175,6 +175,7 @@ public final class PracticeRunner {
                 "-XX:+UseSerialGC",
                 "-XX:TieredStopAtLevel=1",
                 "-Djava.io.tmpdir=" + workDir,
+                "-Duser.language=en", "-Duser.country=US",
                 "-cp", joinClasspath(classpath)));
         command.addAll(mainAndArgs);
         return command;

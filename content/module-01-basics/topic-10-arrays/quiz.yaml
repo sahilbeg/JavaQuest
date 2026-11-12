@@ -1,0 +1,127 @@
+topic: module-01-basics/topic-10-arrays
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: indexes
+    variants:
+      - { prompt: "An array has 12 elements. What is the index of the last one?", choices: ["11", "12", "13", "0"], answer: 0 }
+      - { prompt: "An array has 4 elements. What is the index of the first one?", choices: ["0", "1", "4", "3"], answer: 0 }
+    explain: "Indexes start at 0, so they run from 0 to length - 1."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: array-creation
+    prompt: "What values does new boolean[12] start with?"
+    choices: ["12 false values", "12 true values", "12 null values", "It is empty until you fill it"]
+    answer: 0
+    explain: "New slots get a default value. For boolean that is false."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: index-out-of-bounds
+    prompt: "int[] rides = {12, 45, 7}; What happens when the program reads rides[3]?"
+    choices: ["It crashes with ArrayIndexOutOfBoundsException", "It returns 0", "It returns 7", "The compiler refuses to compile it"]
+    answer: 0
+    explain: "Valid indexes are 0, 1 and 2. Index 3 compiles but crashes when it runs."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: array-length
+    prompt: "for (int i = 0; i < docks.___; i++) {"
+    answers: ["length"]
+    explain: "length gives the number of elements, and it has no brackets for arrays."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: array-creation
+    prompt: "int[] rides = new ___[5];"
+    answers: ["int"]
+    explain: "The type after new must match the array type, int."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: array-loops
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int[] rides = {10, 20, 5};
+              int total = 0;
+              for (int minutes : rides) {
+                  total = total + minutes;
+              }
+              System.out.println(total);
+              System.out.println(rides.length);
+          }
+      }
+    answer: "35\n3"
+    explain: "The loop adds 10, 20 and 5 to make 35. The array has 3 elements."
+    reteach: "## Worked example"
+
+  - id: q07
+    type: predict-output
+    concept: two-d-arrays
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int[][] grid = {
+                  {1, 2, 3},
+                  {4, 5, 6}
+              };
+              System.out.println(grid[1][0]);
+              System.out.println(grid.length);
+              System.out.println(grid[0].length);
+          }
+      }
+    answer: "4\n2\n3"
+    explain: "grid[1][0] is row 1, column 0, which is 4. There are 2 rows, and row 0 has 3 columns."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: index-out-of-bounds
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int[] rides = {12, 45, 7};
+              for (int i = 0; i <= rides.length; i++) {
+                  System.out.println(rides[i]);
+              }
+          }
+      }
+    bugLine: 4
+    explain: "i <= rides.length lets i reach 3, which is past the end. Use i < rides.length."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: order
+    concept: array-loops
+    prompt: "Put the lines in order to print every ride in the array."
+    items:
+      - "int[] rides = {12, 45, 7};"
+      - "for (int i = 0; i < rides.length; i++) {"
+      - "    System.out.println(rides[i]);"
+      - "}"
+    explain: "Create the array first, then loop over its indexes and print each element."
+    reteach: "## Concept"
+
+  - id: q10
+    type: spot-the-bug
+    concept: array-length
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int[] rides = {12, 45, 7};
+              int count = rides.length();
+              System.out.println(count);
+          }
+      }
+    bugLine: 4
+    explain: "For arrays, length has no brackets. Write rides.length."
+    reteach: "## Common mistakes"

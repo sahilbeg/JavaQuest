@@ -1,0 +1,24 @@
+id: module-01-basics/topic-09-methods
+title: "Methods: parameters, return values, scope"
+order: 9
+minutes: 9
+prerequisites: [module-01-basics/topic-08-for-loops]
+concepts: [defining-methods, parameters, return-values, calling-methods, scope, overloading]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m01.methods.FareRules
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0109
+  from: maya
+  title: "Split the fare code into small methods"
+  body: >
+    The fare code is now one long main, about two hundred lines, and nobody can test a single rule in it.
+    Last week a member at Old Mill was charged the unlock fee and it took us a day to find the line.
+    Please split it into small methods we can test one by one.
+hints:
+  - "Each rule gets its own method. pricePerMinute only needs the bike type, and unlockFee only needs to know about membership."
+  - "Inside fare, call pricePerMinute(type) and unlockFee(member) and store the results in local variables. For members, only minutes after the first 30 cost money."
+  - "For a member, use: if (minutes > 30) { return fee + (minutes - 30) * rate; } return fee; For a non-member: return unlockFee(false) + minutes * rate. The overload is just: return fare(\"classic\", minutes, false);"
+review: true

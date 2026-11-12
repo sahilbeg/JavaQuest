@@ -1,0 +1,22 @@
+id: module-01-basics/mini-project
+title: "FEAT-01: Ride receipt printer"
+order: 100
+minutes: 10
+prerequisites: [module-01-basics/topic-12-stringbuilder-formatting]
+concepts: [methods, switch, if-else, stringbuilder, formatting]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m01.feature.ReceiptPrinter
+ticket:
+  key: FEAT-01
+  from: priya
+  title: "Print a receipt at the end of every ride"
+  body: >
+    Riders keep asking what they paid for. When a bike is docked, the kiosk should print a short receipt:
+    the bike, the station, the bike type, the minutes and the fare. The layout is in the KB page. Can you build it?
+hints:
+  - "Build it in small methods: one for the price per minute, one for the fare, one for the receipt text."
+  - "Use a StringBuilder and String.format(\"%-9s%s\", label, value) for each line, then add \"\\n\" between lines."
+  - "Check the type first. If pricePerMinute returns -1, return \"Unknown bike type\" straight away."
+review: false

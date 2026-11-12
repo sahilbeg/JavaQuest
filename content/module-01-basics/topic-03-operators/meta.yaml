@@ -1,0 +1,24 @@
+id: module-01-basics/topic-03-operators
+title: "Operators and expressions"
+order: 3
+minutes: 9
+prerequisites: [module-01-basics/topic-02-primitive-types]
+concepts: [arithmetic, precedence, modulo, compound-assignment, increment, string-concatenation]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m01.operators.FareCalculator
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0103
+  from: priya
+  title: "Show the fare before the rider unlocks"
+  body: >
+    A rider at Riverside told Sam she got a $5.50 charge and had no idea why. The kiosk should
+    show the price of a ride before anyone unlocks a bike. Classic is $1.00 to unlock
+    plus $0.15 a minute, and e-bikes are $0.30 a minute. Can you build the fare maths for us?
+hints:
+  - "Each fare is the unlock fee plus the minutes times the price per minute."
+  - "For hoursAndMinutes, minutes / 60 gives the whole hours and minutes % 60 gives what is left over."
+  - "Try: return 1.00 + minutes * 0.15; and return (minutes / 60) + \" h \" + (minutes % 60) + \" min\";"
+review: true

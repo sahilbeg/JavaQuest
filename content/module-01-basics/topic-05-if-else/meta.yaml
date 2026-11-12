@@ -1,0 +1,24 @@
+id: module-01-basics/topic-05-if-else
+title: "Decisions: if, else, boolean logic"
+order: 5
+minutes: 9
+prerequisites: [module-01-basics/topic-04-console-io]
+concepts: [boolean-expressions, comparison-operators, if-else, logical-operators, string-equals]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m01.ifelse.MemberPricing
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0105
+  from: priya
+  title: "Members still get charged for short rides"
+  body: >
+    A member named Lena rode 12 minutes from Riverside to Old Mill and the kiosk charged her $2.80.
+    Members ride free for their first 30 minutes, so that should have been $0.00.
+    The kiosk charges everyone the same way right now. Can you teach it to tell members apart?
+hints:
+  - "Each method has to make a choice. Start with an if that checks whether the rider is a member."
+  - "isFreeRide is true only when member is true AND minutes is 30 or less. For a member's fare, the paid minutes are minutes - 30."
+  - "Try: if (!member) { return 1.00 + minutes * 0.15; } else if (minutes <= 30) { return 0.0; } else { return (minutes - 30) * 0.15; }"
+review: true

@@ -1,0 +1,116 @@
+topic: module-01-basics/topic-12-stringbuilder-formatting
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: string-format
+    variants:
+      - { prompt: "What does String.format(\"$%.2f\", 2.4999999) give back?", choices: ["$2.50", "$2.49", "$2.4999999", "$2.5"], answer: 0 }
+      - { prompt: "What does String.format(\"$%.2f\", 0.3) give back?", choices: ["$0.30", "$0.3", "$.30", "$0.300"], answer: 0 }
+    explain: "%.2f rounds to exactly 2 digits after the point."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: string-format
+    prompt: "Which placeholder fits a whole number such as the 12 docks at Harbor?"
+    choices: ["%d", "%.2f", "%n", "%-d2"]
+    answer: 0
+    explain: "%d is for whole numbers. %.2f is for decimals."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: string-format
+    prompt: "String price = String.format(\"$___\", 1.5);"
+    answers: ["%.2f"]
+    explain: "%.2f shows a decimal with 2 digits, so 1.5 becomes 1.50."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: format-widths
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println("[" + String.format("%-6s", "Ride") + "]");
+              System.out.println("[" + String.format("%6s", "Ride") + "]");
+          }
+      }
+    answer: "[Ride  ]\n[  Ride]"
+    explain: "The minus pads on the right. Without it, Java pads on the left."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: format-widths
+    prompt: "What does String.format(\"%6.2f\", 2.5) give back?"
+    choices: ["\"  2.50\"", "\"2.50  \"", "\"2.5\"", "\"000002.50\""]
+    answer: 0
+    explain: "2.50 is 4 characters. A width of 6 adds 2 spaces on the left."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: stringbuilder
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              StringBuilder sb = new StringBuilder();
+              for (int i = 1; i <= 3; i++) {
+                  sb.append(i);
+                  sb.append("-");
+              }
+              System.out.println(sb.toString());
+          }
+      }
+    answer: "1-2-3-"
+    explain: "Each loop turn appends the number and then a dash, at the end of the text."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: stringbuilder
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              StringBuilder sb = new StringBuilder();
+              sb.append("Uptown");
+              String name = sb;
+              System.out.println(name);
+          }
+      }
+    bugLine: 5
+    explain: "A StringBuilder is not a String. Use sb.toString()."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: string-concatenation-loops
+    prompt: "Why use a StringBuilder instead of + inside a long loop?"
+    choices: ["Each + builds a new String and copies all the old text", "+ cannot join numbers to text", "+ only works outside methods", "StringBuilder rounds prices for you"]
+    answer: 0
+    explain: "Strings never change, so + copies everything each time. StringBuilder adds to the end."
+    reteach: "## Concept"
+
+  - id: q09
+    type: order
+    concept: stringbuilder
+    prompt: "Put the lines in order to print Spoke."
+    items:
+      - "StringBuilder sb = new StringBuilder();"
+      - "sb.append(\"Spo\");"
+      - "sb.append(\"ke\");"
+      - "System.out.println(sb.toString());"
+    explain: "Create the builder, append the pieces in order, then print the finished text."
+    reteach: "## Worked example"
+
+  - id: q10
+    type: mcq
+    concept: text-blocks
+    prompt: "Which symbols start and end a text block?"
+    choices: ["Three double quotes \"\"\"", "One single quote '", "Backticks ```", "Curly braces { }"]
+    answer: 0
+    explain: "A text block opens and closes with three double quotes."
+    reteach: "## Concept"

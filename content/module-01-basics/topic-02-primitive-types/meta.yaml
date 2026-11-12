@@ -1,0 +1,24 @@
+id: module-01-basics/topic-02-primitive-types
+title: "Primitive types and casting"
+order: 2
+minutes: 9
+prerequisites: [module-01-basics/topic-01-variables]
+concepts: [primitive-types, double, boolean-and-char, casting, integer-division]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m01.primitivetypes.RideStats
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0102
+  from: sam
+  title: "Receipt says 2 km for a 2.5 km ride"
+  body: >
+    A rider who docked at Old Mill wrote in, a bit annoyed. Her receipt said 2 km, but her app
+    tracked 2.5 km. The kiosk's average ride time looks rounded off too. Can you check how it
+    stores these numbers?
+hints:
+  - "A number with a decimal point needs the double type. int throws away everything after the point."
+  - "roundedDownKm should cast with (int). averageMinutes should turn totalMinutes into a double before it divides."
+  - "Try: return (int) km; and return (double) totalMinutes / rides;"
+review: true

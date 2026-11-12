@@ -1,0 +1,134 @@
+topic: module-01-basics/topic-09-methods
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: return-values
+    variants:
+      - { prompt: "What does the return type void mean?", choices: ["The method gives back nothing", "The method gives back 0", "The method cannot have parameters", "The method is empty"], answer: 0 }
+      - { prompt: "Which return type fits a method that only prints a receipt?", choices: ["void", "double", "String", "int"], answer: 0 }
+    explain: "void means the method does its job and hands no value back."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: parameters
+    prompt: "Given ridePrice(int minutes, double rate), which call is correct?"
+    choices: ["ridePrice(10, 0.15)", "ridePrice(0.15, 10)", "ridePrice(10)", "ridePrice(int 10, double 0.15)"]
+    answer: 0
+    explain: "Arguments match parameters by position: first the int minutes, then the double rate."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: overloading
+    prompt: "Which pair of methods is a valid overload?"
+    choices: ["fare(int minutes) and fare(int minutes, double rate)", "fare(int minutes) and fare(int mins)", "fare(int minutes) and price(int minutes)", "double fare(int m) and int fare(int m)"]
+    answer: 0
+    explain: "Overloads share a name and differ in their parameter lists. A different parameter name or return type is not enough."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: defining-methods
+    prompt: "public static ___ unlockFee() { return 1.00; }"
+    answers: ["double"]
+    explain: "1.00 is a decimal number, so the return type is double."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: return-values
+    prompt: "public static int twice(int n) { ___ n * 2; }"
+    answers: ["return"]
+    explain: "return hands the value back to the caller."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: calling-methods
+    code: |
+      public class Main {
+          public static int addTen(int n) {
+              return n + 10;
+          }
+
+          public static void main(String[] args) {
+              int a = addTen(5);
+              System.out.println(a);
+              System.out.println(addTen(a));
+          }
+      }
+    answer: "15\n25"
+    explain: "addTen(5) gives 15. Then addTen(15) gives 25."
+    reteach: "## Worked example"
+
+  - id: q07
+    type: predict-output
+    concept: overloading
+    code: |
+      public class Main {
+          public static String label(int n) {
+              return "int";
+          }
+
+          public static String label(double d) {
+              return "double";
+          }
+
+          public static void main(String[] args) {
+              System.out.println(label(3));
+              System.out.println(label(3.5));
+          }
+      }
+    answer: "int\ndouble"
+    explain: "Java picks the overload whose parameter matches the argument. 3 is an int and 3.5 is a double."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: scope
+    code: |
+      public class Main {
+          public static double fare(int minutes) {
+              double rate = 0.15;
+              return 1.00 + minutes * rate;
+          }
+
+          public static void main(String[] args) {
+              System.out.println(rate);
+          }
+      }
+    bugLine: 8
+    explain: "rate is a local variable of fare. main cannot see it."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: order
+    concept: defining-methods
+    prompt: "Put the lines in order to define a method that returns a ride price."
+    items:
+      - "public static double ridePrice(int minutes) {"
+      - "    double rate = 0.15;"
+      - "    return minutes * rate;"
+      - "}"
+    explain: "The header comes first, then the body, then return, then the closing brace."
+    reteach: "## Concept"
+
+  - id: q10
+    type: spot-the-bug
+    concept: return-values
+    code: |
+      public class Main {
+          public static double unlockFee() {
+              return "1.00";
+          }
+
+          public static void main(String[] args) {
+              System.out.println(unlockFee());
+          }
+      }
+    bugLine: 3
+    explain: "unlockFee promises a double, but \"1.00\" in quotes is a String. Write return 1.00; without quotes."
+    reteach: "## Common mistakes"

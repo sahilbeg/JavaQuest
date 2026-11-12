@@ -1,0 +1,24 @@
+id: module-01-basics/topic-06-switch
+title: "Switch statements and switch expressions"
+order: 6
+minutes: 9
+prerequisites: [module-01-basics/topic-05-if-else]
+concepts: [switch-statement, break-fall-through, switch-expression, multiple-labels, switch-on-strings]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m01.switchcases.BikeTypes
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0106
+  from: maya
+  title: "Kiosk charges e-bikes like classic bikes"
+  body: >
+    We rolled out e-bikes and cargo bikes at Harbor this week, and the kiosk prices them all at $0.15 a minute.
+    A rider took cargo bike B-2210 for 20 minutes and paid $4.00 when it should have been $6.00.
+    The kiosk needs to know the price for each bike type. Can you sort it out?
+hints:
+  - "Each method looks at one value and picks an answer from a short list. That is a job for switch."
+  - "Write a case for \"classic\", \"ebike\" and \"cargo\", and use default for anything else. fare can call pricePerMinute and check for -1 first. dockColor needs a switch expression with `case 1, 2, 3 ->`."
+  - "Try: return switch (dock) { case 1, 2, 3 -> \"blue\"; case 4, 5, 6 -> \"green\"; default -> \"grey\"; };"
+review: true

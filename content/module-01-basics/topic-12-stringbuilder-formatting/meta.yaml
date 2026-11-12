@@ -1,0 +1,24 @@
+id: module-01-basics/topic-12-stringbuilder-formatting
+title: "StringBuilder and text formatting"
+order: 12
+minutes: 9
+prerequisites: [module-01-basics/topic-11-strings]
+concepts: [string-format, format-widths, stringbuilder, string-concatenation-loops, text-blocks]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m01.stringbuilderformatting.ReceiptFormatter
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0112
+  from: priya
+  title: "Printed receipts look messy"
+  body: >
+    A rider at Uptown sent me a photo of her receipt. The ride line says $2.4999999 and the
+    prices zigzag down the page instead of lining up. Receipts are the last thing riders see from us,
+    so they should look tidy. Can you make every price show two decimals in a straight column?
+hints:
+  - "money is one String.format call with $ in front of %.2f."
+  - "line pads the label to 12 characters and the money to 8. The format \"%-12s%8s\" does both."
+  - "In receipt, make a StringBuilder, append line(labels[i], amounts[i]) and \"\\n\" for each item, add up a total, then append line(\"TOTAL\", total) and return sb.toString()."
+review: true

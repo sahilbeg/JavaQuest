@@ -1,0 +1,24 @@
+id: module-01-basics/topic-01-variables
+title: "Variables: boxes with labels"
+order: 1
+minutes: 8
+prerequisites: [module-00-foundations/boss]
+concepts: [declaration, assignment, reassignment, naming, int-and-string]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m01.variables.RideRecord
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0101
+  from: maya
+  title: "Kiosk forgets everything about a ride"
+  body: >
+    The Riverside kiosk forgets a ride the moment it starts. It should remember the bike id,
+    like B-1042, the station name and how many minutes the ride lasted. Without that we can't
+    print a receipt or work out a fare. Can you give it some memory?
+hints:
+  - "Each method should make a variable, put a value in it, and return that variable."
+  - "Bike ids and station names are text, so use String. Minutes are whole numbers, so use int."
+  - "For minutesAfterExtension(), write int minutes = 20; then minutes = 35; then return minutes;"
+review: true

@@ -1,0 +1,132 @@
+topic: module-01-basics/topic-07-while-loops
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: while-loop
+    prompt: "When does a while loop check its condition?"
+    choices: ["Before every turn, including the first", "Only once, at the start", "Only after the first turn", "Only when the program ends"]
+    answer: 0
+    explain: "A while loop checks the condition before each turn. If it is false at the start, the block never runs."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: do-while
+    variants:
+      - { prompt: "Which loop always runs its block at least once?", choices: ["do-while", "while", "if", "switch"], answer: 0 }
+      - { prompt: "The condition is false from the start. Which loop still runs its block one time?", choices: ["do-while", "while", "Neither of them", "Both of them"], answer: 0 }
+    explain: "A do-while runs the block first and checks the condition afterwards."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: counter
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int i = 1;
+              while (i <= 3) {
+                  System.out.println(i);
+                  i++;
+              }
+          }
+      }
+    answer: "1\n2\n3"
+    explain: "i goes 1, 2, 3. When i becomes 4, the condition 4 <= 3 is false and the loop stops."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: do-while
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int tap = 5;
+              do {
+                  System.out.println("Tap " + tap);
+                  tap++;
+              } while (tap < 3);
+              System.out.println("Done");
+          }
+      }
+    answer: "Tap 5\nDone"
+    explain: "The do block runs once before the check. Then 6 < 3 is false, so the loop ends."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: break
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int tap = 1;
+              while (tap <= 5) {
+                  if (tap == 3) {
+                      break;
+                  }
+                  System.out.println(tap);
+                  tap++;
+              }
+              System.out.println("End");
+          }
+      }
+    answer: "1\n2\nEnd"
+    explain: "At tap 3, break leaves the loop before the println, so 3 is never printed."
+    reteach: "## Concept"
+
+  - id: q06
+    type: spot-the-bug
+    concept: infinite-loop
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int docks = 12;
+              while (docks > 0) {
+                  System.out.println(docks);
+                  docks++;
+              }
+          }
+      }
+    bugLine: 6
+    explain: "docks goes up, so docks > 0 stays true for billions of turns, so the program looks frozen. It should be docks--."
+    reteach: "## Concept"
+
+  - id: q07
+    type: fill-blank
+    concept: while-loop
+    prompt: "___ (tap <= 3) {"
+    answers: ["while"]
+    explain: "A while loop starts with the word while and a condition in brackets."
+    reteach: "## Concept"
+
+  - id: q08
+    type: fill-blank
+    concept: break
+    prompt: "if (tap == goodTap) { ___; }"
+    answers: ["break", "break;"]
+    explain: "break leaves the loop at once."
+    reteach: "## Concept"
+
+  - id: q09
+    type: order
+    concept: counter
+    prompt: "Put the lines in order to print 1, 2 and 3."
+    items:
+      - "int i = 1;"
+      - "while (i <= 3) {"
+      - "    System.out.println(i);"
+      - "    i++;"
+      - "}"
+    explain: "Start the counter, test it in the condition, use it, then change it."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: loop-condition
+    prompt: "A counter starts at int n = 10; and goes n--; each turn. Which condition makes the loop stop?"
+    choices: ["while (n > 0)", "while (n < 20)", "while (n != 11)", "while (n <= 10)"]
+    answer: 0
+    explain: "n gets smaller, so n > 0 turns false when n reaches 0. The other conditions stay true forever."
+    reteach: "## Concept"

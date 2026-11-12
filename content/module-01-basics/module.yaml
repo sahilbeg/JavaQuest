@@ -1,0 +1,6 @@
+id: module-01-basics
+title: Java basics
+project: The fare kiosk
+summary: Store values, make decisions, repeat work and format text, while you build the kiosk that prices every ride.
+unlockAfter: module-00-foundations/boss
+mascotIntro: "Hoo! The fare kiosk is your first real project. Every ticket here teaches one Java tool, and together they price a ride."

@@ -1,0 +1,24 @@
+id: module-01-basics/topic-11-strings
+title: "Strings and their methods"
+order: 11
+minutes: 10
+prerequisites: [module-01-basics/topic-10-arrays]
+concepts: [string-methods, trim-and-case, searching-strings, substring, string-equality, immutability]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m01.strings.BikeCode
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0111
+  from: sam
+  title: "Kiosk rejects bike codes typed the wrong way"
+  body: >
+    A rider at Harbor typed " b-1042 " with spaces and got "Unknown bike". Another rider typed
+    B1042 with no dash and got the same message. The bike was sitting right there in dock 7.
+    Can the kiosk accept these codes so riders stop calling me?
+hints:
+  - "Clean the text first: remove the spaces at the ends and make it upper case."
+  - "After cleaning, check startsWith(\"B-\"). If it starts with \"B\" but not \"B-\", add the dash."
+  - "Try: String clean = raw.trim().toUpperCase(); then return \"B-\" + clean.substring(1) when the dash is missing."
+review: true

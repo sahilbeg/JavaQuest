@@ -1,0 +1,127 @@
+topic: module-01-basics/topic-02-primitive-types
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: double
+    prompt: "Which type should store a ride distance of 2.5 km?"
+    choices: ["double", "int", "char", "boolean"]
+    answer: 0
+    explain: "2.5 has a decimal point, so it needs a double. An int would lose the .5."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: primitive-types
+    variants:
+      - { prompt: "Which type holds only true or false?", choices: ["boolean", "char", "String", "long"], answer: 0 }
+      - { prompt: "Which type holds exactly one character, like 'E'?", choices: ["char", "String", "boolean", "int"], answer: 0 }
+    explain: "boolean holds true or false. char holds one character in single quotes."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: boolean-and-char
+    prompt: "boolean isMember = ___;"
+    answers: ["true", "false"]
+    explain: "A boolean holds true or false, written without quotes."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: casting
+    prompt: "int roundedKm = (___) 2.5;"
+    answers: ["int"]
+    explain: "A cast puts the target type in brackets before the value: (int) 2.5 gives 2."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: integer-division
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int a = 5 / 2;
+              double b = 5.0 / 2;
+              System.out.println(a);
+              System.out.println(b);
+          }
+      }
+    answer: "2\n2.5"
+    explain: "5 / 2 uses two ints, so the remainder is thrown away. 5.0 / 2 uses a double, so the .5 stays."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: casting
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              double km = 2.9;
+              int whole = (int) km;
+              double widened = whole;
+              System.out.println(whole);
+              System.out.println(widened);
+          }
+      }
+    answer: "2\n2.0"
+    explain: "The cast cuts off .9 without rounding. Widening 2 into a double gives 2.0."
+    reteach: "## Concept"
+
+  - id: q07
+    type: predict-output
+    concept: integer-division
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int total = 45;
+              int rides = 2;
+              System.out.println(total / rides);
+              System.out.println((double) total / rides);
+          }
+      }
+    answer: "22\n22.5"
+    explain: "int divided by int gives 22. Casting total to a double first keeps the .5."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: spot-the-bug
+    concept: double
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int distanceKm = 2.5;
+              System.out.println(distanceKm);
+          }
+      }
+    bugLine: 3
+    explain: "2.5 does not fit in an int. Java reports a possible lossy conversion. Use double."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: spot-the-bug
+    concept: boolean-and-char
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              boolean isMember = true;
+              char bikeType = "E";
+              System.out.println(bikeType);
+          }
+      }
+    bugLine: 4
+    explain: "A char uses single quotes: 'E'. Double quotes make a String."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: order
+    concept: integer-division
+    prompt: "Put the lines in order so the program prints 22.5."
+    items:
+      - "int total = 45;"
+      - "int rides = total / 22;"
+      - "double average = (double) total / rides;"
+      - "System.out.println(average);"
+    explain: "Each line uses the variable from the line before it. rides is 45 / 22, which is 2, so the average is 22.5."
+    reteach: "## Concept"

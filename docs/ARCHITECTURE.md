@@ -108,6 +108,7 @@ java -Xmx256m -Xss1m -XX:+UseSerialGC -XX:TieredStopAtLevel=1
 | Output | 64 KB stdout and stderr each | Parent truncates the stream |
 | Classpath | the JDK, your topic's classes, its test, JUnit (plus Mockito or Spring test jars for topics that declare them) | Explicit `-cp`. No app classes. |
 | Working directory | a fresh temp directory, deleted after the run | `ProcessBuilder.directory` |
+| Locale | English (US), so `%.2f` always prints a decimal point | `-Duser.language=en -Duser.country=US`; `practice/pom.xml` passes the same flags to IDE test runs |
 | Concurrency | at most 2 child JVMs at once | Semaphore in the runner |
 
 Measured in M1 on an Apple Silicon Mac: a full submit of the hello-world topic (compile, start the child JVM, run 2 tests) took 0.49 s the first time and 0.30 to 0.33 s after that (6 runs). The 10 s limit is about 20 times a normal run. It stays at 10 s to leave room for slower machines and heavier tests. The heap limit has not been tuned; 256 MB is still a guess.

@@ -86,6 +86,8 @@ System.out.println("Hi!");
 
 ```java
 // Display only. Still compiled by the content checker unless marked `java nocompile`.
+// The checker tries the block as written, then as statements inside main, then as class members.
+// A Syntax-box fragment that uses variables from earlier text cannot compile alone: mark it `java nocompile`.
 ```
 
 ```mermaid

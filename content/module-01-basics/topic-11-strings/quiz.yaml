@@ -1,0 +1,115 @@
+topic: module-01-basics/topic-11-strings
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: string-methods
+    variants:
+      - { prompt: "What does \"B-1042\".length() give back?", choices: ["6", "5", "4", "7"], answer: 0 }
+      - { prompt: "What does \"Uptown\".length() give back?", choices: ["6", "5", "7", "0"], answer: 0 }
+    explain: "length() counts every character, including dashes and spaces."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: string-methods
+    prompt: "What does \"Harbor\".charAt(0) give back?"
+    choices: ["'H'", "'a'", "'r'", "An error"]
+    answer: 0
+    explain: "Indexes start at 0, so index 0 is the first character, H."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: trim-and-case
+    prompt: "String clean = raw.___().toUpperCase();"
+    answers: ["trim", "strip"]
+    explain: "trim() and strip() both remove spaces at the start and the end."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: substring
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String code = "B-1042";
+              System.out.println(code.substring(2));
+              System.out.println(code.substring(0, 1));
+          }
+      }
+    answer: "1042\nB"
+    explain: "substring(2) copies from index 2 to the end. substring(0, 1) copies index 0 only."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: immutability
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String station = "old mill";
+              station.toUpperCase();
+              System.out.println(station);
+              station = station.toUpperCase();
+              System.out.println(station);
+          }
+      }
+    answer: "old mill\nOLD MILL"
+    explain: "The first toUpperCase() result is thrown away. Strings never change, so you must store the new one."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: searching-strings
+    prompt: "What does \"B-1042\".indexOf(\"X\") give back?"
+    choices: ["-1", "0", "6", "false"]
+    answer: 0
+    explain: "indexOf gives back -1 when the text is missing."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: string-equality
+    prompt: "Which check is true for typed = \"b-1042\" and the stored code \"B-1042\"?"
+    choices: ["typed.equalsIgnoreCase(\"B-1042\")", "typed.equals(\"B-1042\")", "typed == \"B-1042\"", "typed.startsWith(\"B\")"]
+    answer: 0
+    explain: "equalsIgnoreCase treats b and B as equal. equals and startsWith care about case."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: string-equality
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String typed = "b-1042".toUpperCase();
+              if (typed == "B-1042") {
+                  System.out.println("Unlocked");
+              }
+          }
+      }
+    bugLine: 4
+    explain: "== compares objects. Use typed.equals(\"B-1042\") to compare the text."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: order
+    concept: trim-and-case
+    prompt: "Put the lines in order so the program prints B-1042."
+    items:
+      - "String raw = \" b-1042 \";"
+      - "String clean = raw.trim();"
+      - "clean = clean.toUpperCase();"
+      - "System.out.println(clean);"
+    explain: "Declare the raw text, clean it in two steps, then print the result."
+    reteach: "## Worked example"
+
+  - id: q10
+    type: fill-blank
+    concept: searching-strings
+    prompt: "boolean ok = code.___(\"B-\");   // true when the code begins with B-"
+    answers: ["startsWith"]
+    explain: "startsWith checks only the beginning of the text. contains would also be true for \"B-\" in the middle, so it is the wrong check here."
+    reteach: "## Concept"

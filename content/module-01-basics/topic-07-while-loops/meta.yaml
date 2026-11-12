@@ -1,0 +1,24 @@
+id: module-01-basics/topic-07-while-loops
+title: "Repeating: while and do-while"
+order: 7
+minutes: 9
+prerequisites: [module-01-basics/topic-06-switch]
+concepts: [while-loop, do-while, loop-condition, counter, infinite-loop, break]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m01.whileloops.CardReader
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0107
+  from: theo
+  title: "Card reader gives up after one tap"
+  body: >
+    A rider at Old Mill tapped her card this morning, got "card error", and walked off to the bus.
+    The reader often misses the first tap but works on the second. Can the kiosk keep trying, up to 3 taps,
+    before it shows an error?
+hints:
+  - "Each loop needs a counter that changes, or the condition never becomes false."
+  - "For tapsNeeded, start with int tap = 1; and loop while (tap <= maxTaps). Add 1 to tap at the end of each turn."
+  - "For countdown, start with String text = \"\"; then inside while (n >= 1) write text = text + n + \" \"; n--; and finally return text + \"go\";"
+review: true
