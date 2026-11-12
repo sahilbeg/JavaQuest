@@ -4,9 +4,9 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 
 - **Last updated:** 2026-11-12T17:03:59+05:30
 - **Phase:** PHASE 1: build
-- **Milestone:** C03
-- **Resume here:** C02 is committed at status ui_wired. Next: C03 (Core Java, 16 topics + INC-03 + FEAT-03). Modules 0 to 2 still need your read-through to reach done.
-- **Next task:** C03-01: module 3 topic 01 collections-overview
+- **Milestone:** C04
+- **Resume here:** C03 is committed at status ui_wired. Next: C04 (DSA, 12 topics + INC-04 + FEAT-04). Modules 0 to 3 still need your read-through to reach done.
+- **Next task:** C04-01: module 4 topic 01 big-o
 
 ## Completed tasks
 
@@ -77,8 +77,8 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | C00 | ui_wired |
 | C01 | ui_wired |
 | C02 | ui_wired |
-| C03 | in_progress |
-| C04 | planned |
+| C03 | done |
+| C04 | in_progress |
 | C05 | planned |
 | C06 | planned |
 | C07 | planned |
@@ -100,7 +100,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-00-foundations | Day one | 8 | ui_wired |
 | module-01-basics | The fare kiosk | 14 | ui_wired |
 | module-02-oop | Modelling the fleet | 14 | ui_wired |
-| module-03-core-java | Ride data | 18 | planned |
+| module-03-core-java | Ride data | 18 | ui_wired |
 | module-04-dsa | Moving bikes around | 14 | planned |
 | module-05-advanced-java | Rush hour | 15 | planned |
 | module-06-craft | Paying off debt | 14 | planned |

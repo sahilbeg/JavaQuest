@@ -1,0 +1,120 @@
+topic: module-03-core-java/topic-10-nio-files
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: path
+    variants:
+      - { prompt: "Path folder = Path.of(\"archive\"); What does folder.resolve(\"rides.csv\") give?", choices: ["The path archive/rides.csv", "The path rides.csv/archive", "The text inside rides.csv", "A new empty file called rides.csv"], answer: 0 }
+      - { prompt: "Which call gives the path of today.csv inside the logs folder?", choices: ["Path.of(\"logs\").resolve(\"today.csv\")", "Path.of(\"today.csv\").resolve(\"logs\")", "Files.resolve(\"logs\", \"today.csv\")", "Path.of(\"logs\").getFileName(\"today.csv\")"], answer: 0 }
+    explain: "resolve gives the path of a name inside the folder you call it on. It does not touch the disk."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: read-write-files
+    prompt: "What does Files.readAllLines(log, StandardCharsets.UTF_8) return?"
+    choices: ["A List<String> with one item per line", "One String with the whole file", "A BufferedReader", "The number of lines"]
+    answer: 0
+    explain: "readAllLines reads the whole file and gives back a list of its lines."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: copy-and-move
+    prompt: "After Files.move(a, b), which is true?"
+    choices: ["b exists and a no longer exists", "a and b both exist", "a exists and b is empty", "Both are deleted"]
+    answer: 0
+    explain: "move takes the file away from a and puts it at b. copy would keep both."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: create-and-check
+    prompt: "if (!Files.___(log)) { return new ArrayList<>(); }"
+    answers: ["exists"]
+    explain: "Files.exists returns true when the file is there."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: charset
+    prompt: "Files.writeString(log, text, StandardCharsets.___);"
+    answers: ["UTF_8"]
+    explain: "StandardCharsets.UTF_8 names the UTF-8 charset."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: path
+    code: |
+      import java.nio.file.Path;
+
+      public class Main {
+          public static void main(String[] args) {
+              Path folder = Path.of("archive");
+              Path file = folder.resolve("rides-2026-11-11.csv");
+              System.out.println(file.getFileName());
+              System.out.println(folder.getFileName());
+          }
+      }
+    answer: "rides-2026-11-11.csv\narchive"
+    explain: "getFileName gives the last part of each path."
+    reteach: "## Concept"
+
+  - id: q07
+    type: predict-output
+    concept: read-write-files
+    code: |
+      import java.io.IOException;
+      import java.nio.charset.StandardCharsets;
+      import java.nio.file.*;
+
+      public class Main {
+          public static void main(String[] args) throws IOException {
+              Path log = Path.of("q7-rides.csv");
+              Files.writeString(log, "Riverside\n", StandardCharsets.UTF_8);
+              Files.writeString(log, "Old Mill\n", StandardCharsets.UTF_8);
+              Files.writeString(log, "Uptown\n", StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+              System.out.println(Files.readAllLines(log, StandardCharsets.UTF_8));
+          }
+      }
+    answer: "[Old Mill, Uptown]"
+    explain: "The second writeString replaces Riverside. Only the third call appends."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: order
+    concept: copy-and-move
+    prompt: "Put the lines in order to archive the log."
+    items:
+      - "Path archive = Path.of(\"archive\");"
+      - "Files.createDirectories(archive);"
+      - "Path target = archive.resolve(\"rides-2026-11-11.csv\");"
+      - "Files.move(log, target);"
+    explain: "Name the folder, make sure it exists, build the target path, then move."
+    reteach: "## Worked example"
+
+  - id: q09
+    type: spot-the-bug
+    concept: list-folder
+    code: |
+      List<String> names = new ArrayList<>();
+      try (DirectoryStream<Path> entries = Files.newDirectoryStream(folder)) {
+          for (Path entry : entries) {
+              names.add(entry.getFileName());
+          }
+      }
+    bugLine: 4
+    explain: "getFileName() returns a Path, and the list holds Strings. Add .toString()."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: list-folder
+    prompt: "Why should you sort the names you get from Files.newDirectoryStream?"
+    choices: ["The order of entries is not fixed", "It returns them in reverse order", "It only returns the first ten files", "Sorting closes the folder"]
+    answer: 0
+    explain: "The system decides the order, and it can change. Sort the names when order matters."
+    reteach: "## Concept"

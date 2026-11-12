@@ -81,6 +81,24 @@
                 <source>module-02-oop/topic-10-equals-hashcode-tostring/src</source>
                 <source>module-02-oop/topic-11-records/src</source>
                 <source>module-02-oop/topic-12-enums/src</source>
+                <source>module-03-core-java/boss/src</source>
+                <source>module-03-core-java/mini-project/src</source>
+                <source>module-03-core-java/topic-01-collections-overview/src</source>
+                <source>module-03-core-java/topic-02-lists/src</source>
+                <source>module-03-core-java/topic-03-sets/src</source>
+                <source>module-03-core-java/topic-04-maps/src</source>
+                <source>module-03-core-java/topic-05-generics/src</source>
+                <source>module-03-core-java/topic-06-comparators-iterators/src</source>
+                <source>module-03-core-java/topic-07-exceptions/src</source>
+                <source>module-03-core-java/topic-08-custom-exceptions/src</source>
+                <source>module-03-core-java/topic-09-file-io/src</source>
+                <source>module-03-core-java/topic-10-nio-files/src</source>
+                <source>module-03-core-java/topic-11-date-time/src</source>
+                <source>module-03-core-java/topic-12-lambdas/src</source>
+                <source>module-03-core-java/topic-13-functional-interfaces/src</source>
+                <source>module-03-core-java/topic-14-streams-basics/src</source>
+                <source>module-03-core-java/topic-15-streams-advanced/src</source>
+                <source>module-03-core-java/topic-16-optional/src</source>
               </sources>
             </configuration>
           </execution>
@@ -121,6 +139,24 @@
                 <source>module-02-oop/topic-10-equals-hashcode-tostring/test</source>
                 <source>module-02-oop/topic-11-records/test</source>
                 <source>module-02-oop/topic-12-enums/test</source>
+                <source>module-03-core-java/boss/test</source>
+                <source>module-03-core-java/mini-project/test</source>
+                <source>module-03-core-java/topic-01-collections-overview/test</source>
+                <source>module-03-core-java/topic-02-lists/test</source>
+                <source>module-03-core-java/topic-03-sets/test</source>
+                <source>module-03-core-java/topic-04-maps/test</source>
+                <source>module-03-core-java/topic-05-generics/test</source>
+                <source>module-03-core-java/topic-06-comparators-iterators/test</source>
+                <source>module-03-core-java/topic-07-exceptions/test</source>
+                <source>module-03-core-java/topic-08-custom-exceptions/test</source>
+                <source>module-03-core-java/topic-09-file-io/test</source>
+                <source>module-03-core-java/topic-10-nio-files/test</source>
+                <source>module-03-core-java/topic-11-date-time/test</source>
+                <source>module-03-core-java/topic-12-lambdas/test</source>
+                <source>module-03-core-java/topic-13-functional-interfaces/test</source>
+                <source>module-03-core-java/topic-14-streams-basics/test</source>
+                <source>module-03-core-java/topic-15-streams-advanced/test</source>
+                <source>module-03-core-java/topic-16-optional/test</source>
               </sources>
             </configuration>
           </execution>

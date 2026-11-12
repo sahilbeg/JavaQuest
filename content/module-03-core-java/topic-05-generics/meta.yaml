@@ -1,0 +1,23 @@
+id: module-03-core-java/topic-05-generics
+title: "Generics and bounded types"
+order: 5
+minutes: 9
+prerequisites: [module-03-core-java/topic-04-maps]
+concepts: [generic-class, type-parameter, generic-method, invariance, bounded-type]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0305
+  from: maya
+  title: "Three shelf classes that are really one"
+  body: >
+    The dispatch code has BikeShelf, RiderShelf and StationShelf, and they are copy-pasted line for line.
+    Last week I fixed the "shelf is full" bug in BikeShelf and forgot the other two.
+    So Harbor kept accepting a 13th rider on a 12-dock list. Can you turn them into one Shelf that works for any type?
+hints:
+  - "Write <T> after the class name, then use T everywhere the old code said Bike or Rider."
+  - "Store the items in a List<T> and keep the capacity in an int field. add returns false when size() equals the capacity."
+  - "For maxOf, start with best = items.get(0), then loop and replace best when item.compareTo(best) > 0. For sum, add n.doubleValue() for each number."
+review: true

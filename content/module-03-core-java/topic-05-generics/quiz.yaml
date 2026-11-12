@@ -1,0 +1,132 @@
+topic: module-03-core-java/topic-05-generics
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: type-parameter
+    variants:
+      - { prompt: "In class Shelf<T>, what is T?", choices: ["A placeholder for a type that the user picks", "A field that holds the capacity", "A method that returns the type", "A keyword that means text"], answer: 0 }
+      - { prompt: "In class Box<E>, what is E?", choices: ["A type parameter, filled in when Box is used", "The number of elements", "An exception the class throws", "A variable that holds the box"], answer: 0 }
+    explain: "A type parameter is a placeholder. Shelf<String> replaces T with String."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: generic-class
+    prompt: "Shelf<String> shelf = new Shelf___(12);"
+    answers: ["<>", "<String>"]
+    explain: "The diamond <> copies the type from the left side. Writing <String> again also works."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: generic-class
+    prompt: "Which line creates a box that holds whole numbers?"
+    choices: ["Box<Integer> b = new Box<>();", "Box<int> b = new Box<>();", "Box b<Integer> = new Box();", "Box<> b = new Box<Integer>();"]
+    answer: 0
+    explain: "Type arguments must be classes, so you use Integer. int is a primitive and is not allowed."
+    reteach: "## Common mistakes"
+
+  - id: q04
+    type: predict-output
+    concept: generic-class
+    code: |
+      public class Main {
+          static class Pair<A, B> {
+              private final A first;
+              private final B second;
+              Pair(A first, B second) { this.first = first; this.second = second; }
+              A first() { return first; }
+              B second() { return second; }
+          }
+
+          public static void main(String[] args) {
+              Pair<String, Integer> p = new Pair<>("B-1042", 25);
+              System.out.println(p.first());
+              System.out.println(p.second() * 2);
+          }
+      }
+    answer: "B-1042\n50"
+    explain: "first() returns the String. second() returns an Integer, so the maths works with no cast."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: generic-method
+    prompt: "static ___ T lastOf(List<T> items) {"
+    answers: ["<T>"]
+    explain: "A generic method declares <T> before its return type."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: bounded-type
+    code: |
+      import java.util.List;
+
+      public class Main {
+          static <T extends Comparable<T>> T maxOf(List<T> items) {
+              T best = items.get(0);
+              for (T item : items) {
+                  if (item.compareTo(best) > 0) {
+                      best = item;
+                  }
+              }
+              return best;
+          }
+
+          public static void main(String[] args) {
+              System.out.println(maxOf(List.of(7, 42, 19)));
+              System.out.println(maxOf(List.of("Harbor", "Riverside", "Old Mill")));
+          }
+      }
+    answer: "42\nRiverside"
+    explain: "compareTo orders numbers by size and Strings alphabetically. R comes after H and O."
+    reteach: "## Worked example"
+
+  - id: q07
+    type: mcq
+    concept: invariance
+    prompt: "List<String> names = new ArrayList<>(); List<Object> things = names; What happens?"
+    choices: ["It does not compile", "It compiles, because String is an Object", "It compiles but crashes when it runs", "things becomes an empty list"]
+    answer: 0
+    explain: "Generics are invariant. If it compiled, things.add(42) could put a number into a list of Strings."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: bounded-type
+    prompt: "Which line must you change so this compiles?"
+    code: |
+      static <T> double sum(List<T> numbers) {
+          double total = 0;
+          for (T n : numbers) {
+              total += n.doubleValue();
+          }
+          return total;
+      }
+    bugLine: 1
+    explain: "The compiler reports line 4, because plain T has no doubleValue() method. The fix is the bound on line 1: write <T extends Number> so Java knows T is a number."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: bounded-type
+    prompt: "Given static <T extends Number> double sum(List<T> numbers), which call does NOT compile?"
+    choices: ["sum(List.of(\"10\", \"20\"))", "sum(List.of(10, 20))", "sum(List.of(1.5, 2.5))", "sum(List.of(3L, 4L))"]
+    answer: 0
+    explain: "String does not extend Number. Integer, Double and Long all do."
+    reteach: "## Concept"
+
+  - id: q10
+    type: order
+    concept: generic-class
+    prompt: "Put the lines in order to declare a generic Box class."
+    items:
+      - "class Box<T> {"
+      - "    private T item;"
+      - "    T take() { return item; }"
+      - "}"
+    explain: "The class declares <T>, then uses T for the field and the return type."
+    reteach: "## Concept"

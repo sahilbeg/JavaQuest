@@ -90,6 +90,11 @@ System.out.println("Hi!");
 // A Syntax-box fragment that uses variables from earlier text cannot compile alone: mark it `java nocompile`.
 ```
 
+```java run crash
+// Runnable like `java run`, for a snippet that shows an exception on purpose.
+// The content checker requires it to end with an exception.
+```
+
 ```mermaid
 flowchart LR; Source --> Compiler --> Bytecode --> JVM
 ```

@@ -1,0 +1,123 @@
+topic: module-03-core-java/topic-04-maps
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: key-value
+    variants:
+      - { prompt: "In Map<String, Integer> minutes, what is the key type?", choices: ["String", "Integer", "Map", "int"], answer: 0 }
+      - { prompt: "In Map<String, Integer> minutes, what is the value type?", choices: ["Integer", "String", "Map", "Entry"], answer: 0 }
+    explain: "The first type inside the angle brackets is the key, the second is the value."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: key-value
+    prompt: "You call put(\"Harbor\", 30) and then put(\"Harbor\", 45). What does the map hold for Harbor?"
+    choices: ["45", "30", "75", "Both 30 and 45"]
+    answer: 0
+    explain: "A key appears once. A second put with the same key replaces the old value."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: map-methods
+    code: |
+      import java.util.*;
+
+      public class Main {
+          public static void main(String[] args) {
+              Map<String, Integer> m = new HashMap<>();
+              m.put("Harbor", 45);
+              System.out.println(m.get("Uptown"));
+              System.out.println(m.getOrDefault("Uptown", 0));
+              System.out.println(m.containsKey("Harbor"));
+          }
+      }
+    answer: "null\n0\ntrue"
+    explain: "get returns null for a missing key. getOrDefault returns the fallback 0. Harbor is a key, so containsKey is true."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: counting-pattern
+    prompt: "counts.put(type, counts.___(type, 0) + 1);"
+    answers: ["getOrDefault"]
+    explain: "getOrDefault gives 0 the first time a type appears, so the count starts at 1."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: counting-pattern
+    code: |
+      import java.util.*;
+
+      public class Main {
+          public static void main(String[] args) {
+              Map<String, Integer> counts = new TreeMap<>();
+              for (String t : List.of("ebike", "cargo", "ebike")) {
+                  counts.put(t, counts.getOrDefault(t, 0) + 1);
+              }
+              System.out.println(counts);
+          }
+      }
+    answer: "{cargo=1, ebike=2}"
+    explain: "ebike is counted twice and cargo once. The TreeMap prints its keys in alphabetical order."
+    reteach: "## Try it"
+
+  - id: q06
+    type: mcq
+    concept: map-iteration
+    prompt: "You need both the station and its minutes inside one loop. What do you loop over?"
+    choices: ["map.entrySet()", "map.keySet() only", "map.values()", "map.size()"]
+    answer: 0
+    explain: "entrySet gives each pair as a Map.Entry with getKey() and getValue()."
+    reteach: "## Concept"
+
+  - id: q07
+    type: fill-blank
+    concept: map-iteration
+    prompt: "for (Map.Entry<String, Integer> e : totals.entrySet()) { System.out.println(e.getKey() + \"=\" + e.___()); }"
+    answers: ["getValue"]
+    explain: "A Map.Entry has getKey() for the key and getValue() for the value."
+    reteach: "## Concept"
+
+  - id: q08
+    type: mcq
+    concept: hashmap-vs-treemap
+    prompt: "Which map loops over its keys in sorted order?"
+    choices: ["TreeMap", "HashMap", "LinkedHashMap", "Every map"]
+    answer: 0
+    explain: "TreeMap keeps keys sorted. HashMap promises no order. LinkedHashMap keeps the order keys were first put."
+    reteach: "## Concept"
+
+  - id: q09
+    type: spot-the-bug
+    concept: map-methods
+    code: |
+      import java.util.*;
+
+      public class Main {
+          public static void main(String[] args) {
+              Map<String, Integer> totals = new HashMap<>();
+              int uptown = totals.get("Uptown");
+              System.out.println(uptown + 10);
+          }
+      }
+    bugLine: 6
+    explain: "Uptown is missing, so get returns null. Turning null into an int crashes. Use getOrDefault(\"Uptown\", 0)."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: order
+    concept: counting-pattern
+    prompt: "Put the lines in order to total the minutes per station."
+    items:
+      - "Map<String, Integer> totals = new TreeMap<>();"
+      - "for (Ride ride : rides) {"
+      - "    int old = totals.getOrDefault(ride.station(), 0);"
+      - "    totals.put(ride.station(), old + ride.minutes());"
+      - "}"
+    explain: "Make the map, loop once, read the old total, then put back the new one."
+    reteach: "## Worked example"

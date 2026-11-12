@@ -1,0 +1,131 @@
+topic: module-03-core-java/topic-11-date-time
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: local-date-time
+    variants:
+      - { prompt: "Which class holds a date and a time together?", choices: ["LocalDateTime", "LocalDate", "LocalTime", "Duration"], answer: 0 }
+      - { prompt: "Which class holds only a date, such as 2026-11-14?", choices: ["LocalDate", "LocalTime", "LocalDateTime", "Period"], answer: 0 }
+    explain: "LocalDate is a date, LocalTime is a time, and LocalDateTime is both."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: create-and-parse
+    prompt: "LocalDate day = LocalDate.___(\"2026-11-14\");"
+    answers: ["parse"]
+    explain: "parse reads ISO text such as 2026-11-14 and builds a LocalDate."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: date-arithmetic
+    code: |
+      import java.time.LocalDateTime;
+
+      public class Main {
+          public static void main(String[] args) {
+              LocalDateTime start = LocalDateTime.of(2026, 11, 13, 23, 50);
+              LocalDateTime end = start.plusMinutes(30);
+              System.out.println(end);
+          }
+      }
+    answer: "2026-11-14T00:20"
+    explain: "Adding 30 minutes to 23:50 rolls over into the next day at 00:20."
+    reteach: "## Worked example"
+
+  - id: q04
+    type: predict-output
+    concept: date-arithmetic
+    code: |
+      import java.time.LocalDate;
+
+      public class Main {
+          public static void main(String[] args) {
+              LocalDate day = LocalDate.of(2026, 11, 14);
+              day.plusDays(1);
+              System.out.println(day);
+              day = day.plusDays(1);
+              System.out.println(day);
+          }
+      }
+    answer: "2026-11-14\n2026-11-15"
+    explain: "The first plusDays result is thrown away, because dates never change. The second is stored back in day."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: predict-output
+    concept: duration
+    code: |
+      import java.time.Duration;
+      import java.time.LocalDateTime;
+
+      public class Main {
+          public static void main(String[] args) {
+              LocalDateTime a = LocalDateTime.parse("2026-11-14T22:00");
+              LocalDateTime b = LocalDateTime.parse("2026-11-15T01:15");
+              System.out.println(Duration.between(a, b).toMinutes());
+          }
+      }
+    answer: "195"
+    explain: "From 22:00 to 01:15 the next day is 3 hours and 15 minutes, which is 195 minutes."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: period
+    prompt: "You need the gap between a pass purchase date and its expiry, in months and days. Which class fits?"
+    choices: ["Period", "Duration", "LocalTime", "DateTimeFormatter"]
+    answer: 0
+    explain: "Period measures calendar amounts in years, months and days. Duration measures clock time."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: formatting
+    prompt: "Which pattern prints 14/11/2026 for 14 November 2026?"
+    choices: ["dd/MM/yyyy", "dd/mm/yyyy", "DD/MM/YYYY", "d/M/yy"]
+    answer: 0
+    explain: "MM is the month. mm is the minute, and d/M/yy would print 14/11/26."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: spot-the-bug
+    concept: local-date-time
+    code: |
+      import java.time.LocalDate;
+
+      public class Main {
+          public static void main(String[] args) {
+              LocalDate a = LocalDate.of(2026, 11, 14);
+              LocalDate b = LocalDate.of(2026, 11, 15);
+              if (a < b) {
+                  System.out.println("a comes first");
+              }
+          }
+      }
+    bugLine: 7
+    explain: "The < operator only works on numbers. Use a.isBefore(b) to compare dates."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: fill-blank
+    concept: local-date-time
+    prompt: "boolean weekend = day.getDayOfWeek() == DayOfWeek.___;"
+    answers: ["SATURDAY", "SUNDAY"]
+    explain: "DayOfWeek is an enum with values MONDAY to SUNDAY. Saturday and Sunday are the weekend."
+    reteach: "## Concept"
+
+  - id: q10
+    type: order
+    concept: duration
+    prompt: "Put the lines in order to print how many minutes a ride took."
+    items:
+      - "LocalDateTime start = LocalDateTime.of(2026, 11, 13, 23, 50);"
+      - "LocalDateTime end = start.plusMinutes(30);"
+      - "Duration d = Duration.between(start, end);"
+      - "System.out.println(d.toMinutes());"
+    explain: "You need both moments before you can measure the Duration between them, and the Duration before you print it."
+    reteach: "## Worked example"

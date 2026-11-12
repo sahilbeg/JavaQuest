@@ -1,0 +1,24 @@
+id: module-03-core-java/topic-02-lists
+title: "List, ArrayList, LinkedList"
+order: 2
+minutes: 10
+prerequisites: [module-03-core-java/topic-01-collections-overview]
+concepts: [list-methods, looping-lists, concurrent-modification, arraylist-vs-linkedlist, immutable-lists]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m03.lists.RideQueue
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0302
+  from: theo
+  title: "Evening ride list crashes when we clear short rides"
+  body: >
+    Every evening I tidy the Harbor ride list. I drop the test rides under 2 minutes, put
+    late fixes at the front, and look up rides by station. The code that drops short rides
+    loops with for-each and crashes with ConcurrentModificationException. Can you make the list safe to edit?
+hints:
+  - "addFirst uses add with an index: position 0 is the front. For removeShortRides, loop with an index from the end down to 0."
+  - "Inside the backwards loop, if rides.get(i).minutes() is under the limit, call rides.remove(i) and add 1 to a counter. Return the counter."
+  - "ridesFrom builds a new ArrayList and adds each ride whose station().equals(station). longest returns null when rides.isEmpty(), else keeps the ride with the most minutes so far."
+review: true

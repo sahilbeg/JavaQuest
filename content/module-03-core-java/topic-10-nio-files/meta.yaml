@@ -1,0 +1,23 @@
+id: module-03-core-java/topic-10-nio-files
+title: "NIO: Path and Files"
+order: 10
+minutes: 9
+prerequisites: [module-03-core-java/topic-09-file-io]
+concepts: [path, read-write-files, create-and-check, copy-and-move, list-folder, charset]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0310
+  from: maya
+  title: "Switch to Files and archive yesterday's log"
+  body: >
+    Our java.io file code works, but it is long and hard to review. We are moving to the newer
+    Files API. While you are in there, the Harbor kiosk should move yesterday's ride log into an
+    archive folder, so today's log starts empty.
+hints:
+  - "Path.resolve builds a path inside a folder: archiveDir.resolve(\"rides-\" + dateLabel + \".csv\")."
+  - "Check Files.exists first. Files.createDirectories makes a folder, and it is fine if the folder is already there."
+  - "appendRide can call Files.writeString(log, csvLine + \"\\n\", StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.APPEND);"
+review: true

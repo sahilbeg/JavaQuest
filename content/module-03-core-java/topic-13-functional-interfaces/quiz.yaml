@@ -1,0 +1,124 @@
+topic: module-03-core-java/topic-13-functional-interfaces
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: functional-interface
+    variants:
+      - { prompt: "What makes an interface a functional interface?", choices: ["It has exactly one abstract method", "It has no methods at all", "It has only static methods", "It extends Function"], answer: 0 }
+      - { prompt: "Which interface can a lambda fill in?", choices: ["One with exactly one abstract method", "One with two abstract methods", "One with only default methods", "Any class with a constructor"], answer: 0 }
+    explain: "A lambda fills in one method. So the interface needs exactly one abstract method for Java to know which one."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: functional-interface-annotation
+    prompt: "What does @FunctionalInterface do?"
+    choices: ["The compiler checks the interface has exactly one abstract method", "It makes the interface run faster", "It turns every method into a lambda", "It is required, or lambdas will not compile"]
+    answer: 0
+    explain: "The annotation is a guard. The interface works without it, but with it the compiler rejects a second abstract method."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: built-in-interfaces
+    variants:
+      - { prompt: "You need a check that answers true or false for a Ride. Which interface fits?", choices: ["Predicate<Ride>", "Consumer<Ride>", "Supplier<Ride>", "UnaryOperator<Ride>"], answer: 0 }
+      - { prompt: "You need something that takes nothing and gives back a station name. Which interface fits?", choices: ["Supplier<String>", "Consumer<String>", "Predicate<String>", "Function<String, String>"], answer: 0 }
+    explain: "Predicate takes one value and returns a boolean. Supplier takes nothing and returns a value."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: built-in-interfaces
+    prompt: "boolean longRide = isLong.___(45);"
+    answers: ["test"]
+    explain: "A Predicate's one method is called test."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: combining-functions
+    code: |
+      import java.util.function.Predicate;
+
+      public class Main {
+          public static void main(String[] args) {
+              Predicate<Integer> isLong = minutes -> minutes >= 30;
+              Predicate<Integer> isHuge = minutes -> minutes >= 120;
+              System.out.println(isLong.and(isHuge.negate()).test(60));
+              System.out.println(isLong.negate().or(isHuge).test(150));
+          }
+      }
+    answer: "true\ntrue"
+    explain: "60 is long and not huge, so the first is true. 150 is huge, so the or is true."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: combining-functions
+    code: |
+      import java.util.function.Function;
+
+      public class Main {
+          public static void main(String[] args) {
+              Function<Integer, Integer> doubleIt = n -> n * 2;
+              Function<Integer, Integer> addOne = n -> n + 1;
+              System.out.println(doubleIt.andThen(addOne).apply(5));
+              System.out.println(addOne.andThen(doubleIt).apply(5));
+          }
+      }
+    answer: "11\n12"
+    explain: "andThen runs the first function, then the second. 5 doubled is 10, plus 1 is 11. 5 plus 1 is 6, doubled is 12."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: custom-functional-interface
+    prompt: "Which method breaks the one-method rule?"
+    code: |
+      @FunctionalInterface
+      interface Promotion {
+          double apply(String type, double fare);
+          String name();
+      }
+    bugLine: 4
+    explain: "Line 4 adds a second abstract method. That breaks the one-method rule, so @FunctionalInterface makes the compiler stop."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: fill-blank
+    concept: built-in-interfaces
+    prompt: "___<Integer, Double, Double> fare = (minutes, price) -> 1.00 + minutes * price;"
+    answers: ["BiFunction"]
+    explain: "BiFunction takes two inputs and gives back one result."
+    reteach: "## Concept"
+
+  - id: q09
+    type: order
+    concept: custom-functional-interface
+    prompt: "Put the lines in order to declare your own functional interface."
+    items:
+      - "@FunctionalInterface"
+      - "interface Promotion {"
+      - "    double apply(String type, double fare);"
+      - "}"
+    explain: "The annotation goes above the interface, and the one abstract method goes inside the braces."
+    reteach: "## Concept"
+
+  - id: q10
+    type: spot-the-bug
+    concept: built-in-interfaces
+    code: |
+      import java.util.function.Consumer;
+
+      public class Main {
+          public static void main(String[] args) {
+              Consumer<String> show = text -> System.out.println(text);
+              show.apply("Harbor");
+          }
+      }
+    bugLine: 6
+    explain: "A Consumer's method is accept. The line should be show.accept(\"Harbor\");"
+    reteach: "## Common mistakes"

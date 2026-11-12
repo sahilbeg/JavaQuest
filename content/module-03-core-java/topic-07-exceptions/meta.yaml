@@ -1,0 +1,24 @@
+id: module-03-core-java/topic-07-exceptions
+title: "Exceptions: try, catch, finally"
+order: 7
+minutes: 10
+prerequisites: [module-03-core-java/topic-06-comparators-iterators]
+concepts: [exception, stack-trace, try-catch, multiple-catch, finally, throw]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m03.exceptions.LogImporter
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0307
+  from: sam
+  title: "One bad line kills the whole ride import"
+  body: >
+    Last night the import stopped at a line that says "B-1042,Riverside,ebike,twenty". Every ride after it
+    was lost, so riders at Riverside got no receipts this morning. Nobody even got a report about it.
+    Can the import skip the broken line, keep going, and tell us how many lines it skipped?
+hints:
+  - "Integer.parseInt throws a NumberFormatException when the text is not a number. Put it inside try and catch that exception."
+  - "In parseLine, split the line on \",\" and check parts.length first. If it is not 4, throw new IllegalArgumentException(\"...\") with the line in the message."
+  - "In importAll, loop over the lines. Inside the loop, try rides.add(parseLine(line)); and in catch (IllegalArgumentException e) add 1 to badLines."
+review: true

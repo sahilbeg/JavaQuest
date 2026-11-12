@@ -64,4 +64,9 @@ class LessonRendererTest {
     void rawHtmlInLessonsIsEscaped() {
         assertFalse(renderer.render("<script>alert(1)</script>\n").contains("<script>"));
     }
+
+    @Test
+    void crashSnippetIsStillRunnable() {
+        assertTrue(renderer.render("```java run crash\nint x;\n```\n").contains("data-runnable"));
+    }
 }

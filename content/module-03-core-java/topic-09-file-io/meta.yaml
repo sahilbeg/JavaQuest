@@ -1,0 +1,23 @@
+id: module-03-core-java/topic-09-file-io
+title: "Reading and writing files (java.io)"
+order: 9
+minutes: 9
+prerequisites: [module-03-core-java/topic-08-custom-exceptions]
+concepts: [files-and-paths, buffered-reader, buffered-writer, try-with-resources-files, io-exception, encoding]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0309
+  from: theo
+  title: "Stop copying the ride log by hand"
+  body: >
+    Every night someone on my team opens the Riverside kiosk's ride log and types it into a
+    spreadsheet, line by line. Last week they skipped B-1042 and the totals were off. The kiosk
+    already has the file, so it should read and write it by itself. Can you make that happen?
+hints:
+  - "Open the file inside try ( ... ) so it closes on its own, then read one line at a time until readLine() gives back null."
+  - "For each line that is not blank, split it on commas and build a Ride with Integer.parseInt for the minutes. A line with only spaces counts as blank: test line.trim().isEmpty()."
+  - "In write, call writer.write(r.bikeId() + \",\" + r.station() + \",\" + r.type() + \",\" + r.minutes()); then writer.newLine(); for each ride."
+review: true

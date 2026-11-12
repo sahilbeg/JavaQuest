@@ -1,0 +1,23 @@
+id: module-03-core-java/topic-12-lambdas
+title: "Lambdas and method references"
+order: 12
+minutes: 10
+prerequisites: [module-03-core-java/topic-11-date-time]
+concepts: [lambda-syntax, comparator-lambda, comparing-then-comparing, method-reference, foreach-removeif]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0312
+  from: theo
+  title: "Nine Comparator classes and counting"
+  body: >
+    The ride sorter from SPK-0306 works, but every new sort order needs its own Comparator class.
+    There are nine of them now. I just asked for a tenth one.
+    The Harbor team wants to see rides by station and then by length. Can you shrink the sorter so a new order is one line?
+hints:
+  - "Copy the list first with new ArrayList<>(rides), then call sort on the copy and return it."
+  - "Comparator.comparing(Ride::minutes) sorts by minutes. Add .thenComparing(Ride::minutes) after comparing(Ride::station) for the second order."
+  - "removeShort: rides.removeIf(r -> r.minutes() < under); upperIds: rides.forEach(r -> ids.add(r.bikeId().toUpperCase()));"
+review: true

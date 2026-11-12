@@ -9,7 +9,12 @@ public final class LessonCode {
 
     public record Block(int line, String info, String code) {
         public boolean runnable() {
-            return info.equals("java run");
+            return info.equals("java run") || expectsCrash();
+        }
+
+        /** A `java run crash` block shows an exception on purpose, so it must end with one. */
+        public boolean expectsCrash() {
+            return info.equals("java run crash");
         }
     }
 
@@ -24,7 +29,7 @@ public final class LessonCode {
         var matcher = FENCE.matcher(markdown);
         while (matcher.find()) {
             String info = matcher.group(1).strip();
-            if (info.equals("java") || info.equals("java run")) {
+            if (info.equals("java") || info.equals("java run") || info.equals("java run crash")) {
                 int line = (int) markdown.substring(0, matcher.start()).lines().count() + 1;
                 blocks.add(new Block(line, info, matcher.group(2)));
             }

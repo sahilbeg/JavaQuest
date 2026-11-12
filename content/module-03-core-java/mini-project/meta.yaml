@@ -1,0 +1,22 @@
+id: module-03-core-java/mini-project
+title: "FEAT-03: Ride-log analytics with CSV import"
+order: 100
+minutes: 10
+prerequisites: [module-03-core-java/topic-16-optional]
+concepts: [nio-files, exceptions, maps, streams, optional]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m03.feature.RideAnalytics
+ticket:
+  key: FEAT-03
+  from: priya
+  title: "Import the ride log and build the analytics report"
+  body: >
+    Every station uploads a CSV ride log each night. I want one command that reads a log and prints a short report:
+    rides, revenue, the busiest station and minutes per bike type. Some lines are always broken, so list them instead of crashing.
+hints:
+  - "Read with Files.readAllLines. Skip the header line and blank lines. Count line numbers from 1, header included."
+  - "Wrap the parsing of one line in try/catch. On a bad line, add a message like \"line 3: bad minutes: twenty\" and carry on."
+  - "busiestStation: group minutes per station, then take the max entry and map it to its key. minutesPerType: use a TreeMap so types come out sorted."
+review: false

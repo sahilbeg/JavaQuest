@@ -1,0 +1,23 @@
+id: module-03-core-java/topic-15-streams-advanced
+title: "Streams: grouping, reducing, flatMap"
+order: 15
+minutes: 10
+prerequisites: [module-03-core-java/topic-14-streams-basics]
+concepts: [grouping-by, partitioning-by, to-map-merge, reduce, flat-map, joining]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0315
+  from: priya
+  title: "Monthly dashboard for the board"
+  body: >
+    The board meets next week and wants a monthly dashboard. They asked for rides per station,
+    minutes per bike type, and which rides ran long. They also want every bike that showed up in
+    any station's log, from Riverside to Uptown, listed once. Can you build the numbers behind it?
+hints:
+  - "Most methods end in collect(...) with a helper from Collectors. allBikes ends in toList()."
+  - "Use groupingBy(Ride::station, Collectors.counting()) for rides and groupingBy(Ride::type, Collectors.summingInt(Ride::minutes)) for minutes."
+  - "For allBikes, try stationLogs.stream().flatMap(List::stream).map(Ride::bikeId).distinct().sorted().toList()."
+review: true

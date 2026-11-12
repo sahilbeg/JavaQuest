@@ -1,0 +1,138 @@
+topic: module-03-core-java/topic-15-streams-advanced
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: grouping-by
+    variants:
+      - { prompt: "What does rides.stream().collect(Collectors.groupingBy(Ride::station)) return?", choices: ["A Map from each station to a List of its rides", "A List of station names", "A Map from each station to a count", "One Ride for each station"], answer: 0 }
+      - { prompt: "What does rides.stream().collect(Collectors.groupingBy(Ride::type)) return?", choices: ["A Map from each type to a List of its rides", "A Set of bike types", "A Map from each type to its total minutes", "A sorted List of rides"], answer: 0 }
+    explain: "groupingBy with only a key makes piles. Each pile is a List of the items that share that key."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: grouping-by
+    prompt: "Map<String, Long> m = rides.stream().collect(Collectors.groupingBy(Ride::station, Collectors.___()));"
+    answers: ["counting"]
+    explain: "counting() is the downstream collector that counts each pile. It gives a Long."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: grouping-by
+    code: |
+      import java.util.List;
+      import java.util.Map;
+      import java.util.TreeMap;
+      import java.util.stream.Collectors;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> types = List.of("ebike", "classic", "ebike", "cargo", "ebike");
+              Map<String, Long> m = types.stream()
+                      .collect(Collectors.groupingBy(t -> t, Collectors.counting()));
+              System.out.println(new TreeMap<>(m));
+          }
+      }
+    answer: "{cargo=1, classic=1, ebike=3}"
+    explain: "Each type becomes a key. counting() counts each pile, and TreeMap prints the keys in alphabetical order."
+    reteach: "## Worked example"
+
+  - id: q04
+    type: mcq
+    concept: partitioning-by
+    prompt: "You split rides with partitioningBy(r -> r.minutes() > 60). No ride is longer than 60 minutes. What does split.get(true) give?"
+    choices: ["An empty list", "null", "An exception", "Every ride"]
+    answer: 0
+    explain: "partitioningBy always makes both the true and the false key. An empty pile is an empty list."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: reduce
+    code: |
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<Integer> minutes = List.of(25, 10, 40);
+              int total = minutes.stream().reduce(5, Integer::sum);
+              System.out.println(total);
+          }
+      }
+    answer: "80"
+    explain: "reduce starts at the identity 5, then adds 25, 10 and 40. That makes 80."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: to-map-merge
+    prompt: "Collectors.toMap(Ride::station, Ride::minutes) meets two rides from Harbor. What happens?"
+    choices: ["It throws an IllegalStateException for a duplicate key", "It keeps the first ride's minutes", "It keeps the last ride's minutes", "It adds the minutes together"]
+    answer: 0
+    explain: "Without a merge function, toMap does not know which value to keep. Pass a third argument such as Integer::sum."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: fill-blank
+    concept: flat-map
+    prompt: "List<Ride> all = stationLogs.stream().___(List::stream).toList();"
+    answers: ["flatMap"]
+    explain: "flatMap turns each inner list into a stream and joins them into one stream."
+    reteach: "## Concept"
+
+  - id: q08
+    type: predict-output
+    concept: joining
+    code: |
+      import java.util.List;
+      import java.util.stream.Collectors;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> stations = List.of("Uptown", "Harbor", "Uptown", "Old Mill");
+              String s = stations.stream()
+                      .distinct()
+                      .sorted()
+                      .collect(Collectors.joining(" / "));
+              System.out.println(s);
+          }
+      }
+    answer: "Harbor / Old Mill / Uptown"
+    explain: "distinct drops the second Uptown, sorted puts the names in order, and joining puts \" / \" between them."
+    reteach: "## Try it"
+
+  - id: q09
+    type: spot-the-bug
+    concept: grouping-by
+    code: |
+      import java.util.List;
+      import java.util.Map;
+      import java.util.stream.Collectors;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> types = List.of("ebike", "cargo");
+              Map<String, Integer> m = types.stream()
+                      .collect(Collectors.groupingBy(t -> t, Collectors.counting()));
+              System.out.println(m);
+          }
+      }
+    bugLine: 8
+    explain: "counting() gives a Long, so the map must be Map<String, Long>. The compiler points at line 9, but the wrong part is the declared type on line 8."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: order
+    concept: flat-map
+    prompt: "Put the lines in order to list every bike id from all station logs once."
+    items:
+      - "List<String> bikes = stationLogs.stream()"
+      - "        .flatMap(List::stream)"
+      - "        .map(Ride::bikeId)"
+      - "        .distinct()"
+      - "        .toList();"
+    explain: "Flatten first so you have rides. Then take the ids, drop repeats, and collect."
+    reteach: "## Try it"

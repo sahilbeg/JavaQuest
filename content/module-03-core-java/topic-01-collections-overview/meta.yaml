@@ -1,0 +1,24 @@
+id: module-03-core-java/topic-01-collections-overview
+title: "The collections framework map"
+order: 1
+minutes: 8
+prerequisites: [module-02-oop/boss]
+concepts: [fixed-size-arrays, collection-family, arraylist, diamond-generics, choosing-collections]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m03.collectionsoverview.RideLog
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0301
+  from: maya
+  title: "Kiosk crashes on the 101st ride"
+  body: >
+    The Riverside kiosk crashed at 6:40 pm yesterday, right as ride 101 of the day ended.
+    The ride log lives in a Ride[100] array, and that array is full. We need a log that grows
+    as long as riders keep riding. Can you swap it for something that grows?
+hints:
+  - "The rides field should hold an ArrayList that starts empty. Create it where the field is declared or in the constructor."
+  - "add puts a bike id on the end of the list, count returns rides.size(), and get returns rides.get(index)."
+  - "In pickCollection, compare job with equals: \"keep rides in order\" gives \"List\", \"unique bike ids\" gives \"Set\", \"minutes per bike\" gives \"Map\"."
+review: true

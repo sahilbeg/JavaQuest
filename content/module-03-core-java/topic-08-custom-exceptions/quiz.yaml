@@ -1,0 +1,147 @@
+topic: module-03-core-java/topic-08-custom-exceptions
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: checked-unchecked
+    variants:
+      - { prompt: "Which class makes your exception checked?", choices: ["extends Exception", "extends RuntimeException", "extends IllegalArgumentException", "extends NumberFormatException"], answer: 0 }
+      - { prompt: "Which class makes your exception unchecked?", choices: ["extends RuntimeException", "extends Exception", "extends Throwable", "extends Object"], answer: 0 }
+    explain: "Exceptions that extend RuntimeException are unchecked. Other exceptions that extend Exception are checked."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: checked-unchecked
+    prompt: "A method throws a checked exception. What must every caller do?"
+    choices: ["Catch it or declare it with throws", "Nothing, the compiler ignores it", "Return -1", "Call close()"]
+    answer: 0
+    explain: "The compiler checks checked exceptions. A caller that neither catches nor declares one does not compile."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: throws-clause
+    prompt: "int dock(String bikeId) ___ DockFullException {"
+    answers: ["throws"]
+    explain: "throws, with an s, goes in the method signature and lists what the method can throw."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: custom-exception
+    prompt: "class UnknownBikeTypeException extends ___ {   // the parent of every unchecked exception"
+    answers: ["RuntimeException"]
+    explain: "An unchecked exception extends RuntimeException or one of its children."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: custom-exception
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              try {
+                  throw new DockFullException("Uptown");
+              } catch (DockFullException e) {
+                  System.out.println(e.getMessage());
+              }
+          }
+      }
+
+      class DockFullException extends Exception {
+          DockFullException(String station) {
+              super("Station full: " + station);
+          }
+      }
+    answer: "Station full: Uptown"
+    explain: "super(...) stores the message, and getMessage() gives it back."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: try-with-resources
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              try (Session s = new Session()) {
+                  System.out.println("working");
+                  throw new IllegalStateException("oops");
+              } catch (IllegalStateException e) {
+                  System.out.println("caught " + e.getMessage());
+              }
+          }
+      }
+
+      class Session implements AutoCloseable {
+          public void close() {
+              System.out.println("closed");
+          }
+      }
+    answer: "working\nclosed\ncaught oops"
+    explain: "Java closes the resource as soon as the try block ends, even when it throws. Then the catch runs."
+    reteach: "## Worked example"
+
+  - id: q07
+    type: predict-output
+    concept: exception-cause
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              try {
+                  try {
+                      Integer.parseInt("twenty");
+                  } catch (NumberFormatException e) {
+                      throw new IllegalStateException("Bad ride line", e);
+                  }
+              } catch (IllegalStateException e) {
+                  System.out.println(e.getMessage());
+                  System.out.println(e.getCause().getClass().getSimpleName());
+              }
+          }
+      }
+    answer: "Bad ride line\nNumberFormatException"
+    explain: "The new exception has its own message. getCause() gives back the original NumberFormatException."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: throws-clause
+    code: |
+      public class Main {
+          static void dock() throws DockFullException {
+              throw new DockFullException("Harbor");
+          }
+          public static void main(String[] args) {
+              dock();
+          }
+      }
+      class DockFullException extends Exception {
+          DockFullException(String s) { super("Station full: " + s); }
+      }
+    bugLine: 6
+    explain: "dock() throws a checked exception, and main neither catches it nor declares it. Wrap the call in try and catch, or add throws to main."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: order
+    concept: try-with-resources
+    prompt: "Put the lines in order to use a session that closes itself."
+    items:
+      - "try (KioskSession session = new KioskSession(harbor)) {"
+      - "    return \"Docked at \" + session.dock(bikeId);"
+      - "} catch (DockFullException e) {"
+      - "    return e.getMessage();"
+      - "}"
+    explain: "The resource goes in round brackets after try. The catch handles the checked exception."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: try-with-resources
+    prompt: "What must a class do so it can go inside try ( ... )?"
+    choices: ["Implement AutoCloseable", "Extend Exception", "Have a main method", "Be a record"]
+    answer: 0
+    explain: "try-with-resources only accepts AutoCloseable objects. Java calls their close() method for you."
+    reteach: "## Concept"

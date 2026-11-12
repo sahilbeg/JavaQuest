@@ -1,0 +1,136 @@
+topic: module-03-core-java/topic-09-file-io
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: buffered-reader
+    variants:
+      - { prompt: "What does readLine() return when the file has no lines left?", choices: ["null", "An empty String", "-1", "It throws an exception"], answer: 0 }
+      - { prompt: "Which value tells your reading loop that the file is finished?", choices: ["readLine() returns null", "readLine() returns \"\"", "readLine() returns \"EOF\"", "readLine() returns 0"], answer: 0 }
+    explain: "readLine() returns null at the end of the file. A blank line comes back as an empty String, which is different."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: files-and-paths
+    prompt: "What happens when you run new File(\"rides.csv\")?"
+    choices: ["Java makes an object that holds the path, and nothing is opened", "Java creates an empty rides.csv on the disk", "Java opens rides.csv for reading", "Java deletes any old rides.csv"]
+    answer: 0
+    explain: "A File object only holds the path. FileReader or FileWriter does the real opening."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: io-exception
+    prompt: "Your method uses a FileReader and has no try/catch. What must the method header say?"
+    choices: ["throws IOException", "throws RuntimeException", "catch IOException", "Nothing, IOException is unchecked"]
+    answer: 0
+    explain: "IOException is a checked exception. You catch it or declare throws IOException."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: buffered-writer
+    prompt: "writer.write(\"B-1042,Riverside,ebike,25\"); writer.___();"
+    answers: ["newLine"]
+    explain: "write() does not add a line break. newLine() adds one."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: encoding
+    prompt: "new FileReader(file, StandardCharsets.___)"
+    answers: ["UTF_8"]
+    explain: "StandardCharsets.UTF_8 is the common encoding that handles every language."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: buffered-reader
+    code: |
+      import java.io.*;
+      import java.nio.charset.StandardCharsets;
+
+      public class Main {
+          public static void main(String[] args) throws IOException {
+              try (BufferedWriter w = new BufferedWriter(new FileWriter("q6.txt", StandardCharsets.UTF_8))) {
+                  w.write("Harbor");
+                  w.newLine();
+                  w.write("Uptown");
+                  w.newLine();
+              }
+              try (BufferedReader r = new BufferedReader(new FileReader("q6.txt", StandardCharsets.UTF_8))) {
+                  String line = r.readLine();
+                  while (line != null) {
+                      System.out.println(line.length());
+                      line = r.readLine();
+                  }
+              }
+          }
+      }
+    answer: "6\n6"
+    explain: "The file holds two lines, Harbor and Uptown. Each has 6 letters, and readLine() drops the line break."
+    reteach: "## Worked example"
+
+  - id: q07
+    type: predict-output
+    concept: buffered-reader
+    code: |
+      import java.io.*;
+      import java.nio.charset.StandardCharsets;
+
+      public class Main {
+          public static void main(String[] args) throws IOException {
+              try (PrintWriter out = new PrintWriter(new FileWriter("q7.txt", StandardCharsets.UTF_8))) {
+                  out.println("a");
+                  out.println("b");
+                  out.println("c");
+              }
+              try (BufferedReader r = new BufferedReader(new FileReader("q7.txt", StandardCharsets.UTF_8))) {
+                  while (r.readLine() != null) {
+                      System.out.println(r.readLine());
+                  }
+              }
+          }
+      }
+    answer: "b\nnull"
+    explain: "Each readLine() call reads a new line. The check eats a, the print shows b, the check eats c, and the print shows null."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: order
+    concept: try-with-resources-files
+    prompt: "Put the lines in order to print every line of a file."
+    items:
+      - "try (BufferedReader r = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {"
+      - "    String line = r.readLine();"
+      - "    while (line != null) {"
+      - "        System.out.println(line);"
+      - "        line = r.readLine();"
+      - "    }"
+      - "}"
+    explain: "Open the reader in try, read the first line, then loop: print it and read the next one."
+    reteach: "## Concept"
+
+  - id: q09
+    type: spot-the-bug
+    concept: try-with-resources-files
+    code: |
+      public static void save(File file) throws IOException {
+          BufferedWriter w = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8));
+          w.write("B-1042,Riverside,ebike,25");
+          w.newLine();
+      }
+    bugLine: 2
+    explain: "The writer is never closed, so the text may never reach the disk. Open it inside try ( ... )."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: buffered-writer
+    prompt: "Which line adds to the end of visits.txt instead of emptying it first?"
+    choices: ["new FileWriter(\"visits.txt\", StandardCharsets.UTF_8, true)", "new FileWriter(\"visits.txt\", StandardCharsets.UTF_8)", "new FileReader(\"visits.txt\", StandardCharsets.UTF_8, true)", "new File(\"visits.txt\", true)"]
+    answer: 0
+    explain: "The extra true turns on append mode. Without it, FileWriter empties the file."
+    reteach: "## Concept"

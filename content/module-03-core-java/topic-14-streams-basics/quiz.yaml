@@ -1,0 +1,118 @@
+topic: module-03-core-java/topic-14-streams-basics
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: stream-pipeline
+    variants:
+      - { prompt: "What is a stream?", choices: ["A pipeline that carries items from a collection through steps", "A new kind of list that stores items", "A loop with an index counter", "A file you read line by line"], answer: 0 }
+      - { prompt: "Where does a stream keep its data?", choices: ["It keeps none; the items stay in the source collection", "In a hidden array inside the stream", "In a file on disk", "In a Map of index to item"], answer: 0 }
+    explain: "A stream holds no data of its own. It moves items from the source through the steps."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: filter-map
+    prompt: "Which step swaps each ride for its station name?"
+    choices: ["map(ride -> ride.station())", "filter(ride -> ride.station())", "distinct()", "count()"]
+    answer: 0
+    explain: "map takes a Function and swaps each item for the result. filter only keeps or drops items."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: lazy-single-use
+    prompt: "What happens when you call count() twice on the same stream variable?"
+    choices: ["The second call throws IllegalStateException", "Both calls return the same number", "The second call returns 0", "The code does not compile"]
+    answer: 0
+    explain: "A stream works once. After the terminal step, it is closed, so the second call crashes at run time."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: number-streams
+    prompt: "int total = rides.stream().___(Ride::minutes).sum();"
+    answers: ["mapToInt"]
+    explain: "mapToInt turns each ride into an int, which gives you sum and average."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: number-streams
+    prompt: "double mean = rides.stream().mapToInt(Ride::minutes).average().___(0.0);"
+    answers: ["orElse"]
+    explain: "average might be empty for an empty list. orElse(0.0) gives 0.0 in that case."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: sorted-limit-distinct
+    code: |
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> stations = List.of("Uptown", "Harbor", "Uptown", "Old Mill");
+              System.out.println(stations.stream().distinct().sorted().toList());
+              System.out.println(stations.stream().limit(2).toList());
+          }
+      }
+    answer: "[Harbor, Old Mill, Uptown]\n[Uptown, Harbor]"
+    explain: "distinct drops the second Uptown and sorted orders A to Z. limit(2) keeps the first two items in list order."
+    reteach: "## Concept"
+
+  - id: q07
+    type: predict-output
+    concept: filter-map
+    code: |
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<Integer> minutes = List.of(25, 10, 40, 15);
+              System.out.println(minutes.stream().filter(m -> m > 12).map(m -> m * 2).toList());
+              System.out.println(minutes.stream().filter(m -> m < 20).count());
+          }
+      }
+    answer: "[50, 80, 30]\n2"
+    explain: "filter keeps 25, 40 and 15, and map doubles them. Two values are under 20: 10 and 15."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: order
+    concept: collect-to-list
+    prompt: "Put the pipeline in order to get a list of e-bike ids."
+    items:
+      - "List<String> ids = rides.stream()"
+      - "        .filter(ride -> ride.type().equals(\"ebike\"))"
+      - "        .map(ride -> ride.bikeId())"
+      - "        .toList();"
+    explain: "Start with the source, filter before you map away the type, and finish with the terminal toList."
+    reteach: "## Worked example"
+
+  - id: q09
+    type: spot-the-bug
+    concept: number-streams
+    code: |
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<Integer> minutes = List.of(25, 10, 40);
+              double mean = minutes.stream().mapToInt(m -> m).average();
+              System.out.println(mean);
+          }
+      }
+    bugLine: 6
+    explain: "average() gives back an OptionalDouble. Add .orElse(0.0) to get a plain double."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: lazy-single-use
+    prompt: "A pipeline has filter and map but no terminal operation. What runs?"
+    choices: ["Nothing; streams are lazy", "Only the filter", "Both steps, and the list changes", "Both steps, and the result prints"]
+    answer: 0
+    explain: "Intermediate steps only run when a terminal operation asks for a result."
+    reteach: "## Concept"

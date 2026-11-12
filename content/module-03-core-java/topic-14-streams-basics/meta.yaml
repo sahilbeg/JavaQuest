@@ -1,0 +1,23 @@
+id: module-03-core-java/topic-14-streams-basics
+title: "Streams: filter, map, collect"
+order: 14
+minutes: 9
+prerequisites: [module-03-core-java/topic-13-functional-interfaces]
+concepts: [stream-pipeline, filter-map, number-streams, collect-to-list, sorted-limit-distinct, lazy-single-use]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0314
+  from: maya
+  title: "Rewrite the report loops as streams"
+  body: >
+    The daily report code is ten loops long, and every loop has a different off-by-one bug.
+    Yesterday it skipped the last ride at Uptown and showed Harbor twice in the station list.
+    Can you rewrite the simple reports as streams, so there are no index counters left to get wrong?
+hints:
+  - "Every report starts with rides.stream() and ends with toList(), sum() or orElse(0.0)."
+  - "For stations, map(ride -> ride.station()), then distinct(), then sorted(). For minutes, mapToInt(ride -> ride.minutes())."
+  - "For the top three: sorted((a, b) -> Integer.compare(b.minutes(), a.minutes())).limit(3).map(ride -> ride.bikeId()).toList()"
+review: true

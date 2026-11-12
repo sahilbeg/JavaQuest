@@ -52,4 +52,13 @@ class LessonCodeTest {
         assertTrue(programs.get(0).contains("public static void main(String[] args) {\npublic static void main"));
         assertEquals(1, programs.get(1).split("void main", -1).length - 1, "member wrapper must not add a second main");
     }
+
+    @Test
+    void crashBlocksAreRunnableAndExpectAnException() {
+        var blocks = LessonCode.compilableBlocks("```java run crash\nint[] a = new int[1];\n```\n");
+
+        assertEquals(1, blocks.size());
+        assertTrue(blocks.getFirst().runnable());
+        assertTrue(blocks.getFirst().expectsCrash());
+    }
 }

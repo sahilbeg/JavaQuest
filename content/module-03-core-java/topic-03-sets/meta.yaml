@@ -1,0 +1,24 @@
+id: module-03-core-java/topic-03-sets
+title: "Set, HashSet, TreeSet"
+order: 3
+minutes: 9
+prerequisites: [module-03-core-java/topic-02-lists]
+concepts: [set-no-duplicates, hashset, treeset, set-methods, set-operations, equals-hashcode]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0303
+  from: sam
+  title: "Bikes used today count is too high"
+  body: >
+    A rider at Harbor rode B-1042 three times this morning, and the dashboard counted three bikes.
+    Theo thinks we have way more bikes on the street than we really do. The count should show
+    each bike once, no matter how many rides it did. Could you also tell me which bikes visited
+    both Harbor and Uptown?
+hints:
+  - "A Set keeps only one copy of each value. Put the ids in a Set and look at its size."
+  - "A TreeSet keeps its values sorted. new ArrayList<>(treeSet) turns it back into a List. For bikes at both stations, try retainAll."
+  - "For firstDuplicate, loop over the ids and call seen.add(id). When add returns false, you have met that id before, so return it."
+review: true

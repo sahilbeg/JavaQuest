@@ -1,0 +1,124 @@
+topic: module-03-core-java/topic-16-optional
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: optional-basics
+    variants:
+      - { prompt: "What is an Optional<String>?", choices: ["A box that holds one String or nothing", "A String that can never be null", "A list of Strings", "A String field that is optional to set"], answer: 0 }
+      - { prompt: "Why return Optional<Ride> instead of Ride?", choices: ["It tells the caller the ride might be missing", "It makes the method run faster", "It lets the method return many rides", "It stops the ride from changing"], answer: 0 }
+    explain: "An Optional is a box that may be empty. Its type warns the caller that the answer can be missing."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: creating-optionals
+    prompt: "Optional<String> s = Optional.___(docks.get(bikeId));"
+    answers: ["ofNullable"]
+    explain: "Map.get can return null. ofNullable turns null into an empty box. Optional.of would throw."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: unwrapping
+    code: |
+      import java.util.Optional;
+
+      public class Main {
+          public static void main(String[] args) {
+              Optional<String> a = Optional.of("Harbor");
+              Optional<String> b = Optional.empty();
+              System.out.println(a.orElse("unknown"));
+              System.out.println(b.orElse("unknown"));
+              System.out.println(b.isPresent());
+          }
+      }
+    answer: "Harbor\nunknown\nfalse"
+    explain: "a holds Harbor, so orElse gives Harbor. b is empty, so it gives the default, and isPresent is false."
+    reteach: "## Worked example"
+
+  - id: q04
+    type: mcq
+    concept: unwrapping
+    prompt: "Which method runs its default only when the box is empty?"
+    choices: ["orElseGet", "orElse", "isPresent", "of"]
+    answer: 0
+    explain: "orElseGet takes a lambda and calls it only when needed. orElse builds its default every time."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: optional-map
+    code: |
+      import java.util.Optional;
+
+      public class Main {
+          public static void main(String[] args) {
+              Optional<String> s = Optional.of("uptown");
+              Optional<String> none = Optional.empty();
+              System.out.println(s.map(String::toUpperCase).orElse("NONE"));
+              System.out.println(none.map(String::toUpperCase).orElse("NONE"));
+              none.ifPresent(x -> System.out.println("found"));
+          }
+      }
+    answer: "UPTOWN\nNONE"
+    explain: "map changes a full box and skips an empty one. ifPresent does nothing on an empty box."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: optional-from-streams
+    prompt: "What does rides.stream().max(...) return for an empty list?"
+    choices: ["An empty Optional", "null", "A Ride with 0 minutes", "It throws an exception"]
+    answer: 0
+    explain: "max may find nothing, so it returns an Optional. An empty list gives an empty box."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: when-not-to-use
+    prompt: "Where is Optional a good fit?"
+    choices: ["As the return type of a lookup that may find nothing", "As the type of a private field", "As a method parameter", "As the type of a list element"]
+    answer: 0
+    explain: "Optional is made for return values. Fields and parameters should use plain types."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: creating-optionals
+    code: |
+      import java.util.Map;
+      import java.util.Optional;
+
+      public class Main {
+          public static void main(String[] args) {
+              Map<String, String> docks = Map.of("B-1042", "Riverside");
+              Optional<String> s = Optional.of(docks.get("B-0007"));
+              System.out.println(s.orElse("unknown"));
+          }
+      }
+    bugLine: 7
+    explain: "docks.get returns null for B-0007, and Optional.of(null) throws. Use Optional.ofNullable."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: fill-blank
+    concept: unwrapping
+    prompt: "String name = findStation(\"B-0007\").___(\"unknown\");"
+    answers: ["orElse"]
+    explain: "orElse opens the box and gives the default when it is empty."
+    reteach: "## Concept"
+
+  - id: q10
+    type: order
+    concept: optional-map
+    prompt: "Put the lines in order to print a label for the longest ride, or no rides."
+    items:
+      - "Optional<Ride> longest = rides.stream()"
+      - "        .max((a, b) -> Integer.compare(a.minutes(), b.minutes()));"
+      - "String label = longest.map(r -> r.bikeId() + \": \" + r.minutes() + \" min\")"
+      - "        .orElse(\"no rides\");"
+      - "System.out.println(label);"
+    explain: "Find the longest ride first. Then map it to a label, give a default, and print."
+    reteach: "## Try it"

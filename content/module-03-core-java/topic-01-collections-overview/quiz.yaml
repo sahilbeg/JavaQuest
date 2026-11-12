@@ -1,0 +1,123 @@
+topic: module-03-core-java/topic-01-collections-overview
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: fixed-size-arrays
+    prompt: "You create new String[100] and try to store item number 101. What happens?"
+    choices: ["The program crashes with ArrayIndexOutOfBoundsException", "The array grows to 101 slots", "Item 101 replaces item 1", "Java ignores the extra item"]
+    answer: 0
+    explain: "An array has a fixed size. Position 100 does not exist in an array of 100 slots."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: collection-family
+    variants:
+      - { prompt: "Which collection keeps each item only once?", choices: ["Set", "List", "Map", "Array"], answer: 0 }
+      - { prompt: "Which collection pairs a key with a value?", choices: ["Map", "List", "Set", "Array"], answer: 0 }
+    explain: "A Set holds no duplicates. A Map pairs keys with values. A List keeps order and allows duplicates."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: choosing-collections
+    prompt: "Theo wants the total minutes ridden for each bike id. Which collection fits best?"
+    choices: ["Map", "List", "Set", "A String"]
+    answer: 0
+    explain: "You look up minutes by bike id, so the bike id is a key and the minutes are its value."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: diamond-generics
+    prompt: "List<String> ids = new ArrayList___();"
+    answers: ["<>", "<String>"]
+    explain: "The diamond <> copies String from the left side. Writing <String> also works."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: arraylist
+    prompt: "int howMany = rides.___();"
+    answers: ["size"]
+    explain: "Lists count their items with size(). Arrays use .length instead."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: arraylist
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> ids = new ArrayList<>();
+              ids.add("B-1042");
+              ids.add("B-2001");
+              ids.add("B-1042");
+              System.out.println(ids.size());
+              System.out.println(ids.get(1));
+          }
+      }
+    answer: "3\nB-2001"
+    explain: "A list allows duplicates, so it holds 3 items. Position 1 is the second item."
+    reteach: "## Worked example"
+
+  - id: q07
+    type: predict-output
+    concept: arraylist
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> stations = new ArrayList<>();
+              stations.add("Harbor");
+              stations.add("Uptown");
+              System.out.println(stations);
+          }
+      }
+    answer: "[Harbor, Uptown]"
+    explain: "Printing a list shows its items in order, inside square brackets, separated by a comma and a space."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: diamond-generics
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<int> minutes = new ArrayList<>();
+              minutes.add(25);
+          }
+      }
+    bugLine: 6
+    explain: "Lists hold objects only. Use List<Integer> instead of List<int>."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: order
+    concept: arraylist
+    prompt: "Put the lines in order to print the first bike id."
+    items:
+      - "List<String> ids = new ArrayList<>();"
+      - "ids.add(\"B-1042\");"
+      - "System.out.println(ids.get(0));"
+    explain: "Create the list first, then add to it, then read from it."
+    reteach: "## Worked example"
+
+  - id: q10
+    type: mcq
+    concept: choosing-collections
+    prompt: "Sam needs every ride in the order it happened, and a bike may ride twice. Which collection fits?"
+    choices: ["List", "Set", "Map", "An array of size 10"]
+    answer: 0
+    explain: "A List keeps order and allows the same bike id more than once."
+    reteach: "## Concept"

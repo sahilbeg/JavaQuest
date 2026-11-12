@@ -1,0 +1,25 @@
+id: module-03-core-java/topic-04-maps
+title: "Map, HashMap, TreeMap"
+order: 4
+minutes: 10
+prerequisites: [module-03-core-java/topic-03-sets]
+concepts: [key-value, map-methods, map-iteration, counting-pattern, hashmap-vs-treemap]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m03.maps.StationStats
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0304
+  from: priya
+  title: "Minutes per station, and which one is busiest"
+  body: >
+    For Friday's planning meeting I need total minutes ridden per station, plus the busiest one.
+    Right now the report walks the whole ride list again for Riverside, again for Old Mill, again
+    for Harbor and again for Uptown. Once we add more stations that gets slow. Can it work it all
+    out in one pass?
+hints:
+  - "A Map links each station (the key) to its running total of minutes (the value). Go through the rides once."
+  - "Inside the loop, read the old total with getOrDefault(station, 0) and put back the old total plus the ride's minutes."
+  - "For busiestStation, loop over the TreeMap's entrySet. Replace the best station only when entry.getValue() is strictly bigger, so the alphabetically first station wins a tie."
+review: true

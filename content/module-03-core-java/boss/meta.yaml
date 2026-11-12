@@ -1,0 +1,23 @@
+id: module-03-core-java/boss
+title: "INC-03: The monthly ride report is wrong"
+order: 99
+minutes: 10
+prerequisites: [module-03-core-java/topic-16-optional]
+concepts: [lists, maps, primitive-types, comparators, streams]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m03.incident.MonthlyReport
+ticket:
+  key: INC-03
+  from: theo
+  title: "The monthly ride report is wrong"
+  body: >
+    The monthly report job crashed last night, and the version from the night before had odd numbers.
+    Harbor's average ride shows 22 minutes when riders clearly averaged 22.5, and the top stations are in a random order.
+    The board meets on Monday. Please fix it.
+hints:
+  - "Bronze: removing from a list inside a for-each loop throws ConcurrentModificationException. Use removeIf or an Iterator."
+  - "Silver: an int divided by an int drops the decimals. Turn one side into a double before you divide."
+  - "Gold: a HashMap has no order. Sort the stations by total minutes, largest first, then by name, before you take the first n."
+review: false

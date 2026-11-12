@@ -1,0 +1,24 @@
+id: module-03-core-java/topic-08-custom-exceptions
+title: "Checked vs unchecked, custom exceptions, try-with-resources"
+order: 8
+minutes: 10
+prerequisites: [module-03-core-java/topic-07-exceptions]
+concepts: [checked-unchecked, throws-clause, custom-exception, exception-cause, try-with-resources]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m03.customexceptions.KioskSession
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0308
+  from: maya
+  title: "Error codes that everyone ignores"
+  body: >
+    When Harbor is full, dock() returns -1, and half our callers never check it. Yesterday a rider was
+    charged for a ride at Harbor that never ended in a dock. I want the full-station case to be impossible
+    to ignore, so the compiler forces every caller to deal with it.
+hints:
+  - "A checked exception class extends Exception. An unchecked one extends RuntimeException. Pass the message up with super(\"Station full: \" + station)."
+  - "In Station.dock, if docked equals docks, write throw new DockFullException(name); otherwise add 1 to docked and return it. Pricing throws new UnknownBikeTypeException(type) for any other type."
+  - "close() sets closed = true. In run, write try (KioskSession session = new KioskSession(s)) { return \"Docked at \" + session.dock(bikeId); } catch (DockFullException e) { return e.getMessage(); }"
+review: true

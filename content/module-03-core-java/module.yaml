@@ -1,0 +1,6 @@
+id: module-03-core-java
+title: Core Java
+project: Ride data
+summary: Store, sort, read and analyse thousands of rides with collections, files, dates, lambdas and streams.
+unlockAfter: module-02-oop/boss
+mascotIntro: "Hoo! Spoke now has thousands of rides a day. Arrays and loops can't keep up, so it's time for Java's power tools."

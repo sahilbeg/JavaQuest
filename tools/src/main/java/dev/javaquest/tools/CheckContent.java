@@ -75,6 +75,9 @@ public final class CheckContent {
         if (last.status() == ProgramResult.Status.COMPILE_ERROR) {
             return "does not compile: " + last.compileErrors().getFirst().message().lines().findFirst().orElse("");
         }
+        if (block.expectsCrash()) {
+            return last.status() == ProgramResult.Status.EXCEPTION ? null : "crash snippet ended with " + last.status() + " instead of an exception";
+        }
         if (block.runnable() && last.status() != ProgramResult.Status.COMPLETED) {
             return "runnable snippet ended with " + last.status();
         }

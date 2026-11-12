@@ -1,0 +1,23 @@
+id: module-03-core-java/topic-13-functional-interfaces
+title: "Functional interfaces"
+order: 13
+minutes: 9
+prerequisites: [module-03-core-java/topic-12-lambdas]
+concepts: [functional-interface, functional-interface-annotation, built-in-interfaces, combining-functions, custom-functional-interface]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0313
+  from: priya
+  title: "Promotions without a code change every week"
+  body: >
+    Marketing wants "half price on Sundays" this week and "e-bikes 20 percent off" at Harbor
+    next week. Right now every promotion means an engineer edits the fare code. Could you make
+    promotions pluggable, so we can add a new one without touching the fare logic?
+hints:
+  - "Each promotion is a lambda with two inputs, the ride and the fare, that returns the new fare: (ride, fare) -> fare / 2."
+  - "In eBikeDiscount, check ride.type().equals(\"ebike\") inside a block lambda. Twenty percent off is fare * (100 - 20) / 100."
+  - "applyAll starts with double result = fare; then loops: result = promotion.apply(ride, result); and returns result at the end."
+review: true

@@ -1,0 +1,23 @@
+id: module-03-core-java/topic-16-optional
+title: "Optional"
+order: 16
+minutes: 9
+prerequisites: [module-03-core-java/topic-15-streams-advanced]
+concepts: [optional-basics, creating-optionals, unwrapping, optional-map, optional-from-streams, when-not-to-use]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0316
+  from: sam
+  title: "App crashes on a retired bike"
+  body: >
+    A rider at Harbor typed in B-0007 to see where it was docked, and the app crashed. That bike was
+    retired last month, so findStation returned null and the next line blew up with a NullPointerException.
+    Can you make the lookup say "unknown" instead of crashing?
+hints:
+  - "Wrap the map lookup in Optional.ofNullable(...). It gives back an empty box when the value is null."
+  - "stationOrUnknown can call findStation(bikeId).orElse(\"unknown\"). longestRide can use stream().max(...)."
+  - "For the label, try longestRide(rides).map(r -> r.bikeId() + \": \" + r.minutes() + \" min\").orElse(\"no rides\")."
+review: true

@@ -1,0 +1,138 @@
+topic: module-03-core-java/topic-07-exceptions
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: exception
+    variants:
+      - { prompt: "What does Integer.parseInt(\"twenty\") do?", choices: ["It throws a NumberFormatException", "It returns 20", "It returns 0", "It returns -1"], answer: 0 }
+      - { prompt: "What does Integer.parseInt(\"12.5\") do?", choices: ["It throws a NumberFormatException", "It returns 12", "It returns 13", "It returns 12.5"], answer: 0 }
+    explain: "parseInt only reads whole numbers written as digits. Anything else makes it throw a NumberFormatException."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: stack-trace
+    prompt: "In a stack trace, where do you look first for your bug?"
+    choices: ["The first at line that names your own file", "The last line of the trace", "Every java.base line", "The line with the word thread"]
+    answer: 0
+    explain: "The top lines may be inside Java itself. The first at line that names your own file shows where your code went wrong."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: try-catch
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              try {
+                  int m = Integer.parseInt("ten");
+                  System.out.println("Minutes: " + m);
+              } catch (NumberFormatException e) {
+                  System.out.println("Bad");
+              }
+              System.out.println("End");
+          }
+      }
+    answer: "Bad\nEnd"
+    explain: "parseInt throws, so the first println is skipped. The catch prints Bad, and then the program carries on to print End."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: finally
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              try {
+                  System.out.println(Integer.parseInt("7"));
+              } catch (NumberFormatException e) {
+                  System.out.println("Bad");
+              } finally {
+                  System.out.println("Done");
+              }
+          }
+      }
+    answer: "7\nDone"
+    explain: "Nothing throws, so the catch is skipped. finally runs every time, so Done is printed too."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: multiple-catch
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String[] parts = "B-1042,Harbor".split(",");
+              try {
+                  System.out.println(parts[2]);
+              } catch (NumberFormatException e) {
+                  System.out.println("Number");
+              } catch (ArrayIndexOutOfBoundsException e) {
+                  System.out.println("Index");
+              }
+          }
+      }
+    answer: "Index"
+    explain: "parts has slots 0 and 1 only. Asking for slot 2 throws an ArrayIndexOutOfBoundsException, so the second catch runs."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: try-catch
+    prompt: "} catch (___ e) {   // handles Integer.parseInt(\"abc\")"
+    answers: ["NumberFormatException", "java.lang.NumberFormatException", "IllegalArgumentException", "java.lang.IllegalArgumentException", "RuntimeException", "Exception", "Throwable"]
+    explain: "parseInt throws a NumberFormatException. A catch for that type, or for a more general type above it, handles it."
+    reteach: "## Concept"
+
+  - id: q07
+    type: fill-blank
+    concept: throw
+    prompt: "___ new IllegalArgumentException(\"Minutes cannot be negative\");"
+    answers: ["throw"]
+    explain: "The keyword throw sends an exception up to the caller."
+    reteach: "## Concept"
+
+  - id: q08
+    type: order
+    concept: finally
+    prompt: "Put the parts of a full try statement in order."
+    items:
+      - "try {"
+      - "    int m = Integer.parseInt(text);"
+      - "} catch (NumberFormatException e) {"
+      - "    System.out.println(\"Bad number\");"
+      - "} finally {"
+      - "    System.out.println(\"Done\");"
+      - "}"
+    explain: "try comes first, then each catch, then finally at the end."
+    reteach: "## Concept"
+
+  - id: q09
+    type: spot-the-bug
+    concept: multiple-catch
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              try {
+                  int m = Integer.parseInt("x");
+              } catch (IllegalArgumentException e) {
+                  System.out.println("Bad value");
+              } catch (NumberFormatException e) {
+                  System.out.println("Bad number");
+              }
+          }
+      }
+    bugLine: 7
+    explain: "NumberFormatException is a kind of IllegalArgumentException, so the first catch already handles it. Java reports that it has already been caught. Put the specific catch first."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: throw
+    prompt: "A method does not catch an exception that happens inside it. What happens?"
+    choices: ["The exception goes up to the method that called it", "Java ignores it and returns 0", "The method starts again", "The exception is deleted"]
+    answer: 0
+    explain: "An uncaught exception leaves the method and goes up to the caller. If nobody catches it, the program crashes."
+    reteach: "## Concept"

@@ -1,0 +1,154 @@
+topic: module-03-core-java/topic-06-comparators-iterators
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: comparable
+    variants:
+      - { prompt: "a.compareTo(b) returns -3. What does that mean?", choices: ["a comes before b", "b comes before a", "a and b are equal", "The comparison failed"], answer: 0 }
+      - { prompt: "a.compareTo(b) returns 7. What does that mean?", choices: ["a comes after b", "a comes before b", "a and b are equal", "a is 7 bigger than b"], answer: 0 }
+    explain: "Negative means a first, zero means equal, positive means b first. Only the sign matters."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: comparable
+    prompt: "return Integer.___(this.minutes, other.minutes);"
+    answers: ["compare"]
+    explain: "Integer.compare(a, b) returns a negative, zero or positive int."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: sorting
+    code: |
+      import java.util.ArrayList;
+      import java.util.Collections;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> stations = new ArrayList<>(List.of("Uptown", "Harbor", "Riverside", "Old Mill"));
+              Collections.sort(stations);
+              System.out.println(stations);
+          }
+      }
+    answer: "[Harbor, Old Mill, Riverside, Uptown]"
+    explain: "String has a natural order: alphabetical. Collections.sort uses it."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: comparator
+    prompt: "Which method does a class that implements Comparator<Ride> write?"
+    choices: ["public int compare(Ride a, Ride b)", "public int compareTo(Ride other)", "public boolean compare(Ride a, Ride b)", "public Ride sort(Ride a, Ride b)"]
+    answer: 0
+    explain: "Comparator has compare with two parameters. Comparable has compareTo with one."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: multi-key-sort
+    code: |
+      import java.util.ArrayList;
+      import java.util.Comparator;
+      import java.util.List;
+
+      public class Main {
+          record Ride(String station, int minutes) { }
+
+          static class ByStationThenMinutes implements Comparator<Ride> {
+              public int compare(Ride a, Ride b) {
+                  int byStation = a.station().compareTo(b.station());
+                  if (byStation != 0) {
+                      return byStation;
+                  }
+                  return Integer.compare(a.minutes(), b.minutes());
+              }
+          }
+
+          public static void main(String[] args) {
+              List<Ride> rides = new ArrayList<>(List.of(
+                      new Ride("Uptown", 10), new Ride("Harbor", 40), new Ride("Harbor", 5)));
+              rides.sort(new ByStationThenMinutes().reversed());
+              for (Ride r : rides) {
+                  System.out.println(r.station() + " " + r.minutes());
+              }
+          }
+      }
+    answer: "Uptown 10\nHarbor 40\nHarbor 5"
+    explain: "Normal order is Harbor 5, Harbor 40, Uptown 10. reversed() flips the whole list."
+    reteach: "## Worked example"
+
+  - id: q06
+    type: spot-the-bug
+    concept: multi-key-sort
+    code: |
+      public int compare(Ride a, Ride b) {
+          int byStation = a.station().compareTo(b.station());
+          if (byStation == 0) {
+              return byStation;
+          }
+          return Integer.compare(a.minutes(), b.minutes());
+      }
+    bugLine: 3
+    explain: "Return the station result when it is NOT zero. Only a tie should fall through to minutes."
+    reteach: "## Concept"
+
+  - id: q07
+    type: fill-blank
+    concept: comparator
+    prompt: "rides.sort(new ByMinutes().___());"
+    answers: ["reversed"]
+    explain: "reversed() returns a comparator with the opposite order."
+    reteach: "## Concept"
+
+  - id: q08
+    type: order
+    concept: iterator
+    prompt: "Put the lines in order to remove every ride over 60 minutes."
+    items:
+      - "Iterator<Ride> it = rides.iterator();"
+      - "while (it.hasNext()) {"
+      - "    if (it.next().minutes() > 60) {"
+      - "        it.remove();"
+      - "    }"
+      - "}"
+    explain: "Get the iterator, loop while items remain, call next(), then remove() if needed."
+    reteach: "## Concept"
+
+  - id: q09
+    type: mcq
+    concept: iterator
+    prompt: "Why use an Iterator to remove items while looping?"
+    choices: ["Removing through the list inside a for-each loop crashes with ConcurrentModificationException", "Iterators sort the list as they go", "A for-each loop cannot read records", "Iterator.remove() deletes every item at once"]
+    answer: 0
+    explain: "The for-each loop notices the list changed and stops. it.remove() keeps the iterator in step."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: predict-output
+    concept: iterator
+    code: |
+      import java.util.ArrayList;
+      import java.util.Iterator;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<Integer> minutes = new ArrayList<>(List.of(25, 95, 8, 140));
+              int removed = 0;
+              Iterator<Integer> it = minutes.iterator();
+              while (it.hasNext()) {
+                  if (it.next() > 60) {
+                      it.remove();
+                      removed++;
+                  }
+              }
+              System.out.println(minutes + " " + removed);
+          }
+      }
+    answer: "[25, 8] 2"
+    explain: "95 and 140 are over 60, so the iterator removes them. Two items go."
+    reteach: "## Try it"

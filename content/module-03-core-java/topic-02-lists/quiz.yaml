@@ -1,0 +1,129 @@
+topic: module-03-core-java/topic-02-lists
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: list-methods
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> ids = new ArrayList<>();
+              ids.add("B-2001");
+              ids.add(0, "B-1042");
+              ids.add("B-3300");
+              ids.set(2, "B-5000");
+              System.out.println(ids);
+          }
+      }
+    answer: "[B-1042, B-2001, B-5000]"
+    explain: "add(0, ...) puts B-1042 at the front. set(2, ...) replaces the third item."
+    reteach: "## Concept"
+
+  - id: q02
+    type: predict-output
+    concept: list-methods
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> ids = new ArrayList<>(List.of("B-1042", "B-2001", "B-3300"));
+              ids.remove(0);
+              System.out.println(ids.indexOf("B-3300"));
+              System.out.println(ids.contains("B-1042"));
+          }
+      }
+    answer: "1\nfalse"
+    explain: "Removing position 0 shifts the others left, so B-3300 is now at 1. B-1042 is gone."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: list-methods
+    variants:
+      - { prompt: "What does indexOf return when the item is not in the list?", choices: ["-1", "0", "null", "It throws an exception"], answer: 0 }
+      - { prompt: "Which method replaces the item at a position without changing the size?", choices: ["set", "add", "remove", "clear"], answer: 0 }
+    explain: "indexOf gives -1 for a missing item. set replaces an item in place."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: list-methods
+    prompt: "if (rides.___()) { System.out.println(\"No rides yet\"); }"
+    answers: ["isEmpty"]
+    explain: "isEmpty() is true when the list has no items."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: concurrent-modification
+    prompt: "You call list.remove(x) inside a for-each loop over the same list. What usually happens?"
+    choices: ["ConcurrentModificationException", "The item is removed safely", "A compile error", "The loop starts again from the top"]
+    answer: 0
+    explain: "The for-each loop usually notices the list changed and throws ConcurrentModificationException. Removing the second-to-last item is the exception: the loop ends early and silently skips the last item."
+    reteach: "## Concept"
+
+  - id: q06
+    type: spot-the-bug
+    concept: concurrent-modification
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> ids = new ArrayList<>(List.of("B-1", "T-1", "B-2", "B-3"));
+              for (String id : ids) {
+                  if (id.startsWith("T")) {
+                      ids.remove(id);
+                  }
+              }
+          }
+      }
+    bugLine: 9
+    explain: "Line 9 changes the list while the for-each loop on line 7 is still walking it. Loop backwards with an index instead."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: order
+    concept: looping-lists
+    prompt: "Put the lines in order to remove every ride under 2 minutes safely."
+    items:
+      - "for (int i = rides.size() - 1; i >= 0; i--) {"
+      - "    if (rides.get(i).minutes() < 2) {"
+      - "        rides.remove(i);"
+      - "    }"
+      - "}"
+    explain: "The loop starts at the last index and steps down, so removing never skips an item."
+    reteach: "## Concept"
+
+  - id: q08
+    type: mcq
+    concept: arraylist-vs-linkedlist
+    prompt: "Which list jumps straight to get(500) without walking through the items before it?"
+    choices: ["ArrayList", "LinkedList", "Both walk through the items", "Neither has get"]
+    answer: 0
+    explain: "ArrayList keeps a hidden array, so any position is one step away. LinkedList walks the chain."
+    reteach: "## Concept"
+
+  - id: q09
+    type: mcq
+    concept: immutable-lists
+    prompt: "List<String> s = List.of(\"Harbor\"); s.add(\"Uptown\"); What happens?"
+    choices: ["UnsupportedOperationException", "s becomes [Harbor, Uptown]", "A compile error", "Uptown replaces Harbor"]
+    answer: 0
+    explain: "A list from List.of can never change. Copy it into a new ArrayList to edit it."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: fill-blank
+    concept: looping-lists
+    prompt: "for (Ride ride ___ rides) { total = total + ride.minutes(); }"
+    answers: [":"]
+    explain: "A for-each loop uses a colon: for (Type name : list)."
+    reteach: "## Concept"

@@ -1,0 +1,135 @@
+topic: module-03-core-java/topic-12-lambdas
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: lambda-syntax
+    variants:
+      - { prompt: "Which line is a valid lambda that takes two rides and compares their minutes?", choices: ["(a, b) -> Integer.compare(a.minutes(), b.minutes())", "a, b -> Integer.compare(a.minutes(), b.minutes())", "(a, b) => Integer.compare(a.minutes(), b.minutes())", "(a, b) -> return Integer.compare(a.minutes(), b.minutes())"], answer: 0 }
+      - { prompt: "Which line is a valid lambda that checks if a ride is longer than 30 minutes?", choices: ["r -> r.minutes() > 30", "r => r.minutes() > 30", "r -> { r.minutes() > 30 }", "-> r.minutes() > 30"], answer: 0 }
+    explain: "A lambda is parameters, then ->, then a body. Two parameters need brackets, and a one-expression body has no return."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: method-reference
+    prompt: "rides.sort(Comparator.comparing(Ride___minutes));"
+    answers: ["::"]
+    explain: "A method reference puts two colons between the class and the method name."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: comparator-lambda
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<Integer> minutes = new ArrayList<>(List.of(25, 8, 40, 3));
+              minutes.sort((a, b) -> b - a);
+              System.out.println(minutes);
+          }
+      }
+    answer: "[40, 25, 8, 3]"
+    explain: "b - a puts bigger numbers first, so the list goes from longest to shortest."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: foreach-removeif
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> stations = new ArrayList<>(List.of("Riverside", "Old Mill", "Harbor", "Uptown"));
+              stations.removeIf(s -> s.length() > 6);
+              stations.forEach(s -> System.out.println(s.toUpperCase()));
+          }
+      }
+    answer: "HARBOR\nUPTOWN"
+    explain: "Riverside (9) and Old Mill (8) are longer than 6 letters, so removeIf deletes them. forEach prints the rest in upper case."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: comparing-then-comparing
+    code: |
+      import java.util.ArrayList;
+      import java.util.Comparator;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<Ride> rides = new ArrayList<>();
+              rides.add(new Ride("B-1", "Uptown", "classic", 5));
+              rides.add(new Ride("B-2", "Harbor", "ebike", 20));
+              rides.add(new Ride("B-3", "Harbor", "cargo", 9));
+              rides.sort(Comparator.comparing(Ride::station).thenComparing(Ride::minutes));
+              rides.forEach(r -> System.out.println(r.bikeId()));
+          }
+      }
+
+      record Ride(String bikeId, String station, String type, int minutes) {}
+    answer: "B-3\nB-2\nB-1"
+    explain: "Harbor comes before Uptown. The two Harbor rides tie on station, so thenComparing puts 9 minutes before 20."
+    reteach: "## Worked example"
+
+  - id: q06
+    type: mcq
+    concept: comparing-then-comparing
+    prompt: "Which comparator puts the longest ride first?"
+    choices: ["Comparator.comparing(Ride::minutes).reversed()", "Comparator.comparing(Ride::minutes)", "Comparator.comparing(Ride::station).thenComparing(Ride::minutes)", "Comparator.reversed(Ride::minutes)"]
+    answer: 0
+    explain: "comparing(Ride::minutes) sorts shortest first, and reversed() flips it."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: method-reference
+    prompt: "Which lambda does String::toUpperCase stand for?"
+    choices: ["s -> s.toUpperCase()", "s -> String.toUpperCase()", "() -> toUpperCase()", "s -> toUpperCase(s)"]
+    answer: 0
+    explain: "The method reference calls toUpperCase on each string it receives."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: lambda-syntax
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<Integer> minutes = new ArrayList<>(List.of(25, 8, 40));
+              minutes.sort((a, b) -> return a - b);
+              System.out.println(minutes);
+          }
+      }
+    bugLine: 7
+    explain: "A lambda body without braces cannot use return. Write (a, b) -> a - b."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: fill-blank
+    concept: foreach-removeif
+    prompt: "rides.___(r -> r.minutes() < 2);"
+    answers: ["removeIf"]
+    explain: "removeIf deletes every item for which the lambda returns true."
+    reteach: "## Concept"
+
+  - id: q10
+    type: order
+    concept: lambda-syntax
+    prompt: "Put the parts of the lambda in order: (a, b) -> a.minutes() - b.minutes()"
+    items:
+      - "(a, b)"
+      - "->"
+      - "a.minutes() - b.minutes()"
+    explain: "A lambda starts with its parameters, then the arrow, then the body."
+    reteach: "## Concept"

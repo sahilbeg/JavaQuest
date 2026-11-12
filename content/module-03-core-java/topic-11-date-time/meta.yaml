@@ -1,0 +1,24 @@
+id: module-03-core-java/topic-11-date-time
+title: "java.time: dates, times, durations"
+order: 11
+minutes: 10
+prerequisites: [module-03-core-java/topic-10-nio-files]
+concepts: [local-date-time, create-and-parse, date-arithmetic, duration, period, formatting]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0311
+  from: priya
+  title: "The kiosk still thinks every day ends at midnight"
+  body: >
+    Remember INC-01? We patched it, but the kiosk still stores times as minutes since midnight.
+    A rider took a bike from Harbor at 23:50 on Friday and docked at Uptown at 00:20.
+    The receipt said minus 1410 minutes. Monthly passes have no real expiry date at all.
+    Can you switch the ride times over to real dates and times?
+hints:
+  - "LocalDateTime holds a date and a time together, so a ride that crosses midnight is no longer a problem."
+  - "Duration.between(start, end) measures the gap. For the pass, a LocalDate has a plusMonths method."
+  - "isWeekend: compare day.getDayOfWeek() with DayOfWeek.SATURDAY and DayOfWeek.SUNDAY using ==. label: return start.format(DateTimeFormatter.ofPattern(\"EEE d MMM HH:mm\", Locale.ENGLISH));"
+review: true
