@@ -17,7 +17,7 @@ JavaQuest is a local, single-user learning app. One command starts it. It serves
 | Database | H2 in file mode at `~/.javaquest/progress` | Pure Java, no native driver. Survives restarts. SQLite needs a native library; H2 does not. |
 | Migrations | Flyway | Progress data survives app upgrades. |
 | Live updates | Server-Sent Events (SSE) | One-way server to browser push is all the file watcher needs. Simpler than WebSockets. |
-| Tests in practice | JUnit 6 (the Jupiter API, same as JUnit 5 for learners) run through the console launcher's standalone jar | Structured results with no Maven start-up cost per run. One jar serves both the runner and the IDE. |
+| Tests in practice | JUnit 6 (the Jupiter API, same as JUnit 5 for learners) run through the console launcher's standalone jar, with Mockito 5 and SLF4J with Logback for module 6 | Structured results with no Maven start-up cost per run. `practice/pom.xml` lists every library, so the runner and the IDE share one classpath. |
 | Styling | Hand-written CSS with custom properties, light and dark themes | Small, no framework, easy to theme. |
 
 ## Repository layout
@@ -102,11 +102,11 @@ java -Xmx256m -Xss1m -XX:+UseSerialGC -XX:TieredStopAtLevel=1
 
 | Limit | Value | How it is enforced |
 |---|---|---|
-| Wall-clock time | 10 s per run (compile and test each) | Parent kills the process tree with `ProcessHandle.destroyForcibly()` |
+| Wall-clock time | 10 s per run (compile and test each), or the topic's `timeoutSeconds` for test runs | Parent kills the process tree with `ProcessHandle.destroyForcibly()` |
 | Heap | 256 MB | `-Xmx` |
 | Thread stack | 1 MB | `-Xss`, so runaway recursion fails fast with a StackOverflowError |
 | Output | 64 KB stdout and stderr each | Parent truncates the stream |
-| Classpath | the JDK, your topic's classes, its test, JUnit (plus Mockito or Spring test jars for topics that declare them) | Explicit `-cp`. No app classes. |
+| Classpath | the JDK, your topic's classes, its test, and the libraries in `practice/target/runner-classpath.txt`: JUnit, Mockito, SLF4J and Logback. Main runs and lesson snippets get the same libraries. Spring test jars arrive with module 8. | Explicit `-cp`. No app classes. Mockito loads as a `-javaagent`, so runs print no agent warnings. The content and practice checks read the same file. |
 | Working directory | a fresh temp directory, deleted after the run | `ProcessBuilder.directory` |
 | Locale | English (US), so `%.2f` always prints a decimal point | `-Duser.language=en -Duser.country=US`; `practice/pom.xml` passes the same flags to IDE test runs |
 | Concurrency | at most 2 child JVMs at once | Semaphore in the runner |

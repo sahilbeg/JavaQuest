@@ -38,13 +38,13 @@ public final class VerifyPractice {
             .build();
 
     public static void main(String[] args) throws Exception {
-        if (args.length != 2 || args[1] == null) {
-            System.err.println("Usage: VerifyPractice <repo root> <junit-platform-console-standalone jar>");
+        if (args.length < 1) {
+            System.err.println("Usage: VerifyPractice <repo root>");
             System.err.println("Run it with: ./mvnw -q -pl tools dependency:properties exec:java");
             System.exit(2);
         }
         Path root = Path.of(args[0]).toAbsolutePath().normalize();
-        var runner = new PracticeRunner(PracticeRunner.currentJavaExecutable(), List.of(Path.of(args[1])), LIMITS);
+        var runner = new PracticeRunner(PracticeRunner.currentJavaExecutable(), RunnerClasspath.read(root), LIMITS);
         Path stateFile = root.resolve("build_state.json");
         ObjectNode state = (ObjectNode) JSON.readTree(stateFile.toFile());
         boolean allVerified = true;

@@ -52,7 +52,6 @@
         <configuration>
           <arguments>
             <argument>${maven.multiModuleProjectDirectory}</argument>
-            <argument>${org.junit.platform:junit-platform-console-standalone:jar}</argument>
           </arguments>
         </configuration>
         <executions>

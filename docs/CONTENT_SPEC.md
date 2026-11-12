@@ -31,7 +31,7 @@ prerequisites: [module-00-foundations/boss]
 concepts: [declaration, assignment, naming, reassignment]   # used to tag quiz questions and weak spots
 practice:
   kind: code                   # code | quiz
-  runner: plain                # plain | mockito | spring
+  runner: plain                # plain | mockito | spring; Mockito, SLF4J and Logback are on every run's classpath, so plain covers them
   mainClass: jq.m01.variables.Variables   # fully qualified, for the Run button, optional
   timeoutSeconds: 10           # optional override
 # The runner finds test classes by scanning the compiled test/ folder, so no test class name is needed.

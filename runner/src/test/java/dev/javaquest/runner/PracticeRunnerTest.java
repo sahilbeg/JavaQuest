@@ -121,6 +121,30 @@ class PracticeRunnerTest {
     }
 
     @Test
+    void snippetCanUseTheLibrariesOnTheRunnerClasspath() throws Exception {
+        ProgramResult result = runner.runSnippet("""
+                public class Main {
+                    public static void main(String[] args) {
+                        org.junit.jupiter.api.Assertions.assertEquals(5, 2 + 3);
+                        System.out.println("library ok");
+                    }
+                }
+                """);
+
+        assertEquals(ProgramResult.Status.COMPLETED, result.status(), result::output);
+        assertEquals("library ok", result.output().strip());
+    }
+
+    @Test
+    void mockitoOnTheClasspathIsLoadedAsAnAgent() {
+        Path mockito = Path.of("/m2/org/mockito/mockito-core/5.24.0/mockito-core-5.24.0.jar");
+
+        assertEquals(List.of("-javaagent:" + mockito, "-Xshare:off"),
+                PracticeRunner.agentOptions(List.of(CONSOLE_JAR, mockito)));
+        assertEquals(List.of(), PracticeRunner.agentOptions(List.of(CONSOLE_JAR)));
+    }
+
+    @Test
     void snippetFileIsNamedAfterItsClass() throws Exception {
         ProgramResult result = runner.runSnippet("""
                 public class Kiosk {

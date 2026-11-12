@@ -28,7 +28,7 @@ public final class CheckContent {
 
     public static void main(String[] args) throws Exception {
         Path root = Path.of(args[0]).toAbsolutePath().normalize();
-        var runner = new PracticeRunner(PracticeRunner.currentJavaExecutable(), List.of(), LIMITS);
+        var runner = new PracticeRunner(PracticeRunner.currentJavaExecutable(), RunnerClasspath.read(root), LIMITS);
         var catalog = ContentCatalog.load(root.resolve("content"), root.resolve("practice"));
         Set<String> curriculum = curriculumIds(root.resolve("build_state.json"));
         var problems = new ArrayList<String>();

@@ -115,11 +115,13 @@ public final class PracticeRunner {
         Path workDir = Files.createTempDirectory("javaquest-main-");
         try {
             Path classes = workDir.resolve("main");
-            List<CompileError> errors = compile(sources, classes, List.of());
+            List<CompileError> errors = compile(sources, classes, testRuntimeClasspath);
             if (!errors.isEmpty()) {
                 return new ProgramResult(ProgramResult.Status.COMPILE_ERROR, errors, "", elapsedSince(started));
             }
-            Finished run = spawn(jvmCommand(workDir, List.of(classes), List.of(mainClass)), workDir, limits.timeout());
+            var classpath = new ArrayList<>(testRuntimeClasspath);
+            classpath.add(classes);
+            Finished run = spawn(jvmCommand(workDir, classpath, List.of(mainClass)), workDir, limits.timeout());
             ProgramResult.Status status = !run.inTime() ? ProgramResult.Status.TIMED_OUT
                     : run.exitCode() == 0 ? ProgramResult.Status.COMPLETED : ProgramResult.Status.EXCEPTION;
             return new ProgramResult(status, List.of(), run.output(), elapsedSince(started));
@@ -179,10 +181,20 @@ public final class PracticeRunner {
                 "-XX:+UseSerialGC",
                 "-XX:TieredStopAtLevel=1",
                 "-Djava.io.tmpdir=" + workDir,
-                "-Duser.language=en", "-Duser.country=US",
-                "-cp", joinClasspath(classpath)));
+                "-Duser.language=en", "-Duser.country=US"));
+        command.addAll(agentOptions(classpath));
+        command.addAll(List.of("-cp", joinClasspath(classpath)));
         command.addAll(mainAndArgs);
         return command;
+    }
+
+    /** Mockito warns on every run unless it is loaded as an agent, and an agent turns off class sharing. */
+    static List<String> agentOptions(List<Path> classpath) {
+        return classpath.stream()
+                .filter(entry -> entry.getFileName().toString().startsWith("mockito-core-"))
+                .findFirst()
+                .map(mockito -> List.of("-javaagent:" + mockito, "-Xshare:off"))
+                .orElse(List.of());
     }
 
     private record Finished(boolean inTime, int exitCode, String output) {}
