@@ -1,0 +1,23 @@
+id: module-02-oop/topic-04-static-members
+title: "Static fields and methods"
+order: 4
+minutes: 9
+prerequisites: [module-02-oop/topic-03-encapsulation]
+concepts: [static-fields, constants, static-methods, static-vs-instance, class-name-access]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0204
+  from: priya
+  title: "Count new bikes and stop the id clashes"
+  body: >
+    For the morning report I need to know how many bikes we added to the fleet today.
+    Also, Theo's crew types bike ids by hand, and yesterday two bikes at Uptown were both B-1042.
+    Can the code hand out the next id by itself and keep the count?
+hints:
+  - "A static field belongs to the class, so every Bike shares the same counter. Each new bike should add 1 to it."
+  - "nextId() adds 1 to counter and returns \"B-\" followed by 1000 + counter. The constructor stores the type and sets id = nextId();"
+  - "fare is: return UNLOCK_FEE + perMinute * minutes; created() is: return counter; and resetCounter() is: counter = 0;"
+review: true

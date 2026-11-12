@@ -1,0 +1,171 @@
+topic: module-02-oop/topic-09-composition
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: has-a-vs-is-a
+    variants:
+      - { prompt: "Which pair is a has-a link, so it should use composition?", choices: ["Station and Dock", "EBike and Bike", "CargoBike and Bike", "ClassicBike and Bike"], answer: 0 }
+      - { prompt: "Which sentence describes an is-a link that fits extends?", choices: ["An e-bike is a bike.", "A station is a dock.", "A rider is a membership.", "A dock is a bike."], answer: 0 }
+    explain: "Say the sentence out loud. An e-bike really is a bike. A station has docks, so it holds them in a field."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: arrays-of-objects
+    prompt: "After Dock[] docks = new Dock[12]; what does docks[0] hold?"
+    choices: ["null", "A new empty Dock", "0", "An error"]
+    answer: 0
+    explain: "new Dock[12] makes 12 empty slots. Each slot is null until you put a new Dock() in it."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: arrays-of-objects
+    prompt: "docks[i] = ___;"
+    answers: ["new Dock()"]
+    explain: "Each slot needs its own Dock object, made with new Dock()."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: object-fields
+    prompt: "return bike == ___;"
+    answers: ["null"]
+    explain: "An empty dock has no Bike in its field, so the field is null."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: delegation
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Station s = new Station();
+              System.out.println(s.dock("B-1042"));
+              System.out.println(s.dock("B-2001"));
+              System.out.println(s.dock("B-3300"));
+          }
+      }
+
+      class Dock {
+          private String bikeId;
+          boolean isFree() { return bikeId == null; }
+          void park(String id) { bikeId = id; }
+      }
+
+      class Station {
+          private final Dock[] docks = new Dock[2];
+
+          Station() {
+              for (int i = 0; i < docks.length; i++) {
+                  docks[i] = new Dock();
+              }
+          }
+
+          int dock(String id) {
+              for (int i = 0; i < docks.length; i++) {
+                  if (docks[i].isFree()) {
+                      docks[i].park(id);
+                      return i + 1;
+                  }
+              }
+              return -1;
+          }
+      }
+    answer: "1\n2\n-1"
+    explain: "The station has only 2 docks. The first two bikes go into docks 1 and 2. The third finds no free dock, so dock returns -1."
+    reteach: "## Worked example"
+
+  - id: q06
+    type: predict-output
+    concept: object-fields
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Rider rider = new Rider("Ana");
+              System.out.println(rider.describe());
+              rider.setBike(new Bike("B-1042"));
+              System.out.println(rider.describe());
+          }
+      }
+
+      class Bike {
+          private final String id;
+          Bike(String id) { this.id = id; }
+          String getId() { return id; }
+      }
+
+      class Rider {
+          private final String name;
+          private Bike bike;
+          Rider(String name) { this.name = name; }
+          void setBike(Bike bike) { this.bike = bike; }
+          String describe() {
+              if (bike == null) {
+                  return name + " is walking";
+              }
+              return name + " rides " + bike.getId();
+          }
+      }
+    answer: "Ana is walking\nAna rides B-1042"
+    explain: "The bike field starts as null. After setBike, it holds a reference to the Bike, and describe delegates to getId()."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: arrays-of-objects
+    prompt: "Which line causes the later crash?"
+    code: |
+      class Station {
+          private final Dock[] docks;
+          Station() {
+              docks = new Dock[12];
+          }
+          boolean firstIsFree() {
+              return docks[0].isFree();
+          }
+      }
+    bugLine: 4
+    explain: "The constructor makes 12 slots but never fills them. docks[0] is null, so firstIsFree crashes with a NullPointerException. The crash shows on line 7, but the cause is line 4. Add a loop that puts new Dock() in each slot."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: spot-the-bug
+    concept: has-a-vs-is-a
+    code: |
+      class Dock {
+          private Bike bike;
+          void park(Bike bike) { this.bike = bike; }
+      }
+      class Station extends Dock {
+          private String name;
+      }
+    bugLine: 5
+    explain: "A station is not a dock. It has docks. Remove extends Dock and give Station a Dock[] field."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: choosing-composition
+    prompt: "Why can Station not get its 12 docks through inheritance?"
+    choices: ["A class extends at most one parent, and inheritance gives one copy of it", "Arrays cannot hold objects", "Dock has a private field", "Inheritance only works with interfaces"]
+    answer: 0
+    explain: "Extending Dock would make a station one dock. Holding a Dock[] lets it have as many as it needs."
+    reteach: "## Concept"
+
+  - id: q10
+    type: order
+    concept: delegation
+    prompt: "Put the lines of dock(bike) in order so it parks in the first free dock."
+    items:
+      - "for (int i = 0; i < docks.length; i++) {"
+      - "    if (docks[i].isFree()) {"
+      - "        docks[i].park(bike);"
+      - "        return i + 1;"
+      - "    }"
+      - "}"
+      - "return -1;"
+    explain: "Loop over the docks, ask each one if it is free, delegate the parking, and return -1 only after the loop finds nothing."
+    reteach: "## Worked example"

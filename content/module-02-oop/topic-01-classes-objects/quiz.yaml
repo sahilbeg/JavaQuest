@@ -1,0 +1,134 @@
+topic: module-02-oop/topic-01-classes-objects
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: class-blueprint
+    variants:
+      - { prompt: "What is the difference between a class and an object?", choices: ["A class is a blueprint and an object is one thing built from it", "A class is one thing and an object is a blueprint", "They are two words for the same thing", "An object is a kind of method"], answer: 0 }
+      - { prompt: "The Spoke fleet has 300 bikes. How many Bike classes do you need?", choices: ["One class, and 300 objects", "300 classes, one per bike", "One object, and 300 classes", "No class, just 300 variables"], answer: 0 }
+    explain: "One class describes the kind of thing. Each real bike is a separate object built from it."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: new-keyword
+    prompt: "Bike bike = ___ Bike();"
+    answers: ["new"]
+    explain: "The new keyword builds a fresh object from the class."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: fields
+    prompt: "Where do you declare a field?"
+    choices: ["Inside the class braces, outside any method", "Inside main", "Inside the brackets of a method", "Above the class line"]
+    answer: 0
+    explain: "Fields live in the class body, so every object gets its own copy."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: default-values
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Bike bike = new Bike();
+              System.out.println(bike.minutesRidden);
+              System.out.println(bike.id);
+          }
+      }
+
+      class Bike {
+          String id;
+          int minutesRidden;
+      }
+    answer: "0\nnull"
+    explain: "An int field starts at 0 and a String field starts at null."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: instance-methods
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Bike a = new Bike();
+              Bike b = new Bike();
+              a.addRide(10);
+              b.addRide(4);
+              a.addRide(5);
+              System.out.println(a.minutesRidden + " " + b.minutesRidden);
+          }
+      }
+
+      class Bike {
+          int minutesRidden;
+
+          void addRide(int minutes) {
+              minutesRidden = minutesRidden + minutes;
+          }
+      }
+    answer: "15 4"
+    explain: "Each object keeps its own minutesRidden. Bike a gets 10 plus 5, and bike b gets 4."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: dot-operator
+    prompt: "bike___type = \"cargo\";"
+    answers: ["."]
+    explain: "The dot operator reaches inside one object to its field."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: instance-methods
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Bike bike = new Bike();
+              Bike.addRide(20);
+          }
+      }
+
+      class Bike {
+          int minutesRidden;
+
+          void addRide(int minutes) {
+              minutesRidden = minutesRidden + minutes;
+          }
+      }
+    bugLine: 4
+    explain: "addRide is an instance method. Call it on the object: bike.addRide(20);"
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: order
+    concept: new-keyword
+    prompt: "Put the lines in order to build a bike, set its id and print it."
+    items:
+      - "Bike bike = new Bike();"
+      - "bike.id = \"B-1042\";"
+      - "System.out.println(bike.id);"
+    explain: "Build the object first, then set its field, then read it."
+    reteach: "## Worked example"
+
+  - id: q09
+    type: mcq
+    concept: default-values
+    prompt: "A Bike object has a String field type that nobody set. What does type hold?"
+    choices: ["null", "\"\" (empty text)", "\"classic\"", "0"]
+    answer: 0
+    explain: "Object fields such as String start as null, which means no object at all."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: instance-methods
+    prompt: "Inside the instance method describe(), what does the name id refer to?"
+    choices: ["The id field of the object describe() was called on", "The id of the first bike ever built", "A new local variable that starts empty", "The id field of every bike at once"]
+    answer: 0
+    explain: "An instance method works on the fields of the one object it was called on."
+    reteach: "## Worked example"

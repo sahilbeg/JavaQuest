@@ -1,0 +1,23 @@
+id: module-02-oop/topic-08-interfaces
+title: "Interfaces and default methods"
+order: 8
+minutes: 9
+prerequisites: [module-02-oop/topic-07-abstract-classes]
+concepts: [interface, implements, multiple-interfaces, interface-type, default-method]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0208
+  from: sam
+  title: "Scooters can't use the charging dock"
+  body: >
+    A rider at Harbor docked scooter S-7 overnight and found it at 4% in the morning. The charging
+    dock only knows how to charge an EBike, so it skipped every scooter. Riders are calling about
+    dead scooters. Can the dock charge anything with a battery?
+hints:
+  - "EBike and Scooter both say implements Chargeable, so the dock can treat them the same way."
+  - "Keep the battery between 0 and 100 with two if checks. chargeAll and countNeedingCharge each need one for loop."
+  - "needsCharge: return batteryLevel() < 20;. chargeAll: for (Chargeable item : items) { item.charge(percent); }"
+review: true

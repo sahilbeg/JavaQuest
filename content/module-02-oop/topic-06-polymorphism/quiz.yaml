@@ -1,0 +1,155 @@
+topic: module-02-oop/topic-06-polymorphism
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: superclass-reference
+    variants:
+      - { prompt: "EBike extends Bike. Which line compiles?", choices: ["Bike b = new EBike(\"B-2001\", 80);", "EBike e = new Bike(\"B-1042\");", "CargoBike c = new EBike(\"B-2001\", 80);", "EBike e = new CargoBike(\"B-3005\");"], answer: 0 }
+      - { prompt: "CargoBike extends Bike. Which line compiles?", choices: ["Bike b = new CargoBike(\"B-3005\");", "CargoBike c = new Bike(\"B-1042\");", "EBike e = new CargoBike(\"B-3005\");", "CargoBike c = new EBike(\"B-2001\", 80);"], answer: 0 }
+    explain: "A superclass variable can hold a subclass object. The other way round does not compile."
+    reteach: "## Concept"
+
+  - id: q02
+    type: predict-output
+    concept: dynamic-dispatch
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Bike b = new CargoBike();
+              System.out.println(b.pricePerMinute());
+          }
+      }
+
+      class Bike {
+          public double pricePerMinute() {
+              return 0.15;
+          }
+      }
+
+      class CargoBike extends Bike {
+          @Override
+          public double pricePerMinute() {
+              return 0.25;
+          }
+      }
+    answer: "0.25"
+    explain: "The variable type is Bike, but the object is a CargoBike, so its override runs."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: superclass-arrays
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Bike[] fleet = { new Bike(), new EBike(), new Bike() };
+              for (Bike b : fleet) {
+                  System.out.println(b.name());
+              }
+          }
+      }
+
+      class Bike {
+          public String name() {
+              return "classic";
+          }
+      }
+
+      class EBike extends Bike {
+          @Override
+          public String name() {
+              return "electric";
+          }
+      }
+    answer: "classic\nelectric\nclassic"
+    explain: "One loop over a Bike[] calls each object's own name()."
+    reteach: "## Worked example"
+
+  - id: q04
+    type: mcq
+    concept: dynamic-dispatch
+    prompt: "Bike b = new EBike(\"B-2001\", 80); Which version of pricePerMinute() runs for b.pricePerMinute()?"
+    choices: ["The EBike version, because the object is an EBike", "The Bike version, because the variable is a Bike", "Both, one after the other", "Neither, it does not compile"]
+    answer: 0
+    explain: "Java picks the method from the real object at run time. This is dynamic dispatch."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: instanceof
+    prompt: "if (b ___ EBike e) {"
+    answers: ["instanceof"]
+    explain: "instanceof tests the real kind of the object. The pattern form also names it e."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: instanceof
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Bike b = new EBike();
+              System.out.println(b instanceof Bike);
+              System.out.println(b instanceof EBike);
+              System.out.println(b instanceof CargoBike);
+          }
+      }
+
+      class Bike {
+      }
+
+      class EBike extends Bike {
+      }
+
+      class CargoBike extends Bike {
+      }
+    answer: "true\ntrue\nfalse"
+    explain: "An EBike is also a Bike, but it is not a CargoBike."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: superclass-reference
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Bike b = new EBike("B-2001", 80);
+              System.out.println(b.getBattery());
+          }
+      }
+    bugLine: 4
+    explain: "The variable type is Bike, and Bike has no getBattery(). Use if (b instanceof EBike e) and call e.getBattery()."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: casting
+    prompt: "Bike b = new CargoBike(\"B-3005\"); What happens with EBike e = (EBike) b; ?"
+    choices: ["It compiles, then crashes with a ClassCastException", "It fails to compile", "It turns the cargo bike into an e-bike", "e becomes null"]
+    answer: 0
+    explain: "A cast never changes the object. The object is a CargoBike, so the cast fails at run time."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: order
+    concept: instanceof
+    prompt: "Put the lines in order to print the battery of every e-bike in fleet."
+    items:
+      - "for (Bike b : fleet) {"
+      - "    if (b instanceof EBike e) {"
+      - "        System.out.println(e.getBattery());"
+      - "    }"
+      - "}"
+    explain: "Loop over every bike, test it with instanceof, then use the e variable inside the if."
+    reteach: "## Worked example"
+
+  - id: q10
+    type: mcq
+    concept: instanceof
+    prompt: "Why use `if (b instanceof EBike e)` before treating b as an EBike?"
+    choices: ["It checks the type first, so it can never throw ClassCastException", "It turns any bike into an e-bike", "It makes the program run faster than a cast", "It lets the compiler skip checking the types"]
+    answer: 0
+    explain: "instanceof checks the real object first. The code inside the if only runs for real e-bikes, so the cast can never fail."
+    reteach: "## Common mistakes"

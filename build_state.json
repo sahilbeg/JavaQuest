@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "lastUpdated": "2026-11-12T16:45:38+05:30",
+  "lastUpdated": "2026-11-12T17:04:20+05:30",
   "phase": "PHASE 1: build",
-  "milestone": "C02",
-  "resumeHere": "C01 is committed at status ui_wired. Next: C02 (OOP, 12 topics + INC-02 + FEAT-02). Modules 0 and 1 still need your read-through to reach done.",
+  "milestone": "C03",
+  "resumeHere": "C02 is committed at status ui_wired. Next: C03 (Core Java, 16 topics + INC-03 + FEAT-03). Modules 0 to 2 still need your read-through to reach done.",
   "statusValues": [
     "planned",
     "content_written",
@@ -49,12 +49,13 @@
     "M4-03 error and empty states, connection banner",
     "M4-04 server shutdown with open event streams",
     "C00 module 0: 7 new units written, reviewed (22 findings fixed), content checks, quiz keys and practice verified",
-    "C01 module 1: 12 topics, INC-01, FEAT-01; 2 reviews (34 findings) fixed; all checks green"
+    "C01 module 1: 12 topics, INC-01, FEAT-01; 2 reviews (34 findings) fixed; all checks green",
+    "C02 module 2 OOP: 12 topics, INC-02, FEAT-02; 2 reviews (33 findings) fixed; all checks green"
   ],
-  "nextTask": "C02-01: module 2 topic 01 classes-objects",
+  "nextTask": "C03-01: module 3 topic 01 collections-overview",
   "openDecisions": [
     "A real VoiceOver pass needs a person",
-    "Modules 0 and 1 read-through by you before marking them done"
+    "Modules 0 to 2 read-through by you before marking them done"
   ],
   "blockers": [],
   "milestones": {
@@ -65,8 +66,8 @@
     "M5": "planned",
     "C00": "ui_wired",
     "C01": "ui_wired",
-    "C02": "in_progress",
-    "C03": "planned",
+    "C02": "ui_wired",
+    "C03": "in_progress",
     "C04": "planned",
     "C05": "planned",
     "C06": "planned",
@@ -148,7 +149,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:43:58+05:30"
+            "verifiedAt": "2026-11-12T17:04:03+05:30"
           }
         },
         {
@@ -176,7 +177,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:43:57+05:30"
+            "verifiedAt": "2026-11-12T17:04:02+05:30"
           }
         },
         {
@@ -190,7 +191,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:43:57+05:30"
+            "verifiedAt": "2026-11-12T17:04:02+05:30"
           }
         }
       ],
@@ -212,7 +213,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:44+05:30"
+            "verifiedAt": "2026-11-12T17:04:05+05:30"
           }
         },
         {
@@ -226,7 +227,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:44:01+05:30"
+            "verifiedAt": "2026-11-12T17:04:05+05:30"
           }
         },
         {
@@ -240,7 +241,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:44:01+05:30"
+            "verifiedAt": "2026-11-12T17:04:06+05:30"
           }
         },
         {
@@ -254,7 +255,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:44:02+05:30"
+            "verifiedAt": "2026-11-12T17:04:07+05:30"
           }
         },
         {
@@ -268,7 +269,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:44:02+05:30"
+            "verifiedAt": "2026-11-12T17:04:07+05:30"
           }
         },
         {
@@ -282,7 +283,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:44:03+05:30"
+            "verifiedAt": "2026-11-12T17:04:08+05:30"
           }
         },
         {
@@ -296,7 +297,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:44:04+05:30"
+            "verifiedAt": "2026-11-12T17:04:09+05:30"
           }
         },
         {
@@ -310,7 +311,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:44:04+05:30"
+            "verifiedAt": "2026-11-12T17:04:09+05:30"
           }
         },
         {
@@ -324,7 +325,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:44:05+05:30"
+            "verifiedAt": "2026-11-12T17:04:10+05:30"
           }
         },
         {
@@ -338,7 +339,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:44:06+05:30"
+            "verifiedAt": "2026-11-12T17:04:10+05:30"
           }
         },
         {
@@ -352,7 +353,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:44:06+05:30"
+            "verifiedAt": "2026-11-12T17:04:11+05:30"
           }
         },
         {
@@ -366,7 +367,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:44:07+05:30"
+            "verifiedAt": "2026-11-12T17:04:12+05:30"
           }
         },
         {
@@ -380,7 +381,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:43:59+05:30"
+            "verifiedAt": "2026-11-12T17:04:04+05:30"
           }
         },
         {
@@ -394,7 +395,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-12T16:43:59+05:30"
+            "verifiedAt": "2026-11-12T17:04:04+05:30"
           }
         }
       ],
@@ -403,7 +404,7 @@
     {
       "id": "module-02-oop",
       "title": "Object-Oriented Programming",
-      "status": "planned",
+      "status": "ui_wired",
       "topics": [
         {
           "id": "module-02-oop/topic-01-classes-objects",
@@ -412,11 +413,11 @@
           "prerequisites": [
             "module-01-basics/boss"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T17:04:13+05:30"
           }
         },
         {
@@ -426,11 +427,11 @@
           "prerequisites": [
             "module-02-oop/topic-01-classes-objects"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T17:04:14+05:30"
           }
         },
         {
@@ -440,11 +441,11 @@
           "prerequisites": [
             "module-02-oop/topic-02-constructors"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T17:04:15+05:30"
           }
         },
         {
@@ -454,11 +455,11 @@
           "prerequisites": [
             "module-02-oop/topic-03-encapsulation"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T17:04:15+05:30"
           }
         },
         {
@@ -468,11 +469,11 @@
           "prerequisites": [
             "module-02-oop/topic-04-static-members"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T17:04:16+05:30"
           }
         },
         {
@@ -482,11 +483,11 @@
           "prerequisites": [
             "module-02-oop/topic-05-inheritance"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T17:04:17+05:30"
           }
         },
         {
@@ -496,11 +497,11 @@
           "prerequisites": [
             "module-02-oop/topic-06-polymorphism"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T17:04:17+05:30"
           }
         },
         {
@@ -510,11 +511,11 @@
           "prerequisites": [
             "module-02-oop/topic-07-abstract-classes"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T17:04:18+05:30"
           }
         },
         {
@@ -524,11 +525,11 @@
           "prerequisites": [
             "module-02-oop/topic-08-interfaces"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T17:04:18+05:30"
           }
         },
         {
@@ -538,11 +539,11 @@
           "prerequisites": [
             "module-02-oop/topic-09-composition"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T17:04:19+05:30"
           }
         },
         {
@@ -552,11 +553,11 @@
           "prerequisites": [
             "module-02-oop/topic-10-equals-hashcode-tostring"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T17:04:20+05:30"
           }
         },
         {
@@ -566,11 +567,11 @@
           "prerequisites": [
             "module-02-oop/topic-11-records"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T17:04:20+05:30"
           }
         },
         {
@@ -580,11 +581,11 @@
           "prerequisites": [
             "module-02-oop/topic-12-enums"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T17:04:12+05:30"
           }
         },
         {
@@ -594,11 +595,11 @@
           "prerequisites": [
             "module-02-oop/topic-12-enums"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-12T17:04:13+05:30"
           }
         }
       ],

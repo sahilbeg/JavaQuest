@@ -1,0 +1,147 @@
+topic: module-02-oop/topic-03-encapsulation
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: private-fields
+    variants:
+      - { prompt: "A field is declared as private int battery; inside EBike. Who can use it directly?", choices: ["Only code inside the EBike class", "Any class in the same package", "Any class anywhere", "Only the main method"], answer: 0 }
+      - { prompt: "Which keyword stops other classes from reading or changing a field directly?", choices: ["private", "public", "static", "void"], answer: 0 }
+    explain: "private means only code inside the same class can use the field."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: private-fields
+    prompt: "___ int battery;"
+    answers: ["private"]
+    explain: "private hides the field, so every change must go through a method."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: getters
+    prompt: "What is the usual name of the getter for a field called battery?"
+    choices: ["getBattery", "battery", "readBattery", "setBattery"]
+    answer: 0
+    explain: "A getter is named get plus the field name with a capital first letter."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: setters
+    prompt: "___.battery = battery;"
+    answers: ["this"]
+    explain: "this.battery is the field. Plain battery is the parameter."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: predict-output
+    concept: validation
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              EBike bike = new EBike();
+              bike.setBattery(140);
+              System.out.println(bike.getBattery());
+              bike.setBattery(-3);
+              System.out.println(bike.getBattery());
+          }
+      }
+
+      class EBike {
+          private int battery;
+
+          public int getBattery() {
+              return battery;
+          }
+
+          public void setBattery(int battery) {
+              if (battery < 0) {
+                  battery = 0;
+              }
+              if (battery > 100) {
+                  battery = 100;
+              }
+              this.battery = battery;
+          }
+      }
+    answer: "100\n0"
+    explain: "The setter clamps 140 down to 100 and -3 up to 0."
+    reteach: "## Worked example"
+
+  - id: q06
+    type: predict-output
+    concept: validation
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Station s = new Station();
+              s.setFreeDocks(5);
+              s.setFreeDocks(30);
+              System.out.println(s.getFreeDocks());
+          }
+      }
+
+      class Station {
+          private int freeDocks;
+
+          public int getFreeDocks() {
+              return freeDocks;
+          }
+
+          public void setFreeDocks(int freeDocks) {
+              if (freeDocks >= 0 && freeDocks <= 12) {
+                  this.freeDocks = freeDocks;
+              }
+          }
+      }
+    answer: "5"
+    explain: "30 is outside 0 to 12, so the setter ignores it and the old value 5 stays."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: setters
+    code: |
+      class EBike {
+          private int battery;
+
+          public void setBattery(int battery) {
+              battery = battery;
+          }
+      }
+    bugLine: 5
+    explain: "battery = battery copies the parameter onto itself. Write this.battery = battery;"
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: read-only-fields
+    prompt: "A bike's id must never change after the bike is built. What should the class have?"
+    choices: ["A private final id field with a getter and no setter", "A public id field", "A private id field with a getter and a setter", "A setter with no getter"]
+    answer: 0
+    explain: "With no setter, outside code cannot change the id. final stops the class itself from changing it later."
+    reteach: "## Concept"
+
+  - id: q09
+    type: order
+    concept: validation
+    prompt: "Put the lines in order to make a setter that turns any value above 100 into 100."
+    items:
+      - "public void setBattery(int value) {"
+      - "    if (value > 100) { value = 100; }"
+      - "    battery = value;"
+      - "}"
+    explain: "Check and fix the value first, then store it, then close the method."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: private-fields
+    prompt: "Why is a public battery field risky?"
+    choices: ["Any code can set it to a wrong value like 140 and the class never checks", "Public fields make the program run slower", "Public fields cannot hold numbers", "Public fields are deleted after main ends"]
+    answer: 0
+    explain: "A public field has no door to guard it. A setter can check every change."
+    reteach: "## Hook"

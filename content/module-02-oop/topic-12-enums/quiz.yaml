@@ -1,0 +1,140 @@
+topic: module-02-oop/topic-12-enums
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: enum-basics
+    variants:
+      - { prompt: "Which line declares an enum of bike types?", choices: ["enum BikeType { CLASSIC, EBIKE, CARGO }", "enum BikeType = { CLASSIC, EBIKE, CARGO };", "class enum BikeType { CLASSIC, EBIKE, CARGO }", "enum BikeType(CLASSIC, EBIKE, CARGO);"], answer: 0 }
+      - { prompt: "Which line declares an enum of stations?", choices: ["enum Station { RIVERSIDE, OLD_MILL, HARBOR, UPTOWN }", "enum Station = [RIVERSIDE, OLD_MILL, HARBOR, UPTOWN];", "Station enum { RIVERSIDE, OLD_MILL, HARBOR, UPTOWN }", "enum Station(RIVERSIDE, OLD_MILL, HARBOR, UPTOWN);"], answer: 0 }
+    explain: "An enum starts with the word enum, a name, then the constants inside braces, separated by commas."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: enum-basics
+    prompt: "Why does an enum stop the \"ebkie\" typo from billing a rider $0?"
+    choices: ["A misspelled constant like BikeType.EBKIE does not compile", "Enums fix spelling mistakes on their own", "Enums turn every typo into CLASSIC", "Enums ignore capital letters"]
+    answer: 0
+    explain: "Only the listed constants exist. The compiler rejects any other name before the program runs."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: values-valueof
+    prompt: "BikeType[] all = BikeType.___;"
+    answers: ["values()"]
+    explain: "values() returns an array with every constant, in the order you declared them."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: values-valueof
+    code: |
+      public class Main {
+          enum Membership { BASIC, PLUS, PRO }
+
+          public static void main(String[] args) {
+              Membership[] all = Membership.values();
+              System.out.println(all.length);
+              System.out.println(all[2]);
+              System.out.println(Membership.valueOf("PLUS"));
+          }
+      }
+    answer: "3\nPRO\nPLUS"
+    explain: "There are 3 constants. Index 2 is the third one, PRO. valueOf(\"PLUS\") returns the PLUS constant, which prints its name."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: enum-switch
+    code: |
+      public class Main {
+          enum BikeType { CLASSIC, EBIKE, CARGO }
+
+          public static void main(String[] args) {
+              BikeType type = BikeType.CARGO;
+              switch (type) {
+                  case CLASSIC -> System.out.println("Pedal");
+                  case EBIKE -> System.out.println("Motor");
+                  case CARGO -> System.out.println("Basket");
+              }
+          }
+      }
+    answer: "Basket"
+    explain: "type holds CARGO, so only the CARGO case runs."
+    reteach: "## Concept"
+
+  - id: q06
+    type: spot-the-bug
+    concept: enum-switch
+    code: |
+      public class Main {
+          enum BikeType { CLASSIC, EBIKE, CARGO }
+
+          public static void main(String[] args) {
+              BikeType type = BikeType.EBKIE;
+              System.out.println(type);
+          }
+      }
+    bugLine: 5
+    explain: "EBKIE is not one of the constants. The correct name is EBIKE."
+    reteach: "## Concept"
+
+  - id: q07
+    type: predict-output
+    concept: enum-fields
+    code: |
+      public class Main {
+          enum BikeType {
+              CLASSIC(0.15), EBIKE(0.30), CARGO(0.25);
+
+              private final double price;
+
+              BikeType(double price) {
+                  this.price = price;
+              }
+
+              double pricePerMinute() {
+                  return price;
+              }
+          }
+
+          public static void main(String[] args) {
+              System.out.println(BikeType.CARGO.pricePerMinute());
+              System.out.println(BikeType.EBIKE.pricePerMinute() * 10);
+          }
+      }
+    answer: "0.25\n3.0"
+    explain: "CARGO was built with 0.25. EBIKE was built with 0.30, and 0.30 times 10 is 3.0."
+    reteach: "## Concept"
+
+  - id: q08
+    type: order
+    concept: enum-fields
+    prompt: "Put the lines in order to make an enum with a field."
+    items:
+      - "enum Membership {"
+      - "    BASIC(0), PLUS(30), PRO(60);"
+      - "    private final int free; Membership(int free) { this.free = free; }"
+      - "}"
+    explain: "The constants come first and end with a semicolon. The field and constructor follow on one line."
+    reteach: "## Concept"
+
+  - id: q09
+    type: mcq
+    concept: enum-comparison
+    prompt: "Which line checks whether level is the PRO membership?"
+    choices: ["if (level == Membership.PRO)", "if (level == \"PRO\")", "if (level.equals(\"PRO\"))", "if (Membership == PRO)"]
+    answer: 0
+    explain: "Each constant exists once, so == against Membership.PRO is the right check. level.equals(\"PRO\") compares an enum to a String, so it is always false."
+    reteach: "## Concept"
+
+  - id: q10
+    type: fill-blank
+    concept: enum-comparison
+    prompt: "boolean pays = level ___ Membership.BASIC;"
+    answers: ["=="]
+    explain: "Compare enum constants with ==."
+    reteach: "## Concept"

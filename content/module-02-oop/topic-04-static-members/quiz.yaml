@@ -1,0 +1,131 @@
+topic: module-02-oop/topic-04-static-members
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: static-fields
+    variants:
+      - { prompt: "A class has private static int counter; and you create 5 objects. How many counter values exist?", choices: ["1", "5", "6", "0"], answer: 0 }
+      - { prompt: "What does static mean on a field?", choices: ["The field belongs to the class and all objects share one copy", "Each object gets its own copy of the field", "The field can never change", "The field can only be read by main"], answer: 0 }
+    explain: "A static field belongs to the class, so there is exactly one copy, shared by every object."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: constants
+    prompt: "public static ___ double UNLOCK_FEE = 1.00;"
+    answers: ["final"]
+    explain: "static final makes a constant: one shared value that never changes."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: static-fields
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              new Bike();
+              new Bike();
+              new Bike();
+              System.out.println(Bike.count);
+          }
+      }
+
+      class Bike {
+          static int count = 0;
+
+          Bike() {
+              count++;
+          }
+      }
+    answer: "3"
+    explain: "All three bikes add 1 to the same shared count."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: static-vs-instance
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Bike a = new Bike();
+              Bike b = new Bike();
+              System.out.println(a.trips + " " + Bike.total);
+          }
+      }
+
+      class Bike {
+          static int total = 0;
+          int trips = 0;
+
+          Bike() {
+              total++;
+              trips++;
+          }
+      }
+    answer: "1 2"
+    explain: "trips is an instance field, so each bike has its own, at 1. total is static and shared, so it reaches 2."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: static-methods
+    prompt: "Why can a static method not use this?"
+    choices: ["It runs without any object, so there is no this to point at", "this only works inside main", "this is a reserved word that only constructors use", "Static methods cannot use any variables"]
+    answer: 0
+    explain: "this means the object the method runs on. A static method runs on no object."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: class-name-access
+    prompt: "double price = ___.fare(Prices.CLASSIC, 10);"
+    answers: ["Prices"]
+    explain: "Outside the class, call a static method with the class name and a dot."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: static-vs-instance
+    code: |
+      class Bike {
+          private String type;
+
+          public static String label() {
+              return "Bike: " + type;
+          }
+      }
+    bugLine: 5
+    explain: "label() is static, so it has no bike and cannot read the instance field type. Remove static from label."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: class-name-access
+    prompt: "bike is a Bike object. Which call is correct for an instance method getId() and a static method created()?"
+    choices: ["bike.getId() and Bike.created()", "Bike.getId() and bike.created()", "Bike.getId() and Bike.created()", "getId(bike) and created(Bike)"]
+    answer: 0
+    explain: "Call an instance method on an object and a static method on the class name."
+    reteach: "## Concept"
+
+  - id: q09
+    type: order
+    concept: static-methods
+    prompt: "Put the lines in order to make a static method that hands out the next bike id."
+    items:
+      - "private static String nextId() {"
+      - "    counter++;"
+      - "    return \"B-\" + (1000 + counter);"
+      - "}"
+    explain: "Raise the shared counter first, then build the id from it, so the first id is B-1001."
+    reteach: "## Worked example"
+
+  - id: q10
+    type: mcq
+    concept: constants
+    prompt: "What happens if code runs Prices.UNLOCK_FEE = 0.50; and UNLOCK_FEE is static final?"
+    choices: ["A compile error: cannot assign a value to final variable", "The fee changes to 0.50 for every bike", "The fee changes only for the next ride", "The program prints a warning and keeps 1.00"]
+    answer: 0
+    explain: "final means the value is fixed. The compiler refuses any new assignment."
+    reteach: "## Common mistakes"

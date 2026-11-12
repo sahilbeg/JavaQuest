@@ -1,0 +1,23 @@
+id: module-02-oop/topic-12-enums
+title: "Enums with fields and methods"
+order: 12
+minutes: 9
+prerequisites: [module-02-oop/topic-11-records]
+concepts: [enum-basics, values-valueof, enum-switch, enum-fields, enum-comparison]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0212
+  from: maya
+  title: "A typo billed a rider $0"
+  body: >
+    Bike types and membership levels are plain Strings all over the kiosk code.
+    Someone at Harbor typed "ebkie", no price matched, and a rider got a 40-minute e-bike ride for $0.
+    I want the compiler to catch spelling like that. Please turn types and levels into proper enums.
+hints:
+  - "Each enum constant passes its price to the constructor, so pricePerMinute() just returns the field."
+  - "freeMinutes() and paysUnlockFee() can use a switch on this, or an if like this == BASIC. For example: `return switch (this) { case BASIC -> 0; case PLUS -> 30; case PRO -> 60; };`"
+  - "In fare: if the level pays the unlock fee, return 1.00 + minutes * type.pricePerMinute(). Otherwise paid = minutes - level.freeMinutes(); if paid < 0, paid = 0; return paid * type.pricePerMinute();"
+review: true

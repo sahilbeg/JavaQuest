@@ -1,0 +1,23 @@
+id: module-02-oop/topic-10-equals-hashcode-tostring
+title: "equals, hashCode and toString"
+order: 10
+minutes: 10
+prerequisites: [module-02-oop/topic-09-composition]
+concepts: [object-class, to-string, identity-vs-equality, equals-override, hash-code]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0210
+  from: sam
+  title: "Same bike shows up twice in the lost-bike report"
+  body: >
+    A rider at Old Mill reported B-1042 missing, and so did the station scanner. Now the lost-bike report
+    counts it as two lost bikes. The log is no help either: it just says Bike@1b6d3586.
+    Can you make the report count each bike once and print something I can read?
+hints:
+  - "Start with toString(). It returns text, so build it with +: \"Bike[\" + id + \", \" + type + \"]\"."
+  - "In equals(Object other), first check other instanceof Bike that. If it is not a Bike, return false. If it is, compare id.equals(that.id). Then make hashCode() return Objects.hash(id)."
+  - "countDistinct: for each index i, loop j from 0 to i - 1. If bikes[i].equals(bikes[j]) for any j, the bike was seen before. Count i only when it was not seen before."
+review: true

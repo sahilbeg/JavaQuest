@@ -2,11 +2,11 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-12T16:45:38+05:30
+- **Last updated:** 2026-11-12T17:03:59+05:30
 - **Phase:** PHASE 1: build
-- **Milestone:** C02
-- **Resume here:** C01 is committed at status ui_wired. Next: C02 (OOP, 12 topics + INC-02 + FEAT-02). Modules 0 and 1 still need your read-through to reach done.
-- **Next task:** C02-01: module 2 topic 01 classes-objects
+- **Milestone:** C03
+- **Resume here:** C02 is committed at status ui_wired. Next: C03 (Core Java, 16 topics + INC-03 + FEAT-03). Modules 0 to 2 still need your read-through to reach done.
+- **Next task:** C03-01: module 3 topic 01 collections-overview
 
 ## Completed tasks
 
@@ -47,6 +47,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - M4-04 server shutdown with open event streams
 - C00 module 0: 7 new units written, reviewed (22 findings fixed), content checks, quiz keys and practice verified
 - C01 module 1: 12 topics, INC-01, FEAT-01; 2 reviews (34 findings) fixed; all checks green
+- C02 module 2 OOP: 12 topics, INC-02, FEAT-02; 2 reviews (33 findings) fixed; all checks green
 
 ## Decisions
 
@@ -75,8 +76,8 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 |---|---|
 | C00 | ui_wired |
 | C01 | ui_wired |
-| C02 | in_progress |
-| C03 | planned |
+| C02 | ui_wired |
+| C03 | in_progress |
 | C04 | planned |
 | C05 | planned |
 | C06 | planned |
@@ -98,7 +99,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 |---|---|---|---|
 | module-00-foundations | Day one | 8 | ui_wired |
 | module-01-basics | The fare kiosk | 14 | ui_wired |
-| module-02-oop | Modelling the fleet | 14 | planned |
+| module-02-oop | Modelling the fleet | 14 | ui_wired |
 | module-03-core-java | Ride data | 18 | planned |
 | module-04-dsa | Moving bikes around | 14 | planned |
 | module-05-advanced-java | Rush hour | 15 | planned |
@@ -134,6 +135,20 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-01-basics/topic-12-stringbuilder-formatting | ui_wired | True | True |
 | module-01-basics/boss | ui_wired | True | True |
 | module-01-basics/mini-project | ui_wired | True | True |
+| module-02-oop/topic-01-classes-objects | ui_wired | True | True |
+| module-02-oop/topic-02-constructors | ui_wired | True | True |
+| module-02-oop/topic-03-encapsulation | ui_wired | True | True |
+| module-02-oop/topic-04-static-members | ui_wired | True | True |
+| module-02-oop/topic-05-inheritance | ui_wired | True | True |
+| module-02-oop/topic-06-polymorphism | ui_wired | True | True |
+| module-02-oop/topic-07-abstract-classes | ui_wired | True | True |
+| module-02-oop/topic-08-interfaces | ui_wired | True | True |
+| module-02-oop/topic-09-composition | ui_wired | True | True |
+| module-02-oop/topic-10-equals-hashcode-tostring | ui_wired | True | True |
+| module-02-oop/topic-11-records | ui_wired | True | True |
+| module-02-oop/topic-12-enums | ui_wired | True | True |
+| module-02-oop/boss | ui_wired | True | True |
+| module-02-oop/mini-project | ui_wired | True | True |
 
 ## Commands
 

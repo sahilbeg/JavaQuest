@@ -1,0 +1,23 @@
+id: module-02-oop/topic-01-classes-objects
+title: "Classes and objects: blueprints and bikes"
+order: 1
+minutes: 9
+prerequisites: [module-01-basics/boss]
+concepts: [class-blueprint, fields, new-keyword, dot-operator, instance-methods, default-values]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0201
+  from: maya
+  title: "Every bike is a pile of loose variables"
+  body: >
+    The kiosk code at Riverside tracks bikes as bikeId1, bikeType1, bikeId2, bikeType2, and so on.
+    Adding bike B-1042 last week meant copying six lines, and someone mixed up bikeType3 with bikeType4.
+    Please make one Bike blueprint so every bike carries its own id, type and minutes.
+hints:
+  - "Inside an instance method you can use the bike's own fields directly, like minutesRidden or type."
+  - "addRide adds the new minutes to minutesRidden. describe glues id, type and minutesRidden into one String with +."
+  - "In fare, pick a rate with if/else on type.equals(\"classic\"), \"ebike\" and \"cargo\", then return 1.00 + minutes * rate;"
+review: true

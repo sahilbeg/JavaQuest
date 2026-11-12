@@ -1,0 +1,23 @@
+id: module-02-oop/topic-02-constructors
+title: "Constructors and this"
+order: 2
+minutes: 9
+prerequisites: [module-02-oop/topic-01-classes-objects]
+concepts: [constructors, this-keyword, constructor-overloading, this-chaining, default-constructor]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0202
+  from: theo
+  title: "New bikes arrive half set up"
+  body: >
+    This morning a truck dropped six new bikes at Harbor, and two of them had no id in the system.
+    The kiosk crashed as soon as a rider tapped one. Nobody remembers to fill in every field after new Bike().
+    Can we make it impossible to build a bike or a station without the basics?
+hints:
+  - "A constructor has the same name as the class and no return type. Use this.id = id; to copy a parameter into the field."
+  - "Bike(String id) should not repeat the work. Its first line can be this(id, \"classic\"); which calls the other constructor."
+  - "Station(String name) sets this.name = name; and this.docks = 12; (or calls this(name, 12);). freeDocks returns docks - bikesDocked."
+review: true

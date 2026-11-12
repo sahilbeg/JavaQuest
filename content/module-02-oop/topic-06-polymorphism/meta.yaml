@@ -1,0 +1,24 @@
+id: module-02-oop/topic-06-polymorphism
+title: "Polymorphism and overriding"
+order: 6
+minutes: 10
+prerequisites: [module-02-oop/topic-05-inheritance]
+concepts: [superclass-reference, dynamic-dispatch, superclass-arrays, instanceof, casting]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m02.polymorphism.FleetReport
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0206
+  from: priya
+  title: "One fleet report for every kind of bike"
+  body: >
+    The Monday fleet report runs three separate loops, and last week it skipped the new cargo bikes at
+    Harbor. I want one report that walks the whole fleet once: total fares, how many e-bikes we have,
+    which ones need charging, and our cheapest ride. Can you build it?
+hints:
+  - "Every method takes a Bike[]. Loop over it with for (Bike b : bikes) and let each bike answer for itself."
+  - "For totalFare, add b.fare(minutes). For the battery check, write if (b instanceof EBike e) and then use e.getBattery()."
+  - "In lowBatteryIds, use a StringBuilder and append \", \" before an id only when sb.length() > 0. In cheapest, start with bikes[0] and keep the bike with the lower pricePerMinute()."
+review: true

@@ -1,0 +1,131 @@
+topic: module-02-oop/topic-11-records
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: record-syntax
+    variants:
+      - { prompt: "Which line declares a record with two components?", choices: ["record Dock(String station, int number) { }", "record Dock { String station; int number; }", "class record Dock(String station, int number) { }", "record Dock[String station, int number] { }"], answer: 0 }
+      - { prompt: "Which line is a valid record declaration?", choices: ["record Point(int x, int y) { }", "record Point { int x, int y }", "Point record(int x, int y) { }", "new record Point(int x, int y);"], answer: 0 }
+    explain: "A record lists its components in brackets after the name, then has a body in braces."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: accessors
+    prompt: "int m = ride.___;"
+    answers: ["minutes()"]
+    explain: "A record accessor has the same name as the component, with brackets: minutes()."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: generated-methods
+    code: |
+      public class Main {
+          record Ride(String bikeId, String type, int minutes) { }
+
+          public static void main(String[] args) {
+              Ride ride = new Ride("B-1042", "classic", 12);
+              System.out.println(ride);
+          }
+      }
+    answer: "Ride[bikeId=B-1042, type=classic, minutes=12]"
+    explain: "The generated toString prints the record name and each component as name=value inside square brackets."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: generated-methods
+    code: |
+      public class Main {
+          record Ride(String bikeId, String type, int minutes) { }
+
+          public static void main(String[] args) {
+              Ride a = new Ride("B-7", "cargo", 5);
+              Ride b = new Ride("B-7", "cargo", 5);
+              System.out.println(a.equals(b));
+              System.out.println(a == b);
+          }
+      }
+    answer: "true\nfalse"
+    explain: "equals compares every component, so it is true. == checks for the same object, and these are two objects."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: immutability
+    prompt: "What happens if a record method runs minutes = 20; on a component?"
+    choices: ["The code does not compile, because record fields are final", "The ride now has 20 minutes", "Java makes a new ride with 20 minutes", "The program crashes when the line runs"]
+    answer: 0
+    explain: "Every record field is final. The compiler rejects any attempt to assign a new value."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: predict-output
+    concept: compact-constructor
+    code: |
+      public class Main {
+          record Ride(String bikeId, String type, int minutes) {
+              Ride {
+                  if (minutes < 0) {
+                      minutes = 0;
+                  }
+              }
+          }
+
+          public static void main(String[] args) {
+              System.out.println(new Ride("B-1", "ebike", -3).minutes());
+              System.out.println(new Ride("B-2", "ebike", 8).minutes());
+          }
+      }
+    answer: "0\n8"
+    explain: "The compact constructor turns -3 into 0 before Java stores it. 8 is not negative, so it stays."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: compact-constructor
+    code: |
+      record Ride(String bikeId, String type, int minutes) {
+          Ride {
+              if (minutes < 0) {
+                  this.minutes = 0;
+              }
+          }
+      }
+    bugLine: 4
+    explain: "In a compact constructor you change the parameter, minutes = 0;. Assigning this.minutes is a compile error."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: record-methods
+    prompt: "Inside a method of record Ride(String bikeId, String type, int minutes), how can you read the minutes?"
+    choices: ["Write minutes or minutes() directly", "Call getMinutes()", "Write Ride.minutes", "You cannot, records have no methods"]
+    answer: 0
+    explain: "Inside the record, the component name works like a field, and the accessor minutes() works too."
+    reteach: "## Concept"
+
+  - id: q09
+    type: order
+    concept: record-methods
+    prompt: "Put the lines in order to make a record with a method."
+    items:
+      - "record Ride(String bikeId, String type, int minutes) {"
+      - "    boolean isShort() {"
+      - "        return minutes < 10;"
+      - "    }"
+      - "}"
+    explain: "The record header comes first, then the method sits inside the record braces."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: immutability
+    prompt: "Which thing at Spoke fits a record best?"
+    choices: ["A finished ride with its bike id and minutes", "A bike whose battery drains as it rides", "A station whose free docks change all day", "A rider's wallet balance that goes up and down"]
+    answer: 0
+    explain: "A finished ride never changes, so it suits a record. The others change over time and need a normal class."
+    reteach: "## Concept"

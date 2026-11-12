@@ -1,0 +1,22 @@
+id: module-02-oop/mini-project
+title: "FEAT-02: The membership system"
+order: 100
+minutes: 10
+prerequisites: [module-02-oop/topic-12-enums]
+concepts: [enums, records, encapsulation, arrays-of-objects, formatting]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m02.feature.Rider
+ticket:
+  key: FEAT-02
+  from: priya
+  title: "Launch the membership system"
+  body: >
+    Spoke now sells three memberships: Basic, Plus and Pro. Each rider needs a monthly statement that lists their rides
+    and what each one cost. Marketing wants it live next week. The rules and the layout are in the KB page.
+hints:
+  - "Start with the two enums. BikeType holds the price per minute, and Membership holds the free minutes and the unlock rule."
+  - "Rider keeps a Ride[] of size 50 and a count. recordRide stores the ride at index count, then adds 1. In monthTotal and statement, loop only up to count."
+  - "fareFor(ride): free = level.freeMinutes(); paid = minutes - free, but never below 0. Add 1.00 only when level.paysUnlockFee()."
+review: false

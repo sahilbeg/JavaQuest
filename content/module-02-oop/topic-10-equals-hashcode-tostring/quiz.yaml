@@ -1,0 +1,154 @@
+topic: module-02-oop/topic-10-equals-hashcode-tostring
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: object-class
+    prompt: "Bike has no extends clause. Which class is its parent?"
+    choices: ["Object", "Main", "String", "It has no parent"]
+    answer: 0
+    explain: "Every class without extends gets Object as its parent. That is where toString, equals and hashCode come from."
+    reteach: "## Concept"
+
+  - id: q02
+    type: predict-output
+    concept: to-string
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Bike bike = new Bike("B-1042", "ebike");
+              System.out.println(bike);
+              System.out.println("Lost: " + bike);
+          }
+      }
+
+      class Bike {
+          private final String id;
+          private final String type;
+          Bike(String id, String type) {
+              this.id = id;
+              this.type = type;
+          }
+          @Override
+          public String toString() {
+              return "Bike[" + id + ", " + type + "]";
+          }
+      }
+    answer: "Bike[B-1042, ebike]\nLost: Bike[B-1042, ebike]"
+    explain: "println and + both call toString() for you."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: identity-vs-equality
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Bike a = new Bike("B-1042");
+              Bike b = new Bike("B-1042");
+              Bike c = a;
+              System.out.println(a == b);
+              System.out.println(a.equals(b));
+              System.out.println(a == c);
+          }
+      }
+
+      class Bike {
+          private final String id;
+          Bike(String id) { this.id = id; }
+          @Override
+          public boolean equals(Object other) {
+              if (!(other instanceof Bike that)) {
+                  return false;
+              }
+              return id.equals(that.id);
+          }
+          @Override
+          public int hashCode() {
+              return id.hashCode();
+          }
+      }
+    answer: "false\ntrue\ntrue"
+    explain: "a and b are two objects, so == is false, but their ids match, so equals is true. c points to the same object as a, so a == c is true."
+    reteach: "## Worked example"
+
+  - id: q04
+    type: mcq
+    concept: identity-vs-equality
+    variants:
+      - { prompt: "What does == check when you use it on two objects?", choices: ["Whether both point to the very same object", "Whether their fields hold the same values", "Whether their toString texts match", "Whether they have the same class"], answer: 0 }
+      - { prompt: "Two separate Bike objects both have id B-1042. Bike overrides equals by id. What is true?", choices: ["equals returns true and == returns false", "equals returns false and == returns true", "Both return true", "Both return false"], answer: 0 }
+    explain: "== checks identity: one object or two. equals checks meaning, the way your override defines it."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: equals-override
+    prompt: "public boolean equals(___ other) {"
+    answers: ["Object"]
+    explain: "The parent method in Object takes an Object. Any other parameter type creates a new method instead of overriding."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: fill-blank
+    concept: equals-override
+    prompt: "if (!(other ___ Bike that)) {"
+    answers: ["instanceof"]
+    explain: "instanceof checks that other is a Bike and gives you the variable that of type Bike."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: hash-code
+    prompt: "Bike.equals compares ids only. Which hashCode keeps the rule that equal bikes have equal hash codes?"
+    choices: ["return Objects.hash(id);", "return Objects.hash(id, type);", "return super.hashCode();", "return type.hashCode();"]
+    answer: 0
+    explain: "Build hashCode from the same fields as equals. Two bikes with the same id but different types are equal, so type must stay out."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: equals-override
+    code: |
+      class Bike {
+          private final String id;
+          Bike(String id) { this.id = id; }
+          @Override
+          public boolean equals(Bike other) {
+              return id.equals(other.id);
+          }
+      }
+    bugLine: 5
+    explain: "equals must take an Object. With a Bike parameter, nothing is overridden, and @Override reports an error."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: spot-the-bug
+    concept: identity-vs-equality
+    code: |
+      static boolean contains(Bike[] bikes, Bike target) {
+          for (Bike bike : bikes) {
+              if (bike == target) {
+                  return true;
+              }
+          }
+          return false;
+      }
+    bugLine: 3
+    explain: "== only finds the very same object. A new Bike with the same id is missed. Use bike.equals(target)."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: order
+    concept: equals-override
+    prompt: "Put the lines of equals in order."
+    items:
+      - "public boolean equals(Object other) {"
+      - "    if (!(other instanceof Bike that)) {"
+      - "        return false;"
+      - "    }"
+      - "    return id.equals(that.id);"
+      - "}"
+    explain: "First rule out anything that is not a Bike. Only then can you read that.id and compare."
+    reteach: "## Concept"

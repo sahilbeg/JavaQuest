@@ -1,0 +1,22 @@
+id: module-02-oop/boss
+title: "INC-02: E-bikes are billed as normal bikes"
+order: 99
+minutes: 10
+prerequisites: [module-02-oop/topic-12-enums]
+concepts: [overriding, overloading, field-hiding, polymorphism]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m02.incident.Billing
+ticket:
+  key: INC-02
+  from: theo
+  title: "E-bikes are billed as normal bikes"
+  body: >
+    Finance noticed that every e-bike ride this week was billed at the classic price.
+    Cargo bikes are wrong too. The subclasses look fine at first glance, so the bug is sneaky. Please find it and fix the invoices.
+hints:
+  - "Bronze: compare the method in EBike with the one in Bike. Same name is not enough: the parameters must match too."
+  - "Bronze: put @Override above EBike's method. The compiler then tells you exactly what is wrong. Silver: CargoBike declares its own price field."
+  - "Silver: a field with the same name in a subclass hides the parent's field. Delete CargoBike's price field, then write price = 0.25; in its constructor after super(id);."
+review: false

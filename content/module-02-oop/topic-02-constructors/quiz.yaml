@@ -1,0 +1,155 @@
+topic: module-02-oop/topic-02-constructors
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: constructors
+    variants:
+      - { prompt: "Which line starts a valid constructor for class Bike?", choices: ["Bike(String id) {", "void Bike(String id) {", "public void bike(String id) {", "Bike constructor(String id) {"], answer: 0 }
+      - { prompt: "Which line starts a valid constructor for class Station?", choices: ["Station(String name) {", "int Station(String name) {", "station(String name) {", "void Station(String name) {"], answer: 0 }
+    explain: "A constructor has exactly the class name and no return type, not even void."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: constructors
+    prompt: "When does a constructor run?"
+    choices: ["Once, when new builds the object", "Every time you read a field", "Only when you call it by name like bike.Bike()", "When the program ends"]
+    answer: 0
+    explain: "new builds the object and runs the matching constructor once."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: this-keyword
+    prompt: "___.id = id;"
+    answers: ["this"]
+    explain: "this.id is the field. Plain id is the parameter."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: this-keyword
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Bike bike = new Bike("B-1042");
+              System.out.println(bike.id);
+          }
+      }
+
+      class Bike {
+          String id;
+
+          Bike(String id) {
+              id = id;
+          }
+      }
+    answer: "null"
+    explain: "id = id copies the parameter into itself. The field is never set, so it keeps its default null."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: predict-output
+    concept: constructor-overloading
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Station a = new Station("Riverside");
+              Station b = new Station("Depot", 20);
+              System.out.println(a.docks);
+              System.out.println(b.docks);
+          }
+      }
+
+      class Station {
+          String name;
+          int docks;
+
+          Station(String name) {
+              this(name, 12);
+          }
+
+          Station(String name, int docks) {
+              this.name = name;
+              this.docks = docks;
+          }
+      }
+    answer: "12\n20"
+    explain: "The one-argument constructor chains to the other with 12 docks. The two-argument one uses 20."
+    reteach: "## Worked example"
+
+  - id: q06
+    type: fill-blank
+    concept: this-chaining
+    prompt: "Bike(String id) { ___(id, \"classic\"); }"
+    answers: ["this"]
+    explain: "this(...) calls another constructor of the same class."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: this-chaining
+    code: |
+      class Bike {
+          String id;
+          String type;
+
+          Bike(String id) {
+              System.out.println("New bike");
+              this(id, "classic");
+          }
+
+          Bike(String id, String type) {
+              this.id = id;
+              this.type = type;
+          }
+      }
+    bugLine: 7
+    explain: "A call to this(...) must be the first line of the constructor. The compiler reports the error on the this(...) line."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: default-constructor
+    prompt: "Class Bike has only the constructor Bike(String id). What happens with new Bike()?"
+    choices: ["It does not compile", "It builds a bike with id null", "It builds a bike with id \"\"", "It crashes when the program runs"]
+    answer: 0
+    explain: "Writing any constructor removes the free empty one, so Java cannot find Bike()."
+    reteach: "## Concept"
+
+  - id: q09
+    type: spot-the-bug
+    concept: default-constructor
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Station s = new Station();
+              System.out.println(s.docks);
+          }
+      }
+
+      class Station {
+          String name;
+          int docks;
+
+          Station(String name) {
+              this.name = name;
+              this.docks = 12;
+          }
+      }
+    bugLine: 3
+    explain: "Station has a constructor that needs a name, so new Station() no longer exists. Write new Station(\"Harbor\")."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: order
+    concept: constructors
+    prompt: "Put the lines in order to write a Station constructor that chains to the two-number one."
+    items:
+      - "Station(String name) {"
+      - "    this(name, 12);"
+      - "}"
+    explain: "The header comes first, then the this(...) call as the first line, then the closing brace."
+    reteach: "## Concept"

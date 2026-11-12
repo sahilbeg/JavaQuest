@@ -1,0 +1,23 @@
+id: module-02-oop/topic-11-records
+title: "Records"
+order: 11
+minutes: 9
+prerequisites: [module-02-oop/topic-10-equals-hashcode-tostring]
+concepts: [record-syntax, accessors, generated-methods, immutability, compact-constructor, record-methods]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0211
+  from: priya
+  title: "Ride is 60 lines for three values"
+  body: >
+    The Ride class is 60 lines of fields, getters, equals and toString, and two of them have bugs.
+    Sam had a rider at Old Mill whose 12-minute ride showed up twice in the history because equals compared the wrong field.
+    Rides are just data. Can you make Ride small and correct?
+hints:
+  - "A compact constructor has no round brackets ( ): Ride { ... }. Inside it you can change the parameter minutes before Java stores it."
+  - "In fare(), pick a rate with if/else on type.equals(\"classic\"), \"ebike\" and \"cargo\", then return 1.00 + minutes * rate. Inside the record, minutes is the component itself."
+  - "In RideLog, loop over the array and call rides[i].minutes() or rides[i].fare(). For longest, start with Ride best = null; and keep the ride whose minutes() is bigger."
+review: true

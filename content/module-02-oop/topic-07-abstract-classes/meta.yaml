@@ -1,0 +1,23 @@
+id: module-02-oop/topic-07-abstract-classes
+title: "Abstract classes"
+order: 7
+minutes: 9
+prerequisites: [module-02-oop/topic-06-polymorphism]
+concepts: [abstract-class, abstract-method, no-instances, template-method, must-implement]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0207
+  from: theo
+  title: "A bike with no price at Old Mill"
+  body: >
+    Someone added a plain "Vehicle" to the Old Mill kiosk, with no type at all. A rider took it for
+    40 minutes and paid only the $1.00 unlock fee. Every vehicle we rent is a classic, an e-bike or a
+    cargo bike. Can you make sure nobody can create a vehicle without a real price?
+hints:
+  - "Vehicle already says abstract. Your job is to fill in the method bodies it and its subclasses need."
+  - "fare uses pricePerMinute() without knowing which bike it is. Java picks the right subclass version at run time."
+  - "In Vehicle: return 1.00 + minutes * pricePerMinute(); and return kind() + \" \" + id;. In EBike: return 0.30; and return \"ebike\";"
+review: true

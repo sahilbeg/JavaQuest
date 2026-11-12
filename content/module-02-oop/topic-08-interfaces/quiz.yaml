@@ -1,0 +1,163 @@
+topic: module-02-oop/topic-08-interfaces
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: interface
+    variants:
+      - { prompt: "What is an interface?", choices: ["A list of methods that a class promises to have", "A class with only static fields", "A parent class you extend", "A method with no return type"], answer: 0 }
+      - { prompt: "What does an interface describe?", choices: ["What a thing can do", "Which fields an object stores", "How fast a program runs", "Which package a class lives in"], answer: 0 }
+    explain: "An interface is a promise of methods. Any class that keeps the promise can be used through it."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: implements
+    prompt: "class Scooter ___ Chargeable {"
+    answers: ["implements"]
+    explain: "A class keeps an interface's promise with the word implements."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: default-method
+    prompt: "___ boolean needsCharge() { return batteryLevel() < 20; }"
+    answers: ["default", "public default", "default public"]
+    explain: "A method with a body inside an interface starts with the word default."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: multiple-interfaces
+    prompt: "Which class header compiles? Vehicle is a class; Chargeable and Lockable are interfaces."
+    choices: ["class EBike extends Vehicle implements Chargeable, Lockable {", "class EBike extends Vehicle, Chargeable, Lockable {", "class EBike implements Vehicle extends Chargeable {", "class EBike implements Chargeable implements Lockable {"]
+    answer: 0
+    explain: "Extend one class, then list every interface after one implements, separated by commas."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: interface-type
+    prompt: "A method is declared static void topUp(Chargeable item). EBike and Scooter both implement Chargeable. Which calls compile?"
+    choices: ["Both topUp(new EBike(50)) and topUp(new Scooter(50))", "Only topUp(new EBike(50))", "Only topUp(new Chargeable())", "Neither, the parameter must be a class"]
+    answer: 0
+    explain: "An interface parameter accepts any object whose class implements the interface."
+    reteach: "## Concept"
+
+  - id: q06
+    type: predict-output
+    concept: default-method
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Chargeable c = new Scooter();
+              System.out.println(c.needsCharge());
+          }
+      }
+
+      interface Chargeable {
+          int batteryLevel();
+
+          default boolean needsCharge() {
+              return batteryLevel() < 20;
+          }
+      }
+
+      class Scooter implements Chargeable {
+          public int batteryLevel() {
+              return 12;
+          }
+      }
+    answer: "true"
+    explain: "Scooter gets needsCharge for free. It calls Scooter's batteryLevel(), which is 12, and 12 < 20."
+    reteach: "## Worked example"
+
+  - id: q07
+    type: predict-output
+    concept: interface-type
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Chargeable[] dock = { new EBike(), new Scooter() };
+              for (Chargeable item : dock) {
+                  item.charge(10);
+                  System.out.println(item.batteryLevel());
+              }
+          }
+      }
+
+      interface Chargeable {
+          int batteryLevel();
+          void charge(int percent);
+      }
+
+      class EBike implements Chargeable {
+          private int battery = 50;
+
+          public int batteryLevel() {
+              return battery;
+          }
+
+          public void charge(int percent) {
+              battery = battery + percent;
+          }
+      }
+
+      class Scooter implements Chargeable {
+          private int battery = 10;
+
+          public int batteryLevel() {
+              return battery;
+          }
+
+          public void charge(int percent) {
+              battery = battery + percent * 2;
+          }
+      }
+    answer: "60\n30"
+    explain: "Each object runs its own charge. The EBike adds 10 to 50. The Scooter adds 10 * 2 to 10."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: spot-the-bug
+    concept: implements
+    code: |
+      interface Chargeable {
+          int batteryLevel();
+      }
+
+      class Scooter extends Chargeable {
+          public int batteryLevel() {
+              return 50;
+          }
+      }
+    bugLine: 5
+    explain: "A class implements an interface. Java says: no interface expected here."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: spot-the-bug
+    concept: implements
+    code: |
+      interface Chargeable {
+          int batteryLevel();
+      }
+
+      class EBike implements Chargeable {
+          int batteryLevel() {
+              return 80;
+          }
+      }
+    bugLine: 6
+    explain: "Interface methods are public, so the class must write public int batteryLevel()."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: interface
+    prompt: "How does implements differ from extends?"
+    choices: ["You extend one class but can implement many interfaces", "You implement one interface but can extend many classes", "implements copies fields, extends does not", "There is no difference"]
+    answer: 0
+    explain: "extends says what a class is and allows one parent. implements says what it can do and allows many."
+    reteach: "## Concept"

@@ -1,0 +1,23 @@
+id: module-02-oop/topic-05-inheritance
+title: "Inheritance and super"
+order: 5
+minutes: 10
+prerequisites: [module-02-oop/topic-04-static-members]
+concepts: [extends, inherited-members, super-constructor, overriding, super-method, protected]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0205
+  from: maya
+  title: "EBike and CargoBike are copies of Bike"
+  body: >
+    I fixed the fare rounding bug in Bike last week, and a rider on B-2001 still got the old wrong
+    receipt. Turns out EBike and CargoBike are full copies of Bike with three lines changed.
+    Can you make them build on Bike so a fix in one place reaches all three?
+hints:
+  - "Bike.fare already calls pricePerMinute(), so you only need to change the price in each subclass."
+  - "Write the method again in the subclass with the same name and @Override above it. In the EBike constructor, also store battery in its field."
+  - "In CargoBike, try: @Override public String describe() { return super.describe() + \" [cargo]\"; }"
+review: true

@@ -1,0 +1,165 @@
+topic: module-02-oop/topic-07-abstract-classes
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: abstract-class
+    variants:
+      - { prompt: "What is an abstract class?", choices: ["A class you can never create objects from; it exists to be extended", "A class with no fields", "A class that cannot have a constructor", "A class that only holds static methods"], answer: 0 }
+      - { prompt: "Why did Theo want Vehicle to be abstract?", choices: ["So nobody can create a plain Vehicle with no price", "So Vehicle runs faster", "So Vehicle cannot have subclasses", "So Vehicle can skip its constructor"], answer: 0 }
+    explain: "An abstract class is only a parent. You create objects from its concrete subclasses."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: no-instances
+    prompt: "Vehicle is abstract and EBike extends it. Which line compiles?"
+    choices: ["Vehicle v = new EBike(\"B-1042\");", "Vehicle v = new Vehicle(\"B-1042\");", "EBike e = new Vehicle(\"B-1042\");", "Vehicle v = Vehicle(\"B-1042\");"]
+    answer: 0
+    explain: "You cannot use new on an abstract class. A Vehicle variable can still hold an EBike object."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: abstract-class
+    prompt: "___ class Vehicle {"
+    answers: ["abstract", "public abstract", "abstract public"]
+    explain: "The word abstract before class makes the class abstract."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: abstract-method
+    prompt: "abstract double pricePerMinute()___"
+    answers: [";"]
+    explain: "An abstract method has no body. It ends with a semicolon."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: must-implement
+    prompt: "Vehicle has two abstract methods. CargoBike extends Vehicle and writes only one. What happens?"
+    choices: ["CargoBike does not compile", "The missing method returns 0", "The program crashes when it starts", "Java copies the method from EBike"]
+    answer: 0
+    explain: "A concrete subclass must implement every abstract method, or the compiler stops with an error."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: predict-output
+    concept: template-method
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Vehicle v = new CargoBike();
+              System.out.println(v.fare(4));
+          }
+      }
+
+      abstract class Vehicle {
+          abstract double pricePerMinute();
+
+          double fare(int minutes) {
+              return 1.00 + minutes * pricePerMinute();
+          }
+      }
+
+      class CargoBike extends Vehicle {
+          double pricePerMinute() {
+              return 0.25;
+          }
+      }
+    answer: "2.0"
+    explain: "fare lives in Vehicle, but pricePerMinute comes from CargoBike: 1.00 + 4 * 0.25 = 2.0."
+    reteach: "## Worked example"
+
+  - id: q07
+    type: predict-output
+    concept: template-method
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Vehicle[] fleet = { new EBike("B-1042"), new ClassicBike("B-1001") };
+              for (int i = 0; i < fleet.length; i++) {
+                  System.out.println(fleet[i].label());
+              }
+          }
+      }
+
+      abstract class Vehicle {
+          private String id;
+
+          Vehicle(String id) {
+              this.id = id;
+          }
+
+          abstract String kind();
+
+          String label() {
+              return kind() + " " + id;
+          }
+      }
+
+      class EBike extends Vehicle {
+          EBike(String id) {
+              super(id);
+          }
+
+          String kind() {
+              return "ebike";
+          }
+      }
+
+      class ClassicBike extends Vehicle {
+          ClassicBike(String id) {
+              super(id);
+          }
+
+          String kind() {
+              return "classic";
+          }
+      }
+    answer: "ebike B-1042\nclassic B-1001"
+    explain: "label is written once in Vehicle. Each call to kind() runs the version of the real object."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: spot-the-bug
+    concept: abstract-method
+    code: |
+      abstract class Vehicle {
+          abstract String kind() {
+              return "bike";
+          }
+      }
+    bugLine: 2
+    explain: "An abstract method cannot have a body. Write abstract String kind(); and put the body in each subclass."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: spot-the-bug
+    concept: no-instances
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Vehicle bike = new EBike("B-1042");
+              Vehicle other = new Vehicle("B-1043");
+              System.out.println(bike.fare(10));
+          }
+      }
+    bugLine: 4
+    explain: "Vehicle is abstract, so new Vehicle(...) gives: Vehicle is abstract; cannot be instantiated."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: order
+    concept: must-implement
+    prompt: "Put the lines in order so EBike has its constructor first, then implements the abstract pricePerMinute()."
+    items:
+      - "class EBike extends Vehicle {"
+      - "    EBike(String id) { super(id); }"
+      - "    @Override"
+      - "    double pricePerMinute() { return 0.30; }"
+      - "}"
+    explain: "The class header comes first. The constructor passes the id to Vehicle with super(id). @Override sits just above the method, and the method body gives the real price."
+    reteach: "## Concept"

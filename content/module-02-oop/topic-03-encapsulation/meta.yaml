@@ -1,0 +1,23 @@
+id: module-02-oop/topic-03-encapsulation
+title: "Encapsulation: private fields and getters"
+order: 3
+minutes: 9
+prerequisites: [module-02-oop/topic-02-constructors]
+concepts: [private-fields, getters, setters, validation, read-only-fields]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0203
+  from: sam
+  title: "App told a rider her e-bike had 140% battery"
+  body: >
+    A rider at Harbor sent me a screenshot this morning. The app said e-bike B-1042 had 140% battery,
+    and it died ten minutes into her ride. Some code wrote straight into the battery field.
+    Can you make sure a bike's battery can never be outside 0 to 100?
+hints:
+  - "Make the battery field private, so only code inside EBike can change it. Every change then goes through a method you control."
+  - "Write the clamping once in setBattery: if the value is below 0 use 0, if it is above 100 use 100. The constructor, charge and ride can all call setBattery."
+  - "charge(percent) can be setBattery(battery + percent). ride(minutes) can be setBattery(battery - minutes / 2). canUnlock() is return battery >= 20;"
+review: true
