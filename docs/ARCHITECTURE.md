@@ -9,8 +9,8 @@ JavaQuest is a local, single-user learning app. One command starts it. It serves
 | Runtime | Java 21 LTS | Required. Virtual threads and records are used in the app itself. |
 | Build | Maven 3.9+ with the Maven Wrapper (`mvnw`) | Required. The wrapper means no global Maven install. |
 | Server | Spring Boot 4.1.2 with Web MVC. Later milestones add starters only when they need them. | Mature, one runnable JAR, well documented. |
-| Frontend | Server-rendered shell (Thymeleaf) plus plain ES modules, no Node build | One command start. Nothing to compile for the frontend. |
-| Editor | Monaco, vendored under `app/src/main/resources/static/vendor/monaco/` | Works offline. Same editor as VS Code. |
+| Frontend | One static page plus plain ES modules with hash routes, no Node build | One command start. Nothing to compile for the frontend. |
+| Editor | Monaco 0.57, vendored under `static/vendor/monaco/`, with the TypeScript, CSS, HTML and JSON language services removed (5.6 MB left) | Works offline. Same editor as VS Code. Also colours static code in KB pages. |
 | Markdown | flexmark-java on the server, with a fenced-block extension for `java run`, `mermaid` and `callout` blocks | Rendering is deterministic. No client-side Markdown parser. |
 | Diagrams | Mermaid, vendored | Diagrams live as text in lessons. |
 | Content data | YAML read by Jackson 3 into Java records that check their own fields. Unknown and missing fields are rejected. | Readable to author, strict to load, with one definition of each format in code. |
@@ -28,15 +28,15 @@ javaquest/
   mvnw, mvnw.cmd, .mvn/       # Maven Wrapper
   run.sh                      # build if needed, then start the app (run.bat deferred)
   runner/                     # compiles and tests practice code in a child JVM; shared by app and tools
+  content-model/              # content formats, catalog, quiz draw and grading; shared by app and tools
   app/                        # Spring Boot application
     src/main/java/dev/javaquest/
-      content/                # loads and validates content/, builds the catalog
+      lesson/                 # Markdown to HTML for KB pages
       practice/               # practice service and file watcher
       progress/               # XP, mastery, streaks, badges, spaced repetition
       quiz/                   # question variants, grading
       web/                    # controllers, SSE endpoint
     src/main/resources/
-      templates/              # Thymeleaf pages
       static/                 # css, js modules, vendor/monaco, vendor/mermaid, mascot art
       db/migration/           # Flyway SQL
   content/                    # immutable lesson content (see CONTENT_SPEC.md)
@@ -150,8 +150,8 @@ Export and import as JSON from the settings page give you a backup.
 
 - Unit tests for grading, mastery, XP and spaced repetition rules.
 - An integration test that runs the practice runner on a passing and a failing fixture.
-- `tools/` verifier: for every practice topic, the solution must pass and the skeleton must compile and fail. Command: `./mvnw -q -pl tools dependency:properties exec:java`. It writes the result into `build_state.json` and exits with status 1 when a topic fails.
-- A content checker that validates every YAML file, every internal link, and compiles every `java run` snippet.
+- `tools/` verifier: for every practice topic, the solution must pass and the skeleton must compile and fail. Command: `./mvnw -q -pl tools dependency:properties exec:java@verify-practice`. It writes the result into `build_state.json` and exits with status 1 when a topic fails.
+- Content checker: `./mvnw -q -pl tools dependency:properties exec:java@check-content`. It loads every file, checks prerequisites against the curriculum, compiles every `java` block, runs every `java run` snippet, and runs every predict-the-output question to compare its answer.
 
 ## Risks
 

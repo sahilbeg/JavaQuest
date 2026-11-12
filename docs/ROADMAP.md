@@ -19,18 +19,21 @@ Each milestone ends with: project checks green, both state files updated, one co
 - [x] M1-07 `tools` verifier: solution passes, skeleton fails, writes results into build_state.json
 - [x] M1-08 Tests for the runner, catalog, path mapping, status ladder and HTTP endpoints
 
-## M2: Lesson, editor and quiz UI
+## M2: Lesson, editor and quiz UI (done)
 
-- [ ] Page shell, light and dark themes, responsive layout
-- [ ] Lesson rendering: Markdown, callouts, Mermaid, runnable snippets
-- [ ] Monaco editor with Run, Submit, and IDE-change reload
-- [ ] All 5 quiz types, keyboard accessible, with variants and seeds
-- [ ] Readable compiler and test feedback. Strip the console launcher's summary from the learner's output.
-- [ ] "Reset to skeleton" with a pristine copy
-- [ ] Content checker: prerequisites exist, links, snippet compilation, predict-output answers
+- [x] Story pivot: Spoke workplace, tickets, `docs/STORY.md`, ticket block in `meta.yaml`
+- [x] Page shell, light and dark themes, responsive layout (`DESIGN.md`)
+- [x] Lesson rendering: Markdown, callouts, Mermaid, runnable snippets with "Try it yourself"
+- [x] Monaco editor with Save, Run, Run checks, and reload when the IDE changes the file
+- [x] All 5 quiz types, keyboard accessible, with variants and seeds
+- [x] Readable compiler and test feedback. The launcher summary is stripped from the learner's output.
+- [x] Content checker: prerequisites exist, Java blocks compile, snippets run, predict-output answers
+- [ ] "Reset to skeleton" with a pristine copy (moved to M3)
 
 ## M3: Progress and gamification
 
+- [ ] "Reset to skeleton" with a pristine copy
+- [ ] Hint gating (hint 2 after 2 failed runs, hint 3 after 4) and solution unlock
 - [ ] H2 and Flyway schema
 - [ ] Mastery, hints, solution unlock rules
 - [ ] XP ledger, levels, streaks, badges

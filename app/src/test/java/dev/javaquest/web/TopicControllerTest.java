@@ -136,4 +136,14 @@ class TopicControllerTest {
                 .andExpect(jsonPath("$.result.status").value("COMPILE_ERROR"))
                 .andExpect(jsonPath("$.explanations[0]").value(org.hamcrest.Matchers.containsString("expected a ;")));
     }
+
+    @Test
+    void randomQuizSeedsSurviveAJavaScriptNumber() throws Exception {
+        for (int i = 0; i < 20; i++) {
+            String body = mvc.perform(get(TOPIC + "/quiz")).andReturn().getResponse().getContentAsString();
+            long seed = Long.parseLong(body.replaceAll(".*\"seed\":(\\d+).*", "$1"));
+            org.junit.jupiter.api.Assertions.assertTrue(seed <= TopicController.MAX_BROWSER_SAFE_SEED, "seed " + seed);
+            org.junit.jupiter.api.Assertions.assertEquals(seed, (long) (double) seed);
+        }
+    }
 }

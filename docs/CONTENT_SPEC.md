@@ -169,7 +169,7 @@ questions:
     explain: "Java variables use camelCase and cannot start with a digit."
 ```
 
-The checker compiles every `predict-output` snippet and checks the stated answer against real output.
+The content checker (`exec:java@check-content`) runs every `predict-output` snippet and checks the stated answer against real output. A fill-blank prompt should be the code line only, because the page shows it in the code font.
 
 ## Practice files
 
@@ -194,7 +194,7 @@ Test rules:
 - Tests run in under 2 seconds on the solution, apart from Spring topics.
 - Tests never touch the network. File tests use `@TempDir`.
 
-Verification, recorded in `build_state.json` per topic by `./mvnw -q -pl tools dependency:properties exec:java`:
+Verification, recorded in `build_state.json` per topic by `./mvnw -q -pl tools dependency:properties exec:java@verify-practice`:
 
 - `solutionPasses`: the tests pass when compiled against `solution/`.
 - `skeletonFails`: the tests fail, without a compile error, against `src/`.

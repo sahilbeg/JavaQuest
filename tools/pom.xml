@@ -50,12 +50,25 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <configuration>
-          <mainClass>dev.javaquest.tools.VerifyPractice</mainClass>
           <arguments>
             <argument>${maven.multiModuleProjectDirectory}</argument>
             <argument>${org.junit.platform:junit-platform-console-standalone:jar}</argument>
           </arguments>
         </configuration>
+        <executions>
+          <execution>
+            <id>verify-practice</id>
+            <configuration>
+              <mainClass>dev.javaquest.tools.VerifyPractice</mainClass>
+            </configuration>
+          </execution>
+          <execution>
+            <id>check-content</id>
+            <configuration>
+              <mainClass>dev.javaquest.tools.CheckContent</mainClass>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

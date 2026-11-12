@@ -51,6 +51,9 @@ public class TopicController {
 
     public record Problem(String message) {}
 
+    /** Seeds travel through JavaScript, whose numbers hold integers exactly only up to 2^53 - 1. */
+    static final long MAX_BROWSER_SAFE_SEED = (1L << 53) - 1;
+
     private final ContentCatalog catalog;
     private final PracticeService practice;
     private final LessonRenderer lessons;
@@ -92,7 +95,7 @@ public class TopicController {
     @GetMapping("/topics/{module}/{topic}/quiz")
     public QuizAttempt quiz(@PathVariable String module, @PathVariable String topic, @RequestParam(required = false) Long seed) {
         Topic found = find(module, topic);
-        long chosen = seed != null ? seed : ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE);
+        long chosen = seed != null ? seed : ThreadLocalRandom.current().nextLong(1, MAX_BROWSER_SAFE_SEED);
         return new QuizAttempt(chosen, found.quiz().passPercent(), QuizSession.draw(found.quiz(), chosen));
     }
 

@@ -2,11 +2,11 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-12T14:51:30+05:30
+- **Last updated:** 2026-11-12T15:16:34+05:30
 - **Phase:** PHASE 1: build
-- **Milestone:** M2
-- **Resume here:** M2 backend is committed. Next: build the frontend in Spoke's workplace-tool look (direction contract in .impeccable/surfaces/).
-- **Next task:** M2-B: frontend shell, board, ticket page (KB, check, fix editor, Byte chat), vendored Monaco and Mermaid
+- **Milestone:** M3
+- **Resume here:** M2 is done and committed. Start M3: progress storage (H2 + Flyway), mastery, XP, streaks, kudos.
+- **Next task:** M3-01: H2 and Flyway schema for progress
 
 ## Completed tasks
 
@@ -27,6 +27,8 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - M1-08 M1 tests
 - M2-00 Spoke story, ticket format, PRODUCT.md
 - M2-A backend: lesson rendering, quiz draw and grading, source read/write, run main and snippets, plain-language compiler help
+- M2-B frontend: board, ticket page, KB, onboarding check, Fix editor, Byte chat, design review fixes, DESIGN.md
+- M2-C content checker (exec:java@check-content)
 
 ## Decisions
 
@@ -40,6 +42,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - Verify practice with: ./mvnw -q -pl tools dependency:properties exec:java
 - Story: you are an intern at Spoke, a bike-sharing startup (docs/STORY.md)
 - UI looks like Spoke's internal workplace tools; topics are tickets, bosses are incidents
+- Content check with: ./mvnw -q -pl tools dependency:properties exec:java@check-content
 
 ## Blockers
 
@@ -62,8 +65,8 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | C10 | planned |
 | M0 | done |
 | M1 | done |
-| M2 | in_progress |
-| M3 | planned |
+| M2 | done |
+| M3 | in_progress |
 | M4 | planned |
 | M5 | planned |
 | M6 | planned |
@@ -94,7 +97,8 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 
 - Start the app: `./run.sh`
 - Run all tests: `./mvnw -q install`
-- Verify practice topics: `./mvnw -q -pl tools dependency:properties exec:java`
+- Verify practice topics: `./mvnw -q -pl tools dependency:properties exec:java@verify-practice`
+- Check content: `./mvnw -q -pl tools dependency:properties exec:java@check-content`
 
 ## Session protocol
 
