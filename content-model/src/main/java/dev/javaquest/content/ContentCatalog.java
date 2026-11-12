@@ -58,7 +58,11 @@ public final class ContentCatalog {
         if (meta.practice().kind() == TopicMeta.PracticeKind.CODE && !Files.isDirectory(practice.resolve("test"))) {
             throw new InvalidContentException(practice.resolve("test"), "a code topic needs practice tests");
         }
-        return new Topic(meta, topicDir, practice);
+        Quiz quiz = read(topicDir.resolve("quiz.yaml"), Quiz.class);
+        if (!quiz.topic().equals(meta.id())) {
+            throw new InvalidContentException(topicDir.resolve("quiz.yaml"), "topic '" + quiz.topic() + "' does not match '" + meta.id() + "'");
+        }
+        return new Topic(meta, quiz, topicDir, practice);
     }
 
     private static <T> T read(Path file, Class<T> type) {

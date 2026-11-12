@@ -16,6 +16,10 @@
       <artifactId>runner</artifactId>
     </dependency>
     <dependency>
+      <groupId>dev.javaquest</groupId>
+      <artifactId>content-model</artifactId>
+    </dependency>
+    <dependency>
       <groupId>tools.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
     </dependency>

@@ -1,6 +1,7 @@
 package dev.javaquest.runner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.javaquest.runner.TestRunResult.Outcome;
@@ -80,5 +81,87 @@ class PracticeRunnerTest {
 
         assertEquals(Outcome.CRASHED, result.outcome());
         assertTrue(result.output().contains("java.lang.OutOfMemoryError"), result::output);
+    }
+
+    @Test
+    void failureOutputLeavesOutTheLauncherSummary() throws Exception {
+        TestRunResult result = run("failing");
+
+        assertFalse(result.output().contains("Failures ("), result::output);
+        assertFalse(result.output().contains("Test run finished"), result::output);
+    }
+
+    @Test
+    void outputPrintedByTheLearnerIsKept() throws Exception {
+        assertTrue(run("chatty").output().startsWith("line 0\nline 1\n"));
+    }
+
+    @Test
+    void snippetPrintsItsOutput() throws Exception {
+        ProgramResult result = runner.runSnippet("""
+                public class Main {
+                    public static void main(String[] args) {
+                        System.out.println("Hi " + (2 + 3));
+                    }
+                }
+                """);
+
+        assertEquals(ProgramResult.Status.COMPLETED, result.status());
+        assertEquals("Hi 5", result.output().strip());
+    }
+
+    @Test
+    void snippetFileIsNamedAfterItsClass() throws Exception {
+        ProgramResult result = runner.runSnippet("""
+                public class Kiosk {
+                    public static void main(String[] args) {
+                        System.out.println("ok");
+                    }
+                }
+                """);
+
+        assertEquals(ProgramResult.Status.COMPLETED, result.status(), result::toString);
+    }
+
+    @Test
+    void uncaughtExceptionIsReportedWithItsMessage() throws Exception {
+        ProgramResult result = runner.runSnippet("""
+                public class Main {
+                    public static void main(String[] args) {
+                        int[] docks = new int[3];
+                        docks[5] = 1;
+                    }
+                }
+                """);
+
+        assertEquals(ProgramResult.Status.EXCEPTION, result.status());
+        assertTrue(result.output().contains("ArrayIndexOutOfBoundsException"), result::output);
+    }
+
+    @Test
+    void snippetCompileErrorPointsAtTheLine() throws Exception {
+        ProgramResult result = runner.runSnippet("""
+                public class Main {
+                    public static void main(String[] args) {
+                        System.out.println("Hi")
+                    }
+                }
+                """);
+
+        assertEquals(ProgramResult.Status.COMPILE_ERROR, result.status());
+        assertEquals(3, result.compileErrors().getFirst().line());
+    }
+
+    @Test
+    void endlessProgramIsStopped() throws Exception {
+        ProgramResult result = runner.runSnippet("""
+                public class Main {
+                    public static void main(String[] args) {
+                        while (true) { }
+                    }
+                }
+                """);
+
+        assertEquals(ProgramResult.Status.TIMED_OUT, result.status());
     }
 }

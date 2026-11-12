@@ -2,11 +2,11 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-12T14:43:13+05:30
+- **Last updated:** 2026-11-12T14:51:30+05:30
 - **Phase:** PHASE 1: build
 - **Milestone:** M2
-- **Resume here:** Story and ticket format are committed. Next: record the UI direction contract, then build the page shell (M2-01).
-- **Next task:** M2-01: page shell in Spoke's workplace-tool look, light and dark themes, responsive layout
+- **Resume here:** M2 backend is committed. Next: build the frontend in Spoke's workplace-tool look (direction contract in .impeccable/surfaces/).
+- **Next task:** M2-B: frontend shell, board, ticket page (KB, check, fix editor, Byte chat), vendored Monaco and Mermaid
 
 ## Completed tasks
 
@@ -26,6 +26,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - M1-07 practice verifier
 - M1-08 M1 tests
 - M2-00 Spoke story, ticket format, PRODUCT.md
+- M2-A backend: lesson rendering, quiz draw and grading, source read/write, run main and snippets, plain-language compiler help
 
 ## Decisions
 

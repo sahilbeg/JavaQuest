@@ -2,10 +2,14 @@ package dev.javaquest.content;
 
 import java.nio.file.Path;
 
-public record Topic(TopicMeta meta, Path contentDir, Path practiceDir) {
+public record Topic(TopicMeta meta, Quiz quiz, Path contentDir, Path practiceDir) {
 
     public String id() {
         return meta.id();
+    }
+
+    public Path lessonFile() {
+        return contentDir.resolve("lesson.md");
     }
 
     public Path practiceSources() {

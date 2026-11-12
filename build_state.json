@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "lastUpdated": "2026-11-12T14:43:13+05:30",
+  "lastUpdated": "2026-11-12T14:51:30+05:30",
   "phase": "PHASE 1: build",
   "milestone": "M2",
-  "resumeHere": "Story and ticket format are committed. Next: record the UI direction contract, then build the page shell (M2-01).",
+  "resumeHere": "M2 backend is committed. Next: build the frontend in Spoke's workplace-tool look (direction contract in .impeccable/surfaces/).",
   "statusValues": [
     "planned",
     "content_written",
@@ -28,9 +28,10 @@
     "M1-06 file watcher and SSE",
     "M1-07 practice verifier",
     "M1-08 M1 tests",
-    "M2-00 Spoke story, ticket format, PRODUCT.md"
+    "M2-00 Spoke story, ticket format, PRODUCT.md",
+    "M2-A backend: lesson rendering, quiz draw and grading, source read/write, run main and snippets, plain-language compiler help"
   ],
-  "nextTask": "M2-01: page shell in Spoke's workplace-tool look, light and dark themes, responsive layout",
+  "nextTask": "M2-B: frontend shell, board, ticket page (KB, check, fix editor, Byte chat), vendored Monaco and Mermaid",
   "openDecisions": [],
   "blockers": [],
   "milestones": {

@@ -24,6 +24,14 @@ class ContentCatalogTest {
             review: true
             """;
 
+    private static final String QUIZ = """
+            topic: module-01-basics/topic-01-variables
+            drawCount: 1
+            passPercent: 80
+            questions:
+              - { id: q1, type: mcq, concept: c, prompt: P, choices: [a, b], answer: 0, explain: E }
+            """;
+
     @TempDir
     Path root;
     Path content;
@@ -39,7 +47,7 @@ class ContentCatalogTest {
         topicDir = Files.createDirectories(moduleDir.resolve("topic-01-variables"));
         Files.writeString(topicDir.resolve("meta.yaml"), META);
         Files.writeString(topicDir.resolve("lesson.md"), "## Hook\n");
-        Files.writeString(topicDir.resolve("quiz.yaml"), "questions: []\n");
+        Files.writeString(topicDir.resolve("quiz.yaml"), QUIZ);
         Files.createDirectories(practice.resolve("module-01-basics/topic-01-variables/test"));
     }
 
@@ -82,6 +90,14 @@ class ContentCatalogTest {
 
         var error = assertThrows(InvalidContentException.class, () -> ContentCatalog.load(content, practice));
         assertTrue(error.getMessage().contains("ticket.key"), error.getMessage());
+    }
+
+    @Test
+    void quizForAnotherTopicIsRejected() throws IOException {
+        Files.writeString(topicDir.resolve("quiz.yaml"), QUIZ.replace("topic-01-variables", "topic-09-other"));
+
+        var error = assertThrows(InvalidContentException.class, () -> ContentCatalog.load(content, practice));
+        assertTrue(error.getMessage().contains("does not match"), error.getMessage());
     }
 
     @Test

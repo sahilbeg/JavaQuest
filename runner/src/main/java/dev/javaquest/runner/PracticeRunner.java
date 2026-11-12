@@ -105,41 +105,51 @@ public final class PracticeRunner {
         return file.startsWith(sourceRoot) ? sourceRoot.relativize(file).toString() : file.getFileName().toString();
     }
 
+    public ProgramResult runMain(Path sources, String mainClass) throws IOException, InterruptedException {
+        sources = sources.toAbsolutePath().normalize();
+        long started = System.nanoTime();
+        Path workDir = Files.createTempDirectory("javaquest-main-");
+        try {
+            Path classes = workDir.resolve("main");
+            List<CompileError> errors = compile(sources, classes, List.of());
+            if (!errors.isEmpty()) {
+                return new ProgramResult(ProgramResult.Status.COMPILE_ERROR, errors, "", elapsedSince(started));
+            }
+            Finished run = spawn(jvmCommand(workDir, List.of(classes), List.of(mainClass)), workDir);
+            ProgramResult.Status status = !run.inTime() ? ProgramResult.Status.TIMED_OUT
+                    : run.exitCode() == 0 ? ProgramResult.Status.COMPLETED : ProgramResult.Status.EXCEPTION;
+            return new ProgramResult(status, List.of(), run.output(), elapsedSince(started));
+        } finally {
+            deleteRecursively(workDir);
+        }
+    }
+
+    /** Runs a single-file program such as a lesson snippet. The file is named after its first top-level class. */
+    public ProgramResult runSnippet(String code) throws IOException, InterruptedException {
+        String className = Snippets.mainClassName(code);
+        Path dir = Files.createTempDirectory("javaquest-snippet-");
+        try {
+            Files.writeString(dir.resolve(className + ".java"), code);
+            return runMain(dir, className);
+        } finally {
+            deleteRecursively(dir);
+        }
+    }
+
     private TestRunResult runTests(Path workDir, Path mainClasses, Path testClasses, long started)
             throws IOException, InterruptedException {
         Path reportsDir = workDir.resolve("reports");
         var classpath = new ArrayList<>(testRuntimeClasspath);
         classpath.add(mainClasses);
         classpath.add(testClasses);
-        var command = List.of(
-                javaExecutable.toString(),
-                "-Xmx" + limits.heapMegabytes() + "m",
-                "-Xss1m",
-                "-XX:+UseSerialGC",
-                "-XX:TieredStopAtLevel=1",
-                "-Djava.io.tmpdir=" + workDir,
-                "-cp", joinClasspath(classpath),
+        Finished run = spawn(jvmCommand(workDir, classpath, List.of(
                 "org.junit.platform.console.ConsoleLauncher", "execute",
                 "--scan-classpath", testClasses.toString(),
                 "--reports-dir", reportsDir.toString(),
-                "--disable-banner", "--details=none", "--disable-ansi-colors");
-        Process process = new ProcessBuilder(command)
-                .directory(workDir.toFile())
-                .redirectErrorStream(true)
-                .start();
-        var output = new CappedOutput(process.getInputStream(), limits.maxOutputBytes());
-        Thread reader = Thread.ofVirtual().start(output::drain);
-
-        boolean finished = process.waitFor(limits.timeout().toMillis(), TimeUnit.MILLISECONDS);
-        if (!finished) {
-            process.descendants().forEach(ProcessHandle::destroyForcibly);
-            process.destroyForcibly();
-            process.waitFor();
-        }
-        reader.join();
-        String text = output.text();
+                "--disable-banner", "--details=none", "--disable-ansi-colors")), workDir);
+        String text = LauncherOutput.withoutSummary(run.output());
         Duration duration = elapsedSince(started);
-        if (!finished) {
+        if (!run.inTime()) {
             return new TestRunResult(Outcome.TIMED_OUT, List.of(), List.of(), text, duration);
         }
         Path report = reportsDir.resolve(REPORT_FILE);
@@ -155,6 +165,39 @@ public final class PracticeRunner {
         }
         Outcome outcome = tests.stream().allMatch(TestCaseResult::passed) ? Outcome.PASSED : Outcome.FAILED;
         return new TestRunResult(outcome, tests, List.of(), text, duration);
+    }
+
+    private List<String> jvmCommand(Path workDir, List<Path> classpath, List<String> mainAndArgs) {
+        var command = new ArrayList<>(List.of(
+                javaExecutable.toString(),
+                "-Xmx" + limits.heapMegabytes() + "m",
+                "-Xss1m",
+                "-XX:+UseSerialGC",
+                "-XX:TieredStopAtLevel=1",
+                "-Djava.io.tmpdir=" + workDir,
+                "-cp", joinClasspath(classpath)));
+        command.addAll(mainAndArgs);
+        return command;
+    }
+
+    private record Finished(boolean inTime, int exitCode, String output) {}
+
+    private Finished spawn(List<String> command, Path workDir) throws IOException, InterruptedException {
+        Process process = new ProcessBuilder(command)
+                .directory(workDir.toFile())
+                .redirectErrorStream(true)
+                .start();
+        process.getOutputStream().close();
+        var output = new CappedOutput(process.getInputStream(), limits.maxOutputBytes());
+        Thread reader = Thread.ofVirtual().start(output::drain);
+        boolean finished = process.waitFor(limits.timeout().toMillis(), TimeUnit.MILLISECONDS);
+        if (!finished) {
+            process.descendants().forEach(ProcessHandle::destroyForcibly);
+            process.destroyForcibly();
+            process.waitFor();
+        }
+        reader.join();
+        return new Finished(finished, process.exitValue(), output.text());
     }
 
     private static String joinClasspath(List<Path> entries) {

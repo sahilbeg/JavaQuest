@@ -7,6 +7,7 @@ import dev.javaquest.runner.RunLimits;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Clock;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,11 @@ public class PracticeConfiguration {
     @Bean
     ContentCatalog contentCatalog(JavaQuestProperties properties) throws IOException {
         return ContentCatalog.load(properties.contentDir(), properties.practiceDir());
+    }
+
+    @Bean
+    Clock clock() {
+        return Clock.systemDefaultZone();
     }
 
     @Bean

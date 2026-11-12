@@ -105,6 +105,7 @@ public class PracticeWatcher implements SmartLifecycle {
             return;
         }
         PracticePaths.topicIdForSourceFile(practiceRoot, changed)
+                .filter(topicId -> !practice.isEchoOfBrowserWrite(topicId))
                 .flatMap(catalog::topic)
                 .ifPresent(this::scheduleRun);
     }
