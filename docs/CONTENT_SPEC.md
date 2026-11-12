@@ -32,9 +32,9 @@ concepts: [declaration, assignment, naming, reassignment]   # used to tag quiz q
 practice:
   kind: code                   # code | quiz
   runner: plain                # plain | mockito | spring
-  mainClass: Variables         # for the Run button, optional
-  testClass: VariablesTest
+  mainClass: jq.m01.variables.Variables   # fully qualified, for the Run button, optional
   timeoutSeconds: 10           # optional override
+# The runner finds test classes by scanning the compiled test/ folder, so no test class name is needed.
 xp: { quiz: 50, code: 100 }
 hints:                         # exactly 3, from gentle to explicit
   - "A variable needs a type, a name, and a value."
@@ -169,7 +169,7 @@ The checker compiles every `predict-output` snippet and checks the stated answer
 ```
 practice/module-01-basics/topic-01-variables/
   README.md                 # the task in plain words, same text as the UI
-  src/jq/m01/variables/Variables.java
+  src/jq/m01/variables/Variables.java   # add src/ and test/ to practice/pom.xml so the IDE sees them
   test/jq/m01/variables/VariablesTest.java
   solution/jq/m01/variables/Variables.java
 ```
@@ -187,7 +187,7 @@ Test rules:
 - Tests run in under 2 seconds on the solution, apart from Spring topics.
 - Tests never touch the network. File tests use `@TempDir`.
 
-Verification, recorded in `build_state.json` per topic:
+Verification, recorded in `build_state.json` per topic by `./mvnw -q -pl tools dependency:properties exec:java`:
 
 - `solutionPasses`: the tests pass when compiled against `solution/`.
 - `skeletonFails`: the tests fail, without a compile error, against `src/`.

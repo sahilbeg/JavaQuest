@@ -8,16 +8,16 @@ JavaQuest is a local, single-user learning app. One command starts it. It serves
 |---|---|---|
 | Runtime | Java 21 LTS | Required. Virtual threads and records are used in the app itself. |
 | Build | Maven 3.9+ with the Maven Wrapper (`mvnw`) | Required. The wrapper means no global Maven install. |
-| Server | Spring Boot 3.x (Web, Validation, Data JDBC, Actuator off) | Mature, one runnable JAR, well documented. |
+| Server | Spring Boot 4.1.2 with Web MVC. Later milestones add starters only when they need them. | Mature, one runnable JAR, well documented. |
 | Frontend | Server-rendered shell (Thymeleaf) plus plain ES modules, no Node build | One command start. Nothing to compile for the frontend. |
 | Editor | Monaco, vendored under `app/src/main/resources/static/vendor/monaco/` | Works offline. Same editor as VS Code. |
 | Markdown | flexmark-java on the server, with a fenced-block extension for `java run`, `mermaid` and `callout` blocks | Rendering is deterministic. No client-side Markdown parser. |
 | Diagrams | Mermaid, vendored | Diagrams live as text in lessons. |
-| Content data | YAML parsed with Jackson YAML, validated against JSON Schemas at startup | Readable to author, strict to load. |
+| Content data | YAML read by Jackson 3 into Java records that check their own fields. Unknown and missing fields are rejected. | Readable to author, strict to load, with one definition of each format in code. |
 | Database | H2 in file mode at `~/.javaquest/progress` | Pure Java, no native driver. Survives restarts. SQLite needs a native library; H2 does not. |
 | Migrations | Flyway | Progress data survives app upgrades. |
 | Live updates | Server-Sent Events (SSE) | One-way server to browser push is all the file watcher needs. Simpler than WebSockets. |
-| Tests in practice | JUnit 5 run through the JUnit Platform Console Launcher | Structured results with no Maven start-up cost per run. |
+| Tests in practice | JUnit 6 (the Jupiter API, same as JUnit 5 for learners) run through the console launcher's standalone jar | Structured results with no Maven start-up cost per run. One jar serves both the runner and the IDE. |
 | Styling | Hand-written CSS with custom properties, light and dark themes | Small, no framework, easy to theme. |
 
 ## Repository layout
@@ -26,11 +26,12 @@ JavaQuest is a local, single-user learning app. One command starts it. It serves
 javaquest/
   pom.xml                     # parent POM: Java 21, dependency versions
   mvnw, mvnw.cmd, .mvn/       # Maven Wrapper
-  run.sh / run.bat            # build if needed, then start the app
+  run.sh                      # build if needed, then start the app (run.bat deferred)
+  runner/                     # compiles and tests practice code in a child JVM; shared by app and tools
   app/                        # Spring Boot application
     src/main/java/dev/javaquest/
       content/                # loads and validates content/, builds the catalog
-      practice/               # file watcher, runner, result parsing
+      practice/               # practice service and file watcher
       progress/               # XP, mastery, streaks, badges, spaced repetition
       quiz/                   # question variants, grading
       web/                    # controllers, SSE endpoint
@@ -38,11 +39,10 @@ javaquest/
       templates/              # Thymeleaf pages
       static/                 # css, js modules, vendor/monaco, vendor/mermaid, mascot art
       db/migration/           # Flyway SQL
-      schema/                 # JSON Schemas for meta.yaml, quiz.yaml
   content/                    # immutable lesson content (see CONTENT_SPEC.md)
     module-01-basics/
       module.yaml
-      topic-01-variables/{meta.yaml, lesson.md, quiz.yaml, recap.md}
+      topic-01-variables/{meta.yaml, lesson.md, quiz.yaml}
   practice/                   # your editable code
     pom.xml                   # lets your IDE resolve JUnit and see sources
     module-01-basics/topic-01-variables/
@@ -75,10 +75,10 @@ flowchart LR
   C --> FS[(content/ and practice/)]
 ```
 
-- **Content catalog.** Reads `content/` once at startup, validates every file against its schema, and holds an in-memory index. A validation error stops startup with the file path and the problem. In dev mode a flag reloads content on change.
+- **Content catalog.** Reads `content/` once at startup, checks every file, and holds an in-memory index. A validation error stops startup with the file path and the problem. In dev mode a flag reloads content on change.
 - **Quiz service.** Picks question variants, grades answers, and records weak concepts. Grading is pure data comparison with no code execution.
 - **Practice runner.** Compiles and tests your code in a child JVM (see Sandboxing). One run at a time per topic. Queued runs for the same topic collapse into the latest one.
-- **File watcher.** Uses `java.nio.file.WatchService` on `practice/`. A change to any `src/` file is debounced for 500 ms, then triggers a test run. The result is pushed over SSE, so the page updates while you edit in your IDE. On macOS the JDK WatchService polls, which adds a delay of a few seconds. M1 measures this delay and, if it is too slow, falls back to the `directory-watcher` library, which uses native macOS events.
+- **File watcher.** Uses `java.nio.file.WatchService` on each topic's `src/` folder. A change to a `.java` file waits 500 ms for more saves, then triggers a test run. The result is pushed over SSE, so the page updates while you edit in your IDE. Measured in M1 on macOS with JDK 21.0.13: 0.96 to 1.88 s from save to test start (3 saves), including the 500 ms wait. That is fast enough, so no native watcher library is used.
 - **Progress service.** Applies the rules in GAMIFICATION.md. All state changes go through it.
 
 ## Editor flow: Run and Submit
@@ -109,7 +109,9 @@ java -Xmx256m -Xss1m -XX:+UseSerialGC -XX:TieredStopAtLevel=1
 | Working directory | a fresh temp directory, deleted after the run | `ProcessBuilder.directory` |
 | Concurrency | at most 2 child JVMs at once | Semaphore in the runner |
 
-These values are starting defaults. None has been measured yet. M1 measures run time on the hello-world topic, and the time limit gets adjusted from that measurement.
+Measured in M1 on an Apple Silicon Mac: a full submit of the hello-world topic (compile, start the child JVM, run 2 tests) took 0.49 s the first time and 0.30 to 0.33 s after that (6 runs). The 10 s limit is about 20 times a normal run. It stays at 10 s to leave room for slower machines and heavier tests. The heap limit has not been tuned; 256 MB is still a guess.
+
+Running out of memory ends the whole child JVM, because JUnit rethrows `OutOfMemoryError`. The runner reports this as `CRASHED`, and the output contains `java.lang.OutOfMemoryError`. `System.exit` in learner code is also reported as `CRASHED`.
 
 **This is not a security sandbox.** Java 21 has deprecated the Security Manager for removal, so the child JVM can still read and write any file your user account can reach, open network connections, and start other processes. The limits above stop accidents such as infinite loops, memory blow-ups and huge output. They do not stop malicious code. That is acceptable here because the only code that runs is code you wrote or chose to paste, on your own machine. Two further measures reduce the exposure:
 
@@ -148,14 +150,14 @@ Export and import as JSON from the settings page give you a backup.
 
 - Unit tests for grading, mastery, XP and spaced repetition rules.
 - An integration test that runs the practice runner on a passing and a failing fixture.
-- `tools/` verifier: for every practice topic, the solution must pass and the skeleton must fail. CI-style command: `./mvnw -pl tools verify -Dverify.practice`.
+- `tools/` verifier: for every practice topic, the solution must pass and the skeleton must compile and fail. Command: `./mvnw -q -pl tools dependency:properties exec:java`. It writes the result into `build_state.json` and exits with status 1 when a topic fails.
 - A content checker that validates every YAML file, every internal link, and compiles every `java run` snippet.
 
 ## Risks
 
 | Risk | Mitigation |
 |---|---|
-| macOS file watching is slow | Measure in M1. Fall back to native events. |
+| macOS file watching is slow | Measured in M1: under 2 s. No fallback needed. |
 | Spring topics run slowly | Longer limit, and a progress message in the UI. |
 | Monaco bundle size (about 10 MB unpacked) | Vendored once. Served with long cache headers. |
 | Content volume (136 graded units) | Built one module per milestone, verified by the tools before commit. |

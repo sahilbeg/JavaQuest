@@ -1,0 +1,17 @@
+server:
+  address: 127.0.0.1
+  port: 2026
+
+spring:
+  application:
+    name: javaquest
+  main:
+    banner-mode: off
+
+javaquest:
+  root: .
+  runner:
+    timeout: 10s
+    heap-megabytes: 256
+    max-output-bytes: 65536
+    classpath-file: practice/target/runner-classpath.txt

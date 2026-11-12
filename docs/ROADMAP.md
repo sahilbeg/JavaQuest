@@ -8,16 +8,16 @@ Each milestone ends with: project checks green, both state files updated, one co
 - [x] BUILD_STATE.md and build_state.json
 - [x] Plan approved: mascot Byte, Skip ahead kept, macOS only for now, textbook and W3Schools page style
 
-## M1: App skeleton and practice runner
+## M1: App skeleton and practice runner (done)
 
-- [ ] M1-01 Parent POM, Maven Wrapper, modules `app`, `tools`, and `practice/pom.xml`
-- [ ] M1-02 `run.sh` and `run.bat`: build if the JAR is stale, start on port 2026, bound to 127.0.0.1
-- [ ] M1-03 Content catalog with JSON Schema validation, plus one sample topic (module 0 hello-world)
-- [ ] M1-04 Practice runner: compile, run JUnit in a child JVM, enforce limits, parse XML reports
-- [ ] M1-05 Measure child JVM start and test time. Set the timeout from the measurement.
-- [ ] M1-06 File watcher and SSE push. Measure macOS latency. Pick the watcher implementation.
-- [ ] M1-07 `tools` verifier: solution passes, skeleton fails, writes results into build_state.json
-- [ ] M1-08 Tests for the runner and the verifier
+- [x] M1-01 Parent POM, Maven Wrapper, modules `runner`, `app`, `tools`, and `practice/pom.xml`
+- [x] M1-02 `run.sh`: build if the JAR is stale, start on port 2026, bound to 127.0.0.1
+- [x] M1-03 Content catalog that checks every file, plus one sample topic (module 0 hello-world)
+- [x] M1-04 Practice runner: compile, run JUnit in a child JVM, enforce limits, parse XML reports
+- [x] M1-05 Measured: 0.30 to 0.49 s per submit. The 10 s limit stays.
+- [x] M1-06 File watcher and SSE push. Measured: under 2 s from save to test start. JDK watcher kept.
+- [x] M1-07 `tools` verifier: solution passes, skeleton fails, writes results into build_state.json
+- [x] M1-08 Tests for the runner, catalog, path mapping, status ladder and HTTP endpoints
 
 ## M2: Lesson, editor and quiz UI
 
@@ -25,8 +25,9 @@ Each milestone ends with: project checks green, both state files updated, one co
 - [ ] Lesson rendering: Markdown, callouts, Mermaid, runnable snippets
 - [ ] Monaco editor with Run, Submit, and IDE-change reload
 - [ ] All 5 quiz types, keyboard accessible, with variants and seeds
-- [ ] Readable compiler and test feedback
-- [ ] Content checker: schema, links, snippet compilation, predict-output answers
+- [ ] Readable compiler and test feedback. Strip the console launcher's summary from the learner's output.
+- [ ] "Reset to skeleton" with a pristine copy
+- [ ] Content checker: prerequisites exist, links, snippet compilation, predict-output answers
 
 ## M3: Progress and gamification
 

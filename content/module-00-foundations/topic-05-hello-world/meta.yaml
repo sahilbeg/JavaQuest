@@ -1,0 +1,16 @@
+id: module-00-foundations/topic-05-hello-world
+title: "Your first program: Hello, World"
+order: 5
+minutes: 8
+prerequisites: [module-00-foundations/topic-04-setup-jdk-ide]
+concepts: [class, main-method, println, strings, case-sensitivity]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m00.helloworld.Hello
+xp: { quiz: 50, code: 100 }
+hints:
+  - "Text in Java goes inside double quotes, like \"this\"."
+  - "greeting() needs return \"Hello, World!\"; and main needs System.out.println(...)."
+  - "Inside main, write: System.out.println(greeting());"
+review: true

@@ -2,11 +2,11 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-12T13:06:41+05:30
-- **Phase:** PHASE 0: planning
-- **Milestone:** M0
-- **Resume here:** Plan approved. Start M1 task M1-01.
-- **Next task:** M1-01: create Maven multi-module skeleton (app, content-tools, practice parent POM)
+- **Last updated:** 2026-11-12T13:26:32+05:30
+- **Phase:** PHASE 1: build
+- **Milestone:** M2
+- **Resume here:** M1 is done and committed. Start M2 task M2-01: page shell with light and dark themes.
+- **Next task:** M2-01: page shell, light and dark themes, responsive layout
 
 ## Completed tasks
 
@@ -17,6 +17,14 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - M0-05 roadmap
 - M0-06 state files
 - M0-07 plan approved
+- M1-01 Maven skeleton
+- M1-02 run.sh
+- M1-03 content catalog and sample topic
+- M1-04 practice runner
+- M1-05 runner timing measured
+- M1-06 file watcher and SSE
+- M1-07 practice verifier
+- M1-08 M1 tests
 
 ## Decisions
 
@@ -24,6 +32,10 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - Skip ahead: kept
 - Platform: macOS only for now; Windows deferred
 - Page style: textbook order with W3Schools-style pages (Syntax box, Try it Yourself, prev/next, sidebar)
+- Spring Boot 4.1.2, JUnit 6.1.3 (Jupiter API)
+- Content formats are Java records that check themselves; no JSON Schema files
+- JDK WatchService kept: measured under 2 s on macOS
+- Verify practice with: ./mvnw -q -pl tools dependency:properties exec:java
 
 ## Blockers
 
@@ -45,8 +57,8 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | C09 | planned |
 | C10 | planned |
 | M0 | done |
-| M1 | planned |
-| M2 | planned |
+| M1 | done |
+| M2 | in_progress |
 | M3 | planned |
 | M4 | planned |
 | M5 | planned |
@@ -56,7 +68,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 
 | Module | Units | Status |
 |---|---|---|
-| module-00-foundations | 8 | planned |
+| module-00-foundations | 8 | in_progress |
 | module-01-basics | 14 | planned |
 | module-02-oop | 14 | planned |
 | module-03-core-java | 18 | planned |
@@ -68,7 +80,17 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-09-architecture | 10 | planned |
 | module-10-professional | 8 | planned |
 
-All topics are `planned`. Per-topic status lives in `build_state.json`.
+## Topics past `planned`
+
+| Topic | Status | Solution passes | Skeleton fails |
+|---|---|---|---|
+| module-00-foundations/topic-05-hello-world | tests_verified | True | True |
+
+## Commands
+
+- Start the app: `./run.sh`
+- Run all tests: `./mvnw -q install`
+- Verify practice topics: `./mvnw -q -pl tools dependency:properties exec:java`
 
 ## Session protocol
 

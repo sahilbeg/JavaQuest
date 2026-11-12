@@ -1,0 +1,91 @@
+topic: module-00-foundations/topic-05-hello-world
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: main-method
+    prompt: "Where does Java start running your program?"
+    choices: ["At the main method", "At the first line of the file", "At the last method in the class", "At the class name"]
+    answer: 0
+    explain: "Java always looks for the main method and starts there."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: println
+    prompt: "Complete the line so it prints Hi: System.out.___(\"Hi\");"
+    answers: ["println"]
+    explain: "println prints the text and then moves to a new line."
+    reteach: "## Concept"
+
+  - id: q03
+    type: predict-output
+    concept: println
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println("One");
+              System.out.println("Two");
+          }
+      }
+    answer: "One\nTwo"
+    explain: "Lines run from top to bottom. Each println ends with a new line."
+    reteach: "## Worked example"
+
+  - id: q04
+    type: spot-the-bug
+    concept: println
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println("Hello")
+          }
+      }
+    bugLine: 3
+    explain: "The println line has no semicolon at the end."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: mcq
+    concept: case-sensitivity
+    variants:
+      - { prompt: "Which line compiles?", choices: ["System.out.println(\"Hi\");", "system.out.println(\"Hi\");", "System.Out.println(\"Hi\");", "System.out.PrintLn(\"Hi\");"], answer: 0 }
+      - { prompt: "Which line has the capital letters right?", choices: ["System.out.println(\"Yo\");", "SYSTEM.out.println(\"Yo\");", "System.out.Println(\"Yo\");", "system.Out.println(\"Yo\");"], answer: 0 }
+    explain: "Java cares about capital letters. Only System, out and println spelled exactly like that work."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: mcq
+    concept: class
+    prompt: "A class is called Greeter. What must the file be called?"
+    choices: ["Greeter.java", "greeter.java", "Main.java", "Greeter.class"]
+    answer: 0
+    explain: "The file name matches the class name exactly, plus .java at the end."
+    reteach: "## Concept"
+
+  - id: q07
+    type: order
+    concept: class
+    prompt: "Put the lines in order to make a program that prints Hi."
+    items:
+      - "public class Main {"
+      - "    public static void main(String[] args) {"
+      - "        System.out.println(\"Hi\");"
+      - "    }"
+      - "}"
+    explain: "The class wraps the main method, and main wraps the println."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: strings
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(Hello there);
+          }
+      }
+    bugLine: 3
+    explain: "Text needs double quotes around it: \"Hello there\"."
+    reteach: "## Common mistakes"
