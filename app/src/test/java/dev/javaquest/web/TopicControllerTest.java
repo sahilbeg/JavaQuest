@@ -33,6 +33,7 @@ class TopicControllerTest {
         Files.writeString(classpathFile, System.getProperty("junit.console.jar"));
         registry.add("javaquest.root", () -> Path.of("..").toAbsolutePath().normalize().toString());
         registry.add("javaquest.runner.classpath-file", classpathFile::toString);
+        registry.add("spring.datasource.url", () -> "jdbc:h2:mem:controller-test;DB_CLOSE_DELAY=-1");
     }
 
     @Test
@@ -94,9 +95,10 @@ class TopicControllerTest {
         mvc.perform(post(TOPIC + "/quiz").header(LocalOnlyFilter.WRITE_HEADER, "1")
                         .contentType("application/json").content("{\"seed\": 11, \"answers\": {}}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.scorePercent").value(0))
-                .andExpect(jsonPath("$.passed").value(false))
-                .andExpect(jsonPath("$.questions[0].explain").exists());
+                .andExpect(jsonPath("$.result.scorePercent").value(0))
+                .andExpect(jsonPath("$.result.passed").value(false))
+                .andExpect(jsonPath("$.result.questions[0].explain").exists())
+                .andExpect(jsonPath("$.progress.quizAttempts").value(org.hamcrest.Matchers.greaterThanOrEqualTo(1)));
     }
 
     @Test

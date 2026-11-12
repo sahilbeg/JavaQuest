@@ -407,6 +407,8 @@ pre.mermaid svg .node rect, pre.mermaid svg .node polygon { filter: none !import
 .check-raw { grid-column: 2; font-family: var(--font-code); font-size: 0.82rem; color: var(--ink-soft); }
 .checks-empty { color: var(--ink-soft); margin: 0; }
 .console-out { margin: var(--space-3) 0 0; padding: var(--space-3) var(--space-4); background: var(--code-ground); border: 1px solid var(--line); border-radius: var(--radius-s); font-size: 0.86rem; white-space: pre-wrap; max-height: 240px; overflow: auto; }
+.solution { margin-top: var(--space-5); }
+.solution-code { max-height: none; }
 .console-label { font-size: 0.85rem; color: var(--ink-soft); margin: var(--space-4) 0 0; font-weight: 700; }
 
 /* Onboarding check (quiz) */

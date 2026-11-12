@@ -1,6 +1,7 @@
 package dev.javaquest.practice;
 
 import dev.javaquest.content.Topic;
+import dev.javaquest.progress.ProgressService;
 import dev.javaquest.practice.PracticeResult.Source;
 import dev.javaquest.runner.PracticeRunner;
 import dev.javaquest.web.EventHub;
@@ -29,15 +30,16 @@ public class PracticeService {
     private final PracticeRunner runner;
     private final EventHub events;
     private final Clock clock;
+    private final ProgressService progress;
     private final Semaphore parallelRuns = new Semaphore(MAX_PARALLEL_RUNS);
     private final Map<String, ReentrantLock> topicLocks = new ConcurrentHashMap<>();
-    private final Map<String, PracticeResult> latest = new ConcurrentHashMap<>();
     private final Map<String, Instant> browserWrites = new ConcurrentHashMap<>();
 
-    public PracticeService(PracticeRunner runner, EventHub events, Clock clock) {
+    public PracticeService(PracticeRunner runner, EventHub events, Clock clock, ProgressService progress) {
         this.runner = runner;
         this.events = events;
         this.clock = clock;
+        this.progress = progress;
     }
 
     public PracticeResult submit(Topic topic, Source source) throws IOException, InterruptedException {
@@ -48,7 +50,7 @@ public class PracticeService {
             events.publish("run-started", Map.of("topicId", topic.id(), "source", source));
             var result = new PracticeResult(topic.id(), source,
                     runner.run(topic.practiceSources(), topic.practiceTests()));
-            latest.put(topic.id(), result);
+            progress.recordTestRun(topic, result);
             events.publish("run-finished", result);
             return result;
         } finally {
@@ -76,7 +78,26 @@ public class PracticeService {
     }
 
     public Optional<PracticeResult> latest(String topicId) {
-        return Optional.ofNullable(latest.get(topicId));
+        return progress.latestRun(topicId);
+    }
+
+    /** Puts the untouched skeleton back into src/, replacing the learner's edits. */
+    public void resetToSkeleton(Topic topic) throws IOException {
+        Path src = topic.practiceSources();
+        Path skeleton = topic.practiceSkeleton();
+        browserWrites.put(topic.id(), clock.instant());
+        try (Stream<Path> old = Files.walk(src)) {
+            for (Path file : old.filter(p -> p.toString().endsWith(".java")).toList()) {
+                Files.delete(file);
+            }
+        }
+        try (Stream<Path> fresh = Files.walk(skeleton)) {
+            for (Path file : fresh.filter(Files::isRegularFile).toList()) {
+                Path target = src.resolve(skeleton.relativize(file).toString());
+                Files.createDirectories(target.getParent());
+                Files.copy(file, target);
+            }
+        }
     }
 
     public List<String> sourceFiles(Topic topic) throws IOException {

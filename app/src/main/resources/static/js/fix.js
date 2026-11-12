@@ -1,7 +1,7 @@
 import { h, icon } from "./dom.js";
 import { api } from "./api.js";
 import { bus } from "./events.js";
-import { loadMonaco, editorTheme, EDITOR_OPTIONS } from "./monaco.js";
+import { loadMonaco, editorTheme, colorizeJava, EDITOR_OPTIONS } from "./monaco.js";
 import { describeProgram } from "./kb.js";
 
 export async function renderFix(container, topic, chat, onResult) {
@@ -19,15 +19,19 @@ export async function renderFix(container, topic, chat, onResult) {
   const saveButton = h("button", { type: "button", class: "button button-quiet", onclick: () => save() }, icon("save"), "Save");
   const runButton = topic.mainClass && h("button", { type: "button", class: "button", onclick: run }, icon("play"), "Run");
   const submitButton = h("button", { type: "button", class: "button button-primary", onclick: submit }, icon("send"), "Run checks");
+  const solutionButton = h("button", { type: "button", class: "button button-quiet", onclick: showSolution }, icon("lightbulb"), "Show solution");
+  const resetButton = h("button", { type: "button", class: "button button-quiet", onclick: confirmReset }, icon("rotate-ccw"), "Reset");
+  const solutionPanel = h("section", { class: "solution", hidden: true, "aria-labelledby": "solution-title" });
 
   container.replaceChildren(
     h("p", { class: "fix-intro" }, "Edit the code here or in your IDE at ",
       h("code", {}, `practice/${id}/src/${path}`),
       ". Saving in your IDE runs the checks for you."),
     h("div", { class: "editor-frame" },
-      h("div", { class: "editor-bar" }, fileLabel, h("span", { class: "spacer" }), saveButton, runButton, submitButton),
+      h("div", { class: "editor-bar" }, fileLabel, h("span", { class: "spacer" }), resetButton, solutionButton, saveButton, runButton, submitButton),
       notice, host),
-    checks);
+    checks,
+    solutionPanel);
 
   renderChecks(checks, topic.summary.latest);
 
@@ -75,6 +79,42 @@ export async function renderFix(container, topic, chat, onResult) {
     });
   }
 
+  async function showSolution() {
+    try {
+      const { files, progress } = await api.solution(id);
+      solutionPanel.replaceChildren(
+        h("h2", { id: "solution-title", class: "console-label" }, "Maya's solution"),
+        ...files.map((f) => h("div", {}, h("p", { class: "editor-file" }, f.path), h("pre", { class: "console-out solution-code" }, h("code", {}, f.content)))));
+      solutionPanel.hidden = false;
+      solutionPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+      for (const code of solutionPanel.querySelectorAll("code")) {
+        const html = await colorizeJava(monaco, code.textContent);
+        if (html) code.innerHTML = html;
+      }
+      chat.say(progress.testsPassed
+        ? "Here's how Maya wrote it. Compare it with yours: there's usually more than one good answer."
+        : "Here's the solution. Read it line by line, then type it yourself instead of pasting. Typing it is how it sticks.",
+        { mood: "idle" });
+    } catch (error) {
+      chat.say(error.message, { mood: "encouraging" });
+    }
+  }
+
+  function confirmReset() {
+    notice.replaceChildren("Put the starting code back? Your changes to this file will be lost.",
+      h("button", { type: "button", class: "button", onclick: async () => {
+        notice.hidden = true;
+        await api.reset(id);
+        const fresh = await api.readSource(id, path);
+        savedValue = fresh.content;
+        editor.setValue(fresh.content);
+        markDirty();
+        chat.say("Fresh start. The starting code is back.", { mood: "idle" });
+      } }, "Reset the code"),
+      h("button", { type: "button", class: "button button-quiet", onclick: () => { notice.hidden = true; } }, "Cancel"));
+    notice.hidden = false;
+  }
+
   async function reloadFromDisk() {
     const fresh = await api.readSource(id, path);
     if (fresh.content === savedValue) return;
@@ -104,7 +144,7 @@ export async function renderFix(container, topic, chat, onResult) {
     if (e.detail.topicId !== id) return;
     renderChecks(checks, e.detail);
     narrate(chat, e.detail);
-    onResult(e.detail);
+    await onResult();
     if (e.detail.source === "IDE") await reloadFromDisk();
   };
   bus.addEventListener("run-started", onStarted);
@@ -162,7 +202,7 @@ function narrate(chat, practice) {
   const r = practice.result;
   const where = practice.source === "IDE" ? "I saw your save in the IDE. " : "";
   if (r.outcome === "PASSED") {
-    chat.say(`${where}All checks pass. Ticket closed, nice work!`, { mood: "cheering" });
+    chat.say(`${where}All checks pass!`, { mood: "cheering" });
   } else if (r.outcome === "COMPILE_ERROR") {
     chat.say(`${where}Java can't compile this yet. Start with the first error, line ${r.compileErrors[0]?.line}.`, { mood: "encouraging" });
   } else if (r.outcome === "FAILED") {

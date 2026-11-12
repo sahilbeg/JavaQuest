@@ -1,6 +1,7 @@
 import { h, icon, avatar, TEAM } from "./dom.js";
 import { byte } from "./byte.js";
 import { bus } from "./events.js";
+import { api } from "./api.js";
 import { ticketState, nextTicket } from "./status.js";
 
 export function dockRow(topics, currentId) {
@@ -70,9 +71,11 @@ export async function renderBoard(view, catalog) {
     h("h2", { class: "visually-hidden" }, "Projects"),
     projects));
 
-  const refresh = (e) => {
+  const refresh = async (e) => {
     const slot = view.querySelector(`.dock-slot[data-topic="${CSS.escape(e.detail.topicId)}"]`);
-    if (slot && e.detail.result.outcome === "PASSED" && slot.dataset.state !== "done") {
+    if (!slot || slot.dataset.state === "done") return;
+    const fresh = await api.progress(e.detail.topicId);
+    if (fresh.progress.mastered) {
       slot.dataset.state = "done";
       slot.setAttribute("data-docking", "");
     }

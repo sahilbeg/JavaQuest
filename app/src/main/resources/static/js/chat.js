@@ -4,8 +4,7 @@ import { api } from "./api.js";
 
 export function createChat(container, topic) {
   const log = h("div", { class: "chat-log", role: "log", "aria-live": "polite", "aria-label": "Messages from Byte" });
-  const storageKey = `jq-hints-${topic.summary.id}`;
-  let used = Number(sessionStorage.getItem(storageKey) ?? 0);
+  let used = 0;
 
   const hintButton = h("button", { type: "button", class: "button", onclick: askHint });
   const updateHintButton = () => {
@@ -27,12 +26,11 @@ export function createChat(container, topic) {
   async function askHint() {
     hintButton.disabled = true;
     try {
-      const { hint } = await api.hint(topic.summary.id, used + 1);
-      used += 1;
-      sessionStorage.setItem(storageKey, String(used));
+      const { hint, progress } = await api.nextHint(topic.summary.id);
+      used = progress.hintsUsed;
       say(hint, { kind: "hint", mood: "thinking" });
     } catch (error) {
-      say(`I couldn't fetch that hint: ${error.message}`, { mood: "encouraging" });
+      say(error.message, { mood: "encouraging" });
     }
     updateHintButton();
   }
@@ -44,12 +42,11 @@ export function createChat(container, topic) {
     h("div", { class: "chat-actions" }, hintButton));
   updateHintButton();
 
-  (async () => {
-    for (let n = 1; n <= used; n++) {
-      const { hint } = await api.hint(topic.summary.id, n);
-      say(hint, { kind: "hint", mood: "thinking", fresh: false });
-    }
-  })().catch(() => {});
+  api.hints(topic.summary.id).then(({ opened }) => {
+    used = opened.length;
+    opened.forEach((hint) => say(hint, { kind: "hint", mood: "thinking", fresh: false }));
+    updateHintButton();
+  }).catch(() => {});
 
   return { say };
 }

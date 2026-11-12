@@ -20,7 +20,11 @@ export const topicPath = (id) => `/api/topics/${id}`;
 export const api = {
   catalog: () => fetch("/api/catalog").then(parse),
   topic: (id) => fetch(topicPath(id)).then(parse),
-  hint: (id, n) => fetch(`${topicPath(id)}/hints/${n}`).then(parse),
+  hints: (id) => fetch(`${topicPath(id)}/hints`).then(parse),
+  nextHint: (id) => fetch(`${topicPath(id)}/hints/next`, { method: "POST", headers: WRITE_HEADERS }).then(parse),
+  progress: (id) => fetch(`${topicPath(id)}/progress`).then(parse),
+  solution: (id) => fetch(`${topicPath(id)}/solution`, { method: "POST", headers: WRITE_HEADERS }).then(parse),
+  reset: (id) => fetch(`${topicPath(id)}/reset`, { method: "POST", headers: WRITE_HEADERS }).then(parse),
   quiz: (id) => fetch(`${topicPath(id)}/quiz`).then(parse),
   gradeQuiz: (id, seed, answers) =>
     fetch(`${topicPath(id)}/quiz`, { method: "POST", headers: WRITE_HEADERS, body: JSON.stringify({ seed, answers }) }).then(parse),

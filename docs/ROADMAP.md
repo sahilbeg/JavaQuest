@@ -32,10 +32,11 @@ Each milestone ends with: project checks green, both state files updated, one co
 
 ## M3: Progress and gamification
 
-- [ ] "Reset to skeleton" with a pristine copy
-- [ ] Hint gating (hint 2 after 2 failed runs, hint 3 after 4) and solution unlock
-- [ ] H2 and Flyway schema
-- [ ] Mastery, hints, solution unlock rules
+- [x] "Reset to skeleton" with a pristine `skeleton/` copy
+- [x] Hint gating (hint 2 after 2 failed runs, hint 3 after 4) and solution unlock
+- [x] H2 and Flyway schema
+- [x] Mastery rules, mastery percent, progress survives restarts
+- [x] Native file watcher (save to checks under 1 s)
 - [ ] XP ledger, levels, streaks, badges
 - [ ] Spaced repetition and weak-topic list
 - [ ] Career dashboard, ticket board, "Continue where you left off"

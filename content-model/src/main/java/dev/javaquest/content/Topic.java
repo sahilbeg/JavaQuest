@@ -16,6 +16,14 @@ public record Topic(TopicMeta meta, Quiz quiz, Path contentDir, Path practiceDir
         return practiceDir.resolve("src");
     }
 
+    public Path practiceSkeleton() {
+        return practiceDir.resolve("skeleton");
+    }
+
+    public Path practiceSolution() {
+        return practiceDir.resolve("solution");
+    }
+
     public Path practiceTests() {
         return practiceDir.resolve("test");
     }

@@ -10,6 +10,9 @@ import dev.javaquest.practice.PracticeResult;
 import dev.javaquest.practice.PracticeResult.Source;
 import dev.javaquest.practice.PracticeService;
 import dev.javaquest.practice.ProgramRun;
+import dev.javaquest.progress.LockedException;
+import dev.javaquest.progress.ProgressService;
+import dev.javaquest.progress.ProgressService.TopicProgress;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
@@ -34,7 +37,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public class TopicController {
 
     public record TopicSummary(String id, String moduleId, String title, String practiceKind,
-                               TopicMeta.Ticket ticket, PracticeResult latest) {}
+                               TopicMeta.Ticket ticket, PracticeResult latest, TopicProgress progress) {}
 
     public record Catalog(List<ModuleInfo> modules, List<TopicSummary> topics) {}
 
@@ -44,6 +47,14 @@ public class TopicController {
     public record QuizAttempt(long seed, int passPercent, List<QuizSession.Presented> questions) {}
 
     public record QuizAnswers(long seed, Map<String, Object> answers) {}
+
+    public record QuizGraded(QuizSession.Result result, TopicProgress progress) {}
+
+    public record Hints(List<String> opened, TopicProgress progress) {}
+
+    public record OpenedHint(String hint, TopicProgress progress) {}
+
+    public record Solution(List<ProgressService.SourceFile> files, TopicProgress progress) {}
 
     public record SourceFile(String path, String content) {}
 
@@ -58,12 +69,15 @@ public class TopicController {
     private final PracticeService practice;
     private final LessonRenderer lessons;
     private final EventHub events;
+    private final ProgressService progress;
 
-    public TopicController(ContentCatalog catalog, PracticeService practice, LessonRenderer lessons, EventHub events) {
+    public TopicController(ContentCatalog catalog, PracticeService practice, LessonRenderer lessons, EventHub events,
+                           ProgressService progress) {
         this.catalog = catalog;
         this.practice = practice;
         this.lessons = lessons;
         this.events = events;
+        this.progress = progress;
     }
 
     @GetMapping("/catalog")
@@ -83,13 +97,34 @@ public class TopicController {
                 practice.sourceFiles(found));
     }
 
-    @GetMapping("/topics/{module}/{topic}/hints/{number}")
-    public Map<String, String> hint(@PathVariable String module, @PathVariable String topic, @PathVariable int number) {
-        List<String> hints = find(module, topic).meta().hints();
-        if (number < 1 || number > hints.size()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No hint " + number);
-        }
-        return Map.of("hint", hints.get(number - 1));
+    @GetMapping("/topics/{module}/{topic}/hints")
+    public Hints hints(@PathVariable String module, @PathVariable String topic) {
+        Topic found = find(module, topic);
+        return new Hints(progress.openedHints(found), progress.progress(found));
+    }
+
+    @PostMapping("/topics/{module}/{topic}/hints/next")
+    public OpenedHint nextHint(@PathVariable String module, @PathVariable String topic) {
+        Topic found = find(module, topic);
+        String hint = progress.openNextHint(found);
+        return new OpenedHint(hint, progress.progress(found));
+    }
+
+    @GetMapping("/topics/{module}/{topic}/progress")
+    public TopicSummary progress(@PathVariable String module, @PathVariable String topic) {
+        return summary(find(module, topic));
+    }
+
+    @PostMapping("/topics/{module}/{topic}/solution")
+    public Solution solution(@PathVariable String module, @PathVariable String topic) throws IOException {
+        Topic found = find(module, topic);
+        var files = progress.openSolution(found);
+        return new Solution(files, progress.progress(found));
+    }
+
+    @PostMapping("/topics/{module}/{topic}/reset")
+    public void reset(@PathVariable String module, @PathVariable String topic) throws IOException {
+        practice.resetToSkeleton(find(module, topic));
     }
 
     @GetMapping("/topics/{module}/{topic}/quiz")
@@ -100,8 +135,10 @@ public class TopicController {
     }
 
     @PostMapping("/topics/{module}/{topic}/quiz")
-    public QuizSession.Result gradeQuiz(@PathVariable String module, @PathVariable String topic, @RequestBody QuizAnswers answers) {
-        return QuizSession.grade(find(module, topic).quiz(), answers.seed(), answers.answers());
+    public QuizGraded gradeQuiz(@PathVariable String module, @PathVariable String topic, @RequestBody QuizAnswers answers) {
+        Topic found = find(module, topic);
+        var result = QuizSession.grade(found.quiz(), answers.seed(), answers.answers());
+        return new QuizGraded(result, progress.recordQuiz(found, answers.seed(), result));
     }
 
     @GetMapping("/topics/{module}/{topic}/source")
@@ -148,9 +185,15 @@ public class TopicController {
         return new Problem(e.getMessage());
     }
 
+    @ExceptionHandler(LockedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public Problem locked(LockedException e) {
+        return new Problem(e.getMessage());
+    }
+
     private TopicSummary summary(Topic t) {
         return new TopicSummary(t.id(), t.meta().moduleId(), t.meta().title(), t.meta().practice().kind().name(),
-                t.meta().ticket(), practice.latest(t.id()).orElse(null));
+                t.meta().ticket(), practice.latest(t.id()).orElse(null), progress.progress(t));
     }
 
     private Topic find(String module, String topic) {

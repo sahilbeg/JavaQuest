@@ -52,7 +52,7 @@ public final class VerifyPractice {
         for (Path topicDir : practiceTopics(root.resolve("practice"))) {
             String topicId = root.resolve("practice").relativize(topicDir).toString().replace('\\', '/');
             TestRunResult solution = runner.run(topicDir.resolve("solution"), topicDir.resolve("test"));
-            TestRunResult skeleton = runner.run(topicDir.resolve("src"), topicDir.resolve("test"));
+            TestRunResult skeleton = runner.run(topicDir.resolve("skeleton"), topicDir.resolve("test"));
             boolean solutionPasses = solution.outcome() == Outcome.PASSED;
             boolean skeletonFails = skeleton.outcome() == Outcome.FAILED;
             System.out.printf("%s: solution %s (%d ms), skeleton %s (%d ms)%n", topicId,

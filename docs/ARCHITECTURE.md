@@ -55,7 +55,7 @@ javaquest/
   build_state.json
 ```
 
-`content/` and `practice/**/test`, `practice/**/solution` are written once and never regenerated. `practice/**/src` is yours to edit. The app writes nothing inside the repo except when you press "Reset to skeleton", which restores `src/` from a pristine copy in `practice/.pristine/` after asking you.
+`content/` and `practice/**/{skeleton,test,solution}` are written once and never regenerated. `practice/**/src` is yours to edit. The app writes inside the repo only when you save in its editor, or press "Reset", which copies `skeleton/` back over `src/` after asking you.
 
 ## Runtime components
 
@@ -78,7 +78,7 @@ flowchart LR
 - **Content catalog.** Reads `content/` once at startup, checks every file, and holds an in-memory index. A validation error stops startup with the file path and the problem. In dev mode a flag reloads content on change.
 - **Quiz service.** Picks question variants, grades answers, and records weak concepts. Grading is pure data comparison with no code execution.
 - **Practice runner.** Compiles and tests your code in a child JVM (see Sandboxing). One run at a time per topic. Queued runs for the same topic collapse into the latest one.
-- **File watcher.** Uses `java.nio.file.WatchService` on each topic's `src/` folder. A change to a `.java` file waits 500 ms for more saves, then triggers a test run. The result is pushed over SSE, so the page updates while you edit in your IDE. Measured in M1 on macOS with JDK 21.0.13: 0.96 to 1.88 s from save to test start (3 saves), including the 500 ms wait. That is fast enough, so no native watcher library is used.
+- **File watcher.** Uses the `directory-watcher` library on `practice/`, which listens to native file events (FSEvents on macOS). A change to a `.java` file under a topic's `src/` waits 300 ms for more saves, then triggers a test run, pushed to the page over SSE. Measured with JDK 21.0.13 on macOS: the JDK `WatchService` took 2.2 to 2.5 s to notice a save, because it polls on macOS. The native watcher takes 0.36 to 0.39 s including the 300 ms wait (3 saves each). The test run then takes 0.35 to 0.56 s.
 - **Progress service.** Applies the rules in GAMIFICATION.md. All state changes go through it.
 
 ## Editor flow: Run and Submit
@@ -126,11 +126,11 @@ Module 8 and 9 exercises need Spring on the classpath. Each such topic declares 
 
 ## Persistence
 
-H2 file database at `~/.javaquest/progress.mv.db`. It lives outside the repo, so a `git pull` never touches your progress. Tables:
+H2 file database at `~/.javaquest/progress.mv.db` (set `--javaquest.data-dir` to move it). Flyway creates the tables from `app/src/main/resources/db/migration/`. It lives outside the repo, so a `git pull` never touches your progress. Tables:
 
-- `topic_progress(topic_id, quiz_best, quiz_attempts, tests_passed, mastered_at, hints_used, solution_viewed, last_seen)`
-- `quiz_attempt(id, topic_id, variant_seed, score, weak_concepts, created_at)`
-- `test_run(id, topic_id, source, passed, failed, duration_ms, created_at)` where `source` is `browser` or `ide`
+- `topic_progress(topic_id, quiz_best, quiz_attempts, tests_passed, failed_runs, hints_used, failed_runs_at_last_hint, solution_viewed, mastered_at, last_seen)`
+- `quiz_attempt(id, topic_id, seed, score, passed, weak_concepts, created_at)`
+- `test_run(id, topic_id, source, outcome, passed, total, duration_ms, result_json, created_at)` where `source` is `BROWSER` or `IDE`. The latest row feeds the checks panel after a restart.
 - `review_card(topic_id, ease, interval_days, due_on, repetitions)` for spaced repetition
 - `xp_event(id, kind, amount, topic_id, created_at)`, the ledger that XP totals derive from
 - `badge(id, earned_at)`
@@ -157,7 +157,7 @@ Export and import as JSON from the settings page give you a backup.
 
 | Risk | Mitigation |
 |---|---|
-| macOS file watching is slow | Measured in M1: under 2 s. No fallback needed. |
+| macOS file watching is slow | ~~Measured in M1: under 2 s. No fallback needed.~~ Remeasured: 2.2 to 2.5 s with the JDK watcher. Replaced by native events: 0.36 to 0.39 s. |
 | Spring topics run slowly | Longer limit, and a progress message in the UI. |
 | Monaco bundle size (about 10 MB unpacked) | Vendored once. Served with long cache headers. |
 | Content volume (136 graded units) | Built one module per milestone, verified by the tools before commit. |

@@ -2,11 +2,11 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-12T15:16:34+05:30
+- **Last updated:** 2026-11-12T15:31:32+05:30
 - **Phase:** PHASE 1: build
 - **Milestone:** M3
-- **Resume here:** M2 is done and committed. Start M3: progress storage (H2 + Flyway), mastery, XP, streaks, kudos.
-- **Next task:** M3-01: H2 and Flyway schema for progress
+- **Resume here:** M3 progress core is done. Next: XP ledger, job titles, streaks, kudos, spaced repetition, career dashboard.
+- **Next task:** M3-04: XP ledger and job-title levels
 
 ## Completed tasks
 
@@ -29,6 +29,10 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - M2-A backend: lesson rendering, quiz draw and grading, source read/write, run main and snippets, plain-language compiler help
 - M2-B frontend: board, ticket page, KB, onboarding check, Fix editor, Byte chat, design review fixes, DESIGN.md
 - M2-C content checker (exec:java@check-content)
+- M3-01 H2 + Flyway progress store; progress survives restarts
+- M3-02 mastery, hint gating, solution unlock, reset to skeleton
+- M3-03 native file watcher: save to checks in under 1 s
+- M2 follow-ups: fill-blank prompt, spacing check on real pages, Impeccable v4.8.2
 
 ## Decisions
 
@@ -43,6 +47,8 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - Story: you are an intern at Spoke, a bike-sharing startup (docs/STORY.md)
 - UI looks like Spoke's internal workplace tools; topics are tickets, bosses are incidents
 - Content check with: ./mvnw -q -pl tools dependency:properties exec:java@check-content
+- Each practice topic has a committed skeleton/ copy; verification and Reset use it
+- File watcher: directory-watcher (native FSEvents), measured 0.36 to 0.39 s save to start
 
 ## Blockers
 

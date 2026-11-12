@@ -5,6 +5,7 @@ import { renderKb } from "./kb.js";
 import { renderQuiz } from "./quiz.js";
 import { renderFix } from "./fix.js";
 import { ticketState } from "./status.js";
+import { toast } from "./dom.js";
 
 const TABS = [
   { key: "kb", label: "KB page", icon: "book-open" },
@@ -22,6 +23,21 @@ export async function renderTicket(view, catalog, id, initialTab) {
   const person = TEAM[summary.ticket.from];
   const stateChip = h("span", { class: `chip ${ticketState(summary).chip}` }, ticketState(summary).label);
   const disposers = [];
+  let wasMastered = summary.progress.mastered;
+
+  async function refreshState() {
+    const fresh = await api.progress(id);
+    const state = ticketState(fresh);
+    stateChip.className = `chip ${state.chip}`;
+    stateChip.textContent = state.label;
+    if (fresh.progress.mastered && !wasMastered) {
+      chat.say(["Ticket closed! You passed the check and the code checks.", `${person.name.split(" ")[0]} will be pleased.`], { mood: "cheering" });
+      toast(`${summary.ticket.key} closed. Nice work!`);
+    } else if (fresh.progress.testsPassed && !fresh.progress.mastered && fresh.progress.quizBest < 80) {
+      chat.say("Your code passes! Take the onboarding check to close the ticket.", { mood: "cheering" });
+    }
+    wasMastered = fresh.progress.mastered;
+  }
 
   const chatBox = h("aside", { class: "chat", id: "byte-chat", tabindex: "-1", "aria-label": "Chat with Byte" });
   const chat = createChat(chatBox, topic);
@@ -57,12 +73,8 @@ export async function renderTicket(view, catalog, id, initialTab) {
     rendered.add(key);
     try {
       if (key === "kb") disposers.push(renderKb(panels.kb, topic.lessonHtml, chat));
-      if (key === "check") await renderQuiz(panels.check, id, chat, showSection);
-      if (key === "fix") disposers.push(await renderFix(panels.fix, topic, chat, (result) => {
-        const state = ticketState({ latest: result });
-        stateChip.className = `chip ${state.chip}`;
-        stateChip.textContent = state.label;
-      }));
+      if (key === "check") await renderQuiz(panels.check, id, chat, showSection, refreshState);
+      if (key === "fix") disposers.push(await renderFix(panels.fix, topic, chat, refreshState));
     } catch (error) {
       rendered.delete(key);
       panels[key].replaceChildren(h("div", { class: "error-panel", role: "alert" }, h("p", {}, error.message)));

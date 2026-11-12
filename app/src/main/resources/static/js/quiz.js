@@ -9,7 +9,7 @@ const TYPE_LABELS = {
   "spot-the-bug": "Spot the bug",
 };
 
-export async function renderQuiz(container, topicId, chat, showSection) {
+export async function renderQuiz(container, topicId, chat, showSection, onProgress) {
   container.replaceChildren(h("p", { class: "loading" }, "Getting your check ready…"));
   const attempt = await api.quiz(topicId);
   const readers = new Map();
@@ -21,7 +21,7 @@ export async function renderQuiz(container, topicId, chat, showSection) {
       const { node, read } = QUESTION[q.type](q, i);
       readers.set(q.id, read);
       return h("fieldset", { class: "question", "data-qid": q.id },
-        h("legend", {}, `${i + 1}. ${q.type === "fill-blank" ? "Fill in the missing part." : q.prompt} `,
+        h("legend", {}, `${i + 1}. ${q.type === "fill-blank" ? "Fill in the missing part of this line." : q.prompt} `,
           h("span", { class: "question-type" }, TYPE_LABELS[q.type])), node);
     }),
     h("button", { type: "submit", class: "button button-primary" }, icon("send"), "Check my answers"));
@@ -37,15 +37,16 @@ export async function renderQuiz(container, topicId, chat, showSection) {
     const button = form.querySelector("button[type=submit]");
     button.disabled = true;
     try {
-      const result = await api.gradeQuiz(topicId, attempt.seed, answers);
-      showResult(result);
+      const { result, progress } = await api.gradeQuiz(topicId, attempt.seed, answers);
+      showResult(result, progress);
+      onProgress();
     } catch (error) {
       chat.say(`I couldn't grade that: ${error.message}`, { mood: "encouraging" });
       button.disabled = false;
     }
   }
 
-  function showResult(result) {
+  function showResult(result, progress) {
     form.querySelectorAll("input, textarea, button").forEach((el) => { el.disabled = true; });
     for (const graded of result.questions) {
       const fieldset = form.querySelector(`[data-qid="${CSS.escape(graded.id)}"]`);
@@ -59,13 +60,15 @@ export async function renderQuiz(container, topicId, chat, showSection) {
     }
     const banner = h("div", { class: `quiz-result ${result.passed ? "quiz-result-pass" : "quiz-result-fail"}`, role: "status" },
       h("span", { class: "quiz-score" }, `${result.scorePercent}%`),
-      h("span", {}, result.passed ? "Check passed. Now go fix the code." : `You need ${attempt.passPercent}% to pass.`),
-      h("button", { type: "button", class: "button", onclick: () => renderQuiz(container, topicId, chat, showSection) },
+      h("span", {}, result.passed
+        ? (progress.testsPassed ? "Check passed." : "Check passed. Now go fix the code.")
+        : `You need ${attempt.passPercent}% to pass. Your best so far is ${progress.quizBest}%.`),
+      h("button", { type: "button", class: "button", onclick: () => renderQuiz(container, topicId, chat, showSection, onProgress) },
         icon("rotate-ccw"), result.passed ? "Take another set" : "Try a new set"));
     form.prepend(banner);
     banner.scrollIntoView({ behavior: "smooth", block: "start" });
     if (result.passed) {
-      chat.say(`${result.scorePercent}%! You know this. Open the Fix tab and close the ticket.`, { mood: "cheering" });
+      if (!progress.testsPassed) chat.say(`${result.scorePercent}%! You know this. Open the Fix tab and get the checks green.`, { mood: "cheering" });
     } else {
       chat.say([`${result.scorePercent}% this time. Close!`,
         `Have another look at: ${result.weakConcepts.join(", ")}. Then try a new set.`], { mood: "encouraging" });

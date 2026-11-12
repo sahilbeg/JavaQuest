@@ -176,7 +176,8 @@ The content checker (`exec:java@check-content`) runs every `predict-output` snip
 ```
 practice/module-01-basics/topic-01-variables/
   README.md                 # the task in plain words, same text as the UI
-  src/jq/m01/variables/Variables.java   # add src/ and test/ to practice/pom.xml so the IDE sees them
+  src/jq/m01/variables/Variables.java   # the learner's copy; add src/ and test/ to practice/pom.xml so the IDE sees them
+  skeleton/jq/m01/variables/Variables.java   # pristine starting code, identical to src/ when written; Reset copies it back
   test/jq/m01/variables/VariablesTest.java
   solution/jq/m01/variables/Variables.java
 ```
@@ -197,7 +198,7 @@ Test rules:
 Verification, recorded in `build_state.json` per topic by `./mvnw -q -pl tools dependency:properties exec:java@verify-practice`:
 
 - `solutionPasses`: the tests pass when compiled against `solution/`.
-- `skeletonFails`: the tests fail, without a compile error, against `src/`.
+- `skeletonFails`: the tests fail, without a compile error, against `skeleton/`. The learner's `src/` is never used for verification.
 
 ## Boss and mini-project folders
 

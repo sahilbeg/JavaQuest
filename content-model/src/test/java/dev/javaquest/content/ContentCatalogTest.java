@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -48,7 +49,9 @@ class ContentCatalogTest {
         Files.writeString(topicDir.resolve("meta.yaml"), META);
         Files.writeString(topicDir.resolve("lesson.md"), "## Hook\n");
         Files.writeString(topicDir.resolve("quiz.yaml"), QUIZ);
-        Files.createDirectories(practice.resolve("module-01-basics/topic-01-variables/test"));
+        for (String folder : List.of("src", "skeleton", "solution", "test")) {
+            Files.createDirectories(practice.resolve("module-01-basics/topic-01-variables").resolve(folder));
+        }
     }
 
     @Test
@@ -117,9 +120,10 @@ class ContentCatalogTest {
     }
 
     @Test
-    void codeTopicWithoutTestsIsRejected() throws IOException {
-        Files.delete(practice.resolve("module-01-basics/topic-01-variables/test"));
+    void codeTopicWithoutASkeletonIsRejected() throws IOException {
+        Files.delete(practice.resolve("module-01-basics/topic-01-variables/skeleton"));
 
-        assertThrows(InvalidContentException.class, () -> ContentCatalog.load(content, practice));
+        var error = assertThrows(InvalidContentException.class, () -> ContentCatalog.load(content, practice));
+        assertTrue(error.getMessage().contains("skeleton"), error.getMessage());
     }
 }

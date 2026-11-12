@@ -14,7 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: println
-    prompt: "Complete the line so it prints Hi: System.out.___(\"Hi\");"
+    prompt: "System.out.___(\"Hi\");"
     answers: ["println"]
     explain: "println prints the text and then moves to a new line."
     reteach: "## Concept"

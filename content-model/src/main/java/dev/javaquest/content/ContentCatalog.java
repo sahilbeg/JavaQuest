@@ -55,8 +55,12 @@ public final class ContentCatalog {
         String folderId = contentDir.relativize(topicDir).toString().replace('\\', '/');
         requireMatchesFolder(meta.id(), folderId, topicDir);
         Path practice = practiceDir.resolve(meta.id());
-        if (meta.practice().kind() == TopicMeta.PracticeKind.CODE && !Files.isDirectory(practice.resolve("test"))) {
-            throw new InvalidContentException(practice.resolve("test"), "a code topic needs practice tests");
+        if (meta.practice().kind() == TopicMeta.PracticeKind.CODE) {
+            for (String folder : List.of("src", "skeleton", "solution", "test")) {
+                if (!Files.isDirectory(practice.resolve(folder))) {
+                    throw new InvalidContentException(practice.resolve(folder), "a code topic needs this practice folder");
+                }
+            }
         }
         Quiz quiz = read(topicDir.resolve("quiz.yaml"), Quiz.class);
         if (!quiz.topic().equals(meta.id())) {

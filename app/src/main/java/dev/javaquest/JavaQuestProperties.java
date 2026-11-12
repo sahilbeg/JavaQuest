@@ -5,7 +5,7 @@ import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("javaquest")
-public record JavaQuestProperties(Path root, Runner runner) {
+public record JavaQuestProperties(Path root, Path dataDir, Runner runner) {
 
     public record Runner(Duration timeout, int heapMegabytes, int maxOutputBytes, Path classpathFile) {}
 
