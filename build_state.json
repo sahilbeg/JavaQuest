@@ -1,0 +1,2048 @@
+{
+  "schemaVersion": 1,
+  "lastUpdated": "2026-11-12T12:58:44+05:30",
+  "phase": "PHASE 0: planning",
+  "milestone": "M0",
+  "resumeHere": "M0 planning docs are written. Wait for plan approval, then start M1 task M1-01.",
+  "statusValues": [
+    "planned",
+    "content_written",
+    "practice_written",
+    "tests_verified",
+    "ui_wired",
+    "done"
+  ],
+  "completedTasks": [
+    "M0-01 architecture",
+    "M0-02 curriculum",
+    "M0-03 content spec",
+    "M0-04 gamification",
+    "M0-05 roadmap",
+    "M0-06 state files"
+  ],
+  "nextTask": "M1-01: create Maven multi-module skeleton (app, content-tools, practice parent POM)",
+  "openDecisions": [
+    "Plan approval pending",
+    "Mascot name and art style (default: Byte the owl)"
+  ],
+  "blockers": [],
+  "milestones": {
+    "M1": "planned",
+    "M2": "planned",
+    "M3": "planned",
+    "M4": "planned",
+    "M5": "planned",
+    "C00": "planned",
+    "C01": "planned",
+    "C02": "planned",
+    "C03": "planned",
+    "C04": "planned",
+    "C05": "planned",
+    "C06": "planned",
+    "C07": "planned",
+    "C08": "planned",
+    "C09": "planned",
+    "C10": "planned",
+    "M6": "planned",
+    "M0": "done"
+  },
+  "modules": [
+    {
+      "id": "module-00-foundations",
+      "title": "How computers and programs work",
+      "world": "The Workshop",
+      "status": "planned",
+      "topics": [
+        {
+          "id": "module-00-foundations/topic-01-how-computers-work",
+          "title": "How computers work (CPU, memory, storage)",
+          "practice": "quiz",
+          "prerequisites": [],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-00-foundations/topic-02-what-is-a-program",
+          "title": "What a program is: source, compiler, bytecode, JVM",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-00-foundations/topic-01-how-computers-work"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-00-foundations/topic-03-terminal-basics",
+          "title": "The terminal: files, folders, commands",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-00-foundations/topic-02-what-is-a-program"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-00-foundations/topic-04-setup-jdk-ide",
+          "title": "Installing the JDK and an IDE",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-00-foundations/topic-03-terminal-basics"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-00-foundations/topic-05-hello-world",
+          "title": "Your first program: Hello, World",
+          "practice": "code",
+          "prerequisites": [
+            "module-00-foundations/topic-04-setup-jdk-ide"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-00-foundations/topic-06-git-basics",
+          "title": "Git basics: init, add, commit, log",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-00-foundations/topic-05-hello-world"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-00-foundations/boss",
+          "title": "Fix the broken Hello program and commit it",
+          "practice": "code",
+          "prerequisites": [
+            "module-00-foundations/topic-06-git-basics"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-00-foundations/mini-project",
+          "title": "Personal greeting card printer",
+          "practice": "code",
+          "prerequisites": [
+            "module-00-foundations/topic-06-git-basics"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "module-01-basics",
+      "title": "Java basics",
+      "world": "Village of Variables",
+      "status": "planned",
+      "topics": [
+        {
+          "id": "module-01-basics/topic-01-variables",
+          "title": "Variables: boxes with labels",
+          "practice": "code",
+          "prerequisites": [
+            "module-00-foundations/boss"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-01-basics/topic-02-primitive-types",
+          "title": "Primitive types and casting",
+          "practice": "code",
+          "prerequisites": [
+            "module-01-basics/topic-01-variables"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-01-basics/topic-03-operators",
+          "title": "Operators and expressions",
+          "practice": "code",
+          "prerequisites": [
+            "module-01-basics/topic-02-primitive-types"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-01-basics/topic-04-console-io",
+          "title": "Input and output with the console",
+          "practice": "code",
+          "prerequisites": [
+            "module-01-basics/topic-03-operators"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-01-basics/topic-05-if-else",
+          "title": "Decisions: if, else, boolean logic",
+          "practice": "code",
+          "prerequisites": [
+            "module-01-basics/topic-04-console-io"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-01-basics/topic-06-switch",
+          "title": "Switch statements and switch expressions",
+          "practice": "code",
+          "prerequisites": [
+            "module-01-basics/topic-05-if-else"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-01-basics/topic-07-while-loops",
+          "title": "Repeating: while and do-while",
+          "practice": "code",
+          "prerequisites": [
+            "module-01-basics/topic-06-switch"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-01-basics/topic-08-for-loops",
+          "title": "Counting loops: for, break, continue",
+          "practice": "code",
+          "prerequisites": [
+            "module-01-basics/topic-07-while-loops"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-01-basics/topic-09-methods",
+          "title": "Methods: parameters, return values, scope",
+          "practice": "code",
+          "prerequisites": [
+            "module-01-basics/topic-08-for-loops"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-01-basics/topic-10-arrays",
+          "title": "Arrays and 2D arrays",
+          "practice": "code",
+          "prerequisites": [
+            "module-01-basics/topic-09-methods"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-01-basics/topic-11-strings",
+          "title": "Strings and their methods",
+          "practice": "code",
+          "prerequisites": [
+            "module-01-basics/topic-10-arrays"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-01-basics/topic-12-stringbuilder-formatting",
+          "title": "StringBuilder and text formatting",
+          "practice": "code",
+          "prerequisites": [
+            "module-01-basics/topic-11-strings"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-01-basics/boss",
+          "title": "Number-guessing game engine",
+          "practice": "code",
+          "prerequisites": [
+            "module-01-basics/topic-12-stringbuilder-formatting"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-01-basics/mini-project",
+          "title": "Grade calculator",
+          "practice": "code",
+          "prerequisites": [
+            "module-01-basics/topic-12-stringbuilder-formatting"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "module-02-oop",
+      "title": "Object-Oriented Programming",
+      "world": "Object Forest",
+      "status": "planned",
+      "topics": [
+        {
+          "id": "module-02-oop/topic-01-classes-objects",
+          "title": "Classes and objects: blueprints and houses",
+          "practice": "code",
+          "prerequisites": [
+            "module-01-basics/boss"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-02-oop/topic-02-constructors",
+          "title": "Constructors and this",
+          "practice": "code",
+          "prerequisites": [
+            "module-02-oop/topic-01-classes-objects"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-02-oop/topic-03-encapsulation",
+          "title": "Encapsulation: private fields and getters",
+          "practice": "code",
+          "prerequisites": [
+            "module-02-oop/topic-02-constructors"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-02-oop/topic-04-static-members",
+          "title": "Static fields and methods",
+          "practice": "code",
+          "prerequisites": [
+            "module-02-oop/topic-03-encapsulation"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-02-oop/topic-05-inheritance",
+          "title": "Inheritance and super",
+          "practice": "code",
+          "prerequisites": [
+            "module-02-oop/topic-04-static-members"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-02-oop/topic-06-polymorphism",
+          "title": "Polymorphism and overriding",
+          "practice": "code",
+          "prerequisites": [
+            "module-02-oop/topic-05-inheritance"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-02-oop/topic-07-abstract-classes",
+          "title": "Abstract classes",
+          "practice": "code",
+          "prerequisites": [
+            "module-02-oop/topic-06-polymorphism"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-02-oop/topic-08-interfaces",
+          "title": "Interfaces and default methods",
+          "practice": "code",
+          "prerequisites": [
+            "module-02-oop/topic-07-abstract-classes"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-02-oop/topic-09-composition",
+          "title": "Composition over inheritance",
+          "practice": "code",
+          "prerequisites": [
+            "module-02-oop/topic-08-interfaces"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-02-oop/topic-10-equals-hashcode-tostring",
+          "title": "equals, hashCode and toString",
+          "practice": "code",
+          "prerequisites": [
+            "module-02-oop/topic-09-composition"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-02-oop/topic-11-records",
+          "title": "Records",
+          "practice": "code",
+          "prerequisites": [
+            "module-02-oop/topic-10-equals-hashcode-tostring"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-02-oop/topic-12-enums",
+          "title": "Enums with fields and methods",
+          "practice": "code",
+          "prerequisites": [
+            "module-02-oop/topic-11-records"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-02-oop/boss",
+          "title": "Zoo simulator with animal hierarchy",
+          "practice": "code",
+          "prerequisites": [
+            "module-02-oop/topic-12-enums"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-02-oop/mini-project",
+          "title": "Bank account system",
+          "practice": "code",
+          "prerequisites": [
+            "module-02-oop/topic-12-enums"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "module-03-core-java",
+      "title": "Core Java",
+      "world": "Library of Collections",
+      "status": "planned",
+      "topics": [
+        {
+          "id": "module-03-core-java/topic-01-collections-overview",
+          "title": "The collections framework map",
+          "practice": "code",
+          "prerequisites": [
+            "module-02-oop/boss"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/topic-02-lists",
+          "title": "List, ArrayList, LinkedList",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-01-collections-overview"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/topic-03-sets",
+          "title": "Set, HashSet, TreeSet",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-02-lists"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/topic-04-maps",
+          "title": "Map, HashMap, TreeMap",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-03-sets"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/topic-05-generics",
+          "title": "Generics and bounded types",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-04-maps",
+            "module-02-oop/topic-08-interfaces"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/topic-06-comparators-iterators",
+          "title": "Comparable, Comparator, Iterator",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-05-generics"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/topic-07-exceptions",
+          "title": "Exceptions: try, catch, finally",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-06-comparators-iterators"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/topic-08-custom-exceptions",
+          "title": "Checked vs unchecked, custom exceptions, try-with-resources",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-07-exceptions"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/topic-09-file-io",
+          "title": "Reading and writing files (java.io)",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-08-custom-exceptions"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/topic-10-nio-files",
+          "title": "NIO: Path and Files",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-09-file-io"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/topic-11-date-time",
+          "title": "java.time: dates, times, durations",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-10-nio-files"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/topic-12-lambdas",
+          "title": "Lambdas and method references",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-11-date-time"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/topic-13-functional-interfaces",
+          "title": "Functional interfaces",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-12-lambdas"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/topic-14-streams-basics",
+          "title": "Streams: filter, map, collect",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-13-functional-interfaces"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/topic-15-streams-advanced",
+          "title": "Streams: grouping, reducing, flatMap",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-14-streams-basics"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/topic-16-optional",
+          "title": "Optional",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-15-streams-advanced"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/boss",
+          "title": "Library catalogue search engine",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-16-optional"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-03-core-java/mini-project",
+          "title": "Expense tracker with CSV import",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/topic-16-optional"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "module-04-dsa",
+      "title": "Data structures and algorithms",
+      "world": "Algorithm Mountains",
+      "status": "planned",
+      "topics": [
+        {
+          "id": "module-04-dsa/topic-01-big-o",
+          "title": "Complexity and Big-O",
+          "practice": "code",
+          "prerequisites": [
+            "module-03-core-java/boss"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-02-recursion",
+          "title": "Recursion",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-01-big-o"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-03-searching",
+          "title": "Linear and binary search",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-02-recursion"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-04-simple-sorts",
+          "title": "Bubble, selection, insertion sort",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-03-searching"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-05-merge-quick-sort",
+          "title": "Merge sort and quicksort",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-04-simple-sorts"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-06-linked-lists",
+          "title": "Build a linked list",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-05-merge-quick-sort"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-07-stacks-queues",
+          "title": "Stacks and queues",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-06-linked-lists"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-08-hash-tables",
+          "title": "Build a hash table",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-07-stacks-queues",
+            "module-02-oop/topic-10-equals-hashcode-tostring"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-09-trees-bst",
+          "title": "Binary trees and BSTs",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-08-hash-tables"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-10-heaps",
+          "title": "Heaps and priority queues",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-09-trees-bst"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-11-graphs",
+          "title": "Graphs: BFS and DFS",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-10-heaps"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-12-dynamic-programming",
+          "title": "Dynamic programming basics",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-11-graphs"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-04-dsa/boss",
+          "title": "Maze solver",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-12-dynamic-programming"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-04-dsa/mini-project",
+          "title": "Autocomplete with a trie",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-12-dynamic-programming"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "module-05-advanced-java",
+      "title": "Advanced Java",
+      "world": "Thread Citadel",
+      "status": "planned",
+      "topics": [
+        {
+          "id": "module-05-advanced-java/topic-01-threads",
+          "title": "Threads and Runnable",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/boss"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-05-advanced-java/topic-02-synchronization",
+          "title": "Race conditions, synchronized, locks",
+          "practice": "code",
+          "prerequisites": [
+            "module-05-advanced-java/topic-01-threads"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-05-advanced-java/topic-03-executors",
+          "title": "Executors and thread pools",
+          "practice": "code",
+          "prerequisites": [
+            "module-05-advanced-java/topic-02-synchronization"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-05-advanced-java/topic-04-completable-future",
+          "title": "CompletableFuture",
+          "practice": "code",
+          "prerequisites": [
+            "module-05-advanced-java/topic-03-executors",
+            "module-03-core-java/topic-12-lambdas"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-05-advanced-java/topic-05-virtual-threads",
+          "title": "Virtual threads",
+          "practice": "code",
+          "prerequisites": [
+            "module-05-advanced-java/topic-04-completable-future"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-05-advanced-java/topic-06-concurrent-collections",
+          "title": "Concurrent collections and atomics",
+          "practice": "code",
+          "prerequisites": [
+            "module-05-advanced-java/topic-05-virtual-threads"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-05-advanced-java/topic-07-jvm-memory",
+          "title": "JVM memory: stack, heap, metaspace",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-05-advanced-java/topic-06-concurrent-collections"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-05-advanced-java/topic-08-garbage-collection",
+          "title": "Garbage collection",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-05-advanced-java/topic-07-jvm-memory"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-05-advanced-java/topic-09-classloading",
+          "title": "Class loading",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-05-advanced-java/topic-08-garbage-collection"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-05-advanced-java/topic-10-reflection",
+          "title": "Reflection",
+          "practice": "code",
+          "prerequisites": [
+            "module-05-advanced-java/topic-09-classloading"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-05-advanced-java/topic-11-annotations",
+          "title": "Annotations and a tiny processor",
+          "practice": "code",
+          "prerequisites": [
+            "module-05-advanced-java/topic-10-reflection"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-05-advanced-java/topic-12-sealed-types",
+          "title": "Sealed types",
+          "practice": "code",
+          "prerequisites": [
+            "module-05-advanced-java/topic-11-annotations"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-05-advanced-java/topic-13-pattern-matching",
+          "title": "Pattern matching for instanceof, switch and records",
+          "practice": "code",
+          "prerequisites": [
+            "module-05-advanced-java/topic-12-sealed-types"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-05-advanced-java/boss",
+          "title": "Parallel web-page word counter (simulated)",
+          "practice": "code",
+          "prerequisites": [
+            "module-05-advanced-java/topic-13-pattern-matching"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-05-advanced-java/mini-project",
+          "title": "Mini task scheduler",
+          "practice": "code",
+          "prerequisites": [
+            "module-05-advanced-java/topic-13-pattern-matching"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "module-06-craft",
+      "title": "Engineering craft",
+      "world": "Craftsman's Guild",
+      "status": "planned",
+      "topics": [
+        {
+          "id": "module-06-craft/topic-01-clean-code",
+          "title": "Clean code: names, functions, comments",
+          "practice": "code",
+          "prerequisites": [
+            "module-05-advanced-java/boss"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-06-craft/topic-02-solid",
+          "title": "SOLID principles",
+          "practice": "code",
+          "prerequisites": [
+            "module-06-craft/topic-01-clean-code"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-06-craft/topic-03-creational-patterns",
+          "title": "Creational patterns: factory, builder, singleton",
+          "practice": "code",
+          "prerequisites": [
+            "module-06-craft/topic-02-solid"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-06-craft/topic-04-structural-patterns",
+          "title": "Structural patterns: adapter, decorator, facade",
+          "practice": "code",
+          "prerequisites": [
+            "module-06-craft/topic-03-creational-patterns"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-06-craft/topic-05-behavioral-patterns",
+          "title": "Behavioral patterns: strategy, observer, command",
+          "practice": "code",
+          "prerequisites": [
+            "module-06-craft/topic-04-structural-patterns"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-06-craft/topic-06-refactoring",
+          "title": "Refactoring safely",
+          "practice": "code",
+          "prerequisites": [
+            "module-06-craft/topic-05-behavioral-patterns"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-06-craft/topic-07-uml-basics",
+          "title": "UML class and sequence diagrams",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-06-craft/topic-06-refactoring"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-06-craft/topic-08-junit",
+          "title": "Testing with JUnit 5",
+          "practice": "code",
+          "prerequisites": [
+            "module-06-craft/topic-07-uml-basics"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-06-craft/topic-09-mockito",
+          "title": "Mocks with Mockito",
+          "practice": "code",
+          "prerequisites": [
+            "module-06-craft/topic-08-junit",
+            "module-02-oop/topic-08-interfaces"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-06-craft/topic-10-tdd",
+          "title": "Test-driven development",
+          "practice": "code",
+          "prerequisites": [
+            "module-06-craft/topic-09-mockito"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-06-craft/topic-11-debugging",
+          "title": "Debugging with breakpoints and stack traces",
+          "practice": "code",
+          "prerequisites": [
+            "module-06-craft/topic-10-tdd"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-06-craft/topic-12-logging",
+          "title": "Logging with SLF4J",
+          "practice": "code",
+          "prerequisites": [
+            "module-06-craft/topic-11-debugging"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-06-craft/boss",
+          "title": "Refactor a legacy invoice module under tests",
+          "practice": "code",
+          "prerequisites": [
+            "module-06-craft/topic-12-logging"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-06-craft/mini-project",
+          "title": "Pluggable discount engine",
+          "practice": "code",
+          "prerequisites": [
+            "module-06-craft/topic-12-logging"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "module-07-tooling",
+      "title": "Build and tooling",
+      "world": "Forge of Tools",
+      "status": "planned",
+      "topics": [
+        {
+          "id": "module-07-tooling/topic-01-maven",
+          "title": "Maven: POM, lifecycle, dependencies",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-06-craft/boss"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-07-tooling/topic-02-gradle",
+          "title": "Gradle basics",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-07-tooling/topic-01-maven"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-07-tooling/topic-03-git-workflow",
+          "title": "Git branches, merges, rebases, pull requests",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-07-tooling/topic-02-gradle"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-07-tooling/topic-04-ci-basics",
+          "title": "Continuous integration basics",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-07-tooling/topic-03-git-workflow"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-07-tooling/topic-05-docker-basics",
+          "title": "Docker basics: images and containers",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-07-tooling/topic-04-ci-basics"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-07-tooling/boss",
+          "title": "Diagnose a broken build pipeline (scenario quiz)",
+          "practice": "code",
+          "prerequisites": [
+            "module-07-tooling/topic-05-docker-basics"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-07-tooling/mini-project",
+          "title": "Package a CLI app as a runnable JAR",
+          "practice": "code",
+          "prerequisites": [
+            "module-07-tooling/topic-05-docker-basics"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "module-08-backend",
+      "title": "Backend engineering",
+      "world": "Server Kingdom",
+      "status": "planned",
+      "topics": [
+        {
+          "id": "module-08-backend/topic-01-http",
+          "title": "How HTTP works",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-07-tooling/boss"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-08-backend/topic-02-rest-design",
+          "title": "REST and API design",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-08-backend/topic-01-http"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-08-backend/topic-03-spring-boot-intro",
+          "title": "Spring Boot: your first app",
+          "practice": "code",
+          "prerequisites": [
+            "module-08-backend/topic-02-rest-design"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-08-backend/topic-04-dependency-injection",
+          "title": "Dependency injection and beans",
+          "practice": "code",
+          "prerequisites": [
+            "module-08-backend/topic-03-spring-boot-intro",
+            "module-06-craft/topic-02-solid"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-08-backend/topic-05-spring-mvc",
+          "title": "Controllers and request mapping",
+          "practice": "code",
+          "prerequisites": [
+            "module-08-backend/topic-04-dependency-injection"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-08-backend/topic-06-validation",
+          "title": "Validation and error responses",
+          "practice": "code",
+          "prerequisites": [
+            "module-08-backend/topic-05-spring-mvc"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-08-backend/topic-07-sql-basics",
+          "title": "SQL basics",
+          "practice": "code",
+          "prerequisites": [
+            "module-08-backend/topic-06-validation"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-08-backend/topic-08-jdbc",
+          "title": "JDBC",
+          "practice": "code",
+          "prerequisites": [
+            "module-08-backend/topic-07-sql-basics"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-08-backend/topic-09-jpa-hibernate",
+          "title": "JPA and Hibernate",
+          "practice": "code",
+          "prerequisites": [
+            "module-08-backend/topic-08-jdbc",
+            "module-08-backend/topic-07-sql-basics"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-08-backend/topic-10-transactions",
+          "title": "Transactions",
+          "practice": "code",
+          "prerequisites": [
+            "module-08-backend/topic-09-jpa-hibernate"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-08-backend/topic-11-spring-security",
+          "title": "Security basics with Spring Security",
+          "practice": "code",
+          "prerequisites": [
+            "module-08-backend/topic-10-transactions"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-08-backend/topic-12-api-docs-errors",
+          "title": "API docs, versioning and error design",
+          "practice": "code",
+          "prerequisites": [
+            "module-08-backend/topic-11-spring-security"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-08-backend/boss",
+          "title": "Todo REST API with persistence and tests",
+          "practice": "code",
+          "prerequisites": [
+            "module-08-backend/topic-12-api-docs-errors"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-08-backend/mini-project",
+          "title": "Bookstore backend",
+          "practice": "code",
+          "prerequisites": [
+            "module-08-backend/topic-12-api-docs-errors"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "module-09-architecture",
+      "title": "Architecture",
+      "world": "Sky Architects",
+      "status": "planned",
+      "topics": [
+        {
+          "id": "module-09-architecture/topic-01-layered-architecture",
+          "title": "Layered architecture",
+          "practice": "code",
+          "prerequisites": [
+            "module-08-backend/boss"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-09-architecture/topic-02-hexagonal-architecture",
+          "title": "Hexagonal architecture: ports and adapters",
+          "practice": "code",
+          "prerequisites": [
+            "module-09-architecture/topic-01-layered-architecture",
+            "module-06-craft/topic-02-solid"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-09-architecture/topic-03-microservices",
+          "title": "Microservices: when and why",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-09-architecture/topic-02-hexagonal-architecture"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-09-architecture/topic-04-messaging",
+          "title": "Messaging and events",
+          "practice": "code",
+          "prerequisites": [
+            "module-09-architecture/topic-03-microservices"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-09-architecture/topic-05-caching",
+          "title": "Caching",
+          "practice": "code",
+          "prerequisites": [
+            "module-09-architecture/topic-04-messaging"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-09-architecture/topic-06-system-design",
+          "title": "System design basics",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-09-architecture/topic-05-caching"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-09-architecture/topic-07-performance-profiling",
+          "title": "Performance and profiling",
+          "practice": "code",
+          "prerequisites": [
+            "module-09-architecture/topic-06-system-design"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-09-architecture/topic-08-observability",
+          "title": "Logs, metrics and traces",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-09-architecture/topic-07-performance-profiling"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-09-architecture/boss",
+          "title": "Design a URL shortener (design + core code)",
+          "practice": "code",
+          "prerequisites": [
+            "module-09-architecture/topic-08-observability"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-09-architecture/mini-project",
+          "title": "Event-driven order service (in-process)",
+          "practice": "code",
+          "prerequisites": [
+            "module-09-architecture/topic-08-observability"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "module-10-professional",
+      "title": "Professional skills",
+      "world": "Hall of Pros",
+      "status": "planned",
+      "topics": [
+        {
+          "id": "module-10-professional/topic-01-code-reviews",
+          "title": "Giving and receiving code reviews",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-09-architecture/boss"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-10-professional/topic-02-reading-codebases",
+          "title": "Reading large codebases",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-10-professional/topic-01-code-reviews"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-10-professional/topic-03-documentation",
+          "title": "Writing documentation",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-10-professional/topic-02-reading-codebases"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-10-professional/topic-04-estimation",
+          "title": "Estimation and planning",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-10-professional/topic-03-documentation"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-10-professional/topic-05-interview-prep",
+          "title": "Interview prep: coding and behavioural",
+          "practice": "code",
+          "prerequisites": [
+            "module-10-professional/topic-04-estimation"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-10-professional/topic-06-capstone",
+          "title": "Capstone: full-stack Java service",
+          "practice": "code",
+          "prerequisites": [
+            "module-10-professional/topic-05-interview-prep"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-10-professional/boss",
+          "title": "Mock technical interview",
+          "practice": "code",
+          "prerequisites": [
+            "module-10-professional/topic-06-capstone"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-10-professional/mini-project",
+          "title": "Capstone (see topic)",
+          "practice": "code",
+          "prerequisites": [
+            "module-10-professional/topic-06-capstone"
+          ],
+          "status": "planned",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        }
+      ]
+    }
+  ]
+}
