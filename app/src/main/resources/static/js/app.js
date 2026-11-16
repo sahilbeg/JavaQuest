@@ -8,7 +8,7 @@ import { h } from "./dom.js";
 import { byte } from "./byte.js";
 import { bus } from "./events.js";
 import { replayPageTour, setPageTour } from "./tour.js";
-import { openSettings } from "./settings.js";
+import { mountDailyLimit } from "./daily.js";
 
 const view = document.getElementById("view");
 let cleanup = () => {};
@@ -25,7 +25,7 @@ function parseRoute() {
 }
 
 let lastRoute = "";
-async function route() {
+async function route({ keepFocus = false } = {}) {
   const current = parseRoute();
   // The lesson player updates ?step= itself; that is not a new page.
   const key = current.name === "ticket" ? `ticket:${current.id}` : location.hash;
@@ -47,7 +47,7 @@ async function route() {
       : current.name === "review" ? await renderReview(view, catalog, current.id)
       : current.name === "career" ? await renderCareer(view)
       : await renderJourney(view, catalog);
-    if (current.name !== "ticket" && (document.activeElement === document.body || !view.contains(document.activeElement))) {
+    if (!keepFocus && current.name !== "ticket" && (document.activeElement === document.body || !view.contains(document.activeElement))) {
       view.focus({ preventScroll: true });
     }
   } catch (error) {
@@ -94,11 +94,13 @@ function setupEvents() {
 
 document.getElementById("wordmark-byte").replaceWith(byte("idle", "", { size: "sm" }));
 document.getElementById("tour-button").addEventListener("click", () => replayPageTour());
-document.getElementById("settings-button").addEventListener("click", () => openSettings());
-// A new daily limit can lock or open the next ticket, so draw the page again.
-bus.addEventListener("settings", () => {
+mountDailyLimit(document.getElementById("daily-limit-slot"));
+// The course page shows the daily limit, and a new limit can open or close the next ticket: draw the page again,
+// leaving the keyboard focus in the top bar. A lesson in progress is redrawn only when its access changed.
+bus.addEventListener("settings", (e) => {
+  if (parseRoute().name !== "journey" && !e.detail?.reachedChanged) return;
   lastRoute = "";
-  route();
+  route({ keepFocus: true });
 });
 setupTheme();
 setupEvents();

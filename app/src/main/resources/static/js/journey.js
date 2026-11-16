@@ -2,7 +2,7 @@ import { h, icon, avatar, TEAM } from "./dom.js";
 import { api } from "./api.js";
 import { ticketState, topicKind, nextTicket } from "./status.js";
 import { startTourOnce } from "./tour.js";
-import { openSettings } from "./settings.js";
+import { focusDailyLimit } from "./daily.js";
 
 const KIND_LABEL = { incident: "Incident", feature: "Feature" };
 const pad = (n) => String(n).padStart(2, "0");
@@ -92,8 +92,6 @@ export async function renderJourney(view, catalog) {
 
   const today = catalog.today;
   const resting = !allDone && current?.locked && current.id === catalog.frontierId;
-  const pace = today.limitOn && !catalog.authorMode && !allDone
-    && h("p", { class: "pace mono" }, `Today ${Math.min(today.doneToday, today.limit)}/${today.limit}`);
 
   const restCard = resting && h("section", { class: "up-next is-resting", id: "up-next", "aria-labelledby": "up-next-title" },
     h("div", { class: "up-next-main" },
@@ -105,7 +103,7 @@ export async function renderJourney(view, catalog) {
     h("div", { class: "up-next-side" },
       h("button", { type: "button", class: "button button-big", onclick: () => document.getElementById("journey-path")?.scrollIntoView({ behavior: "smooth", block: "start" }) },
         icon("rotate-ccw"), "Revisit a ticket"),
-      h("button", { type: "button", class: "button button-quiet", onclick: () => openSettings() }, icon("settings"), "Change daily limit")));
+      h("button", { type: "button", class: "button button-quiet", onclick: () => focusDailyLimit() }, icon("settings"), "Change daily limit")));
 
   const upNext = restCard || current && h("section", { class: "up-next", id: "up-next", "aria-labelledby": "up-next-title" },
     allDone
@@ -129,8 +127,7 @@ export async function renderJourney(view, catalog) {
           h("div", { class: "module-progress" },
             h("span", { class: "meter", role: "img", "aria-label": `${doneHere} of ${own.length} tickets done in ${currentModule.title}` },
               h("span", { style: `width:${own.length ? Math.round((doneHere / own.length) * 100) : 0}%` })),
-            h("span", { class: "mono" }, `${doneHere}/${own.length} in this module`)),
-          pace)]);
+            h("span", { class: "mono" }, `${doneHere}/${own.length} in this module`)))]);
 
   const career = await api.career().catch(() => null);
   const due = career?.reviewsDue ?? [];

@@ -9,7 +9,7 @@ The story is in `docs/STORY.md`. The game layer uses its words.
 - The home page is your ticket board. Each module is a project. Its tickets are the topics, then the incident (boss) and the feature (mini-project).
 - Ticket states: locked (not assigned yet), to do, in progress, done (mastered), and needs review (spaced repetition is due).
 - Tickets open one at a time, in curriculum order: a ticket opens when every ticket before it is mastered. The first ticket that is not mastered is the learner's current ticket. Mastered tickets stay open for practice. There is no skipping ahead (`Gate.java`).
-- Daily limit (Settings, off by default, 1 to 20 tickets, default 3). With it on, once that many tickets were first mastered today (midnight to midnight, laptop time), the current ticket waits for tomorrow. Mastered tickets, their quizzes and reviews stay open. Author mode ignores the limit. The setting lives on the `player` row, so progress backups carry it.
+- Daily limit (a control in the top bar on every page, off by default, 1 to 20 tickets, default 3). With it on, once that many tickets were first mastered today (midnight to midnight, laptop time), the current ticket waits for tomorrow. Mastered tickets, their quizzes and reviews stay open. Author mode ignores the limit. The setting lives on the `player` row, so progress backups carry it.
 - Author mode (`./run.sh --author`) opens every ticket, for writing and reviewing content, on port 2027 with its own progress database, so the learner's progress is untouched.
 
 ## Mastery

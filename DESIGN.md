@@ -52,7 +52,7 @@ Byte, the team's helper bot, is a small monochrome owl mark (`js/byte.js`) that 
 - **Animation** (`js/animate.js`): a bordered panel with a mono header, a Watch overlay, the stage, the caption and compact controls. Code animations show code with a highlighted line, memory (variable boxes, object cards, indigo reference arrows) and a console. Scenes show boxes, links and travelling tokens.
 - **Walkthrough** (`js/tour.js`): the page dims, a spotlight with a thin indigo edge moves to each target, and a small bubble explains it. It plays once per page; the `?` button replays it.
 - **Callouts**: bordered panels with a coloured dot and a mono label (Tip, Careful, Think of it like, New word).
-- **Settings** (`js/settings.js`): a modal dialog from the gear in the top bar. A switch turns the daily limit on; a stepper sets tickets per day; a mono status line says how many are done today.
+- **Daily limit** (`js/daily.js`): always on screen, in the sticky top bar on every page. A switch turns it on, a stepper sets tickets per day, and a mono status shows today's count ("2/3 today", amber "Done today · 3/3"). Changes save at once. The status has a fixed width, so the + and − buttons never move between clicks.
 - **Checks**: a joined list of JUnit results, with incident tiers as bronze, silver and gold pills.
 
 ## Motion
@@ -61,4 +61,4 @@ Short fades and 6–14px slides with an ease-out curve. Cards slide in from the 
 
 ## Layout
 
-The top bar is 56px, sticky and blurred. The course and career pages are 960px wide. Lesson cards are 760px, and 1160px for the code step. At 900px and below, cards stack and module rows drop their bars. At 640px and below, the top bar shows icons only and rows hide their keys.
+The top bar is 56px, sticky and blurred. Below 1080px it drops the XP bar, title and "a day"; below 900px the nav labels; below 760px the wordmark text. At 640px and below it is 100px tall, with the daily limit on its own second row. The course and career pages are 960px wide. Lesson cards are 760px, and 1160px for the code step. At 900px and below, cards stack and module rows drop their bars. At 640px and below, the top bar shows icons only and rows hide their keys.

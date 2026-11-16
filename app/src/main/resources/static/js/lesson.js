@@ -6,7 +6,7 @@
 
 import { h, icon, avatar, TEAM, reducedMotion } from "./dom.js";
 import { api } from "./api.js";
-import { openSettings } from "./settings.js";
+import { focusDailyLimit } from "./daily.js";
 
 import { createHelper } from "./chat.js";
 import { enhanceContent } from "./kb.js";
@@ -389,7 +389,7 @@ function renderResting(view, catalog, summary) {
     h("p", {}, "Until then, revisit any ticket you've finished, or do your reviews."),
     h("div", { class: "button-row", style: "justify-content:center" },
       h("a", { class: "button button-primary", href: "#/" }, icon("map"), "Your journey"),
-      h("button", { type: "button", class: "button", onclick: () => openSettings() }, icon("settings"), "Change daily limit"))));
+      h("button", { type: "button", class: "button", onclick: () => focusDailyLimit() }, icon("settings"), "Change daily limit"))));
   document.title = "Opens tomorrow · JavaQuest";
   return () => {};
 }

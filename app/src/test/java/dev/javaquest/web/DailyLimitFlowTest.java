@@ -72,6 +72,12 @@ class DailyLimitFlowTest {
                 .andExpect(jsonPath("$.topics[1].locked").value(false));
 
         master(SECOND);
+        mvc.perform(get("/api/settings"))
+                .andExpect(jsonPath("$.dailyLimitOn").value(true))
+                .andExpect(jsonPath("$.dailyLimit").value(2))
+                .andExpect(jsonPath("$.doneToday").value(2))
+                .andExpect(jsonPath("$.reached").value(true))
+                .andExpect(jsonPath("$.authorMode").value(false));
         mvc.perform(get("/api/catalog"))
                 .andExpect(jsonPath("$.frontierId").value(THIRD))
                 .andExpect(jsonPath("$.today.doneToday").value(2))
