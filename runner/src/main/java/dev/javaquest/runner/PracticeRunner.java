@@ -41,6 +41,11 @@ public final class PracticeRunner {
         this.limits = limits;
     }
 
+    /** The limits every run gets unless a caller passes its own. */
+    public RunLimits limits() {
+        return limits;
+    }
+
     public static Path currentJavaExecutable() {
         return Path.of(System.getProperty("java.home"), "bin", "java");
     }
@@ -50,6 +55,11 @@ public final class PracticeRunner {
     }
 
     public TestRunResult run(Path mainSources, Path testSources, Duration timeout) throws IOException, InterruptedException {
+        return run(mainSources, testSources, limits.withTimeout(timeout));
+    }
+
+    /** Runs the tests with these limits instead of the runner's own, for topics that need more time or memory. */
+    public TestRunResult run(Path mainSources, Path testSources, RunLimits limits) throws IOException, InterruptedException {
         mainSources = mainSources.toAbsolutePath().normalize();
         testSources = testSources.toAbsolutePath().normalize();
         long started = System.nanoTime();
@@ -66,7 +76,7 @@ public final class PracticeRunner {
             if (!errors.isEmpty()) {
                 return new TestRunResult(Outcome.COMPILE_ERROR, List.of(), errors, "", elapsedSince(started));
             }
-            return runTests(workDir, mainClasses, testClasses, started, timeout);
+            return runTests(workDir, mainClasses, testClasses, started, limits);
         } finally {
             deleteRecursively(workDir);
         }
@@ -110,6 +120,11 @@ public final class PracticeRunner {
     }
 
     public ProgramResult runMain(Path sources, String mainClass) throws IOException, InterruptedException {
+        return runMain(sources, mainClass, limits);
+    }
+
+    /** Runs a main method with these limits instead of the runner's own. */
+    public ProgramResult runMain(Path sources, String mainClass, RunLimits limits) throws IOException, InterruptedException {
         sources = sources.toAbsolutePath().normalize();
         long started = System.nanoTime();
         Path workDir = Files.createTempDirectory("javaquest-main-");
@@ -121,7 +136,7 @@ public final class PracticeRunner {
             }
             var classpath = new ArrayList<>(testRuntimeClasspath);
             classpath.add(classes);
-            Finished run = spawn(jvmCommand(workDir, classpath, List.of(mainClass)), workDir, limits.timeout());
+            Finished run = spawn(jvmCommand(workDir, classpath, List.of(mainClass), limits), workDir, limits);
             ProgramResult.Status status = !run.inTime() ? ProgramResult.Status.TIMED_OUT
                     : run.exitCode() == 0 ? ProgramResult.Status.COMPLETED : ProgramResult.Status.EXCEPTION;
             return new ProgramResult(status, List.of(), run.output(), elapsedSince(started));
@@ -142,7 +157,7 @@ public final class PracticeRunner {
         }
     }
 
-    private TestRunResult runTests(Path workDir, Path mainClasses, Path testClasses, long started, Duration timeout)
+    private TestRunResult runTests(Path workDir, Path mainClasses, Path testClasses, long started, RunLimits limits)
             throws IOException, InterruptedException {
         Path reportsDir = workDir.resolve("reports");
         var classpath = new ArrayList<>(testRuntimeClasspath);
@@ -152,7 +167,7 @@ public final class PracticeRunner {
                 "org.junit.platform.console.ConsoleLauncher", "execute",
                 "--scan-classpath", testClasses.toString(),
                 "--reports-dir", reportsDir.toString(),
-                "--disable-banner", "--details=none", "--disable-ansi-colors")), workDir, timeout);
+                "--disable-banner", "--details=none", "--disable-ansi-colors"), limits), workDir, limits);
         String text = LauncherOutput.withoutSummary(run.output());
         Duration duration = elapsedSince(started);
         if (!run.inTime()) {
@@ -173,7 +188,7 @@ public final class PracticeRunner {
         return new TestRunResult(outcome, tests, List.of(), text, duration);
     }
 
-    private List<String> jvmCommand(Path workDir, List<Path> classpath, List<String> mainAndArgs) {
+    private List<String> jvmCommand(Path workDir, List<Path> classpath, List<String> mainAndArgs, RunLimits limits) {
         var command = new ArrayList<>(List.of(
                 javaExecutable.toString(),
                 "-Xmx" + limits.heapMegabytes() + "m",
@@ -199,7 +214,7 @@ public final class PracticeRunner {
 
     private record Finished(boolean inTime, int exitCode, String output) {}
 
-    private Finished spawn(List<String> command, Path workDir, Duration timeout) throws IOException, InterruptedException {
+    private Finished spawn(List<String> command, Path workDir, RunLimits limits) throws IOException, InterruptedException {
         Process process = new ProcessBuilder(command)
                 .directory(workDir.toFile())
                 .redirectErrorStream(true)
@@ -207,7 +222,7 @@ public final class PracticeRunner {
         process.getOutputStream().close();
         var output = new CappedOutput(process.getInputStream(), limits.maxOutputBytes());
         Thread reader = Thread.ofVirtual().start(output::drain);
-        boolean finished = process.waitFor(timeout.toMillis(), TimeUnit.MILLISECONDS);
+        boolean finished = process.waitFor(limits.timeout().toMillis(), TimeUnit.MILLISECONDS);
         if (!finished) {
             process.descendants().forEach(ProcessHandle::destroyForcibly);
             process.destroyForcibly();

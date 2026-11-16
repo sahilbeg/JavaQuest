@@ -1,6 +1,7 @@
 package dev.javaquest.content;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.Duration;
 import java.util.List;
 
 public record TopicMeta(
@@ -28,9 +29,32 @@ public record TopicMeta(
     }
 
     public record Practice(PracticeKind kind, RunnerKind runner, String mainClass, Integer timeoutSeconds) {
+
+        /** A Spring topic starts a whole application context, so it gets at least this long, unless timeoutSeconds says otherwise. */
+        public static final Duration SPRING_TIMEOUT = Duration.ofSeconds(60);
+        /** A Spring topic gets at least this much heap. */
+        public static final int SPRING_HEAP_MEGABYTES = 512;
+
         public Practice {
             require(kind != null, "practice.kind is required");
+            require(timeoutSeconds == null || timeoutSeconds > 0, "practice.timeoutSeconds must be positive, got: " + timeoutSeconds);
             runner = runner == null ? RunnerKind.PLAIN : runner;
+        }
+
+        /** How long a run may take: timeoutSeconds when set, otherwise the default, raised to SPRING_TIMEOUT for Spring. */
+        public Duration timeout(Duration defaultTimeout) {
+            if (timeoutSeconds != null) {
+                return Duration.ofSeconds(timeoutSeconds);
+            }
+            if (runner == RunnerKind.SPRING && defaultTimeout.compareTo(SPRING_TIMEOUT) < 0) {
+                return SPRING_TIMEOUT;
+            }
+            return defaultTimeout;
+        }
+
+        /** The heap for a run: the default, raised to SPRING_HEAP_MEGABYTES for Spring. */
+        public int heapMegabytes(int defaultHeapMegabytes) {
+            return runner == RunnerKind.SPRING ? Math.max(defaultHeapMegabytes, SPRING_HEAP_MEGABYTES) : defaultHeapMegabytes;
         }
     }
 

@@ -15,4 +15,12 @@ public record RunLimits(Duration timeout, int heapMegabytes, int maxOutputBytes)
             throw new IllegalArgumentException("maxOutputBytes must be positive: " + maxOutputBytes);
         }
     }
+
+    public RunLimits withTimeout(Duration newTimeout) {
+        return new RunLimits(newTimeout, heapMegabytes, maxOutputBytes);
+    }
+
+    public RunLimits withHeapMegabytes(int newHeapMegabytes) {
+        return new RunLimits(timeout, newHeapMegabytes, maxOutputBytes);
+    }
 }

@@ -1,5 +1,6 @@
 package dev.javaquest.tools;
 
+import dev.javaquest.content.ContentCatalog;
 import dev.javaquest.runner.PracticeRunner;
 import dev.javaquest.runner.RunLimits;
 import dev.javaquest.runner.TestRunResult;
@@ -45,14 +46,16 @@ public final class VerifyPractice {
         }
         Path root = Path.of(args[0]).toAbsolutePath().normalize();
         var runner = new PracticeRunner(PracticeRunner.currentJavaExecutable(), RunnerClasspath.read(root), LIMITS);
+        var catalog = ContentCatalog.load(root.resolve("content"), root.resolve("practice"));
         Path stateFile = root.resolve("build_state.json");
         ObjectNode state = (ObjectNode) JSON.readTree(stateFile.toFile());
         boolean allVerified = true;
 
         for (Path topicDir : practiceTopics(root.resolve("practice"))) {
             String topicId = root.resolve("practice").relativize(topicDir).toString().replace('\\', '/');
-            TestRunResult solution = runner.run(topicDir.resolve("solution"), topicDir.resolve("test"));
-            TestRunResult skeleton = runner.run(topicDir.resolve("skeleton"), topicDir.resolve("test"));
+            RunLimits limits = limitsFor(catalog, topicId);
+            TestRunResult solution = runner.run(topicDir.resolve("solution"), topicDir.resolve("test"), limits);
+            TestRunResult skeleton = runner.run(topicDir.resolve("skeleton"), topicDir.resolve("test"), limits);
             boolean solutionPasses = solution.outcome() == Outcome.PASSED;
             boolean skeletonFails = skeleton.outcome() == Outcome.FAILED;
             System.out.printf("%s: solution %s (%d ms), skeleton %s (%d ms)%n", topicId,
@@ -70,6 +73,16 @@ public final class VerifyPractice {
         if (!allVerified) {
             System.exit(1);
         }
+    }
+
+    /** The same limits the app uses: the topic's own timeout, and more time and heap for Spring topics. */
+    private static RunLimits limitsFor(ContentCatalog catalog, String topicId) {
+        var practice = catalog.topic(topicId).map(topic -> topic.meta().practice()).orElse(null);
+        if (practice == null) {
+            return LIMITS;
+        }
+        return LIMITS.withTimeout(practice.timeout(LIMITS.timeout()))
+                .withHeapMegabytes(practice.heapMegabytes(LIMITS.heapMegabytes()));
     }
 
     private static List<Path> practiceTopics(Path practiceRoot) throws IOException {

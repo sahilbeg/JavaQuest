@@ -102,11 +102,11 @@ java -Xmx256m -Xss1m -XX:+UseSerialGC -XX:TieredStopAtLevel=1
 
 | Limit | Value | How it is enforced |
 |---|---|---|
-| Wall-clock time | 10 s per run (compile and test each), or the topic's `timeoutSeconds` for test runs | Parent kills the process tree with `ProcessHandle.destroyForcibly()` |
-| Heap | 256 MB | `-Xmx` |
+| Wall-clock time | 10 s per run (compile and test each), or the topic's `timeoutSeconds`; at least 60 s for `runner: spring` topics | Parent kills the process tree with `ProcessHandle.destroyForcibly()` |
+| Heap | 256 MB, or 512 MB for `runner: spring` topics | `-Xmx` |
 | Thread stack | 1 MB | `-Xss`, so runaway recursion fails fast with a StackOverflowError |
 | Output | 64 KB stdout and stderr each | Parent truncates the stream |
-| Classpath | the JDK, your topic's classes, its test, and the libraries in `practice/target/runner-classpath.txt`: JUnit, Mockito, SLF4J and Logback. Main runs and lesson snippets get the same libraries. Spring test jars arrive with module 8. | Explicit `-cp`. No app classes. Mockito loads as a `-javaagent`, so runs print no agent warnings. The content and practice checks read the same file. |
+| Classpath | the JDK, your topic's classes, its test, and the libraries in `practice/target/runner-classpath.txt`: JUnit, Mockito, SLF4J, Logback, and from module 8 Spring Boot (Web MVC, validation, data JPA, H2), Spring Security and their test jars. Main runs and lesson snippets get the same libraries. | Explicit `-cp`. No app classes. Mockito loads as a `-javaagent`, so runs print no agent warnings. The content and practice checks read the same file. |
 | Working directory | a fresh temp directory, deleted after the run | `ProcessBuilder.directory` |
 | Locale | English (US), so `%.2f` always prints a decimal point | `-Duser.language=en -Duser.country=US`; `practice/pom.xml` passes the same flags to IDE test runs |
 | Concurrency | at most 2 child JVMs at once | Semaphore in the runner |
@@ -124,7 +124,14 @@ Stronger isolation such as containers or OS sandbox profiles is out of scope. It
 
 ## Spring Boot and backend topics
 
-Module 8 and 9 exercises need Spring on the classpath. Each such topic declares `runner: spring` in `meta.yaml`. The runner then adds a fixed, pre-downloaded set of Spring Boot test jars, resolved once by `practice/pom.xml` into `~/.m2`. These runs get a 60 s limit and 512 MB of heap, because a Spring context starts slowly. These values are also estimates until M1 measures them.
+Module 8 and 9 exercises need Spring on the classpath. `practice/pom.xml` declares Spring Boot 4.1.2 (Web MVC, validation, data JPA), H2, Spring Security 7.1.2 and their test jars, so they join the one shared runner classpath that every topic uses. Each topic that starts a Spring context declares `runner: spring` in `meta.yaml`. `TopicMeta.Practice` then raises the limits to at least 60 s and 512 MB. The app and `verify-practice` both use those rules.
+
+Measured in C08: a `@SpringBootTest` with MockMvc, JPA and H2 runs in about 2.3 s with 256 MB, so the Spring limits are a safety margin for slow laptops.
+
+Two rules keep the shared classpath safe:
+
+- Spring Security comes without Spring Boot's security starter, so nothing is locked until a topic writes `@EnableWebSecurity` and its own `SecurityFilterChain`. With the starter, every endpoint in every Spring topic would answer 401.
+- The runner compiles only `.java` files, so practice topics configure Spring in code or in `@SpringBootTest(properties = ...)`, never in `application.properties`.
 
 ## Persistence
 

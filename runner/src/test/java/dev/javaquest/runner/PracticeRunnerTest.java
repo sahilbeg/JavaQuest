@@ -72,6 +72,16 @@ class PracticeRunnerTest {
     }
 
     @Test
+    void perRunLimitsCanRaiseTheHeap() throws Exception {
+        Path root = FIXTURES.resolve("needs-heap");
+
+        assertEquals(Outcome.CRASHED, runner.run(root.resolve("src"), root.resolve("test")).outcome(),
+                "100 MB does not fit in the default 64 MB");
+        TestRunResult roomy = runner.run(root.resolve("src"), root.resolve("test"), LIMITS.withHeapMegabytes(256));
+        assertEquals(Outcome.PASSED, roomy.outcome(), roomy::output);
+    }
+
+    @Test
     void systemExitCountsAsACrash() throws Exception {
         assertEquals(Outcome.CRASHED, run("exits").outcome());
     }

@@ -4,6 +4,7 @@ import dev.javaquest.content.Topic;
 import dev.javaquest.progress.ProgressService;
 import dev.javaquest.practice.PracticeResult.Source;
 import dev.javaquest.runner.PracticeRunner;
+import dev.javaquest.runner.RunLimits;
 import dev.javaquest.runner.TestRunResult;
 import dev.javaquest.web.EventHub;
 import java.io.IOException;
@@ -61,17 +62,21 @@ public class PracticeService {
     }
 
     private TestRunResult runTests(Topic topic) throws IOException, InterruptedException {
-        Integer seconds = topic.meta().practice().timeoutSeconds();
-        if (seconds == null) {
-            return runner.run(topic.practiceSources(), topic.practiceTests());
-        }
-        return runner.run(topic.practiceSources(), topic.practiceTests(), Duration.ofSeconds(seconds));
+        return runner.run(topic.practiceSources(), topic.practiceTests(), limitsFor(topic));
+    }
+
+    /** The runner's limits, with the topic's own timeout and the extra time and heap a Spring topic needs. */
+    private RunLimits limitsFor(Topic topic) {
+        var practice = topic.meta().practice();
+        RunLimits base = runner.limits();
+        return base.withTimeout(practice.timeout(base.timeout()))
+                .withHeapMegabytes(practice.heapMegabytes(base.heapMegabytes()));
     }
 
     public ProgramRun runMain(Topic topic, String mainClass) throws IOException, InterruptedException {
         parallelRuns.acquire();
         try {
-            return new ProgramRun(runner.runMain(topic.practiceSources(), mainClass));
+            return new ProgramRun(runner.runMain(topic.practiceSources(), mainClass, limitsFor(topic)));
         } finally {
             parallelRuns.release();
         }
