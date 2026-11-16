@@ -155,6 +155,20 @@ class PracticeRunnerTest {
     }
 
     @Test
+    void parameterNamesAreKeptForSpring() throws Exception {
+        ProgramResult result = runner.runSnippet("""
+                public class Main {
+                    static void find(String bikeId) { }
+                    public static void main(String[] args) throws Exception {
+                        System.out.println(Main.class.getDeclaredMethod("find", String.class).getParameters()[0].getName());
+                    }
+                }
+                """);
+
+        assertEquals("bikeId", result.output().strip(), "javac should run with -parameters");
+    }
+
+    @Test
     void snippetFileIsNamedAfterItsClass() throws Exception {
         ProgramResult result = runner.runSnippet("""
                 public class Kiosk {

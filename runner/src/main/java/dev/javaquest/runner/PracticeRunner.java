@@ -94,8 +94,10 @@ public final class PracticeRunner {
         var compiler = ToolProvider.getSystemJavaCompiler();
         var diagnostics = new DiagnosticCollector<JavaFileObject>();
         try (var fileManager = compiler.getStandardFileManager(diagnostics, Locale.ENGLISH, StandardCharsets.UTF_8)) {
+            // -parameters keeps parameter names in the class files, as Spring Boot's Maven setup does,
+            // so @PathVariable String id works without repeating the name.
             List<String> options = List.of(
-                    "--release", "21", "-proc:none", "-encoding", "UTF-8",
+                    "--release", "21", "-proc:none", "-parameters", "-encoding", "UTF-8",
                     "-d", outputDir.toString(),
                     "-cp", joinClasspath(classpath));
             var units = fileManager.getJavaFileObjectsFromPaths(sources);
