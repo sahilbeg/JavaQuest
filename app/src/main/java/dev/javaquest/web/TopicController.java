@@ -6,11 +6,13 @@ import dev.javaquest.content.QuizSession;
 import dev.javaquest.content.Topic;
 import dev.javaquest.content.TopicMeta;
 import dev.javaquest.lesson.LessonRenderer;
+import dev.javaquest.lesson.QuickReference;
 import dev.javaquest.practice.PracticeResult;
 import dev.javaquest.practice.PracticeResult.Source;
 import dev.javaquest.practice.PracticeService;
 import dev.javaquest.practice.ProgramRun;
 import dev.javaquest.progress.Gate;
+import dev.javaquest.progress.LockedException;
 import dev.javaquest.progress.ProgressService;
 import dev.javaquest.progress.ProgressService.TopicProgress;
 import java.io.IOException;
@@ -74,15 +76,17 @@ public class TopicController {
     private final EventHub events;
     private final ProgressService progress;
     private final Gate gate;
+    private final QuickReference quickReference;
 
     public TopicController(ContentCatalog catalog, PracticeService practice, LessonRenderer lessons, EventHub events,
-                           ProgressService progress, Gate gate) {
+                           ProgressService progress, Gate gate, QuickReference quickReference) {
         this.catalog = catalog;
         this.practice = practice;
         this.lessons = lessons;
         this.events = events;
         this.progress = progress;
         this.gate = gate;
+        this.quickReference = quickReference;
     }
 
     @GetMapping("/catalog")
@@ -106,6 +110,16 @@ public class TopicController {
                 index < all.size() - 1 ? all.get(index + 1).id() : null,
                 practice.sourceFiles(found), found.hasQuiz(),
                 found.meta().isBoss() ? "incident" : found.meta().isFeature() ? "feature" : "ticket");
+    }
+
+    /** Quick reference notes, taken from the lesson. They open once the ticket is finished (any time in author mode). */
+    @GetMapping("/topics/{module}/{topic}/notes")
+    public QuickReference.Notes notes(@PathVariable String module, @PathVariable String topic) throws IOException {
+        Topic found = open(module, topic);
+        if (!gate.authorMode() && !progress.progress(found).mastered()) {
+            throw new LockedException("Quick reference notes open once you finish this ticket.");
+        }
+        return quickReference.notes(Files.readString(found.lessonFile()));
     }
 
     @GetMapping("/topics/{module}/{topic}/hints")

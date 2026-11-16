@@ -20,6 +20,7 @@ export const topicPath = (id) => `/api/topics/${id}`;
 export const api = {
   catalog: () => fetch("/api/catalog").then(parse),
   topic: (id) => fetch(topicPath(id)).then(parse),
+  notes: (id) => fetch(`${topicPath(id)}/notes`).then(parse),
   hints: (id) => fetch(`${topicPath(id)}/hints`).then(parse),
   nextHint: (id) => fetch(`${topicPath(id)}/hints/next`, { method: "POST", headers: WRITE_HEADERS }).then(parse),
   progress: (id) => fetch(`${topicPath(id)}/progress`).then(parse),

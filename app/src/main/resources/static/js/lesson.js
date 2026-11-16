@@ -300,6 +300,7 @@ export async function renderLesson(view, catalog, id, params) {
       message,
       h("div", { class: "button-row" },
         h("a", { class: "button", href: "#/" }, icon("map"), "Back to your journey"),
+        h("a", { class: "button", href: `#/notes/${id}` }, icon("book-open"), "Quick reference"),
         next));
   }
 

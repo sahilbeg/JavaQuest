@@ -119,6 +119,15 @@ The app shows a lesson as short cards in a lesson player, not as one long page (
 
 Tickets open one at a time: a ticket opens when every ticket before it is mastered.
 
+### Quick reference notes
+
+When a ticket is finished, the Notes page shows a quick reference built from its lesson (`QuickReference.java`), so write these parts with that in mind:
+
+- **Key points**: the `## Recap` bullets.
+- **Syntax**: every `### Syntax: <name>` subsection, with its first `java` block and the first paragraph after that block. Put the short, general form in that first block.
+- **Words to know**: every `callout jargon`.
+- **Common mistakes**: each bold title paragraph in `## Common mistakes`, its first `java` block, and the paragraphs up to the next title (the error and the fix).
+
 ### Animations (```animate)
 
 An animation shows an idea happening step by step, with one short caption per step from Byte. Learners press Watch, or step through with the buttons. **Every topic should have at least one animation**, placed in the Concept or Worked example where the idea is hardest to picture: variables changing, a loop running, objects and references, a request travelling to a server. Animations replace reading, so a long paragraph that only describes steps can shrink to one sentence plus the animation.

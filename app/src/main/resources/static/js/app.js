@@ -3,6 +3,7 @@ import { renderJourney } from "./journey.js";
 import { renderLesson } from "./lesson.js";
 import { renderCareer } from "./career.js";
 import { renderReview } from "./review.js";
+import { renderNotes, renderNotesIndex } from "./notes.js";
 import { refreshRewards } from "./rewards.js";
 import { h } from "./dom.js";
 import { byte } from "./byte.js";
@@ -20,6 +21,9 @@ function parseRoute() {
   if (ticket) return { name: "ticket", id: ticket[1], params };
   const review = path.match(/^\/review\/(module-[^/]+\/[^/]+)$/);
   if (review) return { name: "review", id: review[1] };
+  const notes = path.match(/^\/notes\/(module-[^/]+\/[^/]+)$/);
+  if (notes) return { name: "notes", id: notes[1] };
+  if (path === "/notes") return { name: "notes" };
   if (path === "/career") return { name: "career" };
   return { name: "journey" };
 }
@@ -41,11 +45,12 @@ async function route({ keepFocus = false } = {}) {
   try {
     const catalog = await api.catalog();
     document.getElementById("author-banner").hidden = !catalog.authorMode;
-    document.title = { journey: "Your journey · JavaQuest", career: "Career · JavaQuest", review: "Review · JavaQuest" }[current.name] ?? "JavaQuest";
+    document.title = { journey: "Your journey · JavaQuest", career: "Career · JavaQuest", review: "Review · JavaQuest", notes: "Notes · JavaQuest" }[current.name] ?? "JavaQuest";
     setPageTour(current.name === "ticket" ? "lesson" : current.name);
     cleanup = current.name === "ticket" ? await renderLesson(view, catalog, current.id, current.params)
       : current.name === "review" ? await renderReview(view, catalog, current.id)
       : current.name === "career" ? await renderCareer(view)
+      : current.name === "notes" ? await (current.id ? renderNotes(view, catalog, current.id) : renderNotesIndex(view, catalog))
       : await renderJourney(view, catalog);
     if (!keepFocus && current.name !== "ticket" && (document.activeElement === document.body || !view.contains(document.activeElement))) {
       view.focus({ preventScroll: true });
