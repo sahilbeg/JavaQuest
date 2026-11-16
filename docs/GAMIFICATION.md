@@ -9,7 +9,7 @@ The story is in `docs/STORY.md`. The game layer uses its words.
 - The home page is your ticket board. Each module is a project. Its tickets are the topics, then the incident (boss) and the feature (mini-project).
 - Ticket states: locked (not assigned yet), to do, in progress, done (mastered), and needs review (spaced repetition is due).
 - Tickets open one at a time, in curriculum order: a ticket opens when every ticket before it is mastered. The first ticket that is not mastered is the learner's current ticket. Mastered tickets stay open for practice. There is no skipping ahead (`Gate.java`).
-- Author mode (`./run.sh --unlock-all`) opens every ticket, for writing and reviewing content.
+- Author mode (`./run.sh --author`) opens every ticket, for writing and reviewing content, on port 2027 with its own progress database, so the learner's progress is untouched.
 
 ## Mastery
 

@@ -4,6 +4,17 @@ JavaQuest teaches Java from zero to professional through a story: the learner is
 
 The app is being built milestone by milestone. To continue the build, run `/continue-build`, or follow "Resuming the build" below.
 
+## The user is also learning with this app
+
+The user learns Java with JavaQuest while the build goes on. Their learning must never be disturbed:
+
+- **Their progress** lives in `~/.javaquest/progress.mv.db` (H2, outside the repo; daily copies in `~/.javaquest/backups/`). Never delete, reset, import into or write to it. Never take checks, submit code or open lessons against it for testing.
+- **Preview and test with `./run.sh --author`.** It opens every ticket on http://localhost:2027 with its own database in `~/.javaquest-author`. The learner's app on 2026 can keep running at the same time. For a throwaway run, add `--javaquest.data-dir=<scratch folder>`. Do not use `./run.sh --unlock-all`: it opens everything against the learner's real progress.
+- **Their code** lives in `practice/<module>/<topic>/src/`: that is where they write each fix, in the app or their IDE. Never edit, overwrite, reset, `git checkout`, `git restore` or `git stash` an existing ticket's `src/`. Fixes to an existing topic go in its `skeleton/` and `solution/` only; `src/` is created only for a new topic, as a copy of its skeleton. A pre-commit hook (`.githooks/pre-commit`) refuses commits that change an existing `src/`. Never bypass it with `--no-verify` or `ALLOW_SRC_CHANGES=1`.
+- **Stage files by explicit path** (`git add content/module-09-architecture practice/module-09-architecture ...`), never `git add -A` or `git add .`. The learner's edits show up as modified `src/` files in `git status`; leave them alone.
+- **Ticket ids never change**: progress is keyed by them. Never rename or delete an existing topic folder.
+- **Never stop or restart the learner's app** (the `java` process on port 2026) unless the user asks. Rebuilding while it runs is safe: `run.sh` runs a copy of the jar.
+
 ## Where the build stands
 
 These files are the tracker. Read them before doing anything:
@@ -55,8 +66,8 @@ Large modules can be written in parallel by subagents, one or two topics each. G
 ## Commands
 
 ```bash
-./run.sh                                                             # start the app at http://localhost:2026
-./run.sh --unlock-all                                                # author mode: every ticket open, for read-throughs
+./run.sh                                                             # the learner's app: http://localhost:2026, progress in ~/.javaquest
+./run.sh --author                                                    # for building: every ticket open, http://localhost:2027, separate database
 ./mvnw -q install                                                    # build and run all platform tests
 ./mvnw -q -pl tools dependency:properties exec:java@check-content    # check every lesson and quiz (about 2 min)
 ./mvnw -q -pl tools dependency:properties exec:java@check-content -Djq.only=module-01-basics/topic-03   # only topics whose id starts with this
@@ -64,7 +75,9 @@ Large modules can be written in parallel by subagents, one or two topics each. G
 .claude/scripts/check-topic.sh <practice unit dir> [solution|skeleton|src]   # one unit, fast, same JVM flags as the runner
 ```
 
-Do not run `./mvnw install` (or `package`) while the app is running: it rewrites `app/target/javaquest.jar` under the running server, which then hangs. Stop the app first, or use `./mvnw -q test` for the platform tests. `run.sh` rebuilds the jar when `app/`, `runner/` or the poms changed.
+`./mvnw install` rewrites `app/target/javaquest.jar`. That is safe while the app runs, because `run.sh` starts a copy (`app/target/javaquest-running-<port>.jar`). A server started any other way, straight from `javaquest.jar`, hangs when the jar is replaced. `run.sh` rebuilds the jar when `app/`, `runner/`, `content-model/` or the poms changed; restart `./run.sh --author` to see the new build. The learner sees it the next time they start `./run.sh`.
+
+In a fresh clone, enable the hook once: `git config core.hooksPath .githooks`.
 
 After a change to `practice/pom.xml`, refresh the runner classpath:
 
@@ -81,5 +94,5 @@ After a change to `practice/pom.xml`, refresh the runner classpath:
 
 ## Open items for the user
 
-- The browser read-through of finished modules, which moves them from `ui_wired` to `done`.
+- The browser read-through of finished modules, which moves them from `ui_wired` to `done`. Do it with `./run.sh --author`.
 - A real VoiceOver pass.

@@ -10,6 +10,7 @@ Continue building JavaQuest from where it stopped.
    - the last finished milestone and the one in progress;
    - per module, how many units are `planned`, `ui_wired` and `done`;
    - the next task, any blockers, and anything uncommitted.
+   Modified files under `practice/*/*/src/` are the user's own learning code: never touch, stage or revert them (see "The user is also learning with this app" in CLAUDE.md).
 3. If `$ARGUMENTS` names a milestone or task, start there. Otherwise start at `nextTask`. If the working tree has uncommitted changes you did not expect, stop and ask the user first.
 4. Build the milestone exactly as `CLAUDE.md` describes, under "How a content module is built" (or the ROADMAP's checklist for M5 and M6). Skip units whose files exist and whose status is past `planned`.
 5. Finish as `CLAUDE.md` describes, under "Finishing a milestone": all checks green, review findings fixed, state files updated, then commit.
