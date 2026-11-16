@@ -1,0 +1,186 @@
+topic: module-08-backend/topic-09-jpa-hibernate
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: object-relational-mapping
+    variants:
+      - prompt: "What does an ORM such as Hibernate do for you?"
+        choices:
+          - "It copies data between Java objects and database rows, and writes the SQL for that"
+          - "It replaces the database, so no SQL runs at all"
+          - "It turns Java classes into REST endpoints"
+          - "It compiles SQL files into Java bytecode"
+        answer: 0
+      - prompt: "In object-relational mapping, what does one Java object usually stand for?"
+        choices: ["One row in a table", "One whole table", "One column", "One database"]
+        answer: 0
+    explain: "An ORM maps a class to a table, an object to a row and a field to a column. SQL still runs underneath."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: object-relational-mapping
+    variants:
+      - prompt: "Which one is the rulebook of annotations and interfaces in jakarta.persistence?"
+        choices: ["JPA", "Hibernate", "Spring Data JPA", "H2"]
+        answer: 0
+      - prompt: "Which one is the engine that follows the JPA rules and writes the SQL?"
+        choices: ["Hibernate", "JPA", "Spring Data JPA", "JDBC URL"]
+        answer: 0
+      - prompt: "Which one writes the code behind an interface that extends JpaRepository?"
+        choices: ["Spring Data JPA", "JPA", "Hibernate", "The JDK"]
+        answer: 0
+    explain: "JPA is the rulebook, Hibernate is the engine that implements it, and Spring Data JPA writes repositories on top."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: entities
+    variants:
+      - prompt: "Why does a JPA entity need a no-argument constructor?"
+        choices:
+          - "Hibernate first makes an empty object, then fills each field from a column"
+          - "Java forbids constructors with arguments on annotated classes"
+          - "The database calls it to create the table"
+          - "It makes the entity immutable"
+        answer: 0
+      - prompt: "Why can a Java record not be a JPA entity?"
+        choices:
+          - "It has no no-argument constructor and its fields are final, so Hibernate cannot fill or change them"
+          - "Records cannot have annotations"
+          - "Records cannot hold String fields"
+          - "Records are slower to compare than classes"
+        answer: 0
+    explain: "Hibernate builds an empty object and fills it, and later changes fields. A record allows neither, and a record class is final too."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: entities
+    prompt: "BikeStatus is stored with the default EnumType.ORDINAL. A teammate adds RESERVED as the second value. What happens to the old rows?"
+    choices:
+      - "Rows that held 1 for RENTED now read as RESERVED"
+      - "Nothing, the database stores the enum name"
+      - "The app refuses to start until the rows are fixed"
+      - "Hibernate renumbers the old rows for you"
+    answer: 0
+    explain: "ORDINAL stores the position. Inserting a value shifts every position after it. EnumType.STRING stores the word, which never moves."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: entities
+    prompt: "@Enumerated(EnumType.___)   // store the word, such as RENTED"
+    answers: ["STRING"]
+    explain: "EnumType.STRING stores the enum's name, so the column holds RENTED instead of a number."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: relationships
+    variants:
+      - prompt: "Bike has @ManyToOne Station station. Station has @OneToMany(mappedBy = \"station\") List<Bike> bikes. What does mappedBy say?"
+        choices:
+          - "The station field in Bike owns the link, and this list is only the other view of it"
+          - "Hibernate must create a second link table"
+          - "The list is loaded before every query"
+          - "Station owns the foreign key column"
+        answer: 0
+      - prompt: "Bike has @ManyToOne Station station. Which table gets the station_id foreign key column?"
+        choices: ["bike", "station", "A new bike_station table", "No table, it lives only in Java"]
+        answer: 0
+    explain: "The many side holds the foreign key. @ManyToOne in Bike owns it, and mappedBy on the other side points back to that field."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: relationships
+    prompt: "You load 50 bikes from 50 different stations with one query. The station link is LAZY. Then a loop prints bike.getStation().getName() for each. How many queries run in all?"
+    choices: ["51", "1", "2", "50"]
+    answer: 0
+    explain: "One query loads the bikes, then each lazy station loads on first use. That is the N+1 problem. join fetch loads both in one query."
+    reteach: "## Concept"
+
+  - id: q08
+    type: mcq
+    concept: repositories
+    variants:
+      - prompt: "In interface BikeRepository extends JpaRepository<Bike, String>, what is String?"
+        choices: ["The type of Bike's @Id field", "The type of every column", "The table name", "The return type of findAll"]
+        answer: 0
+      - prompt: "What does stations.findById(\"depot\") return when no row has that id?"
+        choices: ["An empty Optional", "null", "A new Station with empty fields", "It throws SQLException"]
+        answer: 0
+      - prompt: "What does @DataJpaTest start for a test?"
+        choices:
+          - "Only the JPA parts of Spring, with an in-memory database, and each test rolled back at the end"
+          - "The whole app with a real web server on port 8080"
+          - "Only Mockito mocks, with no database at all"
+          - "Your production database, read-only"
+        answer: 0
+    explain: "JpaRepository<T, ID> names the entity and its id type. findById returns an Optional. @DataJpaTest is a slice with an in-memory database."
+    reteach: "## Concept"
+
+  - id: q09
+    type: fill-blank
+    concept: derived-queries
+    prompt: "long ___(BikeStatus status);   // a derived query: how many bikes have this status"
+    answers: ["countByStatus"]
+    explain: "countBy returns how many rows match, and Status names the field to compare."
+    reteach: "## Concept"
+
+  - id: q10
+    type: spot-the-bug
+    concept: derived-queries
+    code: |
+      @Entity
+      public class Bike {
+          @Id private String id;
+          @Enumerated(EnumType.STRING) private BikeStatus status;
+          @ManyToOne private Station station;
+      }
+
+      interface BikeRepository extends JpaRepository<Bike, String> {
+          List<Bike> findByStatus(BikeStatus status);
+          List<Bike> findByStationNameOrderByIdAsc(String name);
+          long countByColour(String colour);
+      }
+    bugLine: 11
+    explain: "Bike has no colour field, so Spring Data cannot build the query and the app fails at startup with No property 'colour' found for type 'Bike'."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: order
+    concept: jpql
+    prompt: "Put the JPQL clauses in order to count the available bikes of each type, keeping only types with more than one."
+    items:
+      - "select b.type, count(b) from Bike b"
+      - "where b.status = :status"
+      - "group by b.type"
+      - "having count(b) > 1"
+      - "order by b.type"
+    explain: "JPQL keeps SQL's clause order: select, from, where, group by, having, order by."
+    reteach: "## Concept"
+
+  - id: q12
+    type: mcq
+    concept: jpql
+    variants:
+      - prompt: "Which @Query is valid JPQL for the Bike entity?"
+        choices:
+          - "select b from Bike b where b.station.name = :name"
+          - "select * from bike where station_id = :name"
+          - "select b from bike b where b.station_id = :name"
+          - "select Bike where name = :name"
+        answer: 0
+      - prompt: "A repository has @Query(\"select b from bike b\"). What happens?"
+        choices:
+          - "The app fails at startup: Could not resolve root entity 'bike'"
+          - "It works, because JPQL ignores case in entity names"
+          - "It returns an empty list"
+          - "It compiles to a table scan of every table"
+        answer: 0
+    explain: "JPQL names entity classes and fields, such as Bike and b.station.name, not tables and columns."
+    reteach: "## Concept"

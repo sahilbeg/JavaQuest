@@ -1,0 +1,172 @@
+topic: module-08-backend/topic-12-api-docs-errors
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: api-contracts
+    prompt: "Riverton Transit's planner reads GET /api/v1/rentals/{id}. Which parts of the response are promises Spoke must keep?"
+    choices:
+      - "The field names, their types and what they mean"
+      - "Only the HTTP status code"
+      - "Only the order the fields appear in"
+      - "Nothing, as long as the server does not crash"
+    answer: 0
+    explain: "Once clients ship code that reads a field, its name, type and meaning are all part of the contract."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: breaking-changes
+    variants:
+      - prompt: "Which change to GET /api/v1/rentals/{id} is a breaking change?"
+        choices:
+          - "Renaming fareCents to fare"
+          - "Adding a new optional field minutes"
+          - "Adding a new endpoint GET /api/v1/stations"
+          - "Adding an optional query parameter ?include=bike"
+        answer: 0
+      - prompt: "Which change breaks clients even though the JSON looks exactly the same?"
+        choices:
+          - "fareCents now holds dollars instead of cents"
+          - "A new optional field minutes appears"
+          - "A new endpoint is added under /api/v2"
+          - "The server answers a little faster"
+        answer: 0
+    explain: "Removing, renaming or retyping a field breaks clients, and so does changing what a field means. New optional fields and new endpoints are safe."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: breaking-changes
+    prompt: "Why is adding a new field to a JSON response usually safe?"
+    choices:
+      - "Tolerant readers ignore fields they do not know"
+      - "JSON clients always fail on unknown fields, so they notice the change"
+      - "New fields are hidden from old clients by the server"
+      - "Only fields with numbers can break clients"
+    answer: 0
+    explain: "A tolerant reader reads what it needs and skips the rest. Jackson 3 reads that way by default."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: breaking-changes
+    code: |
+      import tools.jackson.databind.json.JsonMapper;
+
+      public class Main {
+          record RentalV1(String id, long fareCents) { }
+
+          public static void main(String[] args) {
+              JsonMapper mapper = JsonMapper.builder().build();
+              String json = "{\"id\":\"rental-18\",\"fareCents\":415,\"currency\":\"USD\"}";
+              RentalV1 rental = mapper.readValue(json, RentalV1.class);
+              System.out.println(rental.fareCents());
+          }
+      }
+    answer: "415"
+    explain: "The record has no currency field, so Jackson skips it and still reads fareCents. That is the tolerant reader at work."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: versioning
+    prompt: "Why does Spoke put the version in the URL path, as in /api/v2/rentals, instead of in a header?"
+    choices:
+      - "The version is visible in every link, log and browser, so it is easy to see and try"
+      - "Headers cannot carry numbers"
+      - "Spring cannot read request headers"
+      - "Path versions make the JSON smaller"
+    answer: 0
+    explain: "Header versioning keeps one URL, but hides the version. A path version shows up everywhere for free."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: versioning
+    prompt: "@RequestMapping(\"/api/___/rentals\")   // the new version, where fare is an object"
+    answers: ["v2"]
+    explain: "v1 keeps the old flat fareCents. The new shape lives under /api/v2, so both run side by side."
+    reteach: "## Concept"
+
+  - id: q07
+    type: order
+    concept: deprecation
+    prompt: "Put the steps in the order the KB page gives."
+    items:
+      - "Tell partners about v2 and the sunset date"
+      - "Add Deprecation and Sunset headers to every v1 response"
+      - "Watch the logs for v1 calls until the sunset date"
+      - "Switch v1 off after the sunset date"
+    explain: "Announce first, mark the responses, wait and watch, and only then switch the old version off."
+    reteach: "## Concept"
+
+  - id: q08
+    type: mcq
+    concept: deprecation
+    variants:
+      - prompt: "Which header line follows RFC 8594 to say v1 stops working at the end of June 2027?"
+        choices:
+          - "Sunset: Wed, 30 Jun 2027 23:59:59 GMT"
+          - "Sunset: 2027-06-30"
+          - "Sunset: true"
+          - "Sunset: @1793491200"
+        answer: 0
+      - prompt: "Which header line follows RFC 9745 to say v1 was deprecated?"
+        choices:
+          - "Deprecation: @1793491200"
+          - "Deprecation: yes"
+          - "Deprecation: 2026-11-01"
+          - "Deprecated-Since: November"
+        answer: 0
+    explain: "Sunset takes an HTTP date in GMT. Deprecation takes @ followed by the seconds since 1 January 1970 UTC."
+    reteach: "## Concept"
+
+  - id: q09
+    type: spot-the-bug
+    concept: problem-types
+    code: |
+      ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,
+              "No rental with id " + ex.rentalId() + " exists.");
+      problem.setType(URI.create(PROBLEMS + "rental-not-found/" + ex.rentalId()));
+      problem.setTitle("Rental not found");
+      problem.setProperty("rentalId", ex.rentalId());
+      return problem;
+    bugLine: 3
+    explain: "The type must be the same for every missing rental, so clients can match it. Put the id in detail and in an extension field, not in the type."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: problem-types
+    prompt: "Riverton's code must decide whether an error means \"no such rental\". Which field should it check?"
+    choices: ["type", "detail", "title", "instance"]
+    answer: 0
+    explain: "type is a stable URI that names the kind of problem. detail and title are for humans and may be reworded."
+    reteach: "## Concept"
+
+  - id: q11
+    type: fill-blank
+    concept: problem-types
+    prompt: "problem.___(\"rentalId\", ex.rentalId());   // add an extension field to the ProblemDetail"
+    answers: ["setProperty"]
+    explain: "setProperty adds an extension field next to type, title, status, detail and instance."
+    reteach: "## Concept"
+
+  - id: q12
+    type: mcq
+    concept: openapi
+    variants:
+      - prompt: "What does an openapi.yaml file describe?"
+        choices:
+          - "Every path, its parameters, its responses and the shape of each JSON body"
+          - "The SQL tables behind the API"
+          - "Which Java classes the server uses"
+          - "The passwords of the API's users"
+        answer: 0
+      - prompt: "Which tool reads Spring controllers and generates an OpenAPI document?"
+        choices: ["springdoc-openapi", "Jackson", "Mockito", "H2"]
+        answer: 0
+    explain: "OpenAPI writes the contract down in one file. springdoc-openapi can generate it from Spring code, and Swagger UI turns it into readable docs."
+    reteach: "## Concept"

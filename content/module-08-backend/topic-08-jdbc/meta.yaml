@@ -1,0 +1,23 @@
+id: module-08-backend/topic-08-jdbc
+title: "JDBC"
+order: 8
+minutes: 10
+prerequisites: [module-08-backend/topic-07-sql-basics]
+concepts: [connections, prepared-statements, result-sets, resource-cleanup, generated-keys, sql-injection]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0808
+  from: maya
+  title: "Rentals service must read and write rides, safely"
+  body: >
+    The rentals service needs to save rides and read them back itself, without an engineer running SQL by hand.
+    Also, Sam forwarded a rider report: typing ' OR '1'='1 into the rider search showed everybody's rides.
+    Can you build JdbcRideRepository so it does both jobs, and make sure that trick finds nothing?
+hints:
+  - "Copy the shape of createSchema: try-with-resources around the Connection and the statement, and a catch that throws RideRepositoryException."
+  - "Use connection.prepareStatement(sql) with ? in the SQL, then statement.setString(1, riderId) before executeQuery(). For save, pass Statement.RETURN_GENERATED_KEYS as the second argument."
+  - "findByRider: try (ResultSet rows = statement.executeQuery()) { while (rows.next()) { rides.add(toRide(rows)); } }. In save, after executeUpdate(), read keys.next() and keys.getLong(1) from statement.getGeneratedKeys()."
+review: true

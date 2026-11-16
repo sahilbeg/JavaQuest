@@ -2,11 +2,11 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-16T10:58:44+05:30
+- **Last updated:** 2026-11-16T11:57:18+05:30
 - **Phase:** PHASE 1: build
-- **Milestone:** C08
-- **Resume here:** C07 is committed at status ui_wired. Next: C08 (Backend engineering). Modules 0 to 7 still need your read-through to reach done.
-- **Next task:** C08-01: module 8 topic 01 http
+- **Milestone:** C09
+- **Resume here:** C08 is committed at status ui_wired. Next: C09 (Architecture). Modules 0 to 8 still need your read-through to reach done.
+- **Next task:** C09-01: module 9 topic 01 layered architecture
 
 ## Completed tasks
 
@@ -54,6 +54,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - C06: module 6 Engineering craft (12 topics, 1 quiz-only), INC-06 and FEAT-06; test-writing practice checked with mutants
 - State fix: C03 to C06 milestones and their topics set to ui_wired (content checks pass); 4 quiz-only topics moved from planned to ui_wired
 - C07: module 7 Build and tooling (5 quiz-only topics), INC-07 and FEAT-07; reviewed (13 findings fixed); jar build checked as reproducible across time zones; all checks green
+- C08: module 8 Backend engineering (2 quiz topics, 10 Spring/SQL/JDBC code topics), INC-08 and FEAT-08; 3 reviews (about 45 findings) fixed; runner compiles with -parameters; all checks green
 
 ## Decisions
 
@@ -75,7 +76,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 ## Open decisions
 
 - A real VoiceOver pass needs a person
-- Modules 0 to 7 read-through by you before marking them done
+- Modules 0 to 8 read-through by you before marking them done
 
 ## Blockers
 
@@ -93,8 +94,8 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | C05 | ui_wired |
 | C06 | ui_wired |
 | C07 | ui_wired |
-| C08 | in_progress |
-| C09 | planned |
+| C08 | ui_wired |
+| C09 | in_progress |
 | C10 | planned |
 | M0 | done |
 | M1 | done |
@@ -116,7 +117,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-05-advanced-java | Rush hour | 15 | ui_wired |
 | module-06-craft | Paying off debt | 14 | ui_wired |
 | module-07-tooling | Shipping safely | 7 | ui_wired |
-| module-08-backend | The Spoke API | 14 | planned |
+| module-08-backend | The Spoke API | 14 | ui_wired |
 | module-09-architecture | Growing up | 10 | planned |
 | module-10-professional | Full-time offer | 8 | planned |
 
@@ -228,6 +229,20 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-07-tooling/topic-05-docker-basics | ui_wired | None | None |
 | module-07-tooling/boss | ui_wired | True | True |
 | module-07-tooling/mini-project | ui_wired | True | True |
+| module-08-backend/topic-01-http | ui_wired | None | None |
+| module-08-backend/topic-02-rest-design | ui_wired | None | None |
+| module-08-backend/topic-03-spring-boot-intro | ui_wired | True | True |
+| module-08-backend/topic-04-dependency-injection | ui_wired | True | True |
+| module-08-backend/topic-05-spring-mvc | ui_wired | True | True |
+| module-08-backend/topic-06-validation | ui_wired | True | True |
+| module-08-backend/topic-07-sql-basics | ui_wired | True | True |
+| module-08-backend/topic-08-jdbc | ui_wired | True | True |
+| module-08-backend/topic-09-jpa-hibernate | ui_wired | True | True |
+| module-08-backend/topic-10-transactions | ui_wired | True | True |
+| module-08-backend/topic-11-spring-security | ui_wired | True | True |
+| module-08-backend/topic-12-api-docs-errors | ui_wired | True | True |
+| module-08-backend/boss | ui_wired | True | True |
+| module-08-backend/mini-project | ui_wired | True | True |
 
 ## Commands
 

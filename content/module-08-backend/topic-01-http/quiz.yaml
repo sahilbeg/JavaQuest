@@ -1,0 +1,133 @@
+topic: module-08-backend/topic-01-http
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: request-response
+    variants:
+      - { prompt: "The rider app wants the list of stations. Who sends the first message?", choices: ["The app, as a request to the server", "The server, as a response to the app", "The server, as soon as the app starts", "Both at the same moment"], answer: 0 }
+      - { prompt: "In HTTP, which program is the client?", choices: ["The program that asks, like the rider app", "The program that answers, like the Spoke server", "Any program that stores data", "The Wi-Fi router"], answer: 0 }
+    explain: "The client always speaks first with a request. The server only ever answers with a response."
+    reteach: "## Concept"
+
+  - id: q02
+    type: order
+    concept: request-response
+    prompt: "Put the parts of a raw HTTP request in order."
+    items:
+      - "Request line: POST /rentals HTTP/1.1"
+      - "Headers: Content-Type: application/json"
+      - "A blank line"
+      - "Body: {\"riderId\": \"r-17\", \"bikeId\": \"B-1042\"}"
+    explain: "The request line comes first, then the headers, then a blank line that ends the headers, then the body."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: urls
+    variants:
+      - { prompt: "In https://api.spoke.example:8443/stations?city=riverton, which part is the path?", choices: ["/stations", "api.spoke.example", "8443", "city=riverton"], answer: 0 }
+      - { prompt: "In https://api.spoke.example:8443/stations?city=riverton, which part is the query?", choices: ["city=riverton", "/stations", "https", "api.spoke.example:8443"], answer: 0 }
+      - { prompt: "In https://api.spoke.example:8443/stations?city=riverton, which part is the host?", choices: ["api.spoke.example", "https", "/stations", "8443"], answer: 0 }
+    explain: "scheme://host:port/path?query. The query starts after the question mark."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: urls
+    prompt: "String host = uri.___();   // \"api.spoke.example\" from https://api.spoke.example:8443/stations"
+    answers: ["getHost"]
+    explain: "getHost() returns only the computer's name. getPort() gives 8443 and getPath() gives /stations."
+    reteach: "## Concept"
+
+  - id: q05
+    type: predict-output
+    concept: urls
+    prompt: "What does this print?"
+    code: |
+      import java.net.URI;
+
+      public class Main {
+          public static void main(String[] args) {
+              URI uri = URI.create("https://api.spoke.example/stations");
+              System.out.println(uri.getPort());
+          }
+      }
+    answer: "-1"
+    explain: "No port is written in the URL, so URI reports -1 for 'none'. The default for https, 443, is not filled in for you."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: mcq
+    concept: methods
+    variants:
+      - { prompt: "Which method only reads, and changes nothing on the server?", choices: ["GET", "POST", "PATCH", "DELETE"], answer: 0 }
+      - { prompt: "The app sends the same request twice because the first answer was lost. Which method might create two rentals?", choices: ["POST", "GET", "PUT", "DELETE"], answer: 0 }
+      - { prompt: "Which of these methods is idempotent?", choices: ["PUT", "POST", "None of them", "Only POST and PATCH"], answer: 0 }
+    explain: "GET is safe: it only reads. GET, PUT and DELETE are idempotent: repeating them changes nothing more. POST is neither."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: methods
+    prompt: "What is the difference between PUT and PATCH?"
+    choices: ["PUT replaces the whole thing, PATCH changes some fields", "PUT creates, PATCH deletes", "PUT reads, PATCH writes", "There is no difference"]
+    answer: 0
+    explain: "PUT sends a complete new version. PATCH sends only the fields that change."
+    reteach: "## Concept"
+
+  - id: q08
+    type: mcq
+    concept: status-codes
+    variants:
+      - { prompt: "The app asks for /stations/harbour, but Spoke's id is harbor. Which status fits?", choices: ["404 Not Found", "500 Internal Server Error", "201 Created", "301 Moved Permanently"], answer: 0 }
+      - { prompt: "POST /rentals worked and a new rental exists. Which status fits?", choices: ["201 Created", "200 OK", "204 No Content", "304 Not Modified"], answer: 0 }
+      - { prompt: "Ada, a rider, is logged in and tries to move a bike between stations, which only ops staff may do. Which status fits?", choices: ["403 Forbidden", "401 Unauthorized", "400 Bad Request", "409 Conflict"], answer: 0 }
+      - { prompt: "The server is down for upkeep and asks clients to try later. Which status fits?", choices: ["503 Service Unavailable", "500 Internal Server Error", "400 Bad Request", "204 No Content"], answer: 0 }
+    explain: "404 means the thing does not exist. 201 means something was created. 403 means logged in but not allowed. 503 means the server cannot answer right now."
+    reteach: "## Concept"
+
+  - id: q09
+    type: fill-blank
+    concept: status-codes
+    prompt: "HTTP/1.1 ___ Conflict"
+    answers: ["409"]
+    explain: "409 Conflict means the request clashes with the server's current state, like renting a bike that is already rented."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: headers
+    variants:
+      - { prompt: "Which header tells the server that the body you send is JSON?", choices: ["Content-Type", "Accept", "Location", "Cache-Control"], answer: 0 }
+      - { prompt: "Which header, on a 201 response, says where the new rental lives?", choices: ["Location", "Content-Type", "Authorization", "Accept"], answer: 0 }
+      - { prompt: "Which header asks the server to answer in JSON?", choices: ["Accept", "Content-Type", "Location", "Authorization"], answer: 0 }
+      - { prompt: "What does Cache-Control: max-age=30 on a response mean?", choices: ["You may reuse this answer for 30 seconds", "The server will wait 30 seconds before answering", "The body is 30 bytes long", "Only 30 clients may ask"], answer: 0 }
+    explain: "Content-Type names the body's format. Accept asks for a format. Location points to a new thing. Cache-Control says how long a copy stays good."
+    reteach: "## Concept"
+
+  - id: q11
+    type: spot-the-bug
+    concept: headers
+    prompt: "This request should start a rental with a JSON body. Which line is wrong?"
+    code: |
+      POST /rentals HTTP/1.1
+      Host: api.spoke.example
+      Content-Type: text/plain
+      Accept: application/json
+
+      {"riderId": "r-17", "bikeId": "B-1042"}
+    bugLine: 3
+    explain: "The body is JSON, so Content-Type must be application/json. With text/plain the server cannot read it as JSON."
+    reteach: "## Common mistakes"
+
+  - id: q12
+    type: mcq
+    concept: statelessness
+    variants:
+      - { prompt: "The app sent its token on the first request, then leaves it out on the second. What happens?", choices: ["401, because the server does not remember the first request", "200, because the server remembers the app", "301, because the app is sent to the login page", "The server waits for the token"], answer: 0 }
+      - { prompt: "What does it mean that HTTP is stateless?", choices: ["Each request carries everything the server needs, because the server remembers nothing between requests", "The server never stores any data at all", "Requests have no headers", "Only GET requests are allowed"], answer: 0 }
+      - { prompt: "Why do stateless servers suit Spoke's rush hour?", choices: ["Any copy of the server can answer any request", "They never need a database", "They do not need HTTPS", "They answer before the request arrives"], answer: 0 }
+    explain: "Stateless means every request stands alone. The token travels each time, so any server copy can answer."
+    reteach: "## Concept"

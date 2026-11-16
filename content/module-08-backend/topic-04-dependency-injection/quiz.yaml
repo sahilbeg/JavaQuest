@@ -1,0 +1,195 @@
+topic: module-08-backend/topic-04-dependency-injection
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: inversion-of-control
+    variants:
+      - prompt: "In a Spring Boot app, who creates the FareService object?"
+        choices:
+          - "Spring's container, when the app starts"
+          - "The controller, with new FareService()"
+          - "The main method, one line at a time"
+          - "The rider app, when it sends a request"
+        answer: 0
+      - prompt: "What is the ApplicationContext?"
+        choices:
+          - "Spring's container, which creates the beans and wires them together"
+          - "The folder that holds application.properties"
+          - "The HTTP request the rider app sends"
+          - "A list of the jars on the classpath"
+        answer: 0
+    explain: "With inversion of control, Spring's container (the ApplicationContext) creates the objects and passes them to each other. Your code no longer calls new for them."
+    reteach: "## Concept"
+
+  - id: q02
+    type: order
+    concept: inversion-of-control
+    prompt: "Put the steps Spring takes at startup in order."
+    items:
+      - "Scan the packages for classes marked @Component or @Service"
+      - "Create StandardPriceList and the Clock"
+      - "Create FareService, passing them to its constructor"
+      - "Hand the finished FareService to whoever asks for it"
+    explain: "Spring first finds the beans, then builds the ones with no needs, then builds the ones that need them."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: beans
+    variants:
+      - prompt: "What is a bean in Spring?"
+        choices:
+          - "An object that Spring creates and looks after in its container"
+          - "Any object made with new"
+          - "A Java class that has getters and setters only"
+          - "A test that checks the container started"
+        answer: 0
+      - prompt: "Which of these is NOT a bean?"
+        choices:
+          - "A PriceList you made yourself with new StandardPriceList()"
+          - "A class marked @Service that Spring found by scanning"
+          - "The Clock returned by a @Bean method"
+          - "Your @RestController"
+        answer: 0
+    explain: "A bean lives in Spring's container because Spring created it. An object you build with new is a plain object that Spring knows nothing about."
+    reteach: "## Concept"
+
+  - id: q04
+    type: predict-output
+    concept: beans
+    code: |
+      import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+      import org.springframework.stereotype.Service;
+
+      public class Main {
+          public static void main(String[] args) {
+              try (var context = new AnnotationConfigApplicationContext(FareService.class)) {
+                  FareService first = context.getBean(FareService.class);
+                  FareService second = context.getBean(FareService.class);
+                  System.out.println(FareService.built);
+                  System.out.println(first == second);
+              }
+          }
+      }
+
+      @Service
+      class FareService {
+          static int built = 0;
+
+          FareService() {
+              built++;
+          }
+      }
+    answer: "1\ntrue"
+    explain: "Beans are singletons by default. Spring builds FareService once and hands out that same object every time."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: component-scanning
+    prompt: "SpokeApiApplication is in package dev.spoke.api. Which @Service does component scanning find?"
+    choices:
+      - "dev.spoke.api.fares.FareService"
+      - "dev.spoke.billing.FareService"
+      - "dev.spoke.FareService"
+      - "com.spoke.api.FareService"
+    answer: 0
+    explain: "Scanning starts at the application class's package and goes into every package below it. dev.spoke.api.fares is below dev.spoke.api."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: component-scanning
+    prompt: "@___ class FareService { }  // the component annotation meant for business-rule classes"
+    answers: ["Service"]
+    explain: "@Service is a @Component for classes that hold business rules. @Repository is for database code."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: constructor-injection
+    code: |
+      @Service
+      class FareService {
+          private final PriceList prices;
+
+          FareService(PriceList prices) {
+              prices = prices;
+          }
+      }
+    bugLine: 6
+    explain: "prices = prices assigns the parameter to itself, so the final field is never set. javac refuses it: variable prices might not have been initialized. Write this.prices = prices."
+    reteach: "## Concept"
+
+  - id: q08
+    type: mcq
+    concept: constructor-injection
+    variants:
+      - prompt: "Why is constructor injection better than @Autowired on a field?"
+        choices:
+          - "Fields can be final, and a plain test must pass the helpers in"
+          - "It makes the app start faster"
+          - "Field injection does not compile"
+          - "Only constructors can receive interfaces"
+        answer: 0
+      - prompt: "FareService has exactly one constructor. What does Spring need to use it?"
+        choices:
+          - "Nothing extra: Spring uses a single constructor by itself"
+          - "@Autowired on the constructor"
+          - "@Bean on the constructor"
+          - "A second, empty constructor"
+        answer: 0
+    explain: "With one constructor, Spring calls it without any @Autowired. The constructor shows what the class needs, and the fields can be final."
+    reteach: "## Concept"
+
+  - id: q09
+    type: fill-blank
+    concept: bean-methods
+    prompt: "@___ Clock clock() { return Clock.systemUTC(); }  // inside a @Configuration class"
+    answers: ["Bean"]
+    explain: "A @Bean method inside a @Configuration class hands Spring the object it returns, as a bean named after the method."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: bean-methods
+    prompt: "Why does Spoke use a @Bean method for java.time.Clock instead of @Component?"
+    choices:
+      - "Clock is a JDK class, so you cannot add @Component to its source"
+      - "@Component only works on interfaces"
+      - "@Bean methods make beans that are not singletons"
+      - "Clock objects cannot be shared"
+    answer: 0
+    explain: "You cannot edit classes you do not own. A @Bean method builds the object yourself and gives it to Spring."
+    reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: choosing-beans
+    variants:
+      - prompt: "Two classes implement PriceList and both are @Component. FareService asks for one PriceList. What happens?"
+        choices:
+          - "Spring stops with NoUniqueBeanDefinitionException: expected single matching bean but found 2"
+          - "Spring picks the class whose name comes first in the alphabet"
+          - "Spring picks the class it created last"
+          - "Spring passes null"
+        answer: 0
+      - prompt: "What does @Primary on StandardPriceList do?"
+        choices:
+          - "It makes StandardPriceList the default when someone asks for a PriceList"
+          - "It makes StandardPriceList the only PriceList bean"
+          - "It makes Spring create StandardPriceList before every other bean"
+          - "It turns StandardPriceList into a @Configuration class"
+        answer: 0
+    explain: "Spring will not guess between two beans of one type. @Primary sets the default, and @Qualifier picks a specific one."
+    reteach: "## Concept"
+
+  - id: q12
+    type: fill-blank
+    concept: choosing-beans
+    prompt: "FareService(PriceList standard, @___(\"sunday\") PriceList sunday, Clock clock) {"
+    answers: ["Qualifier"]
+    explain: "@Qualifier(\"sunday\") on the parameter asks for the bean with the same label, SundayPriceList."
+    reteach: "## Concept"

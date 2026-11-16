@@ -1,0 +1,22 @@
+id: module-08-backend/mini-project
+title: "FEAT-08: The station availability API"
+order: 100
+minutes: 12
+prerequisites: [module-08-backend/topic-12-api-docs-errors]
+concepts: [rest-endpoints, jpa-queries, validation, problem-details]
+practice:
+  kind: code
+  runner: spring
+ticket:
+  key: FEAT-08
+  from: priya
+  title: "Live numbers on the station map"
+  body: >
+    Riders keep walking to Uptown only to find no bikes, or riding to Riverside to find every dock full.
+    The map in the rider app needs live numbers for each station: free bikes, free e-bikes and empty docks.
+    Riverton Transit wants the same numbers on its bus stop screens, so please make it a proper API they can call too.
+hints:
+  - "Start in the repositories. Spring Data writes a count query from a method name, such as countByStationIdAndStatus, or findAllByOrderByNameAsc for a sorted list (By with no condition, then OrderBy). Then fill availabilityOf before you touch the controller."
+  - "docksFree is station.getDocks() minus countByStationId(id). A RENTED bike has no station, so it is never counted as docked. In all, compare minBikes with the AVAILABLE count of that type, or of every type when type is null."
+  - "Controller: @RequestParam(defaultValue = \"0\") @Min(0) @Max(12) int minBikes, and @RequestParam(required = false) BikeType type. Errors: put @ExceptionHandler(TheException.class) on each method, and read the name with result.getMethodParameter().getParameterName()."
+review: false

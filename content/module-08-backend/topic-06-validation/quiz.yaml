@@ -1,0 +1,184 @@
+topic: module-08-backend/topic-06-validation
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: bean-validation
+    variants:
+      - prompt: "Which annotation rejects a riderId that is only spaces?"
+        choices: ["@NotBlank", "@NotNull", "@Positive", "@Max(12)"]
+        answer: 0
+      - prompt: "Which annotations keep a dock number between 1 and 12?"
+        choices: ["@Min(1) @Max(12)", "@Size(min = 1, max = 12)", "@Positive", "@NotBlank"]
+        answer: 0
+    explain: "@NotBlank needs text with more than spaces. @Min and @Max set the lowest and highest number. @Size is for the length of text or lists."
+    reteach: "## Concept"
+
+  - id: q02
+    type: predict-output
+    concept: bean-validation
+    code: |
+      import ch.qos.logback.classic.Level;
+      import ch.qos.logback.classic.Logger;
+      import jakarta.validation.Validation;
+      import jakarta.validation.Validator;
+      import jakarta.validation.constraints.NotBlank;
+      import jakarta.validation.constraints.NotNull;
+      import jakarta.validation.constraints.Pattern;
+      import org.slf4j.LoggerFactory;
+
+      public class Main {
+          public static void main(String[] args) {
+              ((Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)).setLevel(Level.WARN);
+              Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+              System.out.println(validator.validate(new Start("r-17", "B-1042")).size());
+              System.out.println(validator.validate(new Start("r-17", "b1042")).size());
+              System.out.println(validator.validate(new Start(" ", null)).size());
+          }
+      }
+
+      record Start(@NotBlank String riderId, @NotNull @Pattern(regexp = "B-\\d{4}") String bikeId) {}
+    answer: "0\n1\n2"
+    explain: "b1042 breaks @Pattern only. In the last one, the blank riderId breaks @NotBlank and the null bikeId breaks @NotNull. @Pattern treats null as valid, so it adds nothing."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: bean-validation
+    prompt: '@___(regexp = "B-\\d{4}", message = "must look like B-1042") String bikeId,'
+    answers: ["Pattern"]
+    explain: "@Pattern checks text against a regular expression. message replaces the default message."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: valid-trigger
+    variants:
+      - prompt: "StartRentalRequest has @NotBlank on riderId, but the method is start(@RequestBody StartRentalRequest request). A rider sends a blank riderId. What happens?"
+        choices:
+          - "The rental starts, because nothing asked Spring to check the rules"
+          - "Spring answers 400 Bad Request"
+          - "The code does not compile"
+          - "Spring answers 500 Internal Server Error"
+        answer: 0
+      - prompt: "Which exception does Spring throw when @Valid finds a broken rule in a request body?"
+        choices: ["MethodArgumentNotValidException", "ConstraintViolationException", "HttpMessageNotReadableException", "BikeNotFoundException"]
+        answer: 0
+    explain: "The annotations are only a checklist. @Valid before @RequestBody makes Spring check them, and a broken rule throws MethodArgumentNotValidException, which means 400."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: valid-trigger
+    prompt: "public ResponseEntity<Rental> start(___ @RequestBody StartRentalRequest request) {"
+    answers: ["@Valid", "@Validated"]
+    explain: "@Valid in front of @RequestBody runs the rules before your method is called. Spring also accepts @Validated in that spot."
+    reteach: "## Concept"
+
+  - id: q06
+    type: spot-the-bug
+    concept: hiding-internals
+    code: |
+      @ExceptionHandler(Exception.class)
+      public ProblemDetail unexpected(Exception e) {
+          log.error("Unexpected error while handling a request", e);
+          return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+      }
+    bugLine: 4
+    explain: "The exception's message can hold class names, package names and other internals. Log it, and send a fixed sentence such as \"Something went wrong on our side\"."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: mcq
+    concept: exception-handlers
+    prompt: "What does putting @RestControllerAdvice on a class do?"
+    choices:
+      - "Its @ExceptionHandler methods answer exceptions from every controller"
+      - "It checks the rules on every request body"
+      - "It turns the class into a controller with its own paths"
+      - "It hides every exception without logging it"
+    answer: 0
+    explain: "A controller advice adds the same error handling to every controller, so the handlers live in one place."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: exception-handlers
+    code: |
+      @RestControllerAdvice
+      public class SpokeErrorHandler extends ResponseEntityExceptionHandler {
+          @ExceptionHandler(MethodArgumentNotValidException.class)
+          public ProblemDetail invalid(MethodArgumentNotValidException e) {
+              return ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+          }
+      }
+    bugLine: 3
+    explain: "The base class already handles MethodArgumentNotValidException, so Spring finds two handlers and stops with \"Ambiguous @ExceptionHandler method\". Keep extending the base class, and override handleMethodArgumentNotValid instead."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: order
+    concept: exception-handlers
+    prompt: "A rider sends a body with a bad bike id. Put the steps in order."
+    items:
+      - "The request reaches the DispatcherServlet"
+      - "@Valid runs the rules on StartRentalRequest"
+      - "Spring throws MethodArgumentNotValidException, and the controller method never runs"
+      - "The advice builds a ProblemDetail with the errors property"
+      - "The app receives 400 with Content-Type application/problem+json"
+    explain: "Validation happens before your method. The exception goes straight to the advice, which builds the answer."
+    reteach: "## Worked example"
+
+  - id: q10
+    type: mcq
+    concept: problem-details
+    variants:
+      - prompt: "Which ProblemDetail field holds the path of the request that failed?"
+        choices: ["instance", "type", "title", "detail"]
+        answer: 0
+      - prompt: "Which ProblemDetail field is a web address that names the kind of problem, so the app can compare it?"
+        choices: ["type", "instance", "status", "detail"]
+        answer: 0
+      - prompt: "Which Content-Type does Spring send with a ProblemDetail body?"
+        choices: ["application/problem+json", "text/plain", "application/xml", "text/html"]
+        answer: 0
+    explain: "RFC 9457 defines type, title, status, detail and instance. Spring fills in instance and sends application/problem+json."
+    reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: status-for-errors
+    variants:
+      - prompt: "A rider asks for bike B-2001, which another rider is using. Which status fits?"
+        choices: ["409 Conflict", "404 Not Found", "400 Bad Request", "500 Internal Server Error"]
+        answer: 0
+      - prompt: "A rider asks for bike B-9999, and no bike has that id. Which status fits?"
+        choices: ["404 Not Found", "409 Conflict", "400 Bad Request", "500 Internal Server Error"]
+        answer: 0
+      - prompt: "A NullPointerException is thrown inside our own service. Which status fits?"
+        choices: ["500 Internal Server Error", "400 Bad Request", "404 Not Found", "409 Conflict"]
+        answer: 0
+    explain: "4xx means the request needs to change: 400 bad input, 404 no such thing, 409 a clash with the current state. 5xx means our server has a problem."
+    reteach: "## Concept"
+
+  - id: q12
+    type: mcq
+    concept: hiding-internals
+    variants:
+      - prompt: "Where should the stack trace of an unexpected exception go?"
+        choices:
+          - "Into the server log, with log.error"
+          - "Into the detail field of the 500 answer"
+          - "Into a header of the 500 answer"
+          - "Nowhere, so nobody ever sees it"
+        answer: 0
+      - prompt: "Why does a catch-all handler send only \"Something went wrong on our side\"?"
+        choices:
+          - "Class names help attackers and confuse riders, while the log keeps the full story for the team"
+          - "ProblemDetail cannot hold long text"
+          - "Spring removes anything longer from the answer"
+          - "Riders asked for shorter messages"
+        answer: 0
+    explain: "Log everything for the team, and tell the rider almost nothing about a bug they cannot fix."
+    reteach: "## Concept"

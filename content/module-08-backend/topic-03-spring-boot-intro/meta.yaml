@@ -1,0 +1,23 @@
+id: module-08-backend/topic-03-spring-boot-intro
+title: "Spring Boot: your first app"
+order: 3
+minutes: 10
+prerequisites: [module-08-backend/topic-02-rest-design]
+concepts: [frameworks, starters, auto-configuration, application-class, rest-controller, mockmvc-tests]
+practice:
+  kind: code
+  runner: spring
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0803
+  from: maya
+  title: "The rider app has no server to talk to"
+  body: >
+    The rider app team starts testing on Monday, but right now the app has no server to ask
+    which stations exist. Please start the Spoke API with Spring Boot. It needs GET /stations
+    listing our five stations, and GET /health so Theo can ping it and see it is up.
+hints:
+  - "Spring only uses classes it knows about. Right now nothing tells Spring that StationController exists or which paths it answers."
+  - "Put @RestController above the class. Put @GetMapping(\"/stations\") above stations() and @GetMapping(\"/health\") above health()."
+  - "Inside the methods: return STATIONS; and return new Health(\"UP\", STATIONS.size());"
+review: true

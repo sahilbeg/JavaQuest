@@ -1,0 +1,23 @@
+id: module-08-backend/topic-10-transactions
+title: "Transactions"
+order: 10
+minutes: 10
+prerequisites: [module-08-backend/topic-09-jpa-hibernate]
+concepts: [atomicity, transactional, rollback-rules, proxies, propagation, isolation]
+practice:
+  kind: code
+  runner: spring
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0810
+  from: priya
+  title: "A ride-credit gift took 500 cents and delivered nothing"
+  body: >
+    Riders can now gift ride credit to a friend, and they love it. But finance found a gift where the
+    sender lost 500 cents and the friend got nothing, after a timeout halfway through. Gifting to a
+    whole group has the same problem. Money must either move completely or not at all.
+hints:
+  - "The gift code itself is fine. The bug is that its steps commit one by one. One annotation on each public method in GiftService fixes most of it."
+  - "@Transactional rolls back on unchecked exceptions only. InsufficientCreditException is checked, so say rollbackFor = InsufficientCreditException.class."
+  - "Put @Transactional(rollbackFor = InsufficientCreditException.class) on both gift and giftToEach. giftToEach needs its own, because it calls gift through 'this', which skips Spring's proxy."
+review: true

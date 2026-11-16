@@ -1,0 +1,168 @@
+topic: module-08-backend/topic-03-spring-boot-intro
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: frameworks
+    variants:
+      - prompt: "What is the main difference between a library and a framework?"
+        choices:
+          - "Your code calls a library, but a framework calls your code"
+          - "A library is written in Java, but a framework is written in XML"
+          - "A framework is always smaller than a library"
+          - "Only libraries can be added with Maven"
+        answer: 0
+      - prompt: "In a Spring Boot app, who calls the stations() method in your controller?"
+        choices:
+          - "Spring calls it when a GET /stations request arrives"
+          - "Your main method calls it once at startup"
+          - "The rider app calls the Java method directly"
+          - "Nobody, it only runs inside tests"
+        answer: 0
+    explain: "A framework runs the program and calls your code at the right moments. A library waits until your code calls it."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: frameworks
+    prompt: "What does inversion of control mean?"
+    choices:
+      - "Control moves from your code to the framework, which decides when to call your code"
+      - "The program runs its lines from bottom to top"
+      - "The user controls the server instead of the programmer"
+      - "Every if statement is turned into its opposite"
+    answer: 0
+    explain: "Normally your main method is in charge. With a framework, the framework is in charge and calls you. Topic 04 goes deeper."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: starters
+    prompt: "<artifactId>___</artifactId>  <!-- the Spring Boot 4 starter for a web API -->"
+    answers: ["spring-boot-starter-webmvc"]
+    explain: "spring-boot-starter-webmvc brings Spring MVC, embedded Tomcat and Jackson. Older guides call it spring-boot-starter-web."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: starters
+    prompt: "What is a Spring Boot starter?"
+    choices:
+      - "One dependency that pulls in a set of libraries that work together"
+      - "The main method that starts the server"
+      - "A button on start.spring.io that runs your app"
+      - "A test that checks the server started"
+    answer: 0
+    explain: "A starter is a single dependency, such as spring-boot-starter-webmvc, that brings a matching set of libraries."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: auto-configuration
+    prompt: "You never wrote any server code, yet Tomcat starts on port 8080. Why?"
+    choices:
+      - "Auto-configuration saw Tomcat on the classpath and set up a server with defaults"
+      - "Java starts a web server for every program that has a main method"
+      - "start.spring.io runs the server for you on its own computer"
+      - "@RestController starts a new Tomcat for every controller"
+    answer: 0
+    explain: "Spring Boot looks at the jars on the classpath. Tomcat and Spring MVC are there, so it sets up a web server on the default port 8080."
+    reteach: "## Concept"
+
+  - id: q06
+    type: order
+    concept: application-class
+    prompt: "Put the lines of the application class in order."
+    items:
+      - "@SpringBootApplication"
+      - "public class SpokeApiApplication {"
+      - "    public static void main(String[] args) {"
+      - "        SpringApplication.run(SpokeApiApplication.class, args);"
+      - "    }"
+      - "}"
+    explain: "The annotation sits above the class. The main method calls SpringApplication.run with the class itself."
+    reteach: "## Concept"
+
+  - id: q07
+    type: fill-blank
+    concept: application-class
+    prompt: "SpringApplication.___(SpokeApiApplication.class, args);"
+    answers: ["run"]
+    explain: "SpringApplication.run starts Spring, which starts the web server and waits for requests."
+    reteach: "## Concept"
+
+  - id: q08
+    type: mcq
+    concept: application-class
+    prompt: "The application class is in package dev.spoke.api. Which controller does Spring find?"
+    choices:
+      - "One in dev.spoke.api.stations"
+      - "One in dev.spoke.web"
+      - "One in dev.spoke"
+      - "One in com.example.api"
+    answer: 0
+    explain: "Spring looks in the application class's package and every package below it. dev.spoke.api.stations is below dev.spoke.api."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: spot-the-bug
+    concept: rest-controller
+    code: |
+      @Controller
+      public class StationController {
+          @GetMapping("/stations")
+          public List<String> stations() {
+              return List.of("Riverside", "Old Mill", "Harbor");
+          }
+      }
+    bugLine: 1
+    explain: "A plain @Controller treats the return value as the name of a web page and fails with a circular view path error. Use @RestController to send the list as JSON."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: predict-output
+    concept: rest-controller
+    code: |
+      import tools.jackson.databind.json.JsonMapper;
+
+      public class Main {
+          record Dock(String station, int free) {}
+
+          public static void main(String[] args) {
+              JsonMapper mapper = JsonMapper.builder().build();
+              System.out.println(mapper.writeValueAsString(new Dock("Harbor", 3)));
+          }
+      }
+    answer: "{\"station\":\"Harbor\",\"free\":3}"
+    explain: "Jackson turns each record field into a JSON field with the same name, in the order the record lists them."
+    reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: mockmvc-tests
+    variants:
+      - prompt: "What does MockMvc do in a Spring test?"
+        choices:
+          - "It hands fake requests straight to your controllers, without opening a port"
+          - "It starts Tomcat on port 8080 and sends real requests"
+          - "It replaces your controller with a Mockito mock"
+          - "It checks that your code compiles"
+        answer: 0
+      - prompt: "Which pair of annotations gives a test the whole app plus a ready-made MockMvc?"
+        choices:
+          - "@SpringBootTest and @AutoConfigureMockMvc"
+          - "@RestController and @GetMapping"
+          - "@SpringBootApplication and @Test"
+          - "@ExtendWith and @Mock"
+        answer: 0
+    explain: "@SpringBootTest starts the app in the test, and @AutoConfigureMockMvc adds MockMvc, which sends requests without a real port."
+    reteach: "## Concept"
+
+  - id: q12
+    type: fill-blank
+    concept: mockmvc-tests
+    prompt: "assertEquals(200, result.getResponse().___(), \"GET /stations should answer 200 OK\");"
+    answers: ["getStatus"]
+    explain: "getResponse().getStatus() gives the HTTP status code, such as 200 or 404."
+    reteach: "## Worked example"

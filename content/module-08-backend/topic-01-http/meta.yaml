@@ -1,0 +1,22 @@
+id: module-08-backend/topic-01-http
+title: "How HTTP works"
+order: 1
+minutes: 10
+prerequisites: [module-07-tooling/boss]
+concepts: [request-response, urls, methods, status-codes, headers, statelessness]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0801
+  from: priya
+  title: "The rider app needs to talk to a server"
+  body: >
+    The rider app team starts next month. Their app will ask a Spoke server for stations and
+    rentals, instead of reading the kiosk's own files. Before the API work starts, I'd like you
+    to understand how the app and the server talk to each other. Can you get up to speed?
+hints:
+  - "Every HTTP exchange is one request from the client and one response from the server. The server never speaks first."
+  - "Read a status code by its first digit: 2 means it worked, 4 means the client got something wrong, 5 means the server did."
+  - "GET only reads, so repeating it is safe. Repeating a PUT or DELETE changes nothing more. Repeating a POST can start a second rental."
+review: true

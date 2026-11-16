@@ -1,0 +1,24 @@
+id: module-08-backend/topic-05-spring-mvc
+title: "Controllers and request mapping"
+order: 5
+minutes: 10
+prerequisites: [module-08-backend/topic-04-dependency-injection]
+concepts: [request-mapping, path-variables, request-params, request-body, response-entity, http-status]
+practice:
+  kind: code
+  runner: spring
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0805
+  from: priya
+  title: "The rentals screens need a server to talk to"
+  body: >
+    The app team has signed off the rentals design, so riders will start a rental, look one up,
+    see their past rentals and end a ride from their phones. The app is ready to call the server,
+    but the server has no rental addresses yet. Can you add the four rental endpoints so the app
+    team can start testing against them this week?
+hints:
+  - "Each method needs a mapping annotation, and each value from the request needs its own annotation too. Start with @PostMapping and @RequestBody on start."
+  - "Read the id with @PathVariable String id and the filter with @RequestParam(required = false) String riderId. For a create, return ResponseEntity.created(URI.create(\"/rentals/\" + rental.id())).body(rental)."
+  - "Map end with @PostMapping(\"/{id}/end\"). For not found, use service.find(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, \"No rental \" + id)). In end, wrap service.end(id) in try, and in catch (RentalAlreadyEndedException e) throw a ResponseStatusException with HttpStatus.CONFLICT."
+review: true

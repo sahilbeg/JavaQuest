@@ -1,0 +1,166 @@
+topic: module-08-backend/topic-11-spring-security
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: authentication
+    variants:
+      - prompt: "Ada calls GET /rentals/mine without sending any credentials. What should a secured Spoke API answer?"
+        choices: ["401 Unauthorized", "403 Forbidden", "200 OK with an empty list", "404 Not Found"]
+        answer: 0
+      - prompt: "Ada sends the wrong password with Basic auth. What should the API answer?"
+        choices: ["401 Unauthorized", "403 Forbidden", "400 Bad Request", "500 Internal Server Error"]
+        answer: 0
+    explain: "401 means the server does not know who you are yet: the credentials are missing or wrong. Log in first."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: authorization
+    variants:
+      - prompt: "Ada logs in correctly as a RIDER and calls POST /admin/bikes/B-1042/move, which needs OPS. What should the API answer?"
+        choices: ["403 Forbidden", "401 Unauthorized", "200 OK", "404 Not Found"]
+        answer: 0
+      - prompt: "Which question does authorization answer?"
+        choices: ["What may you do?", "Who are you?", "Is the password long enough?", "Which server answered?"]
+        answer: 0
+    explain: "Authorization runs after authentication. The server knows it is Ada, and her role does not allow the move, so it answers 403."
+    reteach: "## Concept"
+
+  - id: q03
+    type: order
+    concept: filter-chain
+    prompt: "Put the steps in the order they happen when Ada calls GET /rentals/mine with Basic auth."
+    items:
+      - "The request reaches the security filter chain"
+      - "A filter reads the Authorization header and checks Ada's password"
+      - "A later filter checks the rules for /rentals/mine"
+      - "RentalController.mine runs and returns Ada's rentals"
+    explain: "The filter chain sits in front of the controllers. It authenticates first, then authorizes, and only then passes the request on."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: filter-chain
+    prompt: "Spring Security is on the classpath, but without Boot's security starter. You wrote controllers and no security code. Who can call POST /admin/bikes/B-1042/move?"
+    choices:
+      - "Everyone, because nothing switched Spring Security on"
+      - "Nobody, because every URL is locked by default"
+      - "Only a user called user, with a password printed in the log"
+      - "Only requests that send a CSRF token"
+    answer: 0
+    explain: "Without the starter, nothing happens until your code adds @EnableWebSecurity and a SecurityFilterChain bean. The starter is what locks everything and prints a generated password."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: filter-chain
+    prompt: "@___   // on SecurityConfig: switches Spring Security on and provides HttpSecurity"
+    answers: ["EnableWebSecurity"]
+    explain: "@EnableWebSecurity switches Spring Security on. Without it, there is no HttpSecurity bean for your filter chain method."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: spot-the-bug
+    concept: roles
+    code: |
+      http.authorizeHttpRequests(auth -> auth
+              .requestMatchers(HttpMethod.GET, "/stations").permitAll()
+              .requestMatchers("/admin/**").hasRole("ROLE_OPS")
+              .anyRequest().authenticated());
+    bugLine: 3
+    explain: "hasRole adds the ROLE_ prefix for you. Write hasRole(\"OPS\"), or hasAuthority(\"ROLE_OPS\")."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: predict-output
+    concept: roles
+    code: |
+      import org.springframework.security.core.userdetails.User;
+      import org.springframework.security.core.userdetails.UserDetails;
+
+      public class Main {
+          public static void main(String[] args) {
+              UserDetails lin = User.withUsername("lin").password("hash").roles("RIDER").build();
+              System.out.println(lin.getAuthorities());
+          }
+      }
+    answer: "[ROLE_RIDER]"
+    explain: "roles(\"RIDER\") stores the authority ROLE_RIDER. A role is just an authority whose name starts with ROLE_."
+    reteach: "## Concept"
+
+  - id: q08
+    type: predict-output
+    concept: password-hashing
+    code: |
+      import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+      import org.springframework.security.crypto.password.PasswordEncoder;
+
+      public class Main {
+          public static void main(String[] args) {
+              PasswordEncoder encoder = new BCryptPasswordEncoder();
+              String a = encoder.encode("fix-it");
+              String b = encoder.encode("fix-it");
+              System.out.println(a.equals(b));
+              System.out.println(encoder.matches("fix-it", b));
+          }
+      }
+    answer: "false\ntrue"
+    explain: "Each encode adds a new random salt, so the two hashes differ. matches reads the salt from the stored hash, so it still says true."
+    reteach: "## Concept"
+
+  - id: q09
+    type: mcq
+    concept: password-hashing
+    prompt: "Why should Spoke store riders' passwords as BCrypt hashes instead of plain text?"
+    choices:
+      - "A stolen user table then reveals no passwords, and BCrypt is slow on purpose to make guessing expensive"
+      - "BCrypt makes passwords shorter, so the database is smaller"
+      - "BCrypt hashes can be turned back into the password when a rider forgets it"
+      - "Plain text passwords cannot be compared with equals"
+    answer: 0
+    explain: "A hash cannot be turned back. BCrypt adds a random salt and is deliberately slow, so leaked hashes are hard to crack."
+    reteach: "## Concept"
+
+  - id: q10
+    type: fill-blank
+    concept: password-hashing
+    prompt: "User.withUsername(\"ada\").password(encoder.___(\"ride-on\")).roles(\"RIDER\").build();"
+    answers: ["encode"]
+    explain: "encoder.encode turns the plain password into a BCrypt hash before it is stored."
+    reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: stateless-apis
+    prompt: "Why is it safe for Spoke's API to switch CSRF protection off?"
+    choices:
+      - "It keeps no login cookies, so a bad web page cannot borrow a rider's login"
+      - "Basic auth encrypts the password, so CSRF cannot happen"
+      - "CSRF only matters for GET requests"
+      - "Spring Security turns CSRF off for every API anyway"
+    answer: 0
+    explain: "CSRF attacks rely on the browser sending a login cookie by itself. A stateless API with no cookie sessions has nothing to forge. Cookie logins keep CSRF on."
+    reteach: "## Concept"
+
+  - id: q12
+    type: mcq
+    concept: stateless-apis
+    variants:
+      - prompt: "What does sessionCreationPolicy(SessionCreationPolicy.STATELESS) mean?"
+        choices:
+          - "The server keeps no session, so every request must carry its own credentials"
+          - "The server remembers each rider forever after one login"
+          - "Passwords are no longer checked"
+          - "The API stops answering POST requests"
+        answer: 0
+      - prompt: "Theo has the OPS role and the right password, but his POST to /admin/bikes/B-1042/move gets 403. GET requests work. What is the most likely cause?"
+        choices:
+          - "CSRF protection is still on, and his POST has no CSRF token"
+          - "httpBasic is missing"
+          - "The password encoder is BCrypt"
+          - "The session policy is STATELESS"
+        answer: 0
+    explain: "A stateless API keeps no session, and it switches CSRF off because there are no login cookies. CSRF is on by default and refuses POSTs without a token."
+    reteach: "## Common mistakes"

@@ -1,0 +1,23 @@
+id: module-08-backend/topic-04-dependency-injection
+title: "Dependency injection and beans"
+order: 4
+minutes: 10
+prerequisites: [module-08-backend/topic-03-spring-boot-intro, module-06-craft/topic-02-solid]
+concepts: [inversion-of-control, beans, component-scanning, constructor-injection, bean-methods, choosing-beans]
+practice:
+  kind: code
+  runner: spring
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0804
+  from: maya
+  title: "FareService builds its own price list and clock"
+  body: >
+    FareService makes its own price list and clock with new, so our tests can't pretend it's Sunday.
+    Priya wants half-price Sunday rides, and right now that means editing FareService every weekend.
+    Please let Spring hand FareService its price lists and its clock instead.
+hints:
+  - "Spring only manages classes it knows about. Start by turning the two price lists and ClockConfig into beans, then FareService."
+  - "StandardPriceList gets @Component and @Primary. SundayPriceList gets @Component and @Qualifier(\"sunday\"). ClockConfig gets @Configuration, and its clock() method gets @Bean."
+  - "Give FareService @Service and the constructor FareService(PriceList standard, @Qualifier(\"sunday\") PriceList sunday, Clock clock). In fareCents: PriceList prices = LocalDate.now(clock).getDayOfWeek() == DayOfWeek.SUNDAY ? sunday : standard;"
+review: true

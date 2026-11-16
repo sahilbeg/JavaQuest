@@ -1,0 +1,23 @@
+id: module-08-backend/topic-12-api-docs-errors
+title: "API docs, versioning and error design"
+order: 12
+minutes: 10
+prerequisites: [module-08-backend/topic-11-spring-security]
+concepts: [api-contracts, versioning, breaking-changes, problem-types, openapi, deprecation]
+practice:
+  kind: code
+  runner: spring
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0812
+  from: priya
+  title: "Riverton Transit wants our bikes in their journey planner"
+  body: >
+    Riverton Transit wants to show Spoke bikes in their journey planner. They need an API that is
+    documented, stays stable, and returns errors their code can handle. Our app team also wants fares
+    to carry a currency, without breaking Riverton on day one. Can you ship v2 next to v1?
+hints:
+  - "Change only the JSON shape in each controller. Both versions already share RentalService, so the rules stay in one place."
+  - "For v1, swap ResponseEntity.ok(body) for ResponseEntity.ok().header(\"Deprecation\", DEPRECATION).header(\"Sunset\", SUNSET).body(...). For v2, the fare is new Fare(rental.fareCents(), \"USD\")."
+  - "In ApiErrors: ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, \"No rental with id \" + ex.rentalId()); then setType(URI.create(PROBLEMS + \"rental-not-found\")), setTitle(\"Rental not found\"), setInstance(URI.create(request.getRequestURI())), setProperty(\"rentalId\", ex.rentalId()), and return it."
+review: true

@@ -240,6 +240,18 @@
                 <source>module-06-craft/topic-12-logging/src</source>
                 <source>module-07-tooling/boss/src</source>
                 <source>module-07-tooling/mini-project/src</source>
+                <source>module-08-backend/boss/src</source>
+                <source>module-08-backend/mini-project/src</source>
+                <source>module-08-backend/topic-03-spring-boot-intro/src</source>
+                <source>module-08-backend/topic-04-dependency-injection/src</source>
+                <source>module-08-backend/topic-05-spring-mvc/src</source>
+                <source>module-08-backend/topic-06-validation/src</source>
+                <source>module-08-backend/topic-07-sql-basics/src</source>
+                <source>module-08-backend/topic-08-jdbc/src</source>
+                <source>module-08-backend/topic-09-jpa-hibernate/src</source>
+                <source>module-08-backend/topic-10-transactions/src</source>
+                <source>module-08-backend/topic-11-spring-security/src</source>
+                <source>module-08-backend/topic-12-api-docs-errors/src</source>
               </sources>
             </configuration>
           </execution>
@@ -339,6 +351,18 @@
                 <source>module-06-craft/topic-12-logging/test</source>
                 <source>module-07-tooling/boss/test</source>
                 <source>module-07-tooling/mini-project/test</source>
+                <source>module-08-backend/boss/test</source>
+                <source>module-08-backend/mini-project/test</source>
+                <source>module-08-backend/topic-03-spring-boot-intro/test</source>
+                <source>module-08-backend/topic-04-dependency-injection/test</source>
+                <source>module-08-backend/topic-05-spring-mvc/test</source>
+                <source>module-08-backend/topic-06-validation/test</source>
+                <source>module-08-backend/topic-07-sql-basics/test</source>
+                <source>module-08-backend/topic-08-jdbc/test</source>
+                <source>module-08-backend/topic-09-jpa-hibernate/test</source>
+                <source>module-08-backend/topic-10-transactions/test</source>
+                <source>module-08-backend/topic-11-spring-security/test</source>
+                <source>module-08-backend/topic-12-api-docs-errors/test</source>
               </sources>
             </configuration>
           </execution>

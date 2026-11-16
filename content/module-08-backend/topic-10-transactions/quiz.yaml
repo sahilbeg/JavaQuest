@@ -1,0 +1,187 @@
+topic: module-08-backend/topic-10-transactions
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: atomicity
+    variants:
+      - prompt: "What does atomicity promise for a gift that withdraws from one wallet and deposits into another?"
+        choices:
+          - "Both steps are kept, or neither is"
+          - "The two steps run at the same moment"
+          - "The gift is saved to disk twice"
+          - "No other rider can ever read either wallet"
+        answer: 0
+      - prompt: "Which ACID letter means all or nothing?"
+        choices: ["A, atomicity", "C, consistency", "I, isolation", "D, durability"]
+        answer: 0
+    explain: "Atomicity means a group of changes cannot be cut in half. Either every step is committed, or all are rolled back."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: atomicity
+    prompt: "A connection is in auto-commit mode. The withdrawal UPDATE succeeds, then the deposit UPDATE fails. What is in the database?"
+    choices:
+      - "The withdrawal is kept and the deposit is missing"
+      - "Neither change, because the database undoes both"
+      - "Both changes, because the deposit is retried"
+      - "Only the deposit"
+    answer: 0
+    explain: "In auto-commit mode every statement commits alone, the moment it finishes. Nothing ties the two together."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: transactional
+    variants:
+      - prompt: "A public @Transactional method on a Spring bean returns normally. What does Spring do?"
+        choices: ["Commits the transaction", "Rolls back the transaction", "Leaves it open for the next call", "Nothing, the database decides later"]
+        answer: 0
+      - prompt: "A public @Transactional method throws IllegalArgumentException. What does Spring do?"
+        choices:
+          - "Rolls back, then lets the exception reach the caller"
+          - "Commits, then swallows the exception"
+          - "Rolls back and returns null"
+          - "Retries the method once"
+        answer: 0
+    explain: "Spring commits on a normal return and rolls back on a RuntimeException or Error. The exception still reaches the caller."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: transactional
+    prompt: "@Transactional(___ = true)   // this method only looks things up"
+    answers: ["readOnly"]
+    explain: "readOnly = true tells Hibernate and the database that the method only reads, so Hibernate can skip change checks."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: rollback-rules
+    variants:
+      - prompt: "With a plain @Transactional, which exception lets the work done so far be committed?"
+        choices:
+          - "A checked exception, such as class InsufficientCreditException extends Exception"
+          - "IllegalStateException"
+          - "NullPointerException"
+          - "An Error, such as OutOfMemoryError"
+        answer: 0
+      - prompt: "class WalletFullException extends Exception. A plain @Transactional method withdraws, then throws it. What happens to the withdrawal?"
+        choices: ["It is committed", "It is rolled back", "It is retried", "It is kept but hidden from other riders"]
+        answer: 0
+    explain: "By default only RuntimeException and Error roll back. Checked exceptions commit, unless you add rollbackFor."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: rollback-rules
+    prompt: "@Transactional(___ = InsufficientCreditException.class)   // a checked exception that must undo the work"
+    answers: ["rollbackFor"]
+    explain: "rollbackFor adds exceptions that should also roll back, such as your own checked ones."
+    reteach: "## Concept"
+
+  - id: q07
+    type: spot-the-bug
+    concept: rollback-rules
+    code: |
+      @Transactional
+      public void giftToEach(String from, List<String> friends, long cents) throws InsufficientCreditException {
+          for (String friend : friends) {
+              withdraw(from, cents);    // throws InsufficientCreditException when credit runs out
+              deposit(friend, cents);
+          }
+      }
+    bugLine: 1
+    explain: "InsufficientCreditException is checked, so a plain @Transactional commits the gifts that already ran. Use @Transactional(rollbackFor = InsufficientCreditException.class)."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: proxies
+    variants:
+      - prompt: "CreditService has a @Transactional addCredit() and a plain monthlyBonus() that calls this.addCredit(). Another bean calls monthlyBonus(). Does addCredit run in a transaction?"
+        choices:
+          - "No, 'this' is the real object, so the call skips Spring's proxy"
+          - "Yes, the annotation works on every call"
+          - "Yes, but only for the first rider"
+          - "No, because addCredit is public"
+        answer: 0
+      - prompt: "Why does @Transactional on a private method do nothing?"
+        choices:
+          - "Spring's proxy is a subclass, and a subclass cannot override a private method"
+          - "Private methods cannot use repositories"
+          - "The database refuses private calls"
+          - "Spring removes private methods at startup"
+        answer: 0
+      - prompt: "spring.getBean(GiftService.class).getClass().getSimpleName() prints GiftService$$SpringCGLIB$$0. What is that object?"
+        choices:
+          - "A proxy Spring made around your GiftService, which adds the transactions"
+          - "A copy of GiftService with all methods removed"
+          - "A test double made by Mockito"
+          - "A compile error turned into a class"
+        answer: 0
+    explain: "The transaction lives in a proxy around the bean. Calls through this, private and final methods, and objects made with new all skip it."
+    reteach: "## Concept"
+
+  - id: q09
+    type: order
+    concept: proxies
+    prompt: "A caller calls gift on the GiftService bean, and gift throws a RuntimeException. Put the steps in order."
+    items:
+      - "The caller's call reaches Spring's proxy"
+      - "The proxy begins a transaction"
+      - "The proxy calls your real gift method"
+      - "Your gift method throws a RuntimeException"
+      - "The proxy rolls back the transaction"
+      - "The proxy rethrows the exception to the caller"
+    explain: "The proxy wraps your method: begin, call, then commit or roll back, then return or rethrow."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: propagation
+    variants:
+      - prompt: "Finance wants a row for every gift attempt, even when the gift rolls back. Which propagation fits the audit method?"
+        choices: ["REQUIRES_NEW", "REQUIRED", "readOnly = true", "No @Transactional at all"]
+        answer: 0
+      - prompt: "A @Transactional method calls another bean's @Transactional method with the default propagation. What happens?"
+        choices:
+          - "The inner method joins the outer transaction, and both commit or roll back together"
+          - "The inner method always starts a separate transaction"
+          - "The inner method runs with no transaction"
+          - "Spring throws an error for nested transactions"
+        answer: 0
+    explain: "REQUIRED, the default, joins a running transaction. REQUIRES_NEW pauses it and commits its own work separately."
+    reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: propagation
+    prompt: "An outer @Transactional method calls another bean's @Transactional method, which throws. The outer method catches the exception and returns normally. What happens at the end?"
+    choices:
+      - "UnexpectedRollbackException: the joined transaction was already marked for rollback"
+      - "Everything commits, because the exception was caught"
+      - "Only the inner method's work is rolled back"
+      - "The inner method is retried"
+    answer: 0
+    explain: "The inner method joined the outer transaction and marked it rollback-only when it threw. Catching the exception cannot clear that mark."
+    reteach: "## Common mistakes"
+
+  - id: q12
+    type: mcq
+    concept: isolation
+    variants:
+      - prompt: "What is a dirty read?"
+        choices:
+          - "Reading another transaction's change before it commits, which may still be rolled back"
+          - "Reading a row with a spelling mistake in it"
+          - "Reading the same row twice in one transaction"
+          - "Reading from a table with no primary key"
+        answer: 0
+      - prompt: "Which isolation level is the default in PostgreSQL, Oracle, SQL Server and H2, and prevents dirty reads?"
+        choices: ["READ_COMMITTED", "READ_UNCOMMITTED", "SERIALIZABLE", "REQUIRES_NEW"]
+        answer: 0
+    explain: "READ_COMMITTED shows only committed changes, so no dirty reads. It is the default in most databases."
+    reteach: "## Concept"

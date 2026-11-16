@@ -1,0 +1,23 @@
+id: module-08-backend/topic-11-spring-security
+title: "Security basics with Spring Security"
+order: 11
+minutes: 10
+prerequisites: [module-08-backend/topic-10-transactions]
+concepts: [authentication, authorization, filter-chain, password-hashing, roles, stateless-apis]
+practice:
+  kind: code
+  runner: spring
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0811
+  from: theo
+  title: "Anyone with the URL can move our bikes"
+  body: >
+    I just moved B-1042 to the Depot from my phone with no login at all, using the admin move
+    endpoint. Anyone who finds that URL can empty Harbor in a minute. Riders should see only their
+    own rentals, and only ops staff should be able to move bikes. Can you lock it down?
+hints:
+  - "Start with TODO 1. Without @EnableWebSecurity on SecurityConfig, nothing you write later switches on."
+  - "Inside the filter chain, list rules from most specific to least: GET /stations permitAll, /admin/** hasRole(\"OPS\"), then anyRequest().authenticated(). Then add httpBasic, STATELESS sessions and csrf off."
+  - "Return new BCryptPasswordEncoder() from passwordEncoder(). In users(), write User.withUsername(\"ada\").password(encoder.encode(\"ride-on\")).roles(\"RIDER\").build(), and the same for theo with \"fix-it\" and \"OPS\"."
+review: true

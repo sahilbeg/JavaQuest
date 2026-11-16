@@ -1,0 +1,22 @@
+id: module-08-backend/topic-02-rest-design
+title: "REST and API design"
+order: 2
+minutes: 10
+prerequisites: [module-08-backend/topic-01-http]
+concepts: [resources, method-mapping, status-choices, idempotency, filtering-paging, json-design]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0802
+  from: priya
+  title: "Agree on the rentals API before anyone codes"
+  body: >
+    Before anyone writes a line of code, I want the rentals API designed on paper. The app team
+    and the server team should both sign it off. Last time two teams called the same thing a
+    "ride", a "trip" and a "rental", and untangling it took a week. Can you draft the design?
+hints:
+  - "Name things, not actions. /rentals is a thing you can create, read and change, and the method says what to do with it."
+  - "Pick the status code for what happened: 201 with a Location header for something new, 404 for an unknown id, 409 when the bike is already rented."
+  - "A retried POST can start two rentals. Send an Idempotency-Key header, so the server spots the repeat and returns its first answer."
+review: true

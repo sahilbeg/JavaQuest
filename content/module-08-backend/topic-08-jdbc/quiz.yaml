@@ -1,0 +1,190 @@
+topic: module-08-backend/topic-08-jdbc
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: connections
+    variants:
+      - prompt: "What is a JDBC driver?"
+        choices:
+          - "A library that implements the java.sql interfaces for one particular database"
+          - "The SQL statement that creates a table"
+          - "A Java class you write to hold one row"
+          - "The program that runs your JUnit tests"
+        answer: 0
+      - prompt: "What is the main job of a DataSource?"
+        choices:
+          - "To hand out connections, so your repository never needs to know the URL"
+          - "To store rows in memory instead of a database"
+          - "To turn a ResultSet into records"
+          - "To check SQL for typing mistakes before it runs"
+        answer: 0
+    explain: "Your code talks to the java.sql interfaces. The driver implements them for one database, and a DataSource, set up once by the app, hands out connections."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: connections
+    prompt: "One connection creates the ride table and closes. The next connection to jdbc:h2:mem:spoke says Table \"RIDE\" not found. Why?"
+    choices:
+      - "The in-memory database disappeared when its last connection closed"
+      - "Table names must be written in capitals in Java"
+      - "Each connection can only see tables it created itself"
+      - "CREATE TABLE needs executeQuery, not executeUpdate"
+    answer: 0
+    explain: "An in-memory H2 database lives only while a connection is open. Add ;DB_CLOSE_DELAY=-1 to the URL to keep it until the program ends."
+    reteach: "## Common mistakes"
+
+  - id: q03
+    type: fill-blank
+    concept: prepared-statements
+    prompt: "statement.___(1, riderId); // riderId is a String"
+    answers: ["setString"]
+    explain: "setString fills a ? with text. The 1 means the first ?, because JDBC counts from 1."
+    reteach: "## Concept"
+
+  - id: q04
+    type: spot-the-bug
+    concept: prepared-statements
+    code: |
+      PreparedStatement statement = connection.prepareStatement(
+              "SELECT id FROM ride WHERE rider_id = ?");
+      statement.setString(0, "r-17");
+      ResultSet rows = statement.executeQuery();
+    bugLine: 3
+    explain: "Parameters are numbered from 1, so the first ? is setString(1, ...). Index 0 throws Invalid value \"0\" for parameter \"parameterIndex\"."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: predict-output
+    concept: result-sets
+    code: |
+      import java.sql.*;
+
+      public class Main {
+          public static void main(String[] args) throws SQLException {
+              try (Connection connection = DriverManager.getConnection("jdbc:h2:mem:quiz");
+                   Statement statement = connection.createStatement()) {
+                  statement.executeUpdate("CREATE TABLE ride (id INT PRIMARY KEY, minutes INT)");
+                  statement.executeUpdate("INSERT INTO ride VALUES (1, 12), (2, NULL), (3, 30)");
+                  try (ResultSet rows = statement.executeQuery("SELECT id, minutes FROM ride ORDER BY id")) {
+                      while (rows.next()) {
+                          System.out.println(rows.getInt("id") + ":" + rows.getInt("minutes"));
+                      }
+                  }
+              }
+          }
+      }
+    answer: "1:12\n2:0\n3:30"
+    explain: "next() visits each row in turn. getInt returns 0 for a NULL value, so ride 2 prints 0. Call wasNull() if you must tell them apart."
+    reteach: "## Concept"
+
+  - id: q06
+    type: order
+    concept: result-sets
+    prompt: "Put the lines in order to print the id of r-17's first ride."
+    items:
+      - "PreparedStatement statement = connection.prepareStatement(\"SELECT id FROM ride WHERE rider_id = ?\");"
+      - "statement.setString(1, \"r-17\");"
+      - "ResultSet rows = statement.executeQuery();"
+      - "rows.next();"
+      - "System.out.println(rows.getLong(\"id\"));"
+    explain: "Prepare the SQL, fill the ?, run the query, move the cursor onto the first row, then read a column."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: resource-cleanup
+    prompt: "A repository opens a connection on every request and never closes it. What happens as riders keep using the service?"
+    choices:
+      - "Open sessions pile up until the database or the pool has none left, and requests hang"
+      - "Nothing, because Java's garbage collector closes connections at once"
+      - "Each new connection closes the previous one"
+      - "The compiler refuses to build the code"
+    answer: 0
+    explain: "Each open connection is a session holding memory in the database. Servers and pools allow only a few, so leaks end with requests waiting forever."
+    reteach: "## Concept"
+
+  - id: q08
+    type: mcq
+    concept: resource-cleanup
+    prompt: "A try-with-resources opens a Connection, then a PreparedStatement, then a ResultSet. In what order are they closed?"
+    choices:
+      - "ResultSet, then PreparedStatement, then Connection"
+      - "Connection, then PreparedStatement, then ResultSet"
+      - "Only the Connection is closed"
+      - "In a random order"
+    answer: 0
+    explain: "Resources close in reverse order of opening, so the rows go first and the connection last. They close even when an exception is thrown."
+    reteach: "## Concept"
+
+  - id: q09
+    type: fill-blank
+    concept: generated-keys
+    prompt: "PreparedStatement statement = connection.prepareStatement(sql, Statement.___);"
+    answers: ["RETURN_GENERATED_KEYS"]
+    explain: "RETURN_GENERATED_KEYS asks the driver to keep the id the database picked, so getGeneratedKeys() can hand it back."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: generated-keys
+    prompt: "After executeUpdate() inserts a ride whose id the database generates, how do you read the new id?"
+    choices:
+      - "Call statement.getGeneratedKeys(), then next() and getLong(1)"
+      - "Read the return value of executeUpdate(), which is the new id"
+      - "Run SELECT MAX(id) FROM ride and hope no one else inserted"
+      - "Read the id field of the NewRide you passed in"
+    answer: 0
+    explain: "executeUpdate returns the number of rows changed, not the id. getGeneratedKeys() returns a small ResultSet holding the new id."
+    reteach: "## Concept"
+
+  - id: q11
+    type: predict-output
+    concept: sql-injection
+    code: |
+      import java.sql.*;
+
+      public class Main {
+          public static void main(String[] args) throws SQLException {
+              try (Connection connection = DriverManager.getConnection("jdbc:h2:mem:quiz");
+                   Statement statement = connection.createStatement()) {
+                  statement.executeUpdate("CREATE TABLE ride (id INT PRIMARY KEY, rider_id VARCHAR(20))");
+                  statement.executeUpdate("INSERT INTO ride VALUES (1, 'r-17'), (2, 'r-23'), (3, 'r-42')");
+                  String input = "r-99' OR '1'='1";
+
+                  int unsafe = 0;
+                  try (ResultSet rows = statement.executeQuery(
+                          "SELECT id FROM ride WHERE rider_id = '" + input + "'")) {
+                      while (rows.next()) unsafe++;
+                  }
+
+                  int safe = 0;
+                  try (PreparedStatement search = connection.prepareStatement("SELECT id FROM ride WHERE rider_id = ?")) {
+                      search.setString(1, input);
+                      try (ResultSet rows = search.executeQuery()) {
+                          while (rows.next()) safe++;
+                      }
+                  }
+                  System.out.println("unsafe: " + unsafe);
+                  System.out.println("safe: " + safe);
+              }
+          }
+      }
+    answer: "unsafe: 3\nsafe: 0"
+    explain: "Glued into the SQL, the input adds OR '1'='1', which is true for all 3 rows. Sent as a ? value, it is just a strange rider id that matches nothing."
+    reteach: "## Concept"
+
+  - id: q12
+    type: mcq
+    concept: sql-injection
+    prompt: "Which change stops SQL injection in the rider search?"
+    choices:
+      - "Put a ? in the SQL and pass the input with setString"
+      - "Remove the spaces from the input before gluing it into the SQL"
+      - "Use executeUpdate instead of executeQuery"
+      - "Write the SQL keywords in lower case"
+    answer: 0
+    explain: "With a ? parameter the SQL text and the value travel separately, so typed input can never become part of the SQL."
+    reteach: "## Concept"

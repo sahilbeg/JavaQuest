@@ -1,0 +1,23 @@
+id: module-08-backend/topic-07-sql-basics
+title: "SQL basics"
+order: 7
+minutes: 10
+prerequisites: [module-08-backend/topic-06-validation]
+concepts: [tables-and-rows, select-where, order-and-limit, aggregates, joins, changing-data]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0807
+  from: theo
+  title: "Saved queries so ops stops pinging engineers"
+  body: >
+    Rides live in a real database now, and I keep pinging engineers with the same questions.
+    Which Harbor bikes are free right now? How many rides did each station start this week?
+    Can you write a set of saved queries I can run myself, so nobody has to drop their work for me?
+hints:
+  - "Each constant is one SQL statement. Read the README for the columns and the order each one needs, then start with FREE_BIKES_AT_HARBOR."
+  - "Counting per station needs a JOIN to get the station name, then GROUP BY s.name and ORDER BY the count DESC, then s.name. Totals over a limit need HAVING, not WHERE."
+  - "Stations with no rides: SELECT s.name FROM station s LEFT JOIN ride r ON r.start_station_id = s.id WHERE r.id IS NULL ORDER BY s.name. The update is UPDATE bike SET status = 'MAINTENANCE' WHERE id = ?"
+review: true

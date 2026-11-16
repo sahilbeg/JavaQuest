@@ -1,0 +1,167 @@
+topic: module-08-backend/topic-05-spring-mvc
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: request-mapping
+    variants:
+      - prompt: "A class has @RequestMapping(\"/rentals\") and a method has @PostMapping(\"/{id}/end\"). Which request reaches that method?"
+        choices: ["POST /rentals/rental-3/end", "POST /{id}/end", "GET /rentals/rental-3/end", "POST /rentals/end/rental-3"]
+        answer: 0
+      - prompt: "A class has @RequestMapping(\"/stations\") and a method has @GetMapping(\"/{id}\"). Which request reaches that method?"
+        choices: ["GET /stations/harbor", "GET /{id}", "POST /stations/harbor", "GET /harbor/stations"]
+        answer: 0
+    explain: "The class path comes first and the method path is added after it. The HTTP method must match the annotation too."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: request-mapping
+    prompt: "What does the DispatcherServlet do with each request?"
+    choices:
+      - "Finds the controller method whose mapping matches the method and path, and calls it"
+      - "Stores every rental in memory"
+      - "Compiles the controllers when the request arrives"
+      - "Checks the rider's password"
+    answer: 0
+    explain: "The DispatcherServlet is the front door. It matches the request to a mapping, converts the JSON, calls your method and writes the answer."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: request-mapping
+    prompt: "@___(\"/{id}\")   // answers DELETE /rentals/rental-1"
+    answers: ["DeleteMapping"]
+    explain: "Each HTTP method has its own mapping annotation. DELETE uses @DeleteMapping."
+    reteach: "## Concept"
+
+  - id: q04
+    type: order
+    concept: request-mapping
+    prompt: "Put the steps for handling POST /rentals in order."
+    items:
+      - "The DispatcherServlet receives POST /rentals"
+      - "It finds the method marked @PostMapping in the /rentals controller"
+      - "Jackson turns the JSON body into a StartRental record"
+      - "The controller calls service.start and returns a ResponseEntity"
+      - "The rental is written back to the app as JSON with status 201"
+    explain: "Match the mapping, convert the body, run your method, then convert the result back to JSON."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: path-variables
+    variants:
+      - prompt: "Which annotation reads rental-7 out of GET /rentals/rental-7?"
+        choices: ["@PathVariable", "@RequestParam", "@RequestBody", "@RequestMapping"]
+        answer: 0
+      - prompt: "Which annotation reads harbor out of GET /stations/harbor?"
+        choices: ["@PathVariable", "@RequestParam", "@RequestBody", "@ResponseStatus"]
+        answer: 0
+    explain: "Curly braces in a mapping mark a path variable, and @PathVariable reads it into a parameter."
+    reteach: "## Concept"
+
+  - id: q06
+    type: spot-the-bug
+    concept: path-variables
+    code: |
+      @GetMapping("/{id}")
+      public Rental find(@PathVariable String rentalId) {
+          return service.find(rentalId).orElseThrow();
+      }
+    bugLine: 2
+    explain: "Spring looks for {rentalId} in the path, but the mapping says {id}. Rename the parameter to id, or write @PathVariable(\"id\") String rentalId."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: mcq
+    concept: request-params
+    variants:
+      - prompt: "GET /rentals with no query string reaches list(@RequestParam String riderId). What does the app get back?"
+        choices: ["400 Bad Request", "200 with every rental", "404 Not Found", "201 Created"]
+        answer: 0
+      - prompt: "GET /rentals with no query string reaches list(@RequestParam(defaultValue = \"20\") int size). What is size?"
+        choices: ["20", "0", "null", "Spring answers 400 Bad Request"]
+        answer: 0
+    explain: "@RequestParam is required unless you add required = false or a defaultValue. A defaultValue fills in the missing value."
+    reteach: "## Concept"
+
+  - id: q08
+    type: fill-blank
+    concept: request-params
+    prompt: "public List<Rental> list(@RequestParam(___) String riderId) {   // riderId is null when left out"
+    answers: ["required = false", "required=false"]
+    explain: "required = false lets the parameter be missing. Then riderId is null and you list every rental."
+    reteach: "## Concept"
+
+  - id: q09
+    type: spot-the-bug
+    concept: request-body
+    code: |
+      @PostMapping
+      public ResponseEntity<Rental> start(StartRental request) {
+          Rental rental = service.start(request);
+          return ResponseEntity.created(URI.create("/rentals/" + rental.id())).body(rental);
+      }
+    bugLine: 2
+    explain: "Without @RequestBody, Spring does not read the JSON body. The record's fields stay null."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: predict-output
+    concept: request-body
+    code: |
+      import tools.jackson.databind.json.JsonMapper;
+
+      public class Main {
+          public static void main(String[] args) {
+              JsonMapper mapper = JsonMapper.builder().build();
+              String json = "{\"station\": \"harbor\", \"riderId\": \"r-17\", \"bikeId\": \"B-1042\"}";
+              StartRental request = mapper.readValue(json, StartRental.class);
+              System.out.println(request.riderId() + " at " + request.station());
+              System.out.println(mapper.writeValueAsString(new StartRental("r-22", null, "depot")));
+          }
+      }
+
+      record StartRental(String riderId, String bikeId, String station) {}
+    answer: "r-17 at harbor\n{\"riderId\":\"r-22\",\"bikeId\":null,\"station\":\"depot\"}"
+    explain: "Jackson matches JSON keys to record names, so the order in the JSON does not matter. Writing follows the record's order and keeps null as null."
+    reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: response-entity
+    variants:
+      - prompt: "Which line answers 201 Created with a Location header and the rental as the body?"
+        choices:
+          - "return ResponseEntity.created(URI.create(\"/rentals/\" + rental.id())).body(rental);"
+          - "return ResponseEntity.ok(rental);"
+          - "return rental;"
+          - "return ResponseEntity.noContent().build();"
+        answer: 0
+      - prompt: "Which line answers 204 No Content?"
+        choices:
+          - "return ResponseEntity.noContent().build();"
+          - "return ResponseEntity.ok().build();"
+          - "return ResponseEntity.created(location).build();"
+          - "return null;"
+        answer: 0
+    explain: "ResponseEntity picks the status and headers. created(uri) gives 201 with Location, noContent() gives 204, ok gives 200."
+    reteach: "## Concept"
+
+  - id: q12
+    type: mcq
+    concept: http-status
+    variants:
+      - prompt: "A rider tries to end a rental that has already ended. Which status fits best?"
+        choices: ["409 Conflict", "404 Not Found", "201 Created", "415 Unsupported Media Type"]
+        answer: 0
+      - prompt: "The app asks for GET /rentals/rental-99 and there is no such rental. Which status fits best?"
+        choices: ["404 Not Found", "409 Conflict", "400 Bad Request", "200 OK"]
+        answer: 0
+      - prompt: "The app sends JSON to POST /rentals but forgets the Content-Type: application/json header. What does Spring answer?"
+        choices: ["415 Unsupported Media Type", "404 Not Found", "409 Conflict", "201 Created"]
+        answer: 0
+    explain: "404 means no such thing. 409 means the request clashes with the current state. 415 means Spring cannot read the body's format."
+    reteach: "## Concept"

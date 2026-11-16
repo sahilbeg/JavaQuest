@@ -1,0 +1,178 @@
+topic: module-08-backend/topic-07-sql-basics
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: tables-and-rows
+    variants:
+      - prompt: "What is a primary key?"
+        choices:
+          - "A column whose value is unique in its table, so it names exactly one row"
+          - "The first column in every table, whatever it holds"
+          - "A password that unlocks the database"
+          - "A column that holds another table's id"
+        answer: 0
+      - prompt: "What is a foreign key?"
+        choices:
+          - "A column that holds another table's primary key, so it points at a row there"
+          - "A column whose value is unique in its own table"
+          - "A key that only works on databases in other countries"
+          - "A column that is allowed to hold NULL"
+        answer: 0
+    explain: "A primary key names one row in its own table. A foreign key holds another table's primary key, like bike.station_id pointing at a station."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: tables-and-rows
+    prompt: "The table is bike(id, type, status, station_id). Which column is the foreign key?"
+    choices: ["station_id", "id", "type", "status"]
+    answer: 0
+    explain: "station_id holds a station's id, so it points at a row in the station table. id is the bike's own primary key."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: select-where
+    prompt: "SELECT id FROM bike ___ status = 'AVAILABLE';"
+    answers: ["WHERE", "where"]
+    explain: "WHERE keeps only the rows where the test is true."
+    reteach: "## Concept"
+
+  - id: q04
+    type: spot-the-bug
+    concept: select-where
+    code: |
+      SELECT id
+      FROM bike
+      WHERE station_id = NULL;
+    bugLine: 3
+    explain: "A comparison with NULL is never true, so this returns no rows. Use WHERE station_id IS NULL."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: order
+    concept: order-and-limit
+    prompt: "Put the clauses in the order SQL requires."
+    items:
+      - "SELECT rider_id, SUM(fare_cents) AS total"
+      - "FROM ride"
+      - "WHERE minutes > 5"
+      - "GROUP BY rider_id"
+      - "HAVING SUM(fare_cents) > 1000"
+      - "ORDER BY total DESC"
+      - "LIMIT 3"
+    explain: "The order is always SELECT, FROM, WHERE, GROUP BY, HAVING, ORDER BY, LIMIT."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: order-and-limit
+    prompt: "SELECT id, minutes FROM ride ORDER BY minutes ___ LIMIT 3; -- the three longest rides"
+    answers: ["DESC", "desc"]
+    explain: "ORDER BY sorts smallest first by default. DESC flips it, so the longest rides come first and LIMIT 3 keeps them."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: aggregates
+    variants:
+      - prompt: "Theo wants riders whose total fare is over 1000 cents. Which clause filters on that total?"
+        choices: ["HAVING SUM(fare_cents) > 1000", "WHERE SUM(fare_cents) > 1000", "ORDER BY SUM(fare_cents) > 1000", "LIMIT 1000"]
+        answer: 0
+      - prompt: "Which clause keeps only the stations that started more than 3 rides?"
+        choices: ["HAVING COUNT(*) > 3", "WHERE COUNT(*) > 3", "LIMIT 3", "GROUP BY COUNT(*) > 3"]
+        answer: 0
+    explain: "WHERE runs before rows are grouped, so it cannot see a total. HAVING filters the groups after they are counted."
+    reteach: "## Concept"
+
+  - id: q08
+    type: predict-output
+    concept: aggregates
+    code: |
+      import java.sql.*;
+
+      public class Main {
+          public static void main(String[] args) throws SQLException {
+              try (Connection db = DriverManager.getConnection("jdbc:h2:mem:quiz");
+                   Statement sql = db.createStatement()) {
+                  sql.execute("""
+                      CREATE TABLE ride (id INT PRIMARY KEY, rider_id VARCHAR(10), fare_cents BIGINT);
+                      INSERT INTO ride VALUES (1, 'r-17', 460), (2, 'r-23', 400), (3, 'r-17', 340);
+                      """);
+                  ResultSet rows = sql.executeQuery(
+                      "SELECT rider_id, COUNT(*), SUM(fare_cents) FROM ride GROUP BY rider_id ORDER BY rider_id");
+                  while (rows.next()) {
+                      System.out.println(rows.getString(1) + " " + rows.getInt(2) + " " + rows.getLong(3));
+                  }
+              }
+          }
+      }
+    answer: "r-17 2 800\nr-23 1 400"
+    explain: "GROUP BY makes one pile per rider. r-17 has two rides, 460 + 340 = 800. r-23 has one ride of 400."
+    reteach: "## Concept"
+
+  - id: q09
+    type: mcq
+    concept: joins
+    prompt: "Which query lists every station, including stations where no ride started?"
+    choices:
+      - "SELECT s.name, r.id FROM station s LEFT JOIN ride r ON r.start_station_id = s.id"
+      - "SELECT s.name, r.id FROM station s INNER JOIN ride r ON r.start_station_id = s.id"
+      - "SELECT s.name, r.id FROM ride r INNER JOIN station s ON s.id = r.start_station_id"
+      - "SELECT s.name FROM station s WHERE s.id = NULL"
+    answer: 0
+    explain: "A LEFT JOIN keeps every row of the left table, here station, even when no ride matches. An INNER JOIN drops stations with no rides."
+    reteach: "## Concept"
+
+  - id: q10
+    type: predict-output
+    concept: joins
+    code: |
+      import java.sql.*;
+
+      public class Main {
+          public static void main(String[] args) throws SQLException {
+              try (Connection db = DriverManager.getConnection("jdbc:h2:mem:quiz");
+                   Statement sql = db.createStatement()) {
+                  sql.execute("""
+                      CREATE TABLE station (id VARCHAR(20) PRIMARY KEY, name VARCHAR(40));
+                      CREATE TABLE ride (id INT PRIMARY KEY, start_station_id VARCHAR(20));
+                      INSERT INTO station VALUES ('harbor', 'Harbor'), ('depot', 'Depot');
+                      INSERT INTO ride VALUES (1, 'harbor'), (2, 'harbor');
+                      """);
+                  ResultSet rows = sql.executeQuery("""
+                      SELECT s.name, r.id FROM station s LEFT JOIN ride r ON r.start_station_id = s.id
+                      ORDER BY s.name, r.id
+                      """);
+                  while (rows.next()) {
+                      System.out.println(rows.getString(1) + " " + rows.getString(2));
+                  }
+              }
+          }
+      }
+    answer: "Depot null\nHarbor 1\nHarbor 2"
+    explain: "The LEFT JOIN keeps Depot even though no ride started there, and fills its ride column with NULL. Harbor pairs with both of its rides."
+    reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: changing-data
+    prompt: "What does UPDATE bike SET status = 'MAINTENANCE'; do?"
+    choices:
+      - "Sets every bike in the table to MAINTENANCE"
+      - "Sets only the first bike to MAINTENANCE"
+      - "Fails, because UPDATE always needs a WHERE"
+      - "Adds a new bike with status MAINTENANCE"
+    answer: 0
+    explain: "With no WHERE, an UPDATE changes every row. It runs without any error, which is why it is so dangerous."
+    reteach: "## Common mistakes"
+
+  - id: q12
+    type: fill-blank
+    concept: changing-data
+    prompt: "___ FROM ride WHERE id = 7; -- remove ride 7"
+    answers: ["DELETE", "delete"]
+    explain: "DELETE FROM removes the rows that match the WHERE. Here that is ride 7 only."
+    reteach: "## Concept"

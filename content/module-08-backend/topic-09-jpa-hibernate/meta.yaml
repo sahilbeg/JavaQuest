@@ -1,0 +1,24 @@
+id: module-08-backend/topic-09-jpa-hibernate
+title: "JPA and Hibernate"
+order: 9
+minutes: 10
+prerequisites: [module-08-backend/topic-08-jdbc, module-08-backend/topic-07-sql-basics]
+concepts: [object-relational-mapping, entities, relationships, repositories, derived-queries, jpql]
+practice:
+  kind: code
+  runner: spring
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0809
+  from: maya
+  title: "Every new bike field means editing five SQL strings"
+  body: >
+    The JDBC repository works, but adding one column to bikes last week meant changing five SQL strings
+    and a row mapper, and I still missed one. Can you try JPA for stations and bikes, so the code talks
+    in objects? Ops needs three answers from it: free bikes at a station, bikes per status, and which
+    stations have enough free e-bikes.
+hints:
+  - "Start with Bike.java: one annotation on each enum field. Then each TODO in BikeRepository is one method declaration, with no body."
+  - "Spring Data reads method names: findByStationIdAndStatusOrderByIdAsc(String stationId, BikeStatus status) and long countByStatus(BikeStatus status). In StationReport, call them and map each Bike to its id."
+  - "For TODO 4, write @Query(\"select b.station.id from Bike b where b.type = :type and b.status = :status group by b.station.id having count(b) >= :min order by b.station.id\") and give every parameter a @Param(\"...\") with the same name."
+review: true

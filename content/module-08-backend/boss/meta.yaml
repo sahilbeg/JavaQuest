@@ -1,0 +1,22 @@
+id: module-08-backend/boss
+title: "INC-08: Half-finished rentals after a crash"
+order: 99
+minutes: 12
+prerequisites: [module-08-backend/topic-12-api-docs-errors]
+concepts: [transactions, rollback-rules, checked-exceptions, transaction-proxies]
+practice:
+  kind: code
+  runner: spring
+ticket:
+  key: INC-08
+  from: theo
+  title: "Half-finished rentals after a crash"
+  body: >
+    Last night a Harbor dock lost power while riders were unlocking bikes.
+    This morning six bikes show as rented with nobody on them, and two riders say their card was declined but the bike is still blocked.
+    A family that unlocked three bikes together got one ghost rental as well. Please make every unlock all or nothing.
+hints:
+  - "Bronze: every step of startRental must be saved together or not at all. One annotation on the method makes Spring do that."
+  - "Silver: Spring rolls back on RuntimeException and Error only. PaymentDeclinedException extends Exception, so name it: @Transactional(rollbackFor = PaymentDeclinedException.class)."
+  - "Gold: unlockOne is called through `this`, so Spring's proxy never sees the call and its @Transactional does nothing. Delete the copy and call rentals.startRental(riderId, bikeId) instead."
+review: false

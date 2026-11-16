@@ -1,0 +1,127 @@
+topic: module-08-backend/topic-02-rest-design
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: resources
+    variants:
+      - { prompt: "Which path follows REST naming for the list of rentals?", choices: ["/rentals", "/getRentals", "/rental", "/Rentals/List"], answer: 0 }
+      - { prompt: "Which path names one station, Old Mill?", choices: ["/stations/old-mill", "/getStation?name=Old Mill", "/station_OldMill", "/stations/Old Mill"], answer: 0 }
+      - { prompt: "Which path follows REST naming for starting a rental?", choices: ["POST /rentals", "POST /startRental", "GET /rentals/start", "POST /rental/new"], answer: 0 }
+    explain: "Paths are plural, lowercase nouns with hyphens between words. The method, not the path, is the verb."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: resources
+    prompt: "Why does each bike live at /bikes/B-1042 rather than /stations/harbor/bikes/B-1042?"
+    choices: ["Bikes move between stations, so a nested link would break when the bike docks elsewhere", "Nested paths are not allowed in HTTP", "Bike ids are too long for nested paths", "GET cannot read nested paths"]
+    answer: 0
+    explain: "Nest only for a handy list. A thing that moves needs one address that never changes."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: method-mapping
+    variants:
+      - { prompt: "Which request reads one rental?", choices: ["GET /rentals/rental-17", "POST /rentals/rental-17", "GET /getRental?id=rental-17", "PUT /rentals"], answer: 0 }
+      - { prompt: "Which request cancels a rental started by mistake?", choices: ["DELETE /rentals/rental-17", "GET /rentals/rental-17/delete", "POST /deleteRental", "PATCH /rentals"], answer: 0 }
+      - { prompt: "Which request lists the bikes docked at Harbor?", choices: ["GET /stations/harbor/bikes", "POST /stations/harbor/bikes", "GET /harborBikes", "GET /bikes/harbor/list"], answer: 0 }
+    explain: "GET reads, POST creates or runs an action, DELETE removes. The path names the resource."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: method-mapping
+    prompt: "___ /rentals HTTP/1.1   # create a new rental for r-17"
+    answers: ["POST"]
+    explain: "Starting a rental creates a new resource in the /rentals collection, so it is a POST."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: method-mapping
+    prompt: "Why does Spoke end a rental with POST /rentals/{id}/end instead of PATCH /rentals/{id}?"
+    choices: ["Ending a ride does more than edit a field: it locks the bike, works out the fare and charges the card", "PATCH is not a real HTTP method", "POST is idempotent and PATCH is not", "A PATCH request cannot carry a body"]
+    answer: 0
+    explain: "Both designs work. A named action makes a business step with side effects easy to see. Pick one and use it everywhere."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: status-choices
+    variants:
+      - { prompt: "POST /rentals created rental-17. What should the server answer?", choices: ["201 Created with a Location header", "200 OK with no body", "204 No Content", "302 Found"], answer: 0 }
+      - { prompt: "Lin tries to rent B-1042, but Ada is riding it. What should the server answer?", choices: ["409 Conflict", "404 Not Found", "500 Internal Server Error", "200 OK with an error message"], answer: 0 }
+      - { prompt: "DELETE /rentals/rental-17 worked and there is nothing to send back. What should the server answer?", choices: ["204 No Content", "201 Created", "404 Not Found", "409 Conflict"], answer: 0 }
+      - { prompt: "The app asks for GET /rentals/rental-9999, which does not exist. What should the server answer?", choices: ["404 Not Found", "400 Bad Request", "409 Conflict", "204 No Content"], answer: 0 }
+    explain: "201 plus Location for something new, 204 when there is no body, 404 for an unknown id, 409 when the request clashes with the current state."
+    reteach: "## Concept"
+
+  - id: q07
+    type: fill-blank
+    concept: status-choices
+    prompt: "___: /rentals/rental-17   # the 201 header that points to the new rental"
+    answers: ["Location", "location"]
+    explain: "Location tells the client where the new resource lives. Header names ignore case."
+    reteach: "## Concept"
+
+  - id: q08
+    type: mcq
+    concept: idempotency
+    variants:
+      - { prompt: "The app retried POST /rentals after a lost answer, and Lin got two rentals. Why?", choices: ["POST is not idempotent, so each copy creates a new rental", "The server crashed", "GET would have done the same", "The app sent the wrong bike id"], answer: 0 }
+      - { prompt: "What does the server do with a request whose Idempotency-Key it has already seen?", choices: ["Returns the first answer again and creates nothing", "Creates a second rental", "Answers 500 Internal Server Error", "Ignores the request and sends no answer"], answer: 0 }
+      - { prompt: "When should the app make a new idempotency key?", choices: ["Once per tap, reused for every retry of that tap", "For every retry", "Once when the app is installed", "Never, the server makes it"], answer: 0 }
+    explain: "One tap gets one key. Retries reuse it, so the server can tell a repeat from a new request."
+    reteach: "## Concept"
+
+  - id: q09
+    type: order
+    concept: idempotency
+    prompt: "Put the steps of a safe retry in order."
+    items:
+      - "The app makes one key for Lin's tap"
+      - "The app sends POST /rentals with the Idempotency-Key header"
+      - "The server creates rental-17 and stores its answer under the key"
+      - "The answer is lost, so the app retries with the same key"
+      - "The server finds the key and returns the stored answer"
+    explain: "The key is made once, stored with the first answer, and found again on the retry."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: filtering-paging
+    variants:
+      - { prompt: "Which request gets the second page of available bikes at Harbor, 20 per page?", choices: ["GET /bikes?station=harbor&status=AVAILABLE&page=1&size=20", "GET /bikes?station=harbor&status=AVAILABLE&page=2&size=20", "GET /bikes/harbor/AVAILABLE/2", "POST /bikes/search?page=1"], answer: 0 }
+      - { prompt: "Which request lists Ada's rentals, newest first?", choices: ["GET /rentals?riderId=r-17&sort=startedAt,desc", "GET /rentals?riderId=r-17&sort=startedAt,asc", "GET /riders/r-17/rentals/newest/first", "POST /rentals?riderId=r-17"], answer: 0 }
+      - { prompt: "There are 45 bikes and size=20. How many pages are there?", choices: ["3", "2", "20", "45"], answer: 0 }
+    explain: "Filters, sort, page and size go in the query. Pages start at 0, so the second page is page=1."
+    reteach: "## Concept"
+
+  - id: q11
+    type: spot-the-bug
+    concept: json-design
+    prompt: "Which line breaks one of Spoke's JSON rules?"
+    code: |
+      {
+        "id": "rental-17",
+        "bikeId": "B-1042",
+        "startedAt": "2026-11-16T08:30:00Z",
+        "fare": 2.8,
+        "endedAt": null
+      }
+    bugLine: 5
+    explain: "Money goes in whole cents, as \"fareCents\": 280. A decimal number can pick up rounding errors."
+    reteach: "## Concept"
+
+  - id: q12
+    type: mcq
+    concept: json-design
+    variants:
+      - { prompt: "A rider is still riding. How should the rental show its end time?", choices: ["\"endedAt\": null", "Leave endedAt out", "\"endedAt\": \"\"", "\"endedAt\": 0"], answer: 0 }
+      - { prompt: "Which start time follows Spoke's JSON rules?", choices: ["\"startedAt\": \"2026-11-16T08:30:00Z\"", "\"startedAt\": \"16/11/26 8:30\"", "\"startedAt\": \"8:30 am\"", "\"startedAt\": 830"], answer: 0 }
+      - { prompt: "Why does Spoke send ids as strings, like \"rental-17\"?", choices: ["JavaScript loses accuracy on very large numbers, and the format can change later", "Strings are faster to send", "JSON cannot hold numbers", "Strings sort better"], answer: 0 }
+    explain: "Spoke sends every field, null when empty, writes times in ISO-8601 UTC, and keeps ids as strings."
+    reteach: "## Concept"

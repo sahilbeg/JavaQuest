@@ -1,0 +1,23 @@
+id: module-08-backend/topic-06-validation
+title: "Validation and error responses"
+order: 6
+minutes: 10
+prerequisites: [module-08-backend/topic-05-spring-mvc]
+concepts: [bean-validation, valid-trigger, exception-handlers, problem-details, status-for-errors, hiding-internals]
+practice:
+  kind: code
+  runner: spring
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0806
+  from: sam
+  title: "Riders who mistype a bike id get a wall of Java"
+  body: >
+    Riders who mistype a bike id see "500 Internal Server Error" and a wall of Java in the app.
+    One rider sent me a screenshot that shows our package names. They just need to hear that the
+    bike id looks wrong, or that the bike is taken. Can you make the app show them a clear message instead?
+hints:
+  - "Work from the outside in: rules on StartRentalRequest, then @Valid in RentalController, then one handler at a time in SpokeErrorHandler."
+  - "Each handler is a method marked @ExceptionHandler(TheException.class) that returns a ProblemDetail. Build it with ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage()), then call setType and setTitle."
+  - "For errors, loop over e.getBindingResult().getFieldErrors() and put error.getField() and error.getDefaultMessage() into a TreeMap. For the catch-all, call log.error(\"Unexpected error\", e) and return a 500 ProblemDetail with the detail \"Something went wrong on our side\"."
+review: true
