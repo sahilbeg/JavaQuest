@@ -2,7 +2,7 @@ id: module-06-craft/topic-09-mockito
 title: "Mocks with Mockito"
 order: 9
 minutes: 10
-prerequisites: [module-06-craft/topic-08-junit]
+prerequisites: [module-06-craft/topic-08-junit, module-02-oop/topic-08-interfaces]
 concepts: [test-doubles, stubbing, verification, argument-matchers, argument-captor, over-mocking]
 practice:
   kind: code

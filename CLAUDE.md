@@ -61,6 +61,8 @@ Large modules can be written in parallel by subagents, one or two topics each. G
 .claude/scripts/check-topic.sh <practice unit dir> [solution|skeleton|src]   # one unit, fast, same JVM flags as the runner
 ```
 
+Do not run `./mvnw install` (or `package`) while the app is running: it rewrites `app/target/javaquest.jar` under the running server, which then hangs. Stop the app first, or use `./mvnw -q test` for the platform tests. `run.sh` rebuilds the jar when `app/`, `runner/` or the poms changed.
+
 After a change to `practice/pom.xml`, refresh the runner classpath:
 
 ```bash

@@ -2,7 +2,7 @@ id: module-05-advanced-java/topic-04-completable-future
 title: "CompletableFuture"
 order: 4
 minutes: 10
-prerequisites: [module-05-advanced-java/topic-03-executors]
+prerequisites: [module-05-advanced-java/topic-03-executors, module-03-core-java/topic-12-lambdas]
 concepts: [supply-async, then-apply-compose, then-combine, all-of, error-handling, custom-executor]
 practice:
   kind: code

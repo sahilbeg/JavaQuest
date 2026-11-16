@@ -2,7 +2,7 @@ id: module-03-core-java/topic-05-generics
 title: "Generics and bounded types"
 order: 5
 minutes: 9
-prerequisites: [module-03-core-java/topic-04-maps]
+prerequisites: [module-03-core-java/topic-04-maps, module-02-oop/topic-08-interfaces]
 concepts: [generic-class, type-parameter, generic-method, invariance, bounded-type]
 practice:
   kind: code

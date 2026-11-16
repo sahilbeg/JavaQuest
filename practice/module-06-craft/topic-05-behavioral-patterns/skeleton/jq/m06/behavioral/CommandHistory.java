@@ -1,5 +1,8 @@
 package jq.m06.behavioral;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 public class CommandHistory {
     // TODO 9: keep a stack of commands that have run
 

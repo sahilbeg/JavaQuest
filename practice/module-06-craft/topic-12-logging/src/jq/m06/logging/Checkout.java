@@ -1,5 +1,8 @@
 package jq.m06.logging;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Checkout {
 
     // TODO 3: add a private static final Logger from LoggerFactory.getLogger(Checkout.class)

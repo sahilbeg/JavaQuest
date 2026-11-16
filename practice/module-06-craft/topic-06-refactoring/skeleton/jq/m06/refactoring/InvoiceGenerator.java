@@ -1,5 +1,6 @@
 package jq.m06.refactoring;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InvoiceGenerator {

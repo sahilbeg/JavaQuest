@@ -84,6 +84,15 @@
         </configuration>
       </plugin>
       <plugin>
+        <!-- Rebuild the jar on every build. Otherwise a change only in runner or content-model leaves the old
+             jar in place, because this module's own classes did not change, and run.sh starts stale code. -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <forceCreation>true</forceCreation>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
