@@ -15,6 +15,7 @@ spring:
 javaquest:
   root: .
   data-dir: ${user.home}/.javaquest
+  unlock-all: false
   runner:
     timeout: 10s
     heap-megabytes: 256

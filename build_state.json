@@ -2086,7 +2086,7 @@
   ],
   "decisions": [
     "Mascot: Byte the owl",
-    "Skip ahead: kept",
+    "Skip ahead: removed (user feedback, 2026-11-16). Tickets open one at a time when the one before is mastered; ./run.sh --unlock-all is author mode",
     "Platform: macOS only for now; Windows deferred",
     "Page style: textbook order with W3Schools-style pages (Syntax box, Try it Yourself, prev/next, sidebar)",
     "Spring Boot 4.1.2, JUnit 6.1.3 (Jupiter API)",

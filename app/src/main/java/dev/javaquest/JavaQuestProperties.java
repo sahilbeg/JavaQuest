@@ -5,7 +5,11 @@ import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("javaquest")
-public record JavaQuestProperties(Path root, Path dataDir, Runner runner) {
+/**
+ * @param unlockAll author mode: every ticket is open, for writing and reviewing content. Learners keep it off,
+ *                  so tickets open one at a time.
+ */
+public record JavaQuestProperties(Path root, Path dataDir, Runner runner, boolean unlockAll) {
 
     public record Runner(Duration timeout, int heapMegabytes, int maxOutputBytes, Path classpathFile) {}
 

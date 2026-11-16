@@ -55,6 +55,7 @@ Large modules can be written in parallel by subagents, one or two topics each. G
 
 ```bash
 ./run.sh                                                             # start the app at http://localhost:2026
+./run.sh --unlock-all                                                # author mode: every ticket open, for read-throughs
 ./mvnw -q install                                                    # build and run all platform tests
 ./mvnw -q -pl tools dependency:properties exec:java@check-content    # check every lesson and quiz (about 2 min)
 ./mvnw -q -pl tools dependency:properties exec:java@verify-practice  # solution passes, skeleton fails, for every unit (about 3 min); writes build_state.json

@@ -10,6 +10,7 @@ import dev.javaquest.practice.PracticeResult;
 import dev.javaquest.practice.PracticeResult.Source;
 import dev.javaquest.practice.PracticeService;
 import dev.javaquest.practice.ProgramRun;
+import dev.javaquest.progress.Gate;
 import dev.javaquest.progress.ProgressService;
 import dev.javaquest.progress.ProgressService.TopicProgress;
 import java.io.IOException;
@@ -34,9 +35,10 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public class TopicController {
 
     public record TopicSummary(String id, String moduleId, String title, String practiceKind,
-                               TopicMeta.Ticket ticket, PracticeResult latest, TopicProgress progress) {}
+                               TopicMeta.Ticket ticket, PracticeResult latest, TopicProgress progress, boolean locked) {}
 
-    public record Catalog(List<ModuleInfo> modules, List<TopicSummary> topics) {}
+    /** frontierId is the first ticket the learner has not mastered: the one to work on now. */
+    public record Catalog(List<ModuleInfo> modules, List<TopicSummary> topics, String frontierId, boolean authorMode) {}
 
     public record TopicDetail(TopicSummary summary, int minutes, String mainClass, String lessonHtml,
                               int hintCount, String previousId, String nextId, List<String> sourceFiles,
@@ -67,27 +69,33 @@ public class TopicController {
     private final LessonRenderer lessons;
     private final EventHub events;
     private final ProgressService progress;
+    private final Gate gate;
 
     public TopicController(ContentCatalog catalog, PracticeService practice, LessonRenderer lessons, EventHub events,
-                           ProgressService progress) {
+                           ProgressService progress, Gate gate) {
         this.catalog = catalog;
         this.practice = practice;
         this.lessons = lessons;
         this.events = events;
         this.progress = progress;
+        this.gate = gate;
     }
 
     @GetMapping("/catalog")
     public Catalog catalog() {
-        return new Catalog(catalog.modules(), catalog.topics().stream().map(this::summary).toList());
+        Map<String, Gate.Access> access = gate.accessAll();
+        String frontier = access.values().stream().map(Gate.Access::frontierId).findFirst().orElse(null);
+        return new Catalog(catalog.modules(),
+                catalog.topics().stream().map(t -> summary(t, access.get(t.id()).locked())).toList(),
+                frontier, gate.authorMode());
     }
 
     @GetMapping("/topics/{module}/{topic}")
     public TopicDetail topic(@PathVariable String module, @PathVariable String topic) throws IOException {
-        Topic found = find(module, topic);
+        Topic found = open(module, topic);
         List<Topic> all = catalog.topics();
         int index = all.indexOf(found);
-        return new TopicDetail(summary(found), found.meta().minutes(), found.meta().practice().mainClass(),
+        return new TopicDetail(summary(found, false), found.meta().minutes(), found.meta().practice().mainClass(),
                 lessons.render(Files.readString(found.lessonFile())), found.meta().hints().size(),
                 index > 0 ? all.get(index - 1).id() : null,
                 index < all.size() - 1 ? all.get(index + 1).id() : null,
@@ -97,44 +105,45 @@ public class TopicController {
 
     @GetMapping("/topics/{module}/{topic}/hints")
     public Hints hints(@PathVariable String module, @PathVariable String topic) {
-        Topic found = find(module, topic);
+        Topic found = open(module, topic);
         return new Hints(progress.openedHints(found), progress.progress(found));
     }
 
     @PostMapping("/topics/{module}/{topic}/hints/next")
     public OpenedHint nextHint(@PathVariable String module, @PathVariable String topic) {
-        Topic found = find(module, topic);
+        Topic found = open(module, topic);
         String hint = progress.openNextHint(found);
         return new OpenedHint(hint, progress.progress(found));
     }
 
     @GetMapping("/topics/{module}/{topic}/progress")
     public TopicSummary progress(@PathVariable String module, @PathVariable String topic) {
-        return summary(find(module, topic));
+        Topic found = find(module, topic);
+        return summary(found, gate.access(found).locked());
     }
 
     @PostMapping("/topics/{module}/{topic}/solution")
     public Solution solution(@PathVariable String module, @PathVariable String topic) throws IOException {
-        Topic found = find(module, topic);
+        Topic found = open(module, topic);
         var files = progress.openSolution(found);
         return new Solution(files, progress.progress(found));
     }
 
     @PostMapping("/topics/{module}/{topic}/reset")
     public void reset(@PathVariable String module, @PathVariable String topic) throws IOException {
-        practice.resetToSkeleton(find(module, topic));
+        practice.resetToSkeleton(open(module, topic));
     }
 
     @GetMapping("/topics/{module}/{topic}/quiz")
     public QuizAttempt quiz(@PathVariable String module, @PathVariable String topic, @RequestParam(required = false) Long seed) {
-        Topic found = withQuiz(find(module, topic));
+        Topic found = withQuiz(open(module, topic));
         long chosen = seed != null ? seed : ThreadLocalRandom.current().nextLong(1, MAX_BROWSER_SAFE_SEED);
         return new QuizAttempt(chosen, found.quiz().passPercent(), QuizSession.draw(found.quiz(), chosen));
     }
 
     @PostMapping("/topics/{module}/{topic}/quiz")
     public QuizGraded gradeQuiz(@PathVariable String module, @PathVariable String topic, @RequestBody QuizAnswers answers) {
-        Topic found = withQuiz(find(module, topic));
+        Topic found = withQuiz(open(module, topic));
         var result = QuizSession.grade(found.quiz(), answers.seed(), answers.answers());
         return new QuizGraded(result, progress.recordQuiz(found, answers.seed(), result));
     }
@@ -142,24 +151,24 @@ public class TopicController {
     @GetMapping("/topics/{module}/{topic}/source")
     public SourceFile readSource(@PathVariable String module, @PathVariable String topic, @RequestParam String path)
             throws IOException {
-        return new SourceFile(path, practice.readSource(find(module, topic), path));
+        return new SourceFile(path, practice.readSource(open(module, topic), path));
     }
 
     @PutMapping("/topics/{module}/{topic}/source")
     public void writeSource(@PathVariable String module, @PathVariable String topic, @RequestBody SourceFile file)
             throws IOException {
-        practice.writeSource(find(module, topic), file.path(), file.content());
+        practice.writeSource(open(module, topic), file.path(), file.content());
     }
 
     @PostMapping("/topics/{module}/{topic}/submit")
     public PracticeResult submit(@PathVariable String module, @PathVariable String topic)
             throws IOException, InterruptedException {
-        return practice.submit(find(module, topic), Source.BROWSER);
+        return practice.submit(open(module, topic), Source.BROWSER);
     }
 
     @PostMapping("/topics/{module}/{topic}/run")
     public ProgramRun run(@PathVariable String module, @PathVariable String topic) throws IOException, InterruptedException {
-        Topic found = find(module, topic);
+        Topic found = open(module, topic);
         String mainClass = found.meta().practice().mainClass();
         if (mainClass == null) {
             throw new IllegalArgumentException("This ticket has no program to run. Use Submit to run the checks.");
@@ -177,9 +186,9 @@ public class TopicController {
         return events.subscribe();
     }
 
-    private TopicSummary summary(Topic t) {
+    private TopicSummary summary(Topic t, boolean locked) {
         return new TopicSummary(t.id(), t.meta().moduleId(), t.meta().title(), t.meta().practice().kind().name(),
-                t.meta().ticket(), practice.latest(t.id()).orElse(null), progress.progress(t));
+                t.meta().ticket(), practice.latest(t.id()).orElse(null), progress.progress(t), locked);
     }
 
     public static Topic withQuiz(Topic topic) {
@@ -187,6 +196,11 @@ public class TopicController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, topic.id() + " has no onboarding check");
         }
         return topic;
+    }
+
+    /** A ticket the learner has reached. A locked one answers 403 with what to finish first. */
+    private Topic open(String module, String topic) {
+        return gate.requireOpen(find(module, topic));
     }
 
     private Topic find(String module, String topic) {

@@ -22,5 +22,16 @@ if [[ ! -f "$CLASSPATH_FILE" ]] || [[ "$ROOT/practice/pom.xml" -nt "$CLASSPATH_F
     -Dmdep.outputFile="$CLASSPATH_FILE"
 fi
 
+# --unlock-all is author mode: every ticket is open, for writing and reviewing content.
+ARGS=()
+for arg in "$@"; do
+  if [[ "$arg" == "--unlock-all" ]]; then
+    ARGS+=("--javaquest.unlock-all=true")
+    echo "Author mode: every ticket is open."
+  else
+    ARGS+=("$arg")
+  fi
+done
+
 echo "JavaQuest is starting at http://localhost:2026"
-exec java -jar "$JAR" --javaquest.root="$ROOT"
+exec java -jar "$JAR" --javaquest.root="$ROOT" ${ARGS[@]+"${ARGS[@]}"}

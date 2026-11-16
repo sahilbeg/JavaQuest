@@ -3,6 +3,7 @@ package dev.javaquest.practice;
 import dev.javaquest.JavaQuestProperties;
 import dev.javaquest.content.ContentCatalog;
 import dev.javaquest.content.Topic;
+import dev.javaquest.progress.Gate;
 import dev.javaquest.practice.PracticeResult.Source;
 import io.methvin.watcher.DirectoryChangeEvent;
 import io.methvin.watcher.DirectoryWatcher;
@@ -32,15 +33,17 @@ public class PracticeWatcher implements SmartLifecycle {
 
     private final ContentCatalog catalog;
     private final PracticeService practice;
+    private final Gate gate;
     private final Path practiceRoot;
     private final Map<String, ScheduledFuture<?>> pending = new ConcurrentHashMap<>();
     private ScheduledExecutorService scheduler;
     private DirectoryWatcher watcher;
     private volatile boolean running;
 
-    public PracticeWatcher(ContentCatalog catalog, PracticeService practice, JavaQuestProperties properties) {
+    public PracticeWatcher(ContentCatalog catalog, PracticeService practice, Gate gate, JavaQuestProperties properties) {
         this.catalog = catalog;
         this.practice = practice;
+        this.gate = gate;
         this.practiceRoot = properties.practiceDir().toAbsolutePath().normalize();
     }
 
@@ -67,6 +70,7 @@ public class PracticeWatcher implements SmartLifecycle {
         PracticePaths.topicIdForSourceFile(practiceRoot, event.path())
                 .filter(topicId -> !practice.isEchoOfBrowserWrite(topicId))
                 .flatMap(catalog::topic)
+                .filter(topic -> !gate.access(topic).locked())
                 .ifPresent(this::scheduleRun);
     }
 

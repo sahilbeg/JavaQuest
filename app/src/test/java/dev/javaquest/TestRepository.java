@@ -17,6 +17,11 @@ public final class TestRepository {
     private TestRepository() {}
 
     public static Path register(DynamicPropertyRegistry registry, String databaseName) throws IOException {
+        return register(registry, databaseName, true);
+    }
+
+    /** Most tests open every ticket (author mode); gating tests pass unlockAll = false. */
+    public static Path register(DynamicPropertyRegistry registry, String databaseName, boolean unlockAll) throws IOException {
         Path repo = Path.of("..").toAbsolutePath().normalize();
         Path copy = Files.createTempDirectory("javaquest-repo");
         copyTree(repo.resolve("content"), copy.resolve("content"));
@@ -24,6 +29,7 @@ public final class TestRepository {
         Path classpathFile = Files.createTempFile("runner-classpath", ".txt");
         Files.writeString(classpathFile, System.getProperty("junit.console.jar"));
         registry.add("javaquest.root", copy::toString);
+        registry.add("javaquest.unlock-all", () -> String.valueOf(unlockAll));
         registry.add("javaquest.runner.classpath-file", classpathFile::toString);
         registry.add("spring.datasource.url", () -> "jdbc:h2:mem:" + databaseName + ";DB_CLOSE_DELAY=-1");
         return copy;

@@ -1,6 +1,7 @@
 package dev.javaquest.career;
 
 import dev.javaquest.content.ContentCatalog;
+import dev.javaquest.progress.Gate;
 import dev.javaquest.content.QuizSession;
 import dev.javaquest.content.Topic;
 import java.util.LinkedHashMap;
@@ -37,12 +38,14 @@ public class CareerController {
     private final CareerReport report;
     private final CareerStore store;
     private final ContentCatalog catalog;
+    private final Gate gate;
 
-    public CareerController(CareerService career, CareerReport report, CareerStore store, ContentCatalog catalog) {
+    public CareerController(CareerService career, CareerReport report, CareerStore store, ContentCatalog catalog, Gate gate) {
         this.career = career;
         this.report = report;
         this.store = store;
         this.catalog = catalog;
+        this.gate = gate;
     }
 
     @GetMapping("/career")
@@ -52,7 +55,7 @@ public class CareerController {
 
     @PostMapping("/topics/{module}/{topic}/read")
     public void read(@PathVariable String module, @PathVariable String topic) {
-        career.onLessonRead(find(module, topic));
+        career.onLessonRead(gate.requireOpen(find(module, topic)));
     }
 
     @GetMapping("/reviews/{module}/{topic}")
