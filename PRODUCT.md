@@ -24,6 +24,7 @@ The practice code lives in the learner's own repo and IDE. Saving a file in the 
 - The learner switches between the browser and an IDE editing `practice/`.
 - Sessions are short: 5 to 10 minute lessons, one quiz, one exercise.
 - Tickets open one at a time, in order: the next one opens when the current one is mastered.
+- An optional daily limit (Settings, off by default) paces the course: after that many new tickets in a day, the next one opens the following day. Finished tickets and reviews stay open for revisiting.
 
 ## Capabilities and Constraints
 

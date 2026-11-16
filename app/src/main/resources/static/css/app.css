@@ -716,3 +716,44 @@ a.topic-row:hover { background: var(--hover); text-decoration: none; color: var(
   .editor-host { height: 320px; }
   .toast-region { left: var(--space-3); right: var(--space-3); }
 }
+
+/* ---------- Settings and the daily limit ---------- */
+
+.settings-dialog { width: min(460px, calc(100vw - 32px)); padding: 0; border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--surface); color: var(--ink); box-shadow: var(--shadow-lg); }
+.settings-dialog::backdrop { background: oklch(0% 0 0 / 0.55); backdrop-filter: blur(3px); }
+.settings-head { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-4) var(--space-3) var(--space-5); border-bottom: 1px solid var(--line); }
+.settings-head h2 { margin: 0; font-size: 0.95rem; letter-spacing: -0.01em; }
+.settings-body { display: grid; gap: var(--space-4); padding: var(--space-5); }
+.setting { display: grid; gap: var(--space-3); }
+.setting-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+.setting-label { display: grid; gap: 4px; cursor: pointer; }
+.setting-label strong { font-size: 0.92rem; font-weight: 600; }
+.setting-help { margin: 0; font-size: 0.82rem; line-height: 1.55; color: var(--ink-soft); }
+.setting-note { color: var(--amber); }
+.setting-sub { display: grid; gap: var(--space-2); margin: 0; min-width: 0; padding: var(--space-3) var(--space-4); border: 1px solid var(--line); border-radius: var(--r-md); background: var(--sunken); font-size: 0.88rem; transition: opacity 0.15s; }
+.setting-sub:disabled { opacity: 0.5; }
+.setting-status { margin: 0; font-family: var(--mono); font-size: 0.72rem; line-height: 1.6; color: var(--ink-faint); }
+.field-error { margin: 0; font-size: 0.82rem; color: var(--red); }
+.settings-foot { display: flex; justify-content: flex-end; gap: var(--space-2); padding: var(--space-3) var(--space-5); border-top: 1px solid var(--line); }
+
+.switch { appearance: none; position: relative; flex: none; width: 36px; height: 20px; margin: 0; border-radius: 999px; background: var(--line-strong); cursor: pointer; transition: background 0.15s; }
+.switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: var(--ink-soft); transition: transform 0.18s var(--ease), background 0.15s; }
+.switch:checked { background: var(--accent); }
+.switch:checked::after { transform: translateX(16px); background: var(--on-accent); }
+.switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.stepper { display: inline-flex; align-items: stretch; height: 32px; border: 1px solid var(--line-strong); border-radius: var(--r-md); overflow: hidden; background: var(--surface); }
+.stepper button { width: 30px; border: 0; background: transparent; color: var(--ink-soft); font: 500 1rem var(--font); cursor: pointer; transition: background 0.15s, color 0.15s; }
+.stepper button:hover:not(:disabled) { background: var(--hover); color: var(--ink); }
+.stepper button:disabled { cursor: not-allowed; }
+.stepper input { width: 4ch; border: 0; border-inline: 1px solid var(--line-strong); background: transparent; color: var(--ink); text-align: center; font: 0.88rem var(--mono); -moz-appearance: textfield; appearance: textfield; }
+.stepper input::-webkit-inner-spin-button, .stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.stepper input:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.pace { margin: 0; font-size: 0.72rem; color: var(--ink-faint); }
+.up-next.is-resting::before { background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--green) 55%, transparent), transparent); }
+.up-next.is-resting .up-next-body strong { color: var(--ink); font-weight: 500; }
+.topic-row[data-state="resting"] { color: var(--ink-soft); cursor: default; box-shadow: inset 0 0 0 1px var(--line); }
+.topic-row[data-state="resting"] .topic-mark { color: var(--amber); }
+.topic-wait { font-family: var(--mono); font-size: 0.72rem; color: var(--amber); }
+.done-check.is-resting { color: var(--amber); background: var(--amber-wash); border-color: color-mix(in oklch, var(--amber) 35%, var(--line)); }

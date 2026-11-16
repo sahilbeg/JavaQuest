@@ -2,6 +2,7 @@ import { h, icon, avatar, TEAM } from "./dom.js";
 import { api } from "./api.js";
 import { ticketState, topicKind, nextTicket } from "./status.js";
 import { startTourOnce } from "./tour.js";
+import { openSettings } from "./settings.js";
 
 const KIND_LABEL = { incident: "Incident", feature: "Feature" };
 const pad = (n) => String(n).padStart(2, "0");
@@ -20,10 +21,16 @@ function moduleState(own, catalog) {
   return "open";
 }
 
+const tickets = (n) => `${n} ${n === 1 ? "ticket" : "tickets"}`;
+
 function topicRow(topic, index, frontierId) {
-  const state = topic.progress.mastered ? "done" : topic.id === frontierId ? "current" : topic.locked ? "locked" : "open";
+  // The frontier is locked only when the daily limit is reached: it waits for tomorrow.
+  const state = topic.progress.mastered ? "done"
+    : topic.id === frontierId ? (topic.locked ? "resting" : "current")
+    : topic.locked ? "locked" : "open";
   const kind = topicKind(topic);
-  const mark = state === "done" ? icon("check") : state === "locked" ? icon("lock") : state === "current" ? h("span", { class: "dot" }) : h("span", { class: "ring" });
+  const mark = state === "done" ? icon("check") : state === "locked" ? icon("lock") : state === "resting" ? icon("clock")
+    : state === "current" ? h("span", { class: "dot" }) : h("span", { class: "ring" });
   const inner = [
     h("span", { class: "topic-mark", "aria-hidden": "true" }, mark),
     h("span", { class: "topic-num" }, pad(index + 1)),
@@ -31,9 +38,10 @@ function topicRow(topic, index, frontierId) {
     kind !== "ticket" && h("span", { class: `tag tag-${kind}` }, KIND_LABEL[kind]),
     h("span", { class: "topic-key" }, topic.ticket.key),
     state === "current" && h("span", { class: "topic-go" }, "Start", icon("arrow-right")),
-    h("span", { class: "visually-hidden" }, `, ${state === "done" ? "done" : state === "locked" ? "locked" : state === "current" ? "up next" : "open"}`),
+    state === "resting" && h("span", { class: "topic-wait" }, "Tomorrow"),
+    h("span", { class: "visually-hidden" }, `, ${{ done: "done", locked: "locked", resting: "opens tomorrow", current: "up next" }[state] ?? "open"}`),
   ];
-  return h("li", {}, state === "locked"
+  return h("li", {}, state === "locked" || state === "resting"
     ? h("span", { class: "topic-row", "data-state": state, "aria-disabled": "true" }, inner)
     : h("a", { class: "topic-row", "data-state": state, href: `#/t/${topic.id}` }, inner));
 }
@@ -82,7 +90,24 @@ export async function renderJourney(view, catalog) {
   const kind = current ? topicKind(current) : "ticket";
   const moduleIndex = Math.max(0, modules.indexOf(currentModule));
 
-  const upNext = current && h("section", { class: "up-next", id: "up-next", "aria-labelledby": "up-next-title" },
+  const today = catalog.today;
+  const resting = !allDone && current?.locked && current.id === catalog.frontierId;
+  const pace = today.limitOn && !catalog.authorMode && !allDone
+    && h("p", { class: "pace mono" }, `Today ${Math.min(today.doneToday, today.limit)}/${today.limit}`);
+
+  const restCard = resting && h("section", { class: "up-next is-resting", id: "up-next", "aria-labelledby": "up-next-title" },
+    h("div", { class: "up-next-main" },
+      h("p", { class: "eyebrow" }, `Done for today · ${tickets(today.doneToday)}`),
+      h("h2", { id: "up-next-title" }, "That's today's tickets done."),
+      h("p", { class: "up-next-body" }, `You've reached your daily limit of ${tickets(today.limit)}. `,
+        h("strong", {}, `${current.ticket.key} "${current.ticket.title}"`), " opens tomorrow. ",
+        "In the meantime, revisit any ticket you've finished, or do your reviews.")),
+    h("div", { class: "up-next-side" },
+      h("button", { type: "button", class: "button button-big", onclick: () => document.getElementById("journey-path")?.scrollIntoView({ behavior: "smooth", block: "start" }) },
+        icon("rotate-ccw"), "Revisit a ticket"),
+      h("button", { type: "button", class: "button button-quiet", onclick: () => openSettings() }, icon("settings"), "Change daily limit")));
+
+  const upNext = restCard || current && h("section", { class: "up-next", id: "up-next", "aria-labelledby": "up-next-title" },
     allDone
       ? [h("p", { class: "eyebrow" }, "All caught up"),
          h("h2", { id: "up-next-title" }, "Every available ticket is done."),
@@ -104,7 +129,8 @@ export async function renderJourney(view, catalog) {
           h("div", { class: "module-progress" },
             h("span", { class: "meter", role: "img", "aria-label": `${doneHere} of ${own.length} tickets done in ${currentModule.title}` },
               h("span", { style: `width:${own.length ? Math.round((doneHere / own.length) * 100) : 0}%` })),
-            h("span", { class: "mono" }, `${doneHere}/${own.length} in this module`)))]);
+            h("span", { class: "mono" }, `${doneHere}/${own.length} in this module`)),
+          pace)]);
 
   const career = await api.career().catch(() => null);
   const due = career?.reviewsDue ?? [];
@@ -124,7 +150,8 @@ export async function renderJourney(view, catalog) {
       h("p", { class: "muted" }, `${doneAll} of ${topics.length} tickets complete · ${modules.length} modules, from your first program to a full-time offer.`)),
     upNext,
     reviewStrip,
-    h("div", { class: "section-head" }, h("h2", {}, "Course outline"), h("span", { class: "mono muted" }, "One ticket at a time")),
+    h("div", { class: "section-head" }, h("h2", {}, "Course outline"), h("span", { class: "mono muted" },
+      today.limitOn && !catalog.authorMode ? `One ticket at a time · ${tickets(today.limit)} a day` : "One ticket at a time")),
     outline));
 
   startTourOnce("journey");

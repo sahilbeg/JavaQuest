@@ -6,6 +6,7 @@
 
 import { h, icon, avatar, TEAM, reducedMotion } from "./dom.js";
 import { api } from "./api.js";
+import { openSettings } from "./settings.js";
 
 import { createHelper } from "./chat.js";
 import { enhanceContent } from "./kb.js";
@@ -280,14 +281,26 @@ export async function renderLesson(view, catalog, id, params) {
 
   function doneCard() {
     const nextId = catalog.topics[catalog.topics.findIndex((t) => t.id === id) + 1]?.id;
+    const thanks = `${person.name.split(" ")[0]} says thanks. ${summary.ticket.key} is done`;
+    const message = h("p", {}, `${thanks}, and the next ticket is open.`);
+    const next = nextId && h("a", { class: "button button-primary button-big", href: `#/t/${nextId}` }, "Next ticket", icon("arrow-right"));
+    // The catalog was read before this ticket was finished: ask again whether the daily limit now holds the next one.
+    if (nextId) {
+      api.catalog().then((fresh) => {
+        const after = fresh.topics.find((t) => t.id === nextId);
+        if (!after?.locked || after.id !== fresh.frontierId || !fresh.today.reached) return;
+        message.textContent = `${thanks}. That's ${fresh.today.doneToday} ${fresh.today.doneToday === 1 ? "ticket" : "tickets"} today, your daily limit, so the next ticket opens tomorrow.`;
+        next.remove();
+      }).catch(() => {});
+    }
     return h("div", { class: "done-card" },
       h("span", { class: "done-check", "aria-hidden": "true" }, icon("check")),
       h("p", { class: "eyebrow" }, summary.ticket.key),
       h("h1", {}, kind === "incident" ? "Incident resolved" : kind === "feature" ? "Feature shipped" : "Ticket closed"),
-      h("p", {}, `${person.name.split(" ")[0]} says thanks. ${summary.ticket.key} is done, and the next ticket is open.`),
+      message,
       h("div", { class: "button-row" },
         h("a", { class: "button", href: "#/" }, icon("map"), "Back to your journey"),
-        nextId && h("a", { class: "button button-primary button-big", href: `#/t/${nextId}` }, "Next ticket", icon("arrow-right"))));
+        next));
   }
 
   function updateChrome() {
@@ -366,7 +379,23 @@ export async function renderLesson(view, catalog, id, params) {
   };
 }
 
+function renderResting(view, catalog, summary) {
+  const { doneToday, limit } = catalog.today;
+  view.replaceChildren(h("div", { class: "locked-page" },
+    h("span", { class: "done-check is-resting", "aria-hidden": "true" }, icon("clock")),
+    h("h1", {}, "This ticket opens tomorrow"),
+    h("p", {}, `You've completed ${doneToday} ${doneToday === 1 ? "ticket" : "tickets"} today, your daily limit of ${limit}. `,
+      `Come back tomorrow to start ${summary.ticket.key} "${summary.ticket.title}".`),
+    h("p", {}, "Until then, revisit any ticket you've finished, or do your reviews."),
+    h("div", { class: "button-row", style: "justify-content:center" },
+      h("a", { class: "button button-primary", href: "#/" }, icon("map"), "Your journey"),
+      h("button", { type: "button", class: "button", onclick: () => openSettings() }, icon("settings"), "Change daily limit"))));
+  document.title = "Opens tomorrow · JavaQuest";
+  return () => {};
+}
+
 function renderLocked(view, catalog, summary) {
+  if (summary.id === catalog.frontierId && catalog.today?.reached) return renderResting(view, catalog, summary);
   const frontier = catalog.topics.find((t) => t.id === catalog.frontierId);
   view.replaceChildren(h("div", { class: "locked-page" },
     h("span", { class: "done-check is-locked", "aria-hidden": "true" }, icon("lock")),

@@ -37,8 +37,12 @@ public class TopicController {
     public record TopicSummary(String id, String moduleId, String title, String practiceKind,
                                TopicMeta.Ticket ticket, PracticeResult latest, TopicProgress progress, boolean locked) {}
 
-    /** frontierId is the first ticket the learner has not mastered: the one to work on now. */
-    public record Catalog(List<ModuleInfo> modules, List<TopicSummary> topics, String frontierId, boolean authorMode) {}
+    /**
+     * frontierId is the first ticket the learner has not mastered: the one to work on now. today says whether the
+     * daily limit is on and reached; when it is, the frontier is locked until tomorrow.
+     */
+    public record Catalog(List<ModuleInfo> modules, List<TopicSummary> topics, String frontierId, boolean authorMode,
+                          Gate.Today today) {}
 
     public record TopicDetail(TopicSummary summary, int minutes, String mainClass, String lessonHtml,
                               int hintCount, String previousId, String nextId, List<String> sourceFiles,
@@ -83,11 +87,12 @@ public class TopicController {
 
     @GetMapping("/catalog")
     public Catalog catalog() {
-        Map<String, Gate.Access> access = gate.accessAll();
+        Gate.Today today = gate.today();
+        Map<String, Gate.Access> access = gate.accessAll(today);
         String frontier = access.values().stream().map(Gate.Access::frontierId).findFirst().orElse(null);
         return new Catalog(catalog.modules(),
                 catalog.topics().stream().map(t -> summary(t, access.get(t.id()).locked())).toList(),
-                frontier, gate.authorMode());
+                frontier, gate.authorMode(), today);
     }
 
     @GetMapping("/topics/{module}/{topic}")

@@ -8,6 +8,7 @@ import { h } from "./dom.js";
 import { byte } from "./byte.js";
 import { bus } from "./events.js";
 import { replayPageTour, setPageTour } from "./tour.js";
+import { openSettings } from "./settings.js";
 
 const view = document.getElementById("view");
 let cleanup = () => {};
@@ -93,6 +94,12 @@ function setupEvents() {
 
 document.getElementById("wordmark-byte").replaceWith(byte("idle", "", { size: "sm" }));
 document.getElementById("tour-button").addEventListener("click", () => replayPageTour());
+document.getElementById("settings-button").addEventListener("click", () => openSettings());
+// A new daily limit can lock or open the next ticket, so draw the page again.
+bus.addEventListener("settings", () => {
+  lastRoute = "";
+  route();
+});
 setupTheme();
 setupEvents();
 refreshRewards();

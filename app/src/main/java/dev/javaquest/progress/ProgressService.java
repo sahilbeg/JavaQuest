@@ -11,6 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -37,6 +39,24 @@ public class ProgressService {
         this.json = json;
         this.clock = clock;
         this.career = career;
+    }
+
+    public StudySettings settings() {
+        return store.settings();
+    }
+
+    @Transactional
+    public StudySettings saveSettings(StudySettings settings) {
+        settings.validate();
+        store.saveSettings(settings);
+        return store.settings();
+    }
+
+    /** Tickets first completed today, in the laptop's time zone. A new day starts at midnight. */
+    public int masteredToday() {
+        LocalDate today = LocalDate.now(clock);
+        ZoneId zone = clock.getZone();
+        return store.masteredBetween(today.atStartOfDay(zone).toInstant(), today.plusDays(1).atStartOfDay(zone).toInstant());
     }
 
     public TopicProgress progress(Topic topic) {

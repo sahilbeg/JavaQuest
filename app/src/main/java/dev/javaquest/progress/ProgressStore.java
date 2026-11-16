@@ -72,4 +72,24 @@ public class ProgressStore {
                 .params(topicId, seed, score, passed, String.join(",", weakConcepts), now.atOffset(ZoneOffset.UTC))
                 .update();
     }
+
+    /** How many tickets were first completed at or after {@code from} and before {@code to}. */
+    public int masteredBetween(Instant from, Instant to) {
+        return jdbc.sql("SELECT COUNT(*) FROM topic_progress WHERE mastered_at >= ? AND mastered_at < ?")
+                .params(from.atOffset(ZoneOffset.UTC), to.atOffset(ZoneOffset.UTC))
+                .query(Integer.class)
+                .single();
+    }
+
+    public StudySettings settings() {
+        return jdbc.sql("SELECT daily_limit_on, daily_limit FROM player WHERE id = 1")
+                .query((rs, n) -> new StudySettings(rs.getBoolean(1), rs.getInt(2)))
+                .single();
+    }
+
+    public void saveSettings(StudySettings settings) {
+        jdbc.sql("UPDATE player SET daily_limit_on = ?, daily_limit = ? WHERE id = 1")
+                .params(settings.dailyLimitOn(), settings.dailyLimit())
+                .update();
+    }
 }

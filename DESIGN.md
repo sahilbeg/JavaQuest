@@ -44,6 +44,7 @@ Byte, the team's helper bot, is a small monochrome owl mark (`js/byte.js`) that 
 
 - **Course** (`js/journey.js`, home): greeting and overall progress; an "Up next" card for the one open ticket; a review strip when reviews are due; the course outline as a numbered syllabus. Each module row shows its status, a thin progress bar and a count. The current module is open, showing its tickets as rows (done, up next, locked; incident and feature tags). Done modules fold away, and locked modules show their summary only.
 - **Lesson player** (`js/lesson.js`): a sticky bar with a segmented progress bar, one card on stage, Back and Next at the bottom (arrow keys too), and a Hints button that opens Byte's drawer. Steps: ticket, learn cards, mistakes, recap, check, code, done.
+- **Done for today**: when the daily limit is reached, the "Up next" card becomes a rest card (green top edge) naming the ticket that opens tomorrow, and that ticket's row shows an amber clock and "Tomorrow".
 - **Career** and **Review**: the same cards and lists.
 
 ## Components
@@ -51,6 +52,7 @@ Byte, the team's helper bot, is a small monochrome owl mark (`js/byte.js`) that 
 - **Animation** (`js/animate.js`): a bordered panel with a mono header, a Watch overlay, the stage, the caption and compact controls. Code animations show code with a highlighted line, memory (variable boxes, object cards, indigo reference arrows) and a console. Scenes show boxes, links and travelling tokens.
 - **Walkthrough** (`js/tour.js`): the page dims, a spotlight with a thin indigo edge moves to each target, and a small bubble explains it. It plays once per page; the `?` button replays it.
 - **Callouts**: bordered panels with a coloured dot and a mono label (Tip, Careful, Think of it like, New word).
+- **Settings** (`js/settings.js`): a modal dialog from the gear in the top bar. A switch turns the daily limit on; a stepper sets tickets per day; a mono status line says how many are done today.
 - **Checks**: a joined list of JUnit results, with incident tiers as bronze, silver and gold pills.
 
 ## Motion
