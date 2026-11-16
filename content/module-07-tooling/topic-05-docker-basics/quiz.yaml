@@ -1,0 +1,132 @@
+topic: module-07-tooling/topic-05-docker-basics
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: images-and-containers
+    variants:
+      - { prompt: "In Java terms, how does a Docker image relate to a container?", choices: ["The image is like a class, and a container is like an object made from it", "The image is like an object, and a container is like a class", "They are two names for the same thing", "The image is the source code, and a container is the jar"], answer: 0 }
+      - { prompt: "You start three containers from spoke/kiosk:1.10.0. How many images do you need?", choices: ["One image, shared by all three containers", "Three images, one per container", "None, containers do not use images", "One image per station name"], answer: 0 }
+      - { prompt: "Which one is the read-only package that you build once?", choices: ["The image", "The container", "The volume", "The port"], answer: 0 }
+    explain: "An image is the read-only recipe. Each container is one running copy made from it, like an object made with new."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: images-and-containers
+    prompt: "Why does a container start faster and use less memory than a virtual machine?"
+    choices: ["It shares the host computer's kernel instead of booting its own operating system", "It runs without any operating system at all", "It compiles Java to machine code first", "It skips the Java runtime"]
+    answer: 0
+    explain: "A VM boots a whole operating system. A container only isolates your program and shares the kernel underneath."
+    reteach: "## Concept"
+
+  - id: q03
+    type: mcq
+    concept: dockerfile
+    variants:
+      - { prompt: "Which Dockerfile instruction sets the command that runs when a container starts?", choices: ["ENTRYPOINT", "RUN", "FROM", "EXPOSE"], answer: 0 }
+      - { prompt: "What does EXPOSE 8080 do in a Dockerfile?", choices: ["It documents that the program listens on 8080, but opens nothing", "It publishes port 8080 to your computer", "It makes the server listen on 0.0.0.0", "It blocks every port except 8080"], answer: 0 }
+      - { prompt: "When does a RUN instruction run?", choices: ["While the image is being built", "Every time a container starts", "Only when you run docker push", "When the container stops"], answer: 0 }
+    explain: "ENTRYPOINT runs at container start, RUN runs at build time, and EXPOSE is documentation only."
+    reteach: "## Concept"
+
+  - id: q04
+    type: fill-blank
+    concept: dockerfile
+    prompt: "___ eclipse-temurin:21-jre"
+    answers: ["FROM"]
+    explain: "FROM picks the base image. This one already has a Java 21 runtime installed."
+    reteach: "## Concept"
+
+  - id: q05
+    type: order
+    concept: layers-and-cache
+    prompt: "Put the build stage in a cache-friendly order, so a code change does not download dependencies again."
+    items:
+      - "FROM maven:3.9-eclipse-temurin-21 AS build"
+      - "WORKDIR /src"
+      - "COPY pom.xml ."
+      - "RUN mvn -q dependency:go-offline"
+      - "COPY src ./src"
+      - "RUN mvn -q package -DskipTests"
+    explain: "Rarely changed steps go first. Then a code change only rebuilds the last two layers."
+    reteach: "## Concept"
+
+  - id: q06
+    type: mcq
+    concept: layers-and-cache
+    variants:
+      - { prompt: "You change one Java file in src and build again. Which steps rebuild?", choices: ["COPY src ./src and every step after it", "Every step, from FROM down", "Only the FROM step", "No steps, Docker reuses the old image"], answer: 0 }
+      - { prompt: "Why use a multi-stage build for the kiosk?", choices: ["The final image keeps only the jar and a small JRE, not Maven and the JDK", "It runs the tests twice", "It lets one container run two jars", "It removes the need for a Dockerfile"], answer: 0 }
+      - { prompt: "What should a .dockerignore file for the kiosk usually list?", choices: ["target/ and .git", "pom.xml and src", "Dockerfile", "eclipse-temurin:21-jre"], answer: 0 }
+    explain: "Once one step changes, it and every later step rebuild. Multi-stage builds and .dockerignore keep images small and builds fast."
+    reteach: "## Concept"
+
+  - id: q07
+    type: fill-blank
+    concept: ports
+    prompt: "docker run --rm ___ 8080:8080 spoke/kiosk:1.10.0"
+    answers: ["-p", "--publish"]
+    explain: "-p host:container connects your computer's port to the container's port."
+    reteach: "## Concept"
+
+  - id: q08
+    type: spot-the-bug
+    concept: ports
+    prompt: "The image runs with -p 8080:8080, but your laptop's browser cannot load the kiosk. Which line is the bug?"
+    code: |
+      import com.sun.net.httpserver.HttpServer;
+      import java.net.InetSocketAddress;
+
+      public class KioskServer {
+          public static void main(String[] args) throws Exception {
+              HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 8080), 0);
+              server.start();
+              System.out.println("Kiosk listening on port 8080");
+          }
+      }
+    bugLine: 6
+    explain: "Inside a container, 127.0.0.1 means only the container itself. Listen on 0.0.0.0 so published traffic gets in."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: configuration-and-volumes
+    variants:
+      - { prompt: "The same image must say Harbor at the Harbor kiosk. What do you change?", choices: ["Run it with -e KIOSK_STATION=Harbor", "Build a separate image for Harbor", "Edit the jar inside the running container", "Add EXPOSE Harbor to the Dockerfile"], answer: 0 }
+      - { prompt: "System.getenv(\"KIOSK_STATION\") runs where that variable is not set. What does it return?", choices: ["null", "An empty string", "\"Riverside\"", "It throws an exception"], answer: 0 }
+    explain: "Pass settings with -e. In Java, System.getenv returns null for a missing variable, so give it a default."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: configuration-and-volumes
+    prompt: "The Depot kiosk writes rides to /app/data. After a restart with --rm, the rides are gone. What is the fix?"
+    choices: ["Add -v kiosk-data:/app/data so the folder lives in a volume", "Add EXPOSE /app/data to the Dockerfile", "Use the latest tag", "Run the container with -d"]
+    answer: 0
+    explain: "Files inside a container vanish when it is removed. A volume keeps them outside the container."
+    reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: registries-and-tags
+    variants:
+      - { prompt: "Why should the kiosks pull spoke/kiosk:1.10.0 instead of spoke/kiosk:latest?", choices: ["latest is just whatever was pushed last, so kiosks could get different images", "latest images are always broken", "Version tags download faster", "Docker refuses to run latest"], answer: 0 }
+      - { prompt: "What does docker push spoke/kiosk:1.10.0 do?", choices: ["Uploads the image to a registry so other machines can pull it", "Starts a container in the background", "Builds the image from the Dockerfile", "Deletes the image from your laptop"], answer: 0 }
+      - { prompt: "You run docker pull spoke/kiosk with no tag. Which tag does Docker use?", choices: ["latest", "1.10.0", "The newest version number", "It asks you to pick one"], answer: 0 }
+    explain: "A registry stores images. Push and pull exact version tags, because latest can change under your feet."
+    reteach: "## Concept"
+
+  - id: q12
+    type: order
+    concept: registries-and-tags
+    prompt: "Put the steps in order to ship version 1.10.0 from your laptop to the Depot kiosk."
+    items:
+      - "docker build -t spoke/kiosk:1.10.0 ."
+      - "docker run --rm -p 8080:8080 spoke/kiosk:1.10.0"
+      - "docker push spoke/kiosk:1.10.0"
+      - "docker pull spoke/kiosk:1.10.0"
+      - "docker run -d --name kiosk-depot -p 8080:8080 spoke/kiosk:1.10.0"
+    explain: "Build it, try it locally, push it to the registry, then pull and run it on the kiosk."
+    reteach: "## Worked example"

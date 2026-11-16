@@ -1,0 +1,125 @@
+topic: module-07-tooling/topic-02-gradle
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: build-script
+    variants:
+      - { prompt: "Which file plays the part of pom.xml in a Gradle project that uses the Kotlin DSL?", choices: ["build.gradle.kts", "settings.gradle.kts", "gradle-wrapper.properties", "gradlew"], answer: 0 }
+      - { prompt: "Which file holds rootProject.name, the name of the project?", choices: ["settings.gradle.kts", "build.gradle.kts", "gradle-wrapper.properties", "pom.xml"], answer: 0 }
+    explain: "build.gradle.kts describes the build, like pom.xml. settings.gradle.kts names the project."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: build-script
+    prompt: "Which block tells Gradle where to download libraries from?"
+    choices: ["repositories { mavenCentral() }", "dependencies { mavenCentral() }", "plugins { mavenCentral() }", "tasks.test { mavenCentral() }"]
+    answer: 0
+    explain: "repositories lists where libraries come from. Gradle uses the same Maven Central as Maven."
+    reteach: "## Concept"
+
+  - id: q03
+    type: fill-blank
+    concept: build-script
+    prompt: "tasks.test { ___() }  // run the JUnit Jupiter tests"
+    answers: ["useJUnitPlatform"]
+    explain: "useJUnitPlatform() makes the test task find and run JUnit Jupiter tests."
+    reteach: "## Common mistakes"
+
+  - id: q04
+    type: mcq
+    concept: tasks
+    variants:
+      - { prompt: "Which command lists every task a Gradle project has?", choices: ["./gradlew tasks", "./gradlew list", "./gradlew help-tasks", "./gradlew phases"], answer: 0 }
+      - { prompt: "Which task deletes the build folder?", choices: ["clean", "delete", "reset", "purge"], answer: 0 }
+      - { prompt: "With the application plugin, which task starts your mainClass?", choices: ["run", "exec", "start", "launch"], answer: 0 }
+    explain: "tasks lists the tasks, clean deletes build/, and run starts mainClass with the application plugin."
+    reteach: "## Concept"
+
+  - id: q05
+    type: mcq
+    concept: tasks
+    prompt: "You run ./gradlew jar. Which task does Gradle not run?"
+    choices: ["test", "compileJava", "classes", "jar"]
+    answer: 0
+    explain: "Gradle walks the task graph backwards from jar. The jar needs compiled classes, but not the tests."
+    reteach: "## Concept"
+
+  - id: q06
+    type: order
+    concept: tasks
+    prompt: "Put these tasks in the order ./gradlew build runs them."
+    items:
+      - "compileJava"
+      - "classes"
+      - "compileTestJava"
+      - "testClasses"
+      - "test"
+      - "check"
+      - "build"
+    explain: "Each task waits for the ones it depends on. Tests compile against the main classes, and build comes last."
+    reteach: "## Concept"
+
+  - id: q07
+    type: fill-blank
+    concept: configurations
+    prompt: "___(\"org.junit.jupiter:junit-jupiter:5.11.4\")  // the tests compile and run with it, main code never sees it"
+    answers: ["testImplementation"]
+    explain: "JUnit is only needed by the tests, so it goes in testImplementation, like Maven's test scope."
+    reteach: "## Concept"
+
+  - id: q08
+    type: mcq
+    concept: configurations
+    variants:
+      - { prompt: "A Maven dependency has scope provided. Which Gradle configuration matches it?", choices: ["compileOnly", "implementation", "runtimeOnly", "testImplementation"], answer: 0 }
+      - { prompt: "A Maven dependency has scope runtime. Which Gradle configuration matches it?", choices: ["runtimeOnly", "compileOnly", "implementation", "testImplementation"], answer: 0 }
+      - { prompt: "A Maven dependency has no scope, so it is compile. Which Gradle configuration matches it?", choices: ["implementation", "compileOnly", "runtimeOnly", "testImplementation"], answer: 0 }
+    explain: "compile is implementation, test is testImplementation, provided is compileOnly and runtime is runtimeOnly."
+    reteach: "## Concept"
+
+  - id: q09
+    type: spot-the-bug
+    concept: configurations
+    prompt: "TelemetryParser in src/main/java imports org.slf4j.Logger. Compiling it fails with \"package org.slf4j does not exist\". Which line is wrong?"
+    code: |
+      dependencies {
+          testImplementation("org.slf4j:slf4j-api:2.0.16")
+          runtimeOnly("ch.qos.logback:logback-classic:1.5.12")
+          testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
+          testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+      }
+    bugLine: 2
+    explain: "Main code cannot see testImplementation libraries. SLF4J must be in implementation."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: wrapper
+    variants:
+      - { prompt: "Why do you run ./gradlew instead of an installed gradle?", choices: ["It uses the Gradle version pinned for the project", "It runs the tests twice to be safe", "It skips downloading libraries", "It only works on Windows"], answer: 0 }
+      - { prompt: "Which file pins the Gradle version that ./gradlew downloads?", choices: ["gradle/wrapper/gradle-wrapper.properties", "settings.gradle.kts", "build.gradle.kts", "~/.gradle/caches"], answer: 0 }
+    explain: "The wrapper reads distributionUrl in gradle-wrapper.properties, so everyone builds with the same Gradle version."
+    reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: incremental-builds
+    variants:
+      - { prompt: "You run ./gradlew build twice and change nothing. What does compileJava show the second time?", choices: ["UP-TO-DATE", "FAILED", "NO-SOURCE", "SKIPPED-BY-USER"], answer: 0 }
+      - { prompt: "Which flag makes Gradle run every task again, even unchanged ones?", choices: ["--rerun-tasks", "--fresh", "--no-daemon", "--force-all"], answer: 0 }
+      - { prompt: "What is the Gradle daemon?", choices: ["A background process that stays running so the next build starts faster", "A file that lists the project's dependencies", "The folder where jars are saved", "A task that deletes old builds"], answer: 0 }
+    explain: "Gradle skips tasks whose inputs and outputs did not change. --rerun-tasks ignores that, and the daemon keeps Gradle warm."
+    reteach: "## Concept"
+
+  - id: q12
+    type: mcq
+    concept: maven-vs-gradle
+    variants:
+      - { prompt: "Maven puts its jar in target/. Where does Gradle put it?", choices: ["build/libs/", "target/libs/", "out/", "gradle/wrapper/"], answer: 0 }
+      - { prompt: "Which statement about Maven and Gradle is true?", choices: ["Both use groupId:artifactId:version and download from Maven Central", "Gradle cannot use libraries from Maven Central", "Maven projects cannot have tests", "Gradle puts source code in src/gradle/java"], answer: 0 }
+      - { prompt: "Maven runs phases in a fixed line. What does Gradle run instead?", choices: ["Tasks in a graph, only the ones needed", "Every phase, always in the same order", "Scripts written in XML", "One giant task called all"], answer: 0 }
+    explain: "Gradle keeps Maven's coordinates, Maven Central and src layout. It runs tasks from a graph and writes output to build/."
+    reteach: "## Concept"

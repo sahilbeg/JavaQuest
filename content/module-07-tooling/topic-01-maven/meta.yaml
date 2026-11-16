@@ -1,0 +1,23 @@
+id: module-07-tooling/topic-01-maven
+title: "Maven: POM, lifecycle, dependencies"
+order: 1
+minutes: 10
+prerequisites: [module-06-craft/boss]
+concepts: [coordinates, project-layout, lifecycle, dependencies, scopes, plugins]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0701
+  from: maya
+  title: "The kiosk only builds on my laptop"
+  body: >
+    Right now the kiosk is built from a text file of javac commands, and it only works on my
+    laptop. Two new teammates lost a whole day trying to build it, and last week someone shipped
+    an old jar to the Harbor kiosk. I want one command that builds and tests the kiosk the same
+    way on every machine. Can you set that up?
+hints:
+  - "Every Maven project has a name in three parts: groupId, artifactId and version. Look for them near the top of the POM."
+  - "Phases run in order. Asking for package also runs compile and test first. A test-scope jar is only there for the code in src/test/java."
+  - "Use ./mvnw, not mvn, so every laptop gets the same Maven. ./mvnw clean package builds a fresh jar in target/, and ./mvnw dependency:tree lists every jar you pull in."
+review: true

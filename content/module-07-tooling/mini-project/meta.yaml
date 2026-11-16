@@ -1,0 +1,24 @@
+id: module-07-tooling/mini-project
+title: "FEAT-07: Package the kiosk as a runnable jar"
+order: 100
+minutes: 12
+prerequisites: [module-07-tooling/topic-05-docker-basics]
+concepts: [jar-files, manifest, exit-codes, reproducible-builds]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m07.feature.Kiosk
+  timeoutSeconds: 30
+ticket:
+  key: FEAT-07
+  from: priya
+  title: "One file per kiosk"
+  body: >
+    Right now, updating a kiosk means copying a folder of class files and typing a long java command at each station.
+    I want one file, kiosk.jar, that starts with java -jar and can tell us which version it is.
+    Theo also wants two builds of the same code to give exactly the same file, so he can check that Depot runs what we tested.
+hints:
+  - "Start with Kiosk.run. Check args.length first. Then handle \"--version\", then Integer.parseInt inside a try, and send every bad case to the same usage line."
+  - "A jar is a zip file. Write the manifest first with jar.putNextEntry(entry(JarFile.MANIFEST_NAME)) and manifest.write(jar). Then, for each file, putNextEntry, Files.copy(file, jar) and closeEntry."
+  - "For the same bytes every time: sort the files by entry name in filesUnder, and call entry.setTimeLocal(FIXED_TIME) in entry(name). The entry name is classesDir.relativize(file).toString().replace('\\\\', '/')."
+review: false

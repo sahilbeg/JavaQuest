@@ -161,6 +161,8 @@
                 <source>module-06-craft/topic-10-tdd/src</source>
                 <source>module-06-craft/topic-11-debugging/src</source>
                 <source>module-06-craft/topic-12-logging/src</source>
+                <source>module-07-tooling/boss/src</source>
+                <source>module-07-tooling/mini-project/src</source>
               </sources>
             </configuration>
           </execution>
@@ -258,6 +260,8 @@
                 <source>module-06-craft/topic-10-tdd/test</source>
                 <source>module-06-craft/topic-11-debugging/test</source>
                 <source>module-06-craft/topic-12-logging/test</source>
+                <source>module-07-tooling/boss/test</source>
+                <source>module-07-tooling/mini-project/test</source>
               </sources>
             </configuration>
           </execution>

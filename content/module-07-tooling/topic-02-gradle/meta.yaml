@@ -1,0 +1,22 @@
+id: module-07-tooling/topic-02-gradle
+title: "Gradle basics"
+order: 2
+minutes: 9
+prerequisites: [module-07-tooling/topic-01-maven]
+concepts: [build-script, tasks, configurations, wrapper, incremental-builds, maven-vs-gradle]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0702
+  from: theo
+  title: "Nobody can build the telemetry service"
+  body: >
+    The bike telemetry service from the rush-hour project was written by a contractor, and it uses
+    Gradle. Nobody on the team knows how to build it. I need to add a logging library and get its
+    tests running before Friday. Can you figure out how this thing builds?
+hints:
+  - "Gradle reads build.gradle.kts the way Maven reads pom.xml. The same group:artifact:version coordinates work in both."
+  - "A library your main code imports goes in implementation. A library only your tests use goes in testImplementation."
+  - "Run ./gradlew build from the project folder, not gradle. Check that tasks.test has useJUnitPlatform(), then look for the jar in build/libs."
+review: true

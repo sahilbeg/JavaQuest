@@ -1,0 +1,132 @@
+topic: module-07-tooling/topic-04-ci-basics
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: continuous-integration
+    variants:
+      - { prompt: "What does continuous integration mean?", choices: ["Every push is built and tested automatically on a fresh machine", "Everyone merges their work once at the end of the month", "A teammate tests the code by hand before each release", "The code is compiled only on the lead engineer's laptop"], answer: 0 }
+      - { prompt: "Why does CI build on a fresh machine instead of your laptop?", choices: ["So the build only uses what is really in the repository", "Because fresh machines compile Java faster", "So nobody has to write tests", "Because laptops cannot run Maven"], answer: 0 }
+    explain: "CI builds and tests every push automatically, on a clean machine, often, with fast feedback."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: continuous-integration
+    prompt: "The build on main just went red. What should the team do?"
+    choices: ["Stop and fix it, or revert the change, before merging anything else", "Keep merging and fix it at the end of the week", "Delete the failing test so the build goes green", "Turn off the pipeline until the release is out"]
+    answer: 0
+    explain: "Red is a stop sign. A red main blocks everyone, so fixing it comes first."
+    reteach: "## Concept"
+
+  - id: q03
+    type: order
+    concept: pipelines
+    prompt: "Put the pipeline stages in order, cheap to slow."
+    items: ["Checkout", "Compile", "Unit tests", "Package", "Publish"]
+    explain: "Copy the code, compile it, test it, build the jar, then store the jar. Cheap steps first so the pipeline fails fast."
+    reteach: "## Concept"
+
+  - id: q04
+    type: mcq
+    concept: pipelines
+    variants:
+      - { prompt: "Why does compiling come before the slower tests in a pipeline?", choices: ["So a cheap failure stops the pipeline early and you hear about it fast", "Because tests cannot run on Linux", "So the tests run twice", "Because publishing needs the tests to be skipped"], answer: 0 }
+      - { prompt: "In CI, what is a runner?", choices: ["The machine that runs a job, usually fresh and thrown away afterwards", "A JUnit annotation that runs a test", "The person who presses Merge", "A Maven phase after package"], answer: 0 }
+      - { prompt: "In CI, what is a trigger?", choices: ["The event that starts the pipeline, such as a push or a pull request", "A test that fails on purpose", "The jar the build produces", "A secret password"], answer: 0 }
+    explain: "A trigger starts the pipeline, a runner runs it, and cheap steps go first so failures show up fast."
+    reteach: "## Concept"
+
+  - id: q05
+    type: fill-blank
+    concept: workflow-file
+    prompt: "runs-on: ___   # a fresh Linux machine, newest image"
+    answers: ["ubuntu-latest"]
+    explain: "runs-on picks the runner. ubuntu-latest asks GitHub for a fresh Linux machine."
+    reteach: "## Concept"
+
+  - id: q06
+    type: fill-blank
+    concept: workflow-file
+    prompt: "- run: ./mvnw -B ___   # compile, test, package and check, but do not install or deploy"
+    answers: ["verify"]
+    explain: "verify compiles, runs the tests and packages the jar, stopping at the first failure. -B is batch mode."
+    reteach: "## Concept"
+
+  - id: q07
+    type: mcq
+    concept: workflow-file
+    variants:
+      - { prompt: "Where does a GitHub Actions workflow file live?", choices: [".github/workflows/ci.yml", "src/main/resources/ci.yml", "pom.xml", ".gitignore"], answer: 0 }
+      - { prompt: "What does the step uses: actions/checkout@v4 do?", choices: ["Copies the repository's code onto the runner", "Installs Java 21", "Merges the pull request", "Uploads the jar"], answer: 0 }
+      - { prompt: "The upload step needs a secret key. Where should the key live?", choices: ["In the repository's Actions secrets, read with ${{ secrets.UPLOAD_KEY }}", "Typed straight into ci.yml", "In a Java constant in the code", "In the commit message"], answer: 0 }
+    explain: "The workflow is a YAML file in .github/workflows/. Actions like checkout are ready-made steps. Secrets live in the CI settings, never in the repository."
+    reteach: "## Concept"
+
+  - id: q08
+    type: mcq
+    concept: branch-protection
+    variants:
+      - { prompt: "What does a required status check on main do?", choices: ["It blocks merging a pull request until that check is green", "It runs the tests on your laptop", "It deletes branches that fail", "It makes the build run faster"], answer: 0 }
+      - { prompt: "A pull request shows a red cross, but anyone can still press Merge. What is missing?", choices: ["A branch protection rule with a required status check", "A second workflow file", "A longer commit message", "A bigger runner"], answer: 0 }
+    explain: "A check alone is advice. Branch protection with required status checks turns it into a rule and keeps main green."
+    reteach: "## Concept"
+
+  - id: q09
+    type: mcq
+    concept: works-on-my-machine
+    variants:
+      - { prompt: "A test reads /Users/intern/spoke/stations.txt. It passes on the laptop and fails in CI. Why?", choices: ["That folder only exists on the intern's laptop, not on the runner", "CI runners cannot read text files", "JUnit only runs on macOS", "The test is too slow for CI"], answer: 0 }
+      - { prompt: "Which change lets a file-reading test pass on any machine?", choices: ["Take a Path parameter and let the test write its file into a @TempDir", "Copy the file to the same folder on every laptop", "Add the file to .gitignore", "Mark the test with @Disabled"], answer: 0 }
+      - { prompt: "A test passes in the afternoon on your laptop and fails at 2 am in CI. Which fix is best?", choices: ["Inject a Clock and use Clock.fixed in the test", "Only run the build in the afternoon", "Re-run the build until it passes", "Change the laptop's time zone to UTC"], answer: 0 }
+    explain: "Pass in what changes between machines: a Path for files (with @TempDir in tests) and a Clock for time (with Clock.fixed in tests)."
+    reteach: "## Concept"
+
+  - id: q10
+    type: spot-the-bug
+    concept: flaky-tests
+    prompt: "Riders get 20 cents off before 07:00. The test passes at 6 am and fails in the 2 pm build, even with a fixed clock. Which line is wrong?"
+    code: |
+      class EarlyBird {
+          private final Clock clock;
+          EarlyBird(Clock clock) { this.clock = clock; }
+          long discountCents() {
+              LocalTime now = LocalTime.now();
+              return now.isBefore(LocalTime.of(7, 0)) ? 20 : 0;
+          }
+      }
+    bugLine: 5
+    explain: "LocalTime.now() ignores the clock that was passed in and reads the real time, so its tests depend on when they run. Use LocalTime.now(clock)."
+    reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: flaky-tests
+    variants:
+      - { prompt: "What is a flaky test?", choices: ["A test that passes sometimes and fails sometimes on the same code", "A test that always fails", "A test that takes a long time", "A test with no assertions"], answer: 0 }
+      - { prompt: "A test fails one run in five on the same code. What should you do?", choices: ["Find what it depends on, such as the clock or test order, and fix that", "Press Re-run until it goes green", "Delete the test", "Merge anyway because it passed once"], answer: 0 }
+      - { prompt: "One test sets a static counter, and another test expects it to be 0. What can happen?", choices: ["The second test passes or fails depending on the order the tests run", "Both tests always pass", "The code does not compile", "JUnit resets static fields before every test"], answer: 0 }
+    explain: "Flaky tests usually depend on the clock, the time zone, test order, the network, or randomness. Fix the cause instead of re-running."
+    reteach: "## Concept"
+
+  - id: q12
+    type: predict-output
+    concept: works-on-my-machine
+    code: |
+      import java.time.Clock;
+      import java.time.Instant;
+      import java.time.LocalTime;
+      import java.time.ZoneOffset;
+
+      public class Main {
+          public static void main(String[] args) {
+              Clock clock = Clock.fixed(Instant.parse("2026-11-16T07:00:00Z"), ZoneOffset.UTC);
+              LocalTime now = LocalTime.now(clock);
+              long discount = now.isBefore(LocalTime.of(7, 0)) ? 20 : 0;
+              System.out.println(now + " " + discount);
+          }
+      }
+    answer: "07:00 0"
+    explain: "The fixed clock always says 07:00 in UTC. 07:00 is not before 07:00, so there is no early-bird discount, on every machine."
+    reteach: "## Try it"

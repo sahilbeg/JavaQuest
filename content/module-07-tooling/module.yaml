@@ -1,0 +1,6 @@
+id: module-07-tooling
+title: Build and tooling
+project: Shipping safely
+summary: Build Spoke's code with one command, work on branches, let a robot test every push, and ship the kiosk as a jar and a container.
+unlockAfter: module-06-craft/boss
+mascotIntro: "Hoo! Good code is only half the job. Now let's get it from your laptop to every kiosk in Riverton, safely."

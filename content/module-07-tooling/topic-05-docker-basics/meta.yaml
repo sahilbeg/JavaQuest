@@ -1,0 +1,23 @@
+id: module-07-tooling/topic-05-docker-basics
+title: "Docker basics: images and containers"
+order: 5
+minutes: 10
+prerequisites: [module-07-tooling/topic-04-ci-basics]
+concepts: [images-and-containers, dockerfile, layers-and-cache, ports, configuration-and-volumes, registries-and-tags]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0705
+  from: theo
+  title: "Every kiosk has a different Java"
+  body: >
+    The new kiosk computers at Depot and Uptown came with different Java versions installed.
+    Uptown limps along, but Depot could not start the kiosk at all this morning. I want the
+    kiosk shipped as one container image that carries its own Java, so every kiosk runs exactly
+    the same thing.
+hints:
+  - "An image is the packed recipe. A container is one running copy made from it, like an object made from a class."
+  - "Put the lines that rarely change at the top of the Dockerfile, so Docker can reuse its cached layers."
+  - "Publish the port with -p 8080:8080, and make the server inside listen on 0.0.0.0, not 127.0.0.1."
+review: true

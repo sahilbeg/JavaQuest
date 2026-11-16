@@ -1,0 +1,22 @@
+id: module-07-tooling/topic-04-ci-basics
+title: "Continuous integration basics"
+order: 4
+minutes: 10
+prerequisites: [module-07-tooling/topic-03-git-workflow]
+concepts: [continuous-integration, pipelines, workflow-file, branch-protection, works-on-my-machine, flaky-tests]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0704
+  from: theo
+  title: "No more merges that only build on one laptop"
+  body: >
+    Last week someone merged a pull request that didn't even compile on anyone else's machine.
+    The Harbor kiosk update went out late while we untangled it. I want a robot that builds and
+    tests every push on a clean machine. And nobody merges while it's red.
+hints:
+  - "CI is a robot teammate: every push goes to a clean machine, runs the same command, and comes back green or red."
+  - "When CI is red but your laptop is green, ask what your laptop has that a fresh machine lacks: a file, a clock, a time zone, the network?"
+  - "Pass in whatever changes from machine to machine: a Path for files (use @TempDir in tests) and a Clock for time (use Clock.fixed in tests)."
+review: true

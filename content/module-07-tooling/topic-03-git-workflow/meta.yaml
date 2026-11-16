@@ -1,0 +1,22 @@
+id: module-07-tooling/topic-03-git-workflow
+title: "Git branches, merges, rebases, pull requests"
+order: 3
+minutes: 10
+prerequisites: [module-07-tooling/topic-02-gradle]
+concepts: [branches, merging, merge-conflicts, rebasing, pull-requests, history-safety]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0703
+  from: maya
+  title: "No more edits straight on main"
+  body: >
+    Two interns edited FareCalculator straight on main on the same afternoon. One person's change
+    vanished, and main didn't compile for an hour. From now on, every change goes through a branch
+    and a pull request. Your next fare change is the first one, so please do it that way.
+hints:
+  - "A branch is just a label on a commit. Make one before you touch any code: git switch -c, then a name like fix/harbor-fare-rounding."
+  - "Conflict? Look for the <<<<<<<, ======= and >>>>>>> lines. Keep the code you want, delete all three markers, then git add and git commit."
+  - "The whole flow: git switch -c fix/harbor-fare-rounding, commit, git push -u origin fix/harbor-fare-rounding, open a pull request, wait for green checks and an approval, merge, then delete the branch."
+review: true
