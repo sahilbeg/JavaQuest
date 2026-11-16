@@ -116,7 +116,7 @@ An open interface is a party with an open door: anyone can walk in. A sealed int
 This knowledge pays off in two places:
 
 - A reader sees the whole family in one line, at the top of the parent.
-- In the next topic, [a switch over a sealed type](#/t/module-05-advanced-java/topic-13-pattern-matching) becomes exhaustive. **Exhaustive** means the compiler checks that every permitted type has a case. Forget one and the code does not compile.
+- In the next topic, [a switch over a sealed type](/t/module-05-advanced-java/topic-13-pattern-matching) becomes exhaustive. **Exhaustive** means the compiler checks that every permitted type has a case. Forget one and the code does not compile.
 
 In this topic you still use `instanceof` chains. The chain itself does not warn you about a missing type, but the sealed parent stops strangers from joining the family.
 

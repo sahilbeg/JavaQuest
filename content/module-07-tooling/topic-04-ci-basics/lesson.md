@@ -99,7 +99,7 @@ Byte says: other CI systems, such as GitLab CI and Jenkins, use different file n
 
 ### Checks on a pull request
 
-When you open a pull request, the workflow runs on it. You learned pull requests in [the Git workflow topic](#/t/module-07-tooling/topic-03-git-workflow). GitHub shows the result near the bottom as a **check**. A yellow dot means running, a green tick means passed, and a red cross means failed. "Details" opens the log.
+When you open a pull request, the workflow runs on it. You learned pull requests in [the Git workflow topic](/t/module-07-tooling/topic-03-git-workflow). GitHub shows the result near the bottom as a **check**. A yellow dot means running, a green tick means passed, and a red cross means failed. "Details" opens the log.
 
 ### Branch protection: keep main green
 

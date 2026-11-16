@@ -42,10 +42,13 @@ Byte, the team's helper bot, is a small monochrome owl mark (`js/byte.js`) that 
 
 ## Pages
 
+Every page has a real address that can be bookmarked and reloaded: `/` (course), `/t/<ticket id>` (lesson, with `?step=` for the card), `/notes`, `/notes/<ticket id>`, `/review/<ticket id>` and `/career`. The server answers each with the one page (`PageController`), and links inside the app open without a reload. Old `/#/...` links still work.
+
+
 - **Course** (`js/journey.js`, home): greeting and overall progress; an "Up next" card for the one open ticket; a review strip when reviews are due; the course outline as a numbered syllabus. Each module row shows its status, a thin progress bar and a count. The current module is open, showing its tickets as rows (done, up next, locked; incident and feature tags). Done modules fold away, and locked modules show their summary only.
 - **Lesson player** (`js/lesson.js`): a sticky bar with a segmented progress bar, one card on stage, Back and Next at the bottom (arrow keys too), and a Hints button that opens Byte's drawer. Steps: ticket, learn cards, mistakes, recap, check, code, done.
 - **Done for today**: when the daily limit is reached, the "Up next" card becomes a rest card (green top edge) naming the ticket that opens tomorrow, and that ticket's row shows an amber clock and "Tomorrow".
-- **Notes** (`js/notes.js`, `#/notes`): quick reference for every finished ticket, grouped by module, with a filter. Each ticket's page (`#/notes/<id>`) has bordered sections: Key points, Syntax, Words to know and Common mistakes, plus "Open the full lesson", print, and previous/next. The ticket's last card links to it.
+- **Notes** (`js/notes.js`, `/notes`): quick reference for every finished ticket, grouped by module, with a filter. Each ticket's page (`/notes/<id>`) has bordered sections: Key points, Syntax, Words to know and Common mistakes, plus "Open the full lesson", print, and previous/next. The ticket's last card links to it.
 - **Career** and **Review**: the same cards and lists.
 
 ## Components

@@ -140,7 +140,7 @@ A **watch** is an expression you pin in the debugger. Type `parts.length` or `mi
 
 ### Reproduce first, with a failing test
 
-Before you change any code, write a test that fails the same way the crash report does. You learned this rhythm in [TDD](#/t/module-06-craft/topic-10-tdd). The test proves you found the real bug. When it turns green, you know the fix worked. It also stays in the suite, so the bug cannot quietly come back.
+Before you change any code, write a test that fails the same way the crash report does. You learned this rhythm in [TDD](/t/module-06-craft/topic-10-tdd). The test proves you found the real bug. When it turns green, you know the fix worked. It also stays in the suite, so the bug cannot quietly come back.
 
 ```java nocompile
 @Test

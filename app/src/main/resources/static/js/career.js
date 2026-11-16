@@ -31,7 +31,7 @@ function reviewsBlock(reviews) {
     reviews.length
       ? h("ul", { class: "plain-list" }, reviews.map((r) => h("li", {},
           h("span", { class: "key" }, r.key), h("span", {}, r.title),
-          h("a", { class: "button", href: `#/review/${r.id}` }, icon("rotate-ccw"), "Review"))))
+          h("a", { class: "button", href: `/review/${r.id}` }, icon("rotate-ccw"), "Review"))))
       : h("p", { class: "empty-line" }, "Nothing due. Closed tickets come back here a day later, then less and less often."));
 }
 
@@ -43,7 +43,7 @@ function weakBlock(weak) {
           h("span", { class: "key" }, w.key),
           h("span", {}, w.title, h("br"), h("span", { class: "career-small" }, w.reason,
             w.concepts.length ? ` Topics: ${w.concepts.join(", ")}.` : "")),
-          h("a", { class: "button", href: `#/t/${w.id}` }, "Open KB page"))))
+          h("a", { class: "button", href: `/t/${w.id}` }, "Open KB page"))))
       : h("p", { class: "empty-line" }, "No weak spots right now."));
 }
 
@@ -65,7 +65,7 @@ function ticketsBlock(topics) {
       h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Ticket"), h("th", { scope: "col" }, "Title"), h("th", { scope: "col" }, "Mastery"))),
       h("tbody", {}, topics.map((t) => h("tr", {},
         h("td", { class: "key" }, t.key),
-        h("td", {}, h("a", { href: `#/t/${t.id}` }, t.title)),
+        h("td", {}, h("a", { href: `/t/${t.id}` }, t.title)),
         h("td", {}, h("span", { class: "mastery-bar", role: "img", "aria-label": `${t.masteryPercent}%` },
           h("span", { style: `width:${t.masteryPercent}%` })), ` ${t.masteryPercent}%`))))));
 }

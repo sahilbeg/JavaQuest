@@ -106,6 +106,8 @@ Byte says: names should describe what the box holds.
 
 Callout kinds: `tip`, `warning`, `analogy`, `jargon` (defines a term).
 
+To link to another ticket, use its path: `[equals and hashCode](/t/module-02-oop/topic-10-equals-hashcode-tostring)`. The link opens in the app without a reload.
+
 Style rules: sentences under 25 words, second person, friendly, no unexplained jargon, reading time 5 to 10 minutes.
 
 ### How the page plays a lesson

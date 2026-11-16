@@ -14,9 +14,10 @@ import { mountDailyLimit } from "./daily.js";
 const view = document.getElementById("view");
 let cleanup = () => {};
 
+/** Routes are real paths, such as /t/module-01-basics/topic-01-variables; the server answers each with this page. */
 function parseRoute() {
-  const [path, query = ""] = location.hash.replace(/^#/, "").split("?");
-  const params = new URLSearchParams(query);
+  const path = location.pathname.replace(/\/+$/, "") || "/";
+  const params = new URLSearchParams(location.search);
   const ticket = path.match(/^\/t\/(module-[^/]+\/[^/]+)$/);
   if (ticket) return { name: "ticket", id: ticket[1], params };
   const review = path.match(/^\/review\/(module-[^/]+\/[^/]+)$/);
@@ -32,7 +33,7 @@ let lastRoute = "";
 async function route({ keepFocus = false } = {}) {
   const current = parseRoute();
   // The lesson player updates ?step= itself; that is not a new page.
-  const key = current.name === "ticket" ? `ticket:${current.id}` : location.hash;
+  const key = current.name === "ticket" ? `ticket:${current.id}` : location.pathname + location.search;
   if (key === lastRoute && current.name === "ticket") return;
   lastRoute = key;
   cleanup();
@@ -110,5 +111,27 @@ bus.addEventListener("settings", (e) => {
 setupTheme();
 setupEvents();
 refreshRewards();
-addEventListener("hashchange", route);
+
+/** Opens a page of the app without reloading it. */
+function navigate(url) {
+  history.pushState(null, "", url);
+  route();
+  scrollTo({ top: 0 });
+}
+
+// Links to app pages ("/notes", "/t/...") open in place. New tabs, downloads, the API and other sites load normally.
+document.addEventListener("click", (event) => {
+  if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  const link = event.target.closest?.("a[href]");
+  if (!link || link.target || link.hasAttribute("download")) return;
+  const raw = link.getAttribute("href");
+  const url = new URL(raw.startsWith("#/") ? raw.slice(1) : raw, location.href);
+  if (url.origin !== location.origin || url.pathname.startsWith("/api/") || !/^#?\//.test(raw)) return;
+  event.preventDefault();
+  if (url.pathname + url.search !== location.pathname + location.search) navigate(url.pathname + url.search);
+});
+addEventListener("popstate", () => route());
+
+// Links from before the switch to paths, such as /#/t/..., still work: move them to their path.
+if (location.hash.startsWith("#/")) history.replaceState(null, "", location.hash.slice(1));
 route();

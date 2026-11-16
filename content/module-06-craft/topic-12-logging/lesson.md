@@ -91,7 +91,7 @@ Why not join strings with `+`? Two reasons.
 log.error("payment failed for {}", riderId, exception);
 ```
 
-Put the exception **last**, after the values for the placeholders. SLF4J sees that the last value is an exception. It prints the message, then the full stack trace under it. The stack trace is the map you learned to read in [Debugging](#/t/module-06-craft/topic-11-debugging).
+Put the exception **last**, after the values for the placeholders. SLF4J sees that the last value is an exception. It prints the message, then the full stack trace under it. The stack trace is the map you learned to read in [Debugging](/t/module-06-craft/topic-11-debugging).
 
 ### Never log secrets
 

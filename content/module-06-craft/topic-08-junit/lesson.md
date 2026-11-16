@@ -77,7 +77,7 @@ assertAll(
 ```
 
 - `assertTrue` and `assertFalse` check a yes or no fact.
-- `assertThrows` runs the lambda and passes only if it throws that exception type. You met lambdas in [functional interfaces](#/t/module-03-core-java/topic-13-functional-interfaces).
+- `assertThrows` runs the lambda and passes only if it throws that exception type. You met lambdas in [functional interfaces](/t/module-03-core-java/topic-13-functional-interfaces).
 - `assertAll` runs every check inside it, even after one fails. Then it reports all the failures together.
 
 ```java run

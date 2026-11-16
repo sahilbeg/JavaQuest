@@ -43,7 +43,7 @@ function topicRow(topic, index, frontierId) {
   ];
   return h("li", {}, state === "locked" || state === "resting"
     ? h("span", { class: "topic-row", "data-state": state, "aria-disabled": "true" }, inner)
-    : h("a", { class: "topic-row", "data-state": state, href: `#/t/${topic.id}` }, inner));
+    : h("a", { class: "topic-row", "data-state": state, href: `/t/${topic.id}` }, inner));
 }
 
 function moduleItem(module, own, catalog, index, previousProject) {
@@ -122,7 +122,7 @@ export async function renderJourney(view, catalog) {
             state.key === "progress" && h("span", { class: "tag" }, state.label)),
           h("p", { class: "up-next-body" }, current.ticket.body)),
         h("div", { class: "up-next-side" },
-          h("a", { class: "button button-primary button-big", href: `#/t/${current.id}` },
+          h("a", { class: "button button-primary button-big", href: `/t/${current.id}` },
             state.key === "progress" ? "Continue" : "Start ticket", icon("arrow-right")),
           h("div", { class: "module-progress" },
             h("span", { class: "meter", role: "img", "aria-label": `${doneHere} of ${own.length} tickets done in ${currentModule.title}` },
@@ -135,7 +135,7 @@ export async function renderJourney(view, catalog) {
     icon("rotate-ccw"),
     h("div", {}, h("h2", { id: "due-title" }, `${due.length} ${due.length === 1 ? "review" : "reviews"} due`),
       h("p", {}, "Three quick questions from tickets you closed, so they stay fresh.")),
-    h("a", { class: "button", href: `#/review/${due[0].id}` }, "Start review", icon("arrow-right")));
+    h("a", { class: "button", href: `/review/${due[0].id}` }, "Start review", icon("arrow-right")));
 
   const outline = h("ol", { class: "outline", id: "journey-path" }, modules.map((module, i) =>
     moduleItem(module, topics.filter((t) => t.moduleId === module.id), catalog, i, modules[i - 1]?.title)));

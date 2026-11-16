@@ -39,7 +39,7 @@ export async function renderReview(view, catalog, id) {
     const [text, mood] = VERDICTS[grade];
     form.prepend(h("div", { class: `quiz-result ${grade === "AGAIN" ? "quiz-result-fail" : "quiz-result-pass"}`, role: "status" },
       byte(mood, ""), h("span", {}, text),
-      h("a", { class: "button", href: "#/career" }, "Back to your career page")));
+      h("a", { class: "button", href: "/career" }, "Back to your career page")));
     form.scrollIntoView({ behavior: "smooth", block: "start" });
     refreshRewards();
   }

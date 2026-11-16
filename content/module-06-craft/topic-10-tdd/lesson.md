@@ -75,7 +75,7 @@ Byte says: if a step takes more than five minutes to get green, undo it and take
 You must call your code from a test before it exists. So you design it from the caller's side first. Code that is hard to call in a test is usually hard to use anywhere. TDD pushes you toward:
 
 - small methods that take inputs and return a value;
-- interfaces, such as `GroupDiscount`, that a test can swap for a fake (you did this with Mockito in [Mockito](#/t/module-06-craft/topic-09-mockito));
+- interfaces, such as `GroupDiscount`, that a test can swap for a fake (you did this with Mockito in [Mockito](/t/module-06-craft/topic-09-mockito));
 - no hidden reads from the clock, the screen or a database inside the rule itself.
 
 ### When TDD is awkward
@@ -87,7 +87,7 @@ TDD fits rules with clear right answers, like fares and discounts. It fits badly
 
 ## Worked example
 
-Here is a full TDD session for Priya's ticket. Each cycle shows the new test, the red message, the code and the green result. The tests live in a class `GroupsTest`, with JUnit imported as in [JUnit](#/t/module-06-craft/topic-08-junit).
+Here is a full TDD session for Priya's ticket. Each cycle shows the new test, the red message, the code and the green result. The tests live in a class `GroupsTest`, with JUnit imported as in [JUnit](/t/module-06-craft/topic-08-junit).
 
 ### Cycle 1: a solo rider
 

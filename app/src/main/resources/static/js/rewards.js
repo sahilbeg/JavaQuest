@@ -27,7 +27,7 @@ function renderTopbar(summary) {
   const into = level.xp - level.levelStartXp;
   const slot = document.getElementById("career-chip");
   slot.replaceChildren(
-    h("a", { class: "career-chip", href: "#/career", "aria-label": `${level.title}, level ${level.level}, ${level.xp} XP, ${streak.current} day streak. Open your career page.` },
+    h("a", { class: "career-chip", href: "/career", "aria-label": `${level.title}, level ${level.level}, ${level.xp} XP, ${streak.current} day streak. Open your career page.` },
       h("span", { class: "stat stat-level", "aria-hidden": "true" }, icon("star"), `Lv ${level.level}`,
         h("span", { class: "stat-title" }, level.title),
         h("span", { class: "xp-bar" }, h("span", { class: "xp-bar-fill", style: `width:${Math.round((into / span) * 100)}%` }))),

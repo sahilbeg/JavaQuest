@@ -135,7 +135,7 @@ When the bucket count changes, every key's index changes too. Harbor sits in buc
 
 ### Step 5: equals and hashCode must agree
 
-You met this rule in [equals, hashCode and toString](#/t/module-02-oop/topic-10-equals-hashcode-tostring). Now you can see why it matters.
+You met this rule in [equals, hashCode and toString](/t/module-02-oop/topic-10-equals-hashcode-tostring). Now you can see why it matters.
 
 - `hashCode` picks the bucket.
 - `equals` finds the key inside that bucket.

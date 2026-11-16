@@ -163,7 +163,7 @@ stop.run();   // no more emails
 ```
 
 ```callout warning
-A subject keeps a reference to every subscriber in its list. The [garbage collector](#/t/module-05-advanced-java/topic-08-garbage-collection) can only free objects that nothing points to. So a screen that subscribes and never unsubscribes stays in memory as long as the subject lives. This is called a **listener leak**. Always unsubscribe when the subscriber is done.
+A subject keeps a reference to every subscriber in its list. The [garbage collector](/t/module-05-advanced-java/topic-08-garbage-collection) can only free objects that nothing points to. So a screen that subscribes and never unsubscribes stays in memory as long as the subject lives. This is called a **listener leak**. Always unsubscribe when the subscriber is done.
 ```
 
 ```java run

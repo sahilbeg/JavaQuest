@@ -17,7 +17,7 @@ function moduleLabel(catalog, moduleId) {
   return `Module ${pad(Math.max(0, index))} · ${catalog.modules[index]?.title ?? ""}`;
 }
 
-/** #/notes: every finished ticket, grouped by module, with a filter. */
+/** /notes: every finished ticket, grouped by module, with a filter. */
 export async function renderNotesIndex(view, catalog) {
   const topics = available(catalog);
   const head = h("header", { class: "page-head" },
@@ -32,7 +32,7 @@ export async function renderNotesIndex(view, catalog) {
         icon("book-open"),
         h("h2", {}, "No notes yet"),
         h("p", {}, "Finish your first ticket and its quick reference appears here."),
-        next && h("a", { class: "button button-primary", href: `#/t/${next.id}` }, "Go to my ticket", icon("arrow-right")))));
+        next && h("a", { class: "button button-primary", href: `/t/${next.id}` }, "Go to my ticket", icon("arrow-right")))));
     return () => {};
   }
 
@@ -45,7 +45,7 @@ export async function renderNotesIndex(view, catalog) {
     const rows = own.map((t) => {
       const kind = topicKind(t);
       const row = h("li", {},
-        h("a", { class: "notes-row", href: `#/notes/${t.id}` },
+        h("a", { class: "notes-row", href: `/notes/${t.id}` },
           h("span", { class: "notes-key" }, t.ticket.key),
           h("span", { class: "notes-title" }, t.title, h("span", { class: "notes-ticket" }, t.ticket.title)),
           kind !== "ticket" ? h("span", { class: `tag tag-${kind}` }, KIND_LABEL[kind]) : h("span"),
@@ -83,7 +83,7 @@ export async function renderNotesIndex(view, catalog) {
   return () => {};
 }
 
-/** #/notes/<id>: one ticket's quick reference. */
+/** /notes/<id>: one ticket's quick reference. */
 export async function renderNotes(view, catalog, id) {
   const summary = catalog.topics.find((t) => t.id === id);
   if (!summary) throw new Error(`There is no ticket called ${id}.`);
@@ -95,8 +95,8 @@ export async function renderNotes(view, catalog, id) {
       h("h1", {}, "Notes open when you finish"),
       h("p", {}, `${summary.ticket.key} "${summary.ticket.title}" gets its quick reference once you finish the ticket.`),
       h("div", { class: "button-row", style: "justify-content:center" },
-        h("a", { class: "button", href: "#/notes" }, icon("book-open"), "All notes"),
-        !summary.locked && h("a", { class: "button button-primary", href: `#/t/${id}` }, "Open the ticket", icon("arrow-right")))));
+        h("a", { class: "button", href: "/notes" }, icon("book-open"), "All notes"),
+        !summary.locked && h("a", { class: "button button-primary", href: `/t/${id}` }, "Open the ticket", icon("arrow-right")))));
     return () => {};
   }
 
@@ -118,18 +118,18 @@ export async function renderNotes(view, catalog, id) {
       m.fixHtml && h("div", { class: "notes-note", html: m.fixHtml })))));
 
   const page = h("article", { class: "notes notes-page", "aria-labelledby": "notes-title" },
-    h("a", { class: "back-link", href: "#/notes" }, icon("arrow-left"), "All notes"),
+    h("a", { class: "back-link", href: "/notes" }, icon("arrow-left"), "All notes"),
     h("header", { class: "page-head" },
       h("p", { class: "eyebrow" }, `${summary.ticket.key} · ${moduleLabel(catalog, summary.moduleId)}`),
       h("h1", { id: "notes-title" }, summary.title),
       h("p", { class: "muted" }, `Quick reference for "${summary.ticket.title}".`),
       h("div", { class: "button-row notes-actions" },
-        h("a", { class: "button", href: `#/t/${id}` }, icon("book-open"), "Open the full lesson"),
+        h("a", { class: "button", href: `/t/${id}` }, icon("book-open"), "Open the full lesson"),
         h("button", { type: "button", class: "button button-quiet", onclick: () => print() }, icon("save"), "Print or save as PDF"))),
     body,
     h("nav", { class: "notes-pager", "aria-label": "More notes" },
-      previous ? h("a", { class: "button", href: `#/notes/${previous.id}` }, icon("arrow-left"), previous.title) : h("span"),
-      next && h("a", { class: "button", href: `#/notes/${next.id}` }, next.title, icon("arrow-right"))));
+      previous ? h("a", { class: "button", href: `/notes/${previous.id}` }, icon("arrow-left"), previous.title) : h("span"),
+      next && h("a", { class: "button", href: `/notes/${next.id}` }, next.title, icon("arrow-right"))));
 
   view.replaceChildren(page);
   document.title = `${summary.title} · Notes · JavaQuest`;

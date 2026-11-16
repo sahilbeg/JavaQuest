@@ -167,7 +167,7 @@ export async function renderLesson(view, catalog, id, params) {
 
   const player = h("div", { class: "player" },
     h("div", { class: "player-bar" },
-      h("a", { class: "icon-button", href: "#/", "aria-label": "Back to your journey" }, icon("x")),
+      h("a", { class: "icon-button", href: "/", "aria-label": "Back to your journey" }, icon("x")),
       h("div", { class: "player-title" },
         h("span", { class: "key" }, `${summary.ticket.key} · ${module?.project ?? ""}`),
         h("p", {}, summary.ticket.title)),
@@ -283,7 +283,7 @@ export async function renderLesson(view, catalog, id, params) {
     const nextId = catalog.topics[catalog.topics.findIndex((t) => t.id === id) + 1]?.id;
     const thanks = `${person.name.split(" ")[0]} says thanks. ${summary.ticket.key} is done`;
     const message = h("p", {}, `${thanks}, and the next ticket is open.`);
-    const next = nextId && h("a", { class: "button button-primary button-big", href: `#/t/${nextId}` }, "Next ticket", icon("arrow-right"));
+    const next = nextId && h("a", { class: "button button-primary button-big", href: `/t/${nextId}` }, "Next ticket", icon("arrow-right"));
     // The catalog was read before this ticket was finished: ask again whether the daily limit now holds the next one.
     if (nextId) {
       api.catalog().then((fresh) => {
@@ -299,8 +299,8 @@ export async function renderLesson(view, catalog, id, params) {
       h("h1", {}, kind === "incident" ? "Incident resolved" : kind === "feature" ? "Feature shipped" : "Ticket closed"),
       message,
       h("div", { class: "button-row" },
-        h("a", { class: "button", href: "#/" }, icon("map"), "Back to your journey"),
-        h("a", { class: "button", href: `#/notes/${id}` }, icon("book-open"), "Quick reference"),
+        h("a", { class: "button", href: "/" }, icon("map"), "Back to your journey"),
+        h("a", { class: "button", href: `/notes/${id}` }, icon("book-open"), "Quick reference"),
         next));
   }
 
@@ -330,7 +330,7 @@ export async function renderLesson(view, catalog, id, params) {
     index = next;
     maxSeen = Math.max(maxSeen, index);
     store.set(index);
-    history.replaceState(null, "", `#/t/${id}${index ? `?step=${index}` : ""}`);
+    history.replaceState(null, "", `/t/${id}${index ? `?step=${index}` : ""}`);
     const step = steps[index];
     const content = card(step);
     const wide = step.key === "code";
@@ -389,7 +389,7 @@ function renderResting(view, catalog, summary) {
       `Come back tomorrow to start ${summary.ticket.key} "${summary.ticket.title}".`),
     h("p", {}, "Until then, revisit any ticket you've finished, or do your reviews."),
     h("div", { class: "button-row", style: "justify-content:center" },
-      h("a", { class: "button button-primary", href: "#/" }, icon("map"), "Your journey"),
+      h("a", { class: "button button-primary", href: "/" }, icon("map"), "Your journey"),
       h("button", { type: "button", class: "button", onclick: () => focusDailyLimit() }, icon("settings"), "Change daily limit"))));
   document.title = "Opens tomorrow · JavaQuest";
   return () => {};
@@ -404,8 +404,8 @@ function renderLocked(view, catalog, summary) {
     h("p", {}, `${summary.ticket.key} "${summary.ticket.title}" opens once the tickets before it are done. Tickets open one at a time, so each one builds on the last.`),
     frontier && h("p", {}, "Your current ticket is ", h("strong", {}, `${frontier.ticket.key} "${frontier.ticket.title}"`), "."),
     h("div", { class: "button-row", style: "justify-content:center" },
-      h("a", { class: "button", href: "#/" }, icon("map"), "Your journey"),
-      frontier && h("a", { class: "button button-primary", href: `#/t/${frontier.id}` }, "Go to my ticket", icon("arrow-right")))));
+      h("a", { class: "button", href: "/" }, icon("map"), "Your journey"),
+      frontier && h("a", { class: "button button-primary", href: `/t/${frontier.id}` }, "Go to my ticket", icon("arrow-right")))));
   document.title = "Locked ticket · JavaQuest";
   return () => {};
 }
