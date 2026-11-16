@@ -93,6 +93,35 @@ String station = "Harbor";
 station = "Uptown";       // the box now holds Uptown
 ```
 
+Watch the boxes change as Java runs a ride, one line at a time:
+
+```animate
+title: The kiosk remembers a ride
+kind: code
+code: |
+  String bikeId = "B-1042";
+  int minutes = 20;
+  System.out.println(bikeId + " rode " + minutes + " min");
+  minutes = 35;
+  System.out.println(bikeId + " rode " + minutes + " min");
+steps:
+  - line: 1
+    vars: { bikeId: '"B-1042"' }
+    say: Java makes a String box called bikeId and puts the text "B-1042" inside.
+  - line: 2
+    vars: { minutes: 20 }
+    say: Next, an int box called minutes, holding the whole number 20.
+  - line: 3
+    out: B-1042 rode 20 min
+    say: println reads both boxes and prints what is inside them. The boxes don't change.
+  - line: 4
+    vars: { minutes: 35 }
+    say: The rider kept going. minutes gets 35, and the old 20 is thrown away. No int this time, because the box already exists.
+  - line: 5
+    out: B-1042 rode 35 min
+    say: The same println line now prints 35, because it reads the box as it is right now.
+```
+
 ### Syntax: returning a variable
 
 ```java

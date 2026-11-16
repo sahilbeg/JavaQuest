@@ -69,4 +69,32 @@ class LessonRendererTest {
     void crashSnippetIsStillRunnable() {
         assertTrue(renderer.render("```java run crash\nint x;\n```\n").contains("data-runnable"));
     }
+
+    @Test
+    void animateBlockCarriesItsSpecAndATextFallback() {
+        String html = renderer.render("""
+                ```animate
+                title: A box that changes
+                kind: code
+                code: |
+                  int x = 3;
+                  System.out.println(x);
+                steps:
+                  - { line: 1, vars: { x: 3 }, say: "x holds <3>." }
+                  - { line: 2, out: "3", say: It prints 3. }
+                ```
+                """);
+
+        assertTrue(html.contains("<figure class=\"animation\" data-spec=\"{"), html);
+        assertTrue(html.contains("<li>x holds &lt;3&gt;.</li>"), "captions are escaped text: " + html);
+        assertFalse(html.contains("<3>"), html);
+    }
+
+    @Test
+    void brokenAnimateBlockShowsTheProblem() {
+        String html = renderer.render("```animate\ntitle: x\nkind: code\ncode: int a;\nsteps: []\n```\n");
+
+        assertTrue(html.contains("class=\"animation-error\""), html);
+        assertTrue(html.contains("steps needs 2 to"), html);
+    }
 }

@@ -108,13 +108,84 @@ Callout kinds: `tip`, `warning`, `analogy`, `jargon` (defines a term).
 
 Style rules: sentences under 25 words, second person, friendly, no unexplained jargon, reading time 5 to 10 minutes.
 
-Page style follows a textbook chapter crossed with a W3Schools page:
+### How the page plays a lesson
 
-- Topics read in order like textbook sections, with Previous and Next buttons at the top and bottom of every page.
-- A left sidebar lists every topic in the module, so any page is one click away, like a reference site.
-- Each new piece of syntax gets a "Syntax" box first, then a small example, then a "Try it Yourself" button that opens the snippet in the editor.
-- Examples are short. One idea per example, with many examples per page rather than one large one.
-- Every page ends with a short exercise box ("Fill in the missing part") before the full quiz.
+The app shows a lesson as short cards in a lesson player, not as one long page (`app/.../static/js/lesson.js`):
+
+1. **Your ticket**: the teammate's ticket, plus "In this ticket you'll learn", taken from the `## Recap` bullets. Write the Recap so it reads well as this overview.
+2. **One card per `###` subsection** (or per `##` section that has none). Keep each subsection to one idea: a few short paragraphs, a code block, maybe a callout. Long subsections make long cards.
+3. **Common mistakes** become collapsed accordions. Start each mistake with a bold title paragraph, such as `**1. Forgetting the semicolon.**`, so the title shows and the detail opens on a tap.
+4. **Recap**, then the onboarding check (one question at a time), then the code, then a celebration when the ticket is done.
+
+Tickets open one at a time: a ticket opens when every ticket before it is mastered.
+
+### Animations (```animate)
+
+An animation shows an idea happening step by step, with one short caption per step from Byte. Learners press Watch, or step through with the buttons. **Every topic should have at least one animation**, placed in the Concept or Worked example where the idea is hardest to picture: variables changing, a loop running, objects and references, a request travelling to a server. Animations replace reading, so a long paragraph that only describes steps can shrink to one sentence plus the animation.
+
+The block holds YAML. The content checker parses every animation, and for a `code` animation it also runs the program and checks that the `out` lines match what it really prints.
+
+**`code`**: a program, stepped line by line.
+
+````markdown
+```animate
+title: The kiosk remembers a ride           # required: a short name, shown above the animation
+kind: code
+code: |                                     # Java, like a ```java block: statements, or whole classes
+  String bikeId = "B-1042";
+  int minutes = 20;
+  minutes = 35;
+  System.out.println(minutes);
+steps:                                      # 2 to 24 steps
+  - line: 1                                 # the line highlighted in this step (1-based; 0 or none = no line)
+    vars: { bikeId: '"B-1042"' }            # variables CHANGED in this step; show text with its quotes
+    say: Java makes a String box called bikeId.   # required: one or two short sentences, at most 240 characters
+  - line: 2
+    vars: { minutes: 20 }
+    say: Then an int box called minutes, holding 20.
+  - line: 3
+    vars: { minutes: 35 }
+    say: minutes gets 35. The old 20 is thrown away.
+  - line: 4
+    out: "35"                               # what the program prints in this step (one or more lines)
+    say: println shows what is in the box right now.
+```
+````
+
+- `vars` and `objects` are changes: a variable keeps its value until a later step changes it. Give `~` to remove one (it went out of scope).
+- Objects: `objects: { b1: { type: Bike, fields: { id: '"B-1042"', minutes: 12 } } }`. A variable or field whose value is `"@b1"` draws an arrow to that object. Use objects for anything made with `new`: objects, arrays (`type: "int[]"`, fields `0`, `1`, ...), lists.
+- All `out` lines together must equal the program's real output, in order. If the program prints nothing, use no `out`.
+
+**`scene`**: boxes and messages, for ideas that are not one program: hardware, the JVM, git, HTTP, a database.
+
+````markdown
+```animate
+title: A rider taps Unlock
+kind: scene
+nodes:                                      # 1 to 8 boxes
+  - { id: app, label: Rider app, emoji: "📱" }             # id: lowercase letters, digits, dashes
+  - { id: api, label: Spoke API, emoji: "🖥️", value: idle }  # value: a small changing label (optional)
+  - { id: db, label: Database, emoji: "🗄️", row: 1, col: 1 } # row 0-3, col 0-5 place it on a grid (default: one row)
+steps:
+  - say: The rider taps Unlock.
+    focus: [app]                            # highlight boxes in this step
+  - say: The app sends a request to the API.
+    send: { from: app, to: api, label: "POST /rentals" }
+    set: { api: busy }                      # change box values (they stay until changed again)
+  - say: The API answers.
+    send: { from: api, to: app, label: "201 Created", back: true }   # back: drawn as a reply
+    show: [db]                              # boxes listed in any show start hidden until shown; hide: removes
+```
+````
+
+- `send` takes one message or a list; several messages in one step travel one after another.
+- Keep scenes small: three to five boxes read best.
+
+Writing good animations:
+
+- 4 to 8 steps is the sweet spot. Each caption says what happens and why, in plain words, under 25 words a sentence.
+- Use the Spoke story: bikes, stations, fares, riders.
+- Do not duplicate a `java run` snippet: an animation shows how the code runs, and a snippet lets the learner change it.
 
 ## quiz.yaml
 

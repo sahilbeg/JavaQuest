@@ -48,12 +48,33 @@ Saving a file means copying it from RAM to storage. If the power cuts out before
 
 Here is what happens when a rider taps "Unlock bike" on a kiosk:
 
-```mermaid
-flowchart LR
-  A["Rider taps the screen (input)"] --> B["CPU reads the tap"]
-  B --> C["CPU uses the kiosk app in RAM"]
-  C --> D["RAM loaded the app from storage at startup"]
-  C --> E["Screen shows 'Bike 12 unlocked' (output)"]
+```animate
+title: A rider taps "Unlock bike"
+kind: scene
+nodes:
+  - { id: screen, label: Touchscreen, emoji: "👆", col: 0 }
+  - { id: cpu, label: CPU, emoji: "🧠", value: "waiting", col: 1 }
+  - { id: ram, label: Memory (RAM), emoji: "🧰", col: 2 }
+  - { id: disk, label: Storage, emoji: "🗄️", value: "kiosk app", col: 3 }
+steps:
+  - say: Before any rider arrives, the kiosk starts up. The app is saved in storage, like a tool kept in the shed.
+    focus: [disk]
+  - say: The app is copied from storage into memory, so it is on the workbench and ready to use.
+    send: { from: disk, to: ram, label: kiosk app }
+    set: { ram: "kiosk app" }
+  - say: A rider taps Unlock bike. The touchscreen is an input, so the tap travels to the CPU.
+    focus: [screen]
+    send: { from: screen, to: cpu, label: "tap: unlock" }
+    set: { cpu: "got a tap" }
+  - say: The CPU asks memory what the app says to do with an Unlock tap.
+    focus: [cpu]
+    send: { from: cpu, to: ram, label: "what next?" }
+  - say: Memory answers with the app's instructions. The CPU follows them, very fast.
+    send: { from: ram, to: cpu, label: "unlock bike 12", back: true }
+    set: { cpu: "unlocking 12" }
+  - say: The CPU sends the result to the screen, an output. The rider sees it and rides away.
+    send: { from: cpu, to: screen, label: "Bike 12 unlocked", back: true }
+    set: { screen: "Bike 12 unlocked", cpu: "done" }
 ```
 
 ```callout analogy

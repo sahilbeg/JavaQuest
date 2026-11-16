@@ -1,11 +1,13 @@
 import { api } from "./api.js";
-import { renderBoard } from "./board.js";
-import { renderTicket } from "./ticket.js";
+import { renderJourney } from "./journey.js";
+import { renderLesson } from "./lesson.js";
 import { renderCareer } from "./career.js";
 import { renderReview } from "./review.js";
 import { refreshRewards } from "./rewards.js";
 import { h } from "./dom.js";
+import { byte } from "./byte.js";
 import { bus } from "./events.js";
+import { replayPageTour, setPageTour } from "./tour.js";
 
 const view = document.getElementById("view");
 let cleanup = () => {};
@@ -14,17 +16,22 @@ function parseRoute() {
   const [path, query = ""] = location.hash.replace(/^#/, "").split("?");
   const params = new URLSearchParams(query);
   const ticket = path.match(/^\/t\/(module-[^/]+\/[^/]+)$/);
-  if (ticket) return { name: "ticket", id: ticket[1], tab: params.get("tab") ?? "kb" };
+  if (ticket) return { name: "ticket", id: ticket[1], params };
   const review = path.match(/^\/review\/(module-[^/]+\/[^/]+)$/);
   if (review) return { name: "review", id: review[1] };
   if (path === "/career") return { name: "career" };
-  return { name: "board" };
+  return { name: "journey" };
 }
 
+let lastRoute = "";
 async function route() {
+  const current = parseRoute();
+  // The lesson player updates ?step= itself; that is not a new page.
+  const key = current.name === "ticket" ? `ticket:${current.id}` : location.hash;
+  if (key === lastRoute && current.name === "ticket") return;
+  lastRoute = key;
   cleanup();
   cleanup = () => {};
-  const current = parseRoute();
   for (const link of document.querySelectorAll("[data-nav]")) {
     if (link.dataset.nav === current.name) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
@@ -32,14 +39,19 @@ async function route() {
   view.replaceChildren(h("p", { class: "loading" }, "Loading…"));
   try {
     const catalog = await api.catalog();
-    document.title = { board: "Board · Spoke", career: "Career · Spoke", review: "Review · Spoke" }[current.name] ?? "Spoke · JavaQuest";
-    cleanup = current.name === "ticket" ? await renderTicket(view, catalog, current.id, current.tab)
+    document.getElementById("author-banner").hidden = !catalog.authorMode;
+    document.title = { journey: "Your journey · JavaQuest", career: "Career · JavaQuest", review: "Review · JavaQuest" }[current.name] ?? "JavaQuest";
+    setPageTour(current.name === "ticket" ? "lesson" : current.name);
+    cleanup = current.name === "ticket" ? await renderLesson(view, catalog, current.id, current.params)
       : current.name === "review" ? await renderReview(view, catalog, current.id)
       : current.name === "career" ? await renderCareer(view)
-      : await renderBoard(view, catalog);
-    if (document.activeElement === document.body || !view.contains(document.activeElement)) view.focus({ preventScroll: true });
+      : await renderJourney(view, catalog);
+    if (current.name !== "ticket" && (document.activeElement === document.body || !view.contains(document.activeElement))) {
+      view.focus({ preventScroll: true });
+    }
   } catch (error) {
     view.replaceChildren(h("div", { class: "error-panel", role: "alert" },
+      byte("encouraging", "", { size: "md" }),
       h("h1", {}, "Something went wrong"),
       h("p", {}, error.message),
       h("p", {}, "Check that JavaQuest is still running in your terminal, then reload the page.")));
@@ -55,7 +67,7 @@ function setupTheme() {
   const label = () => button.setAttribute("aria-label", `Switch to ${effective() === "dark" ? "light" : "dark"} theme`);
   button.addEventListener("click", () => {
     root.dataset.theme = effective() === "dark" ? "light" : "dark";
-    localStorage.setItem("jq-theme", root.dataset.theme);
+    try { localStorage.setItem("jq-theme", root.dataset.theme); } catch { /* not remembered: fine */ }
     label();
     bus.dispatchEvent(new Event("theme"));
   });
@@ -79,6 +91,8 @@ function setupEvents() {
   bus.addEventListener("run-finished", () => refreshRewards());
 }
 
+document.getElementById("wordmark-byte").replaceWith(byte("idle", "", { size: "sm" }));
+document.getElementById("tour-button").addEventListener("click", () => replayPageTour());
 setupTheme();
 setupEvents();
 refreshRewards();

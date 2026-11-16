@@ -10,6 +10,7 @@ import com.vladsch.flexmark.html.renderer.NodeRenderingHandler;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.data.MutableDataHolder;
 import com.vladsch.flexmark.util.data.MutableDataSet;
+import dev.javaquest.content.Animation;
 import java.util.List;
 import java.util.Set;
 import org.springframework.stereotype.Component;
@@ -56,6 +57,29 @@ public class LessonRenderer {
         public void extend(Parser.Builder builder) {}
     }
 
+    /**
+     * An animated explanation: the page plays the JSON spec. The step captions also go in as a plain list, so a
+     * screen reader, or a page without JavaScript, still gets every step.
+     */
+    private static void renderAnimation(String yaml, HtmlWriter html) {
+        Animation animation;
+        try {
+            animation = Animation.parse(yaml);
+        } catch (IllegalArgumentException e) {
+            html.attr("class", "animation-error").attr("role", "note").withAttr().tag("p");
+            html.text(e.getMessage()).closeTag("p");
+            return;
+        }
+        html.attr("class", "animation").attr("data-spec", animation.toJson()).withAttr().tag("figure");
+        html.attr("class", "animation-title").withAttr().tag("figcaption").text(animation.title()).closeTag("figcaption");
+        html.attr("class", "animation-fallback").withAttr().tag("ol");
+        for (Animation.Step step : animation.steps()) {
+            html.tag("li").text(step.say()).closeTag("li");
+        }
+        html.closeTag("ol");
+        html.closeTag("figure");
+    }
+
     private final class FencedBlockRenderer implements NodeRenderer {
         @Override
         public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
@@ -73,6 +97,7 @@ public class LessonRenderer {
                     html.attr("class", "mermaid").withAttr().tag("pre").openPre();
                     html.text(code).closePre().closeTag("pre");
                 }
+                case "animate" -> renderAnimation(code, html);
                 case "callout" -> {
                     String kind = CALLOUT_KINDS.contains(modifier) ? modifier : "tip";
                     html.attr("class", "callout callout-" + kind).attr("data-kind", kind).withAttr().tag("aside");

@@ -2,31 +2,25 @@ import { h, icon } from "./dom.js";
 import { api } from "./api.js";
 import { loadMonaco, editorTheme, isDark, colorizeJava, EDITOR_OPTIONS } from "./monaco.js";
 import { bus } from "./events.js";
-import { refreshRewards } from "./rewards.js";
+import { enhanceAnimations } from "./animate.js";
 
 const CALLOUT_LABELS = { tip: "Tip", warning: "Careful", analogy: "Think of it like", jargon: "New word" };
 
-export function renderKb(container, lessonHtml, chat, topicId) {
-  container.innerHTML = lessonHtml;
+/**
+ * Turns rendered lesson HTML inside a container into the interactive version: callout labels, runnable
+ * snippets, coloured Java, Mermaid diagrams and animations. Returns a function that cleans up.
+ */
+export function enhanceContent(container, chat) {
   container.classList.add("kb");
-
   container.querySelectorAll("aside.callout").forEach((aside) => {
-    aside.prepend(h("span", { class: "callout-label" }, CALLOUT_LABELS[aside.dataset.kind] ?? "Note"));
+    if (!aside.querySelector(".callout-label")) {
+      aside.prepend(h("span", { class: "callout-label" }, CALLOUT_LABELS[aside.dataset.kind] ?? "Note"));
+    }
   });
-  container.querySelectorAll(".snippet").forEach((snippet) => enhanceSnippet(snippet, chat));
-
-  const disposers = [];
-  const recap = container.querySelector("#recap");
-  if (recap) {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        observer.disconnect();
-        api.read(topicId).then(refreshRewards).catch(() => {});
-      }
-    });
-    observer.observe(recap);
-    disposers.push(() => observer.disconnect());
-  }
+  container.querySelectorAll(".snippet").forEach((snippet) => {
+    if (!snippet.querySelector(".snippet-bar")) enhanceSnippet(snippet, chat);
+  });
+  const disposers = [enhanceAnimations(container)];
   loadMonaco().then(async (monaco) => {
     for (const code of container.querySelectorAll("pre > code.language-java")) {
       code.dataset.source ??= code.textContent;

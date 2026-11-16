@@ -18,7 +18,7 @@ export async function renderFix(container, topic, chat, onResult) {
   const checks = h("section", { class: "checks", "aria-labelledby": "checks-title" });
   const saveButton = h("button", { type: "button", class: "button button-quiet", onclick: () => save() }, icon("save"), "Save");
   const runButton = topic.mainClass && h("button", { type: "button", class: "button", onclick: run }, icon("play"), "Run");
-  const submitButton = h("button", { type: "button", class: "button button-primary", onclick: submit }, icon("send"), "Run checks");
+  const submitButton = h("button", { type: "button", class: "button button-primary", id: "run-checks", onclick: submit }, icon("send"), "Run checks");
   const solutionButton = h("button", { type: "button", class: "button button-quiet", onclick: showSolution }, icon("lightbulb"), "Show solution");
   const resetButton = h("button", { type: "button", class: "button button-quiet", onclick: confirmReset }, icon("rotate-ccw"), "Reset");
   const solutionPanel = h("section", { class: "solution", hidden: true, "aria-labelledby": "solution-title" });

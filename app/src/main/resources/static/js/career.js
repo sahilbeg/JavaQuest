@@ -101,6 +101,7 @@ function backupBlock() {
 }
 
 export async function renderCareer(view) {
+  const { startTourOnce } = await import("./tour.js");
   const summary = await refreshRewards() ?? await api.career();
   view.replaceChildren(h("div", { class: "career" },
     levelBlock(summary),
@@ -108,5 +109,6 @@ export async function renderCareer(view) {
     kudosBlock(summary.kudos),
     ticketsBlock(summary.topics),
     backupBlock()));
+  startTourOnce("career");
   return () => {};
 }

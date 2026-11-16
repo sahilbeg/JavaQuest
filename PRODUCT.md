@@ -23,14 +23,16 @@ The practice code lives in the learner's own repo and IDE. Saving a file in the 
 - Started with `./run.sh`, served at http://localhost:2026, macOS only for now.
 - The learner switches between the browser and an IDE editing `practice/`.
 - Sessions are short: 5 to 10 minute lessons, one quiz, one exercise.
+- Tickets open one at a time, in order: the next one opens when the current one is mastered.
 
 ## Capabilities and Constraints
 
 - Content is written once and committed. Nothing is generated at runtime.
-- Order follows a textbook. Pages follow a W3Schools pattern: Syntax box, many short examples, "Try it Yourself", Previous and Next, a module sidebar.
+- Order follows a textbook. A lesson plays as short cards, one idea each, after an overview of what the ticket teaches. Animations show code running and data moving, so learners read less.
+- Every page has a first-visit walkthrough with Byte.
 - Story: the learner is an intern at Spoke, a bike-sharing startup. Topics are tickets, bosses are incidents, mini-projects are features, levels are job titles. See `docs/STORY.md`.
 - Game layer: XP, job titles, streaks, kudos, the ticket board, incidents. Rules are in `docs/GAMIFICATION.md`.
-- The interface looks like Spoke's own internal workplace tools: a ticket board, a ticket page, a knowledge base, team chat, and checks on the code.
+- The interface is a playful learning app (see `DESIGN.md`): a journey map of projects, a lesson player, Byte as an illustrated helper, and celebrations for progress. The Spoke story stays in the tickets, teammates and career ladder.
 - Must work offline. All browser libraries are vendored.
 - Spring Boot server with plain ES modules. No Node build step.
 

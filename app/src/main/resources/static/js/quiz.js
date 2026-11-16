@@ -15,17 +15,44 @@ export async function renderQuiz(container, topicId, chat, showSection, onProgre
   const attempt = await api.quiz(topicId);
   const readers = new Map();
 
+  const total = attempt.questions.length;
+  const fieldsets = attempt.questions.map((q, i) => questionFieldset(q, i, readers));
+  const counter = h("span", { class: "quiz-count", "aria-live": "polite" });
+  const dots = h("span", { class: "quiz-dots", "aria-hidden": "true" }, fieldsets.map(() => h("span")));
+  const prev = h("button", { type: "button", class: "button", onclick: () => show(at - 1) }, icon("arrow-left"), "Previous");
+  const next = h("button", { type: "button", class: "button button-primary", onclick: () => show(at + 1) }, "Next question", icon("arrow-right"));
+  const submitButton = h("button", { type: "submit", class: "button button-primary" }, icon("send"), "Check my answers");
+  const pager = h("div", { class: "quiz-pager" }, prev, counter, dots, h("span", { class: "spacer" }), next, submitButton);
   const form = h("form", { class: "quiz", onsubmit: submit },
     h("p", { class: "quiz-intro" },
-      `${attempt.questions.length} questions. You need ${attempt.passPercent}% to pass. Each try shows a fresh mix, so retrying is fine.`),
-    attempt.questions.map((q, i) => questionFieldset(q, i, readers)),
-    h("button", { type: "submit", class: "button button-primary" }, icon("send"), "Check my answers"));
+      `${total} questions, one at a time. You need ${attempt.passPercent}% to pass. Each try shows a fresh mix, so retrying is fine.`),
+    fieldsets, pager);
   container.replaceChildren(form);
+  let at = 0;
+
+  function show(i) {
+    at = Math.max(0, Math.min(total - 1, i));
+    fieldsets.forEach((f, j) => { f.hidden = j !== at; });
+    prev.disabled = at === 0;
+    next.hidden = at === total - 1;
+    submitButton.hidden = at !== total - 1;
+    counter.textContent = `Question ${at + 1} of ${total}`;
+    [...dots.children].forEach((d, j) => { d.className = j === at ? "is-current" : readers.get(attempt.questions[j].id)() !== undefined ? "is-answered" : ""; });
+    fieldsets[at].classList.remove("slide-in");
+    void fieldsets[at].offsetWidth;
+    fieldsets[at].classList.add("slide-in");
+    fieldsets[at].querySelector("input, textarea, button")?.focus({ preventScroll: true });
+  }
+  show(0);
 
   async function submit(event) {
     event.preventDefault();
+    if (at < total - 1) {
+      show(at + 1);
+      return;
+    }
     const answers = readAnswers(readers);
-    const button = form.querySelector("button[type=submit]");
+    const button = submitButton;
     button.disabled = true;
     try {
       const { result, progress } = await api.gradeQuiz(topicId, attempt.seed, answers);
@@ -39,6 +66,8 @@ export async function renderQuiz(container, topicId, chat, showSection, onProgre
   }
 
   function showResult(result, progress) {
+    fieldsets.forEach((f) => { f.hidden = false; });
+    pager.hidden = true;
     form.querySelectorAll("input, textarea, button").forEach((el) => { el.disabled = true; });
     for (const graded of result.questions) {
       const fieldset = form.querySelector(`[data-qid="${CSS.escape(graded.id)}"]`);

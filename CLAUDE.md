@@ -49,6 +49,7 @@ Large modules can be written in parallel by subagents, one or two topics each. G
 - **Tests:** `@DisplayName` on every test, a beginner-readable message on every assertion. No network, no real ports (use MockMvc), files only in `@TempDir`. They pass on any machine, at any time of day.
 - **Quizzes:** `drawCount` 6, `passPercent` 80, 10–12 questions. Exactly one defensible answer per question. A fill-blank prompt allows only one answer. Every meta concept is covered, and every `reteach` names a real heading.
 - **Spring topics** (`runner: spring`): every library is on one shared runner classpath (`practice/target/runner-classpath.txt`). Spring Security is there without Boot's auto-configuration, so nothing is secured until a topic writes `@EnableWebSecurity`. Practice code has no resource files (no `application.properties`, no `schema.sql`), so configure in code or in `@SpringBootTest(properties = ...)`. No `mainClass` for web apps. The runner compiles with `-parameters`. Spring Boot 4 test annotations moved packages, and Jackson is version 3 (`tools.jackson`), so compile against the real jars rather than guessing.
+- **Animations:** every topic has at least one ```` ```animate ```` block (format in `docs/CONTENT_SPEC.md`, model in `content-model/.../Animation.java`). The checker parses each one and runs `code` animations to compare their `out` lines with the real output. Write lessons as short `###` subsections, because each one becomes a card in the lesson player.
 - **An incident must not be given away:** the topic that teaches its ideas uses different examples.
 
 ## Commands
@@ -58,6 +59,7 @@ Large modules can be written in parallel by subagents, one or two topics each. G
 ./run.sh --unlock-all                                                # author mode: every ticket open, for read-throughs
 ./mvnw -q install                                                    # build and run all platform tests
 ./mvnw -q -pl tools dependency:properties exec:java@check-content    # check every lesson and quiz (about 2 min)
+./mvnw -q -pl tools dependency:properties exec:java@check-content -Djq.only=module-01-basics/topic-03   # only topics whose id starts with this
 ./mvnw -q -pl tools dependency:properties exec:java@verify-practice  # solution passes, skeleton fails, for every unit (about 3 min); writes build_state.json
 .claude/scripts/check-topic.sh <practice unit dir> [solution|skeleton|src]   # one unit, fast, same JVM flags as the runner
 ```

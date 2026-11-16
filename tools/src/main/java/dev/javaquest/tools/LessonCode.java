@@ -37,6 +37,20 @@ public final class LessonCode {
         return blocks;
     }
 
+    /** The ```animate blocks of a lesson, with the line each one starts on. */
+    public static List<Block> animationBlocks(String markdown) {
+        var blocks = new ArrayList<Block>();
+        var matcher = FENCE.matcher(markdown);
+        while (matcher.find()) {
+            String info = matcher.group(1).strip();
+            if (info.equals("animate")) {
+                int line = (int) markdown.substring(0, matcher.start()).lines().count() + 1;
+                blocks.add(new Block(line, info, matcher.group(2)));
+            }
+        }
+        return blocks;
+    }
+
     /** The ways a block could be a whole program: as written, as statements in main, or as members of a class. */
     public static List<String> candidatePrograms(String code) {
         if (TOP_LEVEL_TYPE.matcher(code).find()) {

@@ -1,5 +1,6 @@
 package dev.javaquest.tools;
 
+import dev.javaquest.content.Animation;
 import dev.javaquest.content.ContentCatalog;
 import dev.javaquest.content.Quiz;
 import dev.javaquest.content.QuizSession;
@@ -32,8 +33,13 @@ public final class CheckContent {
         var catalog = ContentCatalog.load(root.resolve("content"), root.resolve("practice"));
         Set<String> curriculum = curriculumIds(root.resolve("build_state.json"));
         var problems = new ArrayList<String>();
+        // -Djq.only=module-01-basics/topic-03 checks only the topics whose id starts with that text.
+        String only = System.getProperty("jq.only", "");
 
         for (Topic topic : catalog.topics()) {
+            if (!topic.id().startsWith(only)) {
+                continue;
+            }
             for (String prerequisite : topic.meta().prerequisites()) {
                 if (!curriculum.contains(prerequisite)) {
                     problems.add(topic.id() + ": prerequisite " + prerequisite + " is not in the curriculum");
@@ -42,6 +48,12 @@ public final class CheckContent {
             String lesson = Files.readString(topic.lessonFile());
             for (LessonCode.Block block : LessonCode.compilableBlocks(lesson)) {
                 String problem = checkBlock(runner, block);
+                if (problem != null) {
+                    problems.add(topic.id() + " lesson.md line " + block.line() + ": " + problem);
+                }
+            }
+            for (LessonCode.Block block : LessonCode.animationBlocks(lesson)) {
+                String problem = checkAnimation(runner, block);
                 if (problem != null) {
                     problems.add(topic.id() + " lesson.md line " + block.line() + ": " + problem);
                 }
@@ -82,6 +94,36 @@ public final class CheckContent {
             return "runnable snippet ended with " + last.status();
         }
         return null;
+    }
+
+    /** The animation must parse, and a code animation's program must print exactly what its steps show. */
+    private static String checkAnimation(PracticeRunner runner, LessonCode.Block block) throws Exception {
+        Animation animation;
+        try {
+            animation = Animation.parse(block.code());
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
+        }
+        if (animation.kind() != Animation.Kind.CODE) {
+            return null;
+        }
+        ProgramResult last = null;
+        for (String program : LessonCode.candidatePrograms(animation.code())) {
+            last = runner.runSnippet(program);
+            if (last.status() != ProgramResult.Status.COMPILE_ERROR) {
+                break;
+            }
+        }
+        if (last.status() == ProgramResult.Status.COMPILE_ERROR) {
+            return "animation code does not compile: " + last.compileErrors().getFirst().message().lines().findFirst().orElse("");
+        }
+        if (last.status() != ProgramResult.Status.COMPLETED) {
+            return "animation code ended with " + last.status();
+        }
+        String actual = QuizSession.normalizeOutput(last.output());
+        String expected = QuizSession.normalizeOutput(animation.expectedOutput());
+        return actual.equals(expected) ? null
+                : "animation shows output \"" + expected + "\" but the code prints \"" + actual + "\"";
     }
 
     private static String checkPrediction(PracticeRunner runner, Quiz.PredictOutput predict) throws Exception {
