@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "lastUpdated": "2026-11-13T03:30:00+05:30",
+  "lastUpdated": "2026-11-16T10:31:06+05:30",
   "phase": "PHASE 1: build",
   "milestone": "C07",
-  "resumeHere": "C06 is committed at status ui_wired. Next: C07 (Build and tooling). Modules 0 to 6 still need your read-through to reach done.",
+  "resumeHere": "State files reconciled: modules 0 to 6 and all their topics are at ui_wired. Next: C07 (Build and tooling). Modules 0 to 6 still need your read-through to reach done.",
   "statusValues": [
     "planned",
     "content_written",
@@ -54,7 +54,8 @@
     "C03: module 3 Core Java (16 topics), INC-03 and FEAT-03; java run crash block type; reviewed and fixed",
     "C04: module 4 DSA (12 topics), INC-04 and FEAT-04; built-by-hand and timeout guards in tests; Depot added to STORY.md",
     "C05: module 5 Advanced Java (13 topics, 3 quiz-only), INC-05 and FEAT-05; runner honours practice.timeoutSeconds",
-    "C06: module 6 Engineering craft (12 topics, 1 quiz-only), INC-06 and FEAT-06; test-writing practice checked with mutants"
+    "C06: module 6 Engineering craft (12 topics, 1 quiz-only), INC-06 and FEAT-06; test-writing practice checked with mutants",
+    "State fix: C03 to C06 milestones and their topics set to ui_wired (content checks pass); 4 quiz-only topics moved from planned to ui_wired"
   ],
   "nextTask": "C07-01: module 7 topic 01 maven",
   "openDecisions": [
@@ -71,10 +72,10 @@
     "C00": "ui_wired",
     "C01": "ui_wired",
     "C02": "ui_wired",
-    "C03": "done",
-    "C04": "done",
-    "C05": "done",
-    "C06": "done",
+    "C03": "ui_wired",
+    "C04": "ui_wired",
+    "C05": "ui_wired",
+    "C06": "ui_wired",
     "C07": "in_progress",
     "C08": "planned",
     "C09": "planned",
@@ -621,7 +622,7 @@
           "prerequisites": [
             "module-02-oop/boss"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -635,7 +636,7 @@
           "prerequisites": [
             "module-03-core-java/topic-01-collections-overview"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -649,7 +650,7 @@
           "prerequisites": [
             "module-03-core-java/topic-02-lists"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -663,7 +664,7 @@
           "prerequisites": [
             "module-03-core-java/topic-03-sets"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -678,7 +679,7 @@
             "module-03-core-java/topic-04-maps",
             "module-02-oop/topic-08-interfaces"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -692,7 +693,7 @@
           "prerequisites": [
             "module-03-core-java/topic-05-generics"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -706,7 +707,7 @@
           "prerequisites": [
             "module-03-core-java/topic-06-comparators-iterators"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -720,7 +721,7 @@
           "prerequisites": [
             "module-03-core-java/topic-07-exceptions"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -734,7 +735,7 @@
           "prerequisites": [
             "module-03-core-java/topic-08-custom-exceptions"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -748,7 +749,7 @@
           "prerequisites": [
             "module-03-core-java/topic-09-file-io"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -762,7 +763,7 @@
           "prerequisites": [
             "module-03-core-java/topic-10-nio-files"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -776,7 +777,7 @@
           "prerequisites": [
             "module-03-core-java/topic-11-date-time"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -790,7 +791,7 @@
           "prerequisites": [
             "module-03-core-java/topic-12-lambdas"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -804,7 +805,7 @@
           "prerequisites": [
             "module-03-core-java/topic-13-functional-interfaces"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -818,7 +819,7 @@
           "prerequisites": [
             "module-03-core-java/topic-14-streams-basics"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -832,7 +833,7 @@
           "prerequisites": [
             "module-03-core-java/topic-15-streams-advanced"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -846,7 +847,7 @@
           "prerequisites": [
             "module-03-core-java/topic-16-optional"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -860,7 +861,7 @@
           "prerequisites": [
             "module-03-core-java/topic-16-optional"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -882,7 +883,7 @@
           "prerequisites": [
             "module-03-core-java/boss"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -896,7 +897,7 @@
           "prerequisites": [
             "module-04-dsa/topic-01-big-o"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -910,7 +911,7 @@
           "prerequisites": [
             "module-04-dsa/topic-02-recursion"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -924,7 +925,7 @@
           "prerequisites": [
             "module-04-dsa/topic-03-searching"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -938,7 +939,7 @@
           "prerequisites": [
             "module-04-dsa/topic-04-simple-sorts"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -952,7 +953,7 @@
           "prerequisites": [
             "module-04-dsa/topic-05-merge-quick-sort"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -966,7 +967,7 @@
           "prerequisites": [
             "module-04-dsa/topic-06-linked-lists"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -981,7 +982,7 @@
             "module-04-dsa/topic-07-stacks-queues",
             "module-02-oop/topic-10-equals-hashcode-tostring"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -995,7 +996,7 @@
           "prerequisites": [
             "module-04-dsa/topic-08-hash-tables"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1009,7 +1010,7 @@
           "prerequisites": [
             "module-04-dsa/topic-09-trees-bst"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1023,7 +1024,7 @@
           "prerequisites": [
             "module-04-dsa/topic-10-heaps"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1037,7 +1038,7 @@
           "prerequisites": [
             "module-04-dsa/topic-11-graphs"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1051,7 +1052,7 @@
           "prerequisites": [
             "module-04-dsa/topic-12-dynamic-programming"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1065,7 +1066,7 @@
           "prerequisites": [
             "module-04-dsa/topic-12-dynamic-programming"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1087,7 +1088,7 @@
           "prerequisites": [
             "module-04-dsa/boss"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1101,7 +1102,7 @@
           "prerequisites": [
             "module-05-advanced-java/topic-01-threads"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1115,7 +1116,7 @@
           "prerequisites": [
             "module-05-advanced-java/topic-02-synchronization"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1130,7 +1131,7 @@
             "module-05-advanced-java/topic-03-executors",
             "module-03-core-java/topic-12-lambdas"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1144,7 +1145,7 @@
           "prerequisites": [
             "module-05-advanced-java/topic-04-completable-future"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1158,7 +1159,7 @@
           "prerequisites": [
             "module-05-advanced-java/topic-05-virtual-threads"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1172,7 +1173,7 @@
           "prerequisites": [
             "module-05-advanced-java/topic-06-concurrent-collections"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": null,
             "skeletonFails": null,
@@ -1186,7 +1187,7 @@
           "prerequisites": [
             "module-05-advanced-java/topic-07-jvm-memory"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": null,
             "skeletonFails": null,
@@ -1200,7 +1201,7 @@
           "prerequisites": [
             "module-05-advanced-java/topic-08-garbage-collection"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": null,
             "skeletonFails": null,
@@ -1214,7 +1215,7 @@
           "prerequisites": [
             "module-05-advanced-java/topic-09-classloading"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1228,7 +1229,7 @@
           "prerequisites": [
             "module-05-advanced-java/topic-10-reflection"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1242,7 +1243,7 @@
           "prerequisites": [
             "module-05-advanced-java/topic-11-annotations"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1256,7 +1257,7 @@
           "prerequisites": [
             "module-05-advanced-java/topic-12-sealed-types"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1270,7 +1271,7 @@
           "prerequisites": [
             "module-05-advanced-java/topic-13-pattern-matching"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1284,7 +1285,7 @@
           "prerequisites": [
             "module-05-advanced-java/topic-13-pattern-matching"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1306,7 +1307,7 @@
           "prerequisites": [
             "module-05-advanced-java/boss"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1320,7 +1321,7 @@
           "prerequisites": [
             "module-06-craft/topic-01-clean-code"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1334,7 +1335,7 @@
           "prerequisites": [
             "module-06-craft/topic-02-solid"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1348,7 +1349,7 @@
           "prerequisites": [
             "module-06-craft/topic-03-creational-patterns"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1362,7 +1363,7 @@
           "prerequisites": [
             "module-06-craft/topic-04-structural-patterns"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1376,7 +1377,7 @@
           "prerequisites": [
             "module-06-craft/topic-05-behavioral-patterns"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1390,7 +1391,7 @@
           "prerequisites": [
             "module-06-craft/topic-06-refactoring"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": null,
             "skeletonFails": null,
@@ -1404,7 +1405,7 @@
           "prerequisites": [
             "module-06-craft/topic-07-uml-basics"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1419,7 +1420,7 @@
             "module-06-craft/topic-08-junit",
             "module-02-oop/topic-08-interfaces"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1433,7 +1434,7 @@
           "prerequisites": [
             "module-06-craft/topic-09-mockito"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1447,7 +1448,7 @@
           "prerequisites": [
             "module-06-craft/topic-10-tdd"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1461,7 +1462,7 @@
           "prerequisites": [
             "module-06-craft/topic-11-debugging"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1475,7 +1476,7 @@
           "prerequisites": [
             "module-06-craft/topic-12-logging"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
@@ -1489,7 +1490,7 @@
           "prerequisites": [
             "module-06-craft/topic-12-logging"
           ],
-          "status": "tests_verified",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,

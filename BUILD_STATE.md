@@ -2,10 +2,10 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-12T17:03:59+05:30
+- **Last updated:** 2026-11-16T10:31:06+05:30
 - **Phase:** PHASE 1: build
 - **Milestone:** C07
-- **Resume here:** C06 is committed at status ui_wired. Next: C07 (Build and tooling). Modules 0 to 6 still need your read-through to reach done.
+- **Resume here:** State files reconciled: modules 0 to 6 and all their topics are at ui_wired. Next: C07 (Build and tooling). Modules 0 to 6 still need your read-through to reach done.
 - **Next task:** C07-01: module 7 topic 01 maven
 
 ## Completed tasks
@@ -48,6 +48,11 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - C00 module 0: 7 new units written, reviewed (22 findings fixed), content checks, quiz keys and practice verified
 - C01 module 1: 12 topics, INC-01, FEAT-01; 2 reviews (34 findings) fixed; all checks green
 - C02 module 2 OOP: 12 topics, INC-02, FEAT-02; 2 reviews (33 findings) fixed; all checks green
+- C03: module 3 Core Java (16 topics), INC-03 and FEAT-03; java run crash block type; reviewed and fixed
+- C04: module 4 DSA (12 topics), INC-04 and FEAT-04; built-by-hand and timeout guards in tests; Depot added to STORY.md
+- C05: module 5 Advanced Java (13 topics, 3 quiz-only), INC-05 and FEAT-05; runner honours practice.timeoutSeconds
+- C06: module 6 Engineering craft (12 topics, 1 quiz-only), INC-06 and FEAT-06; test-writing practice checked with mutants
+- State fix: C03 to C06 milestones and their topics set to ui_wired (content checks pass); 4 quiz-only topics moved from planned to ui_wired
 
 ## Decisions
 
@@ -66,6 +71,11 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - File watcher: directory-watcher (native FSEvents), measured 0.36 to 0.39 s save to start
 - Incident tiers come from test class names ending BronzeTest, SilverTest, GoldTest
 
+## Open decisions
+
+- A real VoiceOver pass needs a person
+- Modules 0 to 2 read-through by you before marking them done
+
 ## Blockers
 
 - None
@@ -77,10 +87,10 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | C00 | ui_wired |
 | C01 | ui_wired |
 | C02 | ui_wired |
-| C03 | done |
-| C04 | done |
-| C05 | done |
-| C06 | done |
+| C03 | ui_wired |
+| C04 | ui_wired |
+| C05 | ui_wired |
+| C06 | ui_wired |
 | C07 | in_progress |
 | C08 | planned |
 | C09 | planned |
@@ -149,6 +159,67 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-02-oop/topic-12-enums | ui_wired | True | True |
 | module-02-oop/boss | ui_wired | True | True |
 | module-02-oop/mini-project | ui_wired | True | True |
+| module-03-core-java/topic-01-collections-overview | ui_wired | True | True |
+| module-03-core-java/topic-02-lists | ui_wired | True | True |
+| module-03-core-java/topic-03-sets | ui_wired | True | True |
+| module-03-core-java/topic-04-maps | ui_wired | True | True |
+| module-03-core-java/topic-05-generics | ui_wired | True | True |
+| module-03-core-java/topic-06-comparators-iterators | ui_wired | True | True |
+| module-03-core-java/topic-07-exceptions | ui_wired | True | True |
+| module-03-core-java/topic-08-custom-exceptions | ui_wired | True | True |
+| module-03-core-java/topic-09-file-io | ui_wired | True | True |
+| module-03-core-java/topic-10-nio-files | ui_wired | True | True |
+| module-03-core-java/topic-11-date-time | ui_wired | True | True |
+| module-03-core-java/topic-12-lambdas | ui_wired | True | True |
+| module-03-core-java/topic-13-functional-interfaces | ui_wired | True | True |
+| module-03-core-java/topic-14-streams-basics | ui_wired | True | True |
+| module-03-core-java/topic-15-streams-advanced | ui_wired | True | True |
+| module-03-core-java/topic-16-optional | ui_wired | True | True |
+| module-03-core-java/boss | ui_wired | True | True |
+| module-03-core-java/mini-project | ui_wired | True | True |
+| module-04-dsa/topic-01-big-o | ui_wired | True | True |
+| module-04-dsa/topic-02-recursion | ui_wired | True | True |
+| module-04-dsa/topic-03-searching | ui_wired | True | True |
+| module-04-dsa/topic-04-simple-sorts | ui_wired | True | True |
+| module-04-dsa/topic-05-merge-quick-sort | ui_wired | True | True |
+| module-04-dsa/topic-06-linked-lists | ui_wired | True | True |
+| module-04-dsa/topic-07-stacks-queues | ui_wired | True | True |
+| module-04-dsa/topic-08-hash-tables | ui_wired | True | True |
+| module-04-dsa/topic-09-trees-bst | ui_wired | True | True |
+| module-04-dsa/topic-10-heaps | ui_wired | True | True |
+| module-04-dsa/topic-11-graphs | ui_wired | True | True |
+| module-04-dsa/topic-12-dynamic-programming | ui_wired | True | True |
+| module-04-dsa/boss | ui_wired | True | True |
+| module-04-dsa/mini-project | ui_wired | True | True |
+| module-05-advanced-java/topic-01-threads | ui_wired | True | True |
+| module-05-advanced-java/topic-02-synchronization | ui_wired | True | True |
+| module-05-advanced-java/topic-03-executors | ui_wired | True | True |
+| module-05-advanced-java/topic-04-completable-future | ui_wired | True | True |
+| module-05-advanced-java/topic-05-virtual-threads | ui_wired | True | True |
+| module-05-advanced-java/topic-06-concurrent-collections | ui_wired | True | True |
+| module-05-advanced-java/topic-07-jvm-memory | ui_wired | None | None |
+| module-05-advanced-java/topic-08-garbage-collection | ui_wired | None | None |
+| module-05-advanced-java/topic-09-classloading | ui_wired | None | None |
+| module-05-advanced-java/topic-10-reflection | ui_wired | True | True |
+| module-05-advanced-java/topic-11-annotations | ui_wired | True | True |
+| module-05-advanced-java/topic-12-sealed-types | ui_wired | True | True |
+| module-05-advanced-java/topic-13-pattern-matching | ui_wired | True | True |
+| module-05-advanced-java/boss | ui_wired | True | True |
+| module-05-advanced-java/mini-project | ui_wired | True | True |
+| module-06-craft/topic-01-clean-code | ui_wired | True | True |
+| module-06-craft/topic-02-solid | ui_wired | True | True |
+| module-06-craft/topic-03-creational-patterns | ui_wired | True | True |
+| module-06-craft/topic-04-structural-patterns | ui_wired | True | True |
+| module-06-craft/topic-05-behavioral-patterns | ui_wired | True | True |
+| module-06-craft/topic-06-refactoring | ui_wired | True | True |
+| module-06-craft/topic-07-uml-basics | ui_wired | None | None |
+| module-06-craft/topic-08-junit | ui_wired | True | True |
+| module-06-craft/topic-09-mockito | ui_wired | True | True |
+| module-06-craft/topic-10-tdd | ui_wired | True | True |
+| module-06-craft/topic-11-debugging | ui_wired | True | True |
+| module-06-craft/topic-12-logging | ui_wired | True | True |
+| module-06-craft/boss | ui_wired | True | True |
+| module-06-craft/mini-project | ui_wired | True | True |
 
 ## Commands
 
