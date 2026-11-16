@@ -741,8 +741,12 @@ a.stone:hover { transform: translateY(-3px) scale(1.05); color: var(--ink); }
 .anim-arrows { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .anim-arrows path { fill: none; stroke: var(--violet); stroke-width: 2.5; stroke-linecap: round; }
 .anim-arrows .arrow-head { fill: var(--violet); }
+.anim-arrows path.anim-link { stroke: var(--line-strong); stroke-width: 3; }
+.anim-arrows .anim-link-label { fill: var(--ink-soft); font: 700 12px var(--font); text-anchor: middle; }
+.anim-scene .anim-node { z-index: 1; }
 
 .anim-code-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(220px, 1fr); gap: var(--space-4); align-items: start; }
+.anim-code-layout.has-heap { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .kb .anim-code, .anim-code { margin: 0; padding: var(--space-3) 0; border-radius: var(--r-md); background: var(--sunken); border: 2px solid var(--line); font-size: 0.82rem; line-height: 1.6; overflow-x: auto; }
 .kb .anim-console-lines, .anim-console-lines { margin: 0; padding: 0; border: 0; border-radius: 0; background: none; color: inherit; font-size: inherit; overflow: visible; }
 .anim-line { display: grid; grid-template-columns: 2.6em max-content; min-width: 100%; width: max-content; padding: 1px var(--space-4) 1px 0; transition: background 0.3s; position: relative; }
@@ -766,8 +770,8 @@ a.stone:hover { transform: translateY(-3px) scale(1.05); color: var(--ink); }
 }
 .anim-box.is-ref { background: var(--violet-wash); border-color: var(--violet); box-shadow: 0 3px 0 var(--violet); min-width: 44px; }
 .anim-box.is-ref::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--violet); }
-.anim-heap { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-4); }
-.anim-obj { min-width: 120px; border: 3px solid var(--violet); border-radius: 14px; background: var(--surface); box-shadow: 0 3px 0 var(--violet); overflow: hidden; }
+.anim-heap { display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-3); margin-top: var(--space-6); }
+.anim-obj { min-width: 104px; border: 3px solid var(--violet); border-radius: 14px; background: var(--surface); box-shadow: 0 3px 0 var(--violet); overflow: hidden; }
 .anim-obj-type { padding: 4px 10px; background: var(--violet); color: var(--surface); font-family: var(--mono); font-size: 0.78rem; font-weight: 700; }
 :root[data-theme="dark"] .anim-obj-type { color: oklch(20% 0.03 272); }
 .anim-obj-fields { padding: 6px 10px; display: grid; gap: 2px; font-family: var(--mono); font-size: 0.8rem; }
@@ -925,7 +929,7 @@ a.stone:hover { transform: translateY(-3px) scale(1.05); color: var(--ink); }
 
 .career, .review-page { max-width: 1040px; margin: 0 auto; padding: var(--space-6) var(--space-5) var(--space-8); }
 .career-hero {
-  display: grid; grid-template-columns: auto 1fr auto; gap: var(--space-6); align-items: center;
+  display: grid; grid-template-columns: auto 1fr auto; gap: var(--space-5) var(--space-6); align-items: center;
   padding: var(--space-6); margin-bottom: var(--space-5); border-radius: var(--r-xl);
   background: var(--surface); border: 2px solid var(--line); box-shadow: var(--shadow-2);
 }
@@ -1009,7 +1013,7 @@ a.stone:hover { transform: translateY(-3px) scale(1.05); color: var(--ink); }
 @media (max-width: 900px) {
   .journey-hero { grid-template-columns: 1fr; gap: var(--space-4); }
   .journey-hero .byte-says { flex-direction: row; align-items: flex-end; }
-  .career-hero { grid-template-columns: 1fr; text-align: center; }
+  .career-hero { grid-template-columns: 1fr; text-align: center; justify-items: center; }
   .career-columns { grid-template-columns: 1fr; }
   .anim-code-layout { grid-template-columns: 1fr; }
   .lesson-card { padding: var(--space-5); }

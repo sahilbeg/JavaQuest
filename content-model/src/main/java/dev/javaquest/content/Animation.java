@@ -26,7 +26,7 @@ import tools.jackson.dataformat.yaml.YAMLMapper;
  * The format is described in docs/CONTENT_SPEC.md. Everything is checked when the block is parsed, and the
  * content checker also runs a code animation's program and compares its output with the steps' {@code out}.
  */
-public record Animation(String title, Kind kind, String code, List<Node> nodes, List<Step> steps) {
+public record Animation(String title, Kind kind, String code, List<Node> nodes, List<Link> links, List<Step> steps) {
 
     public enum Kind {
         @JsonProperty("code") CODE,
@@ -35,6 +35,9 @@ public record Animation(String title, Kind kind, String code, List<Node> nodes, 
 
     /** A box in a scene. {@code row} and {@code col} place it on a small grid; by default boxes sit in one row. */
     public record Node(String id, String label, String emoji, String value, Integer row, Integer col) {}
+
+    /** A line that always joins two boxes in a scene, like a folder and its parent, or two stations on a route. */
+    public record Link(String from, String to, String label) {}
 
     /** A token that travels from one box to another, carrying a short label. {@code back} draws a reply. */
     public record Send(String from, String to, String label, Boolean back) {}
@@ -54,6 +57,8 @@ public record Animation(String title, Kind kind, String code, List<Node> nodes, 
     public static final int MAX_NODES = 8;
     public static final int MAX_SAY = 240;
     private static final Pattern ID = Pattern.compile("[a-z][a-z0-9-]*");
+    /** A bare ~ (YAML's "nothing") as a map value, which the parser would otherwise read as the text "~". */
+    private static final Pattern TILDE = Pattern.compile("(:[ \\t]*)~(?=[ \\t]*(?:[,}\\n#]|$))", Pattern.MULTILINE);
 
     private static final YAMLMapper YAML = YAMLMapper.builder()
             .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
@@ -75,13 +80,19 @@ public record Animation(String title, Kind kind, String code, List<Node> nodes, 
         }
         if (kind == Kind.CODE) {
             require(code != null && !code.isBlank(), "a code animation needs code");
-            require(nodes == null, "nodes belong to scene animations");
+            require(nodes == null && links == null, "nodes and links belong to scene animations");
             checkCodeSteps(code.strip().split("\n", -1).length, steps);
         } else {
             require(code == null, "code belongs to code animations");
             require(nodes != null && nodes.size() >= 1 && nodes.size() <= MAX_NODES, "a scene needs 1 to " + MAX_NODES + " nodes");
             nodes = List.copyOf(nodes);
+            links = links == null ? List.of() : List.copyOf(links);
             checkScene(nodes, steps);
+            Set<String> ids = new HashSet<>(nodes.stream().map(Node::id).toList());
+            for (Link link : links) {
+                require(ids.contains(link.from()) && ids.contains(link.to()),
+                        "links need from and to that name nodes, got " + link.from() + " - " + link.to());
+            }
         }
     }
 
@@ -152,7 +163,7 @@ public record Animation(String title, Kind kind, String code, List<Node> nodes, 
     /** Parses a ```animate block. Throws IllegalArgumentException with a message that names the problem. */
     public static Animation parse(String yaml) {
         try {
-            return YAML.readValue(yaml, Animation.class);
+            return YAML.readValue(TILDE.matcher(yaml).replaceAll("$1null"), Animation.class);
         } catch (JacksonException e) {
             Throwable cause = e;
             while (cause.getCause() != null && !(cause instanceof IllegalArgumentException)) {

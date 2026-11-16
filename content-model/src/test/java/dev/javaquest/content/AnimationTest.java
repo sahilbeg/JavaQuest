@@ -59,6 +59,29 @@ class AnimationTest {
     }
 
     @Test
+    void tildeRemovesAVariableOrAnObject() {
+        Animation animation = Animation.parse("""
+                title: Boxes come and go
+                kind: code
+                code: |
+                  int x = 1;
+                  int y = 2;
+                steps:
+                  - line: 1
+                    vars: { x: 1 }
+                    objects: { s1: { type: Spare, fields: { n: 1 } } }
+                    say: One.
+                  - line: 2
+                    vars: { x: ~, y: 2 }
+                    objects:
+                      s1: ~
+                    say: Two.
+                """);
+        assertEquals(Map.of("y", 2), animation.varsAfter(1));
+        assertTrue(animation.toJson().contains("\"s1\":null"), animation.toJson());
+    }
+
+    @Test
     void sceneAnimationParses() {
         Animation animation = Animation.parse("""
                 title: The CPU asks memory
@@ -66,6 +89,8 @@ class AnimationTest {
                 nodes:
                   - { id: cpu, label: CPU, emoji: "🧠" }
                   - { id: ram, label: Memory, value: "x = 3" }
+                links:
+                  - { from: cpu, to: ram, label: bus }
                 steps:
                   - say: The CPU needs x.
                     focus: cpu
@@ -73,6 +98,7 @@ class AnimationTest {
                     send: [{ from: cpu, to: ram, label: "x?" }, { from: ram, to: cpu, label: "3", back: true }]
                 """);
         assertEquals(2, animation.nodes().size());
+        assertEquals("bus", animation.links().getFirst().label());
         assertEquals(2, animation.steps().get(1).send().size());
     }
 

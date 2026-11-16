@@ -83,7 +83,54 @@ switch (type) {
 }
 ```
 
-Inside the `case` labels you write only the constant name, without `BikeType.` in front.
+Inside the `case` labels you write only the constant name, without `BikeType.` in front. Watch a loop visit every constant while the switch picks a case:
+
+```animate
+title: Three constants, one switch
+kind: code
+code: |
+  public class Main {
+      enum BikeType { CLASSIC, EBIKE, CARGO }
+
+      public static void main(String[] args) {
+          for (BikeType t : BikeType.values()) {
+              switch (t) {
+                  case CLASSIC -> System.out.println("Pedal power");
+                  case EBIKE -> System.out.println("Motor help");
+                  case CARGO -> System.out.println("Big basket");
+              }
+          }
+      }
+  }
+steps:
+  - line: 2
+    objects:
+      classic: { type: BikeType, fields: { name: '"CLASSIC"' } }
+      ebike: { type: BikeType, fields: { name: '"EBIKE"' } }
+      cargo: { type: BikeType, fields: { name: '"CARGO"' } }
+    say: Java builds exactly three BikeType objects, one per constant. No code can ever make a fourth.
+  - line: 5
+    vars: { t: "@classic" }
+    objects: { all: { type: "BikeType[]", fields: { "0": "@classic", "1": "@ebike", "2": "@cargo" } } }
+    say: values() hands back an array of every constant, in declared order. The loop keeps this array out of sight and starts with t pointing at CLASSIC.
+  - line: 7
+    out: Pedal power
+    say: The switch looks at t and jumps straight to case CLASSIC. The other cases are skipped.
+  - line: 5
+    vars: { t: "@ebike" }
+    say: Next round. t now points at the EBIKE object. There is only one EBIKE in the whole program, which is why == works on enums.
+  - line: 8
+    out: Motor help
+    say: This time the switch picks case EBIKE.
+  - line: 5
+    vars: { t: "@cargo" }
+    say: Last round. t points at CARGO.
+  - line: 9
+    out: Big basket
+    say: case CARGO prints. The loop has visited every constant, so it ends.
+```
+
+### Syntax: a switch that gives back a value
 
 A switch can also produce a value that you return. An arrow case holds a value or a { } block. It cannot hold a bare return.
 

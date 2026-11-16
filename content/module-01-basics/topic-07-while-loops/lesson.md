@@ -30,17 +30,52 @@ flowchart TD
   A -->|false| C["Carry on after the loop"]
 ```
 
-A `while` is an `if` that keeps asking. Here is a loop that prints three lines:
+A `while` is an `if` that keeps asking. Watch this loop go round three times, then stop:
 
-```java
-int i = 1;
-while (i <= 3) {
-    System.out.println("Tap " + i);
-    i++;
-}
+```animate
+title: The kiosk counts taps
+kind: code
+code: |
+  int i = 1;
+  while (i <= 3) {
+      System.out.println("Tap " + i);
+      i++;
+  }
+  System.out.println("Done");
+steps:
+  - line: 1
+    vars: { i: 1 }
+    say: Java makes a counter box called i, starting at 1.
+  - line: 2
+    say: "The check: is 1 <= 3? Yes, it is true, so the block runs."
+  - line: 3
+    out: Tap 1
+    say: The block prints Tap 1, reading i as it is right now.
+  - line: 4
+    vars: { i: 2 }
+    say: i++ adds one, so i is 2. Then Java jumps back up to the check.
+  - line: 2
+    say: "Is 2 <= 3? Yes, still true, so the block runs again."
+  - line: 3
+    out: Tap 2
+    say: The block prints Tap 2.
+  - line: 4
+    vars: { i: 3 }
+    say: i++ makes i 3. Back up to the check once more.
+  - line: 2
+    say: 3 <= 3 is true too, so there is a third turn.
+  - line: 3
+    out: Tap 3
+    say: Round three prints Tap 3.
+  - line: 4
+    vars: { i: 4 }
+    say: i++ makes i 4. Back up to the check.
+  - line: 2
+    say: 4 <= 3 is false. Java skips the block, and the loop is over.
+  - line: 6
+    out: Done
+    say: Java carries on with the line after the loop.
 ```
-
-It prints `Tap 1`, `Tap 2` and `Tap 3`. After the third turn, `i` is 4, so `4 <= 3` is `false` and the loop stops.
 
 ### Syntax: a counter
 
@@ -54,6 +89,8 @@ A **counter** is an `int` variable that counts turns. Most loops have three part
 1. **Start** the counter before the loop: `int i = 1;`
 2. **Test** it in the condition: `while (i <= 3)`
 3. **Change** it inside the block: `i++;`
+
+### Counting down, by fives, or zero times
 
 You can count down too:
 
@@ -100,7 +137,7 @@ An **infinite loop** never stops, because its condition never turns `false`. Thi
 Before you run a loop, ask: "What changes each turn, and will it make the condition false?" If nothing changes, the loop runs forever.
 ```
 
-Watch out for a change in the wrong direction too. If `docks++` runs where `docks--` belongs, `docks > 0` stays true for billions of turns, so the program looks frozen. It should be docks--.
+Watch out for a change in the wrong direction too. If `docks++` runs where `docks--` belongs, `docks > 0` stays true for billions of turns, so the program looks frozen. It should be `docks--`.
 
 ### Syntax: do-while
 
@@ -140,18 +177,45 @@ while (condition) {
 
 `break` jumps out of the loop at once. Java carries on with the line after the loop. You already met `break` in `switch`; here it does the same job for loops.
 
-```java
-int tap = 1;
-while (tap <= 3) {
-    if (tap == 2) {
-        System.out.println("Card read!");
-        break;
-    }
-    tap++;
-}
-```
+Watch the card read on tap 2. Tap 3 never happens:
 
-This stops at tap 2. Tap 3 never happens.
+```animate
+title: break stops the taps early
+kind: code
+code: |
+  int tap = 1;
+  while (tap <= 3) {
+      if (tap == 2) {
+          System.out.println("Card read!");
+          break;
+      }
+      tap++;
+  }
+  System.out.println("Stopped at tap " + tap);
+steps:
+  - line: 1
+    vars: { tap: 1 }
+    say: The first tap. tap starts at 1.
+  - line: 2
+    say: Is 1 <= 3? Yes, so the block runs.
+  - line: 3
+    say: Is tap 2? No, so the if block is skipped.
+  - line: 7
+    vars: { tap: 2 }
+    say: tap++ makes tap 2. Java jumps back up to the check.
+  - line: 2
+    say: 2 <= 3 is still true, so the block runs again.
+  - line: 3
+    say: This time tap == 2 is true, so the if block runs.
+  - line: 4
+    out: Card read!
+    say: The card is read on the second tap.
+  - line: 5
+    say: break leaves the loop at once. tap++ and the check are skipped.
+  - line: 9
+    out: Stopped at tap 2
+    say: Java carries on after the loop. tap is still 2, and tap 3 never happened.
+```
 
 ### Syntax: return inside a loop
 
@@ -193,11 +257,7 @@ public class Main {
 }
 ```
 
-1. `tap` starts at 1. The condition `1 <= 3` is `true`, so the block runs and prints `Tap 1...`.
-2. `tap == goodTap` is `false`, so `tap++` makes it 2.
-3. `2 <= 3` is `true`. The block prints `Tap 2...`.
-4. Now `tap == goodTap` is `true`. `paid` becomes `true`, and `break` leaves the loop.
-5. Java prints `Paid: true`.
+It runs like the `break` animation above. Tap 1 fails, so `tap++` makes it 2. On tap 2, `tap == goodTap` is `true`, so `paid` becomes `true` and `break` leaves the loop. Java prints `Paid: true`.
 
 Change `goodTap` to 5. The loop runs three turns, then stops on its own. It prints `Paid: false`.
 

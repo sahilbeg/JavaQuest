@@ -33,7 +33,34 @@ double fee = unlockFee();
 System.out.println(fee);
 ```
 
-The call `unlockFee()` runs the method. The value it returns lands where the call was written. Here it goes into `fee`.
+The call `unlockFee()` runs the method. The value it returns lands where the call was written. Here it goes into `fee`. Watch Java jump into the method and come back:
+
+```animate
+title: main asks for the unlock fee
+kind: code
+code: |
+  public static double unlockFee() {
+      return 1.00;
+  }
+
+  public static void main(String[] args) {
+      double fee = unlockFee();
+      System.out.println(fee);
+  }
+steps:
+  - line: 5
+    say: Every program starts in main. The method unlockFee sits above it, waiting to be called.
+  - line: 6
+    say: main calls unlockFee(). Java pauses main at this line and jumps into the method.
+  - line: 2
+    say: return 1.00 hands the value back and ends the method.
+  - line: 6
+    vars: { fee: '1.0' }
+    say: Back in main, 1.0 lands where the call was written, so it goes into fee.
+  - line: 7
+    out: "1.0"
+    say: main carries on with the next line and prints fee.
+```
 
 ### Syntax: parameters
 
@@ -52,6 +79,8 @@ double a = ridePrice(10);   // minutes is 10, a is 1.5
 double b = ridePrice(20);   // minutes is 20, b is 3.0
 ```
 
+### Syntax: several parameters
+
 A method can take several parameters. Separate them with commas, and give each one its own type.
 
 ```java
@@ -66,7 +95,7 @@ double c = ridePrice(10, 0.30);   // 3.0
 
 The arguments match the parameters by position. The first argument goes into the first parameter.
 
-### Syntax: return types, including void
+### Syntax: return types
 
 The return type can be any type you know: `int`, `double`, `boolean`, `String`.
 
@@ -79,6 +108,8 @@ public static String bikeName() {
     return "B-1042";
 }
 ```
+
+### Syntax: void
 
 Some methods do a job and give nothing back. Their return type is `void`, which means "nothing".
 
@@ -129,17 +160,56 @@ public static double fare(int minutes) {
 A **local variable** is a variable created inside a method. Its **scope** is the part of the code where it exists: from its line to the closing brace of its block.
 ```
 
-When the method ends, its local variables disappear. Another method cannot see them. Parameters are local variables too. A variable made inside a loop or an `if` block lives only inside that block.
+Parameters are local variables too. Watch the boxes of `fare` appear when it is called, and disappear when it returns:
+
+```animate
+title: fare's boxes come and go
+kind: code
+code: |
+  public static double fare(int minutes) {
+      double rate = 0.15;
+      return 1.00 + minutes * rate;
+  }
+
+  public static void main(String[] args) {
+      double total = fare(10);
+      System.out.println("Total: $" + total);
+  }
+steps:
+  - line: 7
+    say: main calls fare(10). Java jumps into fare and main waits.
+  - line: 1
+    vars: { minutes: 10 }
+    say: The parameter minutes is a new box inside fare. It receives the argument 10.
+  - line: 2
+    vars: { rate: 0.15 }
+    say: fare makes a local box, rate. Only fare can see it.
+  - line: 3
+    vars: { minutes: null, rate: null }
+    say: 1.00 + 10 * 0.15 is 2.5. return hands 2.5 back. fare has ended, so minutes and rate disappear.
+  - line: 7
+    vars: { total: 2.5 }
+    say: Back in main, 2.5 lands in total. main never saw minutes or rate.
+  - line: 8
+    out: "Total: $2.5"
+    say: main prints the fare.
+```
+
+When the method ends, its local variables disappear. Another method cannot see them.
+
+```callout analogy
+Each method is a room with its own whiteboard. What you write on one whiteboard stays in that room. To share a value, pass it in as an argument or give it back with return.
+```
+
+### Scope inside loops and ifs
+
+A variable made inside a loop or an `if` block lives only inside that block.
 
 ```java
 for (int i = 0; i < 3; i++) {
     int doubled = i * 2;      // lives only inside the loop
 }
 // i and doubled do not exist here
-```
-
-```callout analogy
-Each method is a room with its own whiteboard. What you write on one whiteboard stays in that room. To share a value, pass it in as an argument or give it back with return.
 ```
 
 ### Syntax: method overloading

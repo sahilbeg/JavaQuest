@@ -66,6 +66,50 @@ Chargeable c = new Scooter();
 c.charge(30);
 ```
 
+Watch one `Chargeable` variable point at two different objects. Spoke's scooters have fast chargers that double the top-up:
+
+```animate
+title: One promise, two ways to keep it
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          Chargeable c = new EBike();
+          c.charge(30);
+          c = new Scooter();
+          c.charge(30);
+      }
+  }
+  interface Chargeable { void charge(int percent); }
+  class EBike implements Chargeable {
+      public void charge(int percent) { System.out.println("EBike: +" + percent); }
+  }
+  class Scooter implements Chargeable {
+      public void charge(int percent) { System.out.println("Scooter: +" + percent * 2); }
+  }
+steps:
+  - line: 3
+    vars: { c: "@e1" }
+    objects: { e1: { type: EBike } }
+    say: c has the interface type Chargeable. It can point at any object that keeps the promise. Here it points at an EBike.
+  - line: 4
+    say: c.charge(30) is called. Java looks at the object c points at right now, which is an EBike.
+  - line: 11
+    out: "EBike: +30"
+    say: So EBike's own charge runs and prints +30.
+  - line: 5
+    vars: { c: "@s1" }
+    objects: { e1: ~, s1: { type: Scooter } }
+    say: Same variable, new object. c now points at a Scooter, which keeps the promise too. Nothing points at the EBike now, so Java can clean it up later.
+  - line: 6
+    say: The very same call, c.charge(30). This time c points at a Scooter.
+  - line: 14
+    out: "Scooter: +60"
+    say: Scooter keeps the promise its own way. Its fast charger doubles the percent, so it prints +60.
+```
+
+### The dock accepts anything Chargeable
+
 A parameter can have an interface type too. The method then accepts any object that keeps the promise.
 
 ```java nocompile

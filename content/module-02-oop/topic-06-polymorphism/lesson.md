@@ -82,7 +82,49 @@ Bike b = new EBike("B-2001", 80);
 System.out.println(b.pricePerMinute());   // 0.3
 ```
 
-The variable says `Bike`, yet Java prints 0.3. When you call a method, Java looks at the real object at run time and runs that object's override.
+The variable says `Bike`, yet Java prints 0.3. When you call a method, Java looks at the real object at run time and runs that object's override. Watch one variable point at two kinds of bike:
+
+```animate
+title: The object picks the method
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          Bike b = new EBike();
+          System.out.println(b.pricePerMinute());
+          b = new Bike();
+          System.out.println(b.pricePerMinute());
+      }
+  }
+  class Bike {
+      public double pricePerMinute() { return 0.15; }
+  }
+  class EBike extends Bike {
+      @Override
+      public double pricePerMinute() { return 0.30; }
+  }
+steps:
+  - line: 3
+    objects: { e1: { type: EBike } }
+    vars: { b: "@e1" }
+    say: The variable's type is Bike, but it points to an EBike object. That is allowed, because every e-bike is a bike.
+  - line: 4
+    say: To call pricePerMinute(), Java does not look at the variable's type. It follows the arrow and finds an EBike.
+  - line: 14
+    say: So EBike's override runs, and it returns 0.30.
+  - line: 4
+    out: "0.3"
+    say: println prints 0.3. The label said Bike, but the object decided.
+  - line: 5
+    objects: { e1: ~, c1: { type: Bike } }
+    vars: { b: "@c1" }
+    say: Now b points to a plain Bike. Nothing points at the old e-bike any more, so Java can clean it up later.
+  - line: 10
+    say: This time the object is a Bike, so Bike's own version runs and returns 0.15.
+  - line: 6
+    out: "0.15"
+    say: The same call gives a different answer. That is dynamic dispatch.
+```
 
 ```callout jargon
 **Dynamic dispatch** means Java picks which version of an overridden method to run while the program runs, based on the real object.
@@ -91,6 +133,8 @@ The variable says `Bike`, yet Java prints 0.3. When you call a method, Java look
 ```callout analogy
 The variable type is the label on a parcel. The object is what is inside. When you press a button on the parcel, the thing inside decides what happens.
 ```
+
+### The variable type decides what you can call
 
 The variable type still matters for one thing. It decides which methods you are allowed to call.
 
@@ -115,11 +159,51 @@ for (Bike b : fleet) {
 
 One array holds all three kinds. One loop asks each bike for its fare. Each bike answers with its own price: 2.5, 4.0 and 3.5.
 
-```mermaid
-flowchart LR
-    L["for each Bike b: b.fare(10)"] --> A["Bike B-1042: 0.15 per minute"]
-    L --> B["EBike B-2001: 0.30 per minute"]
-    L --> C["CargoBike B-3005: 0.25 per minute"]
+```animate
+title: One loop, three prices
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          Bike[] fleet = { new Bike(), new EBike(), new CargoBike() };
+          for (Bike b : fleet) {
+              System.out.println(b.fare(10));
+          }
+      }
+  }
+  class Bike {
+      public double pricePerMinute() { return 0.15; }
+      public double fare(int minutes) { return 1.00 + minutes * pricePerMinute(); }
+  }
+  class EBike extends Bike { @Override public double pricePerMinute() { return 0.30; } }
+  class CargoBike extends Bike { @Override public double pricePerMinute() { return 0.25; } }
+steps:
+  - line: 3
+    objects:
+      c1: { type: Bike }
+      e1: { type: EBike }
+      k1: { type: CargoBike }
+      fleet-arr: { type: "Bike[]", fields: { "0": "@c1", "1": "@e1", "2": "@k1" } }
+    vars: { fleet: "@fleet-arr" }
+    say: One Bike[] array holds three kinds of bike. Each slot points to a different object.
+  - line: 4
+    vars: { b: "@c1" }
+    say: First lap. b points to the classic bike.
+  - line: 5
+    out: "2.5"
+    say: fare(10) asks this object for its price. A plain Bike says 0.15, so 1.00 + 1.50 = 2.5.
+  - line: 4
+    vars: { b: "@e1" }
+    say: Second lap. The same variable b now points to the e-bike.
+  - line: 5
+    out: "4.0"
+    say: Same line, but the object is an EBike. Its override says 0.30, so the fare is 4.0.
+  - line: 4
+    vars: { b: "@k1" }
+    say: Third lap. b points to the cargo bike.
+  - line: 5
+    out: "3.5"
+    say: The cargo bike answers 0.25 a minute, so 3.5. One loop, three prices, and no if to check the kind.
 ```
 
 ### Syntax: instanceof

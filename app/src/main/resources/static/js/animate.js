@@ -142,7 +142,7 @@ function codeView(spec, body) {
   const markerId = `anim-head-${++markerCount}`;
   const hasObjects = spec.steps.some((s) => s.objects);
   const hasOutput = spec.steps.some((s) => s.out != null);
-  body.append(h("div", { class: "anim-code-layout" },
+  body.append(h("div", { class: `anim-code-layout${hasObjects ? " has-heap" : ""}` },
     h("pre", { class: "anim-code", "aria-label": "The code" }, lineEls),
     h("div", { class: "anim-side" },
       h("div", { class: "anim-memory" }, h("p", { class: "anim-panel-label" }, "Memory"), vars, hasObjects && heap),
@@ -158,8 +158,8 @@ function codeView(spec, body) {
     const out = [];
     for (let i = 0; i <= index; i++) {
       const s = spec.steps[i];
-      for (const [k, val] of Object.entries(s.vars ?? {})) val == null ? v.delete(k) : v.set(k, val);
-      for (const [k, obj] of Object.entries(s.objects ?? {})) obj == null ? o.delete(k) : o.set(k, obj);
+      for (const [k, val] of Object.entries(s.vars ?? {})) val == null || val === "~" ? v.delete(k) : v.set(k, val);
+      for (const [k, obj] of Object.entries(s.objects ?? {})) obj == null || obj === "~" ? o.delete(k) : o.set(k, obj);
       if (s.out != null) out.push(...String(s.out).replace(/\n$/, "").split("\n"));
     }
     return { v, o, out };
@@ -313,6 +313,25 @@ function sceneView(spec, body) {
 
   function drawLinks() {
     arrows.replaceChildren(arrowHeadDefs(markerId));
+    for (const link of spec.links ?? []) {
+      const from = nodeEls.get(link.from);
+      const to = nodeEls.get(link.to);
+      if (from.classList.contains("is-hidden") || to.classList.contains("is-hidden")) continue;
+      const a = center(from);
+      const b = center(to);
+      const line = document.createElementNS(SVG, "path");
+      line.setAttribute("d", `M${a.x},${a.y} L${b.x},${b.y}`);
+      line.setAttribute("class", "anim-link");
+      arrows.append(line);
+      if (link.label) {
+        const text = document.createElementNS(SVG, "text");
+        text.setAttribute("x", String((a.x + b.x) / 2));
+        text.setAttribute("y", String((a.y + b.y) / 2 - 6));
+        text.setAttribute("class", "anim-link-label");
+        text.textContent = link.label;
+        arrows.append(text);
+      }
+    }
     for (const send of sends) {
       const a = center(nodeEls.get(send.from));
       const b = center(nodeEls.get(send.to));

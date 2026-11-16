@@ -89,7 +89,45 @@ double fare(int minutes) {
 }
 ```
 
-`fare` is written once, in `Vehicle`. It does not know which bike it is working for. When it runs, Java calls the `pricePerMinute()` of the real object. An `EBike` uses 0.30. A `ClassicBike` uses 0.15.
+`fare` is written once, in `Vehicle`, and does not know which bike it is working for. Watch which `pricePerMinute()` runs when an e-bike asks for its fare:
+
+```animate
+title: Vehicle's fare asks the real bike
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          Vehicle v = new EBike();
+          System.out.println(v.fare(10));
+      }
+  }
+  abstract class Vehicle {
+      abstract double pricePerMinute();
+      double fare(int minutes) { return 1.00 + minutes * pricePerMinute(); }
+  }
+  class EBike extends Vehicle {
+      @Override
+      double pricePerMinute() { return 0.30; }
+  }
+steps:
+  - line: 3
+    vars: { v: "@e1" }
+    objects: { e1: { type: EBike } }
+    say: new Vehicle() would not compile, because Vehicle is abstract. EBike is concrete, so Java builds one. v has type Vehicle but points at the EBike.
+  - line: 4
+    say: v.fare(10) is called. EBike has no fare of its own, so Java runs the one it inherited from Vehicle.
+  - line: 9
+    say: fare needs pricePerMinute(). Vehicle only promised that method. It has no body to run.
+  - line: 13
+    say: So Java asks the real object. It is an EBike, so EBike's pricePerMinute() runs and returns 0.30.
+  - line: 9
+    say: Back in fare, 1.00 + 10 * 0.30 is 4.0. fare hands 4.0 back to main.
+  - line: 4
+    out: "4.0"
+    say: println prints the fare. A ClassicBike would run the very same fare with its own price, 0.15, and get 2.5.
+```
+
+### The template method idea
 
 ```callout analogy
 Think of a recipe card for a sandwich: "take bread, add the filling, close it". The card is fixed. Each customer chooses the filling. In code, the fixed steps live in the abstract class, and the subclasses supply the missing piece.

@@ -115,6 +115,57 @@ This style is called **clamping**. A value below the range becomes the lowest al
 | `setBattery(140)` | 100 |
 | `setBattery(-5)` | 0 |
 
+Watch the setter stop a bad value at the door:
+
+```animate
+title: The setter checks before it stores
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          EBike bike = new EBike();
+          bike.setBattery(140);
+          System.out.println(bike.getBattery() + "%");
+      }
+  }
+  class EBike {
+      private int battery;
+      public int getBattery() { return battery; }
+      public void setBattery(int battery) {
+          if (battery > 100) {
+              battery = 100;
+          }
+          this.battery = battery;
+      }
+  }
+steps:
+  - line: 3
+    objects: { e1: { type: EBike, fields: { battery: 0 } } }
+    vars: { bike: "@e1" }
+    say: A new e-bike. Its battery field is private, so main can only reach it through methods.
+  - line: 4
+    say: main asks the setter to store 140. It cannot write bike.battery itself.
+  - line: 11
+    vars: { this: "@e1", battery: 140 }
+    say: Inside setBattery, the parameter battery holds 140. The field in the object is still 0.
+  - line: 12
+    say: The check asks if 140 is above 100. It is, so the if body runs.
+  - line: 13
+    vars: { battery: 100 }
+    say: The parameter is clamped down to 100. The field has still not changed.
+  - line: 15
+    objects: { e1: { type: EBike, fields: { battery: 100 } } }
+    say: Only now does this.battery get a value, and it is the safe one, 100.
+  - line: 16
+    vars: { this: ~, battery: ~ }
+    say: setBattery ends. Its parameter disappears, but the field keeps 100.
+  - line: 5
+    out: 100%
+    say: Back in main, the getter reads 100. The bad value never reached the field.
+```
+
+### Another style: ignore a bad value
+
 Another style is to **ignore** a bad value and keep the old one:
 
 ```java

@@ -78,10 +78,6 @@ switch (dock) {
 
 Dock 5 jumps to `case 5`, which has no code of its own, so it falls into `case 6` and prints `Middle row`.
 
-```callout warning
-A forgotten `break` causes fall-through by accident. Java runs the next case too, even though its label does not match.
-```
-
 ### Syntax: switching on Strings
 
 ```java
@@ -99,6 +95,82 @@ switch (type) {
 ```
 
 A switch can check Strings. It compares the text the same way `.equals` does, so capital letters matter. `"EBike"` will not match `"ebike"`.
+
+Watch the switch jump to the matching case:
+
+```animate
+title: The switch jumps to a case
+kind: code
+code: |
+  String type = "ebike";
+  switch (type) {
+      case "classic":
+          System.out.println("0.15 a minute");
+          break;
+      case "ebike":
+          System.out.println("0.30 a minute");
+          break;
+      default:
+          System.out.println("Unknown bike");
+  }
+  System.out.println("Price shown");
+steps:
+  - line: 1
+    vars: { type: '"ebike"' }
+    say: The rider picked an e-bike.
+  - line: 2
+    say: The switch reads the value in brackets, "ebike", and looks for the case with that label.
+  - line: 6
+    say: It lands on case "ebike". The classic case is skipped, and its lines never light up.
+  - line: 7
+    out: "0.30 a minute"
+    say: The e-bike price prints.
+  - line: 8
+    say: break jumps out of the switch, so default never runs.
+  - line: 12
+    out: Price shown
+    say: Java carries on after the switch's closing brace.
+```
+
+### Fall-through by accident
+
+```callout warning
+A forgotten `break` causes fall-through by accident. Java runs the next case too, even though its label does not match.
+```
+
+Watch a classic bike get the e-bike price too, because one `break` is missing:
+
+```animate
+title: The missing break
+kind: code
+code: |
+  String type = "classic";
+  switch (type) {
+      case "classic":
+          System.out.println("0.15");
+      case "ebike":
+          System.out.println("0.30");
+          break;
+      default:
+          System.out.println("Unknown");
+  }
+steps:
+  - line: 1
+    vars: { type: '"classic"' }
+    say: The rider picked a classic bike.
+  - line: 3
+    say: The switch jumps straight to the case labelled "classic".
+  - line: 4
+    out: "0.15"
+    say: The classic price prints. But there is no break after it.
+  - line: 5
+    say: So Java walks past the next label without checking it. "ebike" does not match, and that does not matter.
+  - line: 6
+    out: "0.30"
+    say: The e-bike price prints too, for a classic bike. That is fall-through by accident.
+  - line: 7
+    say: break finally jumps out of the switch. The default case never runs.
+```
 
 ### Syntax: the switch expression (Java 14 and later)
 

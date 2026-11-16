@@ -114,6 +114,39 @@ double c = (double) 5;  // 5.0
 A cast to int cuts off the decimal part. It never rounds up, so `(int) 2.9` gives `2`.
 ```
 
+Watch a ride distance move between a double box and an int box:
+
+```animate
+title: Squashing 2.9 km into an int
+kind: code
+code: |
+  double km = 2.9;
+  int wholeKm = (int) km;
+  double back = wholeKm;
+  System.out.println(km);
+  System.out.println(wholeKm);
+  System.out.println(back);
+steps:
+  - line: 1
+    vars: { km: 2.9 }
+    say: A double box holds the ride distance, 2.9 km. A double keeps the decimal part.
+  - line: 2
+    vars: { wholeKm: 2 }
+    say: The cast (int) cuts off the .9 and puts 2 in an int box. It never rounds up to 3.
+  - line: 3
+    vars: { back: '2.0' }
+    say: Widening needs no cast. 2 goes into a double box as 2.0, but the lost .9 does not come back.
+  - line: 4
+    out: "2.9"
+    say: The km box was never changed. A cast makes a new value and leaves the old box alone.
+  - line: 5
+    out: "2"
+    say: The int box prints a whole number, with no decimal point.
+  - line: 6
+    out: "2.0"
+    say: The double box prints 2.0. Java always shows a double with a decimal point.
+```
+
 ### The integer division surprise
 
 The four maths signs `+ - * /` work on numbers. Topic 03 covers them in detail. One rule matters right now. When you divide an int by an int, Java gives back an int and throws away the remainder.
@@ -124,7 +157,44 @@ double b = 5 / 2;     // 2.0, the .5 was already lost
 double c = 5.0 / 2;   // 2.5
 ```
 
-Look at `b`. Java does the division first, with two ints, so it gets `2`. Only then does it widen `2` to `2.0`. The fix is to make one side a double before dividing.
+Watch Java share 7 minutes between 2 rides, three different ways:
+
+```animate
+title: Three ways to divide 7 by 2
+kind: code
+code: |
+  int minutes = 7;
+  int rides = 2;
+  int a = minutes / rides;
+  double b = minutes / rides;
+  double c = (double) minutes / rides;
+  System.out.println(a + " " + b + " " + c);
+steps:
+  - line: 1
+    vars: { minutes: 7 }
+    say: An int box holds 7 minutes.
+  - line: 2
+    vars: { rides: 2 }
+    say: Another int box holds 2 rides. We want the average minutes per ride.
+  - line: 3
+    vars: { a: 3 }
+    say: An int divided by an int gives an int. 7 / 2 is really 3.5, but Java drops the .5, so a holds 3.
+  - line: 4
+    say: Here Java divides first, still with two ints. The answer is 3 again, even though the box is a double.
+  - line: 4
+    vars: { b: '3.0' }
+    say: Only then does Java widen 3 into the double box, as 3.0. The .5 was already lost.
+  - line: 5
+    vars: { c: 3.5 }
+    say: The cast turns 7 into 7.0 before dividing. A double divided by an int gives a double, so c holds 3.5.
+  - line: 6
+    out: 3 3.0 3.5
+    say: Same numbers, three answers. Cast one side to double before you divide to keep the decimals.
+```
+
+### Fixing it with a cast
+
+Make one side a double before dividing:
 
 ```java
 int total = 45;
@@ -133,12 +203,6 @@ double average = (double) total / rides;   // 22.5
 ```
 
 The cast turns `total` into `45.0` first. A double divided by an int gives a double, so the .5 survives.
-
-```mermaid
-flowchart LR
-  A["45 / 2"] --> B["int / int"] --> C["22"]
-  D["(double) 45 / 2"] --> E["double / int"] --> F["22.5"]
-```
 
 ### Syntax: a method with inputs
 

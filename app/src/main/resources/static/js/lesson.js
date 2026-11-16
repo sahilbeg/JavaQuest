@@ -187,7 +187,10 @@ export async function renderLesson(view, catalog, id, params) {
       chat.say([kind === "incident" ? "Incident resolved! Riders can use the kiosk again."
         : topic.hasQuiz ? "Ticket closed! You passed the check and the code checks." : "Feature shipped! Every check passes.",
         `${person.name.split(" ")[0]} will be pleased.`], { mood: "cheering", quiet: true });
-      go(doneIndex);
+      // Stay on the result, so the learner sees their score or green checks, and offer the finish line.
+      confetti();
+      updateChrome();
+      nextButton.classList.add("pop");
       return;
     }
     if (fresh.progress.testsPassed && !fresh.progress.mastered && topic.hasQuiz && fresh.progress.quizBest < 80) {
@@ -296,8 +299,9 @@ export async function renderLesson(view, catalog, id, params) {
     backButton.disabled = index <= 0;
     const atWorkEnd = index >= lastWork;
     const label = index === 0 ? "Start" : steps[index + 1]?.key === "check" ? "To the check"
-      : steps[index + 1]?.key === "code" ? (steps[index]?.key === "check" ? "To the code" : "To the code")
-      : index === doneIndex ? "Journey" : "Next";
+      : steps[index + 1]?.key === "code" ? "To the code"
+      : steps[index + 1]?.key === "done" ? "Finish the ticket"
+      : "Next";
     nextButton.replaceChildren(label, icon("arrow-right"));
     nextButton.hidden = index === doneIndex || (atWorkEnd && !mastered);
   }
@@ -321,7 +325,6 @@ export async function renderLesson(view, catalog, id, params) {
     dispose = () => { cleanContent(); content.dispose?.(); };
     updateChrome();
     if (step.key === "done" && mastered) {
-      confetti();
       refreshRewards();
     }
     if ((step.key === "recap" || (step.key === "learn" && !recap && index === cards.length)) && !readSent) {

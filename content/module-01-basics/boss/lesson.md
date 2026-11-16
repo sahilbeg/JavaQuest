@@ -28,7 +28,34 @@ int end = 20;
 int minutes = (end - start + minutesInDay) % minutesInDay;
 ```
 
-Adding 1440 makes the number positive. The `%` then removes any extra full day.
+Adding 1440 makes the number positive. The `%` then removes any extra full day. Watch both ways on the 23:50 to 00:20 ride:
+
+```animate
+title: A ride across midnight
+kind: code
+code: |
+  int start = 1430;
+  int end = 20;
+  int wrong = end - start;
+  int minutes = (end - start + 1440) % 1440;
+  System.out.println(wrong + " vs " + minutes);
+steps:
+  - line: 1
+    vars: { start: 1430 }
+    say: The ride starts at 23:50, which is 1430 minutes since midnight.
+  - line: 2
+    vars: { end: 20 }
+    say: It ends at 00:20, just after midnight. That is only 20.
+  - line: 3
+    vars: { wrong: -1410 }
+    say: Plain subtraction goes backwards round the clock. 20 - 1430 is -1410, which made the negative fare.
+  - line: 4
+    vars: { minutes: 30 }
+    say: Adding a full day gives -1410 + 1440 = 30. Then % 1440 removes any extra day, so 30 stays 30.
+  - line: 5
+    out: -1410 vs 30
+    say: The fixed formula gives the real 30 minute ride.
+```
 
 ### Syntax: a time with two digits
 

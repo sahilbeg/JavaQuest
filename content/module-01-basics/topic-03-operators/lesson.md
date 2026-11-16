@@ -64,6 +64,31 @@ int extra = minutes % 60;  // 15 minutes left over
 Picture 75 bikes and racks that hold 60 each. `75 / 60` is how many racks you fill. `75 % 60` is how many bikes are left on the pavement.
 ```
 
+Watch `/` and `%` split a long ride into hours and minutes:
+
+```animate
+title: Splitting 130 minutes
+kind: code
+code: |
+  int minutes = 130;
+  int hours = minutes / 60;
+  int left = minutes % 60;
+  System.out.println(hours + " h " + left + " min");
+steps:
+  - line: 1
+    vars: { minutes: 130 }
+    say: A rider kept bike B-1042 out for 130 minutes. The receipt should show hours and minutes.
+  - line: 2
+    vars: { hours: 2 }
+    say: 60 fits into 130 two whole times. Integer division keeps the 2 and drops the rest.
+  - line: 3
+    vars: { left: 10 }
+    say: "% asks what is left over. Two hours use 120 minutes, so 10 minutes remain."
+  - line: 4
+    out: 2 h 10 min
+    say: The receipt joins both boxes into one line of text.
+```
+
 ### Syntax: precedence and brackets
 
 **Precedence** means which operator Java does first. `*`, `/` and `%` happen before `+` and `-`. Operators of the same level run from left to right.
@@ -75,6 +100,39 @@ int z = 10 - 4 - 3;    // 3, left to right
 ```
 
 Brackets `( )` always win. Use them whenever an expression could confuse a reader.
+
+Watch Java price a 10 minute ride, then get it wrong with brackets in the wrong place:
+
+```animate
+title: Which sum happens first?
+kind: code
+code: |
+  int minutes = 10;
+  double fare = 1.00 + minutes * 0.15;
+  System.out.println("Fare: $" + fare);
+  double wrong = (1.00 + minutes) * 0.15;
+  System.out.println("Oops: $" + wrong);
+steps:
+  - line: 1
+    vars: { minutes: 10 }
+    say: The ride lasted 10 minutes.
+  - line: 2
+    say: "* comes before +, so Java works out minutes * 0.15 first. That is 1.5, the cost of the minutes."
+  - line: 2
+    vars: { fare: 2.5 }
+    say: Then Java adds the 1.00 unlock fee. fare holds 2.5.
+  - line: 3
+    out: "Fare: $2.5"
+    say: The kiosk shows the right fare.
+  - line: 4
+    say: Brackets always win, so this time Java adds first. 1.00 + 10 makes 11.0.
+  - line: 4
+    vars: { wrong: 1.65 }
+    say: Then 11.0 * 0.15 gives 1.65. Every number is right, but the order is wrong.
+  - line: 5
+    out: "Oops: $1.65"
+    say: The rider would pay too little. Check where your brackets go.
+```
 
 ### Syntax: compound assignment
 
@@ -96,6 +154,43 @@ int ridesToday = 0;
 ridesToday++;   // now 1
 ridesToday++;   // now 2
 ridesToday--;   // now 1
+```
+
+Watch `++` and `+=` work together as the fare meter ticks, in cents:
+
+```animate
+title: The fare meter ticks
+kind: code
+code: |
+  int fareCents = 100;
+  int minutes = 0;
+  minutes++;
+  fareCents += 15;
+  minutes++;
+  fareCents += 15;
+  System.out.println(minutes + " min: " + fareCents + " cents");
+steps:
+  - line: 1
+    vars: { fareCents: 100 }
+    say: Unlocking a classic bike costs 100 cents, so the meter starts at 100.
+  - line: 2
+    vars: { minutes: 0 }
+    say: No minutes have passed yet.
+  - line: 3
+    vars: { minutes: 1 }
+    say: One minute passes. minutes++ adds one to the box, so 0 becomes 1.
+  - line: 4
+    vars: { fareCents: 115 }
+    say: fareCents += 15 means fareCents = fareCents + 15. The box now holds 115.
+  - line: 5
+    vars: { minutes: 2 }
+    say: Another minute. ++ adds one again, so minutes is 2.
+  - line: 6
+    vars: { fareCents: 130 }
+    say: Another 15 cents. Each += reads the box, adds, and stores the answer back in the same box.
+  - line: 7
+    out: "2 min: 130 cents"
+    say: After two minutes the ride costs 130 cents.
 ```
 
 ### Syntax: joining text with +
@@ -130,11 +225,7 @@ public class Main {
 }
 ```
 
-1. `minutes` holds `10`.
-2. Java does `minutes * 0.15` first, because `*` comes before `+`. That gives `1.5`.
-3. Then Java adds the unlock fee: `1.00 + 1.5` is `2.5`.
-4. The first `println` joins three pieces into `Ride: 10 min`.
-5. The second `println` prints `Fare: $2.5`.
+Java does `minutes * 0.15` first, because `*` comes before `+`, then adds the unlock fee: `1.00 + 1.5` is `2.5`. The two lines print `Ride: 10 min` and `Fare: $2.5`.
 
 Here is the hours and minutes trick in action:
 

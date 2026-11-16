@@ -20,20 +20,53 @@ for (int i = 1; i <= 3; i++) {
 }
 ```
 
-This prints `Dock 1`, `Dock 2` and `Dock 3`. The three parts inside the brackets are separated by semicolons:
+The three parts inside the brackets are separated by semicolons:
 
 1. **Start** `int i = 1` runs once, before anything else.
 2. **Test** `i <= 3` is checked before every turn. When it is `false`, the loop ends.
 3. **Change** `i++` runs at the end of every turn.
 
-```mermaid
-flowchart TD
-  A["Start: int i = 1"] --> B{"Test: i <= 3?"}
-  B -->|true| C["Run the block"]
-  C --> D["Change: i++"]
-  D --> B
-  B -->|false| E["Carry on after the loop"]
+Watch Java jump between the three parts and the block:
+
+```animate
+title: Three docks, three turns
+kind: code
+code: |
+  for (int i = 1; i <= 3; i++) {
+      System.out.println("Dock " + i);
+  }
+  System.out.println("All docks listed");
+steps:
+  - line: 1
+    vars: { i: 1 }
+    say: "Start: int i = 1 runs once. A counter box i appears, holding 1."
+  - line: 1
+    say: "Test: is 1 <= 3? Yes, so the block runs."
+  - line: 2
+    out: Dock 1
+    say: The block prints Dock 1.
+  - line: 1
+    vars: { i: 2 }
+    say: "Change: i++ makes i 2. Then the test again: 2 <= 3 is true."
+  - line: 2
+    out: Dock 2
+    say: So the block runs a second time.
+  - line: 1
+    vars: { i: 3 }
+    say: "Change: i becomes 3. Test: 3 <= 3 is still true."
+  - line: 2
+    out: Dock 3
+    say: The third and last turn prints Dock 3.
+  - line: 1
+    vars: { i: 4 }
+    say: "Change: i becomes 4. Test: 4 <= 3 is false, so the loop ends."
+  - line: 4
+    vars: { i: null }
+    out: All docks listed
+    say: Java carries on below the loop. The box i is gone, because it only lived inside the loop.
 ```
+
+### for versus while
 
 This `for` loop does exactly the same as this `while` loop:
 
@@ -82,7 +115,47 @@ for (int ride = 1; ride <= 3; ride++) {
 }
 ```
 
-Start a total at 0 before the loop. Each turn adds one more amount. After three turns, `total` is `7.5`.
+Start a total at 0 before the loop. Each turn adds one more amount. Watch `total` grow by one $2.50 fare per ride:
+
+```animate
+title: Adding up three fares
+kind: code
+code: |
+  double total = 0.0;
+  for (int ride = 1; ride <= 3; ride++) {
+      total = total + 2.50;
+  }
+  System.out.println("Total: $" + total);
+steps:
+  - line: 1
+    vars: { total: '0.0' }
+    say: The total starts at 0, before the loop. Nothing has been added yet.
+  - line: 2
+    vars: { ride: 1 }
+    say: ride starts at 1. 1 <= 3 is true, so the first turn begins.
+  - line: 3
+    vars: { total: 2.5 }
+    say: Java reads total (0.0), adds 2.50, and puts 2.5 back into the same box.
+  - line: 2
+    vars: { ride: 2 }
+    say: ride++ makes ride 2. Still <= 3, so another turn.
+  - line: 3
+    vars: { total: '5.0' }
+    say: The second fare goes on top. total is now 5.0.
+  - line: 2
+    vars: { ride: 3 }
+    say: ride is 3. 3 <= 3 is true, one more turn.
+  - line: 3
+    vars: { total: 7.5 }
+    say: The third fare makes 7.5.
+  - line: 2
+    vars: { ride: 4 }
+    say: ride++ makes ride 4. 4 <= 3 is false, so the loop ends.
+  - line: 5
+    vars: { ride: null }
+    out: "Total: $7.5"
+    say: The box ride is gone, because it only lived inside the loop. The total is printed once, after the loop.
+```
 
 ### Syntax: building text in a loop
 
@@ -128,6 +201,8 @@ for (int dock = 1; dock <= 5; dock++) {
 ```
 
 Dock 3 is broken, so it is skipped. This prints `1 2 4 5 `.
+
+### break in a for loop
 
 ```java
 for (int dock = 1; dock <= 5; dock++) {

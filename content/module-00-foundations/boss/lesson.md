@@ -35,6 +35,27 @@ System.out.println();
 System.out.println("Own line");
 ```
 
+```animate
+title: print waits, println ends the line
+kind: code
+code: |
+  System.out.print("Same ");
+  System.out.print("line");
+  System.out.println();
+  System.out.println("Own line");
+steps:
+  - line: 1
+    say: print sends "Same " and stays on that line. The line is not finished, so the next text lands right after it.
+  - line: 2
+    say: print adds "line" just after "Same ". Still the same line, which is how the broken kiosk ran its text together.
+  - line: 3
+    out: Same line
+    say: println() with nothing inside just ends the line. Now "Same line" shows up, finished.
+  - line: 4
+    out: Own line
+    say: println prints "Own line" on a fresh line, then ends that line too.
+```
+
 ```callout tip
 Run the program with the Run button to see what the screen shows. Then run the checks to see which tier passes.
 ```

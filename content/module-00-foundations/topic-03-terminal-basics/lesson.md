@@ -12,7 +12,35 @@ A **terminal** is a window where you type instructions as text. On your Mac, the
 A **shell** is the program inside the terminal that reads what you type and runs it. Your Mac uses a shell called **zsh**. A **command** is one instruction you type, such as `ls`.
 ```
 
-You type a command and press Enter. The shell runs it and prints the answer below. Then it waits for the next command.
+You type a command and press Enter. The shell runs it, and the answer appears below. Then it waits for the next command. Watch one command make the trip:
+
+```animate
+title: What happens when you type ls
+kind: scene
+nodes:
+  - { id: you, label: Terminal window, emoji: "⌨️", value: "%" }
+  - { id: shell, label: Shell (zsh), emoji: "🐚", value: waiting }
+  - { id: prog, label: The ls program, emoji: "🔧" }
+  - { id: folder, label: Current folder, emoji: "📁", value: "~/spoke" }
+steps:
+  - say: You type ls and press Enter. The terminal hands your text to the shell.
+    focus: [you]
+    set: { you: "% ls" }
+    send: { from: you, to: shell, label: ls }
+  - say: The shell reads the word ls. It finds the program called ls on your Mac and starts it.
+    set: { shell: running ls }
+    send: { from: shell, to: prog, label: start }
+  - say: You gave ls no folder name, so it looks inside the current folder, the one you stand in.
+    send: { from: prog, to: folder, label: "what's inside?" }
+  - say: The folder answers with the names it holds.
+    send: { from: folder, to: prog, label: "bikes  logs", back: true }
+  - say: ls writes the names straight into the terminal window, below your command. Then ls ends.
+    send: { from: prog, to: you, label: "bikes  logs", back: true }
+    set: { you: "bikes  logs" }
+  - say: ls is done, so the shell shows the % prompt again. It is waiting for your next command.
+    focus: [you]
+    set: { you: "%", shell: waiting }
+```
 
 ### Folders form a tree
 
@@ -134,14 +162,44 @@ bikes  logs
 /Users/you/spoke
 ```
 
-1. `pwd` shows you start in your home folder, `/Users/you`.
-2. `ls` lists three folders. One is `spoke`.
-3. `cd spoke` moves you into it, and `ls` shows `bikes` and `logs`.
-4. `cd logs` moves one level deeper. `ls` shows a file for each day.
-5. `cat` prints yesterday's log. Theo has his answer.
+Watch where you stand as each command runs. The pin moves with every `cd`:
+
+```animate
+title: Riding through the folder tree
+kind: scene
+nodes:
+  - { id: home, label: "~ (/Users/you)", emoji: "🏠", value: "📍 you are here", row: 0, col: 1 }
+  - { id: spoke, label: spoke, emoji: "📁", row: 1, col: 1 }
+  - { id: logs, label: logs, emoji: "📁", row: 2, col: 0 }
+  - { id: bikes, label: bikes, emoji: "📁", row: 2, col: 2 }
+  - { id: file, label: 2026-11-11.txt, emoji: "📄", row: 3, col: 0 }
+  - { id: term, label: Terminal, emoji: "⌨️", value: "% pwd", row: 0, col: 3 }
+links:
+  - { from: home, to: spoke }
+  - { from: spoke, to: logs }
+  - { from: spoke, to: bikes }
+  - { from: logs, to: file }
+steps:
+  - say: You start in your home folder. pwd prints its full path, /Users/you.
+    focus: [home]
+    set: { term: /Users/you }
+  - say: ls lists what is inside home. One of the folders is spoke.
+    show: [spoke]
+    set: { term: "Desktop Documents spoke" }
+  - say: cd spoke moves you down into it. From now on, every command works from spoke.
+    set: { home: "", spoke: "📍 you are here", term: "% cd spoke" }
+  - say: ls shows bikes and logs. cd logs moves you one level deeper.
+    show: [logs, bikes]
+    set: { spoke: "", logs: "📍 you are here", term: "% cd logs" }
+  - say: cat prints yesterday's log. It works because the file sits right here, in the current folder.
+    show: [file]
+    send: { from: file, to: term, label: "08:02 bike 17 out" }
+    set: { term: "08:02 bike 17 out..." }
+  - say: cd .. climbs one level up, to the parent folder. pwd confirms you are in /Users/you/spoke.
+    set: { logs: "", spoke: "📍 you are here", term: /Users/you/spoke }
+```
 
 Your own `ls` list in the home folder will be longer. A Mac also has folders like Downloads, Music and Pictures.
-6. `cd ..` climbs back up to `spoke`, and `pwd` confirms it.
 
 ## Try it
 

@@ -71,7 +71,51 @@ System.out.println(a.equals(b));   // true
 System.out.println(a == b);        // false, two separate objects
 ```
 
-`==` still checks whether two variables point at the same object. `equals` checks the values.
+`==` still checks whether two variables point at the same object. `equals` checks the values. Watch everything Java wrote for you at work:
+
+```animate
+title: A one-line record at work
+kind: code
+code: |
+  public class Main {
+      record Ride(String bikeId, String type, int minutes) { }
+
+      public static void main(String[] args) {
+          Ride a = new Ride("B-1042", "classic", 12);
+          Ride b = new Ride("B-1042", "classic", 12);
+          System.out.println(a);
+          System.out.println(a == b);
+          System.out.println(a.equals(b));
+          Ride longer = new Ride(a.bikeId(), a.type(), a.minutes() + 5);
+          System.out.println(longer.minutes() + " vs " + a.minutes());
+      }
+  }
+steps:
+  - line: 5
+    vars: { a: "@r1" }
+    objects: { r1: { type: Ride, fields: { bikeId: '"B-1042"', type: '"classic"', minutes: 12 } } }
+    say: Java wrote the constructor for you. It stores the three components in final fields.
+  - line: 6
+    vars: { b: "@r2" }
+    objects: { r2: { type: Ride, fields: { bikeId: '"B-1042"', type: '"classic"', minutes: 12 } } }
+    say: A second new builds a second Ride with the same values.
+  - line: 7
+    out: Ride[bikeId=B-1042, type=classic, minutes=12]
+    say: println calls the generated toString. It prints the record name and every component as name=value.
+  - line: 8
+    out: "false"
+    say: == asks if a and b point at one object. They point at two, so false.
+  - line: 9
+    out: "true"
+    say: The generated equals compares every component. All three match, so true.
+  - line: 10
+    vars: { longer: "@r3" }
+    objects: { r3: { type: Ride, fields: { bikeId: '"B-1042"', type: '"classic"', minutes: 17 } } }
+    say: You cannot change a's minutes, because the fields are final. So you build a new Ride from a's accessors, with 5 more minutes.
+  - line: 11
+    out: 17 vs 12
+    say: The new ride has 17 minutes. The old ride still has 12, untouched, like a printed receipt.
+```
 
 ### Records cannot change
 

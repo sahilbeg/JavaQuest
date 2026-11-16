@@ -42,7 +42,40 @@ class CargoBike extends Bike {
 }
 ```
 
-A `CargoBike` now holds two fields called `price`. `Bike`'s method reads `Bike`'s field, which is still 0.15. Delete the `price` field from `CargoBike`. Then, in its constructor after `super(id);`, write `price = 0.25;`. That sets the field `CargoBike` inherited from `Bike`.
+A `CargoBike` now holds two fields called `price`. Watch which one the fare reads:
+
+```animate
+title: Two price fields in one bike
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          Bike b = new CargoBike();
+          System.out.println(b.pricePerMinute());
+      }
+  }
+  class Bike {
+      protected double price = 0.15;
+      double pricePerMinute() { return price; }
+  }
+  class CargoBike extends Bike {
+      protected double price = 0.25;
+  }
+steps:
+  - line: 3
+    vars: { b: "@c1" }
+    objects: { c1: { type: CargoBike, fields: { "Bike's price": 0.15, "CargoBike's price": 0.25 } } }
+    say: new CargoBike() builds one object. Inside it sit two separate fields called price, one from Bike and one from CargoBike.
+  - line: 4
+    say: pricePerMinute() is written only in Bike, so Bike's method runs.
+  - line: 9
+    say: Inside Bike's method, price means Bike's own field. It cannot see CargoBike's field, so it returns 0.15.
+  - line: 4
+    out: "0.15"
+    say: The cargo ride is billed at the classic price. That is the incident. Fields are not overridden; only methods are.
+```
+
+Delete the `price` field from `CargoBike`. Then, in its constructor after `super(id);`, write `price = 0.25;`. That sets the field `CargoBike` inherited from `Bike`.
 
 ```callout tip
 Fields are not overridden. Only methods are. When a subclass needs a different value, set the parent's field or override a method.

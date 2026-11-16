@@ -56,9 +56,65 @@ for (int i = 0; i < docks.length; i++) {
 }
 ```
 
+Watch a small rack of 3 fill up, then take a bike:
+
+```animate
+title: A rack, its docks and a bike
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          Dock[] docks = new Dock[3];
+          for (int i = 0; i < docks.length; i++) {
+              docks[i] = new Dock();
+          }
+          docks[0].bike = new Bike("B-1042");
+          System.out.println("Dock 2 free: " + (docks[1].bike == null));
+      }
+  }
+  class Dock { Bike bike; }
+  class Bike { String id; Bike(String id) { this.id = id; } }
+steps:
+  - line: 3
+    vars: { docks: "@rack" }
+    objects: { rack: { type: "Dock[]", fields: { "0": null, "1": null, "2": null } } }
+    say: new Dock[3] builds the rack. It has 3 slots, and every slot is null. There are no docks yet.
+  - line: 4
+    vars: { i: 0 }
+    say: The loop starts with i at 0, and 0 is less than docks.length, which is 3.
+  - line: 5
+    objects:
+      d0: { type: Dock, fields: { bike: null } }
+      rack: { type: "Dock[]", fields: { "0": "@d0", "1": null, "2": null } }
+    say: First round. new Dock() builds a real dock, and slot 0 points at it. Its bike field starts as null, so no bike yet.
+  - line: 5
+    vars: { i: 1 }
+    objects:
+      d1: { type: Dock, fields: { bike: null } }
+      rack: { type: "Dock[]", fields: { "0": "@d0", "1": "@d1", "2": null } }
+    say: Second round fills slot 1 the same way.
+  - line: 5
+    vars: { i: 2 }
+    objects:
+      d2: { type: Dock, fields: { bike: null } }
+      rack: { type: "Dock[]", fields: { "0": "@d0", "1": "@d1", "2": "@d2" } }
+    say: Third round fills slot 2. Every slot now points at a real dock, so asking any of them a question is safe.
+  - line: 7
+    vars: { i: ~ }
+    objects:
+      b1: { type: Bike, fields: { id: '"B-1042"' } }
+      d0: { type: Dock, fields: { bike: "@b1" } }
+    say: A bike arrives at dock 1. The dock's bike field now points at the Bike. The dock has the bike; it does not copy it. Here bike is not private, to keep the demo short.
+  - line: 8
+    out: "Dock 2 free: true"
+    say: Dock 2 lives in slot 1. Its bike field is still null, so it is free.
+```
+
 ```callout warning
 `new Dock[12]` builds the rack, and `new Dock()` builds one dock. Forget the loop, and `docks[0].isFree()` crashes with a `NullPointerException`.
 ```
+
+### Building the docks in the constructor
 
 The best place for that loop is the constructor. Then every `Station` is born with 12 real docks.
 
@@ -86,6 +142,26 @@ public boolean isFree(int number) {
 ```
 
 **Delegation** means a method passes the work to an object it holds. The station does not check bikes itself. It asks the dock.
+
+```animate
+title: The station asks its dock
+kind: scene
+nodes:
+  - { id: kiosk, label: Kiosk, emoji: "🖥️" }
+  - { id: station, label: Station Riverside, emoji: "🚏" }
+  - { id: dock, label: Dock 2, emoji: "🔌", value: "bike: null" }
+steps:
+  - say: A rider asks the kiosk if dock 2 is free. The kiosk calls isFree(2) on the station.
+    send: { from: kiosk, to: station, label: "isFree(2)" }
+  - say: The station does not look at bikes itself. It finds docks[1] and passes the question on. That is delegation.
+    send: { from: station, to: dock, label: "isFree()" }
+  - say: The dock checks its own private bike field. It holds null, so the answer is true.
+    focus: [dock]
+  - say: The dock answers the station.
+    send: { from: dock, to: station, label: "true", back: true }
+  - say: The station passes the answer back to the kiosk. Each class did only its own job.
+    send: { from: station, to: kiosk, label: "true", back: true }
+```
 
 Each class keeps its own job. `Dock` knows about one bike. `Station` knows about 12 docks. Neither one reaches inside the other's private fields.
 

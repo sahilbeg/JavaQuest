@@ -66,6 +66,36 @@ An **IDE** (Integrated Development Environment) is an editor built for code. It 
 
 The recommended IDE is **IntelliJ IDEA**. Download it from jetbrains.com. The free version has everything this course needs, and it's made for Java. Another good choice is **VS Code** with the **Extension Pack for Java** added.
 
+The IDE does not replace the JDK. When you press Run, it calls the JDK tools for you:
+
+```animate
+title: You press Run in the IDE
+kind: scene
+nodes:
+  - { id: ide, label: IntelliJ IDEA, emoji: "🪟", value: Hello.java }
+  - { id: javac, label: javac (JDK), emoji: "🔧" }
+  - { id: cls, label: Hello.class, emoji: "📦", value: bytecode }
+  - { id: jvm, label: java (JVM), emoji: "⚙️" }
+steps:
+  - say: You write Hello.java in the IDE and press the green Run button.
+    focus: [ide]
+  - say: The IDE hands your file to javac, the compiler from the JDK. javac checks it and builds it.
+    send: { from: ide, to: javac, label: Hello.java }
+    set: { javac: compiling }
+  - say: javac writes Hello.class, full of bytecode.
+    show: [cls]
+    send: { from: javac, to: cls, label: bytecode }
+    set: { javac: done }
+  - say: Next the IDE starts java, the JVM, and tells it to run Hello.
+    send: { from: ide, to: jvm, label: run Hello }
+  - say: The JVM loads Hello.class and runs it.
+    send: { from: cls, to: jvm, label: Hello.class }
+    set: { jvm: running }
+  - say: The output comes back to the IDE's Run panel. Without the JDK installed, the Run button has nothing to call.
+    send: { from: jvm, to: ide, label: "Hello, World!", back: true }
+    set: { ide: "Hello, World!", jvm: finished }
+```
+
 ### Opening the practice project
 
 JavaQuest keeps your exercises in the `practice/` folder of this repository. Each exercise lives in `practice/<module>/<topic>/src`. When you save a file there, JavaQuest notices and runs the checks for you.

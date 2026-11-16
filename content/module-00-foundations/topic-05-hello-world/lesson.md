@@ -78,9 +78,42 @@ public class Hello {
 - `return` hands that text back to whoever called the method.
 - `System.out.println(greeting());` calls the method and prints what it gives back.
 
+Watch Java jump into `greeting()` and come back with the text:
+
+```animate
+title: main calls greeting()
+kind: code
+code: |
+  public class Hello {
+      public static String greeting() {
+          return "Hello, World!";
+      }
+
+      public static void main(String[] args) {
+          System.out.println(greeting());
+      }
+  }
+steps:
+  - line: 6
+    say: Java starts at main, not at the top of the file. greeting() waits until someone calls it.
+  - line: 7
+    say: println needs to know what to print. So Java first calls greeting() and jumps up to it.
+  - line: 3
+    say: greeting() runs its only line. return hands the text "Hello, World!" back to whoever called it.
+  - line: 7
+    out: Hello, World!
+    say: Java is back on line 7, holding the text. println prints it and moves to a new line.
+  - line: 8
+    say: main reaches its closing brace, so the program ends.
+```
+
+### Your exercise file
+
 ```callout jargon
 A **package** groups classes, like folders group files. The exercise file starts with `package jq.m00.helloworld;`. Leave that line exactly as it is.
 ```
+
+Like every Java file, it is compiled first, then run:
 
 ```mermaid
 flowchart LR
@@ -102,10 +135,30 @@ public class Main {
 }
 ```
 
-1. Java finds `main` and starts at its first line.
-2. The first `println` prints `Hello, World!` and moves to a new line.
-3. The second `println` prints `I am learning Java.`
-4. Java reaches the closing brace of `main`, so the program ends.
+Watch Java run it, one line at a time:
+
+```animate
+title: Hello, World! line by line
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          System.out.println("Hello, World!");
+          System.out.println("I am learning Java.");
+      }
+  }
+steps:
+  - line: 2
+    say: Java finds main. Every program starts here.
+  - line: 3
+    out: Hello, World!
+    say: The first println prints Hello, World! and moves to a new line.
+  - line: 4
+    out: I am learning Java.
+    say: The second println prints its text on that new line.
+  - line: 5
+    say: Java reaches the closing brace of main, so the program ends.
+```
 
 Java runs the lines from top to bottom, one at a time.
 

@@ -113,6 +113,56 @@ class EBike extends Bike {
 
 If `Bike` had a constructor with no parameters, Java would call it for you. `Bike` only has `Bike(String id)`, so you must write `super(id)` yourself.
 
+### One object, two parts
+
+Watch `new EBike(...)` build one object that holds the `Bike` part and the `EBike` part:
+
+```animate
+title: Parent part first, then child part
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          EBike e = new EBike("B-2001", 80);
+          System.out.println(e.getId() + " has " + e.getBattery() + "%");
+      }
+  }
+  class Bike {
+      private String id;
+      public Bike(String id) { this.id = id; }
+      public String getId() { return id; }
+  }
+  class EBike extends Bike {
+      private int battery;
+      public EBike(String id, int battery) {
+          super(id);
+          this.battery = battery;
+      }
+      public int getBattery() { return battery; }
+  }
+steps:
+  - line: 3
+    objects: { e1: { type: EBike, fields: { "id (from Bike)": null, battery: 0 } } }
+    say: new EBike makes one object. It has room for Bike's id and for EBike's own battery.
+  - line: 14
+    vars: { this: "@e1", id: '"B-2001"', battery: 80 }
+    say: The EBike constructor starts. Its parameters hold "B-2001" and 80.
+  - line: 15
+    say: super(id) comes first. It jumps to Bike's constructor to set up the Bike part.
+  - line: 9
+    objects: { e1: { type: EBike, fields: { "id (from Bike)": '"B-2001"', battery: 0 } } }
+    say: Bike's constructor stores the id in the Bike part of the same object. battery waits until EBike's constructor carries on.
+  - line: 16
+    objects: { e1: { type: EBike, fields: { "id (from Bike)": '"B-2001"', battery: 80 } } }
+    say: Back in EBike, the new field gets 80. Parent part first, then child part.
+  - line: 3
+    vars: { this: ~, id: ~, battery: ~, e: "@e1" }
+    say: The constructors finish. e points to one object that holds both parts.
+  - line: 4
+    out: B-2001 has 80%
+    say: getId() is inherited from Bike, and getBattery() is EBike's own. Both work on e.
+```
+
 ### Syntax: overriding a method
 
 An e-bike costs 0.30 per minute. You change that one method by writing it again in the child with the same name, parameters and return type. This is called **overriding**.
@@ -128,7 +178,45 @@ class EBike extends Bike {
 }
 ```
 
-Now `fare()` in `Bike` calls `pricePerMinute()`. On an `EBike` object, Java runs the e-bike's version. You did not touch `fare()` at all, yet the e-bike fare is right.
+`fare()` lives in `Bike` and calls `pricePerMinute()`. Watch which version runs for an e-bike:
+
+```animate
+title: fare() finds the e-bike's price
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          EBike e = new EBike();
+          System.out.println(e.fare(10));
+      }
+  }
+  class Bike {
+      public double pricePerMinute() { return 0.15; }
+      public double fare(int minutes) { return 1.00 + minutes * pricePerMinute(); }
+  }
+  class EBike extends Bike {
+      @Override
+      public double pricePerMinute() { return 0.30; }
+  }
+steps:
+  - line: 3
+    objects: { e1: { type: EBike } }
+    vars: { e: "@e1" }
+    say: e points to an e-bike. These classes have no fields, so the object card is empty.
+  - line: 4
+    say: e.fare(10) is called. EBike has no fare method, so Java uses the one it inherits from Bike.
+  - line: 9
+    vars: { this: "@e1", minutes: 10 }
+    say: Bike's fare runs, and this points at the e-bike. It needs pricePerMinute().
+  - line: 13
+    say: this is an EBike, so Java runs EBike's override. It returns 0.30, not 0.15.
+  - line: 9
+    say: Back in fare, 1.00 + 10 * 0.30 makes 4.0.
+  - line: 4
+    vars: { this: ~, minutes: ~ }
+    out: "4.0"
+    say: println shows 4.0. You never touched fare(), yet the e-bike fare is right.
+```
 
 ```java nocompile
 new Bike("B-1042").fare(10);       // 1.00 + 10 * 0.15 = 2.5

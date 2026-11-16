@@ -55,7 +55,49 @@ class Bike {
 **this** means "the object being built or used right now". `this.id` is the field. Plain `id` is the parameter.
 ```
 
-Read `this.id = id;` as "copy the parameter `id` into this object's `id` field".
+Read `this.id = id;` as "copy the parameter `id` into this object's `id` field". Watch a constructor fill in a new bike:
+
+```animate
+title: A constructor builds a bike
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          Bike bike = new Bike("B-1042", "classic");
+          System.out.println(bike.id + " is " + bike.type);
+      }
+  }
+  class Bike {
+      String id;
+      String type;
+      Bike(String id, String type) {
+          this.id = id;
+          this.type = type;
+      }
+  }
+steps:
+  - line: 3
+    objects: { b1: { type: Bike, fields: { id: null, type: null } } }
+    say: new first makes an empty Bike object. Both fields start as null.
+  - line: 10
+    vars: { this: "@b1", id: '"B-1042"', type: '"classic"' }
+    say: Then the constructor runs. this points to the new object. The parameters hold the two values passed to new.
+  - line: 11
+    objects: { b1: { type: Bike, fields: { id: '"B-1042"', type: null } } }
+    say: this.id = id copies the parameter into the object's id field.
+  - line: 12
+    objects: { b1: { type: Bike, fields: { id: '"B-1042"', type: '"classic"' } } }
+    say: this.type = type fills the second field. The bike is complete.
+  - line: 13
+    vars: { this: ~, id: ~, type: ~ }
+    say: The constructor ends. Its parameters and this disappear, but the object stays.
+  - line: 3
+    vars: { bike: "@b1" }
+    say: new hands back the arrow, so bike points to a finished bike. No field was left null.
+  - line: 4
+    out: B-1042 is classic
+    say: println reads both fields through the arrow.
+```
 
 ### Syntax: constructor overloading
 
@@ -111,15 +153,57 @@ class Station {
 - It must be the **first line** of the constructor.
 - The real setup now lives in one place, so a fix happens once.
 
-```callout warning
-Writing any constructor removes the free one. If you never write a constructor, Java gives you an empty one, so `new Bike()` works. Once you write `Bike(String id, String type)`, plain `new Bike()` stops compiling.
+```animate
+title: One constructor hands over to another
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          Station s = new Station("Riverside");
+          System.out.println(s.name + ": " + s.docks + " docks");
+      }
+  }
+  class Station {
+      String name;
+      int docks;
+      Station(String name) {
+          this(name, 12);
+      }
+      Station(String name, int docks) {
+          this.name = name;
+          this.docks = docks;
+      }
+  }
+steps:
+  - line: 3
+    objects: { s1: { type: Station, fields: { name: null, docks: 0 } } }
+    say: new gets one value, "Riverside". Java makes an empty Station object first.
+  - line: 10
+    vars: { this: "@s1", name: '"Riverside"' }
+    say: One argument, so Java picks the constructor with one parameter.
+  - line: 11
+    say: this(name, 12) hands the job to the two-parameter constructor, passing 12 for the docks.
+  - line: 13
+    vars: { docks: 12 }
+    say: The two-parameter constructor starts. Its parameters hold "Riverside" and 12.
+  - line: 14
+    objects: { s1: { type: Station, fields: { name: '"Riverside"', docks: 0 } } }
+    say: The real setup lives here. this.name gets "Riverside".
+  - line: 15
+    objects: { s1: { type: Station, fields: { name: '"Riverside"', docks: 12 } } }
+    say: this.docks gets 12. Every field is set.
+  - line: 3
+    vars: { this: ~, name: ~, docks: ~, s: "@s1" }
+    say: Both constructors finish. Their parameters disappear, and s points to the finished station.
+  - line: 4
+    out: "Riverside: 12 docks"
+    say: println shows the 12 docks the first constructor chose.
 ```
 
-```mermaid
-flowchart LR
-  A["new Bike(&quot;B-1042&quot;)"] --> B["Bike(String id)"]
-  B -- "this(id, &quot;classic&quot;)" --> C["Bike(String id, String type)"]
-  C --> D["fields set"]
+### The free constructor disappears
+
+```callout warning
+Writing any constructor removes the free one. If you never write a constructor, Java gives you an empty one, so `new Bike()` works. Once you write `Bike(String id, String type)`, plain `new Bike()` stops compiling.
 ```
 
 ## Worked example

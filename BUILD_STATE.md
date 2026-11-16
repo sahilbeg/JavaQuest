@@ -56,6 +56,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - C07: module 7 Build and tooling (5 quiz-only topics), INC-07 and FEAT-07; reviewed (13 findings fixed); jar build checked as reproducible across time zones; all checks green
 - C08: module 8 Backend engineering (2 quiz topics, 10 Spring/SQL/JDBC code topics), INC-08 and FEAT-08; 3 reviews (about 45 findings) fixed; runner compiles with -parameters; all checks green
 
+- UX overhaul (user feedback): playful redesign, journey map, mastery gating with author mode, lesson player with short cards, animation engine (code and scene, checked by check-content), first-visit walkthroughs; 56 animations added to modules 0 to 2 and reviewed
 ## Decisions
 
 - Mascot: Byte the owl
@@ -73,6 +74,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - File watcher: directory-watcher (native FSEvents), measured 0.36 to 0.39 s save to start
 - Incident tiers come from test class names ending BronzeTest, SilverTest, GoldTest
 
+- Animations: every topic has at least one ```animate block; modules 0 to 2 done in the UX round, modules 3 to 8 to follow, new modules include them from C09
 ## Open decisions
 
 - A real VoiceOver pass needs a person

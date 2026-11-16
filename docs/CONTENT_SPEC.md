@@ -152,6 +152,7 @@ steps:                                      # 2 to 24 steps
 ```
 ````
 
+- Values show exactly as written, so quote anything that must keep its form: text with its quotes (`'"Ada"'`), chars (`"'A'"`), and doubles ending in `.0` (`'3.0'`, because an unquoted `3.0` shows as `3`).
 - `vars` and `objects` are changes: a variable keeps its value until a later step changes it. Give `~` to remove one (it went out of scope).
 - Objects: `objects: { b1: { type: Bike, fields: { id: '"B-1042"', minutes: 12 } } }`. A variable or field whose value is `"@b1"` draws an arrow to that object. Use objects for anything made with `new`: objects, arrays (`type: "int[]"`, fields `0`, `1`, ...), lists.
 - All `out` lines together must equal the program's real output, in order. If the program prints nothing, use no `out`.
@@ -179,6 +180,7 @@ steps:
 ````
 
 - `send` takes one message or a list; several messages in one step travel one after another.
+- `links` (top level, optional) draws lines that are always there, such as a folder and its parent folder, or two stations on a route: `links: [{ from: home, to: spoke }, { from: spoke, to: logs, label: "cd logs" }]`.
 - Keep scenes small: three to five boxes read best.
 
 Writing good animations:

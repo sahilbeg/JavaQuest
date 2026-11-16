@@ -48,9 +48,44 @@ System.out.println(a == b);   // false
 System.out.println(a == a);   // true
 ```
 
-**Identity** means "the very same object in memory". `==` on objects checks identity. It asks whether two references point to one object.
+**Identity** means "the very same object in memory". `==` on objects checks identity. It asks whether two references point to one object. Watch the arrows:
 
-`a` and `b` were made by two `new` calls. They are two objects, so `==` says `false`, even though they describe the same bike.
+```animate
+title: Two bikes, or one bike twice?
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          Bike a = new Bike("B-1042");
+          Bike b = new Bike("B-1042");
+          Bike c = a;
+          System.out.println(a == b);
+          System.out.println(a == c);
+      }
+  }
+  class Bike {
+      String id;
+      Bike(String id) { this.id = id; }
+  }
+steps:
+  - line: 3
+    vars: { a: "@b1" }
+    objects: { b1: { type: Bike, fields: { id: '"B-1042"' } } }
+    say: The rider's app builds a Bike for B-1042. a holds an arrow to it.
+  - line: 4
+    vars: { b: "@b2" }
+    objects: { b2: { type: Bike, fields: { id: '"B-1042"' } } }
+    say: The scanner builds its own Bike with the same id. A second new means a second object.
+  - line: 5
+    vars: { c: "@b1" }
+    say: No new here. c copies a's arrow, so c and a point at the very same object.
+  - line: 6
+    out: "false"
+    say: a == b asks one question. Do both arrows end at one object? They end at two objects, so false, even though the ids match.
+  - line: 7
+    out: "true"
+    say: a and c end at the same object, so a == c is true.
+```
 
 ### equals compares meaning
 
@@ -106,9 +141,39 @@ public int hashCode() {
 A **hash code** is an `int` that summarises an object. Fast lookup tools sort objects into buckets by this number, and only compare with `equals` inside one bucket.
 ```
 
+`Objects.hash(...)` lives in `java.util.Objects`, so add `import java.util.Objects;` at the top of the file. `return id.hashCode();` works too.
+
+### Why equal bikes need equal hash codes
+
 The rule is simple: **if two objects are equal, their hash codes must be equal**. Otherwise a lookup tool searches the wrong bucket and misses a bike that is really there. So build `hashCode` from the same fields that `equals` uses. Here that is `id` only.
 
-`Objects.hash(...)` lives in `java.util.Objects`, so add `import java.util.Objects;` at the top of the file. `return id.hashCode();` works too.
+```animate
+title: Finding the right bucket
+kind: scene
+nodes:
+  - { id: rider, label: "Rider's B-1042", emoji: "🚲", row: 0, col: 0 }
+  - { id: scanner, label: "Scanner's B-1042", emoji: "🚲", row: 0, col: 2 }
+  - { id: hash, label: hashCode(), emoji: "🔢", row: 1, col: 1 }
+  - { id: b0, label: Bucket 0, emoji: "🪣", value: empty, row: 2, col: 0 }
+  - { id: b1, label: Bucket 1, emoji: "🪣", value: empty, row: 2, col: 1 }
+  - { id: b2, label: Bucket 2, emoji: "🪣", value: empty, row: 2, col: 2 }
+steps:
+  - say: The lost-bike report adds the rider's B-1042 to a lookup tool. First the tool asks the bike for its hash code.
+    send: { from: rider, to: hash, label: "B-1042" }
+  - say: The id gives a number, and the number picks bucket 2. The bike is stored there.
+    send: { from: hash, to: b2, label: "bucket 2" }
+    set: { b2: "B-1042" }
+  - say: Now the scanner's B-1042 arrives. It is a different object, but hashCode uses only the id, so it gives the same number.
+    send: { from: scanner, to: hash, label: "B-1042" }
+  - say: Same number, same bucket. Only inside bucket 2 does the tool call equals. It says true, so this is a duplicate and it is not added again. One lost bike.
+    send: { from: hash, to: b2, label: "bucket 2" }
+    focus: [b2]
+  - say: Now imagine Bike forgot hashCode. Object's version usually gives each object its own number, so the scanner's copy could land in bucket 0.
+    send: { from: hash, to: b0, label: "bucket 0" }
+    set: { b0: "B-1042" }
+  - say: Nobody looks in bucket 2, so equals is never asked. B-1042 is stored twice, and the report counts two lost bikes.
+    focus: [b0, b2]
+```
 
 ## Worked example
 

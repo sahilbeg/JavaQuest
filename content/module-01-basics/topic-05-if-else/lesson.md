@@ -85,6 +85,35 @@ if (member) {
 
 You can write `if (member)` directly. `member` is already a boolean, so `== true` is not needed.
 
+Watch Java pick one path. Line 3 never lights up, because its branch is skipped:
+
+```animate
+title: One path, never both
+kind: code
+code: |
+  boolean member = false;
+  if (member) {
+      System.out.println("Welcome back, member!");
+  } else {
+      System.out.println("Unlock fee: $1.00");
+  }
+  System.out.println("Enjoy the ride!");
+steps:
+  - line: 1
+    vars: { member: false }
+    say: The kiosk stores false, because this rider is not a member.
+  - line: 2
+    say: Java checks the condition. member is false, so the whole if block is skipped.
+  - line: 4
+    say: A false condition sends Java to the else block instead.
+  - line: 5
+    out: "Unlock fee: $1.00"
+    say: Only this branch runs. Exactly one of the two blocks runs, never both and never neither.
+  - line: 7
+    out: Enjoy the ride!
+    say: After the if-else, Java carries on with the next line, whichever branch ran.
+```
+
 ### Syntax: else if
 
 ```java
@@ -114,12 +143,39 @@ if (minutes < 15) {
 
 This prints `normal`. The first check fails, the second one passes, and Java never looks at the `else`.
 
-```mermaid
-flowchart TD
-  A["minutes < 15?"] -- yes --> S["short"]
-  A -- no --> B["minutes < 60?"]
-  B -- yes --> N["normal"]
-  B -- no --> L["long"]
+### The first true condition wins
+
+In this chain, two conditions are true for a 45 minute ride. Watch which one Java picks:
+
+```animate
+title: The first match wins
+kind: code
+code: |
+  int minutes = 45;
+  if (minutes < 15) {
+      System.out.println("short");
+  } else if (minutes < 60) {
+      System.out.println("normal");
+  } else if (minutes < 120) {
+      System.out.println("long");
+  } else {
+      System.out.println("all day");
+  }
+  System.out.println("Ride logged");
+steps:
+  - line: 1
+    vars: { minutes: 45 }
+    say: Bike B-1042 comes back after 45 minutes.
+  - line: 2
+    say: Is 45 less than 15? No, that is false, so Java skips the short block.
+  - line: 4
+    say: Is 45 less than 60? Yes, the first true condition in the chain.
+  - line: 5
+    out: normal
+    say: Java runs this block, and only this block.
+  - line: 11
+    out: Ride logged
+    say: Java jumps past the rest of the chain. 45 < 120 is true too, but it is never checked.
 ```
 
 ### Syntax: logical operators

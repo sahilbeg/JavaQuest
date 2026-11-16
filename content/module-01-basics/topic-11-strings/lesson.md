@@ -14,11 +14,6 @@ Calling a method on a String looks like `code.length()`. The dot means "use this
 
 Each character in a String has a position number called an **index**. Indexes start at 0, just like arrays.
 
-```mermaid
-flowchart LR
-  A["0: B"] --- B["1: -"] --- C["2: 1"] --- D["3: 0"] --- E["4: 4"] --- F["5: 2"]
-```
-
 ### Syntax: length and charAt
 
 ```java nocompile
@@ -36,7 +31,31 @@ System.out.println(code.charAt(0));  // B
 System.out.println(code.charAt(5));  // 2
 ```
 
-The last index is always `length() - 1`.
+The last index is always `length() - 1`. Watch `charAt` read the first and the last character:
+
+```animate
+title: Reading characters by index
+kind: code
+code: |
+  String code = "B-1042";
+  char first = code.charAt(0);
+  char last = code.charAt(code.length() - 1);
+  System.out.println(first + " and " + last);
+steps:
+  - line: 1
+    objects: { s1: { type: String, fields: { "0": "'B'", "1": "'-'", "2": "'1'", "3": "'0'", "4": "'4'", "5": "'2'" } } }
+    vars: { code: "@s1" }
+    say: A String is a row of characters. Each one has an index, starting at 0, just like an array.
+  - line: 2
+    vars: { first: "'B'" }
+    say: charAt(0) reads index 0 and gives back 'B'. It is a char, so it has single quotes.
+  - line: 3
+    vars: { last: "'2'" }
+    say: code.length() is 6, so the last index is 6 - 1 = 5. charAt(5) gives back '2'.
+  - line: 4
+    out: B and 2
+    say: println glues both chars into one line of text.
+```
 
 ### Syntax: changing case
 
@@ -126,20 +145,70 @@ boolean sameIgnoringCase = a.equalsIgnoreCase(b);
 - `equalsIgnoreCase` does the same check but treats `b` and `B` as equal.
 - `==` checks something else. An **object** is one value Java has stored. `==` asks whether two names point at the very same stored value. Two Strings can hold equal text and still be different objects.
 
+Watch `equals` and `==` give different answers for the same text:
+
+```animate
+title: Same text, different objects
+kind: code
+code: |
+  String typed = "b-1042";
+  String upper = typed.toUpperCase();
+  System.out.println(upper.equals("B-1042"));
+  System.out.println(upper == "B-1042");
+steps:
+  - line: 1
+    objects: { s1: { type: String, fields: { text: '"b-1042"' } } }
+    vars: { typed: "@s1" }
+    say: typed points at a String object holding "b-1042".
+  - line: 2
+    objects: { s2: { type: String, fields: { text: '"B-1042"' } } }
+    vars: { upper: "@s2" }
+    say: toUpperCase builds a new String object, "B-1042". upper points at it.
+  - line: 3
+    objects: { s3: { type: String, fields: { text: '"B-1042"' } } }
+    out: "true"
+    say: The "B-1042" written in the code is a separate object. equals compares the characters, and they match, so true.
+  - line: 4
+    out: "false"
+    say: == only asks whether both sides are the very same object. upper and the literal are two different objects, so false.
+```
+
 ```callout warning
 Always compare String text with `equals`. The `==` check sometimes looks like it works, then fails on text built while the program runs.
 ```
 
 ### Strings never change
 
-Strings are **immutable**. That word means "cannot be changed". A method like `toUpperCase()` never changes the original. It builds a brand new String and gives that back.
+Strings are **immutable**. That word means "cannot be changed". A method like `toUpperCase()` never changes the original. It builds a brand new String and gives that back. Watch the arrows:
 
-```java
-String code = "b-1042";
-code.toUpperCase();          // the new String is thrown away
-System.out.println(code);    // b-1042
-code = code.toUpperCase();   // keep the new String
-System.out.println(code);    // B-1042
+```animate
+title: toUpperCase makes a new String
+kind: code
+code: |
+  String code = "b-1042";
+  code.toUpperCase();
+  System.out.println(code);
+  code = code.toUpperCase();
+  System.out.println(code);
+steps:
+  - line: 1
+    objects: { s1: { type: String, fields: { text: '"b-1042"' } } }
+    vars: { code: "@s1" }
+    say: Java stores "b-1042" as a String object. The variable code holds an arrow to it.
+  - line: 2
+    objects: { s2: { type: String, fields: { text: '"B-1042"' } } }
+    say: toUpperCase builds a brand new String, "B-1042". But no variable keeps an arrow to it.
+  - line: 3
+    objects: { s2: null }
+    out: b-1042
+    say: The new String is thrown away. code still points at the old one, which never changed.
+  - line: 4
+    objects: { s3: { type: String, fields: { text: '"B-1042"' } } }
+    vars: { code: "@s3" }
+    say: This time the new String is kept. code = moves the arrow to it.
+  - line: 5
+    out: B-1042
+    say: println follows the arrow and prints B-1042. The old "b-1042" is still there, unchanged, but code no longer points at it.
 ```
 
 ```callout analogy

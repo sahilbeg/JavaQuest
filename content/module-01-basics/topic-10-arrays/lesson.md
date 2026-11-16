@@ -20,6 +20,34 @@ int[] rides = new int[5];
 - `new int[5]` creates a row of 5 slots.
 - New slots start with a default value: `0` for numbers, `false` for `boolean`, `null` for `String`.
 
+Watch an array of 3 ride times being made and filled:
+
+```animate
+title: A row of three slots
+kind: code
+code: |
+  int[] rides = new int[3];
+  rides[0] = 12;
+  rides[2] = 30;
+  System.out.println(rides[0] + " " + rides[1] + " " + rides[2]);
+steps:
+  - line: 1
+    objects: { a1: { type: "int[]", fields: { "0": 0, "1": 0, "2": 0 } } }
+    vars: { rides: "@a1" }
+    say: new int[3] builds one object with 3 numbered slots, all 0. The variable rides holds an arrow to it.
+  - line: 2
+    objects: { a1: { type: "int[]", fields: { "0": 12, "1": 0, "2": 0 } } }
+    say: rides[0] = 12 follows the arrow and puts 12 in slot 0, the first slot.
+  - line: 3
+    objects: { a1: { type: "int[]", fields: { "0": 12, "1": 0, "2": 30 } } }
+    say: Slot 2 is the third and last slot. It gets 30.
+  - line: 4
+    out: 12 0 30
+    say: Slot 1 was never set, so it still holds its default, 0.
+```
+
+### Default values and null
+
 ```callout jargon
 **null** means 'no value yet'. A String slot holds no text until you put some in.
 ```
@@ -29,6 +57,8 @@ boolean[] docks = new boolean[12];   // 12 docks, all false
 double[] fares = new double[3];      // 0.0, 0.0, 0.0
 String[] stations = new String[4];   // null, null, null, null
 ```
+
+### Syntax: listing the values
 
 When you already know the values, list them in curly braces.
 
@@ -76,7 +106,45 @@ for (int i = 0; i < rides.length; i++) {
 }
 ```
 
-The loop variable `i` walks through every index, from 0 up to `length - 1`. Use this loop when you need the index itself, for example to print a dock number.
+The loop variable `i` walks through every index, from 0 up to `length - 1`:
+
+```animate
+title: i walks along the array
+kind: code
+code: |
+  int[] rides = {12, 45, 7};
+  for (int i = 0; i < rides.length; i++) {
+      System.out.println("Ride " + i + ": " + rides[i]);
+  }
+steps:
+  - line: 1
+    objects: { a1: { type: "int[]", fields: { "0": 12, "1": 45, "2": 7 } } }
+    vars: { rides: "@a1" }
+    say: The array has 3 slots, with indexes 0, 1 and 2. So rides.length is 3.
+  - line: 2
+    vars: { i: 0 }
+    say: i starts at 0, the first index. 0 < 3 is true.
+  - line: 3
+    out: "Ride 0: 12"
+    say: rides[i] reads the slot that i names. Right now that is slot 0.
+  - line: 2
+    vars: { i: 1 }
+    say: i++ moves i to the next slot. 1 < 3 is true.
+  - line: 3
+    out: "Ride 1: 45"
+    say: The same line now reads slot 1.
+  - line: 2
+    vars: { i: 2 }
+    say: i is 2, the last index. 2 < 3 is still true.
+  - line: 3
+    out: "Ride 2: 7"
+    say: The last slot is read.
+  - line: 2
+    vars: { i: 3 }
+    say: i is 3 and 3 < 3 is false, so the loop stops. rides[3] does not exist, and it is never read.
+```
+
+Use this loop when you need the index itself, for example to print a dock number.
 
 ```java nocompile
 for (int i = 0; i < docks.length; i++) {
@@ -164,6 +232,8 @@ public static int total(int[] rides) {
     return sum;
 }
 ```
+
+### Syntax: returning an array
 
 A method can also return an array. Create it with `new`, fill it, then return it.
 

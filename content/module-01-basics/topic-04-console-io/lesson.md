@@ -96,6 +96,85 @@ System.out.println("How many minutes did you ride?");
 int minutes = in.nextInt();
 ```
 
+Watch the kiosk ask, the rider answer, and the Scanner carry the answer to your program:
+
+```animate
+title: The kiosk asks, the rider answers
+kind: scene
+nodes:
+  - { id: program, label: Your program, emoji: "📄", value: running, col: 0 }
+  - { id: scanner, label: Scanner, emoji: "🔎", col: 1 }
+  - { id: console, label: Console, emoji: "🖥️", col: 2 }
+  - { id: rider, label: Rider, emoji: "🧑", col: 3 }
+steps:
+  - say: The program prints a prompt first, so the rider knows what to type.
+    focus: [program]
+    send: { from: program, to: console, label: "How many minutes?" }
+    set: { console: "How many minutes?" }
+  - say: nextInt() asks the Scanner for a number. The program waits right here until one arrives.
+    send: { from: program, to: scanner, label: "nextInt()" }
+    set: { program: waiting }
+  - say: The rider types 10 and presses Enter. The keys go into System.in, the keyboard side of the console.
+    focus: [rider]
+    send: { from: rider, to: console, label: "10 ⏎" }
+    set: { console: "How many minutes? 10" }
+  - say: The Scanner reads from System.in. It picks out the digits 1 and 0 as one whole number.
+    focus: [scanner]
+    send: { from: console, to: scanner, label: "10⏎" }
+    set: { scanner: "10" }
+  - say: nextInt() hands back the int 10, and it lands in the minutes box.
+    send: { from: scanner, to: program, label: "10", back: true }
+    set: { program: "minutes = 10" }
+  - say: Now the program does the fare sum and prints the answer.
+    focus: [program]
+    send: { from: program, to: console, label: "Fare: $2.5" }
+    set: { console: "Fare: $2.5" }
+```
+
+### The leftover Enter
+
+A Scanner reads the text in order, like a finger moving along it. `nextInt()` stops right after the digits, so the Enter after them is still waiting. Watch where the finger goes (⏎ marks an Enter):
+
+```animate
+title: The Enter that nextInt leaves behind
+kind: code
+code: |
+  import java.util.Scanner;
+  public class Main {
+      public static void main(String[] args) {
+          Scanner in = new Scanner("12\nRiverside\n");
+          int minutes = in.nextInt();
+          String rest = in.nextLine();
+          String station = in.nextLine();
+          System.out.println(minutes + " min from " + station);
+          System.out.println("rest was [" + rest + "]");
+      }
+  }
+steps:
+  - line: 4
+    objects: { sc: { type: Scanner, fields: { unread: '"12⏎Riverside⏎"' } } }
+    vars: { in: "@sc" }
+    say: The Scanner gets its text, as if a rider typed 12, pressed Enter, typed Riverside and pressed Enter again.
+  - line: 5
+    vars: { minutes: 12 }
+    objects: { sc: { type: Scanner, fields: { unread: '"⏎Riverside⏎"' } } }
+    say: nextInt() reads 12 and stops. The Enter after 12 is still unread.
+  - line: 6
+    vars: { rest: '""' }
+    objects: { sc: { type: Scanner, fields: { unread: '"Riverside⏎"' } } }
+    say: nextLine() reads up to the next Enter. Only the leftover Enter was there, so rest is empty text.
+  - line: 7
+    vars: { station: '"Riverside"' }
+    objects: { sc: { type: Scanner, fields: { unread: '""' } } }
+    say: Now the finger sits at the start of a fresh line, so this nextLine() gets Riverside.
+  - line: 8
+    out: 12 min from Riverside
+    say: Both values arrived safely, because the extra nextLine() swallowed the leftover Enter.
+  - line: 9
+    out: "rest was []"
+    say: That empty rest is the trap. After nextInt(), call nextLine() once before you read a line of text.
+```
+
 ## Worked example
 
 This program plays the kiosk. The pretend rider types `10`.
@@ -114,12 +193,7 @@ public class Main {
 }
 ```
 
-1. The `import` line lets you use `Scanner`.
-2. The Scanner gets the text `10` followed by Enter.
-3. The prompt prints first, so the rider knows what to type.
-4. `nextInt()` reads `10` and stores it in `minutes`.
-5. The fare sum from the last topic gives `2.5`.
-6. The last line prints `Fare: $2.5`.
+The prompt prints first, so the rider knows what to type. Then `nextInt()` reads `10` into `minutes`, and the fare sum from the last topic prints `Fare: $2.5`.
 
 On a real kiosk you write `new Scanner(System.in)` instead. Then the program waits until the rider types a number and presses Enter.
 
@@ -142,7 +216,7 @@ public class Main {
 }
 ```
 
-The lone `in.nextLine();` looks strange. The last mistake below explains why it is there.
+The lone `in.nextLine();` looks strange. "The leftover Enter" above shows why it is there.
 
 ```callout tip
 Read input in the same order the person types it. A Scanner never goes backwards.

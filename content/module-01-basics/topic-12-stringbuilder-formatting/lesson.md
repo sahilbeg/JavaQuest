@@ -23,6 +23,8 @@ The pattern is normal text with **placeholders**. A placeholder starts with `%` 
 | `%.2f` | a decimal with exactly 2 digits after the point | `2.50` |
 | `%n` | a line break | |
 
+### Placeholders in action
+
 ```java
 String a = String.format("Station: %s", "Harbor");        // Station: Harbor
 String b = String.format("%d docks", 12);                 // 12 docks
@@ -79,16 +81,51 @@ public class Main {
 
 ### The problem with + in a loop
 
-You can glue Strings together with `+`. Inside a loop, that gets slow. Strings are immutable, so every `+` builds a whole new String and copies all the old text into it.
+You can glue Strings together with `+`. Inside a loop, that gets slow. Strings are immutable, so every `+` builds a whole new String and copies all the old text into it. Watch the copies pile up:
 
-```java
-String text = "";
-for (int i = 1; i <= 3; i++) {
-    text = text + "Dock " + i + "\n";   // a new copy every time
-}
+```animate
+title: + makes a new String every turn
+kind: code
+code: |
+  String text = "";
+  for (int i = 1; i <= 3; i++) {
+      text = text + i;
+  }
+  System.out.println(text);
+steps:
+  - line: 1
+    objects: { s0: { type: String, fields: { text: '""' } } }
+    vars: { text: "@s0" }
+    say: text starts as an empty String object.
+  - line: 2
+    vars: { i: 1 }
+    say: The loop starts with i at 1.
+  - line: 3
+    objects: { s1: { type: String, fields: { text: '"1"' } } }
+    vars: { text: "@s1" }
+    say: + cannot change the old String. Java builds a new one, "1", and moves the arrow to it.
+  - line: 2
+    vars: { i: 2 }
+    say: Next turn, i is 2.
+  - line: 3
+    objects: { s2: { type: String, fields: { text: '"12"' } } }
+    vars: { text: "@s2" }
+    say: Another brand new String. Java copies "1" into it, then adds 2.
+  - line: 2
+    vars: { i: 3 }
+    say: Last turn, i is 3.
+  - line: 3
+    objects: { s3: { type: String, fields: { text: '"123"' } } }
+    vars: { text: "@s3" }
+    say: A third new String, and a third full copy. The old Strings are left behind as rubbish.
+  - line: 2
+    vars: { i: 4 }
+    say: i++ makes i 4. 4 <= 3 is false, so the loop ends.
+  - line: 5
+    vars: { i: null }
+    out: "123"
+    say: Each turn built a new String and left the old one behind. With ten thousand turns, Java copies the same text over and over.
 ```
-
-With three lines, nobody notices. With ten thousand lines, the program copies the same text over and over.
 
 ```callout analogy
 Using `+` in a loop is like rewriting your whole shopping list each time you add one item. A StringBuilder is a notepad. You just write the next line at the bottom.
@@ -107,12 +144,39 @@ String result = sb.toString();
 - `append(x)` adds `x` to the end. It accepts Strings, numbers and characters.
 - `toString()` gives back the finished text as a normal String.
 
-```java
-StringBuilder sb = new StringBuilder();
-sb.append("Riverside");
-sb.append(" ");
-sb.append(12);
-System.out.println(sb.toString());   // Riverside 12
+Watch `append` write into one single object:
+
+```animate
+title: One StringBuilder, many appends
+kind: code
+code: |
+  StringBuilder sb = new StringBuilder();
+  sb.append("Riverside");
+  sb.append(" ");
+  sb.append(12);
+  String result = sb.toString();
+  System.out.println(result);
+steps:
+  - line: 1
+    objects: { b1: { type: StringBuilder, fields: { text: '""' } } }
+    vars: { sb: "@b1" }
+    say: new makes one empty StringBuilder object. sb holds an arrow to it.
+  - line: 2
+    objects: { b1: { type: StringBuilder, fields: { text: '"Riverside"' } } }
+    say: append writes "Riverside" onto the end of that same object. No copy is made.
+  - line: 3
+    objects: { b1: { type: StringBuilder, fields: { text: '"Riverside "' } } }
+    say: A space goes on the end. Still one object, and the arrow never moves.
+  - line: 4
+    objects: { b1: { type: StringBuilder, fields: { text: '"Riverside 12"' } } }
+    say: append accepts numbers too. 12 is added as the text 12.
+  - line: 5
+    objects: { s1: { type: String, fields: { text: '"Riverside 12"' } } }
+    vars: { result: "@s1" }
+    say: toString makes a normal String from the finished text.
+  - line: 6
+    out: Riverside 12
+    say: println prints the String.
 ```
 
 ### Syntax: text blocks

@@ -116,7 +116,7 @@ steps:
     say: println reads both boxes and prints what is inside them. The boxes don't change.
   - line: 4
     vars: { minutes: 35 }
-    say: The rider kept going. minutes gets 35, and the old 20 is thrown away. No int this time, because the box already exists.
+    say: minutes gets 35, and the old 20 is thrown away. No int this time, because the box already exists.
   - line: 5
     out: B-1042 rode 35 min
     say: The same println line now prints 35, because it reads the box as it is right now.

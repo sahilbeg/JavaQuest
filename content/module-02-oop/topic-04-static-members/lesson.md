@@ -32,15 +32,66 @@ class Bike {
 An instance field is a name tag: every bike wears its own. A static field is the scoreboard on the wall: there is one, and everyone looks at the same board.
 ```
 
-```mermaid
-flowchart TB
-  C["Bike class: counter = 3"]
-  A["bike A: type classic"] --> C
-  B["bike B: type ebike"] --> C
-  D["bike C: type cargo"] --> C
+Watch one shared counter and two bikes:
+
+```animate
+title: One counter for the whole class
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          Bike a = new Bike("classic");
+          Bike b = new Bike("ebike");
+          System.out.println("Bikes built: " + Bike.created());
+      }
+  }
+  class Bike {
+      private static int counter = 0;
+      private String type;
+      public Bike(String type) {
+          this.type = type;
+          counter++;
+      }
+      public static int created() { return counter; }
+  }
+steps:
+  - line: 9
+    objects: { cls: { type: "Bike (class)", fields: { counter: 0 } } }
+    say: Before any bike exists, Java sets up the Bike class. Its one static counter starts at 0.
+  - line: 3
+    objects: { b1: { type: Bike, fields: { type: null } } }
+    say: new builds the first bike. It gets its own type field, but no counter of its own.
+  - line: 12
+    objects: { b1: { type: Bike, fields: { type: '"classic"' } } }
+    vars: { this: "@b1" }
+    say: The constructor runs on this new bike and fills in its own type.
+  - line: 13
+    objects: { cls: { type: "Bike (class)", fields: { counter: 1 } } }
+    say: counter++ changes the class's counter, not a field in the bike. It is now 1.
+  - line: 3
+    vars: { this: ~, a: "@b1" }
+    say: Back in main, a points to the first bike.
+  - line: 4
+    objects: { b2: { type: Bike, fields: { type: null } } }
+    say: The second new builds another bike, with its own type field.
+  - line: 12
+    objects: { b2: { type: Bike, fields: { type: '"ebike"' } } }
+    vars: { this: "@b2" }
+    say: The constructor runs on the second bike and sets its type to ebike.
+  - line: 13
+    objects: { cls: { type: "Bike (class)", fields: { counter: 2 } } }
+    say: Then it bumps the same counter. It shows 2, not 1, because both bikes share it.
+  - line: 4
+    vars: { this: ~, b: "@b2" }
+    say: b points to the second bike. Two bikes, one counter.
+  - line: 5
+    out: "Bikes built: 2"
+    say: Bike.created() asks the class, not a bike. It reads the shared counter.
 ```
 
-Here is the counter in action. The constructor adds 1 each time a bike is built.
+### The counter in action
+
+Here is the counter as a program you can run. The constructor adds 1 each time a bike is built.
 
 ```java run
 public class Main {

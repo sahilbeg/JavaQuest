@@ -52,6 +52,37 @@ System.out.println(bike.id);
 
 The dot means "go inside this object". `bike.id` is the `id` field of that one bike. You can read it or give it a new value.
 
+```animate
+title: Building one bike
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          Bike bike = new Bike();
+          bike.id = "B-1042";
+          bike.type = "classic";
+          System.out.println(bike.id + " is " + bike.type);
+      }
+  }
+  class Bike { String id; String type; int minutesRidden; }
+steps:
+  - line: 3
+    objects: { b1: { type: Bike, fields: { id: null, type: null, minutesRidden: 0 } } }
+    say: new Bike() builds a fresh bike object in memory. Each field starts empty, null (no text yet) for Strings and 0 for numbers.
+  - line: 3
+    vars: { bike: "@b1" }
+    say: The variable bike does not hold the bike itself. It holds a reference, an arrow to where the object lives.
+  - line: 4
+    objects: { b1: { type: Bike, fields: { id: '"B-1042"', type: null, minutesRidden: 0 } } }
+    say: The dot follows the arrow into the object. Its id field now holds "B-1042".
+  - line: 5
+    objects: { b1: { type: Bike, fields: { id: '"B-1042"', type: '"classic"', minutesRidden: 0 } } }
+    say: Same again for type. Only the field changes. The arrow stays where it was.
+  - line: 6
+    out: B-1042 is classic
+    say: println follows the arrow too, reads both fields and prints them.
+```
+
 ### Default values
 
 A field you never set still has a value. Java fills it in when it builds the object.
@@ -123,10 +154,46 @@ class Bike {
 
 `first` has 30 minutes. `second` still has the default `0`, because nobody rode it.
 
-```mermaid
-flowchart LR
-  C["class Bike (blueprint)"] --> A["object: B-1042, 30 min"]
-  C --> B["object: B-2001, 0 min"]
+### Two variables, one bike
+
+Only `new` makes a new object. Copying a variable copies the arrow, not the bike. Watch:
+
+```animate
+title: Two bikes, three arrows
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          Bike first = new Bike();
+          Bike second = new Bike();
+          first.minutesRidden = 30;
+          Bike same = first;
+          same.minutesRidden = 35;
+          System.out.println(first.minutesRidden + " and " + second.minutesRidden);
+      }
+  }
+  class Bike { int minutesRidden; }
+steps:
+  - line: 3
+    objects: { b1: { type: Bike, fields: { minutesRidden: 0 } } }
+    vars: { first: "@b1" }
+    say: new builds a bike, and first points to it.
+  - line: 4
+    objects: { b2: { type: Bike, fields: { minutesRidden: 0 } } }
+    vars: { second: "@b2" }
+    say: A second new builds a second, separate bike. Two objects, two arrows.
+  - line: 5
+    objects: { b1: { type: Bike, fields: { minutesRidden: 30 } } }
+    say: first's bike gets 30 minutes. The other bike keeps its 0.
+  - line: 6
+    vars: { same: "@b1" }
+    say: This line copies the arrow, not the bike. Now same and first point to one object.
+  - line: 7
+    objects: { b1: { type: Bike, fields: { minutesRidden: 35 } } }
+    say: A change through same changes that one shared bike. first sees 35 too.
+  - line: 8
+    out: 35 and 0
+    say: first shows 35 and second still shows 0. Two bikes were built, because new ran twice.
 ```
 
 ## Worked example

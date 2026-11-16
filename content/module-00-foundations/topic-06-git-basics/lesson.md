@@ -16,16 +16,46 @@ Git is the station logbook for your code. Each entry is a **commit**. The stagin
 
 A **repository**, or "repo" for short, is a folder that Git watches. Git keeps its logbook in a hidden folder called `.git` inside it.
 
+### Three places for your work
+
 Your work moves through three places:
 
 1. The **working folder** holds your files as you edit them.
 2. The **staging area** holds the changes you picked for the next entry. This is the parts tray.
 3. The **commit history** holds every saved entry. Each **commit** is one snapshot of your files, with a message.
 
-```mermaid
-flowchart LR
-  A["Working folder"] -->|git add| B["Staging area"]
-  B -->|git commit| C["Commit history"]
+Watch one change travel through all three, then a second change join the chain:
+
+```animate
+title: A change becomes a commit
+kind: scene
+nodes:
+  - { id: work, label: Working folder, emoji: "📝", value: "greeting.txt (new)", row: 0, col: 0 }
+  - { id: stage, label: Staging area, emoji: "🧺", value: empty, row: 0, col: 1 }
+  - { id: history, label: Commit history, emoji: "📚", value: no commits, row: 0, col: 2 }
+  - { id: c1, label: 3f2a1b9, emoji: "🔖", value: Add kiosk greeting, row: 1, col: 1 }
+  - { id: c2, label: 8c4d2e1, emoji: "🔖", value: Add Riverside line, row: 1, col: 2 }
+steps:
+  - say: You create greeting.txt in the working folder. Git can see it, but nothing is saved yet.
+    focus: [work]
+  - say: git add greeting.txt puts the change on the parts tray, the staging area.
+    send: { from: work, to: stage, label: greeting.txt }
+    set: { stage: greeting.txt, work: greeting.txt }
+  - say: git commit -m "Add kiosk greeting" saves everything on the tray as one commit. The tray is empty again.
+    send: { from: stage, to: history, label: Add kiosk greeting }
+    set: { stage: empty, history: 1 commit }
+    show: [c1]
+  - say: You add a line about Riverside Station to the file. The change sits in the working folder, and the commit stays as it was.
+    focus: [work]
+    set: { work: "greeting.txt (changed)" }
+  - say: git add, then git commit -m "Add Riverside line". The second change takes the same trip.
+    send: [{ from: work, to: stage, label: change }, { from: stage, to: history, label: Add Riverside line }]
+    set: { work: greeting.txt, history: 2 commits }
+  - say: The new commit joins the chain and points back to the one before it. That is how Git remembers the order.
+    show: [c2]
+    send: { from: c2, to: c1, label: parent }
+  - say: git log --oneline reads the chain newest first, 8c4d2e1 then 3f2a1b9. You can go back to either one.
+    focus: [c2, c1]
 ```
 
 ### Syntax: check that Git is installed
