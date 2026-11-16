@@ -6,14 +6,14 @@
 
 import { h, icon, avatar, TEAM, reducedMotion } from "./dom.js";
 import { api } from "./api.js";
-import { byte, byteSays } from "./byte.js";
+
 import { createHelper } from "./chat.js";
 import { enhanceContent } from "./kb.js";
 import { renderQuiz } from "./quiz.js";
 import { renderFix } from "./fix.js";
 import { ticketState, topicKind } from "./status.js";
 import { refreshRewards } from "./rewards.js";
-import { confetti } from "./celebrate.js";
+import { glow } from "./celebrate.js";
 import { startTourOnce, setPageTour } from "./tour.js";
 
 const slug = (heading) => heading.replace(/^#+\s*/, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -188,7 +188,7 @@ export async function renderLesson(view, catalog, id, params) {
         : topic.hasQuiz ? "Ticket closed! You passed the check and the code checks." : "Feature shipped! Every check passes.",
         `${person.name.split(" ")[0]} will be pleased.`], { mood: "cheering", quiet: true });
       // Stay on the result, so the learner sees their score or green checks, and offer the finish line.
-      confetti();
+      glow();
       updateChrome();
       nextButton.classList.add("pop");
       return;
@@ -271,7 +271,8 @@ export async function renderLesson(view, catalog, id, params) {
 
   function recapCard() {
     return h("div", {},
-      byteSays(["Nice work! Here's what you learned."], { mood: "cheering", size: "md" }),
+      h("p", { class: "eyebrow" }, "Recap"),
+      h("h2", {}, "What you learned"),
       h("ul", { class: "learn-list" }, [...(recapList?.querySelectorAll("li") ?? [])].map((li) => h("li", { html: li.innerHTML }))),
       steps[index + 1] && steps[index + 1].key !== "done"
         && h("p", {}, `Next: ${steps[index + 1].label.toLowerCase()}.`));
@@ -280,8 +281,9 @@ export async function renderLesson(view, catalog, id, params) {
   function doneCard() {
     const nextId = catalog.topics[catalog.topics.findIndex((t) => t.id === id) + 1]?.id;
     return h("div", { class: "done-card" },
-      byte("cheering", "", { size: "hero", wave: true }),
-      h("h1", {}, kind === "incident" ? "Incident resolved!" : kind === "feature" ? "Feature shipped!" : "Ticket closed!"),
+      h("span", { class: "done-check", "aria-hidden": "true" }, icon("check")),
+      h("p", { class: "eyebrow" }, summary.ticket.key),
+      h("h1", {}, kind === "incident" ? "Incident resolved" : kind === "feature" ? "Feature shipped" : "Ticket closed"),
       h("p", {}, `${person.name.split(" ")[0]} says thanks. ${summary.ticket.key} is done, and the next ticket is open.`),
       h("div", { class: "button-row" },
         h("a", { class: "button", href: "#/" }, icon("map"), "Back to your journey"),
@@ -367,8 +369,8 @@ export async function renderLesson(view, catalog, id, params) {
 function renderLocked(view, catalog, summary) {
   const frontier = catalog.topics.find((t) => t.id === catalog.frontierId);
   view.replaceChildren(h("div", { class: "locked-page" },
-    byte("thinking", "", { size: "lg" }),
-    h("h1", {}, "This ticket is still locked"),
+    h("span", { class: "done-check is-locked", "aria-hidden": "true" }, icon("lock")),
+    h("h1", {}, "This ticket is locked"),
     h("p", {}, `${summary.ticket.key} "${summary.ticket.title}" opens once the tickets before it are done. Tickets open one at a time, so each one builds on the last.`),
     frontier && h("p", {}, "Your current ticket is ", h("strong", {}, `${frontier.ticket.key} "${frontier.ticket.title}"`), "."),
     h("div", { class: "button-row", style: "justify-content:center" },

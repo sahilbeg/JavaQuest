@@ -1,14 +1,14 @@
 import { h, icon, avatar, TEAM } from "./dom.js";
-import { byteSays } from "./byte.js";
 import { api } from "./api.js";
-import { ticketState, topicKind, nextTicket, moduleEmoji } from "./status.js";
+import { ticketState, topicKind, nextTicket } from "./status.js";
 import { startTourOnce } from "./tour.js";
 
-const KIND_LABEL = { incident: "Incident", feature: "Feature", ticket: "Ticket" };
+const KIND_LABEL = { incident: "Incident", feature: "Feature" };
+const pad = (n) => String(n).padStart(2, "0");
 
 function greeting() {
   const hour = new Date().getHours();
-  return hour < 12 ? "Good morning!" : hour < 18 ? "Good afternoon!" : "Good evening!";
+  return hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 }
 
 /** done | current | open | locked | soon */
@@ -20,44 +20,54 @@ function moduleState(own, catalog) {
   return "open";
 }
 
-function stone(topic, frontierId) {
+function topicRow(topic, index, frontierId) {
   const state = topic.progress.mastered ? "done" : topic.id === frontierId ? "current" : topic.locked ? "locked" : "open";
   const kind = topicKind(topic);
-  const glyph = state === "done" ? icon("check")
-    : state === "locked" ? icon("lock")
-    : kind === "incident" ? "⚠️" : kind === "feature" ? "✨" : icon("play");
-  const label = `${topic.ticket.key}: ${topic.ticket.title}. ${state === "done" ? "Done" : state === "locked" ? "Locked" : state === "current" ? "Up next" : "Open"}.`;
-  const inner = [glyph, h("span", { class: "stone-tip", "aria-hidden": "true" }, topic.ticket.title),
-    state === "current" && h("span", { class: "stone-start", "aria-hidden": "true" }, "Start")];
+  const mark = state === "done" ? icon("check") : state === "locked" ? icon("lock") : state === "current" ? h("span", { class: "dot" }) : h("span", { class: "ring" });
+  const inner = [
+    h("span", { class: "topic-mark", "aria-hidden": "true" }, mark),
+    h("span", { class: "topic-num" }, pad(index + 1)),
+    h("span", { class: "topic-title" }, topic.ticket.title),
+    kind !== "ticket" && h("span", { class: `tag tag-${kind}` }, KIND_LABEL[kind]),
+    h("span", { class: "topic-key" }, topic.ticket.key),
+    state === "current" && h("span", { class: "topic-go" }, "Start", icon("arrow-right")),
+    h("span", { class: "visually-hidden" }, `, ${state === "done" ? "done" : state === "locked" ? "locked" : state === "current" ? "up next" : "open"}`),
+  ];
   return h("li", {}, state === "locked"
-    ? h("span", { class: "stone", "data-state": state, "data-kind": kind, role: "img", "aria-label": label, tabindex: "0" }, inner)
-    : h("a", { class: "stone", "data-state": state, "data-kind": kind, href: `#/t/${topic.id}`, "aria-label": label }, inner));
+    ? h("span", { class: "topic-row", "data-state": state, "aria-disabled": "true" }, inner)
+    : h("a", { class: "topic-row", "data-state": state, href: `#/t/${topic.id}` }, inner));
 }
 
-function stop(module, own, catalog, previousProject) {
+function moduleItem(module, own, catalog, index, previousProject) {
   const state = moduleState(own, catalog);
   const done = own.filter((t) => t.progress.mastered).length;
-  const chip = {
-    done: h("span", { class: "chip chip-done" }, icon("check"), "Done"),
-    current: h("span", { class: "chip chip-progress" }, `${done} of ${own.length} done`),
-    open: h("span", { class: "chip chip-todo" }, `${done} of ${own.length} done`),
-    locked: h("span", { class: "chip chip-locked" }, icon("lock"), "Locked"),
-    soon: h("span", { class: "chip chip-locked" }, "Coming soon"),
+  const percent = own.length ? Math.round((done / own.length) * 100) : 0;
+  const status = {
+    done: h("span", { class: "status status-done" }, icon("check"), "Complete"),
+    current: h("span", { class: "status status-current" }, h("span", { class: "dot" }), "In progress"),
+    open: h("span", { class: "status" }, "Open"),
+    locked: h("span", { class: "status status-locked" }, icon("lock"), "Locked"),
+    soon: h("span", { class: "status status-locked" }, "Coming soon"),
   }[state];
-  const badge = state === "done" ? icon("check") : state === "locked" || state === "soon" ? icon("lock") : String(own.length - done);
-  const stones = h("ol", { class: "stones", "aria-label": `Tickets in ${module.project}` }, own.map((t) => stone(t, catalog.frontierId)));
-  const body = state === "current" ? [h("p", { class: "stop-sub" }, module.summary), stones]
-    : state === "done" || state === "open" ? [h("details", {},
-        h("summary", {}, state === "done" ? "Revisit tickets" : "Show tickets", icon("chevron-down")), stones)]
-    : state === "locked" ? [h("p", { class: "stop-sub" }, module.summary),
-        previousProject && h("p", { class: "stop-sub" }, icon("lock"), ` Finish ${previousProject} to open this project.`)]
-    : [h("p", { class: "stop-sub" }, module.summary)];
-  return h("li", { class: "stop", "data-state": state, id: state === "current" ? "current-stop" : null },
-    h("div", { class: "stop-node", "aria-hidden": "true" }, moduleEmoji(module.id), h("span", { class: "stop-badge" }, badge)),
-    h("div", { class: "stop-card" },
-      h("div", { class: "stop-head" }, h("h3", {}, module.project), chip),
-      h("p", { class: "stop-sub" }, module.title),
-      body));
+  const head = [
+    h("span", { class: "module-num" }, pad(index)),
+    h("span", { class: "module-name" }, h("strong", {}, module.title), h("span", {}, module.project)),
+    status,
+    h("span", { class: "module-meter", "aria-hidden": "true" }, h("span", { style: `width:${percent}%` })),
+    h("span", { class: "module-count" }, `${done}/${own.length}`),
+  ];
+  const topics = h("ol", { class: "topic-list", "aria-label": `Tickets in ${module.title}` }, own.map((t, i) => topicRow(t, i, catalog.frontierId)));
+  if (state === "locked" || state === "soon") {
+    return h("li", { class: "module", "data-state": state },
+      h("div", { class: "module-head" }, head),
+      h("p", { class: "module-note" }, module.summary,
+        state === "locked" && previousProject && h("span", {}, ` Finish ${previousProject} to unlock.`)));
+  }
+  return h("li", { class: "module", "data-state": state, id: state === "current" ? "current-stop" : null },
+    h("details", { open: state === "current" },
+      h("summary", { class: "module-head" }, head, icon("chevron-down")),
+      h("p", { class: "module-note" }, module.summary),
+      topics));
 }
 
 export async function renderJourney(view, catalog) {
@@ -67,48 +77,55 @@ export async function renderJourney(view, catalog) {
   const own = topics.filter((t) => t.moduleId === currentModule?.id);
   const allDone = topics.length > 0 && topics.every((t) => t.progress.mastered);
   const doneHere = own.filter((t) => t.progress.mastered).length;
+  const doneAll = topics.filter((t) => t.progress.mastered).length;
   const state = current ? ticketState(current) : null;
   const kind = current ? topicKind(current) : "ticket";
+  const moduleIndex = Math.max(0, modules.indexOf(currentModule));
 
   const upNext = current && h("section", { class: "up-next", id: "up-next", "aria-labelledby": "up-next-title" },
     allDone
-      ? [h("span", { class: "eyebrow" }, icon("sparkles"), "All caught up"),
-         h("h1", { id: "up-next-title" }, "Every ticket is done!"),
-         h("p", {}, "New projects land on your journey as soon as they're written. Revisit any ticket below to practise.")]
-      : [h("span", { class: "eyebrow" }, icon("ticket"), `Up next · ${currentModule.project}`),
-         h("h1", { id: "up-next-title" }, current.ticket.title),
-         h("div", { class: "up-next-meta" },
-           avatar(current.ticket.from),
-           h("span", {}, `from ${TEAM[current.ticket.from].name}`),
-           h("span", { class: "key" }, current.ticket.key),
-           kind !== "ticket" && h("span", { class: `chip ${kind === "incident" ? "chip-failing" : "chip-todo"}` }, KIND_LABEL[kind]),
-           h("span", { class: `chip ${state.chip}` }, state.label)),
-         h("div", { class: "up-next-actions" },
-           h("a", { class: "button button-primary button-big", href: `#/t/${current.id}` },
-             state.key === "progress" ? "Continue" : "Start", icon("arrow-right")),
-           h("div", { class: "module-progress" },
-             h("span", { class: "meter", role: "img", "aria-label": `${doneHere} of ${own.length} tickets done in ${currentModule.project}` },
-               h("span", { style: `width:${own.length ? Math.round((doneHere / own.length) * 100) : 0}%` })),
-             `${doneHere} / ${own.length}`))]);
+      ? [h("p", { class: "eyebrow" }, "All caught up"),
+         h("h2", { id: "up-next-title" }, "Every available ticket is done."),
+         h("p", { class: "muted" }, "New modules appear here as they're released. Revisit any ticket below to practise.")]
+      : [h("div", { class: "up-next-main" },
+          h("p", { class: "eyebrow" }, `Up next · Module ${pad(moduleIndex)} · ${currentModule.title}`),
+          h("h2", { id: "up-next-title" }, current.ticket.title),
+          h("div", { class: "up-next-meta" },
+            avatar(current.ticket.from),
+            h("span", {}, TEAM[current.ticket.from].name),
+            h("span", { class: "sep" }, "·"),
+            h("span", { class: "mono" }, current.ticket.key),
+            kind !== "ticket" && h("span", { class: `tag tag-${kind}` }, KIND_LABEL[kind]),
+            state.key === "progress" && h("span", { class: "tag" }, state.label)),
+          h("p", { class: "up-next-body" }, current.ticket.body)),
+        h("div", { class: "up-next-side" },
+          h("a", { class: "button button-primary button-big", href: `#/t/${current.id}` },
+            state.key === "progress" ? "Continue" : "Start ticket", icon("arrow-right")),
+          h("div", { class: "module-progress" },
+            h("span", { class: "meter", role: "img", "aria-label": `${doneHere} of ${own.length} tickets done in ${currentModule.title}` },
+              h("span", { style: `width:${own.length ? Math.round((doneHere / own.length) * 100) : 0}%` })),
+            h("span", { class: "mono" }, `${doneHere}/${own.length} in this module`)))]);
 
   const career = await api.career().catch(() => null);
   const due = career?.reviewsDue ?? [];
   const reviewStrip = due.length > 0 && h("section", { class: "review-strip", "aria-labelledby": "due-title" },
-    h("span", { style: "font-size:1.8rem", "aria-hidden": "true" }, "🔁"),
-    h("h2", { id: "due-title" }, `${due.length} ${due.length === 1 ? "review" : "reviews"} due today`),
-    h("p", {}, "Three quick questions from tickets you closed, so they don't fade."),
-    h("a", { class: "button button-primary", href: `#/review/${due[0].id}` }, "Start review", icon("arrow-right")));
+    icon("rotate-ccw"),
+    h("div", {}, h("h2", { id: "due-title" }, `${due.length} ${due.length === 1 ? "review" : "reviews"} due`),
+      h("p", {}, "Three quick questions from tickets you closed, so they stay fresh.")),
+    h("a", { class: "button", href: `#/review/${due[0].id}` }, "Start review", icon("arrow-right")));
 
-  const path = h("ol", { class: "path", id: "journey-path" }, modules.map((module, i) =>
-    stop(module, topics.filter((t) => t.moduleId === module.id), catalog, modules[i - 1]?.project)));
+  const outline = h("ol", { class: "outline", id: "journey-path" }, modules.map((module, i) =>
+    moduleItem(module, topics.filter((t) => t.moduleId === module.id), catalog, i, modules[i - 1]?.title)));
 
   view.replaceChildren(h("div", { class: "journey" },
-    h("div", { class: "journey-hero" },
-      byteSays([greeting(), currentModule?.mascotIntro ?? "Welcome to Spoke!"], { mood: "idle", size: "hero", wave: true }),
-      upNext),
+    h("header", { class: "page-head" },
+      h("p", { class: "eyebrow" }, greeting()),
+      h("h1", {}, "Your Java course"),
+      h("p", { class: "muted" }, `${doneAll} of ${topics.length} tickets complete · ${modules.length} modules, from your first program to a full-time offer.`)),
+    upNext,
     reviewStrip,
-    h("div", { class: "path-title" }, h("h2", {}, "Your journey"), h("p", {}, `${modules.length} projects, from your first program to a full-time offer.`)),
-    path));
+    h("div", { class: "section-head" }, h("h2", {}, "Course outline"), h("span", { class: "mono muted" }, "One ticket at a time")),
+    outline));
 
   startTourOnce("journey");
   return () => {};

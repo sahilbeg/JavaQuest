@@ -6,18 +6,18 @@ import { byte } from "./byte.js";
 
 const TOURS = {
   journey: [
-    { title: "Hi, I'm Byte!", text: "Welcome to JavaQuest. You're the new intern at Spoke, a bike-sharing startup. Let me show you around.", mood: "cheering" },
-    { target: "#up-next", title: "Your next ticket", text: "This is the one ticket to work on now. Tickets open one at a time, so you always know where you are." },
-    { target: "#current-stop", title: "Your journey", text: "Each circle is a project. Finish its tickets to open the next project. Point at a stone to see its ticket." },
-    { target: "#career-chip", title: "Level and streak", text: "Every ticket earns XP and moves you up the career ladder. Learn a little every day to grow your streak." },
-    { target: "#tour-button", title: "Need a reminder?", text: "Press this on any page and I'll walk you through it again.", mood: "encouraging" },
+    { title: "Welcome to JavaQuest", text: "You're the new engineering intern at Spoke, a bike-sharing startup. Every lesson is a real ticket from the team. Here's a quick tour." },
+    { target: "#up-next", title: "Up next", text: "The one ticket to work on now. Tickets open one at a time, so each builds on the last." },
+    { target: "#current-stop", title: "Course outline", text: "Your current module, with its tickets in order. Finish them all to unlock the next module." },
+    { target: "#career-chip", title: "Level and streak", text: "Tickets earn XP and move you up the career ladder. A little every day keeps your streak going." },
+    { target: "#tour-button", title: "Tour", text: "Replay this walkthrough on any page from here." },
   ],
   lesson: [
-    { target: "#lesson-progress", title: "A lesson in small steps", text: "Every ticket is a few short cards. This bar shows where you are, and you can jump back to any card you've seen." },
-    { target: "#lesson-card", title: "One idea per card", text: "Read the card, then press Next. The arrow keys work too." },
-    { target: ".anim", title: "Watch it happen", text: "Animations show code running one step at a time. Press Watch, then go at your own pace with the step buttons.", optional: true },
-    { target: "#helper-fab", title: "Stuck? Ask me", text: "Open the chat for hints. More hints open as you try.", mood: "encouraging" },
-    { target: "#player-next", title: "Off you go!", text: "Press Next whenever you're ready.", mood: "cheering" },
+    { target: "#lesson-progress", title: "Lesson progress", text: "Each ticket is a short sequence of cards. Jump back to any card you've already seen." },
+    { target: "#lesson-card", title: "One idea per card", text: "Read, then press Next, or use the arrow keys." },
+    { target: ".anim", title: "Animations", text: "Watch code run step by step, or move through it at your own pace.", optional: true },
+    { target: "#helper-fab", title: "Hints", text: "Byte, the team's helper bot, has hints for this ticket. More open as you try." },
+    { target: "#player-next", title: "Continue", text: "Move on whenever you're ready." },
   ],
   check: [
     { target: ".quiz", title: "The onboarding check", text: "A short mixed set of questions. 80% passes, and every retry gives you a fresh mix." },
@@ -121,7 +121,7 @@ export function startTour(name) {
     const step = usable[index];
     const last = index === usable.length - 1;
     bubble.replaceChildren(
-      h("div", { class: "tour-bubble-head" }, byte(step.mood ?? "idle", "", { size: "md", wave: index === 0 }), h("h2", { id: "tour-title" }, step.title)),
+      h("div", { class: "tour-bubble-head" }, byte("idle", "", { size: "md" }), h("h2", { id: "tour-title" }, step.title)),
       h("p", {}, step.text),
       h("div", { class: "tour-actions" },
         h("span", { class: "tour-count" }, `${index + 1} of ${usable.length}`),

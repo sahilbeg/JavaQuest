@@ -32,7 +32,7 @@ The practice code lives in the learner's own repo and IDE. Saving a file in the 
 - Every page has a first-visit walkthrough with Byte.
 - Story: the learner is an intern at Spoke, a bike-sharing startup. Topics are tickets, bosses are incidents, mini-projects are features, levels are job titles. See `docs/STORY.md`.
 - Game layer: XP, job titles, streaks, kudos, the ticket board, incidents. Rules are in `docs/GAMIFICATION.md`.
-- The interface is a playful learning app (see `DESIGN.md`): a journey map of projects, a lesson player, Byte as an illustrated helper, and celebrations for progress. The Spoke story stays in the tickets, teammates and career ladder.
+- The interface is a modern developer tool for adults, dark first (see `DESIGN.md`): a course outline, a lesson player, and Byte as a small helper mark. The Spoke story stays in the tickets, teammates and career ladder.
 - Must work offline. All browser libraries are vendored.
 - Spring Boot server with plain ES modules. No Node build step.
 

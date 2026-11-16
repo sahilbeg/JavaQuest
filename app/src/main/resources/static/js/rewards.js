@@ -2,7 +2,7 @@ import { api } from "./api.js";
 import { h, icon, toast, reducedMotion } from "./dom.js";
 import { byte } from "./byte.js";
 import { bus } from "./events.js";
-import { confetti, xpFloat } from "./celebrate.js";
+import { glow, xpFloat } from "./celebrate.js";
 
 let last;
 
@@ -43,7 +43,7 @@ function celebrate(before, after) {
   if (after.level.title !== before.level.title) {
     promotion(after.level);
   } else if (after.level.level > before.level.level) {
-    confetti();
+    glow();
     toast(`Level ${after.level.level}! Keep going.`);
   }
   if (after.streak.activeToday && !before.streak.activeToday) {
@@ -57,7 +57,7 @@ function celebrate(before, after) {
 
 function promotion(level) {
   const dialog = h("dialog", { class: "promotion", "aria-labelledby": "promotion-title" },
-    byte("cheering", "", { size: "lg", wave: true }),
+    byte("idle", "", { size: "lg" }),
     h("h2", { id: "promotion-title" }, `You're now a ${level.title}!`),
     h("p", {}, `Maya: "Your work has been great. Congratulations on the promotion. On to the next ticket!"`),
     h("form", { method: "dialog" }, h("button", { class: "button button-primary button-big", autofocus: true }, "Thanks, Maya")));
@@ -65,5 +65,5 @@ function promotion(level) {
   document.body.append(dialog);
   dialog.addEventListener("close", () => dialog.remove());
   dialog.showModal();
-  confetti();
+  glow();
 }

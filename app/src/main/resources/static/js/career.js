@@ -1,14 +1,12 @@
 import { h, icon, avatar, TEAM, toast } from "./dom.js";
 import { api } from "./api.js";
 import { refreshRewards } from "./rewards.js";
-import { byte } from "./byte.js";
 
 function levelBlock({ level, streak }) {
   const span = level.nextLevelXp - level.levelStartXp;
   const into = level.xp - level.levelStartXp;
   const levelsToTitle = level.nextTitleLevel - level.level;
   return h("section", { class: "career-hero", "aria-labelledby": "career-title" },
-    byte(level.level > 1 ? "cheering" : "idle", "", { size: "lg", wave: true }),
     h("div", {},
       h("h1", { id: "career-title" }, level.title),
       h("p", { class: "career-sub" }, `Level ${level.level} · ${level.xp} XP`),

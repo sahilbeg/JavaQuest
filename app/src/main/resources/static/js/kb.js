@@ -59,15 +59,15 @@ function renderDiagrams(container) {
     mermaid.initialize({
       startOnLoad: false,
       theme: "base",
-      fontFamily: "Atkinson Hyperlegible Next, sans-serif",
+      fontFamily: "Inter, sans-serif",
       themeVariables: {
         darkMode: isDark(),
         background: token("--surface"),
-        primaryColor: token("--cobalt-wash"),
-        primaryBorderColor: token("--cobalt"),
+        primaryColor: token("--surface-2"),
+        primaryBorderColor: token("--line-strong"),
         primaryTextColor: token("--ink"),
         lineColor: token("--ink-soft"),
-        fontSize: "15px",
+        fontSize: "14px",
       },
     });
     for (const pre of diagrams) {

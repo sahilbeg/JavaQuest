@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light dark">
+  <meta name="color-scheme" content="dark light">
   <title>JavaQuest</title>
   <meta name="description" content="JavaQuest: learn Java from zero to professional as an intern at Spoke, with short animated lessons, real code checks and a friendly owl.">
-  <link rel="preload" href="/vendor/fonts/atkinson-hyperlegible-next-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/vendor/fonts/atkinson-hyperlegible-next-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/vendor/fonts/inter-latin-variable.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/app.css">
   <script>
-    document.documentElement.dataset.theme = (() => { try { return localStorage.getItem("jq-theme"); } catch { return null; } })() ?? "system";
+    // Dark first: the light theme is one click away and remembered.
+    document.documentElement.dataset.theme = (() => { try { return localStorage.getItem("jq-theme") === "light" ? "light" : "dark"; } catch { return "dark"; } })();
   </script>
 </head>
 <body>
@@ -22,7 +22,7 @@
       <span class="wordmark-name">Java<em>Quest</em></span>
     </a>
     <nav class="topnav" aria-label="Main">
-      <a href="#/" data-nav="journey"><svg class="icon" aria-hidden="true"><use href="/vendor/icons/icons.svg#i-map"/></svg><span>Journey</span></a>
+      <a href="#/" data-nav="journey"><svg class="icon" aria-hidden="true"><use href="/vendor/icons/icons.svg#i-map"/></svg><span>Course</span></a>
       <a href="#/career" data-nav="career"><svg class="icon" aria-hidden="true"><use href="/vendor/icons/icons.svg#i-sparkles"/></svg><span>Career</span></a>
     </nav>
     <div class="topbar-end">
