@@ -63,6 +63,7 @@ async function route({ keepFocus = false } = {}) {
       : current.name === "career" ? await renderCareer(view)
       : current.name === "notes" ? await (current.id ? renderNotes(view, catalog, current.id) : renderNotesIndex(view, catalog))
       : await renderJourney(view, catalog);
+    refreshResume();
     if (!keepFocus && current.name !== "ticket" && (document.activeElement === document.body || !view.contains(document.activeElement))) {
       view.focus({ preventScroll: true });
     }
@@ -111,6 +112,26 @@ function setupEvents() {
 document.getElementById("wordmark-byte").replaceWith(byte("idle", "", { size: "sm" }));
 document.getElementById("tour-button").addEventListener("click", () => replayPageTour());
 mountDailyLimit(document.getElementById("daily-limit-slot"));
+
+/**
+ * The Continue tab: back to the last screen of an unfinished ticket, from any page. Hidden when there is none, or
+ * while that ticket is already on screen.
+ */
+async function refreshResume() {
+  const link = document.getElementById("resume-link");
+  const resume = await api.resume().catch(() => null);
+  const here = parseRoute();
+  if (!resume || (here.name === "ticket" && here.id === resume.topicId)) {
+    link.hidden = true;
+    return;
+  }
+  const where = `${resume.key}, card ${resume.step + 1} of ${resume.total}: ${resume.label}`;
+  link.href = `/t/${resume.topicId}`;
+  link.title = `Continue ${where}`;
+  link.setAttribute("aria-label", `Continue where you left off: ${where}`);
+  link.hidden = false;
+}
+for (const name of ["resume", "career"]) bus.addEventListener(name, () => refreshResume());
 // The course page shows the daily limit, and a new limit can open or close the next ticket: draw the page again,
 // leaving the keyboard focus in the top bar. A lesson in progress is redrawn only when its access changed.
 bus.addEventListener("settings", (e) => {

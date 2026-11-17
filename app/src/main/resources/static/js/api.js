@@ -21,6 +21,10 @@ export const api = {
   catalog: () => fetch("/api/catalog").then(parse),
   topic: (id) => fetch(topicPath(id)).then(parse),
   notes: (id) => fetch(`${topicPath(id)}/notes`).then(parse),
+  position: (id) => fetch(`${topicPath(id)}/position`).then(parse),
+  savePosition: (id, position) =>
+    fetch(`${topicPath(id)}/position`, { method: "PUT", headers: WRITE_HEADERS, body: JSON.stringify(position) }).then(parse),
+  resume: () => fetch("/api/resume").then(parse),
   hints: (id) => fetch(`${topicPath(id)}/hints`).then(parse),
   nextHint: (id) => fetch(`${topicPath(id)}/hints/next`, { method: "POST", headers: WRITE_HEADERS }).then(parse),
   progress: (id) => fetch(`${topicPath(id)}/progress`).then(parse),

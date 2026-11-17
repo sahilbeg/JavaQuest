@@ -10,6 +10,7 @@ const TOURS = {
     { target: "#up-next", title: "Up next", text: "The one ticket to work on now. Tickets open one at a time, so each builds on the last." },
     { target: "#current-stop", title: "Course outline", text: "Your current module, with its tickets in order. Finish them all to unlock the next module." },
     { target: "#career-chip", title: "Level and streak", text: "Tickets earn XP and move you up the career ladder. A little every day keeps your streak going." },
+    { target: "#resume-link", title: "Continue", text: "Back to the exact card you left, from any page. It survives reloads and rebuilds.", optional: true },
     { target: '[data-nav="notes"]', title: "Notes", text: "Every ticket you finish gets a short page of notes: key points, syntax and common mistakes. Come back to them any time." },
     { target: "#daily-limit", title: "Daily limit", text: "Switch it on to learn a few tickets a day and the rest tomorrow. It stays up here on every page, so you can change it any time." },
     { target: "#tour-button", title: "Tour", text: "Replay this walkthrough on any page from here." },

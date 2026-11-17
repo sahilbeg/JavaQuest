@@ -126,7 +126,8 @@ public class CareerStore {
     }
 
     public static final List<String> EXPORTED_TABLES =
-            List.of("topic_progress", "test_run", "quiz_attempt", "xp_event", "kudos", "player", "review_card");
+            List.of("topic_progress", "test_run", "quiz_attempt", "xp_event", "kudos", "player", "review_card",
+                    "lesson_position");
 
     public List<Map<String, Object>> dump(String table) {
         requireKnown(table);

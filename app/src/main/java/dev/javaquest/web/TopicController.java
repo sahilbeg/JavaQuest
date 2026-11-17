@@ -12,6 +12,7 @@ import dev.javaquest.practice.PracticeResult.Source;
 import dev.javaquest.practice.PracticeService;
 import dev.javaquest.practice.ProgramRun;
 import dev.javaquest.progress.Gate;
+import dev.javaquest.progress.LessonPosition;
 import dev.javaquest.progress.LockedException;
 import dev.javaquest.progress.ProgressService;
 import dev.javaquest.progress.ProgressService.TopicProgress;
@@ -66,6 +67,9 @@ public class TopicController {
 
     public record Snippet(String code) {}
 
+    /** The screen to come back to: an unfinished ticket's card, with what the Continue tab needs to show. */
+    public record Resume(String topicId, String key, String ticketTitle, int step, int total, String label) {}
+
 
     /** Seeds travel through JavaScript, whose numbers hold integers exactly only up to 2^53 - 1. */
     static final long MAX_BROWSER_SAFE_SEED = (1L << 53) - 1;
@@ -110,6 +114,37 @@ public class TopicController {
                 index < all.size() - 1 ? all.get(index + 1).id() : null,
                 practice.sourceFiles(found), found.hasQuiz(),
                 found.meta().isBoss() ? "incident" : found.meta().isFeature() ? "feature" : "ticket");
+    }
+
+    /** Where the learner is inside this ticket, or nothing when they have not opened it in the player yet. */
+    @GetMapping("/topics/{module}/{topic}/position")
+    public LessonPosition position(@PathVariable String module, @PathVariable String topic) {
+        return progress.position(open(module, topic)).orElse(null);
+    }
+
+    @PutMapping("/topics/{module}/{topic}/position")
+    public void savePosition(@PathVariable String module, @PathVariable String topic, @RequestBody LessonPosition position) {
+        progress.savePosition(open(module, topic), position);
+    }
+
+    /**
+     * The most recent screen in a ticket that is open and not finished yet: where Continue takes the learner after a
+     * rebuild, a hard reload or a visit to another page. Nothing when every saved place is finished or locked.
+     */
+    @GetMapping("/resume")
+    public Resume resume() {
+        Map<String, Gate.Access> access = gate.accessAll();
+        for (var saved : progress.positions()) {
+            var topic = catalog.topic(saved.topicId());
+            Gate.Access open = access.get(saved.topicId());
+            if (topic.isEmpty() || open == null || open.locked() || progress.progress(topic.get()).mastered()) {
+                continue;
+            }
+            var position = saved.position();
+            return new Resume(saved.topicId(), topic.get().meta().ticket().key(), topic.get().meta().ticket().title(),
+                    position.step(), position.total(), position.label());
+        }
+        return null;
     }
 
     /** Quick reference notes, taken from the lesson. They open once the ticket is finished (any time in author mode). */

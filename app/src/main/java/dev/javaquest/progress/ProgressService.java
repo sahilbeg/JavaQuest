@@ -52,6 +52,21 @@ public class ProgressService {
         return store.settings();
     }
 
+    public Optional<LessonPosition> position(Topic topic) {
+        return store.position(topic.id());
+    }
+
+    @Transactional
+    public void savePosition(Topic topic, LessonPosition position) {
+        position.validate();
+        store.savePosition(topic.id(), position, clock.instant());
+    }
+
+    /** Saved positions, the most recent first. */
+    public List<ProgressStore.SavedPosition> positions() {
+        return store.positions();
+    }
+
     public VoiceSettings voice() {
         return store.voice();
     }

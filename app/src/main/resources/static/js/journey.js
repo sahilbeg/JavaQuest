@@ -105,6 +105,10 @@ export async function renderJourney(view, catalog) {
         icon("rotate-ccw"), "Revisit a ticket"),
       h("button", { type: "button", class: "button button-quiet", onclick: () => focusDailyLimit() }, icon("settings"), "Change daily limit")));
 
+  // Where the learner left off inside the current ticket, saved with the progress.
+  const resume = await api.resume().catch(() => null);
+  const resumeHere = !allDone && resume?.topicId === current?.id && resume.step > 0 ? resume : null;
+
   const upNext = restCard || current && h("section", { class: "up-next", id: "up-next", "aria-labelledby": "up-next-title" },
     allDone
       ? [h("p", { class: "eyebrow" }, "All caught up"),
@@ -120,10 +124,12 @@ export async function renderJourney(view, catalog) {
             h("span", { class: "mono" }, current.ticket.key),
             kind !== "ticket" && h("span", { class: `tag tag-${kind}` }, KIND_LABEL[kind]),
             state.key === "progress" && h("span", { class: "tag" }, state.label)),
-          h("p", { class: "up-next-body" }, current.ticket.body)),
+          h("p", { class: "up-next-body" }, current.ticket.body),
+          resumeHere && h("p", { class: "resume-line" }, icon("play"),
+            `You were on card ${resumeHere.step + 1} of ${resumeHere.total}: `, h("strong", {}, resumeHere.label))),
         h("div", { class: "up-next-side" },
           h("a", { class: "button button-primary button-big", href: `/t/${current.id}` },
-            state.key === "progress" ? "Continue" : "Start ticket", icon("arrow-right")),
+            resumeHere ? `Continue at card ${resumeHere.step + 1}` : state.key === "progress" ? "Continue" : "Start ticket", icon("arrow-right")),
           h("div", { class: "module-progress" },
             h("span", { class: "meter", role: "img", "aria-label": `${doneHere} of ${own.length} tickets done in ${currentModule.title}` },
               h("span", { style: `width:${own.length ? Math.round((doneHere / own.length) * 100) : 0}%` })),

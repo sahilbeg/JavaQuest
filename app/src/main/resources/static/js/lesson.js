@@ -6,6 +6,7 @@
 
 import { h, icon, avatar, TEAM, reducedMotion } from "./dom.js";
 import { api } from "./api.js";
+import { bus } from "./events.js";
 import { focusDailyLimit } from "./daily.js";
 import { listenBar, stopAll } from "./speech.js";
 
@@ -323,6 +324,17 @@ export async function renderLesson(view, catalog, id, params) {
     nextButton.hidden = index === doneIndex || (atWorkEnd && !mastered);
   }
 
+  // The screen is saved with the progress, so a rebuild, a hard reload or another browser opens it again.
+  let positionTimer;
+  function savePosition() {
+    clearTimeout(positionTimer);
+    positionTimer = setTimeout(() => {
+      api.savePosition(id, { step: index, furthest: Math.max(maxSeen, index), total: steps.length, label: steps[index].label })
+        .then(() => bus.dispatchEvent(new Event("resume")))
+        .catch(() => { /* this browser still remembers the card */ });
+    }, 150);
+  }
+
   async function go(next) {
     if (next < 0 || next >= steps.length) return;
     if (next === doneIndex && !mastered) return;
@@ -332,6 +344,7 @@ export async function renderLesson(view, catalog, id, params) {
     index = next;
     maxSeen = Math.max(maxSeen, index);
     store.set(index);
+    savePosition();
     history.replaceState(null, "", `/t/${id}${index ? `?step=${index}` : ""}`);
     const step = steps[index];
     const content = card(step);
@@ -369,7 +382,13 @@ export async function renderLesson(view, catalog, id, params) {
 
   const legacyTab = { check: "check", fix: "code" }[params.get("tab")];
   const fromUrl = Number(params.get("step"));
-  const saved = store.get();
+  // Without a card in the address, open the saved screen: the server's copy first, then this browser's. A card is
+  // found by its title, so a rebuild that adds or removes cards still opens the one the learner was reading.
+  const remote = legacyTab || (Number.isInteger(fromUrl) && fromUrl > 0) ? null : await api.position(id).catch(() => null);
+  const byLabel = remote ? steps.findIndex((s) => s.label === remote.label) : -1;
+  const remoteStep = !remote ? NaN : steps[remote.step]?.label === remote.label ? remote.step : byLabel >= 0 ? byLabel : remote.step;
+  if (remote) maxSeen = Math.max(maxSeen, Math.min(remote.furthest + (byLabel >= 0 ? byLabel - remote.step : 0), lastWork));
+  const saved = Number.isInteger(remoteStep) ? remoteStep : store.get();
   const first = legacyTab ? steps.findIndex((s) => s.key === legacyTab)
     : Number.isInteger(fromUrl) && fromUrl > 0 ? fromUrl
     : Number.isInteger(saved) && saved > 0 && saved < doneIndex ? saved : 0;

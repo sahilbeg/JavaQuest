@@ -87,6 +87,34 @@ public class ProgressStore {
                 .single();
     }
 
+    /** A position with the id of its ticket and when it was saved. */
+    public record SavedPosition(String topicId, LessonPosition position, Instant savedAt) {}
+
+    public Optional<LessonPosition> position(String topicId) {
+        return jdbc.sql("SELECT step, furthest, total, label FROM lesson_position WHERE topic_id = ?")
+                .param(topicId)
+                .query((rs, n) -> new LessonPosition(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4)))
+                .optional();
+    }
+
+    public void savePosition(String topicId, LessonPosition position, Instant now) {
+        jdbc.sql("""
+                        MERGE INTO lesson_position (topic_id, step, furthest, total, label, updated_at)
+                        KEY (topic_id) VALUES (?, ?, ?, ?, ?, ?)""")
+                .params(topicId, position.step(), position.furthest(), position.total(), position.label(),
+                        now.atOffset(ZoneOffset.UTC))
+                .update();
+    }
+
+    /** Every saved position, the most recent first. */
+    public List<SavedPosition> positions() {
+        return jdbc.sql("SELECT topic_id, step, furthest, total, label, updated_at FROM lesson_position ORDER BY updated_at DESC")
+                .query((rs, n) -> new SavedPosition(rs.getString(1),
+                        new LessonPosition(rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getString(5)),
+                        rs.getObject(6, OffsetDateTime.class).toInstant()))
+                .list();
+    }
+
     public VoiceSettings voice() {
         return jdbc.sql("SELECT voice_name, voice_rate FROM player WHERE id = 1")
                 .query((rs, n) -> new VoiceSettings(rs.getString(1), rs.getDouble(2)))

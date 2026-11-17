@@ -298,6 +298,10 @@ main { outline: none; }
 .up-next h2 { font-size: 1.45rem; letter-spacing: -0.025em; margin-bottom: var(--space-3); }
 .up-next-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); color: var(--ink-soft); font-size: 0.85rem; margin-bottom: var(--space-3); }
 .up-next-body { color: var(--ink-soft); max-width: 62ch; margin: 0; }
+.resume-line { display: flex; align-items: center; gap: 6px; margin: var(--space-3) 0 0; font-size: 0.82rem; color: var(--ink-faint); }
+.resume-line .icon { width: 12px; height: 12px; color: var(--accent); }
+.resume-line strong { color: var(--ink-soft); font-weight: 500; }
+.topnav a[data-nav="resume"] .icon { color: var(--accent); }
 .up-next-side { display: grid; justify-items: end; gap: var(--space-3); }
 .module-progress { display: flex; align-items: center; gap: var(--space-3); color: var(--ink-faint); }
 .meter, .module-meter { display: block; height: 4px; border-radius: 999px; background: var(--line-strong); overflow: hidden; }
@@ -697,13 +701,13 @@ a.topic-row:hover { background: var(--hover); text-decoration: none; color: var(
   .module-head { grid-template-columns: 2rem minmax(0, 1fr) auto 3rem 16px; }
   .module-meter { display: none; }
   .stat-title { display: none; }
-  .topnav a span { display: none; }
 }
 /* The top bar holds the daily limit on every page: it gives up words before it runs out of room. */
-@media (max-width: 1080px) {
+@media (max-width: 1279px) {
   .topbar { gap: var(--space-3); }
   .career-chip { margin-right: 0; }
   .daily-unit, .stat-title, .xp-bar { display: none; }
+  .topnav a span { display: none; }
 }
 @media (max-width: 820px) {
   .topbar { padding: 0 var(--space-4); }
