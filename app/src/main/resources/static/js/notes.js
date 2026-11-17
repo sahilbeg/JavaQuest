@@ -3,6 +3,7 @@ import { h, icon } from "./dom.js";
 import { topicKind } from "./status.js";
 import { enhanceContent } from "./kb.js";
 import { startTourOnce } from "./tour.js";
+import { listenBar } from "./speech.js";
 
 const KIND_LABEL = { incident: "Incident", feature: "Feature" };
 const pad = (n) => String(n).padStart(2, "0");
@@ -124,6 +125,7 @@ export async function renderNotes(view, catalog, id) {
       h("h1", { id: "notes-title" }, summary.title),
       h("p", { class: "muted" }, `Quick reference for "${summary.ticket.title}".`),
       h("div", { class: "button-row notes-actions" },
+        listenBar(() => body, { label: "Listen to all", what: "all these notes" }),
         h("a", { class: "button", href: `/t/${id}` }, icon("book-open"), "Open the full lesson"),
         h("button", { type: "button", class: "button button-quiet", onclick: () => print() }, icon("save"), "Print or save as PDF"))),
     body,
@@ -139,7 +141,9 @@ export async function renderNotes(view, catalog, id) {
 }
 
 function section(title, iconName, ...content) {
-  return h("section", { class: "notes-section" },
+  const box = h("section", { class: "notes-section" });
+  box.append(h("div", { class: "notes-section-head" },
     h("h2", {}, icon(iconName), title),
-    content.flat(Infinity));
+    listenBar(() => box, { what: `the ${title.toLowerCase()}` })), ...content.flat(Infinity).filter(Boolean));
+  return box;
 }

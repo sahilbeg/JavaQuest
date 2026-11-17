@@ -57,6 +57,7 @@ Every page has a real address that can be bookmarked and reloaded: `/` (course),
 - **Walkthrough** (`js/tour.js`): the page dims, a spotlight with a thin indigo edge moves to each target, and a small bubble explains it. It plays once per page; the `?` button replays it.
 - **Callouts**: bordered panels with a coloured dot and a mono label (Tip, Careful, Think of it like, New word).
 - **Daily limit** (`js/daily.js`): always on screen, in the sticky top bar on every page. A switch turns it on, a stepper sets tickets per day, and a mono status shows today's count ("2/3 today", amber "Done today · 3/3"). Changes save at once. The status has a fixed width, so the + and − buttons never move between clicks.
+- **Read aloud** (`js/speech.js`): a small pill with Listen and a gear, at the top right of every reading card (ticket, learn cards, mistakes, recap) and on each Notes section, plus "Listen to all" on a notes page. It uses the browser's own speech (Web Speech API), reads paragraph by paragraph with an indigo highlight, skips code and animations, and opens collapsed mistakes as it reaches them. The gear opens a panel with the voice (English voices plus the browser's language, no joke voices), speed (0.5× to 2×) and "Try it". Both are remembered in `localStorage` (`jq-voice`, `jq-rate`). Reading stops on a new card or page.
 - **Checks**: a joined list of JUnit results, with incident tiers as bronze, silver and gold pills.
 
 ## Motion

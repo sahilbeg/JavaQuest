@@ -7,6 +7,7 @@
 import { h, icon, avatar, TEAM, reducedMotion } from "./dom.js";
 import { api } from "./api.js";
 import { focusDailyLimit } from "./daily.js";
+import { listenBar, stopAll } from "./speech.js";
 
 import { createHelper } from "./chat.js";
 import { enhanceContent } from "./kb.js";
@@ -326,6 +327,7 @@ export async function renderLesson(view, catalog, id, params) {
     if (next < 0 || next >= steps.length) return;
     if (next === doneIndex && !mastered) return;
     const back = next < index;
+    stopAll();
     dispose();
     index = next;
     maxSeen = Math.max(maxSeen, index);
@@ -336,6 +338,11 @@ export async function renderLesson(view, catalog, id, params) {
     const wide = step.key === "code";
     const box = h("article", { class: `lesson-card${wide ? " is-wide" : ""}${back ? " is-back" : ""}`, id: "lesson-card",
       "aria-label": step.label, tabindex: "-1" }, content);
+    // Reading cards get a Listen button; the check, the code and the finish line do not.
+    if (["intro", "learn", "mistakes", "recap"].includes(step.key)) {
+      const bar = listenBar(() => box, { what: "this card" });
+      if (bar) box.prepend(bar);
+    }
     stage.replaceChildren(box);
     const cleanContent = step.key === "learn" || step.key === "mistakes" ? enhanceContent(box, chat) : () => {};
     dispose = () => { cleanContent(); content.dispose?.(); };

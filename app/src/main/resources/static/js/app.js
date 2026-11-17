@@ -10,6 +10,7 @@ import { byte } from "./byte.js";
 import { bus } from "./events.js";
 import { replayPageTour, setPageTour } from "./tour.js";
 import { mountDailyLimit } from "./daily.js";
+import { stopAll } from "./speech.js";
 
 const view = document.getElementById("view");
 let cleanup = () => {};
@@ -36,6 +37,7 @@ async function route({ keepFocus = false } = {}) {
   const key = current.name === "ticket" ? `ticket:${current.id}` : location.pathname + location.search;
   if (key === lastRoute && current.name === "ticket") return;
   lastRoute = key;
+  stopAll();
   cleanup();
   cleanup = () => {};
   for (const link of document.querySelectorAll("[data-nav]")) {

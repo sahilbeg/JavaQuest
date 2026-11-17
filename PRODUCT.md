@@ -25,6 +25,7 @@ The practice code lives in the learner's own repo and IDE. Saving a file in the 
 - Sessions are short: 5 to 10 minute lessons, one quiz, one exercise.
 - Tickets open one at a time, in order: the next one opens when the current one is mastered.
 - An optional daily limit (always in the top bar, off by default) paces the course: after that many new tickets in a day, the next one opens the following day. Finished tickets and reviews stay open for revisiting.
+- Lessons and notes can be read aloud, with a choice of voice and speed.
 - Every finished ticket gets quick reference notes (the Notes page): key points, syntax, new words and common mistakes, taken from its lesson.
 
 ## Capabilities and Constraints

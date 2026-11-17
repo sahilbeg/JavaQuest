@@ -820,11 +820,12 @@ a.topic-row:hover { background: var(--hover); text-decoration: none; color: var(
 .notes-actions { margin-top: var(--space-4); }
 .notes-body { display: grid; gap: var(--space-4); }
 .notes-section { padding: var(--space-5) var(--space-5) var(--space-3); background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); }
-.notes-section > h2 { display: flex; align-items: center; gap: var(--space-2); margin: 0 0 var(--space-3); font-size: 1rem; letter-spacing: -0.01em; }
-.notes-section > h2 .icon { width: 16px; height: 16px; color: var(--accent); }
+.notes-section-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin: 0 0 var(--space-3); }
+.notes-section-head h2 { display: flex; align-items: center; gap: var(--space-2); margin: 0; font-size: 1rem; letter-spacing: -0.01em; }
+.notes-section-head h2 .icon { width: 16px; height: 16px; color: var(--accent); }
 .notes-section ul { margin: 0 0 var(--space-3); }
 .notes-item { padding: var(--space-3) 0; border-top: 1px solid var(--line); }
-.notes-section > h2 + .notes-item { border-top: 0; padding-top: 0; }
+.notes-section-head + .notes-item { border-top: 0; padding-top: 0; }
 .notes-item h3 { margin: 0 0 var(--space-2); font-size: 0.95rem; }
 .notes-item pre { margin: 0 0 var(--space-2); }
 .notes-note p { margin: 0 0 var(--space-2); font-size: 0.92rem; }
@@ -848,3 +849,28 @@ a.topic-row:hover { background: var(--hover); text-decoration: none; color: var(
   .notes { padding: 0; max-width: none; }
   .notes-section { break-inside: avoid; border-color: #ccc; }
 }
+
+/* ---------- Read aloud ---------- */
+
+.listen-bar { display: inline-flex; align-items: center; gap: 2px; padding: 2px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); }
+.lesson-card > .listen-bar { float: right; margin: calc(-1 * var(--space-2)) calc(-1 * var(--space-3)) var(--space-2) var(--space-3); position: relative; z-index: 1; }
+.listen-button, .listen-settings { display: inline-flex; align-items: center; gap: 6px; height: 28px; border: 0; border-radius: 999px; background: transparent; color: var(--ink-soft); font: 500 0.8rem var(--font); cursor: pointer; transition: background 0.15s, color 0.15s; }
+.listen-button { padding: 0 10px 0 8px; }
+.listen-settings { width: 28px; justify-content: center; }
+.listen-button:hover, .listen-settings:hover, .listen-settings[aria-expanded="true"] { background: var(--hover); color: var(--ink); }
+.listen-button .icon, .listen-settings .icon { width: 14px; height: 14px; }
+.listen-button.is-playing { background: var(--accent-wash); color: var(--accent-strong); }
+.listen-button.is-playing .icon { width: 11px; height: 11px; }
+.listen-button:focus-visible, .listen-settings:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.is-reading { background: color-mix(in oklch, var(--accent) 14%, transparent); box-shadow: 0 0 0 4px color-mix(in oklch, var(--accent) 14%, transparent); border-radius: 4px; transition: background 0.2s; }
+
+.voice-panel { position: absolute; z-index: 80; display: grid; gap: var(--space-2); padding: var(--space-4); background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); border-radius: var(--r-lg); box-shadow: var(--shadow-lg); font-size: 0.85rem; animation: rise 0.2s var(--ease); }
+.voice-panel label { font-weight: 500; }
+.voice-panel select { width: 100%; height: 34px; padding: 0 8px; font: inherit; color: var(--ink); background: var(--surface-2); border: 1px solid var(--line-strong); border-radius: var(--r-md); margin-bottom: var(--space-2); }
+.voice-panel select:focus-visible, .voice-panel input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.voice-speed { display: flex; justify-content: space-between; align-items: baseline; }
+.voice-speed-value { font-family: var(--mono); font-size: 0.78rem; color: var(--accent); }
+.voice-panel input[type="range"] { width: 100%; accent-color: var(--accent); }
+.voice-speed-scale { display: flex; justify-content: space-between; margin-top: -4px; font-size: 0.72rem; color: var(--ink-faint); }
+.voice-panel-foot { display: flex; justify-content: space-between; margin-top: var(--space-2); }
+@media print { .listen-bar { display: none !important; } }
