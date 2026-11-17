@@ -78,7 +78,7 @@ if (size == items.length) {
 ```
 
 ```callout tip
-Byte says: copying looks slow, but doubling means it happens rarely. With a starting length of 4, you copy at 4, 8, 16 and 32 items. Most pushes are a single store.
+Gojo says: copying looks slow, but doubling means it happens rarely. With a starting length of 4, you copy at 4, 8, 16 and 32 items. Most pushes are a single store.
 ```
 
 ### Syntax: ArrayDeque as a stack

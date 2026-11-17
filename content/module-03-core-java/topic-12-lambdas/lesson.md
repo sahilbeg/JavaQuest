@@ -99,7 +99,7 @@ String::toUpperCase
 A method reference is a shorter lambda. Use it when the lambda only calls one method on its parameter. Write the class, two colons, then the method name with no brackets.
 
 ```callout tip
-Byte says: Read `Ride::minutes` as "use each ride's minutes". Read `String::toUpperCase` as "make each string upper case".
+Gojo says: Read `Ride::minutes` as "use each ride's minutes". Read `String::toUpperCase` as "make each string upper case".
 ```
 
 ### Syntax: forEach and removeIf

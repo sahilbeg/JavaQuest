@@ -2,7 +2,7 @@
 
 Riverside is full, so the app sends you to Old Mill. Old Mill is full too, so it sends you to Harbor. Each station only knows one thing: its own free docks, and which station comes next.
 
-Shizune asks: "How many free docks are there along the whole chain?" Each station can answer with a simple rule. "My free docks, plus whatever the rest of the chain has." The last station has no rest, so it just answers with its own docks.
+Jiraiya asks: "How many free docks are there along the whole chain?" Each station can answer with a simple rule. "My free docks, plus whatever the rest of the chain has." The last station has no rest, so it just answers with its own docks.
 
 That way of solving a problem is called recursion.
 
@@ -115,7 +115,7 @@ Exception in thread "main" java.lang.StackOverflowError
 ```
 
 ```callout warning
-Byte says: when you see StackOverflowError, check two things. Is there a base case? Does every recursive call move closer to it?
+Gojo says: when you see StackOverflowError, check two things. Is there a base case? Does every recursive call move closer to it?
 ```
 
 ### Syntax: recursion on an array with an index
@@ -190,7 +190,7 @@ The fix is to remember answers you already worked out. You will learn that in th
 
 ## Worked example
 
-Here is Shizune's ticket. The array holds free docks at Riverside, Old Mill, Harbor and Uptown, in chain order.
+Here is Jiraiya's ticket. The array holds free docks at Riverside, Old Mill, Harbor and Uptown, in chain order.
 
 ```java run
 public class Main {

@@ -1,6 +1,6 @@
 # Dependency injection and beans
 
-`FareService` builds its own price list and clock with `new`. Tests cannot pretend it is Sunday, and Shizune's half-price Sunday promo never gets used. Let Spring create the pieces and hand them to `FareService`.
+`FareService` builds its own price list and clock with `new`. Tests cannot pretend it is Sunday, and Jiraiya's half-price Sunday promo never gets used. Let Spring create the pieces and hand them to `FareService`.
 
 The fares, in cents: a ride costs the unlock fee plus the per-minute price times the minutes.
 

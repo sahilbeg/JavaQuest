@@ -2,7 +2,7 @@
 
 Picture a ship's captain who writes every thought in the logbook. "Sky is blue." "Had tea." "Engine on fire." "Had more tea." When the storm hits, nobody finds the fire among a thousand cups of tea.
 
-That is the Spoke kiosk today. Every event goes through `System.out.println`. Last night Iruka's night shift searched ten thousand lines for one failed payment at Old Mill. Worse, one line printed a rider's full card number. In this topic you replace those prints with real **logging**.
+That is the Spoke kiosk today. Every event goes through `System.out.println`. Last night Itachi's night shift searched ten thousand lines for one failed payment at Old Mill. Worse, one line printed a rider's full card number. In this topic you replace those prints with real **logging**.
 
 ## Concept
 
@@ -67,7 +67,7 @@ log.error("payment failed for R-17");
 The levels are ordered from TRACE (lowest) to ERROR (highest). When you set a level, you see that level and everything above it. At INFO, the night shift sees INFO, WARN and ERROR. TRACE and DEBUG stay hidden.
 
 ```callout tip
-Byte says: ask "would the night shift want to be woken up for this?" If yes, it is ERROR. If it is odd but handled, it is WARN.
+Gojo says: ask "would the night shift want to be woken up for this?" If yes, it is ERROR. If it is odd but handled, it is WARN.
 ```
 
 ### Syntax: parameterized messages

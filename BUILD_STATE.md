@@ -59,7 +59,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - UX overhaul (user feedback): playful redesign, journey map, mastery gating with author mode, lesson player with short cards, animation engine (code and scene, checked by check-content), first-visit walkthroughs; 56 animations added to modules 0 to 2 and reviewed
 ## Decisions
 
-- Mascot: Byte the owl
+- Helper: Satoru Gojo (was Byte the owl); team: Tsunade, Kakashi, Jiraiya, Itachi (see docs/STORY.md)
 - Skip ahead: removed (user feedback, 2026-11-16). Tickets open one at a time when the one before is mastered; ./run.sh --unlock-all is author mode
 - Platform: macOS only for now; Windows deferred
 - Page style: textbook order with W3Schools-style pages (Syntax box, Try it Yourself, prev/next, sidebar)

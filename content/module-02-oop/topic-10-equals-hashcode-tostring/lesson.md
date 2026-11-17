@@ -1,6 +1,6 @@
 ## Hook
 
-Iruka opens the log and reads this line: `Bike@1b6d3586`. Which bike is that? Nobody can tell.
+Itachi opens the log and reads this line: `Bike@1b6d3586`. Which bike is that? Nobody can tell.
 
 The lost-bike report has a second problem. It lists B-1042 twice and counts two lost bikes. The rider and the station scanner each made a `Bike` object for the same bike. Java sees two objects, so it thinks they are two bikes.
 
@@ -35,7 +35,7 @@ System.out.println(bike);              // Bike[B-1042, ebike]
 System.out.println("Lost: " + bike);   // Lost: Bike[B-1042, ebike]
 ```
 
-Without the override, you get the `Object` version: the class name, an `@`, and a number in hexadecimal (a base-16 number). That is the `Bike@1b6d3586` in Iruka's log.
+Without the override, you get the `Object` version: the class name, an `@`, and a number in hexadecimal (a base-16 number). That is the `Bike@1b6d3586` in Itachi's log.
 
 `@Override` asks the compiler to check that a parent really has this method. If you type `tostring` by mistake, the compiler stops you.
 

@@ -2,7 +2,7 @@
 
 Think about a wall socket. The socket does not care what you plug in. A lamp, a kettle and a phone charger all fit, because they share one plug shape.
 
-Shizune's ticket asks for the same thing for promotions. Marketing invents a new deal every week. Today, each deal means an engineer edits the fare code. You want one "plug shape" for a promotion, so the fare code can accept any deal that fits it.
+Jiraiya's ticket asks for the same thing for promotions. Marketing invents a new deal every week. Today, each deal means an engineer edits the fare code. You want one "plug shape" for a promotion, so the fare code can accept any deal that fits it.
 
 ## Concept
 

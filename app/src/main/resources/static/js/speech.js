@@ -13,7 +13,7 @@ const VOICE_KEY = "jq-voice";
 const RATE_KEY = "jq-rate";
 const MIN_RATE = 0.5;
 const MAX_RATE = 2;
-const SAMPLE = "Hi, I'm Byte. This is how I sound when I read your lessons.";
+const SAMPLE = "Yo, I'm Gojo. This is how I sound when I read your lessons.";
 /** macOS and Chrome ship joke voices (bells, whispers, robots); they make poor teachers. */
 const NOVELTY = /^(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Deranged|Hysterical|Pipe Organ)\b/i;
 /** Reading these elements, in page order, covers the text of a card. */

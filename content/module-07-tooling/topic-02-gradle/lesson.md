@@ -75,7 +75,7 @@ The **Kotlin DSL** is the language of a `.kts` build script. Kotlin is a languag
 ```
 
 ```callout tip
-Byte says: the launcher line, `testRuntimeOnly("org.junit.platform:junit-platform-launcher")`, has no version on purpose. JUnit's own published files tell Gradle which version matches `junit-jupiter`. Gradle 9 needs this line, so always add it.
+Gojo says: the launcher line, `testRuntimeOnly("org.junit.platform:junit-platform-launcher")`, has no version on purpose. JUnit's own published files tell Gradle which version matches `junit-jupiter`. Gradle 9 needs this line, so always add it.
 ```
 
 ### Syntax: the application plugin
@@ -231,7 +231,7 @@ Both are good, and both are common. Teams usually pick by habit and by the kind 
 - Spring Boot's project generator offers both. Libraries do not care which one you use.
 
 ```callout tip
-Byte says: you do not need to love one tool. You need to read both, because you will meet both in the same company.
+Gojo says: you do not need to love one tool. You need to read both, because you will meet both in the same company.
 ```
 
 ## Worked example

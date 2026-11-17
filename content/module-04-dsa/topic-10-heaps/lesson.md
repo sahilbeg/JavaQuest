@@ -1,6 +1,6 @@
 ## Hook
 
-Iruka's repair board is a long list of broken bikes. Each report has an urgency number. A 1 means "no brakes, fix now". A 5 means "squeaky bell". When a new report arrives, the tool re-sorts the whole list. That costs O(n log n) every time.
+Itachi's repair board is a long list of broken bikes. Each report has an urgency number. A 1 means "no brakes, fix now". A 5 means "squeaky bell". When a new report arrives, the tool re-sorts the whole list. That costs O(n log n) every time.
 
 But the crew never reads the whole list. They only ask one question: "Which bike is most urgent right now?" You do not need a fully sorted list to answer that. You only need the smallest number on top. A **heap** keeps exactly that promise, and it keeps it cheaply.
 
@@ -16,7 +16,7 @@ A **binary heap** is a binary tree with two rules.
 So the smallest value always sits at the root. Unlike a BST, left and right are in no particular order. A heap is only "sorted" along each path from the root down.
 
 ```callout jargon
-Byte says: a max-heap flips the order rule, so the largest value sits on top. Everything else in this lesson works the same way.
+Gojo says: a max-heap flips the order rule, so the largest value sits on top. Everything else in this lesson works the same way.
 ```
 
 ### Storing a tree in an array
@@ -113,10 +113,10 @@ A complete tree of n values has about log n levels. Sift up and sift down each w
 | peek | O(1) | read slot 0, no matter how many bikes |
 | add | O(log n) | double the bikes, add one swap at most |
 | poll | O(log n) | double the bikes, add one swap at most |
-| re-sort the list on every report | O(n log n) | what Iruka's tool does now |
+| re-sort the list on every report | O(n log n) | what Itachi's tool does now |
 
 ```callout analogy
-Byte says: a heap is like a hospital waiting room. Nobody lines everyone up in exact order. The nurse just makes sure the most urgent patient is always next.
+Gojo says: a heap is like a hospital waiting room. Nobody lines everyone up in exact order. The nurse just makes sure the most urgent patient is always next.
 ```
 
 ### Syntax: PriorityQueue
@@ -212,7 +212,7 @@ Line by line:
 
 ## Try it
 
-Here is Iruka's repair list with the library heap. Run it. Then add `new Repair("B-1099", 0)` to the list and run again.
+Here is Itachi's repair list with the library heap. Run it. Then add `new Repair("B-1099", 0)` to the list and run again.
 
 ```java run
 import java.util.Comparator;
@@ -243,7 +243,7 @@ record Repair(String bikeId, int urgency) {
 B-1003 and B-1017 both have urgency 1. The `thenComparing` part breaks the tie by bike id.
 
 ```callout warning
-Byte says: printing a PriorityQueue with System.out.println(queue) shows the raw array, which is not sorted. Only poll gives you values in order.
+Gojo says: printing a PriorityQueue with System.out.println(queue) shows the raw array, which is not sorted. Only poll gives you values in order.
 ```
 
 ## Recap

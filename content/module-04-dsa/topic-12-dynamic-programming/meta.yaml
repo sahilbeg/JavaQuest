@@ -14,7 +14,7 @@ ticket:
   from: maya
   title: "Pass pricing tool freezes on a 30-day month"
   body: >
-    Iruka has a rider from Old Mill waiting on the cheapest mix of passes for her month.
+    Itachi has a rider from Old Mill waiting on the cheapest mix of passes for her month.
     Our pricing tool tries every mix with plain recursion, and it hangs for 30 days of rides.
     Day passes are $3, week passes $10 and month passes $25. Can you make it remember its answers?
 hints:

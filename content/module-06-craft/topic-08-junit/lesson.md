@@ -119,7 +119,7 @@ void plusRiderPaysFromMinute31() {
 ```
 
 ```callout tip
-Byte says: one test, one behaviour. When a test called plusRiderPaysFromMinute31 fails, you know the bug before you open the file.
+Gojo says: one test, one behaviour. When a test called plusRiderPaysFromMinute31 fails, you know the bug before you open the file.
 ```
 
 ### Syntax: good names and @DisplayName

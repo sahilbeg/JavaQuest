@@ -147,7 +147,7 @@ The compiler also reports 21. Both tools agree, so your toolbox is complete.
 7. In the project panel, open `module-00-foundations`, then `topic-05-hello-world`, then `src`. The IDE may show the next folders as one package, `jq.m00.helloworld`. Open it and find `Hello.java`.
 
 ```callout tip
-Byte says: open a fresh Terminal window after installing. An old window may not know Java is there yet.
+Gojo says: open a fresh Terminal window after installing. An old window may not know Java is there yet.
 ```
 
 ## Recap

@@ -2,7 +2,7 @@
 
 Think about a ticket gate at a train station. You tap your card. The gate checks one thing: is the card valid? If yes, the gate opens. If no, it beeps and stays shut.
 
-The Spoke kiosk needs to make choices like that gate. Right now it charges every rider the same way. Shizune's ticket says members ride free for their first 30 minutes. So the kiosk must ask a question first: is this rider a member? Then it picks a price based on the answer.
+The Spoke kiosk needs to make choices like that gate. Right now it charges every rider the same way. Jiraiya's ticket says members ride free for their first 30 minutes. So the kiosk must ask a question first: is this rider a member? Then it picks a price based on the answer.
 
 ## Concept
 

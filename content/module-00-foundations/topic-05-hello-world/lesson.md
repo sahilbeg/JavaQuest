@@ -169,7 +169,7 @@ Change the text inside the quotes to your own name, then press **Run**.
 ```java run
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello, my name is Byte!");
+        System.out.println("Hello, my name is Gojo!");
     }
 }
 ```

@@ -40,9 +40,9 @@ A teammate's avatar is a small circle with their initials on their colour. When 
 
 Radii: 6px for inputs and small boxes, 8px for buttons and rows, 12px for cards. Borders do most of the work; shadows are soft and mostly used for floating elements (cards, drawer, toasts, walkthrough).
 
-## Byte
+## Gojo, the helper
 
-Byte, the team's helper bot, is a small monochrome owl mark (`js/byte.js`) that draws in `currentColor`: the logo, the Hints button, chat messages, animation captions and walkthrough bubbles. No cartoon, no moods.
+Gojo (Satoru Gojo), the team's helper, is a small round mark (`js/byte.js`; the file keeps its old name). With the learner's own `gojo.jpg` in `avatars/` it shows that picture; without one, a simple monochrome mark (spiky hair and a blindfold) that draws in `currentColor`. It appears in the logo, the Hints button, chat messages, animation captions and walkthrough bubbles. No moods.
 
 ## Pages
 
@@ -50,7 +50,7 @@ Every page has a real address that can be bookmarked and reloaded: `/` (course),
 
 
 - **Course** (`js/journey.js`, home): greeting and overall progress; an "Up next" card for the one open ticket; a review strip when reviews are due; the course outline as a numbered syllabus. Each module row shows its status, a thin progress bar and a count. The current module is open, showing its tickets as rows (done, up next, locked; incident and feature tags). Done modules fold away, and locked modules show their summary only.
-- **Lesson player** (`js/lesson.js`): a sticky bar with a segmented progress bar, one card on stage, Back and Next at the bottom (arrow keys too), and a Hints button that opens Byte's drawer. Steps: ticket, learn cards, mistakes, recap, check, code, done.
+- **Lesson player** (`js/lesson.js`): a sticky bar with a segmented progress bar, one card on stage, Back and Next at the bottom (arrow keys too), and a Hints button that opens Gojo's drawer. Steps: ticket, learn cards, mistakes, recap, check, code, done.
 - **Done for today**: when the daily limit is reached, the "Up next" card becomes a rest card (green top edge) naming the ticket that opens tomorrow, and that ticket's row shows an amber clock and "Tomorrow".
 - **Notes** (`js/notes.js`, `/notes`): quick reference for every finished ticket, grouped by module, with a filter. Each ticket's page (`/notes/<id>`) has bordered sections: Key points, Syntax, Words to know and Common mistakes, plus "Open the full lesson", print, and previous/next. The ticket's last card links to it.
 - **Career** and **Review**: the same cards and lists.

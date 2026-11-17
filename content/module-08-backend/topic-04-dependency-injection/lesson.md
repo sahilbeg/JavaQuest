@@ -2,7 +2,7 @@
 
 Picture a chef who grows her own tomatoes, mills her own flour and builds her own oven before every dinner. The food might be good, but she can never switch to a cheaper supplier. A food inspector can never swap in a test tomato either.
 
-`FareService` cooks like that. It builds its own price list and its own clock with `new`. So the tests cannot pretend it is Sunday, and Shizune's Sunday promo needs a code change. In this topic, Spring delivers the ingredients instead.
+`FareService` cooks like that. It builds its own price list and its own clock with `new`. So the tests cannot pretend it is Sunday, and Jiraiya's Sunday promo needs a code change. In this topic, Spring delivers the ingredients instead.
 
 ## Concept
 
@@ -248,7 +248,7 @@ Every request in the app shares the same singleton. So do not keep one rider's d
 
 ### Two beans of one type
 
-Shizune's promo adds a second `PriceList` bean, `SundayPriceList`. Now "give me a PriceList" has two answers, and Spring refuses to guess.
+Jiraiya's promo adds a second `PriceList` bean, `SundayPriceList`. Now "give me a PriceList" has two answers, and Spring refuses to guess.
 
 ```java run
 import org.springframework.beans.factory.NoUniqueBeanDefinitionException;

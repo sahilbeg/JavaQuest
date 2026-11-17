@@ -14,7 +14,7 @@ ticket:
   title: "FareService builds its own price list and clock"
   body: >
     FareService makes its own price list and clock with new, so our tests can't pretend it's Sunday.
-    Shizune wants half-price Sunday rides, and right now that means editing FareService every weekend.
+    Jiraiya wants half-price Sunday rides, and right now that means editing FareService every weekend.
     Please let Spring hand FareService its price lists and its clock instead.
 hints:
   - "Spring only manages classes it knows about. Start by turning the two price lists and ClockConfig into beans, then FareService."

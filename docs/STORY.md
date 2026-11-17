@@ -14,13 +14,13 @@ For fun, the team is the Naruto cast in their positions while Tsunade is the Fif
 
 | Character | Position (shown in the app) | Job at Spoke | id in `ticket.from` | What they bring you |
 |---|---|---|---|---|
-| **Byte** | The team's owl mascot, a helper bot in team chat | | | Explains concepts, gives hints, cheers. Never blames. |
+| **Satoru Gojo** (he) | The team's helper in team chat. He is from Jujutsu Kaisen, a guest in the Naruto cast | | | Explains concepts, gives hints, cheers. Relaxed and confident, never blames. Says "Yo!". |
 | **Tsunade** (she) | Fifth Hokage | Lead engineer, your manager | `maya` | Assigns most tickets. Reviews your code. Her solution is the one you compare with. |
 | **Kakashi Hatake** (he) | Jōnin, Team 7 leader | Operations engineer | `theo` | Raises incidents when something breaks in production. |
-| **Shizune** (she) | The Hokage's assistant | Product manager | `priya` | Asks for features. Explains what riders need. |
-| **Iruka Umino** (he) | Chūnin, mission desk | Rider support | `sam` | Forwards rider complaints that turn into bug tickets. |
+| **Jiraiya** (he) | Legendary Sannin, the Toad Sage | Product manager | `priya` | Asks for features. Explains what riders need. |
+| **Itachi Uchiha** (he) | Akatsuki, former ANBU captain | Rider support | `sam` | Forwards rider complaints that turn into bug tickets. |
 
-The ids in `ticket.from` and in kudos stay `maya`, `theo`, `priya` and `sam`, so content and progress never need to change when the cast does. The names, positions and initials shown come from `TEAM` in `app/.../static/js/dom.js`. The learner can add their own pictures of the cast in `avatars/` (see its README); the app ships none. In story text, write the character's name (Tsunade, Kakashi, Shizune, Iruka). Some example code from before the rename keeps old lowercase names in paths or logins, such as `/Users/maya/...`; leave those, because they match the practice code.
+The ids in `ticket.from` and in kudos stay `maya`, `theo`, `priya` and `sam`, so content and progress never need to change when the cast does. The names, positions and initials shown come from `TEAM` in `app/.../static/js/dom.js`. The learner can add their own pictures of the cast in `avatars/` (see its README); the app ships none. In story text, write the character's name (Tsunade, Kakashi, Jiraiya, Itachi) and Gojo for the helper. Some example code from before the rename keeps old lowercase names in paths or logins, such as `/Users/maya/...`; leave those, because they match the practice code.
 
 Characters speak only in tickets, chat and incidents. A lesson may name the teammate who sent the ticket for context, but teammates never do the teaching. The teaching itself stays plain text.
 
@@ -37,7 +37,7 @@ Characters speak only in tickets, chat and incidents. A lesson may name the team
 | Mini-project | Feature, keyed `FEAT-MM` |
 | Level title | Job title |
 | Badge | Kudos |
-| Hint | A message from Byte in chat |
+| Hint | A message from Gojo in chat |
 
 ## Arc by module
 

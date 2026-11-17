@@ -192,7 +192,7 @@ public class Main {
 ```
 
 ```callout tip
-Byte says: before you read a file that might be missing, check `Files.exists`. Then you can return an empty list instead of crashing.
+Gojo says: before you read a file that might be missing, check `Files.exists`. Then you can return an empty list instead of crashing.
 ```
 
 ## Recap

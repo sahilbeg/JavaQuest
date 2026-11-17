@@ -159,7 +159,7 @@ static void quickSort(int[] a, int low, int high) {
 The pivot at `p` is already in place, so neither recursive call includes it.
 
 ```callout analogy
-Partition is like a teacher saying "everyone shorter than Iruka, stand to the left". Iruka ends up in the right spot, and two smaller groups are left to sort.
+Partition is like a teacher saying "everyone shorter than Itachi, stand to the left". Itachi ends up in the right spot, and two smaller groups are left to sort.
 ```
 
 ### Quicksort's bad case

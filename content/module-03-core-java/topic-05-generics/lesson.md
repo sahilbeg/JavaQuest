@@ -59,7 +59,7 @@ public class Main {
 Notice `minutes.take() + 5`. Java knows `take()` returns an `Integer`, so the maths works with no cast. A **cast** is when you force a value into another type, like `(String) value`. Generics remove the need for most casts.
 
 ```callout tip
-Byte says: the compiler checks the type for you. `station.put(42)` will not compile, because `station` holds only Strings. A mistake caught at compile time never reaches a rider.
+Gojo says: the compiler checks the type for you. `station.put(42)` will not compile, because `station` holds only Strings. A mistake caught at compile time never reaches a rider.
 ```
 
 ### Syntax: two type parameters

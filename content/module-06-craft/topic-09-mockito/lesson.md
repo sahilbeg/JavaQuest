@@ -126,7 +126,7 @@ Mock the interfaces your own team wrote, such as `PaymentGateway`. Do not mock t
 A test that mocks everything checks only that your code calls what it calls today. Rename one private step and the test breaks, though riders see no change. Mock the slow or costly edges: cards, locks, networks. Use real objects for plain logic like a fare rule or a record.
 
 ```callout tip
-Byte says: if a test has more when lines than assert lines, ask whether it still tests behaviour.
+Gojo says: if a test has more when lines than assert lines, ask whether it still tests behaviour.
 ```
 
 ## Worked example

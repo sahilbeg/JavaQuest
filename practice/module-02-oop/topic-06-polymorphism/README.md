@@ -1,6 +1,6 @@
 # Polymorphism and overriding
 
-Shizune wants one fleet report for every kind of bike. `Bike`, `EBike` and `CargoBike` are finished. Fill in the four methods in `FleetReport.java`. Each one takes a `Bike[]` that can hold any mix of bikes.
+Jiraiya wants one fleet report for every kind of bike. `Bike`, `EBike` and `CargoBike` are finished. Fill in the four methods in `FleetReport.java`. Each one takes a `Bike[]` that can hold any mix of bikes.
 
 1. **TODO 1:** `totalFare(bikes, minutes)` adds up `b.fare(minutes)` for every bike. Each bike uses its own price.
 2. **TODO 2:** `countEBikes(bikes)` counts the bikes where `b instanceof EBike` is true.

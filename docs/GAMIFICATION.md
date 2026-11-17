@@ -95,8 +95,8 @@ Badges appear as kudos from teammates.
 
 The rules live in `Kudos.java`. A project only counts as shipped once its incident exists in the content.
 
-## Byte, chat and feedback
+## Gojo, chat and feedback
 
-- Byte is the team's owl mascot and lives in the team chat panel. Byte gives hints, explains failed checks, and cheers on done tickets.
+- Gojo (Satoru Gojo) is the team's helper and lives in the team chat panel. Gojo gives hints, explains failed checks, and cheers on done tickets.
 - Moods: idle, thinking (checks running), cheering (pass), encouraging (fail). Encouraging messages never blame. Example: "Close! 4 of 5 checks pass. Want a hint?"
 - Celebrations: a "ticket closed" moment on mastery, a promotion card on a new job title, and a kudos toast. All are skipped under reduced motion.

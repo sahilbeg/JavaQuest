@@ -2,7 +2,7 @@
 
 Think about a school fire drill. The teacher does not shout one order to the tall kids and another to the short kids. She says "everyone walk outside". Each student walks in their own way, but one order covers them all.
 
-Shizune wants the same thing for the fleet. Right now the report has one loop for classic bikes, one for e-bikes and one for cargo bikes. She wants one loop that says "every bike, tell me your fare", and each bike answers with its own price.
+Jiraiya wants the same thing for the fleet. Right now the report has one loop for classic bikes, one for e-bikes and one for cargo bikes. She wants one loop that says "every bike, tell me your fare", and each bike answers with its own price.
 
 ## Concept
 
@@ -386,7 +386,7 @@ class CargoBike extends Bike {
 ```
 
 ```callout tip
-Byte says: reach for `instanceof` only when you need something that one kind of bike has and the others lack, such as a battery. For anything every bike can do, just call the method and let dispatch choose.
+Gojo says: reach for `instanceof` only when you need something that one kind of bike has and the others lack, such as a battery. For anything every bike can do, just call the method and let dispatch choose.
 ```
 
 ## Recap

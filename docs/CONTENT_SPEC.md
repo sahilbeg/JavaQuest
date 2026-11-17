@@ -38,12 +38,12 @@ practice:
 xp: { quiz: 50, code: 100 }
 ticket:                        # the real-world problem, see docs/STORY.md
   key: SPK-0101
-  from: maya                   # maya (Tsunade) | theo (Kakashi) | priya (Shizune) | sam (Iruka); see docs/STORY.md
+  from: maya                   # maya (Tsunade) | theo (Kakashi) | priya (Jiraiya) | sam (Itachi); see docs/STORY.md
   title: "Kiosk forgets how long a ride took"
   body: >
     Riders say the kiosk shows 0 minutes on every receipt. It needs to remember the ride length
     so it can work out the fare. Can you take this one?
-hints:                         # exactly 3, from gentle to explicit, shown as messages from Byte
+hints:                         # exactly 3, from gentle to explicit, shown as messages from Gojo, the helper
   - "A variable needs a type, a name, and a value."
   - "For whole numbers, use int. For text, use String."
   - "Try: int age = 15;"
@@ -100,7 +100,7 @@ flowchart LR; Source --> Compiler --> Bytecode --> JVM
 ```
 
 ```callout tip
-Byte says: names should describe what the box holds.
+Gojo says: names should describe what the box holds.
 ```
 ````
 
@@ -132,7 +132,7 @@ When a ticket is finished, the Notes page shows a quick reference built from its
 
 ### Animations (```animate)
 
-An animation shows an idea happening step by step, with one short caption per step from Byte. Learners press Watch, or step through with the buttons. **Every topic should have at least one animation**, placed in the Concept or Worked example where the idea is hardest to picture: variables changing, a loop running, objects and references, a request travelling to a server. Animations replace reading, so a long paragraph that only describes steps can shrink to one sentence plus the animation.
+An animation shows an idea happening step by step, with one short caption per step from Gojo. Learners press Watch, or step through with the buttons. **Every topic should have at least one animation**, placed in the Concept or Worked example where the idea is hardest to picture: variables changing, a loop running, objects and references, a request travelling to a server. Animations replace reading, so a long paragraph that only describes steps can shrink to one sentence plus the animation.
 
 The block holds YAML. The content checker parses every animation, and for a `code` animation it also runs the program and checks that the `out` lines match what it really prints.
 
@@ -295,7 +295,7 @@ Verification, recorded in `build_state.json` per topic by `./mvnw -q -pl tools d
 
 Same layout as a topic, with these differences:
 
-- A boss is shown as an incident with key `INC-MM`, raised by Kakashi (`from: theo`). A mini-project is a feature with key `FEAT-MM`, asked for by Shizune (`from: priya`).
+- A boss is shown as an incident with key `INC-MM`, raised by Kakashi (`from: theo`). A mini-project is a feature with key `FEAT-MM`, asked for by Jiraiya (`from: priya`).
 - There is no `quiz.yaml`. The catalog rejects one. The checks are the whole task, so mastery is the checks alone.
 - `practice.kind` must be `code`. Use `order: 99` for the boss and `order: 100` for the mini-project so they come after the topics. The catalog sorts by `order`, not by folder name.
 - `review: false`. Incidents and features are not reviewed.

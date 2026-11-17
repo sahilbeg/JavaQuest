@@ -1,6 +1,6 @@
 ## Hook
 
-Iruka forwards three crash reports at 9 a.m. Each one ends in a wall of text that starts with `Exception in thread "main"`. The developer who wrote the code is on holiday, so nobody can ask what they meant.
+Itachi forwards three crash reports at 9 a.m. Each one ends in a wall of text that starts with `Exception in thread "main"`. The developer who wrote the code is on holiday, so nobody can ask what they meant.
 
 That wall of text is a gift. It tells you what went wrong, where, and how the program got there. In this topic you learn to read it. Then you watch the code run one line at a time, until the bug has nowhere to hide.
 

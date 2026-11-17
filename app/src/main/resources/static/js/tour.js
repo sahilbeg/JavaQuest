@@ -1,4 +1,4 @@
-// First-visit walkthroughs. Byte spotlights one thing at a time and explains it in a bubble.
+// First-visit walkthroughs. Gojo spotlights one thing at a time and explains it in a bubble.
 // Each page's tour plays once (remembered in this browser); the ? button in the top bar replays it.
 
 import { h, icon } from "./dom.js";
@@ -18,7 +18,7 @@ const TOURS = {
     { target: "#lesson-progress", title: "Lesson progress", text: "Each ticket is a short sequence of cards. Jump back to any card you've already seen." },
     { target: "#lesson-card", title: "One idea per card", text: "Read, then press Next, or use the arrow keys." },
     { target: ".anim", title: "Animations", text: "Watch code run step by step, or move through it at your own pace.", optional: true },
-    { target: "#helper-fab", title: "Hints", text: "Byte, the team's helper bot, has hints for this ticket. More open as you try." },
+    { target: "#helper-fab", title: "Hints", text: "Gojo, the team's helper, has hints for this ticket. More open as you try." },
     { target: "#player-next", title: "Continue", text: "Move on whenever you're ready." },
   ],
   check: [

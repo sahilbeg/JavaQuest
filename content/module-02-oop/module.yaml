@@ -3,4 +3,4 @@ title: Object-Oriented Programming
 project: Modelling the fleet
 summary: Turn loose variables into bikes, stations and riders that carry their own data and behaviour.
 unlockAfter: module-01-basics/boss
-mascotIntro: "Hoo! The kiosk works, but the fleet is a pile of loose variables. Time to give every bike, station and rider a proper shape."
+mascotIntro: "Yo! The kiosk works, but the fleet is a pile of loose variables. Time to give every bike, station and rider a proper shape."

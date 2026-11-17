@@ -31,11 +31,17 @@ export const TEAM = {
   // The cast is Konoha while Tsunade is the Fifth Hokage. See docs/STORY.md.
   maya: { name: "Tsunade", role: "Fifth Hokage", initials: "TS" },
   theo: { name: "Kakashi Hatake", role: "Jōnin, Team 7 leader", initials: "KH" },
-  priya: { name: "Shizune", role: "The Hokage's assistant", initials: "SZ" },
-  sam: { name: "Iruka Umino", role: "Chūnin, mission desk", initials: "IU" },
+  priya: { name: "Jiraiya", role: "Legendary Sannin, the Toad Sage", initials: "JI" },
+  sam: { name: "Itachi Uchiha", role: "Akatsuki, former ANBU captain", initials: "IU" },
 };
 
 let pictures = {};
+
+/** The first picture file whose name, without its extension, is one of names. */
+export function pictureFor(files = [], names = []) {
+  const file = names.map((n) => n.toLowerCase()).map((n) => files.find((f) => f.replace(/\.[a-z]+$/, "") === n)).find(Boolean);
+  return file ? `/api/team/avatars/${encodeURIComponent(file)}` : null;
+}
 
 /**
  * Takes the picture files in the learner's avatars/ folder and picks one per teammate: the character's first name
@@ -44,9 +50,8 @@ let pictures = {};
 export function setTeamPictures(files = []) {
   pictures = {};
   for (const [id, person] of Object.entries(TEAM)) {
-    const names = [person.name.split(" ")[0], person.name.replace(/\s+/g, "-"), id].map((n) => n.toLowerCase());
-    const file = names.map((n) => files.find((f) => f.replace(/\.[a-z]+$/, "") === n)).find(Boolean);
-    if (file) pictures[id] = `/api/team/avatars/${encodeURIComponent(file)}`;
+    const url = pictureFor(files, [person.name.split(" ")[0], person.name.replace(/\s+/g, "-"), id]);
+    if (url) pictures[id] = url;
   }
 }
 

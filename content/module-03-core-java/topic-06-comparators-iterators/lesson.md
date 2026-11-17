@@ -1,6 +1,6 @@
 ## Hook
 
-Think of a pile of ride receipts dumped on a desk. Iruka needs the longest ride from Harbor. With a messy pile, Iruka has to read every single receipt. With a stack sorted by minutes, the answer sits on top.
+Think of a pile of ride receipts dumped on a desk. Itachi needs the longest ride from Harbor. With a messy pile, Itachi has to read every single receipt. With a stack sorted by minutes, the answer sits on top.
 
 Java can sort a list for you. It only needs one thing: a rule that says which of two items comes first. This page shows you how to write that rule, and how to walk through a list and remove items safely.
 
@@ -86,7 +86,7 @@ class ByStation implements Comparator<Ride> {
 - You pass an object of the class to `sort`: `rides.sort(new ByStation());`.
 
 ```callout analogy
-Comparable is the rule printed on the receipt itself. A Comparator is a separate card that Iruka holds up and says "sort by this today".
+Comparable is the rule printed on the receipt itself. A Comparator is a separate card that Itachi holds up and says "sort by this today".
 ```
 
 ### Syntax: sorting by two keys

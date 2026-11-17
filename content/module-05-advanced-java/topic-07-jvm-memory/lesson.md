@@ -4,7 +4,7 @@ Picture a busy café kitchen. Each cook has a small notepad for the order in fro
 
 A notepad page gets torn off when an order is done. The fridge only empties when someone throws food out. If nobody ever throws anything out, the fridge fills up, however big it is.
 
-Shizune's ticket is about a full fridge. The Harbor kiosk crashed with `OutOfMemoryError: Java heap space`. Before Spoke buys bigger kiosks, you need to know which part of memory ran out, and why.
+Jiraiya's ticket is about a full fridge. The Harbor kiosk crashed with `OutOfMemoryError: Java heap space`. Before Spoke buys bigger kiosks, you need to know which part of memory ran out, and why.
 
 ## Concept
 
@@ -126,7 +126,7 @@ The heap also has a maximum size. When your program asks for a new object and th
 
 ### A leak in Spoke terms
 
-Here is a realistic cause for Shizune's crash. Someone added a history list for a dashboard:
+Here is a realistic cause for Jiraiya's crash. Someone added a history list for a dashboard:
 
 ```java nocompile
 class RideLog {

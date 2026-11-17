@@ -1,6 +1,6 @@
 # Test-driven development
 
-Shizune needs the group ride discount right on day one. You build it test first.
+Jiraiya needs the group ride discount right on day one. You build it test first.
 
 The rules: 1 or 2 riders pay the full fare. 3 or 4 riders get 20 percent off. 5 or more riders get 30 percent off. Every result rounds down to whole cents. A group size below 1 throws `IllegalArgumentException`. Money is a `long` number of cents.
 

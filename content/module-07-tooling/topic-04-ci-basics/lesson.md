@@ -94,7 +94,7 @@ Line by line:
 The quotes around `'21'` keep the version as text. Without quotes, YAML would read a version like `21.10` as the number 21.1.
 
 ```callout tip
-Byte says: other CI systems, such as GitLab CI and Jenkins, use different file names and keys. The ideas are the same everywhere: triggers, jobs, steps, runners, green and red.
+Gojo says: other CI systems, such as GitLab CI and Jenkins, use different file names and keys. The ideas are the same everywhere: triggers, jobs, steps, runners, green and red.
 ```
 
 ### Checks on a pull request

@@ -14,7 +14,7 @@ ticket:
   from: priya
   title: "Show the fare before the rider unlocks"
   body: >
-    A rider at Riverside told Iruka she got a $5.50 charge and had no idea why. The kiosk should
+    A rider at Riverside told Itachi she got a $5.50 charge and had no idea why. The kiosk should
     show the price of a ride before anyone unlocks a bike. Classic is $1.00 to unlock
     plus $0.15 a minute, and e-bikes are $0.30 a minute. Can you build the fare maths for us?
 hints:

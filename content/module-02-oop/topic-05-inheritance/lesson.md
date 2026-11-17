@@ -404,7 +404,7 @@ class EBike extends Bike {
 ```
 
 ```callout tip
-Byte says: when two classes share most of their code, ask "is this one a kind of that one?" If the answer is yes, `extends` is a good fit.
+Gojo says: when two classes share most of their code, ask "is this one a kind of that one?" If the answer is yes, `extends` is a good fit.
 ```
 
 ## Recap

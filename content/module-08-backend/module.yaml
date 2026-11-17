@@ -3,4 +3,4 @@ title: Backend engineering
 project: The Spoke API
 summary: Build the Spring Boot server behind the rider app, from the first HTTP request to a validated, secured, database-backed rentals API.
 unlockAfter: module-07-tooling/boss
-mascotIntro: "Hoo! The rider app is coming. It needs a server to talk to, and you're going to build it."
+mascotIntro: "Yo! The rider app is coming. It needs a server to talk to, and you're going to build it."

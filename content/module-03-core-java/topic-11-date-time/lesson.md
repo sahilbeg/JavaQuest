@@ -89,7 +89,7 @@ int days = p.getDays();
 A `Period` is an amount of time in years, months and days. Use it for calendar amounts, such as "1 month and 3 days". Use `Duration` for clock amounts, such as "45 minutes".
 
 ```callout tip
-Byte says: Months have different lengths. `LocalDate.of(2027, 1, 31).plusMonths(1)` gives 2027-02-28. Java picks the last valid day so you never land on 31 February.
+Gojo says: Months have different lengths. `LocalDate.of(2027, 1, 31).plusMonths(1)` gives 2027-02-28. Java picks the last valid day so you never land on 31 February.
 ```
 
 ### Syntax: DayOfWeek
@@ -124,7 +124,7 @@ A formatter turns a date into text in the shape you choose. Each letter in the p
 `Locale.ENGLISH` tells Java to use English names. Without it, a laptop set to French would print "ven." for Friday.
 
 ```callout warning
-Byte says: `MM` is month and `mm` is minute. Mix them up and your receipts will show the minute where the month should be.
+Gojo says: `MM` is month and `mm` is minute. Mix them up and your receipts will show the minute where the month should be.
 ```
 
 ## Worked example

@@ -14,7 +14,7 @@ ticket:
   title: "The fare code has no tests, so nobody dares touch it"
   body: >
     Before we start the billing rewrite, I want a safety net under StandardFare. Right now a typo could
-    charge every PRO rider at Uptown for their free hour, and we would only hear about it from Iruka's inbox.
+    charge every PRO rider at Uptown for their free hour, and we would only hear about it from Itachi's inbox.
     Please write checks that pass on today's fare rule and shout the moment someone breaks it.
 hints:
   - "Each check should pick a ride, work out the right fare by hand in cents, and compare it with assertEquals."

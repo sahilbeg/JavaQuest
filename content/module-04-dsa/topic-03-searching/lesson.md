@@ -2,7 +2,7 @@
 
 Picture a phone book with 50,000 names. You want "Patel". You could read every name from the first page. Nobody does that. You open the book near the middle, see "Moreno", and know Patel is further on. One glance throws away half the book.
 
-Iruka's support tool reads the retired-bikes list from the top, one id at a time. The list is already sorted. This page shows you how to use that order to jump straight to the answer.
+Itachi's support tool reads the retired-bikes list from the top, one id at a time. The list is already sorted. This page shows you how to use that order to jump straight to the answer.
 
 ## Concept
 

@@ -2,7 +2,7 @@
 
 You fly to another country and your phone charger will not fit the wall socket. You do not rewire the hotel, and you do not cut the plug off your charger. You buy a small travel adapter. It fits the wall on one side and your plug on the other.
 
-Iruka's ticket has the same problem. Spoke bought a second-hand fleet for Depot. Their locks speak a different language: `engage` and `disengage`, with number codes. Nobody is allowed to change the lock classes. Support also wants every unlock logged and retried once. In this topic you learn three patterns that solve this by wrapping objects: adapter, decorator and facade.
+Itachi's ticket has the same problem. Spoke bought a second-hand fleet for Depot. Their locks speak a different language: `engage` and `disengage`, with number codes. Nobody is allowed to change the lock classes. Support also wants every unlock logged and retried once. In this topic you learn three patterns that solve this by wrapping objects: adapter, decorator and facade.
 
 ## Concept
 

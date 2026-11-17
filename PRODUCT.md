@@ -32,17 +32,17 @@ The practice code lives in the learner's own repo and IDE. Saving a file in the 
 
 - Content is written once and committed. Nothing is generated at runtime.
 - Order follows a textbook. A lesson plays as short cards, one idea each, after an overview of what the ticket teaches. Animations show code running and data moving, so learners read less.
-- Every page has a first-visit walkthrough with Byte.
+- Every page has a first-visit walkthrough with Gojo, the helper.
 - Story: the learner is an intern at Spoke, a bike-sharing startup. Topics are tickets, bosses are incidents, mini-projects are features, levels are job titles. See `docs/STORY.md`.
 - Game layer: XP, job titles, streaks, kudos, the ticket board, incidents. Rules are in `docs/GAMIFICATION.md`.
-- The interface is a modern developer tool for adults, dark first (see `DESIGN.md`): a course outline, a lesson player, and Byte as a small helper mark. The Spoke story stays in the tickets, teammates and career ladder.
+- The interface is a modern developer tool for adults, dark first (see `DESIGN.md`): a course outline, a lesson player, and Gojo as a small round helper mark. The Spoke story stays in the tickets, teammates and career ladder.
 - Must work offline. All browser libraries are vendored.
 - Spring Boot server with plain ES modules. No Node build step.
 
 ## Brand Commitments
 
 - Name: JavaQuest. The fictional company inside it is Spoke, in the city of Riverton.
-- Mascot: Byte, a small owl and the team's chat helper. Byte encourages and never blames.
+- Helper: Satoru Gojo (from Jujutsu Kaisen, joining the Naruto cast for fun), the team's chat helper. Gojo is relaxed and confident, encourages and never blames.
 - Learning happens through real-world cases: every concept is taught as the way to solve a concrete Spoke problem.
 - Voice: explain like the reader is 15 and has never coded. Short sentences, analogies, no unexplained jargon.
 

@@ -25,7 +25,7 @@ Each failure has its own HTTP status code.
 | 403 | Forbidden | "I know who you are, and you may not do this." | Ada, a rider, tries to move a bike |
 
 ```callout tip
-Byte says: the name 401 Unauthorized is an old mix-up. It really means unauthenticated. Remember it as "log in first".
+Gojo says: the name 401 Unauthorized is an old mix-up. It really means unauthenticated. Remember it as "log in first".
 ```
 
 ### The security filter chain
@@ -178,7 +178,7 @@ public class Main {
 - The `10` in `$2a$10$` is the **strength**. Each step up doubles the work. 10 is the default and takes a fraction of a second.
 
 ```callout tip
-Byte says: you never call matches yourself during a login. Spring Security calls it for you with the PasswordEncoder bean you define.
+Gojo says: you never call matches yourself during a login. Spring Security calls it for you with the PasswordEncoder bean you define.
 ```
 
 ### Roles and authorities
@@ -472,7 +472,7 @@ class SpokeApi {
 ```
 
 ```callout tip
-Byte says: `MockServletContext` and `MockMvc` act like a web server inside your program. No port opens, so it runs anywhere in a second or two.
+Gojo says: `MockServletContext` and `MockMvc` act like a web server inside your program. No port opens, so it runs anywhere in a second or two.
 ```
 
 ## Recap

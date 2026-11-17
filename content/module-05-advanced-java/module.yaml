@@ -3,4 +3,4 @@ title: Advanced Java
 project: Rush hour
 summary: Keep Spoke correct when thousands of riders, sensors and payments arrive at once, then look inside the JVM itself.
 unlockAfter: module-04-dsa/boss
-mascotIntro: "Hoo! At 8 a.m. everyone wants a bike at the same moment. Let's make the code handle many things at once, safely."
+mascotIntro: "Yo! At 8 a.m. everyone wants a bike at the same moment. Let's make the code handle many things at once, safely."

@@ -26,7 +26,7 @@ class RideService {
 }
 ```
 
-Shizune might change prices. Iruka might change the receipt wording. Someone else might move the database. Split it so each class has one owner.
+Jiraiya might change prices. Itachi might change the receipt wording. Someone else might move the database. Split it so each class has one owner.
 
 ```java
 class FareCalculator {

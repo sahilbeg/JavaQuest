@@ -1,6 +1,6 @@
 ## Hook
 
-Shizune holds up a photo of a crumpled receipt. The ride line says `$2.4999999`. The prices wander left and right like a bike with a flat tyre. The maths was right, but the receipt looks broken.
+Jiraiya holds up a photo of a crumpled receipt. The ride line says `$2.4999999`. The prices wander left and right like a bike with a flat tyre. The maths was right, but the receipt looks broken.
 
 Computers store many decimal numbers with tiny rounding errors. Riders should never see them. In this lesson you learn to round prices to two decimals, line them up in columns, and build long text quickly.
 

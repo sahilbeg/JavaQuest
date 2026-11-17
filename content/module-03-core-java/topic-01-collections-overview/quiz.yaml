@@ -116,7 +116,7 @@ questions:
   - id: q10
     type: mcq
     concept: choosing-collections
-    prompt: "Iruka needs every ride in the order it happened, and a bike may ride twice. Which collection fits?"
+    prompt: "Itachi needs every ride in the order it happened, and a bike may ride twice. Which collection fits?"
     choices: ["List", "Set", "Map", "An array of size 10"]
     answer: 0
     explain: "A List keeps order and allows the same bike id more than once."

@@ -4,7 +4,7 @@
 // code  : a program stepped line by line, with variables, objects (and arrows to them) and console output.
 // scene : labelled boxes; steps highlight boxes, change their values and send tokens between them.
 //
-// Every step has a caption from Byte, read out through an aria-live region. Under reduced motion nothing
+// Every step has a caption from Gojo, the helper, read out through an aria-live region. Under reduced motion nothing
 // moves on its own: the learner steps through, and changes appear without tweening.
 
 import { h, icon, reducedMotion } from "./dom.js";

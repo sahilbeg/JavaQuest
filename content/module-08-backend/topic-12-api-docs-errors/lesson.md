@@ -274,7 +274,7 @@ components:
 You rarely write this file by hand. Tools such as **springdoc-openapi** read your Spring controllers and generate it. **Swagger UI** turns it into a web page where partners can read the docs and try requests. Generators can even write client code for Riverton in their own language. None of these tools are in JavaQuest's setup, so this topic only reads the file.
 
 ```callout tip
-Byte says: put the OpenAPI file under version control. A pull request that changes it shows everyone, in one diff, exactly how the contract moved.
+Gojo says: put the OpenAPI file under version control. A pull request that changes it shows everyone, in one diff, exactly how the contract moved.
 ```
 
 ## Worked example
@@ -439,7 +439,7 @@ class Errors {
 ```
 
 ```callout tip
-Byte says: B-1042 gives 404 here, because this small program has no id check. In your practice task, the service rejects it with a 400 invalid-rental-id problem instead.
+Gojo says: B-1042 gives 404 here, because this small program has no id check. In your practice task, the service rejects it with a 400 invalid-rental-id problem instead.
 ```
 
 ## Recap

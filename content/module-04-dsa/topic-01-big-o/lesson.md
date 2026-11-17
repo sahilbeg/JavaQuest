@@ -99,7 +99,7 @@ Big-O keeps only the part that grows fastest. Here is why.
 - A method that always does 50 steps is O(1). The 50 does not grow.
 
 ```callout tip
-Byte says: ask "what happens when the data doubles?" The answer tells you the Big-O faster than any formula.
+Gojo says: ask "what happens when the data doubles?" The answer tells you the Big-O faster than any formula.
 ```
 
 ### Best case and worst case

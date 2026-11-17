@@ -140,7 +140,7 @@ questions:
   - id: q10
     type: mcq
     concept: search-costs
-    prompt: "Iruka searches one unsorted list of 200 ids exactly once. Which choice makes most sense?"
+    prompt: "Itachi searches one unsorted list of 200 ids exactly once. Which choice makes most sense?"
     choices: ["A linear search, because sorting first would cost more than it saves", "Sort it, then binary search, because binary search is always faster", "Binary search without sorting", "Search it twice to be sure"]
     answer: 0
     explain: "Sorting takes time. Binary search pays off when you sort once and search many times."

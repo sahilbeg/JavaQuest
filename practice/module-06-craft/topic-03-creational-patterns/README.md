@@ -1,6 +1,6 @@
 # Creational patterns: factory, builder, singleton
 
-Shizune's ticket: a receipt said Uptown to Harbor because two Strings were swapped in a long constructor. The app also makes a new price table for every request. Make tickets hard to build wrong. Money is in whole cents, stored as `int`. PriceTable rates are small whole cents, so `int` is enough.
+Jiraiya's ticket: a receipt said Uptown to Harbor because two Strings were swapped in a long constructor. The app also makes a new price table for every request. Make tickets hard to build wrong. Money is in whole cents, stored as `int`. PriceTable rates are small whole cents, so `int` is enough.
 
 `Bike`, `ClassicBike`, `EBike` and `CargoBike` are finished. Work in `RideTicket.java`, `PriceTable.java` and `BikeFactory.java`.
 

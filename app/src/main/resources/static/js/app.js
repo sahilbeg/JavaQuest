@@ -5,8 +5,8 @@ import { renderCareer } from "./career.js";
 import { renderReview } from "./review.js";
 import { renderNotes, renderNotesIndex } from "./notes.js";
 import { refreshRewards } from "./rewards.js";
-import { h, setTeamPictures } from "./dom.js";
-import { byte } from "./byte.js";
+import { h, setTeamPictures, pictureFor } from "./dom.js";
+import { byte, setHelperPicture, HELPER_PICTURES } from "./byte.js";
 import { bus } from "./events.js";
 import { replayPageTour, setPageTour } from "./tour.js";
 import { mountDailyLimit } from "./daily.js";
@@ -31,7 +31,12 @@ function parseRoute() {
 }
 
 // The learner's own team pictures, if any, are known before the first page draws its avatars.
-const picturesReady = api.teamPictures().then(setTeamPictures).catch(() => {});
+// The helper's picture (gojo.jpg) replaces the drawn mark, so the logo is drawn again once it is known.
+const picturesReady = api.teamPictures().then((files) => {
+  setTeamPictures(files);
+  setHelperPicture(pictureFor(files, HELPER_PICTURES));
+  document.querySelector(".wordmark .byte")?.replaceWith(byte("idle", "", { size: "sm" }));
+}).catch(() => {});
 
 let lastRoute = "";
 async function route({ keepFocus = false } = {}) {

@@ -22,7 +22,7 @@ export async function renderReview(view, catalog, id) {
     h("p", { class: "key" }, `Review · ${topic?.ticket.key ?? ""}`),
     h("h1", {}, topic?.ticket.title ?? id),
     h("div", { class: "board-greeting" }, byte("idle"),
-      h("p", {}, h("strong", {}, "Byte: "), "Three quick questions from a ticket you closed. No looking back at the KB page first!")),
+      h("p", {}, h("strong", {}, "Gojo: "), "Three quick questions from a ticket you closed. No looking back at the KB page first!")),
     form));
 
   async function submit(event) {

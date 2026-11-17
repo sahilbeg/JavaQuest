@@ -1,6 +1,6 @@
 # Recursion
 
-Shizune wants the total free docks along the overflow chain: Riverside, then Old Mill, then Harbor, then Uptown. You will write that, plus four warm-up methods, using recursion.
+Jiraiya wants the total free docks along the overflow chain: Riverside, then Old Mill, then Harbor, then Uptown. You will write that, plus four warm-up methods, using recursion.
 
 **Rule: no loops.** Write every method in `Recursion.java` by calling itself. No `for`, no `while`, no streams. The tests only check results, so this rule is on your honour. Each method needs a base case and a recursive case.
 

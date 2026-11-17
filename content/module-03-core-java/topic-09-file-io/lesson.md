@@ -194,7 +194,7 @@ public class Main {
 ```
 
 ```callout tip
-Byte says: real code reads files from a known folder. The practice tests use a fresh temporary folder each time, so your own files are never touched.
+Gojo says: real code reads files from a known folder. The practice tests use a fresh temporary folder each time, so your own files are never touched.
 ```
 
 ## Recap

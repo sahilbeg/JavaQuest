@@ -2,7 +2,7 @@
 
 Think of a parcel locker. A small slot fits a letter. A big slot fits a box. If you push a box into the letter slot, something gets squashed.
 
-That is what happened to Iruka's rider. Her ride was 2.5 km long. The kiosk stored it in a box made for whole numbers, so the .5 got squashed off. The receipt said 2 km. This page shows you the right box for each kind of number.
+That is what happened to Itachi's rider. Her ride was 2.5 km long. The kiosk stored it in a box made for whole numbers, so the .5 got squashed off. The receipt said 2 km. This page shows you the right box for each kind of number.
 
 ## Concept
 

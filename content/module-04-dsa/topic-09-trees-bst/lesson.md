@@ -29,7 +29,7 @@ flowchart TD
 In a **binary tree**, each node has at most two children: a **left child** and a **right child**.
 
 ```callout analogy
-Byte says: a tree is a family tree drawn upside down. The root is the great-grandparent at the top, and the leaves are the youngest kids at the bottom.
+Gojo says: a tree is a family tree drawn upside down. The root is the great-grandparent at the top, and the leaves are the youngest kids at the bottom.
 ```
 
 ### Syntax: a node class
@@ -156,7 +156,7 @@ static int height(Node node) {
 ```
 
 ```callout jargon
-Byte says: some books count edges instead of nodes, so a single node has height 0 there. Both are fine. Just pick one and write it down.
+Gojo says: some books count edges instead of nodes, so a single node has height 0 there. Both are fine. Just pick one and write it down.
 ```
 
 ### Balanced and degenerate trees
@@ -326,7 +326,7 @@ public class Main {
 ```
 
 ```callout tip
-Byte says: in real code, reach for TreeMap or TreeSet when you need sorted keys and fast lookups. Build the tree by hand only to learn how it works.
+Gojo says: in real code, reach for TreeMap or TreeSet when you need sorted keys and fast lookups. Build the tree by hand only to learn how it works.
 ```
 
 ## Recap
