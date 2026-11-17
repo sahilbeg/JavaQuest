@@ -37,6 +37,9 @@ export const api = {
   career: () => fetch("/api/career").then(parse),
   teamPictures: () => fetch("/api/team/avatars").then(parse),
   settings: () => fetch("/api/settings").then(parse),
+  voice: () => fetch("/api/settings/voice").then(parse),
+  saveVoice: (voice) =>
+    fetch("/api/settings/voice", { method: "PUT", headers: WRITE_HEADERS, body: JSON.stringify(voice) }).then(parse),
   saveSettings: (settings) =>
     fetch("/api/settings", { method: "PUT", headers: WRITE_HEADERS, body: JSON.stringify(settings) }).then(parse),
   read: (id) => fetch(`${topicPath(id)}/read`, { method: "POST", headers: WRITE_HEADERS }).then(parse),

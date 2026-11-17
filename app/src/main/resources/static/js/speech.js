@@ -1,9 +1,11 @@
-import { h, icon } from "./dom.js";
+import { h, icon, toast } from "./dom.js";
+import { api } from "./api.js";
 
 /*
  * Read aloud, with the browser's own speech (Web Speech API): nothing is downloaded or sent anywhere.
  * A Listen button reads a card or section paragraph by paragraph, highlighting the one being read.
- * Code blocks, animations and buttons are skipped. The voice and speed are remembered in this browser.
+ * Code blocks, animations and buttons are skipped. The voice and speed are saved with the progress
+ * (/api/settings/voice), so every browser on this laptop uses them, and copied to localStorage for a quick start.
  */
 
 const synth = typeof window !== "undefined" ? window.speechSynthesis : undefined;
@@ -24,6 +26,62 @@ const store = {
   get(key) { try { return localStorage.getItem(key); } catch { return null; } },
   set(key, value) { try { localStorage.setItem(key, value); } catch { /* not remembered: fine */ } },
 };
+
+const validRate = (value) => (Number(value) >= MIN_RATE && Number(value) <= MAX_RATE ? Number(value) : 1);
+
+/** The saved voice (its name) and speed. Starts from this browser's copy, then the server's copy wins. */
+const prefs = { name: store.get(VOICE_KEY), rate: validRate(store.get(RATE_KEY)) };
+
+function remember(name, rate) {
+  prefs.name = name;
+  prefs.rate = validRate(rate);
+  if (name) store.set(VOICE_KEY, name);
+  store.set(RATE_KEY, String(prefs.rate));
+}
+
+let saving = Promise.resolve();
+
+/**
+ * Saves the voice and speed with the progress. Saves go out one at a time, each with the latest choice, so a quick
+ * voice change followed by a speed change can never land in the wrong order. A failure keeps them in this browser.
+ */
+function saveVoiceSettings() {
+  saving = saving.then(() => api.saveVoice({ name: prefs.name || null, rate: prefs.rate })).catch((error) => {
+    toast(`Couldn't save the voice for every browser (${error.message}). This browser still remembers it.`);
+  });
+  return saving;
+}
+
+const loaded = speechSupported ? api.voice().then((saved) => {
+  if (saved?.name) {
+    remember(saved.name, saved.rate);
+  } else if (prefs.name || prefs.rate !== 1) {
+    // Chosen before the server kept it: an older copy may hold a voice id, so store the voice's name.
+    const match = synth.getVoices().find((v) => v.voiceURI === prefs.name || v.name === prefs.name);
+    if (match) prefs.name = match.name;
+    saveVoiceSettings();
+  } else if (saved) {
+    prefs.rate = validRate(saved.rate);
+  }
+}).catch(() => {}) : Promise.resolve();
+
+/**
+ * Some browsers fill their voice list a moment after the page loads. Waits for it (at most two seconds), and for the
+ * saved choice, so the first Listen after a reload already uses the chosen voice.
+ */
+function voicesReady() {
+  const list = new Promise((resolve) => {
+    if (synth.getVoices().length) return resolve();
+    const started = Date.now();
+    const poll = setInterval(() => {
+      if (synth.getVoices().length || Date.now() - started > 2000) {
+        clearInterval(poll);
+        resolve();
+      }
+    }, 100);
+  });
+  return Promise.all([list, loaded]).then(() => loadVoices());
+}
 
 let voices = [];
 let session = null;
@@ -53,14 +111,15 @@ if (speechSupported) {
 }
 
 export function rate() {
-  const value = Number(store.get(RATE_KEY));
-  return value >= MIN_RATE && value <= MAX_RATE ? value : 1;
+  return prefs.rate;
 }
 
 function chosenVoice() {
   if (voices.length === 0) loadVoices();
-  const saved = store.get(VOICE_KEY);
-  return voices.find((v) => v.voiceURI === saved)
+  const saved = prefs.name;
+  // By name first: names stay the same across browsers on one computer. A voice id is accepted from older copies.
+  return voices.find((v) => v.name === saved)
+    ?? voices.find((v) => v.voiceURI === saved)
     ?? voices.find((v) => v.default && rankEnglish(v))
     ?? voices.find((v) => /^en[-_](US|GB)/i.test(v.lang))
     ?? voices[0];
@@ -176,9 +235,12 @@ export function listenBar(getContainer, { label = "Listen", what = "this card" }
     const container = typeof getContainer === "function" ? getContainer() : getContainer;
     const blocks = container ? blocksOf(container) : [];
     if (blocks.length === 0) return;
-    session = { button, blocks, index: 0, sentence: 0, onStop: () => setPlaying(false) };
+    const current = { button, blocks, index: 0, sentence: 0, onStop: () => setPlaying(false) };
+    session = current;
     setPlaying(true);
-    speakFrom(0, 0);
+    voicesReady().then(() => {
+      if (session === current) speakFrom(0, 0);
+    });
   });
   const settings = h("button", { type: "button", class: "listen-settings", "aria-label": "Voice and speed",
     "aria-haspopup": "dialog", "aria-expanded": "false", title: "Voice and speed" }, icon("settings"));
@@ -210,26 +272,30 @@ function toggleVoicePanel(anchor) {
   const fillVoices = () => {
     const current = chosenVoice();
     select.replaceChildren(...(voices.length ? voices : loadVoices()).map((v) =>
-      h("option", { value: v.voiceURI, selected: v === current }, `${v.name} · ${v.lang}`)));
+      h("option", { value: v.name, selected: v === current }, `${v.name} · ${v.lang}`)));
     if (voices.length === 0) select.append(h("option", { value: "" }, "No voices found in this browser"));
   };
   fillVoices();
   document.addEventListener("jq-voices", fillVoices, { once: true });
+  voicesReady().then(() => { if (panel?.el.contains(select)) fillVoices(); });
   const speed = h("input", { type: "range", id: "voice-speed", min: MIN_RATE, max: MAX_RATE, step: 0.1, value: rate() });
   const speedValue = h("output", { for: "voice-speed", class: "voice-speed-value" }, `${rate().toFixed(1)}×`);
   select.addEventListener("change", () => {
-    store.set(VOICE_KEY, select.value);
+    remember(select.value, prefs.rate);
+    saveVoiceSettings();
     restartCurrent();
   });
   speed.addEventListener("input", () => {
     speedValue.textContent = `${Number(speed.value).toFixed(1)}×`;
   });
   speed.addEventListener("change", () => {
-    store.set(RATE_KEY, speed.value);
+    remember(prefs.name, speed.value);
+    saveVoiceSettings();
     restartCurrent();
   });
-  const sample = h("button", { type: "button", class: "button", onclick: () => {
+  const sample = h("button", { type: "button", class: "button", onclick: async () => {
     stopSpeaking();
+    await voicesReady();
     const utterance = new SpeechSynthesisUtterance(SAMPLE);
     const voice = chosenVoice();
     if (voice) {

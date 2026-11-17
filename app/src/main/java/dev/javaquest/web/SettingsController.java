@@ -3,6 +3,7 @@ package dev.javaquest.web;
 import dev.javaquest.progress.Gate;
 import dev.javaquest.progress.ProgressService;
 import dev.javaquest.progress.StudySettings;
+import dev.javaquest.progress.VoiceSettings;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,5 +36,16 @@ public class SettingsController {
     public View save(@RequestBody StudySettings settings) {
         progress.saveSettings(settings);
         return settings();
+    }
+
+    /** The read-aloud voice and speed, kept with the progress so every browser uses the same ones. */
+    @GetMapping("/voice")
+    public VoiceSettings voice() {
+        return progress.voice();
+    }
+
+    @PutMapping("/voice")
+    public VoiceSettings saveVoice(@RequestBody VoiceSettings voice) {
+        return progress.saveVoice(voice);
     }
 }

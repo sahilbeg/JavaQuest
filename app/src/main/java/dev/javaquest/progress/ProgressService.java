@@ -52,6 +52,17 @@ public class ProgressService {
         return store.settings();
     }
 
+    public VoiceSettings voice() {
+        return store.voice();
+    }
+
+    @Transactional
+    public VoiceSettings saveVoice(VoiceSettings voice) {
+        voice.validate();
+        store.saveVoice(voice);
+        return store.voice();
+    }
+
     /** Tickets first completed today, in the laptop's time zone. A new day starts at midnight. */
     public int masteredToday() {
         LocalDate today = LocalDate.now(clock);

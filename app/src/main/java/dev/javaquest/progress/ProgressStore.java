@@ -87,6 +87,18 @@ public class ProgressStore {
                 .single();
     }
 
+    public VoiceSettings voice() {
+        return jdbc.sql("SELECT voice_name, voice_rate FROM player WHERE id = 1")
+                .query((rs, n) -> new VoiceSettings(rs.getString(1), rs.getDouble(2)))
+                .single();
+    }
+
+    public void saveVoice(VoiceSettings voice) {
+        jdbc.sql("UPDATE player SET voice_name = ?, voice_rate = ? WHERE id = 1")
+                .params(voice.name(), voice.rate())
+                .update();
+    }
+
     public void saveSettings(StudySettings settings) {
         jdbc.sql("UPDATE player SET daily_limit_on = ?, daily_limit = ? WHERE id = 1")
                 .params(settings.dailyLimitOn(), settings.dailyLimit())

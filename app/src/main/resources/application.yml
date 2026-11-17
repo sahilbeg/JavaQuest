@@ -7,6 +7,13 @@ spring:
     name: javaquest
   main:
     banner-mode: off
+  # App files change with every build: browsers always check for a newer copy (a cheap 304 when unchanged),
+  # so a new icon, script or style shows up after a restart instead of an old cached one.
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          no-cache: true
   datasource:
     url: jdbc:h2:file:${javaquest.data-dir}/progress
     username: sa
