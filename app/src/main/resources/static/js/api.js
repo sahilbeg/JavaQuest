@@ -35,6 +35,7 @@ export const api = {
   submit: (id) => fetch(`${topicPath(id)}/submit`, { method: "POST", headers: WRITE_HEADERS }).then(parse),
   runMain: (id) => fetch(`${topicPath(id)}/run`, { method: "POST", headers: WRITE_HEADERS }).then(parse),
   career: () => fetch("/api/career").then(parse),
+  teamPictures: () => fetch("/api/team/avatars").then(parse),
   settings: () => fetch("/api/settings").then(parse),
   saveSettings: (settings) =>
     fetch("/api/settings", { method: "PUT", headers: WRITE_HEADERS, body: JSON.stringify(settings) }).then(parse),

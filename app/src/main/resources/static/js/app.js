@@ -5,7 +5,7 @@ import { renderCareer } from "./career.js";
 import { renderReview } from "./review.js";
 import { renderNotes, renderNotesIndex } from "./notes.js";
 import { refreshRewards } from "./rewards.js";
-import { h } from "./dom.js";
+import { h, setTeamPictures } from "./dom.js";
 import { byte } from "./byte.js";
 import { bus } from "./events.js";
 import { replayPageTour, setPageTour } from "./tour.js";
@@ -30,6 +30,9 @@ function parseRoute() {
   return { name: "journey" };
 }
 
+// The learner's own team pictures, if any, are known before the first page draws its avatars.
+const picturesReady = api.teamPictures().then(setTeamPictures).catch(() => {});
+
 let lastRoute = "";
 async function route({ keepFocus = false } = {}) {
   const current = parseRoute();
@@ -46,7 +49,7 @@ async function route({ keepFocus = false } = {}) {
   }
   view.replaceChildren(h("p", { class: "loading" }, "Loading…"));
   try {
-    const catalog = await api.catalog();
+    const [catalog] = await Promise.all([api.catalog(), picturesReady]);
     document.getElementById("author-banner").hidden = !catalog.authorMode;
     document.title = { journey: "Your journey · JavaQuest", career: "Career · JavaQuest", review: "Review · JavaQuest", notes: "Notes · JavaQuest" }[current.name] ?? "JavaQuest";
     setPageTour(current.name === "ticket" ? "lesson" : current.name);

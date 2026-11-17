@@ -35,9 +35,38 @@ export const TEAM = {
   sam: { name: "Iruka Umino", role: "Chūnin, mission desk", initials: "IU" },
 };
 
+let pictures = {};
+
+/**
+ * Takes the picture files in the learner's avatars/ folder and picks one per teammate: the character's first name
+ * (tsunade.png), their full name (kakashi-hatake.jpg) or their id (maya.png).
+ */
+export function setTeamPictures(files = []) {
+  pictures = {};
+  for (const [id, person] of Object.entries(TEAM)) {
+    const names = [person.name.split(" ")[0], person.name.replace(/\s+/g, "-"), id].map((n) => n.toLowerCase());
+    const file = names.map((n) => files.find((f) => f.replace(/\.[a-z]+$/, "") === n)).find(Boolean);
+    if (file) pictures[id] = `/api/team/avatars/${encodeURIComponent(file)}`;
+  }
+}
+
+/** A teammate's picture in a circle, or their initials when there is no picture (or it fails to load). */
 export function avatar(who, size = "") {
   const person = TEAM[who];
-  return h("span", { class: `avatar avatar-${who} ${size}`, "aria-hidden": "true" }, person?.initials ?? "?");
+  const initials = person?.initials ?? "?";
+  const node = h("span", { class: `avatar avatar-${who} ${size}`, "aria-hidden": "true" });
+  if (pictures[who]) {
+    const img = h("img", { src: pictures[who], alt: "", loading: "lazy", decoding: "async" });
+    img.addEventListener("error", () => {
+      node.classList.remove("has-picture");
+      node.replaceChildren(initials);
+    });
+    node.classList.add("has-picture");
+    node.append(img);
+  } else {
+    node.append(initials);
+  }
+  return node;
 }
 
 export function toast(text) {

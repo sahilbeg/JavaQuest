@@ -32,6 +32,10 @@ Every text colour meets 4.5:1 on its surface in both themes.
 - JetBrains Mono for code, and for small uppercase labels: eyebrows, keys, counts, panel names.
 - Body 15px; lesson text 16px with line height 1.75 and a 68ch measure.
 
+## Team pictures
+
+A teammate's avatar is a small circle with their initials on their colour. When the learner puts their own picture in `avatars/` (for example `tsunade.png`; see `avatars/README.md`), the circle shows it instead, cropped to a circle with a thin ring in their colour. The pictures are the learner's, stay on their laptop (git ignores them), and are served by `/api/team/avatars`. PNG, JPEG, WebP and GIF only, up to 2 MB; SVG is refused.
+
 ## Shape and depth
 
 Radii: 6px for inputs and small boxes, 8px for buttons and rows, 12px for cards. Borders do most of the work; shadows are soft and mostly used for floating elements (cards, drawer, toasts, walkthrough).

@@ -20,7 +20,7 @@ For fun, the team is the Naruto cast in their positions while Tsunade is the Fif
 | **Shizune** (she) | The Hokage's assistant | Product manager | `priya` | Asks for features. Explains what riders need. |
 | **Iruka Umino** (he) | Chūnin, mission desk | Rider support | `sam` | Forwards rider complaints that turn into bug tickets. |
 
-The ids in `ticket.from` and in kudos stay `maya`, `theo`, `priya` and `sam`, so content and progress never need to change when the cast does. The names, positions and initials shown come from `TEAM` in `app/.../static/js/dom.js`. In story text, write the character's name (Tsunade, Kakashi, Shizune, Iruka). Some example code from before the rename keeps old lowercase names in paths or logins, such as `/Users/maya/...`; leave those, because they match the practice code.
+The ids in `ticket.from` and in kudos stay `maya`, `theo`, `priya` and `sam`, so content and progress never need to change when the cast does. The names, positions and initials shown come from `TEAM` in `app/.../static/js/dom.js`. The learner can add their own pictures of the cast in `avatars/` (see its README); the app ships none. In story text, write the character's name (Tsunade, Kakashi, Shizune, Iruka). Some example code from before the rename keeps old lowercase names in paths or logins, such as `/Users/maya/...`; leave those, because they match the practice code.
 
 Characters speak only in tickets, chat and incidents. A lesson may name the teammate who sent the ticket for context, but teammates never do the teaching. The teaching itself stays plain text.
 

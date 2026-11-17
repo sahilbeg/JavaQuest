@@ -21,6 +21,11 @@ public record JavaQuestProperties(Path root, Path dataDir, Runner runner, boolea
         return root.resolve("practice");
     }
 
+    /** The learner's own team pictures (tsunade.png and so on), kept out of git. See avatars/README.md. */
+    public Path avatarsDir() {
+        return root.resolve("avatars");
+    }
+
     public Path runnerClasspathFile() {
         return root.resolve(runner.classpathFile());
     }

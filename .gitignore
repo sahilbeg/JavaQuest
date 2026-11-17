@@ -4,3 +4,7 @@ target/
 .vscode/
 .DS_Store
 .impeccable/review/
+
+# Team pictures are the learner's own and stay on this laptop.
+/avatars/*
+!/avatars/README.md
