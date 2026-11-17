@@ -57,7 +57,7 @@ export async function renderNotesIndex(view, catalog) {
     const group = h("section", { class: "notes-group", "aria-labelledby": `notes-${module.id}` },
       h("h2", { id: `notes-${module.id}` }, moduleLabel(catalog, module.id),
         h("span", { class: "mono muted" }, `${own.length}`)),
-      h("ul", { class: "notes-rows" }, rows));
+      h("ul", { class: "notes-rows", style: `--rows:${Math.ceil(rows.length / 2)}` }, rows));
     return { group, rows };
   }).filter(Boolean);
 

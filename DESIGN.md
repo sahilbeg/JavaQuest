@@ -71,4 +71,10 @@ Short fades and 6–14px slides with an ease-out curve. Cards slide in from the 
 
 ## Layout
 
-The top bar is 56px, sticky and blurred. Below 1280px it drops the XP bar, title, "a day" and the nav labels (the icons stay); below 760px the wordmark text. At 820px and below it is 100px tall, with the daily limit on its own second row. The course and career pages are 960px wide. Lesson cards are 760px, and 1160px for the code step. At 900px and below, cards stack and module rows drop their bars. At 640px and below, the top bar shows icons only and rows hide their keys.
+The top bar is 56px, sticky and blurred. Below 1280px it drops the XP bar, title, "a day" and the nav labels (the icons stay); below 760px the wordmark text. At 820px and below it is 100px tall, with the daily limit on its own second row. The course, notes and career pages are up to 1240px wide, so a 1440px laptop has no wasted side space. Lesson cards are 760px, and 1320px for the code step.
+
+At 1200px and wider (a laptop), the app uses the width to cut scrolling:
+- **Lesson cards** become a textbook page (`splitCard` in `js/lesson.js`): text, lists and code in a readable main column (lines stay under about 68 characters); diagrams and callouts (Tip, Careful, Think of it like, New word) in a sticky side column beside the text they belong to; animations and tables across the whole card, so an animation's code and memory panes sit side by side. Such cards are 1200px wide; cards with nothing to put beside the text are 920px. A resized window that crosses 1200px redraws the card in the other layout, and below it the lesson keeps its original single-column order.
+- **The ticket card** puts the ticket on the left and "In this ticket you'll learn" on the right.
+- **Long lists run down two columns**: a module's tickets on the course page and each module's notes, in course order top to bottom.
+- **A notes page** balances its sections over two columns. At 900px and below, cards stack and module rows drop their bars. At 640px and below, the top bar shows icons only and rows hide their keys.

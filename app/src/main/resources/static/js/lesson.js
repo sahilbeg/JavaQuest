@@ -26,6 +26,44 @@ const KIND = {
   feature: { label: "Feature", icon: "sparkles", note: "A bigger build for this project. Every check must pass." },
 };
 
+/** Wide screens get the two-column lesson layout; narrower ones keep the single column in the lesson's order. */
+const WIDE = matchMedia("(min-width: 1200px)");
+const isSide = (n) => n.nodeType === 1 && n.matches("pre.mermaid, aside.callout");
+const isFull = (n) => n.nodeType === 1 && n.matches("figure.animation, table");
+
+/**
+ * Lays a card out like a textbook page: text and code in a readable main column, diagrams and callouts beside the
+ * text they belong to, and animations and tables across the whole card. Returns false when the card has nothing to
+ * put beside the text, so it stays a single column.
+ */
+function splitCard(content) {
+  const nodes = [...content.childNodes];
+  if (!nodes.some(isSide)) return false;
+  const head = [];
+  const rows = [];
+  let row = null;
+  for (const node of nodes) {
+    if (node.nodeType === 3 && !node.textContent.trim()) continue;
+    if (node.nodeType === 1 && node.matches(".card-eyebrow") && rows.length === 0) {
+      head.push(node);
+    } else if (isFull(node)) {
+      row = null;
+      rows.push(h("div", { class: "card-full" }, node));
+    } else {
+      if (!row) {
+        row = { main: h("div", { class: "card-main" }), side: h("div", { class: "card-side" }) };
+        rows.push(h("div", { class: "card-row" }, row.main, row.side));
+      }
+      (isSide(node) ? row.side : row.main).append(node);
+    }
+  }
+  for (const r of rows) {
+    if (r.classList.contains("card-row") && !r.lastChild.hasChildNodes()) r.classList.add("is-plain");
+  }
+  content.replaceChildren(...head, ...rows);
+  return true;
+}
+
 function stepStore(id) {
   const key = `jq-step:${id}`;
   return {
@@ -250,25 +288,27 @@ export async function renderLesson(view, catalog, id, params) {
 
   function introCard() {
     const state = ticketState(summary);
-    return h("div", {},
-      kind !== "ticket" && h("p", { class: `card-kind card-kind-${kind}` }, icon(KIND[kind].icon), KIND[kind].label),
-      h("span", { class: "eyebrow" }, `${summary.ticket.key} · ${module?.project ?? ""}`),
-      h("h1", {}, summary.ticket.title),
-      h("div", { class: "ticket-message" },
+    // On wide screens the overview sits beside the ticket (grid areas in app.css); otherwise it reads top to bottom.
+    return h("div", { class: "intro" },
+      h("div", { class: "intro-head" },
+        kind !== "ticket" && h("p", { class: `card-kind card-kind-${kind}` }, icon(KIND[kind].icon), KIND[kind].label),
+        h("span", { class: "eyebrow" }, `${summary.ticket.key} · ${module?.project ?? ""}`),
+        h("h1", {}, summary.ticket.title)),
+      h("div", { class: "intro-message ticket-message" },
         avatar(summary.ticket.from, "avatar-lg"),
         h("div", { class: "bubble" },
           h("p", { class: "who" }, h("strong", {}, person.name), ` · ${person.role}`),
           h("p", {}, summary.ticket.body))),
-      kind !== "ticket" && h("p", {}, KIND[kind].note),
-      recapList && [h("h2", {}, "In this ticket you'll learn"),
-        h("ul", { class: "learn-list" }, [...recapList.querySelectorAll("li")].map((li) => h("li", { html: li.innerHTML })))],
+      kind !== "ticket" && h("p", { class: "intro-note" }, KIND[kind].note),
+      recapList && h("section", { class: "intro-learn" }, h("h2", {}, "In this ticket you'll learn"),
+        h("ul", { class: "learn-list" }, [...recapList.querySelectorAll("li")].map((li) => h("li", { html: li.innerHTML })))),
       h("div", { class: "intro-meta" },
         h("span", { class: "chip" }, icon("clock"), `${topic.minutes} min`),
         h("span", { class: "chip" }, icon("book-open"), `${cards.length} short cards`),
         topic.hasQuiz && h("span", { class: "chip" }, icon("list-checks"), "Onboarding check"),
         summary.practiceKind === "CODE" && h("span", { class: "chip" }, icon("code"), "Code to fix"),
         h("span", { class: `chip ${state.chip}` }, state.label)),
-      h("button", { type: "button", class: "button button-primary button-big", onclick: () => go(1) },
+      h("button", { type: "button", class: "button button-primary button-big intro-start", onclick: () => go(1) },
         mastered ? "Revisit the lesson" : "Start", icon("arrow-right")));
   }
 
@@ -349,7 +389,8 @@ export async function renderLesson(view, catalog, id, params) {
     const step = steps[index];
     const content = card(step);
     const wide = step.key === "code";
-    const box = h("article", { class: `lesson-card${wide ? " is-wide" : ""}${back ? " is-back" : ""}`, id: "lesson-card",
+    const split = WIDE.matches && (step.key === "intro" || ((step.key === "learn" || step.key === "mistakes") && splitCard(content)));
+    const box = h("article", { class: `lesson-card${wide ? " is-wide" : ""}${split ? " is-split" : ""}${back ? " is-back" : ""}`, id: "lesson-card",
       "aria-label": step.label, tabindex: "-1" }, content);
     // Reading cards get a Listen button; the check, the code and the finish line do not.
     if (["intro", "learn", "mistakes", "recap"].includes(step.key)) {
@@ -379,6 +420,9 @@ export async function renderLesson(view, catalog, id, params) {
     if (e.key === "ArrowLeft" && index > 0) go(index - 1);
   };
   document.addEventListener("keydown", onKey);
+  // Crossing the wide-screen breakpoint (a resized window) draws the card again in the other layout.
+  const onWide = () => go(index);
+  WIDE.addEventListener("change", onWide);
 
   const legacyTab = { check: "check", fix: "code" }[params.get("tab")];
   const fromUrl = Number(params.get("step"));
@@ -403,6 +447,7 @@ export async function renderLesson(view, catalog, id, params) {
   return () => {
     dispose();
     document.removeEventListener("keydown", onKey);
+    WIDE.removeEventListener("change", onWide);
   };
 }
 

@@ -64,7 +64,8 @@ function moduleItem(module, own, catalog, index, previousProject) {
     h("span", { class: "module-meter", "aria-hidden": "true" }, h("span", { style: `width:${percent}%` })),
     h("span", { class: "module-count" }, `${done}/${own.length}`),
   ];
-  const topics = h("ol", { class: "topic-list", "aria-label": `Tickets in ${module.title}` }, own.map((t, i) => topicRow(t, i, catalog.frontierId)));
+  // On wide screens the tickets run down two columns (--rows per column), keeping the course order top to bottom.
+  const topics = h("ol", { class: "topic-list", style: `--rows:${Math.ceil(own.length / 2)}`, "aria-label": `Tickets in ${module.title}` }, own.map((t, i) => topicRow(t, i, catalog.frontierId)));
   if (state === "locked" || state === "soon") {
     return h("li", { class: "module", "data-state": state },
       h("div", { class: "module-head" }, head),

@@ -284,7 +284,8 @@ main { outline: none; }
 
 /* ---------- Course page ---------- */
 
-.journey, .career, .review-page { max-width: 960px; margin: 0 auto; padding: var(--space-7) var(--space-5) var(--space-8); }
+.journey, .career { max-width: 1240px; margin: 0 auto; padding: var(--space-7) var(--space-6) var(--space-8); }
+.review-page { max-width: 960px; margin: 0 auto; padding: var(--space-7) var(--space-5) var(--space-8); }
 .page-head { margin-bottom: var(--space-6); }
 .page-head h1 { margin-bottom: var(--space-2); }
 .page-head .muted { margin: 0; }
@@ -377,7 +378,7 @@ a.topic-row:hover { background: var(--hover); text-decoration: none; color: var(
 .player-stage { flex: 1; padding: var(--space-6) var(--space-5) var(--space-8); }
 .lesson-card { max-width: 760px; margin: 0 auto; padding: var(--space-6) var(--space-7); background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow); animation: card-in 0.3s var(--ease); }
 .lesson-card.is-back { animation-name: card-in-back; }
-.lesson-card.is-wide { max-width: 1160px; }
+.lesson-card.is-wide { max-width: 1320px; }
 .card-eyebrow { display: flex; align-items: center; gap: 6px; }
 .card-eyebrow .icon { width: 12px; height: 12px; }
 .card-kind { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; margin-bottom: var(--space-4); border-radius: 999px; font-size: 0.76rem; font-weight: 500; border: 1px solid var(--line-strong); }
@@ -804,7 +805,7 @@ a.topic-row:hover { background: var(--hover); text-decoration: none; color: var(
 
 /* ---------- Notes (quick reference) ---------- */
 
-.notes { max-width: 860px; margin: 0 auto; padding: var(--space-7) var(--space-5) var(--space-8); }
+.notes { max-width: 1240px; margin: 0 auto; padding: var(--space-7) var(--space-5) var(--space-8); }
 .back-link { display: inline-flex; align-items: center; gap: 6px; margin-bottom: var(--space-5); font-size: 0.85rem; color: var(--ink-soft); }
 .back-link:hover { color: var(--ink); text-decoration: none; }
 .back-link .icon { width: 14px; height: 14px; }
@@ -883,3 +884,41 @@ a.topic-row:hover { background: var(--hover); text-decoration: none; color: var(
 .voice-speed-scale { display: flex; justify-content: space-between; margin-top: -4px; font-size: 0.72rem; color: var(--ink-faint); }
 .voice-panel-foot { display: flex; justify-content: space-between; margin-top: var(--space-2); }
 @media print { .listen-bar { display: none !important; } }
+
+/* ---------- Wide screens (laptops at 1200px and up) ---------- */
+
+@media (min-width: 1200px) {
+  /* Lesson cards: a readable main column, with diagrams and callouts beside the text and animations across. */
+  .lesson-card { max-width: 920px; }
+  .lesson-card.is-split { max-width: 1200px; }
+  .card-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 38%); gap: var(--space-6); align-items: start; }
+  .card-row.is-plain { grid-template-columns: minmax(0, 1fr); }
+  .card-row + .card-row, .card-row + .card-full, .card-full + .card-row, .card-full + .card-full { margin-top: var(--space-5); }
+  .card-main > :first-child, .card-side > :first-child { margin-top: 0; }
+  .card-main > :last-child { margin-bottom: 0; }
+  .card-side { position: sticky; top: calc(var(--topbar) + 72px); display: grid; gap: var(--space-4); }
+  .card-side > .callout, .card-side > pre { margin: 0; }
+  .card-side .callout { font-size: 0.92rem; }
+  .card-side pre.mermaid svg { max-width: 100%; height: auto; }
+
+  /* The ticket card: the ticket on the left, what it teaches on the right. */
+  .intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--space-7);
+    grid-template-areas: "head learn" "message learn" "note learn" "meta learn" "start learn"; align-items: start; }
+  .intro-head { grid-area: head; }
+  .intro-message { grid-area: message; }
+  .intro-note { grid-area: note; }
+  .intro-learn { grid-area: learn; }
+  .intro-learn h2 { margin-top: 0; }
+  .intro .intro-meta { grid-area: meta; }
+  .intro .intro-start { grid-area: start; justify-self: start; }
+
+  /* Long lists run down two columns, so a module's tickets or notes need half the scrolling. */
+  .topic-list, .notes-rows { display: grid; grid-auto-flow: column; grid-template-rows: repeat(var(--rows, 1), auto); grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-4); }
+  .notes-rows { column-gap: 0; }
+  .notes-rows li:nth-child(n) { border-top: 0; }
+  .notes-rows li { border-bottom: 1px solid var(--line); }
+
+  /* A notes page: its sections side by side, balanced over two columns. */
+  .notes-body { display: block; column-count: 2; column-gap: var(--space-4); }
+  .notes-body > .notes-section { break-inside: avoid; margin-bottom: var(--space-4); }
+}
