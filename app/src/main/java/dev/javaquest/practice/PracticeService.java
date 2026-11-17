@@ -14,12 +14,16 @@ import java.nio.file.Path;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +32,7 @@ public class PracticeService {
 
     private static final int MAX_PARALLEL_RUNS = 2;
     private static final Duration BROWSER_WRITE_ECHO = Duration.ofSeconds(3);
+    private static final Pattern TODO_NUMBER = Pattern.compile("TODO\\s+(\\d+)");
 
     private final PracticeRunner runner;
     private final EventHub events;
@@ -125,6 +130,44 @@ public class PracticeService {
                     .sorted()
                     .toList();
         }
+    }
+
+    /** The places the VS Code walkthrough points at, or empty for a ticket without code. */
+    public Optional<CodeGuide> codeGuide(Topic topic) throws IOException {
+        List<String> paths = sourceFiles(topic);
+        if (paths.isEmpty()) {
+            return Optional.empty();
+        }
+        Path unit = topic.practiceDir().toAbsolutePath().normalize();
+        Path src = topic.practiceSources().toAbsolutePath().normalize();
+        Path skeleton = topic.practiceSkeleton().toAbsolutePath().normalize();
+        var files = new ArrayList<CodeGuide.GuideFile>();
+        for (String path : paths) {
+            Path start = skeleton.resolve(path);
+            String starting = Files.isRegularFile(start) ? Files.readString(start, StandardCharsets.UTF_8) : "";
+            List<Integer> todos = new ArrayList<>();
+            Matcher m = TODO_NUMBER.matcher(starting);
+            while (m.find()) {
+                int n = Integer.parseInt(m.group(1));
+                if (!todos.contains(n)) {
+                    todos.add(n);
+                }
+            }
+            Path file = src.resolve(path);
+            List<String> lines = Files.readAllLines(file, StandardCharsets.UTF_8);
+            int line = 1;
+            for (int i = 0; i < lines.size(); i++) {
+                if (lines.get(i).contains("TODO")) {
+                    line = i + 1;
+                    break;
+                }
+            }
+            files.add(new CodeGuide.GuideFile(path, file.toString(), List.copyOf(todos), line, starting.contains("TODO")));
+        }
+        files.sort(Comparator.comparing((CodeGuide.GuideFile f) -> !f.toChange()));
+        Path readme = unit.resolve("README.md");
+        return Optional.of(new CodeGuide(unit.getParent().getParent().toString(), unit.toString(),
+                Files.isRegularFile(readme) ? readme.toString() : null, List.copyOf(files)));
     }
 
     public String readSource(Topic topic, String relativePath) throws IOException {

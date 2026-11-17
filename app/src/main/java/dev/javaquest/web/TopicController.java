@@ -9,6 +9,7 @@ import dev.javaquest.lesson.LessonRenderer;
 import dev.javaquest.lesson.QuickReference;
 import dev.javaquest.practice.PracticeResult;
 import dev.javaquest.practice.PracticeResult.Source;
+import dev.javaquest.practice.CodeGuide;
 import dev.javaquest.practice.PracticeService;
 import dev.javaquest.practice.ProgramRun;
 import dev.javaquest.progress.Gate;
@@ -49,7 +50,7 @@ public class TopicController {
 
     public record TopicDetail(TopicSummary summary, int minutes, String mainClass, String lessonHtml,
                               int hintCount, String previousId, String nextId, List<String> sourceFiles,
-                              boolean hasQuiz, String kind) {}
+                              boolean hasQuiz, String kind, CodeGuide codeGuide) {}
 
     public record QuizAttempt(long seed, int passPercent, List<QuizSession.Presented> questions) {}
 
@@ -113,7 +114,8 @@ public class TopicController {
                 index > 0 ? all.get(index - 1).id() : null,
                 index < all.size() - 1 ? all.get(index + 1).id() : null,
                 practice.sourceFiles(found), found.hasQuiz(),
-                found.meta().isBoss() ? "incident" : found.meta().isFeature() ? "feature" : "ticket");
+                found.meta().isBoss() ? "incident" : found.meta().isFeature() ? "feature" : "ticket",
+                practice.codeGuide(found).orElse(null));
     }
 
     /** Where the learner is inside this ticket, or nothing when they have not opened it in the player yet. */

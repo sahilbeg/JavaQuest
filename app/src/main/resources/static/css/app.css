@@ -588,6 +588,45 @@ a.topic-row:hover { background: var(--hover); text-decoration: none; color: var(
 /* ---------- Code (fix) ---------- */
 
 .fix-intro { color: var(--ink-soft); font-size: 0.9rem; }
+
+/* Kakashi's VS Code walkthrough, above the code editor */
+.button-sm { height: 28px; padding: 0 10px; font-size: 0.8rem; gap: 6px; }
+.vscode-guide { margin: var(--space-4) 0 var(--space-5); border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--surface); }
+.vscode-guide > summary { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); cursor: pointer; list-style: none; border-radius: var(--r-lg); }
+.vscode-guide > summary::-webkit-details-marker { display: none; }
+.vscode-guide > summary:hover { background: var(--hover); }
+.vscode-guide > summary > .icon { margin-left: auto; color: var(--ink-faint); transition: transform 0.2s var(--ease); }
+.vscode-guide[open] > summary > .icon { transform: rotate(180deg); }
+.vg-title { display: flex; flex-direction: column; gap: 2px; }
+.vg-title span { font-size: 0.82rem; color: var(--ink-soft); }
+.vg-body { padding: 0 var(--space-4) var(--space-4); border-top: 1px solid var(--line); }
+.vg-intro { margin: var(--space-4) 0; }
+.vg-steps { display: grid; gap: var(--space-4); }
+.vg-step { padding: var(--space-4); border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface-2); min-width: 0; }
+.vg-step h3 { display: flex; align-items: center; gap: var(--space-2); margin: 0 0 var(--space-2); font-size: 0.98rem; }
+.vg-num { display: inline-grid; place-items: center; flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--tm-theo); color: var(--bg); font-size: 0.78rem; font-weight: 700; }
+.vg-lead { margin: 0 0 var(--space-2); color: var(--ink-soft); font-size: 0.88rem; }
+.vg-list { margin: 0; padding-left: 1.3em; display: grid; gap: var(--space-2); font-size: 0.9rem; line-height: 1.55; }
+.vg-list > li { overflow-wrap: anywhere; }
+.vg-list .button { vertical-align: middle; margin: 2px 0; }
+.vg-path { word-break: break-all; }
+.vg-files { list-style: none; margin: var(--space-2) 0 0; padding: 0; display: grid; gap: var(--space-2); }
+.vg-file { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); padding: 6px var(--space-2) 6px var(--space-3); border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); }
+.vg-file .spacer { flex: 1; }
+.vg-file > .icon { color: var(--ink-faint); }
+.vg-setup > summary { display: flex; align-items: center; gap: var(--space-2); cursor: pointer; list-style: none; color: var(--ink-soft); font-size: 0.86rem; margin-bottom: var(--space-2); }
+.vg-setup > summary::-webkit-details-marker { display: none; }
+.vg-setup > summary .icon { transition: transform 0.2s var(--ease); }
+.vg-setup[open] > summary .icon { transform: rotate(180deg); }
+.vg-check { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-3); font-size: 0.88rem; cursor: pointer; }
+.vg-note { display: flex; gap: var(--space-2); align-items: flex-start; margin: var(--space-3) 0 0; padding: var(--space-2) var(--space-3); border-radius: var(--r-md); font-size: 0.86rem; color: var(--ink-soft); background: var(--blue-wash); }
+.vg-note .icon { flex: none; margin-top: 3px; color: var(--blue); }
+.vg-note-warning { background: var(--amber-wash); }
+.vg-note-warning .icon { color: var(--amber); }
+.vg-outro { display: flex; align-items: center; gap: var(--space-2); margin: var(--space-4) 0 0; color: var(--ink-soft); font-size: 0.88rem; }
+@media (min-width: 1200px) {
+  .vg-steps { grid-template-columns: 1fr 1fr; align-items: start; }
+}
 .editor-frame { border: 1px solid var(--line-strong); border-radius: var(--r-lg); overflow: hidden; background: var(--surface); }
 .editor-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); padding: 6px var(--space-3); background: var(--surface-2); border-bottom: 1px solid var(--line); }
 .editor-bar .button { height: 30px; font-size: 0.8rem; }

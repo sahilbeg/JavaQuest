@@ -3,6 +3,7 @@ import { api } from "./api.js";
 import { bus } from "./events.js";
 import { loadMonaco, editorTheme, colorizeJava, EDITOR_OPTIONS } from "./monaco.js";
 import { describeProgram } from "./kb.js";
+import { vscodeGuide } from "./vscode.js";
 
 export async function renderFix(container, topic, chat, onResult) {
   const id = topic.summary.id;
@@ -23,10 +24,16 @@ export async function renderFix(container, topic, chat, onResult) {
   const resetButton = h("button", { type: "button", class: "button button-quiet", onclick: confirmReset }, icon("rotate-ccw"), "Reset");
   const solutionPanel = h("section", { class: "solution", hidden: true, "aria-labelledby": "solution-title" });
 
-  container.replaceChildren(
-    h("p", { class: "fix-intro" }, "Edit the code here or in your IDE at ",
-      h("code", {}, `practice/${id}/src/${path}`),
-      ". Saving in your IDE runs the checks for you."),
+  const toChange = (topic.codeGuide?.files ?? []).filter((f) => f.toChange);
+  const name = path.split("/").pop();
+  container.replaceChildren(...[
+    vscodeGuide(topic),
+    h("p", { class: "fix-intro" }, "Or type right here instead. ",
+      toChange.length > 1 || (toChange.length === 1 && toChange[0].path !== path)
+        ? ["This editor only shows ", h("code", {}, name), ", and this ticket needs changes in ",
+            toChange.map((f, i) => [i ? (i === toChange.length - 1 ? " and " : ", ") : "", h("code", {}, f.path.split("/").pop())]),
+            ", so VS Code is the easier place for it."]
+        : "Press Run checks when you're done. Saving in VS Code runs the same checks."),
     h("div", { class: "editor-frame" },
       h("div", { class: "editor-bar" }, fileLabel, h("span", { class: "spacer" }), saveButton, runButton, submitButton),
       notice, host),
@@ -36,7 +43,7 @@ export async function renderFix(container, topic, chat, onResult) {
         " to make Tab move focus out of the editor instead."),
       h("span", { class: "spacer" }), solutionButton, resetButton),
     checks,
-    solutionPanel);
+    solutionPanel].filter(Boolean));
 
   renderChecks(checks, topic.summary.latest);
 
@@ -129,13 +136,13 @@ export async function renderFix(container, topic, chat, onResult) {
       markDirty();
       return;
     }
-    notice.replaceChildren("This file changed in your IDE, and you have unsaved edits here.",
+    notice.replaceChildren("This file changed in VS Code, and you have unsaved edits here.",
       h("button", { type: "button", class: "button", onclick: () => {
         savedValue = fresh.content;
         editor.setValue(fresh.content);
         notice.hidden = true;
         markDirty();
-      } }, "Load the IDE version"),
+      } }, "Load the VS Code version"),
       h("button", { type: "button", class: "button button-quiet", onclick: () => { notice.hidden = true; } }, "Keep mine"));
     notice.hidden = false;
   }
@@ -166,7 +173,7 @@ function renderChecks(container, practice) {
     h("h2", { id: "checks-title" }, "Checks"), chip,
     practice && h("span", { class: "source" }, practice.source === "IDE" ? "from your IDE save" : "from this page"));
   if (!practice) {
-    container.replaceChildren(head(null), h("p", { class: "checks-empty" }, "No checks have run yet. Press Run checks, or save the file in your IDE."));
+    container.replaceChildren(head(null), h("p", { class: "checks-empty" }, "No checks have run yet. Save your file in VS Code, or press Run checks."));
     return;
   }
   const r = practice.result;
@@ -219,7 +226,7 @@ function tierRow(tests) {
 
 function narrate(chat, practice) {
   const r = practice.result;
-  const where = practice.source === "IDE" ? "I saw your save in the IDE. " : "";
+  const where = practice.source === "IDE" ? "I saw your save in VS Code. " : "";
   if (r.outcome === "PASSED") {
     chat.say(`${where}All checks pass!`, { mood: "cheering" });
   } else if (r.outcome === "COMPILE_ERROR") {

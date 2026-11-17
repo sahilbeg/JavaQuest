@@ -27,7 +27,8 @@ const TOURS = {
     { target: ".question", title: "Read each question", text: "If you miss one, I'll link you straight back to the card that explains it." },
   ],
   code: [
-    { target: ".editor-frame", title: "Fix the code", text: "Edit here, or open the same file in your IDE. Saving in your IDE runs the checks too." },
+    { target: ".vscode-guide > summary", title: "Code in VS Code", text: "Kakashi shows where this ticket's files are, step by step. Saving a file in VS Code submits it.", optional: true },
+    { target: ".editor-frame", title: "Or fix it here", text: "Small change? Edit here and press Run checks. It runs the same checks as a save in VS Code." },
     { target: "#run-checks", title: "Run the checks", text: "Real JUnit tests check your code. Make every check green to finish the ticket." },
     { target: ".checks", title: "Read the red ones", text: "Each failing check says what it expected. Start with the first red one.", mood: "encouraging" },
   ],

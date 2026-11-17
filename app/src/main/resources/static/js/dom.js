@@ -7,7 +7,7 @@ export function h(tag, attrs = {}, ...children) {
     else if (key === "html") node.innerHTML = value;
     else node.setAttribute(key, value === true ? "" : value);
   }
-  node.append(...children.flat().filter((c) => c != null && c !== false));
+  node.append(...children.flat(Infinity).filter((c) => c != null && c !== false));
   return node;
 }
 
