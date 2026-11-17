@@ -194,16 +194,18 @@ static String format(InvoiceLine line) { ... }
 
 ### Let the IDE do it
 
-IntelliJ IDEA can do these moves for you. It also updates every caller, so it does not miss one. Right-click the code and choose **Refactor**, or use these keys on a Mac (on Windows, use Ctrl for Cmd and Alt for Opt).
+VS Code, with the Extension Pack for Java, can do these moves for you. It also updates every caller, so it does not miss one. Select the code, then press **Ctrl+Shift+R** (the same keys on Mac and Windows) to open the **Refactor** menu. You can also right-click and choose **Refactor…**.
 
-| Move | Mac shortcut |
+| Move | In VS Code |
 |---|---|
-| Rename | Shift+F6 |
-| Extract method | Cmd+Opt+M |
-| Extract variable | Cmd+Opt+V |
-| Extract constant | Cmd+Opt+C |
-| Inline | Cmd+Opt+N |
-| Introduce parameter | Cmd+Opt+P |
+| Rename | Click the name and press F2 |
+| Extract method | Refactor menu, **Extract to method** |
+| Extract variable | Refactor menu, **Extract to local variable** |
+| Extract constant | Refactor menu, **Extract to constant** |
+| Inline | Refactor menu, **Inline** |
+| Introduce parameter | Refactor menu, **Introduce Parameter** |
+
+IntelliJ IDEA has the same moves under its own **Refactor** menu.
 
 ```callout warning
 An automated refactoring is safer than typing, but still run the tests after it. A rename inside a text string, or a method found by reflection, can slip past the IDE.

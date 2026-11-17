@@ -64,7 +64,9 @@ This asks the compiler which version it is. If this works, you have a full JDK.
 
 An **IDE** (Integrated Development Environment) is an editor built for code. It colours your code, spots mistakes as you type, and runs programs with one click.
 
-The recommended IDE is **IntelliJ IDEA**. Download it from jetbrains.com. The free version has everything this course needs, and it's made for Java. Another good choice is **VS Code** with the **Extension Pack for Java** added.
+This course uses **VS Code**, a free editor from Microsoft. Download it from code.visualstudio.com. On its own it doesn't know Java, so you add the **Extension Pack for Java**. An extension is an add-on that teaches VS Code a new skill.
+
+Many Java teams use **IntelliJ IDEA** instead. It works the same way, so you can switch later if you like.
 
 The IDE does not replace the JDK. When you press Run, it calls the JDK tools for you:
 
@@ -72,12 +74,12 @@ The IDE does not replace the JDK. When you press Run, it calls the JDK tools for
 title: You press Run in the IDE
 kind: scene
 nodes:
-  - { id: ide, label: IntelliJ IDEA, emoji: "🪟", value: Hello.java }
+  - { id: ide, label: VS Code, emoji: "🪟", value: Hello.java }
   - { id: javac, label: javac (JDK), emoji: "🔧" }
   - { id: cls, label: Hello.class, emoji: "📦", value: bytecode }
   - { id: jvm, label: java (JVM), emoji: "⚙️" }
 steps:
-  - say: You write Hello.java in the IDE and press the green Run button.
+  - say: You write Hello.java in the IDE and click Run, just above main.
     focus: [ide]
   - say: The IDE hands your file to javac, the compiler from the JDK. javac checks it and builds it.
     send: { from: ide, to: javac, label: Hello.java }
@@ -100,11 +102,13 @@ steps:
 
 JavaQuest keeps your exercises in the `practice/` folder of this repository. Each exercise lives in `practice/<module>/<topic>/src`. When you save a file there, JavaQuest notices and runs the checks for you.
 
-The file `practice/pom.xml` describes all the exercises as one project. Maven is a build tool, and `pom.xml` is its settings file. When your IDE opens `pom.xml` as a project, it finds JUnit, the testing library the checks use.
+The file `practice/pom.xml` describes all the exercises as one project. Maven is a build tool, and `pom.xml` is its settings file. When VS Code opens the `practice` folder, the Java extension reads `pom.xml` and finds JUnit, the testing library the checks use.
 
 ```callout warning
-Open practice/pom.xml as a project. If you open one .java file on its own, the IDE can't see JUnit and shows red errors everywhere.
+Open the whole practice folder in VS Code. If you open one .java file on its own, VS Code can't see JUnit and shows red errors everywhere.
 ```
+
+On every code ticket, Kakashi's guide repeats these steps and points at that ticket's exact files.
 
 ## Worked example
 
@@ -141,10 +145,12 @@ The compiler also reports 21. Both tools agree, so your toolbox is complete.
 1. Go to adoptium.net and download the **Temurin 21** installer for macOS. Double-click the `.pkg` and follow the steps.
 2. Open a new Terminal window. Type `java -version` and press Enter. Check that you see `21`.
 3. Type `javac -version` and press Enter. Check that you see `javac 21`.
-4. Download and install **IntelliJ IDEA** from jetbrains.com. The free version is enough.
-5. In IntelliJ, choose **Open**, go to this repository, and pick `practice/pom.xml`. Choose **Open as Project** when asked.
-6. Wait for the progress bar at the bottom to finish. IntelliJ is downloading JUnit.
-7. In the project panel, open `module-00-foundations`, then `topic-05-hello-world`, then `src`. The IDE may show the next folders as one package, `jq.m00.helloworld`. Open it and find `Hello.java`.
+4. Download **VS Code** from code.visualstudio.com. Open the download, drag **Visual Studio Code** into your **Applications** folder, and start it.
+5. Press **Cmd+Shift+X** to open Extensions. Search for **Extension Pack for Java**, pick the one made by Microsoft, and click **Install**.
+6. Choose **File > Open Folder…**, go to this repository, and pick the `practice` folder. Click **Open**.
+7. If VS Code asks whether you trust the authors of these files, click **Yes, I trust the authors**. It's your own folder.
+8. Wait for the spinner in the bottom bar to stop. The Java extension is reading `pom.xml` and downloading JUnit.
+9. Press **Cmd+Shift+E** to show the Explorer. Open `module-00-foundations`, then `topic-05-hello-world`, then `src`. VS Code may show the next folders as one row, `jq/m00/helloworld`. Open it and find `Hello.java`.
 
 ```callout tip
 Gojo says: open a fresh Terminal window after installing. An old window may not know Java is there yet.
@@ -155,8 +161,8 @@ Gojo says: open a fresh Terminal window after installing. An old window may not 
 - The **JVM** runs Java code. The **JDK** adds tools like `javac` to build it.
 - You install the JDK, version **21**, because it's an LTS version.
 - `java -version` and `javac -version` both should show 21.
-- An **IDE** such as IntelliJ IDEA helps you write and run code.
-- Open `practice/pom.xml` as a project. Saving a file in `src` makes JavaQuest run the checks.
+- An **IDE** such as VS Code, with the Extension Pack for Java, helps you write and run code.
+- Open the `practice` folder in VS Code. Saving a file in `src` makes JavaQuest run the checks.
 
 ## Common mistakes
 
@@ -166,8 +172,8 @@ macOS shows a message like `The operation couldn't be completed. Unable to locat
 
 **An older Java shows up.**
 
-You see: `java version "1.8.0_..."` or `openjdk version "17..."`. Your Mac has an older JDK too. Install Temurin 21, open a new Terminal, and check again. In IntelliJ, set the project SDK to 21 under **File > Project Structure**.
+You see: `java version "1.8.0_..."` or `openjdk version "17..."`. Your Mac has an older JDK too. Install Temurin 21, open a new Terminal, and check again. In VS Code, press **Cmd+Shift+P**, run **Java: Configure Java Runtime**, and pick 21.
 
 **Imports are red in the IDE.**
 
-You see red lines under `import org.junit...` and the word `Cannot resolve symbol`. You opened a single file instead of the project. Close it, then open `practice/pom.xml` and choose **Open as Project**.
+You see red lines under `import org.junit...` and a message that the import cannot be resolved. You opened a single file, or the wrong folder, instead of the project. Choose **File > Open Folder…** and open the `practice` folder itself.

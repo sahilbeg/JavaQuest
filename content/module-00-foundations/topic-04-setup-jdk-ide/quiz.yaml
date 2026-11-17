@@ -41,7 +41,7 @@ questions:
     type: mcq
     concept: check-version
     prompt: "javac -version prints javac 21.0.5. What does that tell you?"
-    choices: ["A full JDK 21 is installed", "Only the JRE is installed", "IntelliJ is installed", "Java 17 is installed"]
+    choices: ["A full JDK 21 is installed", "Only the JRE is installed", "VS Code is installed", "Java 17 is installed"]
     answer: 0
     explain: "javac only comes with the JDK. Version 21 means you have the right one."
     reteach: "## Worked example"
@@ -50,7 +50,7 @@ questions:
     type: mcq
     concept: install-jdk
     prompt: "Which Homebrew command installs Temurin 21?"
-    choices: ["brew install --cask temurin@21", "brew install java-runtime", "brew open temurin", "brew install intellij@21"]
+    choices: ["brew install --cask temurin@21", "brew install java-runtime", "brew open temurin", "brew install vscode@21"]
     answer: 0
     explain: "brew install --cask temurin@21 installs the Temurin build of JDK 21."
     reteach: "## Concept"
@@ -63,7 +63,7 @@ questions:
       - "Install Temurin 21 from adoptium.net"
       - "Open a new Terminal window"
       - "Run java -version and javac -version"
-      - "Open practice/pom.xml as a project in the IDE"
+      - "Open the practice folder in VS Code"
     explain: "Install first, then check in a fresh Terminal, then open the project."
     reteach: "## Try it"
 
@@ -83,9 +83,9 @@ questions:
     type: mcq
     concept: ide-project
     prompt: "Your IDE shows red errors under the JUnit imports. What is the likely fix?"
-    choices: ["Open practice/pom.xml as a project", "Delete the import lines", "Reinstall macOS", "Rename the file to .txt"]
+    choices: ["Open the whole practice folder, with its pom.xml", "Delete the import lines", "Reinstall macOS", "Rename the file to .txt"]
     answer: 0
-    explain: "Opening pom.xml as a project lets the IDE find JUnit."
+    explain: "Opening the practice folder lets the IDE read pom.xml and find JUnit."
     reteach: "## Common mistakes"
 
   - id: q10
