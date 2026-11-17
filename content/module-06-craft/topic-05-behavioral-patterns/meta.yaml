@@ -15,7 +15,7 @@ ticket:
   body: >
     When it rains we want half price, and on marathon day Uptown needs a surge, so pricing has to
     switch without a redeploy. When a ride on B-1042 ends, the app, the email service and the dashboard
-    all need to hear about it. And Sam's team set Harbor to 2 docks by mistake last week, so admins need
+    all need to hear about it. And Iruka's team set Harbor to 2 docks by mistake last week, so admins need
     an undo.
 hints:
   - "Each pricing class has one job. RainDiscount and Surge do not know the fare rule: they ask the strategy they wrap."

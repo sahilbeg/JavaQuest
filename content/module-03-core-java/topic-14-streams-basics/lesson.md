@@ -2,7 +2,7 @@
 
 Picture a car wash. Cars roll in at one end. One station sprays water, the next scrubs, the next dries. Cars roll out clean at the other end. The car wash never stores cars. It only moves them through steps.
 
-Maya's report code works like a messy garage instead. Every report is a loop with its own counter, and every counter has a different bug. A **stream** turns each report into a short car wash: the rides go in, pass a few clear steps, and a result comes out.
+Tsunade's report code works like a messy garage instead. Every report is a loop with its own counter, and every counter has a different bug. A **stream** turns each report into a short car wash: the rides go in, pass a few clear steps, and a result comes out.
 
 ## Concept
 

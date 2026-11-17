@@ -14,7 +14,7 @@ ticket:
   title: "Rentals service must read and write rides, safely"
   body: >
     The rentals service needs to save rides and read them back itself, without an engineer running SQL by hand.
-    Also, Sam forwarded a rider report: typing ' OR '1'='1 into the rider search showed everybody's rides.
+    Also, Iruka forwarded a rider report: typing ' OR '1'='1 into the rider search showed everybody's rides.
     Can you build JdbcRideRepository so it does both jobs, and make sure that trick finds nothing?
 hints:
   - "Copy the shape of createSchema: try-with-resources around the Connection and the statement, and a catch that throws RideRepositoryException."

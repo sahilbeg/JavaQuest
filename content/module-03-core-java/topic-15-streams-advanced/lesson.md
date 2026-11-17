@@ -1,6 +1,6 @@
 ## Hook
 
-Priya needs numbers for the board by next week. How many rides started at each station? How many minutes did each bike type ride? Which bikes showed up anywhere?
+Shizune needs numbers for the board by next week. How many rides started at each station? How many minutes did each bike type ride? Which bikes showed up anywhere?
 
 Imagine a pile of paper ride slips on a table. You could sort them into piles by station, then count each pile. You could add up the minutes on every slip. You could tip several boxes of slips onto one table.
 

@@ -2,7 +2,7 @@
 
 Riverside is full, so the app sends you to Old Mill. Old Mill is full too, so it sends you to Harbor. Each station only knows one thing: its own free docks, and which station comes next.
 
-Priya asks: "How many free docks are there along the whole chain?" Each station can answer with a simple rule. "My free docks, plus whatever the rest of the chain has." The last station has no rest, so it just answers with its own docks.
+Shizune asks: "How many free docks are there along the whole chain?" Each station can answer with a simple rule. "My free docks, plus whatever the rest of the chain has." The last station has no rest, so it just answers with its own docks.
 
 That way of solving a problem is called recursion.
 
@@ -190,7 +190,7 @@ The fix is to remember answers you already worked out. You will learn that in th
 
 ## Worked example
 
-Here is Priya's ticket. The array holds free docks at Riverside, Old Mill, Harbor and Uptown, in chain order.
+Here is Shizune's ticket. The array holds free docks at Riverside, Old Mill, Harbor and Uptown, in chain order.
 
 ```java run
 public class Main {

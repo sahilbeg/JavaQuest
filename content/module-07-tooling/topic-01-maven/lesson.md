@@ -1,6 +1,6 @@
 ## Hook
 
-Maya keeps a text file called `build-steps.txt`. It holds twelve `javac` and `jar` commands, typed in the right order, with paths that only exist on her laptop.
+Tsunade keeps a text file called `build-steps.txt`. It holds twelve `javac` and `jar` commands, typed in the right order, with paths that only exist on her laptop.
 
 A new teammate copies the commands. Step four fails because their folders are different. Another teammate skips the tests to save time and ships an old jar to the Harbor kiosk.
 
@@ -270,7 +270,7 @@ You can also make your own property and use it with `${...}`. The practice POM d
 
 ## Worked example
 
-You turn Maya's text file into a Maven project. The kiosk starts small: one class that prices a ride, and one test.
+You turn Tsunade's text file into a Maven project. The kiosk starts small: one class that prices a ride, and one test.
 
 The folders:
 

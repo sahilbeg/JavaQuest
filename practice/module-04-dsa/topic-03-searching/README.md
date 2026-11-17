@@ -1,6 +1,6 @@
 # Linear and binary search
 
-Sam's support tool reads 50,000 retired bike ids one by one. Build the searches in `Search.java` so it can jump to the answer.
+Iruka's support tool reads 50,000 retired bike ids one by one. Build the searches in `Search.java` so it can jump to the answer.
 
 Do not call `Arrays.binarySearch` or `Collections.binarySearch`. The point is to write the search yourself, and a test counts your loop steps.
 

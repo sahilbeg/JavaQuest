@@ -23,7 +23,7 @@ questions:
   - id: q03
     type: mcq
     concept: choosing-collections
-    prompt: "Theo wants the total minutes ridden for each bike id. Which collection fits best?"
+    prompt: "Kakashi wants the total minutes ridden for each bike id. Which collection fits best?"
     choices: ["Map", "List", "Set", "A String"]
     answer: 0
     explain: "You look up minutes by bike id, so the bike id is a key and the minutes are its value."
@@ -116,7 +116,7 @@ questions:
   - id: q10
     type: mcq
     concept: choosing-collections
-    prompt: "Sam needs every ride in the order it happened, and a bike may ride twice. Which collection fits?"
+    prompt: "Iruka needs every ride in the order it happened, and a bike may ride twice. Which collection fits?"
     choices: ["List", "Set", "Map", "An array of size 10"]
     answer: 0
     explain: "A List keeps order and allows the same bike id more than once."

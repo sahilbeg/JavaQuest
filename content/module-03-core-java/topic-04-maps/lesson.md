@@ -1,6 +1,6 @@
 ## Hook
 
-Priya wants total minutes for each station. The current code walks the full ride list for Riverside. Then it walks it again for Old Mill, again for Harbor, and again for Uptown.
+Shizune wants total minutes for each station. The current code walks the full ride list for Riverside. Then it walks it again for Old Mill, again for Harbor, and again for Uptown.
 
 Picture a school librarian who counts books by rereading the whole shelf once per author. A smarter librarian keeps one sheet with a line per author. She walks the shelf once and adds a tally to the right line. Java's version of that sheet is a map.
 
@@ -12,7 +12,7 @@ Picture a school librarian who counts books by rereading the whole shelf once pe
 A **map** stores pairs. Each pair has a **key** (the thing you look up) and a **value** (what you find). Every key appears at most once. Values may repeat.
 ```
 
-For Priya, the key is a station name and the value is its total minutes. `"Harbor"` maps to `45`.
+For Shizune, the key is a station name and the value is its total minutes. `"Harbor"` maps to `45`.
 
 ```callout analogy
 A map works like a phone's contact list. You look up a name (the key) and get a number (the value). Two contacts cannot share a name, but two names may share a number.

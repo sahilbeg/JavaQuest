@@ -4,7 +4,7 @@ Think of a library with a cleaner. Every evening the cleaner walks the shelves. 
 
 The cleaner is careful. While they check the shelves, nobody may move a book. For a moment, the whole library stands still.
 
-Theo's ticket describes that moment. Once an hour the Uptown kiosk freezes, and the log says "GC pause". GC means **garbage collection**. In this topic you learn what the collector does and why it sometimes stops your program.
+Kakashi's ticket describes that moment. Once an hour the Uptown kiosk freezes, and the log says "GC pause". GC means **garbage collection**. In this topic you learn what the collector does and why it sometimes stops your program.
 
 ## Concept
 
@@ -67,7 +67,7 @@ A **minor collection** cleans only the young generation. It is small and fast, b
 
 To check references safely, the collector sometimes has to stop every thread of your program. This is a **stop-the-world pause**. During it, nothing runs: no unlock button, no fare, no dock sensor reading.
 
-Minor collections usually pause for a short time. A full collection of a big, crowded heap can pause much longer. That matches Theo's freeze: a big collection, once an hour, while the kiosk waits.
+Minor collections usually pause for a short time. A full collection of a big, crowded heap can pause much longer. That matches Kakashi's freeze: a big collection, once an hour, while the kiosk waits.
 
 ```callout analogy
 A stop-the-world pause is the library cleaner saying "Nobody move!" while they check the shelves. The fuller the shelves, the longer everyone waits.
@@ -89,7 +89,7 @@ The JVM ships several collectors. You pick one with a flag when you start `java`
 java -Xlog:gc Main.java
 ```
 
-The JVM prints one line per collection. Each line names the kind of pause, the heap size before and after, and how long the pause took. Theo's "GC pause" line comes from logging like this.
+The JVM prints one line per collection. Each line names the kind of pause, the heap size before and after, and how long the pause took. Kakashi's "GC pause" line comes from logging like this.
 
 ```java run
 import java.util.ArrayList;
@@ -150,7 +150,7 @@ Line by line, the fix:
 2. Call it when the ride screen closes.
 3. Now old screens become unreachable, and the GC frees them.
 
-Leaks also make Theo's pauses worse. Leaked objects survive and move to the old generation. A fuller old generation means more work and a higher risk of a full collection.
+Leaks also make Kakashi's pauses worse. Leaked objects survive and move to the old generation. A fuller old generation means more work and a higher risk of a full collection.
 
 ### Weak references
 

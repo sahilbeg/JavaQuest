@@ -10,13 +10,17 @@ The first stations are Riverside, Old Mill, Harbor and Uptown, with 12 docks eac
 
 ## Cast
 
-| Character | Role | What they bring you |
-|---|---|---|
-| **Byte** | The team's owl mascot, who lives in team chat as a helper bot | Explains concepts, gives hints, cheers. Never blames. |
-| **Maya Okafor** | Lead engineer, your manager | Assigns most tickets. Reviews your code. |
-| **Theo Lindqvist** | Operations engineer | Raises incidents when something breaks in production. |
-| **Priya Raman** | Product manager | Asks for features. Explains what riders need. |
-| **Sam Ortiz** | Rider support | Forwards rider complaints that turn into bug tickets. |
+For fun, the team is the Naruto cast in their positions while Tsunade is the Fifth Hokage. Each keeps the job they do at Spoke.
+
+| Character | Position (shown in the app) | Job at Spoke | id in `ticket.from` | What they bring you |
+|---|---|---|---|---|
+| **Byte** | The team's owl mascot, a helper bot in team chat | | | Explains concepts, gives hints, cheers. Never blames. |
+| **Tsunade** (she) | Fifth Hokage | Lead engineer, your manager | `maya` | Assigns most tickets. Reviews your code. Her solution is the one you compare with. |
+| **Kakashi Hatake** (he) | Jōnin, Team 7 leader | Operations engineer | `theo` | Raises incidents when something breaks in production. |
+| **Shizune** (she) | The Hokage's assistant | Product manager | `priya` | Asks for features. Explains what riders need. |
+| **Iruka Umino** (he) | Chūnin, mission desk | Rider support | `sam` | Forwards rider complaints that turn into bug tickets. |
+
+The ids in `ticket.from` and in kudos stay `maya`, `theo`, `priya` and `sam`, so content and progress never need to change when the cast does. The names, positions and initials shown come from `TEAM` in `app/.../static/js/dom.js`. In story text, write the character's name (Tsunade, Kakashi, Shizune, Iruka). Some example code from before the rename keeps old lowercase names in paths or logins, such as `/Users/maya/...`; leave those, because they match the practice code.
 
 Characters speak only in tickets, chat and incidents. A lesson may name the teammate who sent the ticket for context, but teammates never do the teaching. The teaching itself stays plain text.
 

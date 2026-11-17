@@ -2,7 +2,7 @@
 
 Think about a TV remote. The TV does not care which button you press. Each button is a small object that knows one job, such as "volume up". Some remotes even have a "back" button that undoes your last step.
 
-Priya's ticket has three problems that look different but share one idea. Prices must switch when it rains. Three systems must hear when a ride ends. Admins need an undo. In each case, you put a piece of behaviour into its own object. Then the rest of the code can swap it, list it, or store it.
+Shizune's ticket has three problems that look different but share one idea. Prices must switch when it rains. Three systems must hear when a ride ends. Admins need an undo. In each case, you put a piece of behaviour into its own object. Then the rest of the code can swap it, list it, or store it.
 
 ## Concept
 

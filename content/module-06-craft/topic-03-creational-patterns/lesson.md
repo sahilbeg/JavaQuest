@@ -261,7 +261,7 @@ The program still creates one `PriceTable` and passes it everywhere. The differe
 
 ## Worked example
 
-Here is Priya's ride, built three ways in one program.
+Here is Shizune's ride, built three ways in one program.
 
 ```java run
 public class Main {

@@ -1,6 +1,6 @@
 ## Hook
 
-Your java.io code from the last ticket works. But Maya counted: reading one file took a `File`, a `FileReader`, a `BufferedReader`, a loop and a `try`. That is a lot of code to review.
+Your java.io code from the last ticket works. But Tsunade counted: reading one file took a `File`, a `FileReader`, a `BufferedReader`, a loop and a `try`. That is a lot of code to review.
 
 Java has a newer toolbox for files, called NIO. With it, reading a whole log is one line. The Harbor kiosk also needs a new trick: each morning, move yesterday's log into an archive folder.
 

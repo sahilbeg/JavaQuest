@@ -59,8 +59,8 @@ function promotion(level) {
   const dialog = h("dialog", { class: "promotion", "aria-labelledby": "promotion-title" },
     byte("idle", "", { size: "lg" }),
     h("h2", { id: "promotion-title" }, `You're now a ${level.title}!`),
-    h("p", {}, `Maya: "Your work has been great. Congratulations on the promotion. On to the next ticket!"`),
-    h("form", { method: "dialog" }, h("button", { class: "button button-primary button-big", autofocus: true }, "Thanks, Maya")));
+    h("p", {}, `Tsunade: "Your work has been great. Congratulations on the promotion. On to the next ticket!"`),
+    h("form", { method: "dialog" }, h("button", { class: "button button-primary button-big", autofocus: true }, "Thanks, Lady Tsunade")));
   if (!reducedMotion()) dialog.classList.add("promotion-animate");
   document.body.append(dialog);
   dialog.addEventListener("close", () => dialog.remove());

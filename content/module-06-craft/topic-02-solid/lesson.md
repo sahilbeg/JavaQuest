@@ -2,7 +2,7 @@
 
 Picture a power strip. You plug in a lamp, a phone charger, then a fan. You never open the strip and rewire it to add the fan. The plug shape is the agreement, and anything with that shape fits.
 
-Spoke's `PaymentProcessor` is the opposite. Every new payment method means opening the class and adding a case to a switch. Theo's ticket says the wallet change broke card payments for a whole morning. In this topic you learn five design rules that turn code into a power strip.
+Spoke's `PaymentProcessor` is the opposite. Every new payment method means opening the class and adding a case to a switch. Kakashi's ticket says the wallet change broke card payments for a whole morning. In this topic you learn five design rules that turn code into a power strip.
 
 ## Concept
 
@@ -26,7 +26,7 @@ class RideService {
 }
 ```
 
-Priya might change prices. Sam might change the receipt wording. Someone else might move the database. Split it so each class has one owner.
+Shizune might change prices. Iruka might change the receipt wording. Someone else might move the database. Split it so each class has one owner.
 
 ```java
 class FareCalculator {
@@ -334,4 +334,4 @@ class PaymentProcessor {
 }
 ```
 
-This compiles and runs. But the list is fixed forever, so adding the transit pass means editing `PaymentProcessor` again. That is the exact pain from Theo's ticket. Fix: take `List<PaymentMethod> methods` as a constructor parameter and store it.
+This compiles and runs. But the list is fixed forever, so adding the transit pass means editing `PaymentProcessor` again. That is the exact pain from Kakashi's ticket. Fix: take `List<PaymentMethod> methods` as a constructor parameter and store it.

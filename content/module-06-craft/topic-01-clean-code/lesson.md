@@ -2,7 +2,7 @@
 
 Imagine a recipe that says: "Take t of the x, add 3 of the y, then do k." The food might taste fine. But nobody can change the recipe without breaking it.
 
-Spoke's billing code is that recipe. Maya's ticket says a new hire spent two days reading `calc(int t, int m, int k)`. They changed one price and still got it wrong. The code worked. It just could not be read.
+Spoke's billing code is that recipe. Tsunade's ticket says a new hire spent two days reading `calc(int t, int m, int k)`. They changed one price and still got it wrong. The code worked. It just could not be read.
 
 This module is called "Paying off debt". **Technical debt** is the extra cost you pay later for code that was quick to write but hard to change. In this topic you learn the first tools for paying it off: good names, small methods and honest comments.
 

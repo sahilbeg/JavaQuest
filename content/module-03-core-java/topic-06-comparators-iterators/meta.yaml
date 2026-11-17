@@ -13,7 +13,7 @@ ticket:
   from: theo
   title: "Ride report comes out in random order"
   body: >
-    Sam asked me which Harbor ride ran 95 minutes last night, and neither of us could find it.
+    Iruka asked me which Harbor ride ran 95 minutes last night, and neither of us could find it.
     The ride report prints in whatever order the rides arrived. Support needs it sorted by minutes,
     and sometimes by station and then minutes. Can you also drop the broken rides over the limit?
 hints:

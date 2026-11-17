@@ -4,7 +4,7 @@ Picture a café with one barista. Each customer orders, then waits while the mil
 
 Now picture three baristas. While one waits for milk, the others take orders. The milk takes just as long, but the queue moves.
 
-Theo's ticket is the first café. The Harbor kiosk checks 12 dock sensors one by one. Each check spends most of its time waiting on the network. In this topic you learn to start all 12 checks at once.
+Kakashi's ticket is the first café. The Harbor kiosk checks 12 dock sensors one by one. Each check spends most of its time waiting on the network. In this topic you learn to start all 12 checks at once.
 
 ## Concept
 

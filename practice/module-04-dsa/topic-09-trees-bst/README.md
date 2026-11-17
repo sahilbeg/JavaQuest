@@ -1,6 +1,6 @@
 # Binary trees and BSTs
 
-Theo needs a bike registry that lists bikes in id order and finds one fast. Build `BikeRegistry` as a binary search tree of bike numbers, such as `1042` for bike B-1042.
+Kakashi needs a bike registry that lists bikes in id order and finds one fast. Build `BikeRegistry` as a binary search tree of bike numbers, such as `1042` for bike B-1042.
 
 Build it by hand from the `Node` class that is already there. Do not use `TreeMap`, `TreeSet`, `Collections.sort` or any other sort. Write recursive helper methods where they help, such as `private Node insert(Node node, int bike)`.
 

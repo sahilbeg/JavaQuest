@@ -2,7 +2,7 @@
 
 A post office clerk checks every parcel at the counter. No address? The clerk hands it back and says "you forgot the street". The parcel never reaches the van, and the customer knows exactly what to fix.
 
-Spoke's server has no clerk. A rider types `b1042` instead of `B-1042`, and the request goes all the way in. Something deep inside throws, and the app shows "500 Internal Server Error" with Java class names. Sam's ticket even has a screenshot of our package names. In this topic you check every request at the door, and you turn every error into a short, clear answer.
+Spoke's server has no clerk. A rider types `b1042` instead of `B-1042`, and the request goes all the way in. Something deep inside throws, and the app shows "500 Internal Server Error" with Java class names. Iruka's ticket even has a screenshot of our package names. In this topic you check every request at the door, and you turn every error into a short, clear answer.
 
 ## Concept
 
@@ -289,7 +289,7 @@ Then try these, one at a time:
 - Remove `@Valid`. The second request now answers 201 with dock 40, because nobody checked it.
 - Put `@Valid` back and change `@Max(12)` to `@Max(50)`. Now `errors` lists only `problem`.
 - Change `"moon"` to `"uptown"`. The detail names the new station.
-- In the catch-all, change the detail to `e.toString()`. The last answer now leaks the class name, which is exactly what Sam's rider saw.
+- In the catch-all, change the detail to `e.toString()`. The last answer now leaks the class name, which is exactly what Iruka's rider saw.
 
 ```java run
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -455,7 +455,7 @@ return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.toSt
 {"detail":"java.lang.IllegalStateException: DockLink timeout in jq.m08.validation.BikeCatalog for B-0000","instance":"/rentals","status":500,"title":"Internal Server Error"}
 ```
 
-This is exactly the leak in Sam's screenshot. Fix: log the exception with `log.error(..., e)` and send a fixed sentence.
+This is exactly the leak in Iruka's screenshot. Fix: log the exception with `log.error(..., e)` and send a fixed sentence.
 
 **4. A second handler for MethodArgumentNotValidException.**
 

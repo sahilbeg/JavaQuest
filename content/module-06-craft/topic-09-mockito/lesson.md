@@ -2,7 +2,7 @@
 
 A film crew needs a shot of a car crash. They do not wreck a real star in a real car. They use a stunt double who looks the part, does exactly what the script says, and reports what happened.
 
-Theo's unlock tests have no stunt doubles. Each run charges a real card and clicks open a real lock at Harbor. In this topic you learn to swap the payment provider and the lock for stand-ins. Your tests then run in a second, cost nothing, and need no bike in the room.
+Kakashi's unlock tests have no stunt doubles. Each run charges a real card and clicks open a real lock at Harbor. In this topic you learn to swap the payment provider and the lock for stand-ins. Your tests then run in a second, cost nothing, and need no bike in the room.
 
 ## Concept
 

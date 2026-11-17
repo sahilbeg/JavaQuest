@@ -2,7 +2,7 @@
 
 Imagine building a bridge and only testing it on opening day. If it wobbles, hundreds of people are already on it.
 
-Priya's group ride discount is that bridge. Marketing has already told every rider about it. The first group of five will check their receipts, and a wrong cent becomes a support ticket for Sam. So this time you write the checks **before** the code. That habit has a name: **test-driven development**, or **TDD**.
+Shizune's group ride discount is that bridge. Marketing has already told every rider about it. The first group of five will check their receipts, and a wrong cent becomes a support ticket for Iruka. So this time you write the checks **before** the code. That habit has a name: **test-driven development**, or **TDD**.
 
 ## Concept
 
@@ -87,7 +87,7 @@ TDD fits rules with clear right answers, like fares and discounts. It fits badly
 
 ## Worked example
 
-Here is a full TDD session for Priya's ticket. Each cycle shows the new test, the red message, the code and the green result. The tests live in a class `GroupsTest`, with JUnit imported as in [JUnit](/t/module-06-craft/topic-08-junit).
+Here is a full TDD session for Shizune's ticket. Each cycle shows the new test, the red message, the code and the green result. The tests live in a class `GroupsTest`, with JUnit imported as in [JUnit](/t/module-06-craft/topic-08-junit).
 
 ### Cycle 1: a solo rider
 

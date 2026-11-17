@@ -1,6 +1,6 @@
 # Counting loops: for, break, continue
 
-The kiosk screen needs a list of its docks, and Maya says: "I also want a fare total for a batch of rides." Fill in `DockList.java` with `for` loops.
+The kiosk screen needs a list of its docks, and Tsunade says: "I also want a fare total for a batch of rides." Fill in `DockList.java` with `for` loops.
 
 1. **TODO 1:** `dockLine(docks)` returns the dock numbers from 1 to `docks`, separated by single spaces. `dockLine(5)` is `1 2 3 4 5`. There is no space at the end.
 2. **TODO 2:** `evenDocks(docks)` returns only the even dock numbers, the same way. `evenDocks(12)` is `2 4 6 8 10 12`.

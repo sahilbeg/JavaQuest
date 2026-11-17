@@ -1,6 +1,6 @@
 ## Hook
 
-Picture the Spoke coat room. It has 8 hooks, numbered 0 to 7. When Theo hangs his jacket, a simple rule turns his name into a hook number. When he comes back, the same rule gives the same number. He walks straight to that hook. He never checks the other seven.
+Picture the Spoke coat room. It has 8 hooks, numbered 0 to 7. When Kakashi hangs his jacket, a simple rule turns his name into a hook number. When he comes back, the same rule gives the same number. He walks straight to that hook. He never checks the other seven.
 
 That rule is the whole secret of `HashMap`. It is also why a bad rule made the BikeId lookups slow. If the rule sends every jacket to hook 1, hook 1 holds a giant pile, and you dig through it every time.
 

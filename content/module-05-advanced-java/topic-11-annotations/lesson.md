@@ -2,7 +2,7 @@
 
 Think of the labels on a parcel: "Fragile" and "This side up". The label does not change what is inside the box. It tells the people who handle the box how to treat it.
 
-Priya's ticket has the same shape. The rule "between 1 and 12 docks" lives in a check far away from the setting. People update one and forget the other. If the rule sat on the setting like a label, one small program could read every label and run the checks. Java calls these labels annotations.
+Shizune's ticket has the same shape. The rule "between 1 and 12 docks" lives in a check far away from the setting. People update one and forget the other. If the rule sat on the setting like a label, one small program could read every label and run the checks. Java calls these labels annotations.
 
 ## Concept
 
@@ -182,7 +182,7 @@ Some processors run inside the compiler instead. A **compile-time annotation pro
 
 ## Worked example
 
-This program is a small version of Priya's validator. Each rule sits on its field, and one loop checks them all.
+This program is a small version of Shizune's validator. Each rule sits on its field, and one loop checks them all.
 
 ```java run
 import java.lang.annotation.ElementType;

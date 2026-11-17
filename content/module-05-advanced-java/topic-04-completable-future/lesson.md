@@ -2,7 +2,7 @@
 
 Imagine ordering lunch at a food court. You pay at one counter, then walk to the drinks stand, then wait for your receipt. Each step waits for the one before. A smarter plan: a friend gets the drinks while you pay. You both finish sooner.
 
-Maya's ticket is the same problem. Unlocking a bike calls payment, then the lock, then the receipt service, one after another. Payment is slow at rush hour, so the lock sits idle. You want payment and the lock to run at the same time.
+Tsunade's ticket is the same problem. Unlocking a bike calls payment, then the lock, then the receipt service, one after another. Payment is slow at rush hour, so the lock sits idle. You want payment and the lock to run at the same time.
 
 ## Concept
 

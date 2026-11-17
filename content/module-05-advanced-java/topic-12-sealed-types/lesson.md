@@ -2,7 +2,7 @@
 
 Think about a vending machine with three buttons: water, juice and soda. The person who stocks it knows every possible order. Nobody can glue a fourth button on the side.
 
-A Harbor dock sensor is the same. It sends three kinds of messages: a bike docked, a bike left, or a fault. Maya's ticket says someone glued on a fourth message from another package. The handler had no branch for it, so it did nothing, and nobody noticed. In this topic you learn how to close a family of types so Java itself refuses a surprise fourth member.
+A Harbor dock sensor is the same. It sends three kinds of messages: a bike docked, a bike left, or a fault. Tsunade's ticket says someone glued on a fourth message from another package. The handler had no branch for it, so it did nothing, and nobody noticed. In this topic you learn how to close a family of types so Java itself refuses a surprise fourth member.
 
 ## Concept
 

@@ -2,7 +2,7 @@
 
 Picture a family recipe for pancakes. Your cousin wants blueberry pancakes. She does not rewrite the whole recipe. She writes "make the pancakes from Grandma's recipe, then add blueberries".
 
-Spoke's code has no such shortcut. Someone copied `Bike` into `EBike` and again into `CargoBike`, then changed a few lines. Last week Maya fixed a bug in `Bike`. The two copies still have the bug. Your ticket is to make the e-bike and the cargo bike reuse `Bike` so a fix in one place reaches all three.
+Spoke's code has no such shortcut. Someone copied `Bike` into `EBike` and again into `CargoBike`, then changed a few lines. Last week Tsunade fixed a bug in `Bike`. The two copies still have the bug. Your ticket is to make the e-bike and the cargo bike reuse `Bike` so a fix in one place reaches all three.
 
 ## Concept
 

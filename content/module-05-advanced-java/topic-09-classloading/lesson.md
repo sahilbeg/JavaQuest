@@ -2,7 +2,7 @@
 
 Picture a theatre. The script lists every actor who appears. On opening night an actor is called on stage, and nobody comes out. The script was fine. The actor simply did not turn up at the theatre.
 
-Maya's ticket is that story. The kiosk code compiled without a complaint. Then the Old Mill kiosk started and died with `NoClassDefFoundError`. To fix it, you need to know how the JVM finds and loads classes while your program runs.
+Tsunade's ticket is that story. The kiosk code compiled without a complaint. Then the Old Mill kiosk started and died with `NoClassDefFoundError`. To fix it, you need to know how the JVM finds and loads classes while your program runs.
 
 ## Concept
 
@@ -196,7 +196,7 @@ Line by line:
 2. `Class.forName("jq.kiosk.FareTable")` finds nothing, so it throws.
 3. The `catch` prints `Missing: jq.kiosk.FareTable`.
 
-For Maya's ticket, the likely story is this. The build compiled against `fares.jar`. The kiosk's start script runs `java -cp` with a list that leaves that jar out. When `Kiosk` first touches `FareTable`, the JVM cannot find it and throws `NoClassDefFoundError: jq/kiosk/FareTable`. The fix is to add the jar to the run-time classpath.
+For Tsunade's ticket, the likely story is this. The build compiled against `fares.jar`. The kiosk's start script runs `java -cp` with a list that leaves that jar out. When `Kiosk` first touches `FareTable`, the JVM cannot find it and throws `NoClassDefFoundError: jq/kiosk/FareTable`. The fix is to add the jar to the run-time classpath.
 
 ## Try it
 

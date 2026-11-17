@@ -2,7 +2,7 @@
 
 Picture a mirror in the bike workshop. You hold up any bike, and the mirror shows every part: the battery, the lock, the frame number. You never had to label the bike first.
 
-Sam's ticket asks for that mirror. Support needs to see every field of a `Bike`, a `Station` or a `Ride`. Writing one printer per class means new code every time a class changes. Java has a tool that lets a program look at its own classes while it runs. That tool is called reflection.
+Iruka's ticket asks for that mirror. Support needs to see every field of a `Bike`, a `Station` or a `Ride`. Writing one printer per class means new code every time a class changes. Java has a tool that lets a program look at its own classes while it runs. That tool is called reflection.
 
 ## Concept
 
@@ -226,7 +226,7 @@ Frameworks use reflection all the time. A **framework** is a big library that ca
 
 ## Worked example
 
-This program is a small version of Sam's debug screen. One method describes a plain class, and another describes a record.
+This program is a small version of Iruka's debug screen. One method describes a plain class, and another describes a record.
 
 ```java run
 import java.lang.reflect.Field;

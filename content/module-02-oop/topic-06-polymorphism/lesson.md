@@ -2,7 +2,7 @@
 
 Think about a school fire drill. The teacher does not shout one order to the tall kids and another to the short kids. She says "everyone walk outside". Each student walks in their own way, but one order covers them all.
 
-Priya wants the same thing for the fleet. Right now the report has one loop for classic bikes, one for e-bikes and one for cargo bikes. She wants one loop that says "every bike, tell me your fare", and each bike answers with its own price.
+Shizune wants the same thing for the fleet. Right now the report has one loop for classic bikes, one for e-bikes and one for cargo bikes. She wants one loop that says "every bike, tell me your fare", and each bike answers with its own price.
 
 ## Concept
 

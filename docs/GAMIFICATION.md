@@ -49,7 +49,7 @@ XP is a ledger (`xp_event`), never a stored total. A repeated action never award
 
 ## Levels
 
-~~Level `n` needs `100 * n * (n + 1) / 2` total XP.~~ Level 1 is free. Level `L` needs `100 * (L - 1) * L / 2` total XP: level 2 at 100, level 3 at 300, level 4 at 600, level 6 at 1,500. (`GameRules.xpForLevel`.) Each block of 5 levels has a job title: Intern, Junior Developer, Developer, Software Engineer, Senior Engineer, Staff Engineer, Architect, Principal Engineer. A new title shows as a promotion message from Maya.
+~~Level `n` needs `100 * n * (n + 1) / 2` total XP.~~ Level 1 is free. Level `L` needs `100 * (L - 1) * L / 2` total XP: level 2 at 100, level 3 at 300, level 4 at 600, level 6 at 1,500. (`GameRules.xpForLevel`.) Each block of 5 levels has a job title: Intern, Junior Developer, Developer, Software Engineer, Senior Engineer, Staff Engineer, Architect, Principal Engineer. A new title shows as a promotion message from Tsunade.
 
 ## Streaks
 

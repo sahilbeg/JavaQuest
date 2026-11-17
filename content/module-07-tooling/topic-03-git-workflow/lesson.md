@@ -207,7 +207,7 @@ Keep PRs small: one ticket, one branch, one PR. A reviewer can read 100 lines ca
 
 ## Worked example
 
-Ticket SPK-0703. Harbor's coin kiosk runs its own `FareCalculator`, and it only takes 10-cent coins. A 3-minute ride costs 145 cents, which nobody can pay. Maya agrees that Harbor fares round up to the next 10 cents. Here is the code on `main` today:
+Ticket SPK-0703. Harbor's coin kiosk runs its own `FareCalculator`, and it only takes 10-cent coins. A 3-minute ride costs 145 cents, which nobody can pay. Tsunade agrees that Harbor fares round up to the next 10 cents. Here is the code on `main` today:
 
 ```java
 public class FareCalculator {
@@ -331,7 +331,7 @@ git commit -m "Merge main into fix/harbor-fare-rounding"
 git push
 ```
 
-**Step 6: review and merge.** The checks go green. Maya leaves one comment, you answer it, and she approves. She clicks "Create a merge commit" and deletes the branch on GitHub. You tidy up your laptop:
+**Step 6: review and merge.** The checks go green. Tsunade leaves one comment, you answer it, and she approves. She clicks "Create a merge commit" and deletes the branch on GitHub. You tidy up your laptop:
 
 ```bash
 git switch main

@@ -2,7 +2,7 @@
 
 Picture a ticket machine at a bakery. Every customer pulls a ticket with the next number: 41, 42, 43. The machine keeps one counter for the whole shop. If every customer had a private counter, everyone would get ticket number 1.
 
-Spoke has the second problem. Theo's crew types bike ids by hand, so two bikes at Uptown both ended up as B-1042. Your ticket is to build a ticket machine for bike ids: one counter, shared by the whole `Bike` class.
+Spoke has the second problem. Kakashi's crew types bike ids by hand, so two bikes at Uptown both ended up as B-1042. Your ticket is to build a ticket machine for bike ids: one counter, shared by the whole `Bike` class.
 
 ## Concept
 

@@ -1,6 +1,6 @@
 # Structural patterns: adapter, decorator, facade
 
-Sam's ticket: the second-hand locks at Depot speak `engage` and `disengage` with number codes. Support wants every unlock retried once and recorded, without changing the lock classes.
+Iruka's ticket: the second-hand locks at Depot speak `engage` and `disengage` with number codes. Support wants every unlock retried once and recorded, without changing the lock classes.
 
 `Lock`, `OldLock` and `RiderRegistry` are finished. Do not change `OldLock`. Every class you write keeps another object in a field and passes calls on to it.
 

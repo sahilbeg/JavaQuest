@@ -2,7 +2,7 @@
 
 Picture your first day riding a Spoke bike around Riverton. You stop at a station. A signpost tells you where you are. Arrows point to the next streets. You read the sign, pick a direction, and pedal.
 
-Theo has a job for you. Yesterday's ride log sits on the test server. That server has no screen full of icons and no mouse. It has only a terminal. So today you learn to read the signposts and ride through folders by typing.
+Kakashi has a job for you. Yesterday's ride log sits on the test server. That server has no screen full of icons and no mouse. It has only a terminal. So today you learn to read the signposts and ride through folders by typing.
 
 ## Concept
 
@@ -141,7 +141,7 @@ Spoke's servers run Linux, where names are **case sensitive**. That means capita
 
 ## Worked example
 
-Theo copied the server's `spoke` folder to your laptop, so you can practise on your Mac first. Here is his ticket, solved in a terminal. Lines that start with `%` are what you type. The `%` is the **prompt**, the shell's sign that it is ready. You do not type it.
+Kakashi copied the server's `spoke` folder to your laptop, so you can practise on your Mac first. Here is his ticket, solved in a terminal. Lines that start with `%` are what you type. The `%` is the **prompt**, the shell's sign that it is ready. You do not type it.
 
 ```text
 % pwd

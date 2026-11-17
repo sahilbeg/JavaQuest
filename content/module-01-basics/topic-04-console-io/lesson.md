@@ -2,7 +2,7 @@
 
 A shop till that never asks anything is not much use. A good till asks a question, waits for your answer, and then does the sum.
 
-Theo is testing a kiosk at Old Mill. Right now it only talks. It never listens. His ticket asks the kiosk to ask the rider how many minutes they rode, then print the fare. That means your program has to read what a person types. In this lesson you learn how.
+Kakashi is testing a kiosk at Old Mill. Right now it only talks. It never listens. His ticket asks the kiosk to ask the rider how many minutes they rode, then print the fare. That means your program has to read what a person types. In this lesson you learn how.
 
 ## Concept
 

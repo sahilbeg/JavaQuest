@@ -1,6 +1,6 @@
 ## Hook
 
-Picture the Harbor depot at closing time. Theo has a stack of 50,000 bike cards and wants B-1042. He could flip through every card. Or he could use a guessing game. He picks up a card in the middle: B-1500. Too big, so he only looks to the left. Next card: B-1000. Too small, so he only looks to the right. Each guess throws away half the pile.
+Picture the Harbor depot at closing time. Kakashi has a stack of 50,000 bike cards and wants B-1042. He could flip through every card. Or he could use a guessing game. He picks up a card in the middle: B-1500. Too big, so he only looks to the left. Next card: B-1000. Too small, so he only looks to the right. Each guess throws away half the pile.
 
 Binary search on a sorted array already plays this game. The trouble is new bikes. Every new card must squeeze into the right spot, and shifting 50,000 cards is slow. In this lesson you build a structure that plays the guessing game *and* takes new bikes cheaply. It is called a binary search tree.
 

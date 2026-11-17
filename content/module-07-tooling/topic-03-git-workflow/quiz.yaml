@@ -113,7 +113,7 @@ questions:
   - id: q11
     type: order
     concept: pull-requests
-    prompt: "Put the steps for Maya's new rule in order, from fresh main to cleanup."
+    prompt: "Put the steps for Tsunade's new rule in order, from fresh main to cleanup."
     items:
       - "git switch main, then git pull"
       - "git switch -c fix/harbor-fare-rounding"
@@ -131,6 +131,6 @@ questions:
     variants:
       - { prompt: "What does Squash and merge put on main?", choices: ["One new commit holding all the branch's changes", "Every branch commit plus a merge commit", "Every branch commit replayed with no merge commit", "Nothing until someone runs git pull"], answer: 0 }
       - { prompt: "Why keep pull requests small?", choices: ["Reviewers can read them carefully, and they merge sooner with fewer conflicts", "GitHub rejects pull requests over 100 lines", "Small pull requests skip the CI checks", "Big pull requests delete the branch"], answer: 0 }
-      - { prompt: "What is a pull request?", choices: ["A page asking to merge your branch, with review and checks", "A command that downloads the newest main", "A branch that only Maya can push to", "A way to undo a merge"], answer: 0 }
+      - { prompt: "What is a pull request?", choices: ["A page asking to merge your branch, with review and checks", "A command that downloads the newest main", "A branch that only Tsunade can push to", "A way to undo a merge"], answer: 0 }
     explain: "A pull request asks to merge a branch, with a diff, review comments and CI checks. Small PRs get real reviews."
     reteach: "## Concept"

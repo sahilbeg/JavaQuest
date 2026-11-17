@@ -1,6 +1,6 @@
 # Map, HashMap, TreeMap
 
-Give Priya her station numbers in `StationStats.java`. Every method walks the ride list only once. `Ride` is already written for you.
+Give Shizune her station numbers in `StationStats.java`. Every method walks the ride list only once. `Ride` is already written for you.
 
 1. **TODO 1:** `minutesPerStation` returns a `TreeMap` from each station to its total minutes.
 2. **TODO 2:** `ridesPerType` returns a map from each bike type to how many rides used it.

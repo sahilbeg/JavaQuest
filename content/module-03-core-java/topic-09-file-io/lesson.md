@@ -1,6 +1,6 @@
 ## Hook
 
-Every night, Theo's team opens the ride log on the Riverside kiosk. Then someone types each line into a spreadsheet by hand. It takes an hour, and last week they skipped bike B-1042.
+Every night, Kakashi's team opens the ride log on the Riverside kiosk. Then someone types each line into a spreadsheet by hand. It takes an hour, and last week they skipped bike B-1042.
 
 The kiosk already has the log saved as a file. A Java program can open that file, read every line, and write a new file just as easily. In this lesson you teach the kiosk to do the copying itself.
 

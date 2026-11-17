@@ -38,7 +38,7 @@ practice:
 xp: { quiz: 50, code: 100 }
 ticket:                        # the real-world problem, see docs/STORY.md
   key: SPK-0101
-  from: maya                   # maya | theo | priya | sam
+  from: maya                   # maya (Tsunade) | theo (Kakashi) | priya (Shizune) | sam (Iruka); see docs/STORY.md
   title: "Kiosk forgets how long a ride took"
   body: >
     Riders say the kiosk shows 0 minutes on every receipt. It needs to remember the ride length
@@ -295,7 +295,7 @@ Verification, recorded in `build_state.json` per topic by `./mvnw -q -pl tools d
 
 Same layout as a topic, with these differences:
 
-- A boss is shown as an incident with key `INC-MM`, raised by Theo. A mini-project is a feature with key `FEAT-MM`, asked for by Priya.
+- A boss is shown as an incident with key `INC-MM`, raised by Kakashi (`from: theo`). A mini-project is a feature with key `FEAT-MM`, asked for by Shizune (`from: priya`).
 - There is no `quiz.yaml`. The catalog rejects one. The checks are the whole task, so mastery is the checks alone.
 - `practice.kind` must be `code`. Use `order: 99` for the boss and `order: 100` for the mini-project so they come after the topics. The catalog sorts by `order`, not by folder name.
 - `review: false`. Incidents and features are not reviewed.

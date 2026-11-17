@@ -14,7 +14,7 @@ ticket:
   title: "Undo undoes the wrong thing, and the repair line jumps the queue"
   body: >
     A rider at Harbor picked the wrong bike, tapped Undo, and the kiosk undid her login from
-    five steps earlier instead. Theo also says the repair queue fixes the bike reported a minute
+    five steps earlier instead. Kakashi also says the repair queue fixes the bike reported a minute
     ago before B-1042, which has waited since Monday. Undo should take back the newest action,
     and repairs should go in the order they came in.
 hints:

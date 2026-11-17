@@ -15,7 +15,7 @@ ticket:
   body: >
     A rider sent me a screenshot of the live station map showing Harbor with -3 free docks.
     Another rider got an error page that mentioned ConcurrentModificationException.
-    Maya says the dock sensors update one HashMap from many threads at once. Can you make the map trustworthy?
+    Tsunade says the dock sensors update one HashMap from many threads at once. Can you make the map trustworthy?
 hints:
   - "Swap each plain collection for a thread-safe one: ConcurrentHashMap for the docks, AtomicInteger for the ride count, LinkedBlockingQueue for telemetry."
   - "In dockEvent, merge adds the change in one safe step: docks.merge(station, change, Integer::sum). In free, use getOrDefault(station, 0). In snapshot, return new TreeMap<>(docks)."

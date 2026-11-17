@@ -4,7 +4,7 @@ Picture a restaurant with 8 waiters. Each waiter takes an order, walks to the ki
 
 A smarter waiter drops the order at the kitchen and serves another table while the food cooks. The same 8 waiters can now look after hundreds of tables.
 
-Theo's ticket has the first problem. On marathon day, 10,000 riders pay at once. Each payment waits on the slow payment service. The fixed pool from SPK-0503 has a few threads, and each one stands still while it waits. Virtual threads are the smarter waiters.
+Kakashi's ticket has the first problem. On marathon day, 10,000 riders pay at once. Each payment waits on the slow payment service. The fixed pool from SPK-0503 has a few threads, and each one stands still while it waits. Virtual threads are the smarter waiters.
 
 ## Concept
 

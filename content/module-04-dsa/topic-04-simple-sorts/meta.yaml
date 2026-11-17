@@ -13,7 +13,7 @@ ticket:
   from: maya
   title: "Kiosk firmware has no sort"
   body: >
-    Every night each dock sends its list of ride minutes to the kiosk, and Theo wants the
+    Every night each dock sends its list of ride minutes to the kiosk, and Kakashi wants the
     Riverside report sorted shortest to longest. The kiosk firmware is tiny and has no library
     sort at all. We need a sort we write ourselves that runs right there on the device.
 hints:

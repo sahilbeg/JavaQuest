@@ -2,7 +2,7 @@
 
 At a shop till, the cashier scans your whole basket. Then your card is declined. The cashier does not hand you half the items and keep half your money. The whole sale is voided, and everything goes back to how it was.
 
-Priya's gift feature has no such rule. A gift takes 500 cents from one wallet, then adds 500 cents to another. A timeout struck between the two steps. The first step stayed, the second never happened, and 500 cents vanished. In this topic you learn to make a group of steps behave like one sale: all of it, or none of it.
+Shizune's gift feature has no such rule. A gift takes 500 cents from one wallet, then adds 500 cents to another. A timeout struck between the two steps. The first step stayed, the second never happened, and 500 cents vanished. In this topic you learn to make a group of steps behave like one sale: all of it, or none of it.
 
 ## Concept
 
@@ -78,7 +78,7 @@ public class Main {
 }
 ```
 
-In part 1, rider `r-17` drops from 2000 to 1500 cents and `r-21` gets nothing. That is Priya's bug. In part 2, `r-17` stays at 1500: the second withdrawal was rolled back with the failure. Writing `setAutoCommit`, `commit` and `rollback` by hand in every method is tiring and easy to forget. Spring does it for you.
+In part 1, rider `r-17` drops from 2000 to 1500 cents and `r-21` gets nothing. That is Shizune's bug. In part 2, `r-17` stays at 1500: the second withdrawal was rolled back with the failure. Writing `setAutoCommit`, `commit` and `rollback` by hand in every method is tiring and easy to forget. Spring does it for you.
 
 ### Syntax: @Transactional
 

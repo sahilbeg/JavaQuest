@@ -1,6 +1,6 @@
 # Three crash reports from last night
 
-Sam's support inbox has three reports from the nightly ride import. The developer who wrote this code is on holiday. Each test in `CrashReportsTest` is a failing reproduction of one report. Read the report, find the line, fix the bug, and watch that test turn green.
+Iruka's support inbox has three reports from the nightly ride import. The developer who wrote this code is on holiday. Each test in `CrashReportsTest` is a failing reproduction of one report. Read the report, find the line, fix the bug, and watch that test turn green.
 
 ## Crash report 1: the Harbor ride with no note
 

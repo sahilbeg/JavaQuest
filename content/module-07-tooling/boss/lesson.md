@@ -2,7 +2,7 @@
 
 Kiosk 1.10.0 is ready. It has to reach Riverside, Old Mill, Harbor, Uptown and Depot tonight. The nightly pipeline runs on a fresh CI machine at 02:00, and three of its stages are red.
 
-Every one of them passes on Maya's laptop. That is the clue. Each bug depends on something that is true on her laptop and false on the CI machine.
+Every one of them passes on Tsunade's laptop. That is the clue. Each bug depends on something that is true on her laptop and false on the CI machine.
 
 ```callout analogy
 A recipe that says "use the flour on the left shelf" works in your own kitchen. In a friend's kitchen it fails. Good code, like a good recipe, says what it needs and gets it handed over.

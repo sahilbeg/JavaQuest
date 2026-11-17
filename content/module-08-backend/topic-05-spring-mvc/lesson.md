@@ -2,7 +2,7 @@
 
 Think of a busy restaurant. Diners never walk into the kitchen. They give their order to one host at the door. The host reads the order, walks it to the right cook, and brings the plate back.
 
-Priya's app team has agreed how the rentals screens talk to the server. The app will send "start a rental", "show me rental 7", "list my rentals" and "end this rental". Right now the server has a working `RentalService` and nobody at the door. In this topic you build the door: a **controller** that takes each request, hands it to the service, and sends back an answer. For now the app also sends the start station, and ending a rental takes no body. End stations and fares come later.
+Shizune's app team has agreed how the rentals screens talk to the server. The app will send "start a rental", "show me rental 7", "list my rentals" and "end this rental". Right now the server has a working `RentalService` and nobody at the door. In this topic you build the door: a **controller** that takes each request, hands it to the service, and sends back an answer. For now the app also sends the start station, and ending a rental takes no body. End stations and fares come later.
 
 ## Concept
 

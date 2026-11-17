@@ -1,6 +1,6 @@
 # Abstract classes
 
-Theo found a plain `Vehicle` in the kiosk with no price. Its rides cost only the unlock fee. Make `Vehicle` a safe base class and give every real bike its own price.
+Kakashi found a plain `Vehicle` in the kiosk with no price. Its rides cost only the unlock fee. Make `Vehicle` a safe base class and give every real bike its own price.
 
 `Vehicle` is already `abstract`. It declares two abstract methods: `pricePerMinute()` and `kind()`.
 

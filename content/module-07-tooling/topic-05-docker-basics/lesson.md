@@ -245,7 +245,7 @@ If you leave the tag off, Docker uses the tag `latest`. That name does not mean 
 
 ## Worked example
 
-Theo's ticket: one image that carries its own Java, for every kiosk. Here is the kiosk project.
+Kakashi's ticket: one image that carries its own Java, for every kiosk. Here is the kiosk project.
 
 ```text
 kiosk/

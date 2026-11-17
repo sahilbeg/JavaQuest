@@ -2,7 +2,7 @@
 
 Picture a library with a very fast librarian. You never walk the shelves. You hand over a slip that says "every book about bikes, newest first", and the right books come back.
 
-Spoke's rides now live in a real database, and the slips you hand over are written in a language called SQL. Theo keeps asking engineers the same questions. Which Harbor bikes are free? How many rides did each station start this week? In this topic you learn to write those slips yourself.
+Spoke's rides now live in a real database, and the slips you hand over are written in a language called SQL. Kakashi keeps asking engineers the same questions. Which Harbor bikes are free? How many rides did each station start this week? In this topic you learn to write those slips yourself.
 
 ## Concept
 
@@ -446,7 +446,7 @@ UPDATE bike SET status = 'MAINTENANCE'; with no WHERE sends all six bikes to the
 
 ## Worked example
 
-Theo's question: "How many rides did each station start this week, busiest first?" Build the answer one clause at a time.
+Kakashi's question: "How many rides did each station start this week, busiest first?" Build the answer one clause at a time.
 
 **Step 1: join, so each ride carries its station name.** This is the inner join from above.
 

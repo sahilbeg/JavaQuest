@@ -2,7 +2,7 @@
 
 Think of the evening queue at the Harbor dock. Riders join at the back. A rider with a broken lock gets waved to the front. Someone leaves the line. Someone asks, "Is bike B-1042 in this line?"
 
-A real queue changes all the time. Theo's evening ride list does too. In this topic you learn every tool a `List` gives you for that. You also learn why Theo's code crashes when it removes rides inside a loop.
+A real queue changes all the time. Kakashi's evening ride list does too. In this topic you learn every tool a `List` gives you for that. You also learn why Kakashi's code crashes when it removes rides inside a loop.
 
 ## Concept
 
@@ -120,7 +120,7 @@ Use for-each when you only read. Use the index loop when you need the position.
 
 ### Removing inside a loop
 
-Here is the bug from Theo's ticket:
+Here is the bug from Kakashi's ticket:
 
 ```java nocompile
 for (String id : ids) {

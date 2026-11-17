@@ -27,10 +27,12 @@ export function icon(name, label) {
 }
 
 export const TEAM = {
-  maya: { name: "Maya Okafor", role: "Lead engineer", initials: "MO" },
-  theo: { name: "Theo Lindqvist", role: "Operations", initials: "TL" },
-  priya: { name: "Priya Raman", role: "Product", initials: "PR" },
-  sam: { name: "Sam Ortiz", role: "Rider support", initials: "SO" },
+  // The keys are the ids in meta.yaml (ticket.from) and kudos; only the names shown change.
+  // The cast is Konoha while Tsunade is the Fifth Hokage. See docs/STORY.md.
+  maya: { name: "Tsunade", role: "Fifth Hokage", initials: "TS" },
+  theo: { name: "Kakashi Hatake", role: "Jōnin, Team 7 leader", initials: "KH" },
+  priya: { name: "Shizune", role: "The Hokage's assistant", initials: "SZ" },
+  sam: { name: "Iruka Umino", role: "Chūnin, mission desk", initials: "IU" },
 };
 
 export function avatar(who, size = "") {

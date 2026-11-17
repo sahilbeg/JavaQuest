@@ -1,6 +1,6 @@
 # Graphs: BFS and DFS
 
-Priya wants the app to tell a rider the route with the fewest stops between two stations. Build `LaneMap.java`, a graph of bike lanes.
+Shizune wants the app to tell a rider the route with the fewest stops between two stations. Build `LaneMap.java`, a graph of bike lanes.
 
 1. **TODO 1:** `addLane(a, b)` joins two stations. A lane works both ways, so add `b` to `a`'s list and `a` to `b`'s list. Create a new `ArrayList` the first time you meet a station.
 2. **TODO 2:** `neighbours(station)` returns the stations one lane away, in the order the lanes were added. Return an empty list for a station with no lanes.

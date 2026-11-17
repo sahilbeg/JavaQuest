@@ -2,7 +2,7 @@
 
 Picture a messy bedroom. You want to tidy it, but your little brother keeps his game saves on a sticky note somewhere in the mess. If you throw away the wrong paper, his saves are gone.
 
-So you work carefully. First you photograph where everything is. Then you move one thing at a time and check the photo. Maya's invoice code is that bedroom. Riders' bills must not change by a single character while you tidy it.
+So you work carefully. First you photograph where everything is. Then you move one thing at a time and check the photo. Tsunade's invoice code is that bedroom. Riders' bills must not change by a single character while you tidy it.
 
 ## Concept
 
@@ -49,7 +49,7 @@ public class Main {
 }
 ```
 
-Try it: change `"0" + d` to `d` and run again. One missing zero makes the check print `false`. That is the B-1042 bug from Maya's ticket.
+Try it: change `"0" + d` to `d` and run again. One missing zero makes the check print `false`. That is the B-1042 bug from Tsunade's ticket.
 
 ```callout tip
 Pick inputs that reach every branch: each membership, each bike type, an empty list and an error. A branch the golden master never runs is a branch it cannot protect.

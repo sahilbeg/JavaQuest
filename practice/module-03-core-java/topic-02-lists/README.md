@@ -1,6 +1,6 @@
 # List, ArrayList, LinkedList
 
-Theo tidies the Harbor evening ride list every night. His old code removed short rides inside a for-each loop and crashed. Build a `RideQueue` that edits its list safely.
+Kakashi tidies the Harbor evening ride list every night. His old code removed short rides inside a for-each loop and crashed. Build a `RideQueue` that edits its list safely.
 
 `Ride.java` is done: `record Ride(String bikeId, String station, String type, int minutes)`. In `RideQueue.java`, `add`, `size` and `get` are done too. Finish the rest:
 

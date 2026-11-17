@@ -1,8 +1,8 @@
 ## Hook
 
-Bike B-1042 did three rides from Harbor this morning. The dashboard says "3 bikes used today". Sam knows that is wrong. One bike did three rides.
+Bike B-1042 did three rides from Harbor this morning. The dashboard says "3 bikes used today". Iruka knows that is wrong. One bike did three rides.
 
-A list keeps every entry, even repeats. Sam needs a box that keeps each bike only once. Java has exactly that box. It is called a set.
+A list keeps every entry, even repeats. Iruka needs a box that keeps each bike only once. Java has exactly that box. It is called a set.
 
 ## Concept
 

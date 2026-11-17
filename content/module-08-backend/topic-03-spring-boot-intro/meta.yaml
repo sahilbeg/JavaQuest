@@ -15,7 +15,7 @@ ticket:
   body: >
     The rider app team starts testing on Monday, but right now the app has no server to ask
     which stations exist. Please start the Spoke API with Spring Boot. It needs GET /stations
-    listing our five stations, and GET /health so Theo can ping it and see it is up.
+    listing our five stations, and GET /health so Kakashi can ping it and see it is up.
 hints:
   - "Spring only uses classes it knows about. Right now nothing tells Spring that StationController exists or which paths it answers."
   - "Put @RestController above the class. Put @GetMapping(\"/stations\") above stations() and @GetMapping(\"/health\") above health()."

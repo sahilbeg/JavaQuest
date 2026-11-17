@@ -13,7 +13,7 @@ ticket:
   title: "The Harbor kiosk ran out of memory overnight"
   body: >
     The Harbor kiosk crashed at 3 a.m. and the log says "java.lang.OutOfMemoryError: Java heap space".
-    Theo wants to buy bigger kiosks with more memory. Before I sign that order, I want to know what
+    Kakashi wants to buy bigger kiosks with more memory. Before I sign that order, I want to know what
     actually ran out and whether more memory would even fix it.
 hints:
   - "Think about where each thing lives: local variables in a frame, objects somewhere shared."

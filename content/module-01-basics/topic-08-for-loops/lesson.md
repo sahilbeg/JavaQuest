@@ -1,6 +1,6 @@
 ## Hook
 
-The kiosk at Riverside has 12 docks. Maya wants the screen to show `1 2 3 4 5 6 7 8 9 10 11 12`. You could write twelve `print` lines. But what about a station with 40 docks?
+The kiosk at Riverside has 12 docks. Tsunade wants the screen to show `1 2 3 4 5 6 7 8 9 10 11 12`. You could write twelve `print` lines. But what about a station with 40 docks?
 
 In the last topic, you wrote `while` loops with a counter. You always needed three parts: start, test and change. Those parts were spread over three lines, so they were easy to forget. A **for loop** puts all three on one line.
 

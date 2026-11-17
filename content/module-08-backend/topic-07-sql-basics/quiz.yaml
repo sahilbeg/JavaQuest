@@ -78,7 +78,7 @@ questions:
     type: mcq
     concept: aggregates
     variants:
-      - prompt: "Theo wants riders whose total fare is over 1000 cents. Which clause filters on that total?"
+      - prompt: "Kakashi wants riders whose total fare is over 1000 cents. Which clause filters on that total?"
         choices: ["HAVING SUM(fare_cents) > 1000", "WHERE SUM(fare_cents) > 1000", "ORDER BY SUM(fare_cents) > 1000", "LIMIT 1000"]
         answer: 0
       - prompt: "Which clause keeps only the stations that started more than 3 rides?"

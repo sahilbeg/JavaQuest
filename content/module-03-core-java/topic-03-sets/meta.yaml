@@ -14,7 +14,7 @@ ticket:
   title: "Bikes used today count is too high"
   body: >
     A rider at Harbor rode B-1042 three times this morning, and the dashboard counted three bikes.
-    Theo thinks we have way more bikes on the street than we really do. The count should show
+    Kakashi thinks we have way more bikes on the street than we really do. The count should show
     each bike once, no matter how many rides it did. Could you also tell me which bikes visited
     both Harbor and Uptown?
 hints:

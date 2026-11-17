@@ -14,7 +14,7 @@ ticket:
   title: "Count new bikes and stop the id clashes"
   body: >
     For the morning report I need to know how many bikes we added to the fleet today.
-    Also, Theo's crew types bike ids by hand, and yesterday two bikes at Uptown were both B-1042.
+    Also, Kakashi's crew types bike ids by hand, and yesterday two bikes at Uptown were both B-1042.
     Can the code hand out the next id by itself and keep the count?
 hints:
   - "A static field belongs to the class, so every Bike shares the same counter. Each new bike should add 1 to it."

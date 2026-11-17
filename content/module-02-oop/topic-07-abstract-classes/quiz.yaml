@@ -7,7 +7,7 @@ questions:
     concept: abstract-class
     variants:
       - { prompt: "What is an abstract class?", choices: ["A class you can never create objects from; it exists to be extended", "A class with no fields", "A class that cannot have a constructor", "A class that only holds static methods"], answer: 0 }
-      - { prompt: "Why did Theo want Vehicle to be abstract?", choices: ["So nobody can create a plain Vehicle with no price", "So Vehicle runs faster", "So Vehicle cannot have subclasses", "So Vehicle can skip its constructor"], answer: 0 }
+      - { prompt: "Why did Kakashi want Vehicle to be abstract?", choices: ["So nobody can create a plain Vehicle with no price", "So Vehicle runs faster", "So Vehicle cannot have subclasses", "So Vehicle can skip its constructor"], answer: 0 }
     explain: "An abstract class is only a parent. You create objects from its concrete subclasses."
     reteach: "## Concept"
 

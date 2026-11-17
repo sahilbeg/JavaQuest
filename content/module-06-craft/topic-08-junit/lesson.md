@@ -2,7 +2,7 @@
 
 Picture a climber on a tall wall. Under the wall hangs a net. The climber still tries not to fall. The net means one slip is not the end of the story.
 
-Spoke's fare code has no net. Maya wants to rewrite billing, but nobody dares touch `StandardFare`. One wrong number could charge every PRO rider for their free hour. In this topic you build the net: small programs that check the fare code for you, every time, in under a second.
+Spoke's fare code has no net. Tsunade wants to rewrite billing, but nobody dares touch `StandardFare`. One wrong number could charge every PRO rider for their free hour. In this topic you build the net: small programs that check the fare code for you, every time, in under a second.
 
 ## Concept
 

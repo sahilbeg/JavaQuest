@@ -2,7 +2,7 @@
 
 Picture a shoe rack at the Spoke office. It has 12 slots. You can put shoes on it, or helmets, or water bottles. The rack does not care what goes on it. It only cares that it has 12 slots.
 
-The dispatch code has three racks written as three classes: `BikeShelf`, `RiderShelf` and `StationShelf`. They are the same code with a different word in the middle. When Maya fixed a bug in one, the other two kept the bug. This page shows you how to write the rack once and use it for any type.
+The dispatch code has three racks written as three classes: `BikeShelf`, `RiderShelf` and `StationShelf`. They are the same code with a different word in the middle. When Tsunade fixed a bug in one, the other two kept the bug. This page shows you how to write the rack once and use it for any type.
 
 ## Concept
 

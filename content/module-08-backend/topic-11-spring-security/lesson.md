@@ -2,7 +2,7 @@
 
 Picture Spoke's office building. At the front desk, a guard checks your ID card. That tells the building who you are. Then the colour of your badge decides which floors you may enter. A visitor badge opens the lobby. An ops badge opens the bike workshop too.
 
-Theo found that the Spoke API has no front desk at all. Anyone who knows the address `POST /admin/bikes/B-1042/move` can send bikes to the Depot. In this topic you put a guard and a badge check in front of every request.
+Kakashi found that the Spoke API has no front desk at all. Anyone who knows the address `POST /admin/bikes/B-1042/move` can send bikes to the Depot. In this topic you put a guard and a badge check in front of every request.
 
 ## Concept
 
@@ -142,7 +142,7 @@ Spring Security finds users through a `UserDetailsService`. You give it a userna
 UserDetailsService users(PasswordEncoder encoder) {
     return new InMemoryUserDetailsManager(
             User.withUsername("ada").password(encoder.encode("ride-on")).roles("RIDER").build(),
-            User.withUsername("theo").password(encoder.encode("fix-it")).roles("OPS").build());
+            User.withUsername("kakashi").password(encoder.encode("fix-it")).roles("OPS").build());
 }
 ```
 
@@ -203,10 +203,10 @@ public class Main {
         PasswordEncoder encoder = new BCryptPasswordEncoder();
         InMemoryUserDetailsManager users = new InMemoryUserDetailsManager(
                 User.withUsername("ada").password(encoder.encode("ride-on")).roles("RIDER").build(),
-                User.withUsername("theo").password(encoder.encode("fix-it")).roles("OPS").build());
+                User.withUsername("kakashi").password(encoder.encode("fix-it")).roles("OPS").build());
 
-        UserDetails theo = users.loadUserByUsername("theo");
-        System.out.println(theo.getUsername() + " has " + theo.getAuthorities());
+        UserDetails kakashi = users.loadUserByUsername("kakashi");
+        System.out.println(kakashi.getUsername() + " has " + kakashi.getAuthorities());
         System.out.println("ada exists? " + users.userExists("ada"));
         System.out.println("zoe exists? " + users.userExists("zoe"));
     }
@@ -369,7 +369,7 @@ Then try these changes, one at a time:
 
 1. Change `hasRole("OPS")` to `hasAnyRole("OPS", "RIDER")`. Ada's move now answers 200.
 2. Delete the line `.httpBasic(Customizer.withDefaults())`. The 401 answers turn into 403, and nobody can log in.
-3. Delete the line `.csrf(csrf -> csrf.disable());` and put `;` after the `sessionManagement` line. Theo's POST now gets 403, because it has no CSRF token.
+3. Delete the line `.csrf(csrf -> csrf.disable());` and put `;` after the `sessionManagement` line. Kakashi's POST now gets 403, because it has no CSRF token.
 
 ```java run
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -418,7 +418,7 @@ public class Main {
         show(mvc, "GET  /rentals/mine, ada", get("/rentals/mine").with(httpBasic("ada", "ride-on")));
         show(mvc, "GET  /rentals/mine, bad password", get("/rentals/mine").with(httpBasic("ada", "oops")));
         show(mvc, "POST /admin/move, ada", post("/admin/move").with(httpBasic("ada", "ride-on")));
-        show(mvc, "POST /admin/move, theo", post("/admin/move").with(httpBasic("theo", "fix-it")));
+        show(mvc, "POST /admin/move, kakashi", post("/admin/move").with(httpBasic("kakashi", "fix-it")));
         context.close();
     }
 
@@ -454,7 +454,7 @@ class SecurityConfig {
     UserDetailsService users(PasswordEncoder encoder) {
         return new InMemoryUserDetailsManager(
                 User.withUsername("ada").password(encoder.encode("ride-on")).roles("RIDER").build(),
-                User.withUsername("theo").password(encoder.encode("fix-it")).roles("OPS").build());
+                User.withUsername("kakashi").password(encoder.encode("fix-it")).roles("OPS").build());
     }
 }
 
@@ -504,7 +504,7 @@ Fix: add `@EnableWebSecurity` above the class. It is what creates the `HttpSecur
 **2. Writing the ROLE_ prefix yourself.**
 
 ```java nocompile
-User.withUsername("theo").password(encoder.encode("fix-it")).roles("ROLE_OPS").build()
+User.withUsername("kakashi").password(encoder.encode("fix-it")).roles("ROLE_OPS").build()
 .requestMatchers("/admin/**").hasRole("ROLE_OPS")
 ```
 
@@ -535,10 +535,10 @@ http.authorizeHttpRequests(...).httpBasic(Customizer.withDefaults());   // no cs
 ```
 
 ```text
-POST /admin/bikes/B-1042/move as theo -> 403 Forbidden
+POST /admin/bikes/B-1042/move as kakashi -> 403 Forbidden
 ```
 
-Theo has the right role, but his POST carries no CSRF token, so the CSRF filter refuses it before the role check. Fix: add `.csrf(csrf -> csrf.disable())` for an API without login cookies.
+Kakashi has the right role, but his POST carries no CSRF token, so the CSRF filter refuses it before the role check. Fix: add `.csrf(csrf -> csrf.disable())` for an API without login cookies.
 
 **5. Storing the plain password.**
 

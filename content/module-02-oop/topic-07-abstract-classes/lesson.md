@@ -38,7 +38,7 @@ Java refuses to compile this line. The compiler says:
 error: Vehicle is abstract; cannot be instantiated
 ```
 
-**Instantiated** means "turned into an object". So the message reads: you cannot make an object from `Vehicle`. That one word fixes Theo's ticket.
+**Instantiated** means "turned into an object". So the message reads: you cannot make an object from `Vehicle`. That one word fixes Kakashi's ticket.
 
 You can still create the subclasses. A `Vehicle` variable can still hold them too, just like in the polymorphism topic.
 

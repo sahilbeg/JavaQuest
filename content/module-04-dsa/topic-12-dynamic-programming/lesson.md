@@ -1,6 +1,6 @@
 ## Hook
 
-Maya's pass pricing tool tries every mix of passes for a rider's month. For a 30-day month it freezes. The reason is silly: it solves the same small question again and again, millions of times.
+Tsunade's pass pricing tool tries every mix of passes for a rider's month. For a 30-day month it freezes. The reason is silly: it solves the same small question again and again, millions of times.
 
 Picture a friend who asks you "what is 7 times 8?" every minute. The first time, you work it out. After that, you just remember 56. This topic teaches a program to remember.
 

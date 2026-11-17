@@ -2,7 +2,7 @@
 
 When you travel abroad, your charger does not fit the wall. You carry an adapter. Your charger stays the same, and the adapter speaks to the local socket.
 
-Java talks to databases the same way. Your code speaks one standard language, and a small adapter called a driver speaks to the database. In this topic the rentals service learns to save and read rides itself. You also fix the scary bug Sam forwarded: typing `' OR '1'='1` into the rider search showed everybody's rides.
+Java talks to databases the same way. Your code speaks one standard language, and a small adapter called a driver speaks to the database. In this topic the rentals service learns to save and read rides itself. You also fix the scary bug Iruka forwarded: typing `' OR '1'='1` into the rider search showed everybody's rides.
 
 ## Concept
 
@@ -191,7 +191,7 @@ String sql = "SELECT id, rider_id FROM ride WHERE rider_id = '" + input + "' ORD
 **SQL injection** is an attack where typed input changes the meaning of your SQL. The database cannot tell which part you wrote and which part the user typed.
 ```
 
-Watch what happens with the input from Sam's report.
+Watch what happens with the input from Iruka's report.
 
 ```java run
 import java.sql.*;

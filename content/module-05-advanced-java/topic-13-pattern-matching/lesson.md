@@ -2,7 +2,7 @@
 
 Picture a mail sorter at a post office. Each envelope gets a quick look: letter, parcel or postcard? Then it goes in the right bin. If a new kind of mail appears, a good sorter shouts "I have no bin for this!" before anything gets lost.
 
-Theo wants the dock event handler to work like that sorter. Right now it is a long chain of `instanceof` checks, and a new event type would fall through silently. In this topic you replace the chain with a `switch` that unpacks each event. Best of all, the compiler shouts when a type has no case.
+Kakashi wants the dock event handler to work like that sorter. Right now it is a long chain of `instanceof` checks, and a new event type would fall through silently. In this topic you replace the chain with a `switch` that unpacks each event. Best of all, the compiler shouts when a type has no case.
 
 ## Concept
 
@@ -165,7 +165,7 @@ The first call prints `text`. The second call crashes, because this switch has n
 
 ## Worked example
 
-Here is the event handler from Theo's ticket, with the new `Rebalanced` event for the truck.
+Here is the event handler from Kakashi's ticket, with the new `Rebalanced` event for the truck.
 
 ```java run
 public class Main {

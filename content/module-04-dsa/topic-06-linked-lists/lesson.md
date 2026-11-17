@@ -1,6 +1,6 @@
 ## Hook
 
-Harbor station is full. Every dock holds a bike, and riders want to return theirs. Sam keeps a waiting list. The next free dock goes to the rider at the front.
+Harbor station is full. Every dock holds a bike, and riders want to return theirs. Iruka keeps a waiting list. The next free dock goes to the rider at the front.
 
 Riders join and leave the front of this line all day. With an `ArrayList`, removing the front item shifts every other rider one place left. Picture a queue of people where everyone has to shuffle forward each time.
 
@@ -170,7 +170,7 @@ class RiderList<T> {
 
 ## Worked example
 
-This program builds Sam's waiting list, serves the front rider, and walks the rest.
+This program builds Iruka's waiting list, serves the front rider, and walks the rest.
 
 ```java run
 public class Main {

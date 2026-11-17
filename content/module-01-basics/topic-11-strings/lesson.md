@@ -1,6 +1,6 @@
 ## Hook
 
-Sam from rider support has a problem. Riders type bike codes in strange ways. One rider types `" b-1042 "` with spaces around it. Another types `B1042` and skips the dash. The kiosk compares the text letter by letter, so it says "Unknown bike".
+Iruka from rider support has a problem. Riders type bike codes in strange ways. One rider types `" b-1042 "` with spaces around it. Another types `B1042` and skips the dash. The kiosk compares the text letter by letter, so it says "Unknown bike".
 
 A person reading those codes would see the same bike every time. Your job is to teach the kiosk to clean up the text first. Java gives you a toolbox for that, built right into every String.
 

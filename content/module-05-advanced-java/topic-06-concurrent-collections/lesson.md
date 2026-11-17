@@ -2,7 +2,7 @@
 
 Picture a whiteboard in a busy office that shows how many free docks each station has. Five people walk up at once to change the Harbor number. Two of them read "4", both rub it out, and both write "5". One change vanished.
 
-Sam's ticket is that whiteboard. Dock sensors at every station update one `HashMap` from many threads. Sometimes a change goes missing. Sometimes the map breaks in the middle of an update and throws an exception. This page shows the collections Java built for many threads.
+Iruka's ticket is that whiteboard. Dock sensors at every station update one `HashMap` from many threads. Sometimes a change goes missing. Sometimes the map breaks in the middle of an update and throws an exception. This page shows the collections Java built for many threads.
 
 ## Concept
 

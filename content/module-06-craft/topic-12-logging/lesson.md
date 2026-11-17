@@ -2,7 +2,7 @@
 
 Picture a ship's captain who writes every thought in the logbook. "Sky is blue." "Had tea." "Engine on fire." "Had more tea." When the storm hits, nobody finds the fire among a thousand cups of tea.
 
-That is the Spoke kiosk today. Every event goes through `System.out.println`. Last night Sam's night shift searched ten thousand lines for one failed payment at Old Mill. Worse, one line printed a rider's full card number. In this topic you replace those prints with real **logging**.
+That is the Spoke kiosk today. Every event goes through `System.out.println`. Last night Iruka's night shift searched ten thousand lines for one failed payment at Old Mill. Worse, one line printed a rider's full card number. In this topic you replace those prints with real **logging**.
 
 ## Concept
 

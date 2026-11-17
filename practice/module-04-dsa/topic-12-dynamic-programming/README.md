@@ -1,6 +1,6 @@
 # Dynamic programming basics
 
-Maya's pass pricing tool uses plain recursion, and it freezes on a 30-day month. Rewrite `Passes.java` so every answer comes from a table of small answers you already worked out.
+Tsunade's pass pricing tool uses plain recursion, and it freezes on a 30-day month. Rewrite `Passes.java` so every answer comes from a table of small answers you already worked out.
 
 1. **TODO 1:** `fib(n)` returns the n-th Fibonacci number: `fib(0) = 0`, `fib(1) = 1`, and each next one is the sum of the two before. Use a `long[]` table or a memo. `fib(80)` must come back at once.
 2. **TODO 2:** `cheapestCover` returns 0 when `rideDays` is empty.

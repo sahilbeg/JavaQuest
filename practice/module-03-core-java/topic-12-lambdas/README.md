@@ -1,6 +1,6 @@
 # Lambdas and method references
 
-Theo's sorter has nine Comparator classes. Replace them with short lambdas in `RideSorts.java`. The `Ride` record is already written for you.
+Kakashi's sorter has nine Comparator classes. Replace them with short lambdas in `RideSorts.java`. The `Ride` record is already written for you.
 
 1. **TODO 1:** make `byMinutes(rides)` return a new list sorted from the shortest ride to the longest. Use `Comparator.comparing(Ride::minutes)`. Leave the list you were given in its old order.
 2. **TODO 2:** make `byStationThenMinutes(rides)` return a new list sorted by station name. Rides at the same station go shortest first. Use `thenComparing`.

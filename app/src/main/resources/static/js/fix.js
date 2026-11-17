@@ -88,7 +88,7 @@ export async function renderFix(container, topic, chat, onResult) {
     try {
       const { files, progress } = await api.solution(id);
       solutionPanel.replaceChildren(
-        h("h2", { id: "solution-title", class: "console-label" }, "Maya's solution"),
+        h("h2", { id: "solution-title", class: "console-label" }, "Tsunade's solution"),
         ...files.map((f) => h("div", {}, h("p", { class: "editor-file" }, f.path), h("pre", { class: "console-out solution-code" }, h("code", {}, f.content)))));
       solutionPanel.hidden = false;
       solutionPanel.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -97,7 +97,7 @@ export async function renderFix(container, topic, chat, onResult) {
         if (html) code.innerHTML = html;
       }
       chat.say(progress.testsPassed
-        ? "Here's how Maya wrote it. Compare it with yours: there's usually more than one good answer."
+        ? "Here's how Tsunade wrote it. Compare it with yours: there's usually more than one good answer."
         : "Here's the solution. Read it line by line, then type it yourself instead of pasting. Typing it is how it sticks.",
         { mood: "idle" });
     } catch (error) {

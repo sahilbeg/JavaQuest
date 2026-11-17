@@ -2,7 +2,7 @@
 
 Last spring the app team wrote `POST /trips/start`. The server team built `POST /rides`. The billing sheet called it a "rental". All three meant the same thing, and nothing worked together until someone rewrote two of them.
 
-This time Priya wants the design on paper first. One page that lists every request, every answer and every error. Both teams sign it before anyone codes. An hour of design saves a week of untangling.
+This time Shizune wants the design on paper first. One page that lists every request, every answer and every error. Both teams sign it before anyone codes. An hour of design saves a week of untangling.
 
 ```callout jargon
 An **API** (Application Programming Interface) is the list of requests a program accepts and the answers it gives back. Think of it as a contract between two teams. **REST** (REpresentational State Transfer) is a popular style for HTTP APIs. It is built around things, called resources, and the standard HTTP methods.
@@ -267,7 +267,7 @@ When a change would break apps already on phones, publish a new API version besi
 
 ## Worked example
 
-Here is the design sheet Priya asked for. It is the whole Spoke rentals API on one page.
+Here is the design sheet Shizune asked for. It is the whole Spoke rentals API on one page.
 
 | Method | Path | Body sent | Success | Errors |
 |---|---|---|---|---|

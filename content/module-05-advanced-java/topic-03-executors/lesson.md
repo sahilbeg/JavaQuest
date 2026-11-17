@@ -2,7 +2,7 @@
 
 Picture a pizza shop that hires a new cook for every single order. Each cook needs an apron, a locker and a quick training. Then the cook makes one pizza and goes home. On a busy Friday the shop fills with cooks and runs out of lockers.
 
-A smart shop keeps four cooks. Orders wait on a rail, and each free cook grabs the next one. That is exactly what Priya's ticket needs. Your sensor check starts a new thread for every dock, and with 60 docks the kiosk runs out of memory.
+A smart shop keeps four cooks. Orders wait on a rail, and each free cook grabs the next one. That is exactly what Shizune's ticket needs. Your sensor check starts a new thread for every dock, and with 60 docks the kiosk runs out of memory.
 
 ## Concept
 

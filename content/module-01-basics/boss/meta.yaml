@@ -14,7 +14,7 @@ ticket:
   title: "The kiosk charges the wrong fare after midnight"
   body: >
     Night riders at Harbor are getting crazy receipts. A ride from 23:50 to 00:20 shows minus 1410 minutes.
-    Members are being charged the unlock fee too. Sam has a queue of angry emails. Please fix the fare code tonight.
+    Members are being charged the unlock fee too. Iruka has a queue of angry emails. Please fix the fare code tonight.
 hints:
   - "Bronze: a day has 1440 minutes. When the end is smaller than the start, the ride crossed midnight."
   - "Bronze: (end - start + 1440) % 1440 gives the right minutes in both cases. Silver: compare the member rule in SPK-0105 with the code."

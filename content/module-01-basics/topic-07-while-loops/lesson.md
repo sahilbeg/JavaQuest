@@ -1,6 +1,6 @@
 ## Hook
 
-Theo has a problem at Old Mill. The card reader misses the first tap a lot. The kiosk shows an error at once, and riders give up.
+Kakashi has a problem at Old Mill. The card reader misses the first tap a lot. The kiosk shows an error at once, and riders give up.
 
 A person would just say "tap again". So far your programs run each line once, from top to bottom. To try again, the kiosk needs to **repeat** some lines. Java repeats lines with a **loop**.
 

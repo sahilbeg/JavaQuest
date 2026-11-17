@@ -2,7 +2,7 @@
 
 You just learned to bake with one recipe book. It lists ingredients in a neat form and the steps in a fixed order. Then a friend hands you their cookbook. Same flour, same oven, same cakes. But it is written as short instructions instead of forms.
 
-That is Theo's problem. The telemetry service from rush hour builds with **Gradle**, not Maven. The libraries come from the same place. The folders look the same. Only the recipe is written differently. Once you can read it, you can build it.
+That is Kakashi's problem. The telemetry service from rush hour builds with **Gradle**, not Maven. The libraries come from the same place. The folders look the same. Only the recipe is written differently. Once you can read it, you can build it.
 
 ## Concept
 
@@ -236,7 +236,7 @@ Byte says: you do not need to love one tool. You need to read both, because you 
 
 ## Worked example
 
-Here is the telemetry service Theo is stuck on, after you add the logging library. The folders look like a Maven project, with a Gradle file instead of `pom.xml`.
+Here is the telemetry service Kakashi is stuck on, after you add the logging library. The folders look like a Maven project, with a Gradle file instead of `pom.xml`.
 
 ```text
 telemetry/

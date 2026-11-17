@@ -2,7 +2,7 @@
 
 Two friends share one notebook that holds a running total. Both read "12" at the same moment. Both add 1 in their heads. Both write "13". Two people added one each, yet the total only went up by one.
 
-That is Sam's ticket. Two riders tap the Harbor kiosk at the same moment. Both threads read "1 bike left". Both say yes. And the unlock counter loses taps the same way the notebook did.
+That is Iruka's ticket. Two riders tap the Harbor kiosk at the same moment. Both threads read "1 bike left". Both say yes. And the unlock counter loses taps the same way the notebook did.
 
 ## Concept
 
@@ -157,7 +157,7 @@ void increment() {
 
 ### Check-then-act
 
-Sam's double unlock is a second kind of race. The code checks a condition, then acts on it:
+Iruka's double unlock is a second kind of race. The code checks a condition, then acts on it:
 
 ```java nocompile
 if (bikes > 0) {     // check

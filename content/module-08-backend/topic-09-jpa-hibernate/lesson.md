@@ -2,7 +2,7 @@
 
 Picture two friends who speak different languages. One thinks in objects: a `Bike` with a `Station`. The other thinks in tables: rows, columns and ids. Until now you have been the interpreter, writing every SQL string and copying every column into a field by hand.
 
-That is why Maya's ticket hurts. One new bike field means five SQL strings and a row mapper to edit. In this topic you hire a full-time interpreter. You describe your classes once, and it writes the SQL for you.
+That is why Tsunade's ticket hurts. One new bike field means five SQL strings and a row mapper to edit. In this topic you hire a full-time interpreter. You describe your classes once, and it writes the SQL for you.
 
 ## Concept
 

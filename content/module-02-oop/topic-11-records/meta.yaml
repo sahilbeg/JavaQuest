@@ -14,7 +14,7 @@ ticket:
   title: "Ride is 60 lines for three values"
   body: >
     The Ride class is 60 lines of fields, getters, equals and toString, and two of them have bugs.
-    Sam had a rider at Old Mill whose 12-minute ride showed up twice in the history because equals compared the wrong field.
+    Iruka had a rider at Old Mill whose 12-minute ride showed up twice in the history because equals compared the wrong field.
     Rides are just data. Can you make Ride small and correct?
 hints:
   - "A compact constructor has no round brackets ( ): Ride { ... }. Inside it you can change the parameter minutes before Java stores it."

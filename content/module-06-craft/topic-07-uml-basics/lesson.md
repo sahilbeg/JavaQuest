@@ -1,8 +1,8 @@
 ## Hook
 
-Theo pins a photo on the board. It shows the last billing meeting at Riverside. There are boxes, arrows and a coffee stain. Nobody can say which arrow means what.
+Kakashi pins a photo on the board. It shows the last billing meeting at Riverside. There are boxes, arrows and a coffee stain. Nobody can say which arrow means what.
 
-Maya's team is about to rewrite billing. Before anyone types a line, Theo wants one picture that everybody reads the same way. That needs shared rules for boxes and arrows. Those rules exist. They are called UML.
+Tsunade's team is about to rewrite billing. Before anyone types a line, Kakashi wants one picture that everybody reads the same way. That needs shared rules for boxes and arrows. Those rules exist. They are called UML.
 
 ## Concept
 
@@ -175,7 +175,7 @@ Keep each diagram small: five to seven boxes at most. A diagram that tries to sh
 
 ## Worked example
 
-Theo's billing picture. Riders take rides on bikes from stations. A fare calculator prices each ride. Payment methods come in two kinds.
+Kakashi's billing picture. Riders take rides on bikes from stations. A fare calculator prices each ride. Payment methods come in two kinds.
 
 ```mermaid
 classDiagram

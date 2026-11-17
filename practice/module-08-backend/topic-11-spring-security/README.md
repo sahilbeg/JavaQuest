@@ -33,6 +33,6 @@ Open `SecurityConfigTest.java`. It starts the whole app with `@SpringBootTest` a
 - `@WithMockUser(username = "zoe", roles = "RIDER")` plus `.with(testSecurityContext())` pretends Zoe is already logged in.
 - Each test checks a status code: 200 for allowed, 401 for "log in first", 403 for "not allowed".
 
-The tests check that stations stay public, that rentals need a login and that a wrong password gets 401. A rider gets 403 on the admin move, while Theo gets 200. No session may be created, and Ada's password must be stored as a BCrypt hash.
+The tests check that stations stay public, that rentals need a login and that a wrong password gets 401. A rider gets 403 on the admin move, while Kakashi gets 200. No session may be created, and Ada's password must be stored as a BCrypt hash.
 
 Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.

@@ -1,6 +1,6 @@
 ## Hook
 
-Theo needs a sorted list of every ride from this year for the board report. That is millions of ride times. The report uses insertion sort from the last ticket, and it now runs all night.
+Kakashi needs a sorted list of every ride from this year for the board report. That is millions of ride times. The report uses insertion sort from the last ticket, and it now runs all night.
 
 Insertion sort is O(n^2). Double the rides and it gets four times slower. A year of rides is far too many for that.
 
@@ -159,7 +159,7 @@ static void quickSort(int[] a, int low, int high) {
 The pivot at `p` is already in place, so neither recursive call includes it.
 
 ```callout analogy
-Partition is like a teacher saying "everyone shorter than Sam, stand to the left". Sam ends up in the right spot, and two smaller groups are left to sort.
+Partition is like a teacher saying "everyone shorter than Iruka, stand to the left". Iruka ends up in the right spot, and two smaller groups are left to sort.
 ```
 
 ### Quicksort's bad case

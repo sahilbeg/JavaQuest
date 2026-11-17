@@ -59,7 +59,7 @@ questions:
   - id: q07
     type: mcq
     concept: memory-leak
-    prompt: "Theo doubles the Harbor kiosk's heap with -Xmx, but the leak stays. What happens?"
+    prompt: "Kakashi doubles the Harbor kiosk's heap with -Xmx, but the leak stays. What happens?"
     choices: ["The kiosk crashes later with the same error", "The kiosk never crashes again", "The kiosk crashes sooner", "The error turns into StackOverflowError"]
     answer: 0
     explain: "A bigger heap only gives the leak more room. The list still grows until the heap is full."

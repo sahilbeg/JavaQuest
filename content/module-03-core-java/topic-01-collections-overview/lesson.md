@@ -2,7 +2,7 @@
 
 Picture an egg box with 12 holes. It holds 12 eggs. When egg number 13 arrives, there is no hole for it. You cannot stretch the box.
 
-The Riverside kiosk keeps its ride log in a box like that. It is an array with room for 100 rides. Yesterday, ride 101 ended, and the kiosk crashed. Maya wants a log that grows as long as riders keep riding.
+The Riverside kiosk keeps its ride log in a box like that. It is an array with room for 100 rides. Yesterday, ride 101 ended, and the kiosk crashed. Tsunade wants a log that grows as long as riders keep riding.
 
 ## Concept
 

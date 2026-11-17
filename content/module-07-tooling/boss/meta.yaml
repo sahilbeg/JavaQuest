@@ -16,7 +16,7 @@ ticket:
     Kiosk 1.10.0 was meant to reach all five stations tonight, and the nightly pipeline is red in three places.
     The release gate says 1.10.0 is older than the live 1.9.3.
     The config stage cannot find its file, and the night fare check passes or fails depending on the hour.
-    Maya says all three pass on her laptop.
+    Tsunade says all three pass on her laptop.
 hints:
   - "Bronze: as text, \"1.10.0\" sorts before \"1.9.3\" because the character '1' comes before '9'. Compare major, then minor, then patch with Integer.compare."
   - "Silver: build the path from the folder you are given with configDir.resolve(FILE_NAME). Check Files.exists(file) before you read it, and strip() every value, text and numbers alike."

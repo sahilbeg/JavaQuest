@@ -2,7 +2,7 @@
 
 Think about a calculator on a phone. You type numbers and symbols like `+` and `*`, and it works out the answer. Java has the same symbols built in.
 
-Priya's ticket is about money. A rider at Riverside wants to see the price before unlocking a bike. A classic ride costs $1.00 to unlock plus $0.15 for every minute. The kiosk has to do that sum on its own. In this lesson you teach it how.
+Shizune's ticket is about money. A rider at Riverside wants to see the price before unlocking a bike. A classic ride costs $1.00 to unlock plus $0.15 for every minute. The kiosk has to do that sum on its own. In this lesson you teach it how.
 
 ## Concept
 

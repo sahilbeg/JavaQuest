@@ -1,6 +1,6 @@
 # SQL basics
 
-Theo wants saved queries he can run himself. Fill in the seven constants in `RideQueries.java`. Each one is a single SQL statement, written as a Java string.
+Kakashi wants saved queries he can run himself. Fill in the seven constants in `RideQueries.java`. Each one is a single SQL statement, written as a Java string.
 
 Every constant starts as `"SELECT 1 WHERE FALSE"`. That is valid SQL that returns no rows, so the checks fail with a message until you replace it.
 

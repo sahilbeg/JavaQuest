@@ -3,7 +3,7 @@
 Start the Spoke API so the rider app has a server to talk to. It needs two endpoints:
 
 - `GET /stations` answers `["Riverside","Old Mill","Harbor","Uptown","Depot"]`, in that order.
-- `GET /health` answers `{"status":"UP","stations":5}`, so Theo can ping it.
+- `GET /health` answers `{"status":"UP","stations":5}`, so Kakashi can ping it.
 
 `SpokeApiApplication` (the app's starting point) and the `Health` record are ready. Your work is in `StationController.java`.
 

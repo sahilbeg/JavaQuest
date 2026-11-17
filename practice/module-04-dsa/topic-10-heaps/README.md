@@ -1,6 +1,6 @@
 # Heaps and priority queues
 
-Sam needs the repair crew to always fix the most urgent bike next. Build a min-heap by hand, then use Java's own `PriorityQueue` to plan the repairs.
+Iruka needs the repair crew to always fix the most urgent bike next. Build a min-heap by hand, then use Java's own `PriorityQueue` to plan the repairs.
 
 `MinHeap` stores its values in a plain `int[]`. Do not use `PriorityQueue`, any list or any sort inside it. For index `i`, the parent is `(i - 1) / 2` and the children are `2 * i + 1` and `2 * i + 2`.
 

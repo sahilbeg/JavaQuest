@@ -155,7 +155,7 @@ questions:
           - "Passwords are no longer checked"
           - "The API stops answering POST requests"
         answer: 0
-      - prompt: "Theo has the OPS role and the right password, but his POST to /admin/bikes/B-1042/move gets 403. GET requests work. What is the most likely cause?"
+      - prompt: "Kakashi has the OPS role and the right password, but his POST to /admin/bikes/B-1042/move gets 403. GET requests work. What is the most likely cause?"
         choices:
           - "CSRF protection is still on, and his POST has no CSRF token"
           - "httpBasic is missing"

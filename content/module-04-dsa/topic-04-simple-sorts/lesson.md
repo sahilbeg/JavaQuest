@@ -2,7 +2,7 @@
 
 Think of a hand of playing cards. Most people sort them the same way. They pick up one card at a time and slide it left until it sits in the right spot. You already know a sorting algorithm. You just never wrote it down.
 
-The kiosk firmware has no `Arrays.sort`. Maya needs the nightly list of ride minutes sorted on the device. This page teaches three simple sorts you can write by hand in a few lines.
+The kiosk firmware has no `Arrays.sort`. Tsunade needs the nightly list of ride minutes sorted on the device. This page teaches three simple sorts you can write by hand in a few lines.
 
 ## Concept
 

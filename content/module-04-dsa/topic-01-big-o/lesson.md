@@ -1,8 +1,8 @@
 ## Hook
 
-Picture Theo looking for bike B-1042 in a paper logbook. The logbook holds every ride of the year. Theo starts at page one and reads each line until he finds the bike.
+Picture Kakashi looking for bike B-1042 in a paper logbook. The logbook holds every ride of the year. Kakashi starts at page one and reads each line until he finds the bike.
 
-In January the logbook is thin, so the search is quick. By November it holds thousands of rides. Theo is no slower at reading. The book simply got bigger, and his method reads every line.
+In January the logbook is thin, so the search is quick. By November it holds thousands of rides. Kakashi is no slower at reading. The book simply got bigger, and his method reads every line.
 
 The kiosk has the same problem. This page teaches you to predict how a method slows down as the data grows, before any rider has to wait.
 

@@ -1,6 +1,6 @@
 ## Hook
 
-Sam's repair board is a long list of broken bikes. Each report has an urgency number. A 1 means "no brakes, fix now". A 5 means "squeaky bell". When a new report arrives, the tool re-sorts the whole list. That costs O(n log n) every time.
+Iruka's repair board is a long list of broken bikes. Each report has an urgency number. A 1 means "no brakes, fix now". A 5 means "squeaky bell". When a new report arrives, the tool re-sorts the whole list. That costs O(n log n) every time.
 
 But the crew never reads the whole list. They only ask one question: "Which bike is most urgent right now?" You do not need a fully sorted list to answer that. You only need the smallest number on top. A **heap** keeps exactly that promise, and it keeps it cheaply.
 
@@ -113,7 +113,7 @@ A complete tree of n values has about log n levels. Sift up and sift down each w
 | peek | O(1) | read slot 0, no matter how many bikes |
 | add | O(log n) | double the bikes, add one swap at most |
 | poll | O(log n) | double the bikes, add one swap at most |
-| re-sort the list on every report | O(n log n) | what Sam's tool does now |
+| re-sort the list on every report | O(n log n) | what Iruka's tool does now |
 
 ```callout analogy
 Byte says: a heap is like a hospital waiting room. Nobody lines everyone up in exact order. The nurse just makes sure the most urgent patient is always next.
@@ -212,7 +212,7 @@ Line by line:
 
 ## Try it
 
-Here is Sam's repair list with the library heap. Run it. Then add `new Repair("B-1099", 0)` to the list and run again.
+Here is Iruka's repair list with the library heap. Run it. Then add `new Repair("B-1099", 0)` to the list and run again.
 
 ```java run
 import java.util.Comparator;

@@ -1,6 +1,6 @@
 ## Hook
 
-Theo's ride sorter has a class called `ByMinutes`. It also has `ByStation`, `ByType`, `ByBikeId` and five more. Each class is ten lines long. Only one line in each one does real work: the line that compares two rides.
+Kakashi's ride sorter has a class called `ByMinutes`. It also has `ByStation`, `ByType`, `ByBikeId` and five more. Each class is ten lines long. Only one line in each one does real work: the line that compares two rides.
 
 Imagine writing a whole letter just to say "sort by minutes". A lambda lets you send that one line alone. This lesson shows you how.
 
@@ -113,7 +113,7 @@ rides.removeIf(r -> r.minutes() < 2);
 
 ## Worked example
 
-Here is Theo's sorter with three orders, written with lambdas.
+Here is Kakashi's sorter with three orders, written with lambdas.
 
 ```java run
 import java.util.ArrayList;
