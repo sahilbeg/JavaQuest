@@ -25,7 +25,14 @@ questions:
       - prompt: "Which question does authorization answer?"
         choices: ["What may you do?", "Who are you?", "Is the password long enough?", "Which server answered?"]
         answer: 0
-    explain: "Authorization runs after authentication. The server knows it is Ada, and her role does not allow the move, so it answers 403."
+      - prompt: "Lin is logged in as a RIDER. The rule for /rentals/** is authenticated(). She asks for GET /rentals/rental-17, which is Ada's rental. What must the server also check?"
+        choices:
+          - "That rental-17 belongs to Lin, before returning it"
+          - "Nothing more, because Lin passed authenticated()"
+          - "That Lin's password is a BCrypt hash"
+          - "That the request came over HTTP/2"
+        answer: 0
+    explain: "Authorization runs after authentication. The server knows it is Ada, and her role does not allow the move, so it answers 403. Path rules are not enough: each object loaded by id must belong to the caller, or Lin can read Ada's rentals."
     reteach: "## Concept"
 
   - id: q03
@@ -162,5 +169,12 @@ questions:
           - "The password encoder is BCrypt"
           - "The session policy is STATELESS"
         answer: 0
-    explain: "A stateless API keeps no session, and it switches CSRF off because there are no login cookies. CSRF is on by default and refuses POSTs without a token."
-    reteach: "## Common mistakes"
+      - prompt: "Why do JWT access tokens usually expire after a few minutes?"
+        choices:
+          - "The server checks a JWT without a database, so it cannot easily cancel one before it expires"
+          - "Their signature wears out after a few minutes"
+          - "Base64 text can only be read for a few minutes"
+          - "Browsers delete every header after 15 minutes"
+        answer: 0
+    explain: "A stateless API keeps no session, and it switches CSRF off because there are no login cookies. CSRF is on by default and refuses POSTs without a token. A JWT stays valid until it expires, so access tokens are short-lived and renewed with a refresh token."
+    reteach: "## Concept"

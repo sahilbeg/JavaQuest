@@ -1,0 +1,145 @@
+topic: module-08-backend/topic-15-concurrent-writes
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: isolation-anomalies
+    prompt: "Rentals worked on one server with a synchronized method. With two servers, double rentals started. Why?"
+    choices:
+      - "synchronized only locks inside one JVM, and the two servers are separate JVMs"
+      - "synchronized does not work on methods that use a database"
+      - "The load balancer turns synchronized off"
+      - "Two servers always use different databases"
+    answer: 0
+    explain: "A Java lock lives in one JVM's memory. Two servers share only the database, so the database must decide who wins."
+    reteach: "### Why Java locks stop helping"
+
+  - id: q02
+    type: mcq
+    concept: isolation-anomalies
+    variants:
+      - { prompt: "Two editors read the EBIKE fare as 30. One saves 35, then the other saves 32 from its old copy. What is this called?", choices: ["A lost update", "A dirty read", "A phantom", "A deadlock"], answer: 0 }
+      - { prompt: "A report reads a rental that another transaction has not committed, and that transaction then rolls back. What is this called?", choices: ["A dirty read", "A lost update", "Write skew", "A phantom"], answer: 0 }
+      - { prompt: "Two mechanics each check that the other is on call, then both sign off. Nobody is on call. What is this called?", choices: ["Write skew", "A dirty read", "A non-repeatable read", "A deadlock"], answer: 0 }
+      - { prompt: "Counting bikes at Harbor twice in one transaction gives 7, then 8, because a bike was docked in between. What is this called?", choices: ["A phantom", "A lost update", "A dirty read", "Write skew"], answer: 0 }
+    explain: "Lost update: an overlapping read-change-write erases a change. Dirty read: seeing uncommitted work. Write skew: two checks pass, two different rows change, the rule breaks. Phantom: new rows appear in a repeated search."
+    reteach: "### Five ways overlapping transactions go wrong"
+
+  - id: q03
+    type: predict-output
+    concept: isolation-anomalies
+    prompt: "Two servers read the stock of helmets at Harbor, then each sells one. What does this print?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int helmets = 4;
+              int seenByA = helmets;
+              int seenByB = helmets;
+              helmets = seenByA - 1;
+              helmets = seenByB - 1;
+              System.out.println(helmets);
+          }
+      }
+    answer: "3"
+    explain: "Both servers start from 4 and both write 3. Two helmets left the shelf, but only one was counted: a lost update. The fix is UPDATE ... SET helmets = helmets - 1 in the database."
+    reteach: "### The lost update"
+
+  - id: q04
+    type: mcq
+    concept: isolation-levels
+    variants:
+      - { prompt: "What is PostgreSQL's default isolation level?", choices: ["READ COMMITTED", "READ UNCOMMITTED", "REPEATABLE READ", "SERIALIZABLE"], answer: 0 }
+      - { prompt: "In PostgreSQL, which isolation level blocks write skew?", choices: ["SERIALIZABLE", "READ COMMITTED", "REPEATABLE READ", "None of them"], answer: 0 }
+      - { prompt: "Under READ COMMITTED, a transaction reads the EBIKE fare twice and gets 30, then 35. Which level would make both reads say 30?", choices: ["REPEATABLE READ", "READ UNCOMMITTED", "READ COMMITTED with auto-commit on", "No level can do that"], answer: 0 }
+    explain: "READ COMMITTED is the usual default and blocks only dirty reads. REPEATABLE READ keeps a steady view of the data. SERIALIZABLE blocks every anomaly by failing one of the clashing transactions."
+    reteach: "### Isolation levels"
+
+  - id: q05
+    type: mcq
+    concept: atomic-writes
+    prompt: "UPDATE bike SET status = 'RENTED', rider_id = 'r-23' WHERE id = 'B-1042' AND status = 'AVAILABLE' changes 0 rows. What should the API answer?"
+    choices:
+      - "409 Conflict, because the bike was no longer available"
+      - "201 Created, because the UPDATE ran without an error"
+      - "500 Internal Server Error, because the database failed"
+      - "Run the same UPDATE again until it changes 1 row"
+    answer: 0
+    explain: "0 rows changed means the condition was false: someone else got the bike first. That is the client's clash with the current state, so 409."
+    reteach: "### Syntax: the atomic conditional update"
+
+  - id: q06
+    type: spot-the-bug
+    concept: atomic-writes
+    prompt: "Line 2 checks the status first, yet two servers can still both rent B-1042. Which line lets the second server overwrite the rider?"
+    code: |
+      boolean rent(Connection db, String bikeId, String riderId) throws SQLException {
+          if (!status(db, bikeId).equals("AVAILABLE")) {
+              return false;
+          }
+          return update(db, "UPDATE bike SET status = 'RENTED', rider_id = ? WHERE id = ?", riderId, bikeId) == 1;
+      }
+    bugLine: 5
+    explain: "The UPDATE has no status check, so it overwrites a bike another server rented after line 2 ran. Add AND status = 'AVAILABLE' to its WHERE, and the read on line 2 is no longer needed."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: fill-blank
+    concept: optimistic-locking
+    prompt: "UPDATE fare SET cents_per_minute = ?, version = version + 1 WHERE bike_type = ? AND ___ = ?"
+    answers: ["version"]
+    explain: "The save only changes the row if it is still at the version the editor read. Any other save in between moved the version on, so this one changes 0 rows."
+    reteach: "### Syntax: optimistic locking with a version"
+
+  - id: q08
+    type: mcq
+    concept: optimistic-locking
+    variants:
+      - { prompt: "Which JPA annotation turns on optimistic locking for an entity?", choices: ["@Version", "@Lock", "@Transactional", "@Id"], answer: 0 }
+      - { prompt: "Why is optimistic locking a good fit for the fare editor page?", choices: ["No lock is held while a person thinks, and clashes are rare", "It makes the database lock every row", "It stops two editors from opening the page at once", "It never needs a version column"], answer: 0 }
+    explain: "@Version makes Hibernate check and bump a version on every update, throwing OptimisticLockException on a clash. No lock is held between the read and the save."
+    reteach: "### Syntax: @Version in JPA"
+
+  - id: q09
+    type: mcq
+    concept: pessimistic-locking
+    variants:
+      - { prompt: "Server A ran SELECT ... FOR UPDATE on B-1042 in an open transaction. What happens when server B runs SELECT ... FOR UPDATE on the same row?", choices: ["B waits until A's transaction ends, or until its lock timeout", "B gets the row at once and both hold the lock", "B's query returns no rows", "A's transaction is rolled back at once"], answer: 0 }
+      - { prompt: "A SELECT ... FOR UPDATE runs with auto-commit on. How long does its lock last?", choices: ["Only for that one statement, so it protects nothing after it", "Until the connection closes", "Until the next commit() call", "For the lock timeout"], answer: 0 }
+    explain: "A row lock lasts until its transaction ends. With auto-commit, each statement is its own transaction, so the lock ends as soon as the SELECT does."
+    reteach: "### Syntax: pessimistic locking with FOR UPDATE"
+
+  - id: q10
+    type: mcq
+    concept: atomic-writes
+    prompt: "Rule: a rider may have at most one active rental. Which tool makes the database enforce it, even with two servers?"
+    choices:
+      - "A UNIQUE constraint on an active_rider column that is NULL once the ride ends"
+      - "A SELECT COUNT(*) of active rentals before each insert"
+      - "A synchronized block around the insert"
+      - "A version column on the rider table"
+    answer: 0
+    explain: "The unique index is checked atomically by the database, so two inserts can never both win. Ended rides hold NULL, and many NULLs are allowed in a UNIQUE column."
+    reteach: "### A unique constraint as a lock"
+
+  - id: q11
+    type: mcq
+    concept: deadlocks-and-retries
+    variants:
+      - { prompt: "H2 says: Deadlock detected. The current transaction was rolled back. What should your code do?", choices: ["Run the whole transaction again from its first step, a limited number of times", "Run only the statement that failed again", "Ignore it and commit", "Retry forever until it works"], answer: 0 }
+      - { prompt: "Which error is worth retrying automatically?", choices: ["SQLState 40001, a serialization failure (H2 also uses it for deadlocks)", "SQLState 23505, a unique violation", "SQLState 23502, a NULL in a NOT NULL column", "Any SQLException at all"], answer: 0 }
+    explain: "40001 (and PostgreSQL's deadlock code 40P01) means the whole transaction was rolled back, and a fresh attempt can succeed. A constraint violation fails the same way every time."
+    reteach: "### Syntax: retry the whole transaction"
+
+  - id: q12
+    type: order
+    concept: deadlocks-and-retries
+    prompt: "A transaction hits a deadlock on its first try and works on its second. Put the steps in order."
+    items:
+      - "Turn auto-commit off"
+      - "Run every read and write of the transaction"
+      - "On a deadlock, roll back"
+      - "Run every read and write again from the start"
+      - "Commit"
+    explain: "A deadlock rolls back everything, so the retry repeats every step. Only a successful run commits."
+    reteach: "### Deadlocks"

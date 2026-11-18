@@ -46,7 +46,14 @@ questions:
           - "Rolls back and returns null"
           - "Retries the method once"
         answer: 0
-    explain: "Spring commits on a normal return and rolls back on a RuntimeException or Error. The exception still reaches the caller."
+      - prompt: "A @Transactional gift sends Lin an email, then the deposit throws a RuntimeException. What happens?"
+        choices:
+          - "The database changes roll back, but the email has already been sent"
+          - "The database changes and the email are both undone"
+          - "The email is held back until Spring decides to commit"
+          - "Spring commits, because the email worked"
+        answer: 0
+    explain: "Spring commits on a normal return and rolls back on a RuntimeException or Error. The exception still reaches the caller. A rollback only undoes database changes, so send emails after the commit."
     reteach: "## Concept"
 
   - id: q04

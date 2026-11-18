@@ -97,10 +97,14 @@ questions:
   - id: q07
     type: mcq
     concept: relationships
-    prompt: "You load 50 bikes from 50 different stations with one query. The station link is LAZY. Then a loop prints bike.getStation().getName() for each. How many queries run in all?"
-    choices: ["51", "1", "2", "50"]
-    answer: 0
-    explain: "One query loads the bikes, then each lazy station loads on first use. That is the N+1 problem. join fetch loads both in one query."
+    variants:
+      - prompt: "You load 50 bikes from 50 different stations with one query. The station link is LAZY. Then a loop prints bike.getStation().getName() for each. How many queries run in all?"
+        choices: ["51", "1", "2", "50"]
+        answer: 0
+      - prompt: "A service loads a bike inside its transaction. After the transaction ends, with open-in-view off, the controller calls bike.getStation().getName(). The station link is LAZY. What happens?"
+        choices: ["LazyInitializationException, because the persistence context is closed", "Hibernate loads the station with one more query", "It prints null", "The compiler rejects the call"]
+        answer: 0
+    explain: "A lazy station loads on first use, but only while its persistence context is open. Many lazy loads make the N+1 problem, and one after the context closes throws LazyInitializationException. join fetch loads both in one query."
     reteach: "## Concept"
 
   - id: q08
@@ -120,7 +124,14 @@ questions:
           - "Only Mockito mocks, with no database at all"
           - "Your production database, read-only"
         answer: 0
-    explain: "JpaRepository<T, ID> names the entity and its id type. findById returns an Optional. @DataJpaTest is a slice with an in-memory database."
+      - prompt: "Inside one transaction, a service loads a bike with findById, calls bike.setStatus(BikeStatus.RENTED), and never calls save. What happens at commit?"
+        choices:
+          - "Hibernate sees the managed bike changed and runs an UPDATE"
+          - "Nothing is saved, because save was never called"
+          - "Hibernate throws an exception for the missing save"
+          - "A second bike row is inserted"
+        answer: 0
+    explain: "JpaRepository<T, ID> names the entity and its id type. findById returns an Optional. @DataJpaTest is a slice with an in-memory database. A loaded entity is managed, so dirty checking saves its changes at commit."
     reteach: "## Concept"
 
   - id: q09

@@ -1,6 +1,6 @@
 id: module-08-backend/topic-05-spring-mvc
 title: "Controllers and request mapping"
-order: 5
+order: 6
 minutes: 10
 prerequisites: [module-08-backend/topic-04-dependency-injection]
 concepts: [request-mapping, path-variables, request-params, request-body, response-entity, http-status]

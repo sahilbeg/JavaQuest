@@ -43,7 +43,10 @@ Each column has a type, like a Java field. These are the common ones:
 | `BIGINT` | big whole numbers | `long` |
 | `VARCHAR(20)` | text, up to 20 characters | `String` |
 | `BOOLEAN` | true or false | `boolean` |
-| `TIMESTAMP` | a date and a time | `LocalDateTime` |
+| `TIMESTAMP` | a date and a time, with no time zone | `LocalDateTime` |
+| `TIMESTAMP WITH TIME ZONE` | an exact moment on the world clock | `OffsetDateTime` or `Instant` |
+
+A plain `TIMESTAMP` like `08:30` does not say *where* it was 08:30. The examples here use it, and treat every value as UTC. In a real app, store moments as `TIMESTAMP WITH TIME ZONE`, so every server and every reader agrees on the moment.
 
 ```callout jargon
 A **primary key** is a column whose value is unique in its table, so it names exactly one row. A bike's `id` is its primary key. A **foreign key** is a column that holds another table's primary key. `bike.station_id` points at a row in `station`.
@@ -119,7 +122,7 @@ Text values go in single quotes. Numbers and `NULL` need no quotes.
 
 ### Running SQL from Java
 
-Spoke uses **H2**, a small database written in Java. It can live entirely in memory, so it starts in a blink and vanishes when the program ends. The program below makes a table, fills it, and asks one question. The next topic explains this Java line by line. For now, read the SQL inside the strings.
+Spoke uses **H2**, a small database written in Java. It can live entirely in memory, so it starts in a blink and vanishes when the program ends. The program below makes a table, fills it, and asks one question. The JDBC ticket, two tickets on, explains this Java line by line. For now, read the SQL inside the strings.
 
 ```java run
 import java.sql.*;

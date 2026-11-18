@@ -1,6 +1,6 @@
 id: module-08-backend/topic-04-dependency-injection
 title: "Dependency injection and beans"
-order: 4
+order: 5
 minutes: 10
 prerequisites: [module-08-backend/topic-03-spring-boot-intro, module-06-craft/topic-02-solid]
 concepts: [inversion-of-control, beans, component-scanning, constructor-injection, bean-methods, choosing-beans]

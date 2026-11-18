@@ -1,0 +1,22 @@
+id: module-08-backend/topic-13-networking
+title: "Networking under HTTP: IP, DNS, TCP and TLS"
+order: 1
+minutes: 15
+prerequisites: [module-07-tooling/boss]
+concepts: [ip-and-ports, dns, tcp-and-udp, tls, connections-and-latency, network-errors]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0813
+  from: theo
+  title: "The rider app beta hangs on \"Connecting...\""
+  body: >
+    Beta testers at Harbor see "Connecting..." for up to three seconds before the station map shows.
+    Our server logs say every request took 20 ms, so the time goes missing somewhere between the phone and us.
+    Before we build the API, can you learn what happens on the wire, so we can find where those seconds go?
+hints:
+  - "Before a single HTTP byte moves, the phone must find the server's address, open a connection and set up encryption. Each step costs time."
+  - "Count round trips: a DNS lookup, the TCP handshake, the TLS handshake, then the request itself. A reused connection skips all but the last."
+  - "Read errors by layer: UnknownHostException is DNS, Connection refused means nothing listens on that port, a connect timeout means no answer at all, and SSLHandshakeException is the certificate."
+review: true

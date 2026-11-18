@@ -189,11 +189,219 @@ public interface StationRepository extends JpaRepository<Station, String> {
 `Station` is the entity type and `String` is the type of its `@Id`. When the app starts, Spring Data writes a class that implements it. You get these methods for free:
 
 ```java nocompile
-stations.save(new Station("depot", "Depot", 12));       // INSERT, or UPDATE if the id exists
+stations.save(new Station("depot", "Depot", 12));       // INSERT, or UPDATE if the row exists
 Optional<Station> harbor = stations.findById("harbor");  // empty Optional when there is no row
 List<Station> all = stations.findAll();
 long howMany = stations.count();
 stations.deleteById("depot");
+```
+
+`save` must decide: is this a new row or an old one? It looks at the id. A `null` id, as with `@GeneratedValue`, means new, so it runs one `INSERT`.
+
+`Station` has an id you pick yourself, like `"depot"`. That id is never `null`, so `save` cannot tell. It calls JPA's `merge`, which first runs a `SELECT` to look for the row, then an `INSERT` or `UPDATE`. That extra `SELECT` is normal for assigned ids. Do not be surprised by it in the log.
+
+### The persistence context and dirty checking
+
+An `EntityManager` remembers every entity it has loaded or saved. That memory is called the **persistence context**. Spring Data's repositories use one behind the scenes, one per transaction.
+
+```callout jargon
+The **persistence context** is the set of entity objects an `EntityManager` is tracking right now. It is also called the **first-level cache**. **Dirty checking** means Hibernate spots changed fields on its own and writes them back.
+```
+
+Each entity object is in one of four states:
+
+| State | Means | Example |
+|---|---|---|
+| new (transient) | made with `new`, not known to JPA yet | `new Bike("B-1042", ...)` before `persist` |
+| managed | tracked by the persistence context | after `persist`, or anything `find` or a query returns |
+| detached | was managed, but its `EntityManager` closed or cleared | after `em.close()` or `em.clear()` |
+| removed | will be deleted at commit | after `em.remove(bike)` |
+
+Watch what a managed entity does. There is no `save` call after `setStatus`.
+
+```java run
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.PersistenceConfiguration;
+
+public class Main {
+    public static void main(String[] args) {
+        ((ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory.getLogger("ROOT"))
+                .setLevel(ch.qos.logback.classic.Level.OFF);
+        EntityManagerFactory factory = new PersistenceConfiguration("spoke")
+                .managedClass(Bike.class)
+                .property(PersistenceConfiguration.JDBC_URL, "jdbc:h2:mem:spoke")
+                .property(PersistenceConfiguration.SCHEMAGEN_DATABASE_ACTION, "create")
+                .property("hibernate.show_sql", "true")
+                .createEntityManagerFactory();
+
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        em.persist(new Bike("B-1042", BikeStatus.AVAILABLE));
+        em.getTransaction().commit();
+        em.clear();                                    // start with an empty persistence context
+
+        em.getTransaction().begin();
+        Bike first = em.find(Bike.class, "B-1042");    // SELECT, then remembered
+        Bike again = em.find(Bike.class, "B-1042");    // no SQL: the remembered object
+        System.out.println("same object? " + (first == again));
+        System.out.println("managed? " + em.contains(first));
+
+        first.setStatus(BikeStatus.RENTED);            // no save() or persist() call
+        System.out.println("--- commit ---");
+        em.getTransaction().commit();                  // Hibernate spots the change: UPDATE
+        factory.close();
+    }
+}
+
+enum BikeStatus { AVAILABLE, RENTED }
+
+@Entity
+class Bike {
+    @Id
+    private String id;
+
+    @Enumerated(EnumType.STRING)
+    private BikeStatus status;
+
+    protected Bike() {
+    }
+
+    Bike(String id, BikeStatus status) {
+        this.id = id;
+        this.status = status;
+    }
+
+    void setStatus(BikeStatus status) {
+        this.status = status;
+    }
+}
+```
+
+The second `find` runs no SQL: it returns the same object from the persistence context. And `commit` runs an `UPDATE` all by itself. Hibernate kept a copy of each managed entity when it loaded it. At commit, it compares, sees `status` changed, and writes it.
+
+Sending the waiting SQL to the database is called a **flush**. It happens at commit, before a query that might read the changed table, or when you call `em.flush()`. That explains the `@DataJpaTest` example below: `em.flush()` sends the `INSERT`s now. In the worked example, `em.clear()` empties the persistence context, so the next read really goes to the database.
+
+```callout warning
+Dirty checking works in both directions. If a service changes a managed entity "just to try something", the change is saved at commit, even with no `save` call. Copy the values into a new object if you only want to play with them.
+```
+
+### LazyInitializationException and open-in-view
+
+A lazy link is a stand-in that loads on first touch. It can only load while its persistence context is still open. Touch it after that, and Hibernate cannot reach the database any more.
+
+```java run crash
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PersistenceConfiguration;
+
+public class Main {
+    public static void main(String[] args) {
+        ((ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory.getLogger("ROOT"))
+                .setLevel(ch.qos.logback.classic.Level.OFF);
+        EntityManagerFactory factory = new PersistenceConfiguration("spoke")
+                .managedClass(Station.class)
+                .managedClass(Bike.class)
+                .property(PersistenceConfiguration.JDBC_URL, "jdbc:h2:mem:spoke")
+                .property(PersistenceConfiguration.SCHEMAGEN_DATABASE_ACTION, "create")
+                .createEntityManagerFactory();
+
+        EntityManager setup = factory.createEntityManager();
+        setup.getTransaction().begin();
+        Station harbor = new Station("harbor", "Harbor");
+        setup.persist(harbor);
+        setup.persist(new Bike("B-1042", harbor));
+        setup.getTransaction().commit();
+        setup.close();
+
+        EntityManager em = factory.createEntityManager();
+        Bike bike = em.find(Bike.class, "B-1042");   // the station is a stand-in, not loaded yet
+        em.close();                                  // the persistence context is gone
+
+        System.out.println("bike " + bike.getId() + " loaded");
+        System.out.println(bike.getStation().getName());   // too late to load the station
+    }
+}
+
+@Entity
+class Station {
+    @Id
+    private String id;
+    private String name;
+
+    protected Station() {
+    }
+
+    Station(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    String getName() {
+        return name;
+    }
+}
+
+@Entity
+class Bike {
+    @Id
+    private String id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Station station;
+
+    protected Bike() {
+    }
+
+    Bike(String id, Station station) {
+        this.id = id;
+        this.station = station;
+    }
+
+    String getId() {
+        return id;
+    }
+
+    Station getStation() {
+        return station;
+    }
+}
+```
+
+```text
+Exception in thread "main" org.hibernate.LazyInitializationException: Could not initialize proxy [Station#harbor] - no session
+```
+
+In a Spring app, this happens when a service loads a bike inside its transaction, and the controller touches `bike.getStation()` after the transaction has ended.
+
+There are two good fixes. Both load what you need inside the transaction, in one query:
+
+```java nocompile
+@Query("select b from Bike b join fetch b.station where b.status = :status")
+List<Bike> withStationByStatus(@Param("status") BikeStatus status);
+
+@EntityGraph(attributePaths = "station")        // same idea, on a derived query
+List<Bike> findByStatus(BikeStatus status);
+```
+
+**Open-in-view.** Spring Boot hides this exception by default. Its setting `spring.jpa.open-in-view=true` keeps the persistence context open for the whole web request, even while the JSON is written. Boot even warns about it at startup:
+
+```text
+spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+```
+
+Many teams set `spring.jpa.open-in-view=false`. With it on, lazy loads run quietly while the JSON is built, so N+1 queries go unnoticed. And each request holds a database connection until the response is sent, which drains the pool under load. With it off, a missing `join fetch` fails loudly in your tests instead.
+
+```callout jargon
+**Open-in-view** (also called Open Session in View) keeps the persistence context open until the HTTP response is finished. Lazy links can then still load in the controller and while the JSON is written.
 ```
 
 ### Syntax: derived query methods
@@ -268,6 +476,53 @@ class StationReportTest {
     }
 }
 ```
+
+### Entities stay inside: return DTOs
+
+A controller should never return an `@Entity`, or take one as its `@RequestBody`. Give it a plain record instead, called a **DTO**.
+
+```callout jargon
+A **DTO** (Data Transfer Object) is a simple object, usually a record, that holds exactly the fields one request or response needs.
+```
+
+Three things go wrong when an entity crosses the API:
+
+- **Mass assignment.** If `@RequestBody Bike bike` is bound straight to the entity, a client can send `"status": "AVAILABLE"` or a new `id`, and the server saves it.
+- **Lazy-load leaks.** Jackson calls every getter, so it touches lazy links. That means hidden extra queries, a `LazyInitializationException`, or endless JSON when `Station` lists its bikes and each bike points back to its station.
+- **Coupling.** Rename a column, and the API changes with it. Every app on every phone breaks.
+
+```java nocompile
+record BikeView(String id, String status, String stationName) {
+    static BikeView from(Bike bike) {
+        return new BikeView(bike.getId(), bike.getStatus().name(), bike.getStation().getName());
+    }
+}
+```
+
+The service builds the `BikeView` inside its transaction, with `join fetch` for the station. The controller only ever sees records. The API and the tables can now change separately.
+
+### Testing on the real database: Testcontainers
+
+`@DataJpaTest` uses H2 by default, an in-memory database. It is fast, but production runs PostgreSQL, and the two differ. H2 accepts some SQL that PostgreSQL rejects, and the reverse. Their types, sorting and locking differ too. So tests can pass on H2 while the real app fails.
+
+**Testcontainers** is a test library that starts a real database in a Docker container (module 7) for your tests, then throws it away.
+
+```java nocompile
+@DataJpaTest
+@Testcontainers
+class StationReportPostgresTest {
+
+    @Container
+    @ServiceConnection                     // Spring Boot points the DataSource at this container
+    static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:17");
+
+    @Autowired BikeRepository bikes;
+
+    // the same tests as before, now on real PostgreSQL
+}
+```
+
+It needs Docker on the machine, and the first run downloads the database image. Many teams keep fast H2 tests for quick checks, and run Testcontainers tests in CI (module 7) before every merge. JavaQuest's practice tests use H2, because they must run on any machine without Docker.
 
 ## Worked example
 
@@ -379,7 +634,7 @@ Read it from the top:
 - `hibernate.show_sql` prints every SQL statement. It is the same switch as `spring.jpa.show-sql`.
 - An `EntityManager` is JPA's main tool. `persist` saves a new object. Spring Data's `save` calls it for you.
 - The three `persist` calls sit inside `begin()` and `commit()`, so the rows are written together. You learn more about that in the next topic.
-- `em.clear()` forgets the objects in memory, so the query below really reads from the database.
+- `em.clear()` empties the persistence context, so the query below really reads from the database.
 - The JPQL says `Bike` and `b.status`, never a table name. Look at the output: Hibernate turned it into SQL with aliases like `b1_0`.
 - The station is lazy, so its `SELECT` only runs when the loop calls `getStation().getName()`.
 
@@ -486,10 +741,10 @@ class Bike {
 
 ## Recap
 
-- An ORM maps classes to tables, objects to rows and fields to columns. It still runs SQL, so switch on `show-sql` and read it.
-- JPA is the rulebook, Hibernate is the engine, and Spring Data JPA writes your repositories.
+- An ORM maps classes to tables, objects to rows and fields to columns. JPA is the rulebook, Hibernate the engine, and Spring Data JPA writes your repositories. Switch on `show-sql` and read the SQL.
 - An entity needs `@Entity`, an `@Id`, a protected no-argument constructor and non-final fields, which is why a record cannot be one. Store enums with `EnumType.STRING`.
-- `@ManyToOne` owns the foreign key, and `@OneToMany(mappedBy = ...)` is the other view. Lazy links can cause N+1 queries, and `join fetch` fixes them.
+- `@ManyToOne` owns the foreign key, and `@OneToMany(mappedBy = ...)` is the other view. Lazy links can cause N+1 queries or a `LazyInitializationException`, and `join fetch` fixes both.
+- The persistence context tracks managed entities, and dirty checking saves their changes at commit with no `save` call. Controllers return DTO records, never entities.
 - `JpaRepository<T, ID>` gives `save`, `findById` and `findAll`. Derived method names and JPQL `@Query` with `@Param` add your own queries. `@DataJpaTest` tests them on an in-memory database.
 
 ## Common mistakes

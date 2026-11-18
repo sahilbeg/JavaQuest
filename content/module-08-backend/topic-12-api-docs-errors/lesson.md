@@ -29,8 +29,38 @@ A **breaking change** is any change that can make a working client fail.
 | Change a field's meaning (cents to dollars) | Yes | Nothing crashes, but every fare is now 100 times wrong |
 | Add a new required input (`?city=` must be sent) | Yes | Old requests do not send it |
 | Add a new optional field (`"minutes": 12`) | No | Clients that do not know it can skip it |
+| Add a new enum value (`"status": "RESERVED"`) | Often | A client with a fixed list of values may fail on one it has never seen |
 | Add a new endpoint (`GET /api/v1/stations`) | No | Nobody called it before |
 | Add a new optional query parameter | No | Old requests still work without it |
+
+A new enum value catches many teams out. An old app whose `BikeStatus` enum knows only `AVAILABLE` and `RENTED` cannot read `"RESERVED"`. With Jackson's defaults, it fails. Here `BikeStatus` sits inside a small test program called `Main`, so Java names it `Main$BikeStatus`:
+
+```text
+tools.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `Main$BikeStatus` from String "RESERVED": not one of the values accepted for Enum class: [RENTED, AVAILABLE]
+```
+
+So say in the contract that new values may appear, and make clients map unknown values to a safe fallback. Jackson can do that for you:
+
+```java run
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import tools.jackson.databind.cfg.EnumFeature;
+import tools.jackson.databind.json.JsonMapper;
+
+public class Main {
+    enum BikeStatus { AVAILABLE, RENTED, @JsonEnumDefaultValue UNKNOWN }
+    record Bike(String id, BikeStatus status) { }
+
+    public static void main(String[] args) {
+        JsonMapper mapper = JsonMapper.builder()
+                .enable(EnumFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
+                .build();
+        String newerJson = "{\"id\":\"B-1042\",\"status\":\"RESERVED\"}";
+        System.out.println(mapper.readValue(newerJson, Bike.class));
+    }
+}
+```
+
+It prints `Bike[id=B-1042, status=UNKNOWN]`. The old app keeps working, and shows the bike as "status unknown".
 
 ```callout warning
 A changed meaning is the sneakiest break. The JSON looks the same, the tests on your side pass, and Riverton shows riders a 46,000-cent fare.

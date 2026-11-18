@@ -137,12 +137,14 @@ Spring Security finds users through a `UserDetailsService`. You give it a userna
 
 `InMemoryUserDetailsManager` keeps users in a map in memory. It is perfect for tests and small tools. Real apps load users from a database instead.
 
+Kakashi logs in with his ops account, `theo`. Ada logs in as `ada`.
+
 ```java nocompile
 @Bean
 UserDetailsService users(PasswordEncoder encoder) {
     return new InMemoryUserDetailsManager(
             User.withUsername("ada").password(encoder.encode("ride-on")).roles("RIDER").build(),
-            User.withUsername("kakashi").password(encoder.encode("fix-it")).roles("OPS").build());
+            User.withUsername("theo").password(encoder.encode("fix-it")).roles("OPS").build());
 }
 ```
 
@@ -178,6 +180,10 @@ public class Main {
 - The `10` in `$2a$10$` is the **strength**. Each step up doubles the work. 10 is the default and takes a fraction of a second.
 
 ```callout tip
+Gojo says: hashing gets better over time. `PasswordEncoderFactories.createDelegatingPasswordEncoder()` stores the name of the method in front of each hash, like `{bcrypt}$2a$10$...`. Later you can switch new passwords to a stronger method, such as Argon2, and old hashes still work.
+```
+
+```callout tip
 Gojo says: you never call matches yourself during a login. Spring Security calls it for you with the PasswordEncoder bean you define.
 ```
 
@@ -203,10 +209,10 @@ public class Main {
         PasswordEncoder encoder = new BCryptPasswordEncoder();
         InMemoryUserDetailsManager users = new InMemoryUserDetailsManager(
                 User.withUsername("ada").password(encoder.encode("ride-on")).roles("RIDER").build(),
-                User.withUsername("kakashi").password(encoder.encode("fix-it")).roles("OPS").build());
+                User.withUsername("theo").password(encoder.encode("fix-it")).roles("OPS").build());
 
-        UserDetails kakashi = users.loadUserByUsername("kakashi");
-        System.out.println(kakashi.getUsername() + " has " + kakashi.getAuthorities());
+        UserDetails theo = users.loadUserByUsername("theo");
+        System.out.println(theo.getUsername() + " has " + theo.getAuthorities());
         System.out.println("ada exists? " + users.userExists("ada"));
         System.out.println("zoe exists? " + users.userExists("zoe"));
     }
@@ -243,6 +249,75 @@ class WhoAmIController {
 - An `Authentication` parameter hands you the whole login: the name, the authorities and more.
 
 Take the rider from the login, never from the URL. A URL like `/rentals?rider=ada` lets Lin read Ada's rentals by typing her name.
+
+### Object-level authorization: only your own rentals
+
+The rules so far check *who* may call a path. They do not check *which object*. Lin is a logged-in rider, so `GET /rentals/rental-17` passes `authenticated()`. But rental-17 is Ada's.
+
+This gap is called **broken object level authorization** (BOLA), or IDOR. It is the most common API security hole. Rental ids follow a pattern, so Lin could try `rental-1`, `rental-2`, and so on, and read everyone's trips.
+
+```callout jargon
+**BOLA** (Broken Object Level Authorization) means a user can reach someone else's object just by changing an id in the request. Its older name is **IDOR** (Insecure Direct Object Reference).
+```
+
+The fix: every time you load an object by id, check that the caller may see *that* object.
+
+```java nocompile
+@GetMapping("/rentals/{id}")
+Rental one(@PathVariable String id, Authentication auth) {
+    Rental rental = rentals.findById(id).orElseThrow(NotFound::new);
+    if (!rental.riderUsername().equals(auth.getName()) && !isOps(auth)) {
+        throw new NotFound();   // 404, so Lin cannot even tell that rental-17 exists
+    }
+    return rental;
+}
+```
+
+Spring can also check this on a service method, with **method security**. Put `@EnableMethodSecurity` on a configuration class, then:
+
+```java nocompile
+@PreAuthorize("hasRole('OPS')")                                  // checked before the method runs
+public void moveBike(String bikeId, String station) { ... }
+
+@PostAuthorize("returnObject.riderId() == authentication.name")  // checked on what it returns
+public Rental rental(String id) { ... }
+```
+
+A refused check answers 403.
+
+### More attacks to know: XSS, CORS, headers and guessing
+
+**XSS** (cross-site scripting): a rider names their profile `<script>...</script>`. If a web page shows that name as raw HTML, the script runs in every visitor's browser. The fix is to **escape** output, so `<` shows as text. Template engines escape by default. A JSON API should send `Content-Type: application/json`, never HTML.
+
+**Same-origin policy and CORS**: browsers stop a web page from one site, like `evil.example`, reading answers from another site, like Spoke's API. That block is the **same-origin policy**. **CORS** (cross-origin resource sharing) is how a server relaxes it for chosen sites, with `http.cors(...)` in Spring. List exact sites, never `*`, for logged-in calls. Both are browser rules only. `curl` and other servers ignore them, so they never replace a login.
+
+**Security headers**: Spring Security adds these to every response by default. They tell browsers to be careful.
+
+```text
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+```
+
+`nosniff` stops guessing a file type. `DENY` stops other sites from framing your pages. `no-store` keeps private answers out of caches. Over HTTPS, Spring also sends `Strict-Transport-Security`, which tells browsers to always use HTTPS.
+
+**Password guessing**: an attacker tries thousands of passwords for `ada`. Count failed logins per account and per address. After a few, slow down or answer `429 Too Many Requests` for a while. BCrypt's slowness helps too.
+
+### Keeping secrets out of code
+
+This page writes passwords like `"fix-it"` in code, because they are practice users. Real secrets never go in code, or in any file that goes into git. That includes database passwords, API keys and token signing keys.
+
+Instead, the app reads them when it starts, from an environment variable or a **secret manager**:
+
+```properties
+spring.datasource.password=${DB_PASSWORD}
+```
+
+`${DB_PASSWORD}` is filled from the environment variable `DB_PASSWORD` (topic 03). In production, a secret manager, such as AWS Secrets Manager or HashiCorp Vault, stores secrets encrypted, controls who can read them, and logs every read.
+
+```callout warning
+If a secret is ever committed, treat it as stolen. Deleting it in a later commit does not help: it stays in git history, and bots scan public repositories within minutes. Make a new secret, switch the app to it, and switch the old one off. That is called **rotating** the secret.
+```
 
 ### Syntax: testing secured endpoints
 
@@ -292,7 +367,138 @@ class RentalSecurityTest {
 
 ### Next steps: OAuth2 and JWT
 
-With **OAuth2**, a rider logs in once at a login server and gets a short-lived **token** to send instead of a password. A **JWT** (JSON Web Token) is a common token format that Spring Security can check, inside the same filter chain.
+With **OAuth2**, a rider logs in once at a login server and gets a short-lived **token** to send instead of a password. A **JWT** (JSON Web Token) is a common token format that Spring Security can check, inside the same filter chain. The next cards show how.
+
+### Sessions or tokens? JWT
+
+There are two ways to remember a login.
+
+- **Session**: the server stores "this is Ada" and hands the browser a cookie with a random session id. Every request, the server looks the id up. It is stateful.
+- **Token**: the server hands the app a signed note that says "this is Ada, a RIDER, until 10:15". Every request carries the note. The server only checks the signature. It is stateless.
+
+| | Session | Signed token (JWT) |
+|---|---|---|
+| Server stores | every logged-in user | nothing per user |
+| Any server copy can answer | only if they share the session store | yes |
+| Log someone out at once | easy: delete the session | hard: the token stays valid until it expires |
+| Best for | websites with cookies | APIs, phone apps, service-to-service calls |
+
+A **JWT** has three parts, joined by dots. The **header** names the signing method. The **payload** holds **claims**: facts such as `sub`, the user, and `exp`, the expiry time. Last comes the **signature**.
+
+```java run
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.Base64;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+public class Main {
+    static final byte[] SECRET = "spoke-demo-key-only-the-server-knows!".getBytes(StandardCharsets.UTF_8);
+
+    static String base64(String text) {
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(text.getBytes(StandardCharsets.UTF_8));
+    }
+
+    static String sign(String headerAndPayload) throws Exception {
+        Mac mac = Mac.getInstance("HmacSHA256");
+        mac.init(new SecretKeySpec(SECRET, "HmacSHA256"));
+        byte[] signature = mac.doFinal(headerAndPayload.getBytes(StandardCharsets.UTF_8));
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(signature);
+    }
+
+    static boolean valid(String token) throws Exception {
+        int lastDot = token.lastIndexOf('.');
+        String expected = sign(token.substring(0, lastDot));
+        return MessageDigest.isEqual(expected.getBytes(), token.substring(lastDot + 1).getBytes());
+    }
+
+    public static void main(String[] args) throws Exception {
+        String header = base64("{\"alg\":\"HS256\",\"typ\":\"JWT\"}");
+        String payload = base64("{\"sub\":\"ada\",\"roles\":[\"RIDER\"],\"exp\":1795000000}");
+        String token = header + "." + payload + "." + sign(header + "." + payload);
+        System.out.println(token);
+        System.out.println("valid? " + valid(token));
+
+        String forged = base64("{\"sub\":\"ada\",\"roles\":[\"OPS\"],\"exp\":1795000000}");
+        String tampered = header + "." + forged + "." + token.substring(token.lastIndexOf('.') + 1);
+        System.out.println("tampered valid? " + valid(tampered));
+
+        String middle = token.split("\\.")[1];
+        System.out.println("anyone can read: " + new String(Base64.getUrlDecoder().decode(middle), StandardCharsets.UTF_8));
+    }
+}
+```
+
+- The signature is made from the header, the payload and a secret key that only Spoke has.
+- Ada changes `RIDER` to `OPS` in her payload. The old signature no longer fits, so the check fails.
+- The payload is only Base64, not encrypted. Anyone can read it. Never put a password or a secret in a JWT.
+
+Real code uses a library for this, never hand-made signing. This demo only shows the idea.
+
+```callout jargon
+A **claim** is one fact inside a token, such as `"sub": "ada"`. A **signature** is a code computed from the data and a secret key. Change one letter of the data, and the signature no longer matches.
+```
+
+### Expiry, revocation and refresh tokens
+
+A JWT is checked without asking a database. That is its strength and its weakness. If Ada's phone is stolen, Spoke cannot easily cancel her token. It stays valid until its `exp` time. Cancelling a token early is called **revocation**.
+
+So real systems use two tokens:
+
+1. An **access token**: a JWT that lives only a few minutes, such as 15. It is sent with every request.
+2. A **refresh token**: a long-lived random string that the server *does* store. When the access token expires, the app swaps the refresh token for a new access token.
+
+To log Ada out everywhere, Spoke deletes her refresh token. Within 15 minutes, every access token she holds has expired, and no new one can be made.
+
+```animate
+title: An access token expires
+kind: scene
+nodes:
+  - { id: app, label: Ada's app, emoji: "📱", value: "access: valid" }
+  - { id: api, label: Spoke API, emoji: "🖥️" }
+  - { id: login, label: Login server, emoji: "🔑", value: "refresh: stored" }
+steps:
+  - say: Ada's app sends her short-lived access token with a request. Spoke checks the signature and the expiry. All good.
+    send: [{ from: app, to: api, label: "GET /rentals/mine + JWT" }, { from: api, to: app, label: "200 OK", back: true }]
+  - say: Fifteen minutes pass. The access token's exp time is now in the past.
+    set: { app: "access: expired" }
+  - say: The next request gets 401. Spoke never accepts an expired token.
+    send: [{ from: app, to: api, label: "GET /rentals/mine + JWT" }, { from: api, to: app, label: "401", back: true }]
+  - say: The app sends its refresh token to the login server. The server finds it in its store, so Ada is still allowed.
+    send: { from: app, to: login, label: "refresh token" }
+    focus: [login]
+  - say: A fresh access token comes back, and the app carries on. Ada never typed her password again.
+    send: { from: login, to: app, label: "new access token", back: true }
+    set: { app: "access: valid" }
+  - say: If her phone is stolen, ops deletes the refresh token. The next refresh fails, and the thief is out within 15 minutes.
+    set: { login: "refresh: deleted" }
+```
+
+### Syntax: a JWT resource server
+
+Spring Security checks JWTs for you. Add the `spring-boot-starter-oauth2-resource-server` dependency, tell it who issues the tokens, and switch it on in the filter chain instead of `httpBasic`.
+
+```java nocompile
+http
+        .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+        .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
+        .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .csrf(csrf -> csrf.disable());
+```
+
+```properties
+spring.security.oauth2.resourceserver.jwt.issuer-uri=https://login.spoke.example
+```
+
+On every request, Spring reads `Authorization: Bearer <token>`, checks the signature with the login server's public keys, and checks `exp`. A bad or expired token gets 401. A good one becomes the `Authentication` your controller sees.
+
+```callout jargon
+A **public key** is one half of a key pair. The login server signs tokens with its secret **private key**. Anyone can check those signatures with the matching public key, but cannot make new ones.
+```
+
+```callout jargon
+A **resource server** is an API that accepts tokens made by a separate login server, called the **authorization server**. Spoke's API checks tokens. It never sees the rider's password.
+```
 
 ## Worked example
 
@@ -369,7 +575,7 @@ Then try these changes, one at a time:
 
 1. Change `hasRole("OPS")` to `hasAnyRole("OPS", "RIDER")`. Ada's move now answers 200.
 2. Delete the line `.httpBasic(Customizer.withDefaults())`. The 401 answers turn into 403, and nobody can log in.
-3. Delete the line `.csrf(csrf -> csrf.disable());` and put `;` after the `sessionManagement` line. Kakashi's POST now gets 403, because it has no CSRF token.
+3. Delete the line `.csrf(csrf -> csrf.disable());` and put `;` after the `sessionManagement` line. Kakashi's POST (user `theo`) now gets 403, because it has no CSRF token.
 
 ```java run
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -418,7 +624,7 @@ public class Main {
         show(mvc, "GET  /rentals/mine, ada", get("/rentals/mine").with(httpBasic("ada", "ride-on")));
         show(mvc, "GET  /rentals/mine, bad password", get("/rentals/mine").with(httpBasic("ada", "oops")));
         show(mvc, "POST /admin/move, ada", post("/admin/move").with(httpBasic("ada", "ride-on")));
-        show(mvc, "POST /admin/move, kakashi", post("/admin/move").with(httpBasic("kakashi", "fix-it")));
+        show(mvc, "POST /admin/move, theo", post("/admin/move").with(httpBasic("theo", "fix-it")));
         context.close();
     }
 
@@ -454,7 +660,7 @@ class SecurityConfig {
     UserDetailsService users(PasswordEncoder encoder) {
         return new InMemoryUserDetailsManager(
                 User.withUsername("ada").password(encoder.encode("ride-on")).roles("RIDER").build(),
-                User.withUsername("kakashi").password(encoder.encode("fix-it")).roles("OPS").build());
+                User.withUsername("theo").password(encoder.encode("fix-it")).roles("OPS").build());
     }
 }
 
@@ -477,10 +683,10 @@ Gojo says: `MockServletContext` and `MockMvc` act like a web server inside your 
 
 ## Recap
 
-- Authentication proves who you are (401 when it fails). Authorization decides what you may do (403 when it fails).
+- Authentication proves who you are (401 when it fails). Authorization decides what you may do (403 when it fails), down to which rental is yours.
 - Spring Security is a chain of filters in front of your controllers. Here nothing is secured until you add `@EnableWebSecurity`. Your `SecurityFilterChain` bean then sets the rules.
 - Rules run top to bottom: `permitAll`, `hasRole`, `authenticated`, with `anyRequest()` last.
-- A stateless API uses `httpBasic` (over HTTPS) or tokens, `STATELESS` sessions and no CSRF. Cookie logins keep CSRF on.
+- A stateless API uses `httpBasic` (over HTTPS) or short-lived signed JWTs with refresh tokens, `STATELESS` sessions and no CSRF. Cookie logins keep CSRF on.
 - Store passwords only as BCrypt hashes. `roles("OPS")` becomes the authority `ROLE_OPS`.
 
 ## Common mistakes
@@ -504,7 +710,7 @@ Fix: add `@EnableWebSecurity` above the class. It is what creates the `HttpSecur
 **2. Writing the ROLE_ prefix yourself.**
 
 ```java nocompile
-User.withUsername("kakashi").password(encoder.encode("fix-it")).roles("ROLE_OPS").build()
+User.withUsername("theo").password(encoder.encode("fix-it")).roles("ROLE_OPS").build()
 .requestMatchers("/admin/**").hasRole("ROLE_OPS")
 ```
 
@@ -535,10 +741,10 @@ http.authorizeHttpRequests(...).httpBasic(Customizer.withDefaults());   // no cs
 ```
 
 ```text
-POST /admin/bikes/B-1042/move as kakashi -> 403 Forbidden
+POST /admin/bikes/B-1042/move as theo -> 403 Forbidden
 ```
 
-Kakashi has the right role, but his POST carries no CSRF token, so the CSRF filter refuses it before the role check. Fix: add `.csrf(csrf -> csrf.disable())` for an API without login cookies.
+Kakashi (user `theo`) has the right role, but his POST carries no CSRF token, so the CSRF filter refuses it before the role check. Fix: add `.csrf(csrf -> csrf.disable())` for an API without login cookies.
 
 **5. Storing the plain password.**
 

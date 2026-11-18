@@ -1,7 +1,7 @@
 id: module-08-backend/topic-03-spring-boot-intro
 title: "Spring Boot: your first app"
-order: 3
-minutes: 10
+order: 4
+minutes: 13
 prerequisites: [module-08-backend/topic-02-rest-design]
 concepts: [frameworks, starters, auto-configuration, application-class, rest-controller, mockmvc-tests]
 practice:

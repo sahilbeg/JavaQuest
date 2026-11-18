@@ -1,7 +1,7 @@
 id: module-08-backend/topic-10-transactions
 title: "Transactions"
-order: 10
-minutes: 10
+order: 12
+minutes: 12
 prerequisites: [module-08-backend/topic-09-jpa-hibernate]
 concepts: [atomicity, transactional, rollback-rules, proxies, propagation, isolation]
 practice:

@@ -1,6 +1,6 @@
 id: module-08-backend/topic-07-sql-basics
 title: "SQL basics"
-order: 7
+order: 8
 minutes: 10
 prerequisites: [module-08-backend/topic-06-validation]
 concepts: [tables-and-rows, select-where, order-and-limit, aggregates, joins, changing-data]

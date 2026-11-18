@@ -1,7 +1,7 @@
 id: module-08-backend/topic-02-rest-design
 title: "REST and API design"
-order: 2
-minutes: 10
+order: 3
+minutes: 14
 prerequisites: [module-08-backend/topic-01-http]
 concepts: [resources, method-mapping, status-choices, idempotency, filtering-paging, json-design]
 practice:

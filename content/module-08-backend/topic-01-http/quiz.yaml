@@ -85,7 +85,8 @@ questions:
       - { prompt: "POST /rentals worked and a new rental exists. Which status fits?", choices: ["201 Created", "200 OK", "204 No Content", "304 Not Modified"], answer: 0 }
       - { prompt: "Ada, a rider, is logged in and tries to move a bike between stations, which only ops staff may do. Which status fits?", choices: ["403 Forbidden", "401 Unauthorized", "400 Bad Request", "409 Conflict"], answer: 0 }
       - { prompt: "The server is down for upkeep and asks clients to try later. Which status fits?", choices: ["503 Service Unavailable", "500 Internal Server Error", "400 Bad Request", "204 No Content"], answer: 0 }
-    explain: "404 means the thing does not exist. 201 means something was created. 403 means logged in but not allowed. 503 means the server cannot answer right now."
+      - { prompt: "One app sent 50 requests in a second, more than its allowance, so Spoke asks it to slow down. Which status fits?", choices: ["429 Too Many Requests", "409 Conflict", "400 Bad Request", "401 Unauthorized"], answer: 0 }
+    explain: "404 means the thing does not exist. 201 means something was created. 403 means logged in but not allowed. 503 means the server cannot answer right now. 429 means this client asked too often."
     reteach: "## Concept"
 
   - id: q09

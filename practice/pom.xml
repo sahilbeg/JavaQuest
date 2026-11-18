@@ -258,9 +258,11 @@
                 <source>module-08-backend/topic-05-spring-mvc/src</source>
                 <source>module-08-backend/topic-06-validation/src</source>
                 <source>module-08-backend/topic-07-sql-basics/src</source>
+                <source>module-08-backend/topic-14-database-design/src</source>
                 <source>module-08-backend/topic-08-jdbc/src</source>
                 <source>module-08-backend/topic-09-jpa-hibernate/src</source>
                 <source>module-08-backend/topic-10-transactions/src</source>
+                <source>module-08-backend/topic-15-concurrent-writes/src</source>
                 <source>module-08-backend/topic-11-spring-security/src</source>
                 <source>module-08-backend/topic-12-api-docs-errors/src</source>
               </sources>
@@ -380,9 +382,11 @@
                 <source>module-08-backend/topic-05-spring-mvc/test</source>
                 <source>module-08-backend/topic-06-validation/test</source>
                 <source>module-08-backend/topic-07-sql-basics/test</source>
+                <source>module-08-backend/topic-14-database-design/test</source>
                 <source>module-08-backend/topic-08-jdbc/test</source>
                 <source>module-08-backend/topic-09-jpa-hibernate/test</source>
                 <source>module-08-backend/topic-10-transactions/test</source>
+                <source>module-08-backend/topic-15-concurrent-writes/test</source>
                 <source>module-08-backend/topic-11-spring-security/test</source>
                 <source>module-08-backend/topic-12-api-docs-errors/test</source>
               </sources>

@@ -1,6 +1,6 @@
 id: module-08-backend/topic-06-validation
 title: "Validation and error responses"
-order: 6
+order: 7
 minutes: 10
 prerequisites: [module-08-backend/topic-05-spring-mvc]
 concepts: [bean-validation, valid-trigger, exception-handlers, problem-details, status-for-errors, hiding-internals]

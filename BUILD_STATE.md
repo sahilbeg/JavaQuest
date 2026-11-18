@@ -2,10 +2,10 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-16T11:57:18+05:30
+- **Last updated:** 2026-11-18T11:20:00+05:30
 - **Phase:** PHASE 1: build
 - **Milestone:** C09
-- **Resume here:** C08 is committed at status ui_wired. Next: C09 (Architecture). Modules 0 to 8 still need your read-through to reach done.
+- **Resume here:** The SDE 2 deepening of modules 0 to 8 is committed at status ui_wired (see docs/SDE2_AUDIT.md). Next: C09 (Architecture), now 10 topics including resilience and Kubernetes; it must deliver what earlier lessons promise (rate-limit counting, circuit breakers, Actuator, the outbox). Modules 0 to 8 still need your read-through to reach done.
 - **Next task:** C09-01: module 9 topic 01 layered architecture
 
 ## Completed tasks
@@ -55,8 +55,9 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - State fix: C03 to C06 milestones and their topics set to ui_wired (content checks pass); 4 quiz-only topics moved from planned to ui_wired
 - C07: module 7 Build and tooling (5 quiz-only topics), INC-07 and FEAT-07; reviewed (13 findings fixed); jar build checked as reproducible across time zones; all checks green
 - C08: module 8 Backend engineering (2 quiz topics, 10 Spring/SQL/JDBC code topics), INC-08 and FEAT-08; 3 reviews (about 45 findings) fixed; runner compiles with -parameters; all checks green
-
 - UX overhaul (user feedback): playful redesign, journey map, mastery gating with author mode, lesson player with short cards, animation engine (code and scene, checked by check-content), first-visit walkthroughs; 56 animations added to modules 0 to 2 and reviewed
+- SDE2 audit (docs/SDE2_AUDIT.md): modules 0 to 8 deepened to SDE 2 level; 17 new tickets (M04 13-20, M05 14-15, M06 13, M07 06-08, M08 13-15); module 9 gains resilience and Kubernetes topics; every module independently reviewed; all checks green
+
 ## Decisions
 
 - Helper: Satoru Gojo (was Byte the owl); team: Tsunade, Kakashi, Jiraiya, Itachi (see docs/STORY.md)
@@ -73,8 +74,9 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - Each practice topic has a committed skeleton/ copy; verification and Reset use it
 - File watcher: directory-watcher (native FSEvents), measured 0.36 to 0.39 s save to start
 - Incident tiers come from test class names ending BronzeTest, SilverTest, GoldTest
-
 - Animations: every topic has at least one ```animate block; modules 0 to 2 done in the UX round, modules 3 to 8 to follow, new modules include them from C09
+- Tickets added after a module was built get the next free SPK key; the order a ticket appears in comes from meta.yaml order, not the key or folder number
+
 ## Open decisions
 
 - A real VoiceOver pass needs a person
@@ -115,12 +117,12 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-01-basics | The fare kiosk | 14 | ui_wired |
 | module-02-oop | Modelling the fleet | 14 | ui_wired |
 | module-03-core-java | Ride data | 18 | ui_wired |
-| module-04-dsa | Moving bikes around | 14 | ui_wired |
-| module-05-advanced-java | Rush hour | 15 | ui_wired |
-| module-06-craft | Paying off debt | 14 | ui_wired |
-| module-07-tooling | Shipping safely | 7 | ui_wired |
-| module-08-backend | The Spoke API | 14 | ui_wired |
-| module-09-architecture | Growing up | 10 | planned |
+| module-04-dsa | Moving bikes around | 22 | ui_wired |
+| module-05-advanced-java | Rush hour | 17 | ui_wired |
+| module-06-craft | Paying off debt | 15 | ui_wired |
+| module-07-tooling | Shipping safely | 10 | ui_wired |
+| module-08-backend | The Spoke API | 17 | ui_wired |
+| module-09-architecture | Growing up | 12 | planned |
 | module-10-professional | Full-time offer | 8 | planned |
 
 ## Topics past `planned`
@@ -193,6 +195,14 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-04-dsa/topic-10-heaps | ui_wired | True | True |
 | module-04-dsa/topic-11-graphs | ui_wired | True | True |
 | module-04-dsa/topic-12-dynamic-programming | ui_wired | True | True |
+| module-04-dsa/topic-13-two-pointers | ui_wired | True | True |
+| module-04-dsa/topic-14-backtracking | ui_wired | True | True |
+| module-04-dsa/topic-15-topological-sort | ui_wired | True | True |
+| module-04-dsa/topic-16-dijkstra | ui_wired | True | True |
+| module-04-dsa/topic-17-dp-patterns | ui_wired | True | True |
+| module-04-dsa/topic-18-greedy-intervals | ui_wired | True | True |
+| module-04-dsa/topic-19-tries-union-find | ui_wired | True | True |
+| module-04-dsa/topic-20-bit-manipulation | ui_wired | True | True |
 | module-04-dsa/boss | ui_wired | True | True |
 | module-04-dsa/mini-project | ui_wired | True | True |
 | module-05-advanced-java/topic-01-threads | ui_wired | True | True |
@@ -208,6 +218,8 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-05-advanced-java/topic-11-annotations | ui_wired | True | True |
 | module-05-advanced-java/topic-12-sealed-types | ui_wired | True | True |
 | module-05-advanced-java/topic-13-pattern-matching | ui_wired | True | True |
+| module-05-advanced-java/topic-14-memory-model | ui_wired | True | True |
+| module-05-advanced-java/topic-15-coordinating-threads | ui_wired | True | True |
 | module-05-advanced-java/boss | ui_wired | True | True |
 | module-05-advanced-java/mini-project | ui_wired | True | True |
 | module-06-craft/topic-01-clean-code | ui_wired | True | True |
@@ -222,6 +234,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-06-craft/topic-10-tdd | ui_wired | True | True |
 | module-06-craft/topic-11-debugging | ui_wired | True | True |
 | module-06-craft/topic-12-logging | ui_wired | True | True |
+| module-06-craft/topic-13-object-oriented-design | ui_wired | True | True |
 | module-06-craft/boss | ui_wired | True | True |
 | module-06-craft/mini-project | ui_wired | True | True |
 | module-07-tooling/topic-01-maven | ui_wired | None | None |
@@ -229,8 +242,12 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-07-tooling/topic-03-git-workflow | ui_wired | None | None |
 | module-07-tooling/topic-04-ci-basics | ui_wired | None | None |
 | module-07-tooling/topic-05-docker-basics | ui_wired | None | None |
+| module-07-tooling/topic-06-git-undo | ui_wired | None | None |
+| module-07-tooling/topic-07-shipping-to-production | ui_wired | None | None |
+| module-07-tooling/topic-08-shell-on-call | ui_wired | None | None |
 | module-07-tooling/boss | ui_wired | True | True |
 | module-07-tooling/mini-project | ui_wired | True | True |
+| module-08-backend/topic-13-networking | ui_wired | None | None |
 | module-08-backend/topic-01-http | ui_wired | None | None |
 | module-08-backend/topic-02-rest-design | ui_wired | None | None |
 | module-08-backend/topic-03-spring-boot-intro | ui_wired | True | True |
@@ -238,9 +255,11 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-08-backend/topic-05-spring-mvc | ui_wired | True | True |
 | module-08-backend/topic-06-validation | ui_wired | True | True |
 | module-08-backend/topic-07-sql-basics | ui_wired | True | True |
+| module-08-backend/topic-14-database-design | ui_wired | True | True |
 | module-08-backend/topic-08-jdbc | ui_wired | True | True |
 | module-08-backend/topic-09-jpa-hibernate | ui_wired | True | True |
 | module-08-backend/topic-10-transactions | ui_wired | True | True |
+| module-08-backend/topic-15-concurrent-writes | ui_wired | True | True |
 | module-08-backend/topic-11-spring-security | ui_wired | True | True |
 | module-08-backend/topic-12-api-docs-errors | ui_wired | True | True |
 | module-08-backend/boss | ui_wired | True | True |

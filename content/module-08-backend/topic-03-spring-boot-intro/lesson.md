@@ -195,6 +195,109 @@ public class Main {
 }
 ```
 
+### Changing a default: application.properties
+
+Every default, like port 8080, can be changed without touching Java. Spring Boot reads a text file, `src/main/resources/application.properties`, when it starts. Each line is one `name=value` setting.
+
+```properties
+server.port=9090
+spoke.city=Riverton
+spoke.fares.unlock-cents=100
+spoke.fares.ebike-cents-per-minute=30
+```
+
+Restart, and the log now says `Tomcat started on port 9090`. `server.port` is one of Spring Boot's own settings. The `spoke.` lines are Spoke's own. Spring ignores them until your code asks for them.
+
+```callout jargon
+A **property** is one named setting, like `server.port`. **Configuration** is the set of settings that change how an app behaves without changing its code.
+```
+
+Some teams write `application.yaml` instead. It holds the same settings, nested by their dots.
+
+### Syntax: reading settings with @ConfigurationProperties
+
+To read a group of settings, write a record and label it with the shared prefix.
+
+```java
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties("spoke.fares")
+record FareSettings(long unlockCents, long ebikeCentsPerMinute) {}
+```
+
+Spring fills each field from the matching property. `unlock-cents` in the file fills `unlockCents` in Java. Add `@ConfigurationPropertiesScan` next to `@SpringBootApplication`, so Spring finds the record. Then any controller can ask for a `FareSettings` (topic 04 shows how).
+
+For one single value, `@Value` works too:
+
+```java nocompile
+@Value("${spoke.city}")
+String city;
+```
+
+If the property is missing, the app refuses to start:
+
+```text
+Caused by: org.springframework.util.PlaceholderResolutionException: Could not resolve placeholder 'spoke.city' in value "${spoke.city}"
+```
+
+```callout tip
+Prefer the record for groups. All the related settings sit in one typed place, easy to find, and easy to build by hand in a unit test.
+```
+
+### Profiles and environment variables
+
+Your laptop, the test server and the real one need different settings. Spring Boot keeps one app, and swaps settings around it.
+
+A **profile** is a named set of extra settings. `application-dev.properties` is read only when the `dev` profile is on. Its values beat the ones in `application.properties`.
+
+```properties
+# application-dev.properties
+spoke.city=Devtown
+```
+
+Turn a profile on with `--spring.profiles.active=dev` when you start the app, or with the variable `SPRING_PROFILES_ACTIVE=dev`.
+
+An **environment variable** is a setting the computer hands to every program it starts. Spring Boot reads them as properties too. Write the name in capitals, swap dots for underscores, and drop dashes:
+
+```bash
+SERVER_PORT=9091 SPOKE_FARES_UNLOCKCENTS=150 ./mvnw spring-boot:run
+```
+
+When the same setting comes from several places, the higher one in this list wins:
+
+1. Test settings, like `@SpringBootTest(properties = "spoke.city=Testville")`.
+2. Command-line arguments, like `--server.port=9092`.
+3. Environment variables, like `SERVER_PORT=9091`.
+4. `application-dev.properties`, when the `dev` profile is on.
+5. `application.properties`.
+6. Spring Boot's built-in default, like port 8080.
+
+```callout warning
+Passwords and keys never go in `application.properties`, because that file goes into git. Pass them as environment variables when the app starts. Topic 11 shows more.
+```
+
+```animate
+title: Where server.port comes from
+kind: scene
+nodes:
+  - { id: defaults, label: Built-in default, emoji: "📦", value: "8080" }
+  - { id: file, label: application.properties, emoji: "📄", value: "9090" }
+  - { id: env, label: SERVER_PORT, emoji: "🌍", value: "9091" }
+  - { id: app, label: Spoke API, emoji: "🖥️", value: "?" }
+steps:
+  - say: Spring Boot starts with its built-in default. Port 8080.
+    send: { from: defaults, to: app, label: "8080" }
+    set: { app: "8080" }
+  - say: application.properties says server.port=9090. A file beats the built-in default.
+    send: { from: file, to: app, label: "9090" }
+    set: { app: "9090" }
+  - say: The environment variable SERVER_PORT is 9091. It beats the file.
+    send: { from: env, to: app, label: "9091" }
+    set: { app: "9091" }
+  - say: The app listens on 9091. Same jar, different setting, no code change.
+    focus: [app]
+```
+
 ### Testing with MockMvc
 
 Starting a real server in a test is slow and needs a free port. Spring offers **MockMvc** instead: a pretend browser that hands requests straight to your controllers. No port is opened.
@@ -274,6 +377,10 @@ class StationController {
 - Line 13: `@GetMapping("/health")` links `GET /health` to the method below.
 - Line 15: the method returns a record. Jackson turns it into `{"status":"UP","stations":5}`.
 
+```callout tip
+Writing `/health` by hand is a good first endpoint. Real services add Spring Boot Actuator instead, which gives `/actuator/health` with database and disk checks built in. Module 09 shows it.
+```
+
 Now the test. **JsonPath** reads one value out of JSON text: `$` is the whole document, and `$.status` is its `status` field.
 
 ```java nocompile
@@ -323,6 +430,7 @@ public class Main {
 - Spring Boot is Spring with defaults. Make a project at start.spring.io and add the `spring-boot-starter-webmvc` starter.
 - `@SpringBootApplication` plus `SpringApplication.run` starts the app. Auto-configuration sets up embedded Tomcat on port 8080 because Tomcat is on the classpath.
 - `@RestController` with `@GetMapping("/path")` answers requests. Returned records and lists become JSON through Jackson.
+- Defaults change in `application.properties`. Profiles and environment variables, like `SERVER_PORT`, override it without a code change.
 - `@SpringBootTest` with `@AutoConfigureMockMvc` tests endpoints through MockMvc, with no real port.
 
 ## Common mistakes

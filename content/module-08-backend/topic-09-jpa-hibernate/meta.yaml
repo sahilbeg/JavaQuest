@@ -1,7 +1,7 @@
 id: module-08-backend/topic-09-jpa-hibernate
 title: "JPA and Hibernate"
-order: 9
-minutes: 10
+order: 11
+minutes: 15
 prerequisites: [module-08-backend/topic-08-jdbc, module-08-backend/topic-07-sql-basics]
 concepts: [object-relational-mapping, entities, relationships, repositories, derived-queries, jpql]
 practice:

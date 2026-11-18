@@ -21,6 +21,8 @@ Databases promise four things about transactions, known by the letters **ACID**:
 | I | Isolation | Others do not see your half-finished work. |
 | D | Durability | Once committed, the change survives a crash or a power cut. |
 
+Isolation does not stop every problem, though. Two requests can both read Ada's balance, both add to it, and both write. One update is lost. The Concurrent writes ticket, right after this one, shows the fixes.
+
 This topic is mostly about the A. "Atomic" comes from the Greek for "cannot be cut". A gift is atomic when nobody can ever see it half done.
 
 ### Without a transaction, each statement commits alone
@@ -266,6 +268,36 @@ public class GiftAudit {
 
 `GiftService.gift` calls `audit.record(...)` first, then does the risky steps. The audit row is committed in its own transaction straight away, so it survives even when the gift rolls back. `GiftAudit` is a separate bean on purpose: through `this`, the `REQUIRES_NEW` would be skipped, like any other `@Transactional`.
 
+```callout warning
+`REQUIRES_NEW` borrows a **second** connection from the pool while the first one waits. With a pool of 10 and 10 gifts at once, each holds one connection and waits for a second that never comes. Every request hangs, then times out. Keep `REQUIRES_NEW` rare and short.
+```
+
+### What a rollback cannot undo
+
+A rollback undoes changes in **your database**, and nothing else. Say `gift` sends Lin an email "You got 500 cents!", then the deposit fails. The rows roll back, but the email is already in Lin's inbox. The same goes for a call to a payment company, or a message to another service.
+
+Two rules follow:
+
+1. **Do outside work after the commit.** Send the email only once the gift is safely saved. Spring's `@TransactionalEventListener` runs a method after the commit, and only if it succeeds.
+2. **Never wait on a slow remote call inside a transaction.** A transaction holds a pool connection, and often row locks, for as long as it is open. If the payment company takes 10 seconds, so does your transaction, and other requests queue up behind it.
+
+```java nocompile
+@Transactional
+public void gift(String from, String to, long cents) throws InsufficientCreditException {
+    // ... withdraw, deposit, log: database work only
+    events.publishEvent(new GiftSent(from, to, cents));   // just noted, not sent yet
+}
+
+@TransactionalEventListener        // runs after the commit succeeds
+public void emailFriend(GiftSent gift) {
+    mailer.send(gift.to(), "You got " + gift.cents() + " cents!");
+}
+```
+
+If the gift rolls back, `emailFriend` never runs.
+
+Two catches. The listener runs on the same thread, right after the commit. A slow mail server still makes the rider wait, and the request may still hold its pool connection. Add `@Async` (with `@EnableAsync` on a configuration class) to send the email on another thread, or hand it to a queue. And any database write inside the listener is not committed, unless the listener has its own `@Transactional(propagation = Propagation.REQUIRES_NEW)`. If the server crashes right between the commit and the email, the email is lost. Module 09, on messaging, shows how to guard against that too.
+
 ### Isolation levels
 
 **Isolation** decides how much one transaction can see of another one that is still running. The worst case is a **dirty read**: reading a change that another transaction has not committed yet, and may still roll back. You could show a rider credit that never really arrived.
@@ -473,10 +505,10 @@ class GiftService {
 ## Recap
 
 - A transaction makes several changes atomic: all are committed, or all are rolled back. Without one, each statement commits alone.
-- `@Transactional` on a public method of a Spring bean commits on a normal return and rolls back on a `RuntimeException` or `Error`.
-- Checked exceptions commit by default. Add `rollbackFor = YourException.class` when they must undo the work.
+- `@Transactional` on a public method of a Spring bean commits on a normal return and rolls back on a `RuntimeException` or `Error`. Checked exceptions commit, unless you add `rollbackFor = YourException.class`.
 - The transaction lives in a proxy around the bean. Calls through `this`, private methods and objects made with `new` skip it.
-- `readOnly = true` suits lookups. `REQUIRES_NEW` runs a separate transaction, such as an audit row that must survive a rollback. `READ_COMMITTED` is the usual isolation level and prevents dirty reads.
+- `readOnly = true` suits lookups. `REQUIRES_NEW` runs a separate transaction on a second connection, such as an audit row that must survive a rollback. `READ_COMMITTED` is the usual isolation level and prevents dirty reads.
+- A rollback only undoes database changes. Send emails and call other services after the commit, never while a transaction waits.
 
 ## Common mistakes
 

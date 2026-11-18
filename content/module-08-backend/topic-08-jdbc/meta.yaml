@@ -1,8 +1,8 @@
 id: module-08-backend/topic-08-jdbc
 title: "JDBC"
-order: 8
-minutes: 10
-prerequisites: [module-08-backend/topic-07-sql-basics]
+order: 10
+minutes: 12
+prerequisites: [module-08-backend/topic-14-database-design]
 concepts: [connections, prepared-statements, result-sets, resource-cleanup, generated-keys, sql-injection]
 practice:
   kind: code

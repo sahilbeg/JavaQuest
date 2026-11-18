@@ -1,0 +1,145 @@
+topic: module-08-backend/topic-14-database-design
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: keys-and-constraints
+    prompt: "The Java code already checks that a station exists before docking a bike. Why add a FOREIGN KEY as well?"
+    choices:
+      - "A hand-run SQL script or another service can skip the Java check, but every write goes through the database"
+      - "A foreign key makes queries on bike faster than the Java check"
+      - "Java checks do not work when two servers run"
+      - "Without a foreign key, the station table cannot have a primary key"
+    answer: 0
+    explain: "The constraint holds for every path that writes, including scripts and other services. Keep the Java check too, for friendly messages."
+    reteach: "### Let the database guard the rules"
+
+  - id: q02
+    type: mcq
+    concept: keys-and-constraints
+    variants:
+      - { prompt: "Which constraint refuses a station with 0 docks?", choices: ["CHECK (docks > 0)", "UNIQUE (docks)", "NOT NULL", "REFERENCES station(id)"], answer: 0 }
+      - { prompt: "Which constraint refuses a second station called Harbor?", choices: ["UNIQUE (name)", "CHECK (name > 0)", "NOT NULL", "PRIMARY KEY (docks)"], answer: 0 }
+      - { prompt: "Which constraint refuses a bike docked at station 'atlantis', which does not exist?", choices: ["station_id REFERENCES station(id)", "station_id NOT NULL", "UNIQUE (station_id)", "CHECK (station_id > 0)"], answer: 0 }
+    explain: "CHECK tests a condition, UNIQUE forbids repeats, NOT NULL forbids missing values, and REFERENCES (a foreign key) demands a matching row in another table."
+    reteach: "### Syntax: constraints"
+
+  - id: q03
+    type: predict-output
+    concept: keys-and-constraints
+    prompt: "What does this print?"
+    code: |
+      import java.sql.*;
+
+      public class Main {
+          public static void main(String[] args) throws SQLException {
+              try (Connection db = DriverManager.getConnection("jdbc:h2:mem:quiz");
+                   Statement sql = db.createStatement()) {
+                  sql.execute("CREATE TABLE station (id VARCHAR(20) PRIMARY KEY, name VARCHAR(40) NOT NULL UNIQUE)");
+                  sql.execute("INSERT INTO station VALUES ('harbor', 'Harbor')");
+                  try {
+                      sql.execute("INSERT INTO station VALUES ('harbor-2', 'Harbor')");
+                      System.out.println("saved");
+                  } catch (SQLException e) {
+                      System.out.println(e.getSQLState());
+                  }
+              }
+          }
+      }
+    answer: "23505"
+    explain: "The name Harbor is already taken, so the UNIQUE constraint refuses the row. 23505 is the SQLState for a UNIQUE or primary key violation."
+    reteach: "### Syntax: constraints"
+
+  - id: q04
+    type: spot-the-bug
+    concept: normalization
+    prompt: "This table breaks first normal form (1NF). Which line?"
+    code: |
+      CREATE TABLE rental (
+          id         VARCHAR(20) PRIMARY KEY,
+          rider_id   VARCHAR(20) NOT NULL,
+          bike_ids   VARCHAR(200),   -- 'B-1042, B-1088'
+          started_at TIMESTAMP NOT NULL
+      );
+    bugLine: 4
+    explain: "1NF means one value per cell. A list of bike ids in one column cannot be joined or indexed properly. Give each bike its own row in a separate table."
+    reteach: "### 1NF, 2NF and 3NF in plain words"
+
+  - id: q05
+    type: mcq
+    concept: normalization
+    variants:
+      - { prompt: "The ride table stores start_station_id and also start_station_name. What goes wrong?", choices: ["Renaming a station means updating every ride, and copies can drift apart", "Rides can no longer be joined to stations", "The ride table can no longer have a primary key", "Nothing: storing the name twice is the normal form"], answer: 0 }
+      - { prompt: "When is it reasonable to denormalize, storing a copy on purpose?", choices: ["After measuring that a busy read is too slow, with a plan to keep the copy updated", "Always, because joins are bad", "Whenever a table has more than three columns", "Before writing any queries, to be safe"], answer: 0 }
+    explain: "Normalization keeps each fact in one place, so it cannot drift. Denormalize one column at a time, only for a measured reason, and decide which copy is the truth."
+    reteach: "### Normalization: one fact in one place"
+
+  - id: q06
+    type: mcq
+    concept: indexes
+    variants:
+      - { prompt: "What does an index on rental(rider_id) cost?", choices: ["Extra space, and every insert must also update the index", "Nothing: indexes only make things faster", "It makes every SELECT on rental slower", "It stops rider_id from holding duplicates"], answer: 0 }
+      - { prompt: "Without any index, how does the database answer WHERE rider_id = 'r-17'?", choices: ["It reads every row of the table: a full table scan, O(n)", "It binary-searches the table, O(log n)", "It refuses the query", "It reads only the first row"], answer: 0 }
+    explain: "An index is a sorted copy of some columns. It costs O(n) space and slows writes, and turns an O(n) table scan into an O(log n) lookup."
+    reteach: "### What an index costs"
+
+  - id: q07
+    type: mcq
+    concept: indexes
+    prompt: "Why does a database index use a wide B-tree, with hundreds of keys per node, instead of a binary search tree?"
+    choices:
+      - "Each node visited costs one slow disk read, and wide nodes keep the tree only a few levels deep"
+      - "A B-tree does not need its keys sorted"
+      - "Binary trees cannot store text keys"
+      - "A B-tree makes lookups O(1)"
+    answer: 0
+    explain: "A BST over a million rows is about 20 levels deep. A B-tree with 500 keys per node covers 125 million rows in 3 levels, so a lookup needs 3 reads."
+    reteach: "### An index is a sorted catalogue"
+
+  - id: q08
+    type: mcq
+    concept: composite-indexes
+    variants:
+      - { prompt: "Spoke has an index ON rental(rider_id, started_at). Which query can NOT jump straight into it?", choices: ["WHERE started_at > TIMESTAMP '2026-11-09 00:00:00'", "WHERE rider_id = 'r-17'", "WHERE rider_id = 'r-17' ORDER BY started_at", "WHERE rider_id = 'r-17' AND started_at > TIMESTAMP '2026-11-09 00:00:00'"], answer: 0 }
+      - { prompt: "Which index best serves WHERE station_id = ? ORDER BY started_at?", choices: ["ON rental(station_id, started_at)", "ON rental(started_at, station_id)", "ON rental(started_at)", "ON rental(id, station_id)"], answer: 0 }
+    explain: "A composite index helps queries that use its columns from the left. Put the column tested with = first, then the column you sort or range over."
+    reteach: "### Composite indexes: the leftmost prefix"
+
+  - id: q09
+    type: fill-blank
+    concept: explain-plans
+    prompt: "___ SELECT id FROM rental WHERE rider_id = 'r-17';   -- show the plan only, without running the query"
+    answers: ["EXPLAIN"]
+    explain: "EXPLAIN shows how the database plans to find the rows. EXPLAIN ANALYZE also runs the query and counts the rows it read."
+    reteach: "### Syntax: EXPLAIN"
+
+  - id: q10
+    type: mcq
+    concept: explain-plans
+    variants:
+      - { prompt: "Spoke's rental table has an index on rider_id, yet the plan for SELECT * FROM rental WHERE LOWER(rider_id) = 'r-17' says tableScan. Why?", choices: ["The index is sorted by rider_id, not by LOWER(rider_id), so it cannot be searched", "LOWER makes the query return no rows", "Indexes only work on numbers", "EXPLAIN always says tableScan"], answer: 0 }
+      - { prompt: "Before an index, EXPLAIN ANALYZE showed scanCount 3001. After it, scanCount 11. What changed?", choices: ["The database jumped to the matching rows instead of reading the whole table", "The table lost most of its rows", "The query now returns 11 rows fewer", "The result is now cached"], answer: 0 }
+    explain: "A plan shows whether an index is really used. A function on the column hides it from the index. A falling scanCount means fewer rows were read."
+    reteach: "## Worked example"
+
+  - id: q11
+    type: order
+    concept: schema-migrations
+    prompt: "Rentals need a new end_station_id that must never be NULL. Put the zero-downtime steps in order."
+    items:
+      - "Migration: add end_station_id as a nullable column"
+      - "Deploy code that writes end_station_id for every new rental"
+      - "Backfill end_station_id for the old rows, in batches"
+      - "Migration: add NOT NULL to end_station_id"
+    explain: "Expand, then contract. Old and new servers run side by side during a deploy, so every step must work for both."
+    reteach: "### Expand, then contract"
+
+  - id: q12
+    type: mcq
+    concept: schema-migrations
+    variants:
+      - { prompt: "V2__rentals.sql already ran on every server. You need a promo_code column. What do you do?", choices: ["Add V4__add_promo_code.sql with an ALTER TABLE", "Edit V2__rentals.sql to add the column", "Delete V2 from the history table and run it again", "Run ALTER TABLE by hand on production only"], answer: 0 }
+      - { prompt: "At startup, Flyway says the checksum of V2 does not match. What happened?", choices: ["Someone edited V2 after it had already run", "V2 has never run anywhere", "The database is down", "V3 failed halfway"], answer: 0 }
+    explain: "An applied migration is frozen. Its checksum proves it is unchanged. Every change goes into a new, higher-numbered migration."
+    reteach: "### Never edit an applied migration"

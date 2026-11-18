@@ -1,8 +1,8 @@
 id: module-08-backend/topic-11-spring-security
 title: "Security basics with Spring Security"
-order: 11
-minutes: 10
-prerequisites: [module-08-backend/topic-10-transactions]
+order: 14
+minutes: 15
+prerequisites: [module-08-backend/topic-15-concurrent-writes]
 concepts: [authentication, authorization, filter-chain, password-hashing, roles, stateless-apis]
 practice:
   kind: code

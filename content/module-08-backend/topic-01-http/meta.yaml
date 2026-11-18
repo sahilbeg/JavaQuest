@@ -1,8 +1,8 @@
 id: module-08-backend/topic-01-http
 title: "How HTTP works"
-order: 1
-minutes: 10
-prerequisites: [module-07-tooling/boss]
+order: 2
+minutes: 12
+prerequisites: [module-08-backend/topic-13-networking]
 concepts: [request-response, urls, methods, status-codes, headers, statelessness]
 practice:
   kind: quiz

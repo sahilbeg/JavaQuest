@@ -151,7 +151,11 @@ The **method** is the first word of the request line. It says what the client wa
 **Safe** means the request only reads. It changes nothing on the server. **Idempotent** (say "eye-dem-POH-tent") means sending the same request twice leaves the server just as sending it once would.
 ```
 
-Why care? Phones lose signal in tunnels. When the app hears no answer, it may send the request again. Repeating a GET, PUT or DELETE is harmless. Repeating a POST may start a second rental.
+Why care? Phones lose signal in tunnels. When the app hears no answer, it may send the request again. Repeating a GET, PUT or DELETE leaves the server in the same state. Repeating a POST may start a second rental.
+
+Idempotent means the same *state*, not the same *answer*. The first `DELETE /bikes/B-1042` gets 204. A repeat gets 404, because the bike is already gone. Nothing more was deleted, so that is fine.
+
+It also does not mean "always safe to retry". Say your PUT is lost, and a teammate saves a change before your retry arrives. Your retry overwrites their change. Topic 02 shows how to guard against that.
 
 PATCH depends on what it changes. "Set the end station to Uptown" gives the same result every time. "Add 5 minutes to the ride" does not. Here is the difference between PUT and POST, using a map and a list.
 
@@ -204,8 +208,11 @@ These are the codes you will meet most.
 | 403 | Forbidden | I know who you are, but you may not do this. |
 | 404 | Not Found | There is no station called `harbour`. |
 | 409 | Conflict | Bike B-1042 is already rented. |
+| 429 | Too Many Requests | You asked too often. Slow down. |
 | 500 | Internal Server Error | The server's code crashed. |
 | 503 | Service Unavailable | The server is overloaded or down for upkeep. Try again later. |
+
+A 429 or 503 often carries a `Retry-After` header, such as `Retry-After: 30`. It says how many seconds to wait before trying again, or gives a date and time to wait until. A polite client waits that long.
 
 ```callout warning
 401 is named "Unauthorized", but it really means "not logged in". 403 means "logged in, but not allowed". Mixing them up sends riders to the login screen when logging in will not help.
@@ -274,6 +281,36 @@ Most APIs send JSON bodies. Here is one station.
 
 Each `"name": value` pair is like a field of a Java record. Topic 03 shows Spring turning records into JSON.
 
+### Building JSON safely
+
+It is tempting to glue JSON together with `+`. That breaks as soon as a value holds a quote. Here a rider types a sneaky name into the app.
+
+```java run
+import tools.jackson.databind.json.JsonMapper;
+
+public class Main {
+    record StartRental(String riderId, String bikeId) {}
+
+    public static void main(String[] args) {
+        String riderId = "r-17\", \"bikeId\": \"B-9999";   // text a user typed
+        String glued = "{\"riderId\": \"" + riderId + "\", \"bikeId\": \"B-1042\"}";
+        System.out.println("glued:   " + glued);
+
+        JsonMapper json = JsonMapper.builder().build();
+        String safe = json.writeValueAsString(new StartRental(riderId, "B-1042"));
+        System.out.println("jackson: " + safe);
+    }
+}
+```
+
+The glued text now has two `bikeId` fields. Which one the server reads depends on its parser, and the rider may get a bike they never paid for. This trick is called **injection**.
+
+Jackson, the JSON library Spring uses, puts a backslash before each quote inside a value. That is called **escaping**. The whole typed text stays inside `riderId`, where it belongs. So turn a record into JSON with a library, never with `+`.
+
+```callout jargon
+**Injection** is when text from a user is read as part of a command or format, instead of as plain data. **Escaping** marks special characters, like `"`, so they count as plain text.
+```
+
 ### Stateless: every request stands alone
 
 HTTP is **stateless**. The server keeps no memory of your earlier requests. Each request must carry everything the server needs to answer it.
@@ -321,6 +358,44 @@ Stateless servers are easy to copy. At rush hour Spoke can run three servers, an
 
 HTTPS is HTTP sent through an encrypted connection, using rules called TLS (Transport Layer Security). **Encrypted** means scrambled so that only the two ends can read it. On café Wi-Fi, a snooper sees random bytes, not the rider's token or location. A **certificate** proves the server really belongs to Spoke. Inside the tunnel, the requests and responses are the same HTTP text you saw above. Spoke uses `https` for every request.
 
+You saw what sits under all this in [Networking under HTTP](/t/module-08-backend/topic-13-networking): DNS turns `api.spoke.example` into an address, then TCP and TLS set up the connection and its encryption.
+
+### Timeouts: never wait forever
+
+A network call can hang. The server may be stuck, or a cable may be cut halfway. Without a limit, the app waits forever, and the rider stares at a spinner.
+
+A **timeout** is the longest you agree to wait. Java's `HttpClient` has two kinds:
+
+- `connectTimeout` on the client: how long to wait to reach the server at all.
+- `timeout` on each request: how long to wait for the answer to start arriving, meaning the status and headers. The body after that has no limit unless your code adds one.
+
+```java
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.time.Duration;
+
+class Timeouts {
+    static final HttpClient CLIENT = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(2))
+            .build();
+
+    static HttpRequest stations() {
+        return HttpRequest.newBuilder()
+                .uri(URI.create("https://api.spoke.example/stations"))
+                .timeout(Duration.ofSeconds(5))
+                .GET()
+                .build();
+    }
+}
+```
+
+When the time runs out, `send` throws `java.net.http.HttpTimeoutException: request timed out`. The app can then show "Try again" instead of freezing.
+
+```callout warning
+`HttpClient.newHttpClient()` and a request built with no `.timeout(...)` set no limit of their own. In production, one slow server can then freeze every caller that waits on it. Give every network call a timeout.
+```
+
 ## Worked example
 
 The rider app opens the map, then Ada starts a ride on B-1042. Here is the Java the app could use. It needs a real Spoke server, so it is shown here, not run.
@@ -330,13 +405,21 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
+import tools.jackson.databind.json.JsonMapper;
 
 class SpokeClient {
-    private final HttpClient client = HttpClient.newHttpClient();
+    record StartRental(String riderId, String bikeId) {}
+
+    private final HttpClient client = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(2))
+            .build();
+    private final JsonMapper json = JsonMapper.builder().build();
 
     String fetchStations() throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.spoke.example/stations?city=riverton"))
+                .timeout(Duration.ofSeconds(5))
                 .header("Accept", "application/json")
                 .GET()
                 .build();
@@ -348,12 +431,13 @@ class SpokeClient {
     }
 
     String startRental(String riderId, String bikeId, String token) throws Exception {
-        String json = "{\"riderId\": \"" + riderId + "\", \"bikeId\": \"" + bikeId + "\"}";
+        String body = json.writeValueAsString(new StartRental(riderId, bikeId));
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.spoke.example/rentals"))
+                .timeout(Duration.ofSeconds(5))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + token)
-                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         return response.headers().firstValue("Location").orElse("no Location header");
@@ -363,12 +447,12 @@ class SpokeClient {
 
 Line by line:
 
-1. `HttpClient.newHttpClient()` makes the object that talks to servers. One client can send many requests.
-2. `HttpRequest.newBuilder()` starts a request. `.uri(...)`, `.header(...)` and `.GET()` fill in the request line and headers.
+1. `HttpClient.newBuilder()...build()` makes the object that talks to servers. One client can send many requests. `connectTimeout` stops it waiting forever to connect.
+2. `HttpRequest.newBuilder()` starts a request. `.uri(...)`, `.header(...)` and `.GET()` fill in the request line and headers. `.timeout(...)` caps the wait for the answer.
 3. `.build()` finishes the request. Nothing has been sent yet.
 4. `client.send(...)` sends it and waits for the response. `BodyHandlers.ofString()` reads the body as a `String`.
 5. `statusCode() / 100 != 2` checks the family, so 200, 201 and 204 all count as success.
-6. In `startRental`, `.POST(BodyPublishers.ofString(json))` attaches the JSON body. The `Content-Type` header tells the server it is JSON.
+6. In `startRental`, Jackson's `writeValueAsString` turns the `StartRental` record into JSON, with any quotes escaped. `.POST(BodyPublishers.ofString(body))` attaches it. The `Content-Type` header tells the server it is JSON.
 7. `firstValue("Location")` reads the header that says where the new rental lives.
 
 Here is the exchange for `fetchStations`, written as HTTP/1.1 text. Java adds the `Host` header by itself.
@@ -396,7 +480,7 @@ Host: api.spoke.example
 Content-Type: application/json
 Authorization: Bearer 7f3a9c
 
-{"riderId": "r-17", "bikeId": "B-1042"}
+{"riderId":"r-17","bikeId":"B-1042"}
 ```
 
 ```http
@@ -408,7 +492,7 @@ Content-Type: application/json
 ```
 
 ```callout tip
-Newer versions, HTTP/2 and HTTP/3, pack the same parts into a faster binary form. The method, path, headers, status and body mean exactly the same.
+Newer versions keep the same method, path, headers, status and body. HTTP/2 sends many requests at once over one connection, called **multiplexing**, and squeezes repeated headers. HTTP/3 does the same over QUIC, a newer way to carry data built on UDP, so one lost packet does not hold up the others.
 ```
 
 The 201 says a new rental exists. `Location` says where to find it. A later `GET /rentals/rental-17` will need the token again, because the server is stateless.
@@ -443,7 +527,7 @@ public class Main {
 
 - HTTP is a request from a client, then a response from a server. The client always speaks first.
 - A URL has a scheme, host, port, path and query. `java.net.URI` splits one into its parts.
-- GET reads and is safe. PUT and DELETE are idempotent. POST is neither, so a repeated POST can create twice.
+- GET reads and is safe. PUT and DELETE are idempotent: a repeat leaves the same state. POST is neither, so a repeated POST can create twice.
 - The first digit of a status code gives its family: 2 success, 3 redirection, 4 client error, 5 server error.
 - HTTP is stateless: every request carries its own headers, such as `Authorization`, because the server remembers nothing.
 

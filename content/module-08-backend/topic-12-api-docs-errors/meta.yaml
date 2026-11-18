@@ -1,6 +1,6 @@
 id: module-08-backend/topic-12-api-docs-errors
 title: "API docs, versioning and error design"
-order: 12
+order: 15
 minutes: 10
 prerequisites: [module-08-backend/topic-11-spring-security]
 concepts: [api-contracts, versioning, breaking-changes, problem-types, openapi, deprecation]

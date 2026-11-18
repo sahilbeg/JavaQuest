@@ -1,0 +1,23 @@
+id: module-08-backend/topic-14-database-design
+title: "Database design and performance: indexes and migrations"
+order: 9
+minutes: 15
+prerequisites: [module-08-backend/topic-07-sql-basics]
+concepts: [keys-and-constraints, normalization, indexes, composite-indexes, explain-plans, schema-migrations]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0814
+  from: maya
+  title: "Ride history takes four seconds, and a bike is docked at nowhere"
+  body: >
+    Two things landed on my desk. The rider app's ride history page now takes four seconds, and it gets slower every week.
+    And ops found bike B-1099 docked at a station called "atlantis", which does not exist. Please give the database real
+    rules and the right index, and ship the changes as versioned migrations so every server gets the same schema.
+hints:
+  - "Start with SpokeSchema: each rule is one keyword or clause on a column, such as NOT NULL, UNIQUE, CHECK (docks > 0) or REFERENCES station(id). Then add Migration 3 with a CREATE INDEX."
+  - "The history query filters on rider_id and sorts by started_at, so the index is ON rental(rider_id, started_at). In SchemaMigrator, copy into a new ArrayList before sorting, and check a HashSet for repeated versions."
+  - "apply: boolean old = connection.getAutoCommit(); setAutoCommit(false); then execute(migration.sql()), insert the history row and commit(). In the catch, rollback() and throw new MigrationException(\"V\" + migration.version() + \" failed\", e). In finally, setAutoCommit(old)."
+review: true

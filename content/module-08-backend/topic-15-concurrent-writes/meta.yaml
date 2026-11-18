@@ -1,0 +1,23 @@
+id: module-08-backend/topic-15-concurrent-writes
+title: "Concurrent writes: lost updates and locking"
+order: 13
+minutes: 15
+prerequisites: [module-08-backend/topic-10-transactions]
+concepts: [isolation-anomalies, isolation-levels, atomic-writes, optimistic-locking, pessimistic-locking, deadlocks-and-retries]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0815
+  from: sam
+  title: "Two riders got 'Ride started' for the same bike"
+  body: >
+    At 08:05 two riders at Harbor both got "Ride started" for B-1042, and both paid the 100 cent unlock. Only one could ride off.
+    Another rider somehow has two active rentals, and an ops fare change vanished an hour after it was saved.
+    It started the week we added the second server. Can you make sure only one request wins?
+hints:
+  - "Never read, decide in Java, then write. Put the decision inside the write: a WHERE clause on the UPDATE, a version check, or a UNIQUE constraint. Then look at how many rows changed."
+  - "rentIfAvailable is one UPDATE ... WHERE id = ? AND status = 'AVAILABLE', returning executeUpdate() == 1. updateWithVersion is the same idea with AND version = ?, and it also sets version = version + 1."
+  - "startRental: insert with active_rider = riderId inside try, and catch (SQLException e) { if (\"23505\".equals(e.getSQLState())) return false; throw e; }. inTransaction: a for loop over attempts with commit() in try, rollback() in catch, retry only when isRetryable(e) and attempt < maxAttempts, and setAutoCommit(old) in finally."
+review: true

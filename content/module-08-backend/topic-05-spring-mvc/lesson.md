@@ -29,6 +29,10 @@ sequenceDiagram
     DS-->>App: 201 Created, rental as JSON
 ```
 
+Each request runs on its own thread, from start to finish. Tomcat keeps a pool of them, 200 at most by default. If every thread is stuck waiting on a slow database, request 201 waits in line.
+
+On Java 21, one setting gives each request a cheap virtual thread instead (module 5): `spring.threads.virtual.enabled=true` in `application.properties`. Waiting then costs almost nothing, though a slow database is still slow.
+
 ### Syntax: @RestController and @RequestMapping
 
 ```java nocompile
@@ -151,6 +155,8 @@ A **status code** is the three-digit number at the top of every answer. The app 
 | 400 | Bad Request | The request itself is broken |
 | 404 | Not Found | There is no thing with that id |
 | 409 | Conflict | The request clashes with the current state, like ending a rental twice |
+
+This first version answers 409 to any second end. Topic 02 showed a kinder design, a 200 replay for a retry of the same end. That needs the end station, which comes later.
 
 ### Syntax: ResponseEntity
 

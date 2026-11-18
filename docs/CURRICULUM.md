@@ -9,7 +9,7 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 - Every topic follows: Hook -> Concept -> Worked example -> Try it -> Quiz -> Coding challenge -> Recap and common mistakes.
 - Practice `code` means a JUnit exercise in `practice/`. Practice `quiz` means quiz plus a guided activity (tool topics, theory topics). Mastery for `quiz` topics is the quiz alone.
 - Every module ends with a boss challenge, shown as an incident (`INC-MM`), and a mini-project, shown as a feature (`FEAT-MM`). The story for each is in `docs/STORY.md`.
-- Every topic is shown as a ticket keyed `SPK-MMTT`, for example `SPK-0105`.
+- Every topic is shown as a ticket keyed `SPK-MMTT`, for example `SPK-0105`. Tickets added after a module was first built keep the next free key, so a key can be out of step with the `#` column (for example SPK-0813 comes first in module 08).
 
 ## module-00-foundations: How computers and programs work (project: Day one)
 
@@ -173,18 +173,21 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 
 | # | Topic ID | Title | Practice | Prerequisites |
 |---|---|---|---|---|
-| 1 | `module-08-backend/topic-01-http` | How HTTP works | quiz | `module-07-tooling/boss` |
-| 2 | `module-08-backend/topic-02-rest-design` | REST and API design | quiz | `module-08-backend/topic-01-http` |
-| 3 | `module-08-backend/topic-03-spring-boot-intro` | Spring Boot: your first app | code | `module-08-backend/topic-02-rest-design` |
-| 4 | `module-08-backend/topic-04-dependency-injection` | Dependency injection and beans | code | `module-08-backend/topic-03-spring-boot-intro`, `module-06-craft/topic-02-solid` |
-| 5 | `module-08-backend/topic-05-spring-mvc` | Controllers and request mapping | code | `module-08-backend/topic-04-dependency-injection` |
-| 6 | `module-08-backend/topic-06-validation` | Validation and error responses | code | `module-08-backend/topic-05-spring-mvc` |
-| 7 | `module-08-backend/topic-07-sql-basics` | SQL basics | code | `module-08-backend/topic-06-validation` |
-| 8 | `module-08-backend/topic-08-jdbc` | JDBC | code | `module-08-backend/topic-07-sql-basics` |
-| 9 | `module-08-backend/topic-09-jpa-hibernate` | JPA and Hibernate | code | `module-08-backend/topic-08-jdbc`, `module-08-backend/topic-07-sql-basics` |
-| 10 | `module-08-backend/topic-10-transactions` | Transactions | code | `module-08-backend/topic-09-jpa-hibernate` |
-| 11 | `module-08-backend/topic-11-spring-security` | Security basics with Spring Security | code | `module-08-backend/topic-10-transactions` |
-| 12 | `module-08-backend/topic-12-api-docs-errors` | API docs, versioning and error design | code | `module-08-backend/topic-11-spring-security` |
+| 1 | `module-08-backend/topic-13-networking` | Networking under HTTP: IP, DNS, TCP and TLS | quiz | `module-07-tooling/boss` |
+| 2 | `module-08-backend/topic-01-http` | How HTTP works | quiz | `module-08-backend/topic-13-networking` |
+| 3 | `module-08-backend/topic-02-rest-design` | REST and API design | quiz | `module-08-backend/topic-01-http` |
+| 4 | `module-08-backend/topic-03-spring-boot-intro` | Spring Boot: your first app | code | `module-08-backend/topic-02-rest-design` |
+| 5 | `module-08-backend/topic-04-dependency-injection` | Dependency injection and beans | code | `module-08-backend/topic-03-spring-boot-intro`, `module-06-craft/topic-02-solid` |
+| 6 | `module-08-backend/topic-05-spring-mvc` | Controllers and request mapping | code | `module-08-backend/topic-04-dependency-injection` |
+| 7 | `module-08-backend/topic-06-validation` | Validation and error responses | code | `module-08-backend/topic-05-spring-mvc` |
+| 8 | `module-08-backend/topic-07-sql-basics` | SQL basics | code | `module-08-backend/topic-06-validation` |
+| 9 | `module-08-backend/topic-14-database-design` | Database design and performance: indexes and migrations | code | `module-08-backend/topic-07-sql-basics` |
+| 10 | `module-08-backend/topic-08-jdbc` | JDBC | code | `module-08-backend/topic-14-database-design` |
+| 11 | `module-08-backend/topic-09-jpa-hibernate` | JPA and Hibernate | code | `module-08-backend/topic-08-jdbc`, `module-08-backend/topic-07-sql-basics` |
+| 12 | `module-08-backend/topic-10-transactions` | Transactions | code | `module-08-backend/topic-09-jpa-hibernate` |
+| 13 | `module-08-backend/topic-15-concurrent-writes` | Concurrent writes: lost updates and locking | code | `module-08-backend/topic-10-transactions` |
+| 14 | `module-08-backend/topic-11-spring-security` | Security basics with Spring Security | code | `module-08-backend/topic-15-concurrent-writes` |
+| 15 | `module-08-backend/topic-12-api-docs-errors` | API docs, versioning and error design | code | `module-08-backend/topic-11-spring-security` |
 | boss | `module-08-backend/boss` | INC-08: Half-finished rentals after a crash | code | `module-08-backend/topic-12-api-docs-errors` |
 | mini-project | `module-08-backend/mini-project` | FEAT-08: The station availability API | code | `module-08-backend/topic-12-api-docs-errors` |
 
@@ -221,5 +224,5 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 ## Totals
 
 - Modules: 11
-- Lessons: 114
-- Graded units including bosses and mini-projects: 136
+- Lessons: 133
+- Graded units including bosses and mini-projects: 155

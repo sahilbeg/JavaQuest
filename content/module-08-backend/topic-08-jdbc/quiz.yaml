@@ -20,7 +20,14 @@ questions:
           - "To turn a ResultSet into records"
           - "To check SQL for typing mistakes before it runs"
         answer: 0
-    explain: "Your code talks to the java.sql interfaces. The driver implements them for one database, and a DataSource, set up once by the app, hands out connections."
+      - prompt: "Why does a Spring Boot service get its connections from a pool such as HikariCP?"
+        choices:
+          - "Opening a connection is slow, so the pool keeps a few open and lends them out again and again"
+          - "A pool lets the service open as many connections as it likes, with no limit"
+          - "Without a pool, JDBC cannot run SQL at all"
+          - "A pool stores query results so the database is never asked twice"
+        answer: 0
+    explain: "Your code talks to the java.sql interfaces. The driver implements them for one database, and a DataSource, set up once by the app, hands out connections. In production that DataSource is a pool, because opening a connection is slow."
     reteach: "## Concept"
 
   - id: q02

@@ -1,0 +1,128 @@
+topic: module-08-backend/topic-13-networking
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: ip-and-ports
+    variants:
+      - { prompt: "A program on your laptop connects to 127.0.0.1:8080. Which computer is it talking to?", choices: ["The same laptop it runs on", "The Wi-Fi box", "The nearest Spoke server", "Any computer on the internet that has port 8080 open"], answer: 0 }
+      - { prompt: "Which address is private, so it only works inside one home, office or data centre?", choices: ["192.168.1.20", "1.1.1.1", "127.0.0.1", "0.0.0.0"], answer: 0 }
+      - { prompt: "A server listens on 203.0.113.10:443. What does 443 tell a packet?", choices: ["Which program on that computer it is for", "Which computer on the internet it is for", "How many seconds the answer may be cached", "How many routers it may pass through"], answer: 0 }
+    explain: "127.0.0.1 is loopback, this same computer. 10.x, 192.168.x and 172.16 to 172.31 are private. The IP address finds the computer, and the port finds the program on it."
+    reteach: "### Special addresses: loopback, any, private, public"
+
+  - id: q02
+    type: spot-the-bug
+    concept: ip-and-ports
+    prompt: "The Spoke API runs in a container. The load balancer, on another machine, must reach it. Which line is wrong?"
+    code: |
+      int port = 8080;
+      String bindAddress = "127.0.0.1";
+      System.out.println("Spoke API listening on " + bindAddress + ":" + port);
+    bugLine: 2
+    explain: "127.0.0.1 only accepts connections from the same computer, so the load balancer is refused. Listen on 0.0.0.0 to accept connections on every network card."
+    reteach: "## Common mistakes"
+
+  - id: q03
+    type: predict-output
+    concept: connections-and-latency
+    prompt: "Each round trip takes 50 ms. Ignore server time. What does this print?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int rtt = 50;
+              int fresh = 4 * rtt;    // DNS + TCP + TLS + HTTP
+              int reused = 1 * rtt;   // HTTP only, on a kept-alive connection
+              System.out.println(fresh + reused + reused);
+          }
+      }
+    answer: "300"
+    explain: "The first request pays four round trips, 200 ms. The next two reuse the connection and pay one each, 50 ms. 200 + 50 + 50 = 300."
+    reteach: "### A round-trip budget"
+
+  - id: q04
+    type: mcq
+    concept: dns
+    variants:
+      - { prompt: "Which DNS record says \"look up this other name instead\"?", choices: ["CNAME", "A", "AAAA", "TTL"], answer: 0 }
+      - { prompt: "Which DNS record holds an IPv6 address?", choices: ["AAAA", "A", "CNAME", "IPv6"], answer: 0 }
+      - { prompt: "A DNS record reads: api.spoke.example. 300 IN A 203.0.113.10. What does 300 mean?", choices: ["The answer may be kept in a cache for 300 seconds", "The server listens on port 300", "The lookup took 300 ms", "300 riders may use the address at once"], answer: 0 }
+    explain: "A holds an IPv4 address, AAAA an IPv6 address, and CNAME points to another name. The number after the name is the TTL: how many seconds a cache may keep the answer."
+    reteach: "### DNS records and TTL"
+
+  - id: q05
+    type: fill-blank
+    concept: dns
+    prompt: "api.spoke.example.   300   IN   ___   203.0.113.10"
+    answers: ["A"]
+    explain: "203.0.113.10 is an IPv4 address, and an A record holds an IPv4 address. AAAA would hold an IPv6 one."
+    reteach: "### DNS records and TTL"
+
+  - id: q06
+    type: order
+    concept: tcp-and-udp
+    prompt: "Put the first messages on a brand-new TCP connection in order."
+    items:
+      - "Client sends SYN"
+      - "Server sends SYN-ACK"
+      - "Client sends ACK"
+      - "Client sends the first request bytes"
+    explain: "The three-way handshake is SYN, SYN-ACK, ACK. Only then can data flow, which is why a new connection costs one round trip."
+    reteach: "### The three-way handshake"
+
+  - id: q07
+    type: mcq
+    concept: tcp-and-udp
+    variants:
+      - { prompt: "What does UDP give up to be faster than TCP?", choices: ["The handshake, resending lost packets, and keeping order", "Port numbers", "IP addresses", "Encryption, which TCP always has"], answer: 0 }
+      - { prompt: "Which job suits UDP better than TCP?", choices: ["A live video call, where late data is useless anyway", "Charging a rider's card", "Saving a rental to the database", "Downloading the app's code"], answer: 0 }
+    explain: "UDP sends single packets with no handshake, no resends and no ordering. That suits live data where a late packet is worthless. Payments and saves need TCP's reliable stream."
+    reteach: "### UDP: fast and forgetful"
+
+  - id: q08
+    type: mcq
+    concept: tls
+    variants:
+      - { prompt: "A rider calls GET /rentals/rental-17 over HTTPS on café Wi-Fi. What can a snooper on the Wi-Fi still see?", choices: ["The server's IP address", "The path /rentals/rental-17", "The Authorization header", "The JSON in the response"], answer: 0 }
+      - { prompt: "Which of these does HTTPS protect against?", choices: ["Someone on the Wi-Fi changing the fare in the response", "A bug in Spoke's fare code", "Malware on the rider's phone", "A rider sharing their password"], answer: 0 }
+    explain: "TLS hides and guards the method, path, headers and body on the way. The IP address is on every packet, so it stays visible. HTTPS cannot fix bugs, malware or leaked passwords."
+    reteach: "### What HTTPS protects, and what it does not"
+
+  - id: q09
+    type: mcq
+    concept: tls
+    prompt: "How does the rider app know the certificate from api.spoke.example is real?"
+    choices: ["It is signed, through a chain, by a root CA the phone already trusts, and its name and dates match", "The server says so in a header", "The DNS answer includes the certificate", "Any certificate is accepted if the connection is encrypted"]
+    answer: 0
+    explain: "The chain of trust ends at a root CA in the phone's trusted list. The app also checks the name matches and the certificate has not expired."
+    reteach: "### Certificates and the chain of trust"
+
+  - id: q10
+    type: mcq
+    concept: connections-and-latency
+    variants:
+      - { prompt: "Why does a connection pool make API calls faster?", choices: ["Reused connections skip the DNS, TCP and TLS steps", "It makes the server think faster", "It compresses the JSON", "It raises the bandwidth"], answer: 0 }
+      - { prompt: "The rider app sends small JSON requests to a server 80 ms away. What helps most?", choices: ["Fewer round trips, by reusing connections", "Ten times more bandwidth", "Bigger JSON responses", "Sending XML instead of JSON"], answer: 0 }
+    explain: "For small answers latency is almost all of the time, so cutting round trips matters most. A pool keeps connections open, so later requests skip every handshake."
+    reteach: "### Keep-alive and connection pools"
+
+  - id: q11
+    type: mcq
+    concept: connections-and-latency
+    variants:
+      - { prompt: "What does HTTP/2 add over HTTP/1.1?", choices: ["Many requests share one connection at the same time", "Encryption, which HTTP/1.1 never allowed", "New methods besides GET and POST", "It runs on UDP"], answer: 0 }
+      - { prompt: "Why does HTTP/3 run on QUIC over UDP?", choices: ["So one lost packet delays only its own request, not every request on the connection", "Because UDP never loses packets", "Because TCP cannot carry encrypted data", "So it can skip DNS"], answer: 0 }
+    explain: "HTTP/2 multiplexes many requests on one TCP connection, but one lost packet holds up all of them. QUIC keeps each request's stream separate, so a loss only delays its own request."
+    reteach: "### HTTP/1.1, HTTP/2 and HTTP/3"
+
+  - id: q12
+    type: mcq
+    concept: network-errors
+    variants:
+      - { prompt: "The app gets ConnectException: Connection refused, at once. What does it tell you?", choices: ["The computer answered, but nothing listens on that port", "The name could not be turned into an address", "The certificate has expired", "The server is slow to answer the request"], answer: 0 }
+      - { prompt: "The app gets java.net.UnknownHostException. Which step failed?", choices: ["DNS", "The TCP handshake", "The TLS handshake", "The server's database query"], answer: 0 }
+      - { prompt: "Connecting waits the whole limit, then fails with Connect timed out. What is the most likely cause?", choices: ["Nothing answered at all: a wrong address, a firewall dropping packets, or a machine that is down", "Nothing listens on the port", "The certificate has the wrong name", "The JSON in the request is broken"], answer: 0 }
+      - { prompt: "The app gets SSLHandshakeException: PKIX path building failed. What is the safe fix?", choices: ["Use a certificate signed by a trusted CA, or trust your test CA only in tests", "Turn off certificate checks in the app", "Switch the URL from https to http", "Raise the connect timeout"], answer: 0 }
+    explain: "UnknownHostException is DNS. A fast refusal means nothing listens on the port. A connect timeout means no answer at all. SSLHandshakeException is a certificate problem, and turning checks off makes HTTPS worthless."
+    reteach: "### When it breaks: four errors"

@@ -56,7 +56,8 @@ questions:
       - { prompt: "Lin tries to rent B-1042, but Ada is riding it. What should the server answer?", choices: ["409 Conflict", "404 Not Found", "500 Internal Server Error", "200 OK with an error message"], answer: 0 }
       - { prompt: "DELETE /rentals/rental-17 worked and there is nothing to send back. What should the server answer?", choices: ["204 No Content", "201 Created", "404 Not Found", "409 Conflict"], answer: 0 }
       - { prompt: "The app asks for GET /rentals/rental-9999, which does not exist. What should the server answer?", choices: ["404 Not Found", "400 Bad Request", "409 Conflict", "204 No Content"], answer: 0 }
-    explain: "201 plus Location for something new, 204 when there is no body, 404 for an unknown id, 409 when the request clashes with the current state."
+      - { prompt: "An ops tool sends PUT /stations/harbor with If-Match: \"v7\", but a teammate already changed Harbor, so its ETag is now \"v8\". What should the server answer?", choices: ["412 Precondition Failed", "200 OK, saving the tool's version", "304 Not Modified", "404 Not Found"], answer: 0 }
+    explain: "201 plus Location for something new, 204 when there is no body, 404 for an unknown id, 409 when the request clashes with the current state. 412 refuses an update whose If-Match no longer matches the ETag."
     reteach: "## Concept"
 
   - id: q07
@@ -74,7 +75,9 @@ questions:
       - { prompt: "The app retried POST /rentals after a lost answer, and Lin got two rentals. Why?", choices: ["POST is not idempotent, so each copy creates a new rental", "The server crashed", "GET would have done the same", "The app sent the wrong bike id"], answer: 0 }
       - { prompt: "What does the server do with a request whose Idempotency-Key it has already seen?", choices: ["Returns the first answer again and creates nothing", "Creates a second rental", "Answers 500 Internal Server Error", "Ignores the request and sends no answer"], answer: 0 }
       - { prompt: "When should the app make a new idempotency key?", choices: ["Once per tap, reused for every retry of that tap", "For every retry", "Once when the app is installed", "Never, the server makes it"], answer: 0 }
-    explain: "One tap gets one key. Retries reuse it, so the server can tell a repeat from a new request."
+      - { prompt: "Spoke's server hiccups at rush hour and ten thousand phones fail at once. Why should each phone wait a random time before retrying?", choices: ["So the retries spread out instead of hitting the server in waves", "So the idempotency key changes", "Because random waits make POST idempotent", "So the server can tell phones apart"], answer: 0 }
+      - { prompt: "Two retries with the same Idempotency-Key reach Spoke at the same moment. What stops both from creating a rental?", choices: ["Storing the key first in a column with a unique constraint, so only one insert wins", "Checking a HashMap for the key before creating", "Answering both with 201", "Asking the app to send a new key each time"], answer: 0 }
+    explain: "One tap gets one key. Retries reuse it, so the server can tell a repeat from a new request. A unique key column makes sure only one of two simultaneous copies wins. Random waits (jitter) spread retries out, so they do not hit a struggling server in waves."
     reteach: "## Concept"
 
   - id: q09
@@ -97,7 +100,8 @@ questions:
       - { prompt: "Which request gets the second page of available bikes at Harbor, 20 per page?", choices: ["GET /bikes?station=harbor&status=AVAILABLE&page=1&size=20", "GET /bikes?station=harbor&status=AVAILABLE&page=2&size=20", "GET /bikes/harbor/AVAILABLE/2", "POST /bikes/search?page=1"], answer: 0 }
       - { prompt: "Which request lists Ada's rentals, newest first?", choices: ["GET /rentals?riderId=r-17&sort=startedAt,desc", "GET /rentals?riderId=r-17&sort=startedAt,asc", "GET /riders/r-17/rentals/newest/first", "POST /rentals?riderId=r-17"], answer: 0 }
       - { prompt: "There are 45 bikes and size=20. How many pages are there?", choices: ["3", "2", "20", "45"], answer: 0 }
-    explain: "Filters, sort, page and size go in the query. Pages start at 0, so the second page is page=1."
+      - { prompt: "Rentals are listed newest first with page and size. A ride starts between the app's requests for page 0 and page 1. What goes wrong?", choices: ["One rental shows up on both pages", "Page 1 comes back empty", "The server answers 409 Conflict", "Nothing, offsets never shift"], answer: 0 }
+    explain: "Filters, sort, page and size go in the query. Pages start at 0, so the second page is page=1. On a growing list, offsets shift, so a cursor (the last item seen) is safer."
     reteach: "## Concept"
 
   - id: q11

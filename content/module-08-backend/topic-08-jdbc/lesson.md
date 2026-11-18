@@ -77,7 +77,7 @@ Connection connection = dataSource.getConnection();
 
 - The app sets up the DataSource once, with the URL and any password.
 - Your repository just receives a `DataSource` in its constructor and asks it for connections. It never sees the URL.
-- In production, the DataSource is usually a **connection pool**. It keeps a few connections open and lends them out, because opening a fresh one is slow.
+- In production, the DataSource is usually a connection pool. It keeps a few connections open and lends them out, because opening a fresh one is slow. You meet pools properly below.
 
 ```callout warning
 An in-memory H2 database disappears when its last connection closes. Your table vanishes between two calls. Adding ;DB_CLOSE_DELAY=-1 to the URL keeps it alive until the program ends.
@@ -317,6 +317,39 @@ sessions left open, not counting this one: 3
 ```
 
 The three forgotten connections are still open. The three borrowed in try-with-resources are gone.
+
+### Connection pools
+
+Opening a fresh connection to a real database is slow. The app reaches the database over the network and proves who it is with a password. Then the database sets up a session with its own memory. That takes milliseconds, every time. A busy service cannot pay that on every request.
+
+A **connection pool** opens a few connections once and keeps them. `getConnection()` borrows one. `close()` gives it back to the pool, still open, ready for the next request.
+
+```callout jargon
+A **connection pool** is a set of open database connections that the app reuses. **HikariCP** is the pool Spring Boot uses by default. It is the `DataSource` your repository receives.
+```
+
+A pool has a fixed size: 10 connections by default in Spring Boot, set with `spring.datasource.hikari.maximum-pool-size`. Bigger is not always better. The database can only do so much work at once, so a few busy connections usually beat many idle ones.
+
+When all 10 are lent out, request 11 waits. If none comes back within 30 seconds, it fails. Here is a tiny pool of two, with two connections that are never given back.
+
+```java nocompile
+HikariConfig config = new HikariConfig();
+config.setJdbcUrl("jdbc:h2:mem:spoke");
+config.setMaximumPoolSize(2);          // only two connections to lend
+config.setConnectionTimeout(500);      // wait at most 0.5 s for one
+
+try (HikariDataSource pool = new HikariDataSource(config)) {
+    Connection first = pool.getConnection();    // borrowed, never given back
+    Connection second = pool.getConnection();   // borrowed, never given back
+    Connection third = pool.getConnection();    // waits 0.5 s, then fails
+}
+```
+
+```text
+java.sql.SQLTransientConnectionException: HikariPool-1 - Connection is not available, request timed out after 505ms (total=2, active=2, idle=0, waiting=0)
+```
+
+`active=2, idle=0`: both connections are out, and none will come back. This is a **connection leak**. In production it looks like this: the service works for an hour, then every request hangs and times out. The fix is always the same: borrow inside try-with-resources, so `close()` returns the connection even when an exception is thrown.
 
 ### Syntax: RETURN_GENERATED_KEYS
 

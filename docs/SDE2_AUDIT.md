@@ -135,18 +135,18 @@ New tickets (before the boss):
 
 ## Phase 6: module 08, backend
 
-- [ ] topic-01: timeouts in `SpokeClient`, JSON with Jackson; idempotent means same state; HTTP/2 and HTTP/3; 429
-- [ ] topic-02: idempotent end, Idempotency-Key races; timeouts, retries, backoff with jitter; cursor pagination
-- [ ] topic-03: application.properties, profiles, environment variables
-- [ ] topic-07: `TIMESTAMP WITH TIME ZONE`
-- [ ] topic-08: connection pools
-- [ ] topic-09: persistence context, dirty checking, `LazyInitializationException`, open-in-view, DTOs vs entities, Testcontainers, `save` and `merge`
-- [ ] topic-10: rollback does not undo remote calls, `REQUIRES_NEW`
-- [ ] topic-11: sessions vs JWT, XSS, CORS, object-level authorization, keeping secrets out of code
+- [x] topic-01: timeouts in `SpokeClient`, JSON with Jackson; idempotent means same state; HTTP/2 and HTTP/3; 429
+- [x] topic-02: idempotent end, Idempotency-Key races; timeouts, retries, backoff with jitter; cursor pagination
+- [x] topic-03: application.properties, profiles, environment variables
+- [x] topic-07: `TIMESTAMP WITH TIME ZONE`
+- [x] topic-08: connection pools
+- [x] topic-09: persistence context, dirty checking, `LazyInitializationException`, open-in-view, DTOs vs entities, Testcontainers, `save` and `merge`
+- [x] topic-10: rollback does not undo remote calls, `REQUIRES_NEW`
+- [x] topic-11: sessions vs JWT, XSS, CORS, object-level authorization, keeping secrets out of code
 - New tickets:
-  - [ ] topic-13 Networking under HTTP: IP, DNS, TCP, TLS (placed first)
-  - [ ] topic-14 Database design and performance: indexes, EXPLAIN, constraints, normalization, migrations (after topic-07)
-  - [ ] topic-15 Concurrent writes: isolation anomalies, optimistic and pessimistic locking (after topic-10)
+  - [x] topic-13 Networking under HTTP: IP, DNS, TCP, TLS (placed first)
+  - [x] topic-14 Database design and performance: indexes, EXPLAIN, constraints, normalization, migrations (after topic-07)
+  - [x] topic-15 Concurrent writes: isolation anomalies, optimistic and pessimistic locking (after topic-10)
 
 ## Phase 7: planned modules 09 and 10
 
