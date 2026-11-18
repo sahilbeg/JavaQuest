@@ -1,0 +1,146 @@
+topic: module-09-architecture/topic-06-system-design
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: order
+    concept: design-process
+    prompt: "Put the first six steps of a system design answer in order."
+    items:
+      - "Clarify functional and non-functional requirements"
+      - "Estimate requests a second, storage and bandwidth"
+      - "Define the main API endpoints"
+      - "Sketch the data model and its keys"
+      - "Draw the high-level design"
+      - "Deep dive into the two or three hardest parts"
+    explain: "Requirements decide what matters, numbers decide how big, the API and data model pin down what moves where, and only then do boxes and deep dives make sense. Trade-offs and bottlenecks come last."
+    reteach: "### A framework in eight steps"
+
+  - id: q02
+    type: mcq
+    concept: design-process
+    variants:
+      - { prompt: "Which of these is a non-functional requirement for Spoke?", choices: ["The map loads in under 200 ms for 99% of requests", "A rider can unlock a bike", "A rider can end a ride", "Ops staff can see the fleet"], answer: 0 }
+      - { prompt: "The map's p99 latency is 200 ms. What does that mean?", choices: ["99 requests in 100 take 200 ms or less", "The average request takes 200 ms", "The slowest request takes 200 ms", "99 ms is the fastest request"], answer: 0 }
+      - { prompt: "Which early question shapes a design the most?", choices: ["Which data must never be wrong, and which may be a little stale?", "Which programming language should we use?", "What colour is the app?", "How many microservices should there be?"], answer: 0 }
+    explain: "Functional requirements say what the system does; non-functional ones say how well: latency, availability, consistency, scale. p99 is the time 99% of requests beat. Knowing what must be exact and what may be stale drives most later choices."
+    reteach: "### Step one: requirements"
+
+  - id: q03
+    type: predict-output
+    concept: estimation
+    prompt: "6,000 rides start in a rush hour, each lasting 15 minutes, and each moving bike pings every 10 seconds. What does this print?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              long startsPerHour = 6_000;
+              long rideMinutes = 15;
+              long ridingAtOnce = startsPerHour * rideMinutes / 60;   // Little's law
+              long pingsPerSecond = ridingAtOnce / 10;
+              System.out.println(pingsPerSecond);
+          }
+      }
+    answer: "150"
+    explain: "Little's law: 6,000 an hour × a quarter of an hour = 1,500 bikes riding at once. Each pings every 10 seconds, so 1,500 ÷ 10 = 150 pings a second."
+    reteach: "### Average and peak traffic"
+
+  - id: q04
+    type: fill-blank
+    concept: estimation
+    prompt: "long averagePerSecond = eventsPerDay / ___;"
+    answers: ["86400", "86_400"]
+    explain: "A day has 24 × 60 × 60 = 86,400 seconds, about 10^5. So a million events a day is about 10 a second on average. The peak is usually several times higher."
+    reteach: "### Estimation: powers of ten"
+
+  - id: q05
+    type: mcq
+    concept: scaling-out
+    variants:
+      - { prompt: "What makes an API server easy to scale out behind a load balancer?", choices: ["It is stateless: any copy can answer any request", "It keeps each rider's data in its own memory", "It runs on the biggest machine available", "It talks to every other API server"], answer: 0 }
+      - { prompt: "Three API servers each run at 80%. One crashes. What happens?", choices: ["The other two need 120% each and are likely to fall over too", "Nothing, the load balancer adds a server by itself", "The two left run at 80% as before", "The requests wait in the load balancer forever"], answer: 0 }
+      - { prompt: "What is the main limit of vertical scaling?", choices: ["One machine has a size limit, costs more per core, and is still one machine that can die", "It needs every server to be stateless", "It needs a load balancer", "It moves 80% of the data"], answer: 0 }
+    explain: "Stateless servers can be copied freely, and the load balancer's health checks drop a dead one. Keep spare room, about 50 to 60% busy, so losing one server is survivable. Scaling up is simple but has a ceiling and no redundancy."
+    reteach: "### Stateless servers behind a load balancer"
+
+  - id: q06
+    type: mcq
+    concept: scaling-out
+    prompt: "The rides table is slow at peak. What should you try first?"
+    choices:
+      - "Check for missing indexes on the slow queries"
+      - "Shard the database by city"
+      - "Add five read replicas"
+      - "Move the table to a document database"
+    answer: 0
+    explain: "Scale the database in order: indexes, then caching, then read replicas, then sharding. A missing index is cheap to fix and is often the whole problem. Each later step adds moving parts."
+    reteach: "### Scaling the database: indexes and caches first"
+
+  - id: q07
+    type: mcq
+    concept: replication-and-sharding
+    variants:
+      - { prompt: "Ada saves a new home station. Her app reloads from a read replica and shows the old one. What is this, and what fixes it?", choices: ["Replication lag breaking read-your-writes; read her own recent writes from the leader", "A cache stampede; use single flight", "A hot partition; reshard by rider", "A split brain; add a second leader"], answer: 0 }
+      - { prompt: "The leader dies, and a follower with asynchronous replication takes over. What can be lost?", choices: ["Writes the old leader confirmed but had not yet copied", "Nothing, asynchronous replication never loses data", "Every write since midnight", "Only reads"], answer: 0 }
+    explain: "Followers copy the leader with a delay, so a user can miss their own write; reading their recent writes from the leader fixes it. Asynchronous replication answers before copying, so a failover can lose the newest confirmed writes. A synchronous follower prevents that."
+    reteach: "### Read replicas and replication lag"
+
+  - id: q08
+    type: mcq
+    concept: replication-and-sharding
+    variants:
+      - { prompt: "Pings are sharded by date range. What goes wrong?", choices: ["Every new ping goes to today's shard, a hot partition, while the others idle", "Range queries by date become impossible", "Pings from one bike end up out of order", "Nothing, date ranges spread writes evenly"], answer: 0 }
+      - { prompt: "Which way of sharding lets you move one key at a time, but adds a lookup service that must never be down?", choices: ["Directory", "Hash", "Range", "Round robin"], answer: 0 }
+      - { prompt: "Why is city_id a good shard key for Spoke's rides?", choices: ["A ride never crosses cities, so unlocking, ending and paying for a ride all touch one shard", "Every city has exactly the same traffic", "It makes queries across all cities fast", "It is the shortest column"], answer: 0 }
+    explain: "A shard key must spread new writes and keep common queries on one shard. Range by date piles today's writes on one shard. Hash spreads keys evenly but makes range queries ask every shard. A directory is flexible, but it is one more service to keep up."
+    reteach: "### Sharding: hash, range and directory"
+
+  - id: q09
+    type: predict-output
+    concept: replication-and-sharding
+    prompt: "Twelve keys move from 3 servers to 4, placed by key % N. How many keys change server?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int moved = 0;
+              for (int key = 0; key < 12; key++) {
+                  if (key % 3 != key % 4) {
+                      moved++;
+                  }
+              }
+              System.out.println(moved);
+          }
+      }
+    answer: "9"
+    explain: "Only keys 0, 1 and 2 land on the same server number either way. The other 9 of 12 move. That is why hash mod N makes adding a server so costly, and why consistent hashing exists."
+    reteach: "### Consistent hashing"
+
+  - id: q10
+    type: mcq
+    concept: consistency-and-cap
+    variants:
+      - { prompt: "A network partition cuts a city's API servers off from its shard leader. What should 'unlock a bike' do?", choices: ["Refuse with a clear error: choose consistency", "Unlock anyway and sort it out later: choose availability", "Unlock on every server that answers", "Wait forever"], answer: 0 }
+      - { prompt: "During a partition, what should the 'bikes near me' map do?", choices: ["Show positions a few seconds old: choose availability", "Show an error until the partition heals", "Show no bikes at all", "Unlock every bike"], answer: 0 }
+      - { prompt: "PACELC adds what to CAP?", choices: ["Even with no partition, you trade latency against consistency", "Partitions never happen in the cloud", "You can have all three of C, A and P", "Caches are always consistent"], answer: 0 }
+    explain: "During a partition you choose, per feature: unlocking needs consistency, the map prefers availability. PACELC adds that on normal days you trade latency for consistency."
+    reteach: "### CAP and PACELC in plain words"
+
+  - id: q11
+    type: mcq
+    concept: storage-choices
+    variants:
+      - { prompt: "Where should Spoke keep GPS pings: written all the time, never updated, read by time range?", choices: ["A time-series store", "The SQL payments database", "A CDN", "The browser cache"], answer: 0 }
+      - { prompt: "Where should Spoke keep payments?", choices: ["A relational (SQL) database with transactions and constraints", "Object storage", "A CDN", "A write-behind cache"], answer: 0 }
+      - { prompt: "Where should pings older than 90 days go, compressed, cheaply?", choices: ["Object storage", "RAM on every API server", "The SQL leader", "A key-value cache with a 10 minute TTL"], answer: 0 }
+    explain: "Match the store to the data: SQL for money and rules, time-series for values over time, key-value for fast lookups by key, object storage for big, cheap archives, a CDN for files served near riders."
+    reteach: "### Choosing storage"
+
+  - id: q12
+    type: mcq
+    concept: availability
+    variants:
+      - { prompt: "About how much downtime a year does 99.9% availability allow?", choices: ["About 8.8 hours", "About 5 minutes", "About 3.7 days", "About 53 minutes"], answer: 0 }
+      - { prompt: "A request needs two parts in a row, each 99.9% available. What is the chain's availability?", choices: ["About 99.8%", "99.9%", "99.99%", "100%"], answer: 0 }
+      - { prompt: "Two independent copies of a service each work 99% of the time, and either one will do. What is the availability?", choices: ["99.99%", "99%", "98%", "99.5%"], answer: 0 }
+      - { prompt: "Six API servers sit in front of one Redis with no spare. What is the Redis?", choices: ["A single point of failure", "A hot partition", "A read replica", "A load balancer"], answer: 0 }
+    explain: "99.9% leaves 0.1% of 525,600 minutes, about 526 minutes or 8.8 hours. Parts in a row multiply: 0.999 × 0.999 ≈ 0.998. Copies side by side fail only together: 1 − 0.01 × 0.01 = 0.9999. Any part with no spare is a single point of failure."
+    reteach: "### Availability: counting nines"

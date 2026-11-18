@@ -1,0 +1,141 @@
+topic: module-09-architecture/topic-01-layered-architecture
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: cost-of-change
+    variants:
+      - { prompt: "Why do teams care about architecture at all?", choices: ["It decides how cheap or costly the next change will be", "It makes the program run faster", "It is needed before Java will compile the code", "It reduces the number of tests you need"], answer: 0 }
+      - { prompt: "Spoke wants the kiosk to start rentals and the table to move to PostgreSQL. In the god controller, where do both changes land?", choices: ["In the same file, tangled with HTTP, rules and JSON", "In two separate layers that never touch", "Only in the database", "Nowhere: the god controller needs no changes"], answer: 0 }
+    explain: "Code is changed far more often than it is written. In a god class every change lands in one tangled file. Good architecture keeps each change in one place."
+    reteach: "### Why it matters: the cost of change"
+
+  - id: q02
+    type: mcq
+    concept: cost-of-change
+    prompt: "A small internal tool only lists stations from a table. It has no business rules and one caller. Which shape is reasonable?"
+    choices:
+      - "A thin controller plus a repository, adding a service when the first real rule or second caller appears"
+      - "Six layers and a mapper per field, to be safe"
+      - "SQL in the controller and JSON building in the repository"
+      - "No structure and no tests, since there are no rules"
+    answer: 0
+    explain: "Layers cost boilerplate and pass-through calls. Use as much structure as the problem needs, and be ready to explain why."
+    reteach: "### The costs, and when thin is fine"
+
+  - id: q03
+    type: mcq
+    concept: dependency-rule
+    variants:
+      - { prompt: "Which layer should hold the rule \"a bike can be out on only one rental at a time\"?", choices: ["The service or the domain, so the app, the kiosk and a nightly job all run it", "The controller, because it sees the request first", "The repository, because it talks to the database", "The JSON request record, as an annotation"], answer: 0 }
+      - { prompt: "Which dependency breaks the layering rule?", choices: ["RentalService imports HttpServletRequest", "RentalController calls RentalService", "RentalService calls RentalRepository", "RentalRepository uses the Rental class"], answer: 0 }
+      - { prompt: "Which of these may RentalRepository, in the persistence layer, use?", choices: ["Domain classes such as Rental", "RentalService", "RentalController", "ApiErrors"], answer: 0 }
+    explain: "Business rules live below the web layer, and dependencies point down only. Persistence may use the domain, never the layers above it. A service that knows HTTP can only be called over HTTP."
+    reteach: "### The dependency rule: only downward"
+
+  - id: q04
+    type: spot-the-bug
+    concept: dependency-rule
+    prompt: "This service should be callable from a nightly job too. Which line ties it to HTTP?"
+    code: |
+      @Service
+      public class RentalService {
+          public ResponseEntity<RentalResponse> end(String rentalId) {
+              Rental rental = load(rentalId);
+              rental.end();
+              return ResponseEntity.ok(RentalResponse.from(rental));
+          }
+      }
+    bugLine: 3
+    explain: "The return type ResponseEntity is an HTTP type. Return RentalResponse, throw a domain exception when a rule fails, and let the controller and the advice choose the status."
+    reteach: "### Trap: HTTP leaking down into the service"
+
+  - id: q05
+    type: mcq
+    concept: dtos-vs-entities
+    variants:
+      - { prompt: "Why should a controller not return the Rental entity as JSON?", choices: ["Jackson writes every getter, so internal fields like the payment token reach the client", "Entities cannot be turned into JSON at all", "Records are faster than classes", "Spring only allows records in a response"], answer: 0 }
+      - { prompt: "A controller binds @RequestBody straight into the Rental entity. What can a client now do?", choices: ["Send fields like status or id and have them saved (mass assignment)", "Nothing different: binding ignores unknown fields", "Read other riders' rentals", "Make the server crash on every request"], answer: 0 }
+      - { prompt: "The rentals table renames a column, and the app on every phone breaks. What caused that?", choices: ["The API sent the entity, so the JSON was glued to the table", "The controller used @Valid", "The service had @Transactional", "The repository was an interface"], answer: 0 }
+    explain: "A DTO record holds exactly what one message needs. Internal fields, lazy links and table changes stay behind it, and clients cannot set fields they should not."
+    reteach: "### DTOs and entities are different things"
+
+  - id: q06
+    type: predict-output
+    concept: dtos-vs-entities
+    prompt: "What does this print?"
+    code: |
+      public class Main {
+          record Rental(String id, String bikeId, String paymentToken) {}
+          record RentalResponse(String id, String bikeId) {
+              static RentalResponse from(Rental r) {
+                  return new RentalResponse(r.id(), r.bikeId());
+              }
+          }
+
+          public static void main(String[] args) {
+              Rental rental = new Rental("rental-17", "B-1042", "tok_visa_4242");
+              System.out.println(RentalResponse.from(rental));
+          }
+      }
+    answer: "RentalResponse[id=rental-17, bikeId=B-1042]"
+    explain: "The response record has no paymentToken field, so the token cannot appear in it. A field the DTO does not have can never leak."
+    reteach: "### Syntax: request and response records"
+
+  - id: q07
+    type: mcq
+    concept: validation-and-transactions
+    variants:
+      - { prompt: "Where should the check \"bikeId must not be blank\" live?", choices: ["At the edge: @NotBlank on the request record and @Valid on the controller parameter", "In the repository, before the INSERT", "In the database only", "In the advice class"], answer: 0 }
+      - { prompt: "Where should the check \"rider-7 has an unpaid ride, so no new rental\" live?", choices: ["In the domain or the service, because it needs stored data", "In a @NotBlank annotation", "In the JSON request record", "In the controller's @PostMapping"], answer: 0 }
+    explain: "Shape checks need only the request, so they run first at the edge with Bean Validation. Business rules need data and belong in the domain or the service."
+    reteach: "### Where validation lives"
+
+  - id: q08
+    type: mcq
+    concept: validation-and-transactions
+    prompt: "start() checks that the bike is free, then saves the rental. Where should @Transactional go?"
+    choices:
+      - "On the public service method start, so the check and the save are one unit of work"
+      - "On the controller class, so the whole request is one transaction"
+      - "Only on the repository's save method"
+      - "On the Rental entity"
+    answer: 0
+    explain: "A service method is one use case. On the controller, the connection stays busy while JSON is sent. On the repository only, the check and the save run in two transactions."
+    reteach: "### Where @Transactional lives"
+
+  - id: q09
+    type: mcq
+    concept: error-mapping
+    variants:
+      - { prompt: "RentalService finds that B-1042 is already out. What should it do?", choices: ["Throw BikeUnavailableException, and let the one @RestControllerAdvice map it to 409", "Return ResponseEntity.status(409)", "Return null", "Put @ResponseStatus(409) on the service method"], answer: 0 }
+      - { prompt: "Why map exceptions in one @RestControllerAdvice instead of try/catch in each controller?", choices: ["One place keeps every error format the same, and controllers stay free of error code", "try/catch does not work in controllers", "Advice classes make the app start faster", "Only the advice can read the request body"], answer: 0 }
+    explain: "The service speaks in domain exceptions. One advice class turns each into a status and a Problem Details body, so the format never drifts."
+    reteach: "### Domain exceptions, mapped in one place"
+
+  - id: q10
+    type: fill-blank
+    concept: error-mapping
+    prompt: "ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.___, ex.getMessage());   // a 409"
+    answers: ["CONFLICT"]
+    explain: "HttpStatus.CONFLICT is 409: the request clashes with the current state, such as a bike that is already out."
+    reteach: "### Syntax: @RestControllerAdvice with ProblemDetail"
+
+  - id: q11
+    type: mcq
+    concept: domain-model-styles
+    variants:
+      - { prompt: "Rental has only getters and setters, and every service checks \"already ended\" itself. What is this style called?", choices: ["An anemic domain model", "A rich domain model", "A DTO", "A god class"], answer: 0 }
+      - { prompt: "What is the main benefit of a rich domain model?", choices: ["The class guards its own rules, so no caller can skip them", "It needs no constructor", "It can be sent straight to the client as JSON", "It removes the need for a service layer in every app"], answer: 0 }
+    explain: "A rich model puts each rule next to the data it guards, like rental.end() refusing a second end. An anemic model leaves every caller to remember the rule."
+    reteach: "### Anemic or rich domain model"
+
+  - id: q12
+    type: mcq
+    concept: testing-layers
+    variants:
+      - { prompt: "What is the fastest way to test the busy-bike rule in RentalService?", choices: ["A plain JUnit test with an in-memory fake repository", "A @SpringBootTest that starts the whole app", "Clicking through the rider app", "A test against the production database"], answer: 0 }
+      - { prompt: "What does @WebMvcTest(RentalController.class) start?", choices: ["Only the web layer: that controller, JSON conversion and MockMvc", "The whole app, including the database", "Nothing: it is a plain unit test", "Only the repository and the database"], answer: 0 }
+    explain: "Depending on the repository interface lets a fake stand in, so service tests need no Spring at all. A @WebMvcTest slice starts only the web layer, with a @MockitoBean in place of the service."
+    reteach: "### Testing each layer"

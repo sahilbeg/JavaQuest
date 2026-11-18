@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "lastUpdated": "2026-11-18T11:20:00+05:30",
+  "lastUpdated": "2026-11-18T15:19:47+05:30",
   "phase": "PHASE 1: build",
-  "milestone": "C09",
-  "resumeHere": "The SDE 2 deepening of modules 0 to 8 is committed at status ui_wired (see docs/SDE2_AUDIT.md). Next: C09 (Architecture), now 10 topics including resilience and Kubernetes; it must deliver what earlier lessons promise (rate-limit counting, circuit breakers, Actuator, the outbox). Modules 0 to 8 still need your read-through to reach done.",
+  "milestone": "C10",
+  "resumeHere": "C09 is committed at status ui_wired. Next: C10 (Professional), the last content module; its interview-prep topic must include a low-level design round (building on SPK-0613) and a system design round (building on SPK-0906). Modules 0 to 9 still need your read-through to reach done.",
   "statusValues": [
     "planned",
     "content_written",
@@ -59,12 +59,13 @@
     "C07: module 7 Build and tooling (5 quiz-only topics), INC-07 and FEAT-07; reviewed (13 findings fixed); jar build checked as reproducible across time zones; all checks green",
     "C08: module 8 Backend engineering (2 quiz topics, 10 Spring/SQL/JDBC code topics), INC-08 and FEAT-08; 3 reviews (about 45 findings) fixed; runner compiles with -parameters; all checks green",
     "UX overhaul (user feedback): playful redesign, journey map, mastery gating with author mode, lesson player with short cards, animation engine (code and scene, checked by check-content), first-visit walkthroughs; 56 animations added to modules 0 to 2 and reviewed",
-    "SDE2 audit (docs/SDE2_AUDIT.md): modules 0 to 8 deepened to SDE 2 level; 17 new tickets (M04 13-20, M05 14-15, M06 13, M07 06-08, M08 13-15); module 9 gains resilience and Kubernetes topics; every module independently reviewed; all checks green"
+    "SDE2 audit (docs/SDE2_AUDIT.md): modules 0 to 8 deepened to SDE 2 level; 17 new tickets (M04 13-20, M05 14-15, M06 13, M07 06-08, M08 13-15); module 9 gains resilience and Kubernetes topics; every module independently reviewed; all checks green",
+    "C09: module 9 Architecture (4 quiz topics, 6 code topics: layered (Spring), hexagonal, messaging + transactional outbox (H2), caching, performance, resilience), INC-09 (live map cache: key, stampede, stale-if-error) and FEAT-09 (event-driven billing on a partitioned log); 3 independent reviews (about 40 findings) fixed; all checks green"
   ],
-  "nextTask": "C09-01: module 9 topic 01 layered architecture",
+  "nextTask": "C10-01: module 10 topic 01 giving and receiving code reviews",
   "openDecisions": [
     "A real VoiceOver pass needs a person",
-    "Modules 0 to 8 read-through by you before marking them done"
+    "Modules 0 to 9 read-through by you before marking them done"
   ],
   "blockers": [],
   "milestones": {
@@ -82,8 +83,8 @@
     "C06": "ui_wired",
     "C07": "ui_wired",
     "C08": "ui_wired",
-    "C09": "in_progress",
-    "C10": "planned",
+    "C09": "ui_wired",
+    "C10": "in_progress",
     "M6": "planned",
     "M0": "done"
   },
@@ -158,7 +159,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:10+05:30"
+            "verifiedAt": "2026-11-18T15:16:43+05:30"
           }
         },
         {
@@ -186,7 +187,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:08+05:30"
+            "verifiedAt": "2026-11-18T15:16:41+05:30"
           }
         },
         {
@@ -200,7 +201,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:09+05:30"
+            "verifiedAt": "2026-11-18T15:16:42+05:30"
           }
         }
       ],
@@ -222,7 +223,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:13+05:30"
+            "verifiedAt": "2026-11-18T15:16:46+05:30"
           }
         },
         {
@@ -236,7 +237,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:14+05:30"
+            "verifiedAt": "2026-11-18T15:16:46+05:30"
           }
         },
         {
@@ -250,7 +251,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:15+05:30"
+            "verifiedAt": "2026-11-18T15:16:47+05:30"
           }
         },
         {
@@ -264,7 +265,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:15+05:30"
+            "verifiedAt": "2026-11-18T15:16:48+05:30"
           }
         },
         {
@@ -278,7 +279,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:16+05:30"
+            "verifiedAt": "2026-11-18T15:16:49+05:30"
           }
         },
         {
@@ -292,7 +293,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:17+05:30"
+            "verifiedAt": "2026-11-18T15:16:50+05:30"
           }
         },
         {
@@ -306,7 +307,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:18+05:30"
+            "verifiedAt": "2026-11-18T15:16:51+05:30"
           }
         },
         {
@@ -320,7 +321,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:19+05:30"
+            "verifiedAt": "2026-11-18T15:16:52+05:30"
           }
         },
         {
@@ -334,7 +335,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:20+05:30"
+            "verifiedAt": "2026-11-18T15:16:53+05:30"
           }
         },
         {
@@ -348,7 +349,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:21+05:30"
+            "verifiedAt": "2026-11-18T15:16:54+05:30"
           }
         },
         {
@@ -362,7 +363,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:22+05:30"
+            "verifiedAt": "2026-11-18T15:16:55+05:30"
           }
         },
         {
@@ -376,7 +377,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:23+05:30"
+            "verifiedAt": "2026-11-18T15:16:55+05:30"
           }
         },
         {
@@ -390,7 +391,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:11+05:30"
+            "verifiedAt": "2026-11-18T15:16:44+05:30"
           }
         },
         {
@@ -404,7 +405,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:12+05:30"
+            "verifiedAt": "2026-11-18T15:16:45+05:30"
           }
         }
       ],
@@ -426,7 +427,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:25+05:30"
+            "verifiedAt": "2026-11-18T15:16:58+05:30"
           }
         },
         {
@@ -440,7 +441,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:26+05:30"
+            "verifiedAt": "2026-11-18T15:16:59+05:30"
           }
         },
         {
@@ -454,7 +455,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:27+05:30"
+            "verifiedAt": "2026-11-18T15:17+05:30"
           }
         },
         {
@@ -468,7 +469,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:28+05:30"
+            "verifiedAt": "2026-11-18T15:17:01+05:30"
           }
         },
         {
@@ -482,7 +483,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:29+05:30"
+            "verifiedAt": "2026-11-18T15:17:02+05:30"
           }
         },
         {
@@ -496,7 +497,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:30+05:30"
+            "verifiedAt": "2026-11-18T15:17:03+05:30"
           }
         },
         {
@@ -510,7 +511,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:31+05:30"
+            "verifiedAt": "2026-11-18T15:17:03+05:30"
           }
         },
         {
@@ -524,7 +525,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:32+05:30"
+            "verifiedAt": "2026-11-18T15:17:04+05:30"
           }
         },
         {
@@ -538,7 +539,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:32+05:30"
+            "verifiedAt": "2026-11-18T15:17:05+05:30"
           }
         },
         {
@@ -552,7 +553,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:33+05:30"
+            "verifiedAt": "2026-11-18T15:17:06+05:30"
           }
         },
         {
@@ -566,7 +567,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:34+05:30"
+            "verifiedAt": "2026-11-18T15:17:07+05:30"
           }
         },
         {
@@ -580,7 +581,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:35+05:30"
+            "verifiedAt": "2026-11-18T15:17:08+05:30"
           }
         },
         {
@@ -594,7 +595,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:24+05:30"
+            "verifiedAt": "2026-11-18T15:16:56+05:30"
           }
         },
         {
@@ -608,7 +609,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:24+05:30"
+            "verifiedAt": "2026-11-18T15:16:57+05:30"
           }
         }
       ],
@@ -630,7 +631,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:38+05:30"
+            "verifiedAt": "2026-11-18T15:17:11+05:30"
           }
         },
         {
@@ -644,7 +645,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:39+05:30"
+            "verifiedAt": "2026-11-18T15:17:12+05:30"
           }
         },
         {
@@ -658,7 +659,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:40+05:30"
+            "verifiedAt": "2026-11-18T15:17:13+05:30"
           }
         },
         {
@@ -672,7 +673,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:41+05:30"
+            "verifiedAt": "2026-11-18T15:17:14+05:30"
           }
         },
         {
@@ -687,7 +688,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:42+05:30"
+            "verifiedAt": "2026-11-18T15:17:15+05:30"
           }
         },
         {
@@ -701,7 +702,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:43+05:30"
+            "verifiedAt": "2026-11-18T15:17:15+05:30"
           }
         },
         {
@@ -715,7 +716,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:44+05:30"
+            "verifiedAt": "2026-11-18T15:17:16+05:30"
           }
         },
         {
@@ -729,7 +730,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:45+05:30"
+            "verifiedAt": "2026-11-18T15:17:17+05:30"
           }
         },
         {
@@ -743,7 +744,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:45+05:30"
+            "verifiedAt": "2026-11-18T15:17:18+05:30"
           }
         },
         {
@@ -757,7 +758,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:46+05:30"
+            "verifiedAt": "2026-11-18T15:17:19+05:30"
           }
         },
         {
@@ -771,7 +772,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:47+05:30"
+            "verifiedAt": "2026-11-18T15:17:20+05:30"
           }
         },
         {
@@ -785,7 +786,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:48+05:30"
+            "verifiedAt": "2026-11-18T15:17:21+05:30"
           }
         },
         {
@@ -799,7 +800,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:49+05:30"
+            "verifiedAt": "2026-11-18T15:17:22+05:30"
           }
         },
         {
@@ -813,7 +814,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:50+05:30"
+            "verifiedAt": "2026-11-18T15:17:23+05:30"
           }
         },
         {
@@ -827,7 +828,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:51+05:30"
+            "verifiedAt": "2026-11-18T15:17:24+05:30"
           }
         },
         {
@@ -841,7 +842,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:52+05:30"
+            "verifiedAt": "2026-11-18T15:17:24+05:30"
           }
         },
         {
@@ -855,7 +856,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:36+05:30"
+            "verifiedAt": "2026-11-18T15:17:09+05:30"
           }
         },
         {
@@ -869,7 +870,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:37+05:30"
+            "verifiedAt": "2026-11-18T15:17:10+05:30"
           }
         }
       ],
@@ -891,7 +892,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:54+05:30"
+            "verifiedAt": "2026-11-18T15:17:27+05:30"
           }
         },
         {
@@ -905,7 +906,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:55+05:30"
+            "verifiedAt": "2026-11-18T15:17:28+05:30"
           }
         },
         {
@@ -919,7 +920,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:56+05:30"
+            "verifiedAt": "2026-11-18T15:17:29+05:30"
           }
         },
         {
@@ -933,7 +934,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:57+05:30"
+            "verifiedAt": "2026-11-18T15:17:30+05:30"
           }
         },
         {
@@ -947,7 +948,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:58+05:30"
+            "verifiedAt": "2026-11-18T15:17:31+05:30"
           }
         },
         {
@@ -961,7 +962,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:59+05:30"
+            "verifiedAt": "2026-11-18T15:17:32+05:30"
           }
         },
         {
@@ -975,7 +976,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17+05:30"
+            "verifiedAt": "2026-11-18T15:17:32+05:30"
           }
         },
         {
@@ -990,7 +991,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:01+05:30"
+            "verifiedAt": "2026-11-18T15:17:33+05:30"
           }
         },
         {
@@ -1004,7 +1005,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:02+05:30"
+            "verifiedAt": "2026-11-18T15:17:34+05:30"
           }
         },
         {
@@ -1018,7 +1019,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:03+05:30"
+            "verifiedAt": "2026-11-18T15:17:35+05:30"
           }
         },
         {
@@ -1032,7 +1033,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:04+05:30"
+            "verifiedAt": "2026-11-18T15:17:36+05:30"
           }
         },
         {
@@ -1046,7 +1047,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:05+05:30"
+            "verifiedAt": "2026-11-18T15:17:37+05:30"
           }
         },
         {
@@ -1060,7 +1061,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:06+05:30"
+            "verifiedAt": "2026-11-18T15:17:38+05:30"
           }
         },
         {
@@ -1074,7 +1075,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:07+05:30"
+            "verifiedAt": "2026-11-18T15:17:39+05:30"
           }
         },
         {
@@ -1088,7 +1089,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:08+05:30"
+            "verifiedAt": "2026-11-18T15:17:40+05:30"
           }
         },
         {
@@ -1102,7 +1103,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:09+05:30"
+            "verifiedAt": "2026-11-18T15:17:41+05:30"
           }
         },
         {
@@ -1116,7 +1117,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:09+05:30"
+            "verifiedAt": "2026-11-18T15:17:42+05:30"
           }
         },
         {
@@ -1130,7 +1131,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:10+05:30"
+            "verifiedAt": "2026-11-18T15:17:43+05:30"
           }
         },
         {
@@ -1144,7 +1145,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:11+05:30"
+            "verifiedAt": "2026-11-18T15:17:44+05:30"
           }
         },
         {
@@ -1158,7 +1159,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:12+05:30"
+            "verifiedAt": "2026-11-18T15:17:45+05:30"
           }
         },
         {
@@ -1172,7 +1173,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:53+05:30"
+            "verifiedAt": "2026-11-18T15:17:25+05:30"
           }
         },
         {
@@ -1186,7 +1187,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:16:54+05:30"
+            "verifiedAt": "2026-11-18T15:17:26+05:30"
           }
         }
       ],
@@ -1208,7 +1209,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:22+05:30"
+            "verifiedAt": "2026-11-18T15:17:53+05:30"
           }
         },
         {
@@ -1222,7 +1223,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:23+05:30"
+            "verifiedAt": "2026-11-18T15:17:54+05:30"
           }
         },
         {
@@ -1236,7 +1237,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:24+05:30"
+            "verifiedAt": "2026-11-18T15:17:55+05:30"
           }
         },
         {
@@ -1251,7 +1252,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:25+05:30"
+            "verifiedAt": "2026-11-18T15:17:56+05:30"
           }
         },
         {
@@ -1265,7 +1266,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:26+05:30"
+            "verifiedAt": "2026-11-18T15:17:57+05:30"
           }
         },
         {
@@ -1279,7 +1280,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:27+05:30"
+            "verifiedAt": "2026-11-18T15:17:58+05:30"
           }
         },
         {
@@ -1335,7 +1336,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:28+05:30"
+            "verifiedAt": "2026-11-18T15:17:59+05:30"
           }
         },
         {
@@ -1349,7 +1350,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:29+05:30"
+            "verifiedAt": "2026-11-18T15:18+05:30"
           }
         },
         {
@@ -1363,7 +1364,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:30+05:30"
+            "verifiedAt": "2026-11-18T15:18:01+05:30"
           }
         },
         {
@@ -1377,7 +1378,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:30+05:30"
+            "verifiedAt": "2026-11-18T15:18:02+05:30"
           }
         },
         {
@@ -1391,7 +1392,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:33+05:30"
+            "verifiedAt": "2026-11-18T15:18:05+05:30"
           }
         },
         {
@@ -1405,7 +1406,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:41+05:30"
+            "verifiedAt": "2026-11-18T15:18:12+05:30"
           }
         },
         {
@@ -1419,7 +1420,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:19+05:30"
+            "verifiedAt": "2026-11-18T15:17:51+05:30"
           }
         },
         {
@@ -1433,7 +1434,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:20+05:30"
+            "verifiedAt": "2026-11-18T15:17:52+05:30"
           }
         }
       ],
@@ -1455,7 +1456,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:44+05:30"
+            "verifiedAt": "2026-11-18T15:18:15+05:30"
           }
         },
         {
@@ -1469,7 +1470,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:44+05:30"
+            "verifiedAt": "2026-11-18T15:18:16+05:30"
           }
         },
         {
@@ -1483,7 +1484,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:45+05:30"
+            "verifiedAt": "2026-11-18T15:18:17+05:30"
           }
         },
         {
@@ -1497,7 +1498,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:46+05:30"
+            "verifiedAt": "2026-11-18T15:18:18+05:30"
           }
         },
         {
@@ -1511,7 +1512,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:47+05:30"
+            "verifiedAt": "2026-11-18T15:18:19+05:30"
           }
         },
         {
@@ -1525,7 +1526,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:48+05:30"
+            "verifiedAt": "2026-11-18T15:18:20+05:30"
           }
         },
         {
@@ -1553,7 +1554,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:49+05:30"
+            "verifiedAt": "2026-11-18T15:18:20+05:30"
           }
         },
         {
@@ -1568,7 +1569,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:50+05:30"
+            "verifiedAt": "2026-11-18T15:18:22+05:30"
           }
         },
         {
@@ -1582,7 +1583,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:51+05:30"
+            "verifiedAt": "2026-11-18T15:18:23+05:30"
           }
         },
         {
@@ -1596,7 +1597,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:52+05:30"
+            "verifiedAt": "2026-11-18T15:18:23+05:30"
           }
         },
         {
@@ -1610,7 +1611,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:53+05:30"
+            "verifiedAt": "2026-11-18T15:18:24+05:30"
           }
         },
         {
@@ -1624,7 +1625,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:54+05:30"
+            "verifiedAt": "2026-11-18T15:18:25+05:30"
           }
         },
         {
@@ -1638,7 +1639,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:42+05:30"
+            "verifiedAt": "2026-11-18T15:18:13+05:30"
           }
         },
         {
@@ -1652,7 +1653,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:43+05:30"
+            "verifiedAt": "2026-11-18T15:18:14+05:30"
           }
         }
       ],
@@ -1786,7 +1787,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:55+05:30"
+            "verifiedAt": "2026-11-18T15:18:26+05:30"
           }
         },
         {
@@ -1800,7 +1801,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:17:56+05:30"
+            "verifiedAt": "2026-11-18T15:18:28+05:30"
           }
         }
       ],
@@ -1864,7 +1865,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:18:09+05:30"
+            "verifiedAt": "2026-11-18T15:18:42+05:30"
           }
         },
         {
@@ -1879,7 +1880,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:18:12+05:30"
+            "verifiedAt": "2026-11-18T15:18:45+05:30"
           }
         },
         {
@@ -1893,7 +1894,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:18:14+05:30"
+            "verifiedAt": "2026-11-18T15:18:47+05:30"
           }
         },
         {
@@ -1907,7 +1908,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:18:16+05:30"
+            "verifiedAt": "2026-11-18T15:18:49+05:30"
           }
         },
         {
@@ -1921,7 +1922,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:18:17+05:30"
+            "verifiedAt": "2026-11-18T15:18:51+05:30"
           }
         },
         {
@@ -1935,7 +1936,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:18:35+05:30"
+            "verifiedAt": "2026-11-18T15:19:08+05:30"
           }
         },
         {
@@ -1949,7 +1950,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:18:18+05:30"
+            "verifiedAt": "2026-11-18T15:18:52+05:30"
           }
         },
         {
@@ -1964,7 +1965,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:18:22+05:30"
+            "verifiedAt": "2026-11-18T15:18:55+05:30"
           }
         },
         {
@@ -1978,7 +1979,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:18:26+05:30"
+            "verifiedAt": "2026-11-18T15:18:59+05:30"
           }
         },
         {
@@ -1992,7 +1993,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:18:36+05:30"
+            "verifiedAt": "2026-11-18T15:19:09+05:30"
           }
         },
         {
@@ -2006,7 +2007,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:18:30+05:30"
+            "verifiedAt": "2026-11-18T15:19:03+05:30"
           }
         },
         {
@@ -2020,7 +2021,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:18:34+05:30"
+            "verifiedAt": "2026-11-18T15:19:06+05:30"
           }
         },
         {
@@ -2034,7 +2035,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:18+05:30"
+            "verifiedAt": "2026-11-18T15:18:32+05:30"
           }
         },
         {
@@ -2048,7 +2049,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T11:18:05+05:30"
+            "verifiedAt": "2026-11-18T15:18:38+05:30"
           }
         }
       ],
@@ -2057,7 +2058,7 @@
     {
       "id": "module-09-architecture",
       "title": "Architecture",
-      "status": "planned",
+      "status": "ui_wired",
       "topics": [
         {
           "id": "module-09-architecture/topic-01-layered-architecture",
@@ -2066,11 +2067,11 @@
           "prerequisites": [
             "module-08-backend/boss"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T15:19:14+05:30"
           }
         },
         {
@@ -2081,11 +2082,11 @@
             "module-09-architecture/topic-01-layered-architecture",
             "module-06-craft/topic-02-solid"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T15:19:15+05:30"
           }
         },
         {
@@ -2095,7 +2096,7 @@
           "prerequisites": [
             "module-09-architecture/topic-02-hexagonal-architecture"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": null,
             "skeletonFails": null,
@@ -2109,11 +2110,11 @@
           "prerequisites": [
             "module-09-architecture/topic-03-microservices"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T15:19:16+05:30"
           }
         },
         {
@@ -2123,11 +2124,11 @@
           "prerequisites": [
             "module-09-architecture/topic-04-messaging"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T15:19:19+05:30"
           }
         },
         {
@@ -2137,7 +2138,7 @@
           "prerequisites": [
             "module-09-architecture/topic-05-caching"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": null,
             "skeletonFails": null,
@@ -2151,11 +2152,11 @@
           "prerequisites": [
             "module-09-architecture/topic-06-system-design"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T15:19:20+05:30"
           }
         },
         {
@@ -2165,7 +2166,7 @@
           "prerequisites": [
             "module-09-architecture/topic-07-performance-profiling"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
             "solutionPasses": null,
             "skeletonFails": null,
@@ -2179,7 +2180,12 @@
           "prerequisites": [
             "module-09-architecture/topic-08-observability"
           ],
-          "status": "planned"
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T15:19:21+05:30"
+          }
         },
         {
           "id": "module-09-architecture/topic-10-kubernetes",
@@ -2188,7 +2194,12 @@
           "prerequisites": [
             "module-09-architecture/topic-09-resilience"
           ],
-          "status": "planned"
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
         },
         {
           "id": "module-09-architecture/boss",
@@ -2197,11 +2208,11 @@
           "prerequisites": [
             "module-09-architecture/topic-10-kubernetes"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T15:19:10+05:30"
           }
         },
         {
@@ -2211,11 +2222,11 @@
           "prerequisites": [
             "module-09-architecture/topic-10-kubernetes"
           ],
-          "status": "planned",
+          "status": "ui_wired",
           "verification": {
-            "solutionPasses": null,
-            "skeletonFails": null,
-            "verifiedAt": null
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T15:19:11+05:30"
           }
         }
       ],

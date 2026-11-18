@@ -1,0 +1,22 @@
+id: module-09-architecture/topic-10-kubernetes
+title: "Running on Kubernetes"
+order: 10
+minutes: 15
+prerequisites: [module-09-architecture/topic-09-resilience]
+concepts: [desired-state, pods-and-deployments, services-and-config, probes, resources-and-scaling, rollouts-and-shutdown]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0910
+  from: theo
+  title: "Thirty copies of the API, and I restart them by hand"
+  body: >
+    Spoke has launched in more cities, and our six API servers have become 30 copies. At 3 a.m. two of them froze, and I restarted them by hand, one machine at a time.
+    Every deploy means logging into 30 machines, and last week I missed one. This has to stop.
+    Can you learn how Kubernetes would run them for us, so it restarts, scales and ships them on its own?
+hints:
+  - "Kubernetes works from desired state: you write down what should run, in YAML, and controllers keep changing the cluster until it matches."
+  - "Three probes, three jobs. Startup waits for a slow start. Liveness restarts a stuck container, so it must never check the database. Readiness only takes the Pod out of the Service until it can serve."
+  - "Requests decide where a Pod fits; a memory limit kills the container with exit code 137 when crossed. Give the JVM -XX:MaxRAMPercentage=75 so the heap leaves room below the limit."
+review: true

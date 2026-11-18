@@ -1,0 +1,23 @@
+id: module-09-architecture/topic-09-resilience
+title: "Resilience: rate limits, retries and circuit breakers"
+order: 9
+minutes: 15
+prerequisites: [module-09-architecture/topic-08-observability]
+concepts: [timeouts-and-deadlines, safe-retries, backoff-and-jitter, rate-limiting, circuit-breakers, bulkheads-and-degradation]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0909
+  from: theo
+  title: "The SMS provider went down, and took every rental with it"
+  body: >
+    At 08:10 this morning the SMS provider stopped answering. Every rental start and end waited 30 seconds for it, three times over.
+    Payments queued behind those stuck calls until rentals failed across Riverton. The same morning a partner app sent
+    4,000 requests a minute and slowed the API for everyone. Can you make sure one broken or greedy neighbour can't take us down again?
+hints:
+  - "Never read the real clock: every class gets time from nowMillis.getAsLong(). TokenBucket keeps thousandths of a token in a long, so 300 ms at 2 a second (600 thousandths) is never thrown away."
+  - "CircuitBreaker: state() turns OPEN into HALF_OPEN when now - openedAtMillis >= openMillis. In call(), decide inside synchronized: OPEN throws CallNotPermittedException; HALF_OPEN sets trialInFlight, or throws if it is already set. Run action.get() in a try, then onSuccess() or onFailure() and throw e."
+  - "Backoff: start at base and double while below the cap: ceiling = ceiling > cap / 2 ? cap : ceiling * 2. Retry: for (int attempt = 1; ; attempt++) { try { return action.get(); } catch (RuntimeException e) { if (!isRetryable(e) || attempt >= maxAttempts) throw e; sleeper.sleep(backoff.delayMillis(attempt)); } }"
+review: true

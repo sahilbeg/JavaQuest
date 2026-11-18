@@ -1,0 +1,139 @@
+topic: module-09-architecture/topic-04-messaging
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: async-messaging
+    variants:
+      - { prompt: "Rentals calls Billing over HTTP when a ride ends. Billing is down for a deploy. What happens to riders ending rides?", choices: ["Ending a ride fails or hangs, because Rentals waits for Billing", "Nothing, because HTTP stores the call until Billing is back", "The rides are billed twice", "Billing's database answers for it"], answer: 0 }
+      - { prompt: "Rentals publishes RideEnded to a broker instead of calling Billing. Billing is down for an hour. What happens?", choices: ["The events wait in the broker, and Billing catches up when it is back", "The events are lost, because nobody was listening", "Rentals cannot end rides until Billing is back", "The broker calls Billing's database directly"], answer: 0 }
+      - { prompt: "Ending a ride only works while Billing is also running. What is this called?", choices: ["Temporal coupling", "Eventual consistency", "Log compaction", "A poison message"], answer: 0 }
+    explain: "A synchronous call couples the two services in time: both must be up at once. That is temporal coupling. With async messaging, the message waits, so a consumer that is down simply reads it later."
+    reteach: "### Calling versus telling: sync and async"
+
+  - id: q02
+    type: mcq
+    concept: queues-and-topics
+    variants:
+      - { prompt: "Next month the safety team also wants every RideEnded on the ride-events topic. What must Rentals change?", choices: ["Nothing: the safety team just subscribes", "Rentals must publish a second copy for them", "Rentals must call the safety team over HTTP", "Billing must forward each event to them"], answer: 0 }
+      - { prompt: "Billing, Rewards and Analytics each need every RideEnded event. Which shape fits?", choices: ["A pub/sub topic, so every subscriber gets its own copy", "A queue, so the three share the events between them", "Three HTTP calls from Rentals, one per service", "One consumer that forwards events by email"], answer: 0 }
+    explain: "A topic gives each message to every subscriber, which spreads news. New subscribers cost the producer nothing: the safety team subscribes, and Rentals changes nothing."
+    reteach: "### Topics: publish and subscribe"
+
+  - id: q03
+    type: predict-output
+    concept: partitions-and-offsets
+    prompt: "The key picks the partition: rider number % 3 here. What does this print?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int partitions = 3;
+              int[] riders = {7, 8, 9, 7};
+              StringBuilder out = new StringBuilder();
+              for (int rider : riders) {
+                  out.append(rider % partitions).append(' ');
+              }
+              System.out.println(out.toString().trim());
+          }
+      }
+    answer: "1 2 0 1"
+    explain: "7 % 3 = 1, 8 % 3 = 2, 9 % 3 = 0, and rider 7 lands in partition 1 again. The same key always gives the same partition, which is what keeps one rider's events in order."
+    reteach: "### Partitions: how a topic scales"
+
+  - id: q04
+    type: mcq
+    concept: partitions-and-offsets
+    variants:
+      - { prompt: "ride-events has 3 partitions. The billing group runs 4 consumers. What does the fourth one do?", choices: ["Nothing: it sits idle, because each partition has only one owner in a group", "It reads every partition as a backup copy", "It reads a quarter of each partition", "Kafka adds a fourth partition for it"], answer: 0 }
+      - { prompt: "The billing group has read every ride event. The rewards group is new. Which events does rewards read?", choices: ["All of them: each group keeps its own offsets", "None: billing already took them", "Only events billing failed to handle", "Half of them, shared with billing"], answer: 0 }
+      - { prompt: "billing-1 committed offset 2 for partition 1. What does that mean?", choices: ["The next message it will read from partition 1 is offset 2", "It has read 2 messages from every partition", "Partition 1 has only 2 messages", "Messages 0 and 1 were deleted from the log"], answer: 0 }
+    explain: "Each partition is read by one member of a group, so a group can use at most as many consumers as partitions. Every group has its own offsets, so each group reads every event. A committed offset is the next one to read."
+    reteach: "### Consumer groups and offsets"
+
+  - id: q05
+    type: mcq
+    concept: delivery-guarantees
+    variants:
+      - { prompt: "A consumer commits its offset first, then handles the message, then crashes halfway. Which guarantee is that?", choices: ["At-most-once: the message may be lost", "At-least-once: the message may come twice", "Exactly-once", "Effectively once"], answer: 0 }
+      - { prompt: "A consumer handles the message first, then commits its offset. It crashes between the two. What happens after the restart?", choices: ["It reads the same message again: at-least-once", "The message is lost: at-most-once", "Kafka knows it was handled and skips it", "The broker deletes the whole partition"], answer: 0 }
+      - { prompt: "How do real systems get \"effectively once\" billing?", choices: ["At-least-once delivery plus an idempotent consumer", "At-most-once delivery plus retries", "Turning on Kafka's exactly-once setting, which also covers the Billing database", "One consumer per topic"], answer: 0 }
+    explain: "Commit first risks loss. Handle first risks repeats. Kafka's exactly-once stops at Kafka's edge, so a database effect needs an idempotent consumer on top of at-least-once delivery."
+    reteach: "### Delivery guarantees"
+
+  - id: q06
+    type: spot-the-bug
+    concept: idempotent-consumers
+    prompt: "rider-7's second ride, evt-1003, is never billed. Which line is wrong?"
+    code: |
+      boolean handle(RideEnded event) {
+          if (!processed.add(event.riderId())) {
+              return false;
+          }
+          bills.merge(event.riderId(), event.fareCents(), Long::sum);
+          return true;
+      }
+    bugLine: 2
+    explain: "The consumer remembers rider ids instead of event ids. After rider-7's first ride, every later ride of rider-7 looks like a repeat. Remember event.eventId(), which is unique per event."
+    reteach: "### Idempotent consumers"
+
+  - id: q07
+    type: mcq
+    concept: idempotent-consumers
+    variants:
+      - { prompt: "Billing records the event id in processed_event, commits, then the bill update fails. The event is redelivered. What happens?", choices: ["It is skipped as a repeat, so the ride is never billed", "It is billed once, as it should be", "It is billed twice", "The broker refuses to redeliver it"], answer: 0 }
+      - { prompt: "Where must an idempotent consumer record the event id?", choices: ["In the same database transaction as its effect", "In memory, in a HashSet", "In a separate transaction, committed first", "In the broker, by committing the offset"], answer: 0 }
+      - { prompt: "Billing's INSERT into processed_event fails with SQLState 23505. What should it do?", choices: ["Roll back and skip the message: this event was handled before", "Retry the INSERT until it works", "Add the fare to the bill anyway", "Send the message to the dead-letter queue"], answer: 0 }
+    explain: "The id and the effect must commit together or not at all. Otherwise a crash between them either loses the effect forever or repeats it. A duplicate key (23505) on processed_event means a repeat: roll back and skip."
+    reteach: "### Syntax: a processed-event table"
+
+  - id: q08
+    type: order
+    concept: transactional-outbox
+    prompt: "Put the life of one ride event through the outbox in order."
+    items:
+      - "Update the rental and insert the outbox row in one transaction"
+      - "Commit the transaction"
+      - "The relay selects unsent rows, ordered by id"
+      - "The relay publishes the row and waits for the broker's ack"
+      - "The relay marks the row sent"
+    explain: "The event is safe from the moment of the commit. The relay marks the row sent only after the ack, so a crash can cause a repeat, but never a loss."
+    reteach: "### The transactional outbox"
+
+  - id: q09
+    type: mcq
+    concept: transactional-outbox
+    variants:
+      - { prompt: "The relay publishes row 3, but the broker fails. Rows 4 and 5 are also unsent. What should the relay do?", choices: ["Stop, and leave rows 3, 4 and 5 for the next run, in order", "Skip row 3 and publish rows 4 and 5", "Mark row 3 sent and carry on", "Delete row 3"], answer: 0 }
+      - { prompt: "Why does the outbox give at-least-once delivery, not exactly-once?", choices: ["The relay can crash after the broker's ack but before marking the row sent, so it publishes the row again", "The database may lose committed rows", "The broker always delivers every message twice", "The outbox table has no primary key"], answer: 0 }
+      - { prompt: "Why does the relay mark a row sent only after the broker's ack?", choices: ["Marking first, then crashing before the publish, would lose the event for good", "The broker refuses rows already marked sent", "It makes the relay faster", "So the consumer can skip the event id check"], answer: 0 }
+    explain: "The relay keeps order by stopping at a failure. It marks rows only after the ack, so a crash causes a repeat, never a loss. That is at-least-once delivery."
+    reteach: "### The relay: order, marking and cleanup"
+
+  - id: q10
+    type: mcq
+    concept: event-design
+    variants:
+      - { prompt: "Which field lets a consumer spot an event it has already handled?", choices: ["eventId", "occurredAt", "version", "fareCents"], answer: 0 }
+      - { prompt: "Billing reads fareCents from RideEnded. Which change to the event is safe?", choices: ["Add a new optional field, such as \"discountCents\"", "Rename fareCents to fare", "Change fareCents from cents to dollars", "Remove riderId, because Billing has the rental id"], answer: 0 }
+      - { prompt: "A thin event says only \"rental-17 ended\". What is the main cost?", choices: ["Every consumer must call Rentals back for the details, which couples them again", "It cannot be partitioned", "It cannot carry an event id", "Brokers refuse small messages"], answer: 0 }
+    explain: "A unique eventId lets consumers spot repeats. Add fields, but never rename, remove, or change a field's type or meaning. A fat event saves every consumer a call back to the producer."
+    reteach: "### Designing an event"
+
+  - id: q11
+    type: mcq
+    concept: delivery-guarantees
+    variants:
+      - { prompt: "One RideEnded has a bike type Billing has never heard of. It fails on every try. What should the consumer do?", choices: ["Retry a few times with backoff, then move it to a dead-letter queue and alert someone", "Retry it forever until it works", "Skip it silently and commit", "Stop the whole consumer group until a person comes"], answer: 0 }
+      - { prompt: "Why is retrying a poison message forever so harmful?", choices: ["Everything behind it in the partition waits, so lag grows without end", "The broker deletes the topic after 10 retries", "It makes the message lose its event id", "It turns at-least-once into at-most-once"], answer: 0 }
+    explain: "Bounded retries handle short blips. A message that can never succeed goes to a dead-letter queue, so the partition keeps moving, and a person fixes and replays it later."
+    reteach: "### Retries, poison messages and dead-letter queues"
+
+  - id: q12
+    type: mcq
+    concept: transactional-outbox
+    variants:
+      - { prompt: "Rentals commits the ride, then publishes RideEnded. The server crashes between the two. What happens?", choices: ["The ride is ENDED, but no event exists, so Billing never hears of it", "The commit is undone", "The broker publishes the event by itself", "Billing charges the ride twice"], answer: 0 }
+      - { prompt: "Rentals publishes RideEnded inside its transaction, then the commit fails and rolls back. What happens?", choices: ["Billing charges a ride that, as far as Rentals knows, never ended", "The rollback recalls the message from the broker", "Nothing: the broker waits for the commit", "The ride is billed at 0 cents"], answer: 0 }
+    explain: "Writing to a database and a broker with no shared transaction is the dual-write problem: either write can succeed while the other fails. The outbox puts the event in the same transaction as the ride."
+    reteach: "### The dual-write problem"

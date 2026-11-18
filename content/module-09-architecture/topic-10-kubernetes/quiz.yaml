@@ -1,0 +1,143 @@
+topic: module-09-architecture/topic-10-kubernetes
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: desired-state
+    variants:
+      - { prompt: "spoke-api's Deployment says replicas: 30. Kakashi deletes one of its Pods by hand. What happens next?", choices: ["A new Pod is created, because 29 running differs from the 30 desired", "Nothing: there are 29 Pods until someone applies the file again", "The whole Deployment restarts", "The deleted Pod comes back with the same name and IP"], answer: 0 }
+      - { prompt: "What does a Kubernetes controller do, over and over?", choices: ["Compares the desired state with the actual state, and acts to close the gap", "Runs each kubectl command once, in the order typed", "Restarts every Pod on a timer", "Copies container images between nodes"], answer: 0 }
+    explain: "Controllers reconcile: they compare what you declared with what is running, then act. Deleting a Pod only makes a gap, so the ReplicaSet makes a new Pod, with a new name and IP."
+    reteach: "### Desired state and the reconciliation loop"
+
+  - id: q02
+    type: order
+    concept: desired-state
+    prompt: "You run kubectl apply -f spoke-api.yaml for a brand-new Deployment. Put what happens in order."
+    items:
+      - "kubectl sends the YAML to the API server"
+      - "The API server stores the desired state in etcd"
+      - "The Deployment controller creates a ReplicaSet"
+      - "The ReplicaSet controller creates the Pods"
+      - "The scheduler picks a node for each Pod"
+      - "The kubelet on that node starts the container"
+    explain: "Everything goes through the API server and is stored in etcd. Controllers turn the Deployment into a ReplicaSet and the ReplicaSet into Pods. The scheduler places each Pod, and the kubelet on that node runs it."
+    reteach: "### Cluster, nodes and the control plane"
+
+  - id: q03
+    type: fill-blank
+    concept: pods-and-deployments
+    prompt: "kind: ___     # keeps 30 copies of spoke-api running, and rolls out new versions"
+    answers: ["Deployment"]
+    explain: "A Deployment holds the Pod template and the number of copies, and handles updates by creating a new ReplicaSet for each version. You rarely create ReplicaSets or Pods yourself."
+    reteach: "### Deployments, ReplicaSets and Pods"
+
+  - id: q04
+    type: mcq
+    concept: services-and-config
+    variants:
+      - { prompt: "The billing service must call spoke-api, whose Pods are replaced all the time. What should it call?", choices: ["The Service's DNS name, http://spoke-api", "One Pod's IP address, saved in a config file", "The node's IP address", "The newest Pod's name"], answer: 0 }
+      - { prompt: "How does a Service know which Pods to send traffic to?", choices: ["Its label selector picks the ready Pods with matching labels", "It sends to every Pod in the cluster", "You list each Pod's IP in the Service", "The scheduler tells it once, when the Service is created"], answer: 0 }
+      - { prompt: "The rider app on the internet must reach the spoke-api Service, which is a ClusterIP. What do you add?", choices: ["An Ingress (or Gateway) with a rule for api.spoke.example", "A second ClusterIP Service", "A bigger memory limit", "A readiness probe"], answer: 0 }
+    explain: "Pods are ephemeral and change IP, so a Service gives them one stable name and load-balances across the ready Pods its selector matches. A ClusterIP is internal only; an Ingress or Gateway brings outside traffic in."
+    reteach: "### Services: one stable name"
+
+  - id: q05
+    type: mcq
+    concept: services-and-config
+    variants:
+      - { prompt: "A Secret in git reads api-key: cGF5LWtleS1saXZlLTc=. How safe is that key?", choices: ["Not safe: base64 is an encoding anyone can reverse", "Safe: Kubernetes encrypts Secret values with the cluster's key", "Safe as long as the repo is private", "Safe, because only kubectl can read base64"], answer: 0 }
+      - { prompt: "The payment API key changes. Which way of giving it to the app picks up the change without a restart?", choices: ["Mounting the Secret as a file", "An environment variable from the Secret", "Baking it into the image", "A hard-coded constant"], answer: 0 }
+    explain: "Secret values are only base64, so anyone with the file has the key: keep Secrets out of git and prefer a secret manager. Environment variables are read once at start; a mounted file is updated when the Secret changes."
+    reteach: "### Secrets are not encrypted"
+
+  - id: q06
+    type: spot-the-bug
+    concept: probes
+    prompt: "Spoke's database can be slow for a minute at a time. Which line could restart all 30 Pods at once?"
+    code: |
+      livenessProbe:
+        httpGet:
+          path: /actuator/health
+          port: 8081
+      readinessProbe:
+        httpGet:
+          path: /actuator/health/readiness
+          port: 8081
+    bugLine: 3
+    explain: "Plain /actuator/health includes the db check. A slow database fails every Pod's liveness, and Kubernetes restarts them all: a restart storm. Liveness should use /actuator/health/liveness."
+    reteach: "### Probe mistakes that cause outages"
+
+  - id: q07
+    type: mcq
+    concept: probes
+    variants:
+      - { prompt: "Which probe, when it fails, takes the Pod out of the Service without restarting it?", choices: ["Readiness", "Liveness", "Startup", "All three"], answer: 0 }
+      - { prompt: "A Spring app needs 60 s to start, and liveness keeps killing it at 30 s. What fixes it?", choices: ["A startup probe that allows enough time before liveness begins", "Removing the readiness probe", "A higher memory limit", "Pointing liveness at the database"], answer: 0 }
+      - { prompt: "During a rolling update with maxUnavailable: 0, the new Pods never pass their readiness probe. What happens?", choices: ["The rollout stalls, and the old Pods keep serving", "The old Pods are deleted anyway", "Kubernetes skips readiness for new versions", "The Service sends traffic to the new Pods regardless"], answer: 0 }
+    explain: "Liveness restarts, readiness removes from traffic, and startup holds both off until the app has started. Readiness also gates rollouts: an old Pod leaves only when a new one is ready."
+    reteach: "### Probes: startup, liveness and readiness"
+
+  - id: q08
+    type: predict-output
+    concept: resources-and-scaling
+    prompt: "A Pod's memory limit is 1024 MiB. The first number is the JVM's default heap; the second is with -XX:MaxRAMPercentage=75. What does this print?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              long limitMb = 1024;
+              System.out.println(limitMb * 25 / 100 + " -> " + limitMb * 75 / 100);
+          }
+      }
+    answer: "256 -> 768"
+    explain: "By default the JVM gives the heap 25% of the container limit: 256 MiB. MaxRAMPercentage=75 raises it to 768 MiB and leaves a quarter for memory outside the heap."
+    reteach: "### The JVM in a container"
+
+  - id: q09
+    type: mcq
+    concept: resources-and-scaling
+    variants:
+      - { prompt: "A Pod stops with exit code 137, and describe shows Reason: OOMKilled. What happened?", choices: ["The container went over its memory limit, and the kernel killed it", "The JVM threw OutOfMemoryError and printed a stack trace", "It used too much CPU and was killed", "Its liveness probe failed"], answer: 0 }
+      - { prompt: "A container uses more CPU than its CPU limit. What happens?", choices: ["It is throttled: it slows down but keeps running", "It is killed with exit code 137", "It is moved to another node", "Its CPU request is raised"], answer: 0 }
+      - { prompt: "A new Pod stays Pending. Which setting does the scheduler compare with each node's free room?", choices: ["The Pod's requests", "The Pod's limits", "The Pod's liveness probe", "The image size"], answer: 0 }
+    explain: "Requests decide where a Pod fits; a Pod no node has room for stays Pending. Over the CPU limit a container is throttled; over the memory limit it is killed: OOMKilled, exit code 137, with no Java stack trace."
+    reteach: "### Requests and limits"
+
+  - id: q10
+    type: predict-output
+    concept: resources-and-scaling
+    prompt: "An HPA targets 60% CPU. 10 Pods average 90%. How many Pods does it ask for?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int current = 10;
+              double cpu = 90;
+              double target = 60;
+              System.out.println((int) Math.ceil(current * cpu / target));
+          }
+      }
+    answer: "15"
+    explain: "desired = ceil(current × current value ÷ target) = ceil(10 × 90 ÷ 60) = 15."
+    reteach: "### Horizontal Pod Autoscaler"
+
+  - id: q11
+    type: fill-blank
+    concept: rollouts-and-shutdown
+    prompt: "kubectl rollout ___ deployment/spoke-api     # 2.5.1 is broken: go back to the previous version"
+    answers: ["undo"]
+    explain: "rollout undo scales the previous ReplicaSet back up, so it takes seconds. Then fix git, so the next apply does not bring the bad version back."
+    reteach: "### Syntax: kubectl rollout"
+
+  - id: q12
+    type: order
+    concept: rollouts-and-shutdown
+    prompt: "A spoke-api Pod with a preStop sleep is deleted during a rollout. Put its shutdown in order."
+    items:
+      - "The API server marks the Pod as Terminating"
+      - "The preStop hook sleeps 10 s while the Pod is taken out of the Service"
+      - "The kubelet sends SIGTERM to the java process"
+      - "Spring stops taking new requests and finishes the ones in flight"
+      - "The process exits before terminationGracePeriodSeconds runs out, so no SIGKILL is needed"
+    explain: "Deleting a Pod starts its removal from the Service and the preStop hook together. The sleep gives load balancers time to stop sending traffic. Then SIGTERM lets Spring drain gracefully, within the grace period."
+    reteach: "### Graceful shutdown"

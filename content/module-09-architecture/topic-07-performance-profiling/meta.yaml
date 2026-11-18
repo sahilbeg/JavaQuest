@@ -1,0 +1,23 @@
+id: module-09-architecture/topic-07-performance-profiling
+title: "Performance: percentiles, profiling and hotspots"
+order: 7
+minutes: 15
+prerequisites: [module-09-architecture/topic-06-system-design]
+concepts: [measure-first, percentiles, capacity-math, profiling, benchmarking, hotspots]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0907
+  from: theo
+  title: "Ride history is fine on average, and five seconds for some riders"
+  body: >
+    The dashboard says the ride-history report averages 180 ms, so on paper it is healthy.
+    But Itachi keeps forwarding riders who stared at a spinner for five seconds or more, and nobody knows where that time goes.
+    Can you measure it properly, find the real hotspot and make it fast, without guessing?
+hints:
+  - "A percentile is a position in the sorted samples. Sort a copy, then the rank is percent × n / 100, rounded up, counting from 1."
+  - "Little's law is L = λ × W. With latency in milliseconds, that is rate × millis / 1000. Threads round up with Math.ceilDiv; a rate you promise rounds down with plain division."
+  - "In build: fill a HashMap<String, String> from rider id to name in one loop over riders. Then use one StringBuilder, namesById.getOrDefault(ride.riderId(), \"unknown rider\"), and append the same pieces slowBuild joins with +."
+review: true

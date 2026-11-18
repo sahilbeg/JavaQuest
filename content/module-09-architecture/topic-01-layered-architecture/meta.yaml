@@ -1,0 +1,23 @@
+id: module-09-architecture/topic-01-layered-architecture
+title: "Layered architecture: web, service, domain, persistence"
+order: 1
+minutes: 15
+prerequisites: [module-08-backend/boss]
+concepts: [cost-of-change, dependency-rule, dtos-vs-entities, validation-and-transactions, error-mapping, domain-model-styles, testing-layers]
+practice:
+  kind: code
+  runner: spring
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0901
+  from: maya
+  title: "The rentals controller does everything"
+  body: >
+    RentalController reads HTTP, checks the rules, keeps the rentals and sends the whole entity back, payment token included.
+    The kiosk team wants to start rentals too, and we are moving to PostgreSQL next month. Right now both changes mean editing that one file.
+    Split it into a controller, a service and a repository, and keep the token out of the JSON.
+hints:
+  - "Move each job down one layer: storage goes into InMemoryRentalRepository, the busy-bike rule into RentalService, and HTTP stays in RentalController. Errors become exceptions that ApiErrors maps."
+  - "The controller's only field is the RentalService. start is one call, rentals.start(request.riderId(), request.bikeId(), request.stationId(), request.paymentToken()), then ResponseEntity.created(URI.create(\"/rentals/\" + rental.id())).body(rental). Add @Valid before @RequestBody."
+  - "In the service: if (rentals.findActiveByBikeId(bikeId).isPresent()) throw new BikeUnavailableException(bikeId); then save new Rental(rentals.nextId(), ...) and return RentalResponse.from(rental). In ApiErrors: ProblemDetail p = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage()); p.setType(URI.create(PROBLEMS + \"bike-unavailable\")); p.setTitle(\"Bike unavailable\"); p.setProperty(\"bikeId\", ex.bikeId()); return p;"
+review: true

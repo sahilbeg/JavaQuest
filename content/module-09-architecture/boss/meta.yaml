@@ -1,0 +1,24 @@
+id: module-09-architecture/boss
+title: "INC-09: The live map falls over at peak"
+order: 99
+minutes: 15
+prerequisites: [module-09-architecture/topic-10-kubernetes]
+concepts: [cache-keys, ttl-expiry, cache-stampede, single-flight, stale-if-error]
+practice:
+  kind: code
+  runner: plain
+  timeoutSeconds: 30
+ticket:
+  key: INC-09
+  from: theo
+  title: "The live map falls over at peak"
+  body: >
+    At 8 a.m. the live map in the rider app was all spinners, and the station-status service sat at 100% CPU.
+    The cache in front of it shows a 0% hit rate on the dashboard, and every 5 seconds the load jumps again.
+    When the service finally fell over, the map showed errors at every station instead of numbers that were a few seconds old.
+    Please make the map survive tomorrow's rush hour.
+hints:
+  - "Bronze: look at the map's key type. A MapRequest holds a new requestId every time, so no two requests are equal. Use Map<String, Entry> keyed by request.stationId(), and make isFresh return now.isBefore(entry.loadedAt().plus(TTL))."
+  - "Silver: keep a second ConcurrentHashMap<String, CompletableFuture<StationStatus>> of loads in progress. putIfAbsent a new future: if you got null back, you load, complete the future (or completeExceptionally) and remove it in a finally block. Otherwise join() the future you got back."
+  - "Gold: wrap source.load in try/catch. Remember when each station last failed. In the catch, or when the last failure is less than RETRY_INTERVAL ago, return entry.status().asStale() if now is before loadedAt + TTL + MAX_STALE, else throw new StatusUnavailableException(stationId, e)."
+review: false

@@ -2,11 +2,11 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-18T11:20:00+05:30
+- **Last updated:** 2026-11-18T15:19:47+05:30
 - **Phase:** PHASE 1: build
-- **Milestone:** C09
-- **Resume here:** The SDE 2 deepening of modules 0 to 8 is committed at status ui_wired (see docs/SDE2_AUDIT.md). Next: C09 (Architecture), now 10 topics including resilience and Kubernetes; it must deliver what earlier lessons promise (rate-limit counting, circuit breakers, Actuator, the outbox). Modules 0 to 8 still need your read-through to reach done.
-- **Next task:** C09-01: module 9 topic 01 layered architecture
+- **Milestone:** C10
+- **Resume here:** C09 is committed at status ui_wired. Next: C10 (Professional), the last content module; its interview-prep topic must include a low-level design round (building on SPK-0613) and a system design round (building on SPK-0906). Modules 0 to 9 still need your read-through to reach done.
+- **Next task:** C10-01: module 10 topic 01 giving and receiving code reviews
 
 ## Completed tasks
 
@@ -57,6 +57,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - C08: module 8 Backend engineering (2 quiz topics, 10 Spring/SQL/JDBC code topics), INC-08 and FEAT-08; 3 reviews (about 45 findings) fixed; runner compiles with -parameters; all checks green
 - UX overhaul (user feedback): playful redesign, journey map, mastery gating with author mode, lesson player with short cards, animation engine (code and scene, checked by check-content), first-visit walkthroughs; 56 animations added to modules 0 to 2 and reviewed
 - SDE2 audit (docs/SDE2_AUDIT.md): modules 0 to 8 deepened to SDE 2 level; 17 new tickets (M04 13-20, M05 14-15, M06 13, M07 06-08, M08 13-15); module 9 gains resilience and Kubernetes topics; every module independently reviewed; all checks green
+- C09: module 9 Architecture (4 quiz topics, 6 code topics: layered (Spring), hexagonal, messaging + transactional outbox (H2), caching, performance, resilience), INC-09 (live map cache: key, stampede, stale-if-error) and FEAT-09 (event-driven billing on a partitioned log); 3 independent reviews (about 40 findings) fixed; all checks green
 
 ## Decisions
 
@@ -80,7 +81,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 ## Open decisions
 
 - A real VoiceOver pass needs a person
-- Modules 0 to 8 read-through by you before marking them done
+- Modules 0 to 9 read-through by you before marking them done
 
 ## Blockers
 
@@ -99,8 +100,8 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | C06 | ui_wired |
 | C07 | ui_wired |
 | C08 | ui_wired |
-| C09 | in_progress |
-| C10 | planned |
+| C09 | ui_wired |
+| C10 | in_progress |
 | M0 | done |
 | M1 | done |
 | M2 | done |
@@ -122,7 +123,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-06-craft | Paying off debt | 15 | ui_wired |
 | module-07-tooling | Shipping safely | 10 | ui_wired |
 | module-08-backend | The Spoke API | 17 | ui_wired |
-| module-09-architecture | Growing up | 12 | planned |
+| module-09-architecture | Growing up | 12 | ui_wired |
 | module-10-professional | Full-time offer | 8 | planned |
 
 ## Topics past `planned`
@@ -264,6 +265,18 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-08-backend/topic-12-api-docs-errors | ui_wired | True | True |
 | module-08-backend/boss | ui_wired | True | True |
 | module-08-backend/mini-project | ui_wired | True | True |
+| module-09-architecture/topic-01-layered-architecture | ui_wired | True | True |
+| module-09-architecture/topic-02-hexagonal-architecture | ui_wired | True | True |
+| module-09-architecture/topic-03-microservices | ui_wired | None | None |
+| module-09-architecture/topic-04-messaging | ui_wired | True | True |
+| module-09-architecture/topic-05-caching | ui_wired | True | True |
+| module-09-architecture/topic-06-system-design | ui_wired | None | None |
+| module-09-architecture/topic-07-performance-profiling | ui_wired | True | True |
+| module-09-architecture/topic-08-observability | ui_wired | None | None |
+| module-09-architecture/topic-09-resilience | ui_wired | True | True |
+| module-09-architecture/topic-10-kubernetes | ui_wired | None | None |
+| module-09-architecture/boss | ui_wired | True | True |
+| module-09-architecture/mini-project | ui_wired | True | True |
 
 ## Commands
 

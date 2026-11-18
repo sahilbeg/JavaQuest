@@ -1,0 +1,168 @@
+topic: module-09-architecture/topic-09-resilience
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: timeouts-and-deadlines
+    variants:
+      - { prompt: "What does a read timeout limit?", choices: ["Waiting for the answer after the connection is open", "Opening the TCP connection", "How long a DNS answer may be cached", "How many times the client retries"], answer: 0 }
+      - { prompt: "Spoke calls the SMS provider with HttpClient.newHttpClient() and a request built with no timeout. The provider accepts the connection, then never answers. What happens?", choices: ["The thread waits forever", "Java gives up after 30 seconds", "Java gives up after 2 seconds", "The call fails at once with HttpTimeoutException"], answer: 0 }
+    explain: "A connect timeout limits opening the connection; a read timeout limits waiting for the answer. Java's HttpClient has neither by default, so a silent provider keeps the thread for good."
+    reteach: "### Timeouts everywhere"
+
+  - id: q02
+    type: predict-output
+    concept: timeouts-and-deadlines
+    prompt: "The rider app waits 3 s in all. How many milliseconds does the SMS call get?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              long budgetMs = 3_000;       // the rider app's deadline
+              long spentMs = 2_200;        // the database and the payment took 2.2 s
+              long smsTimeoutMs = 2_000;   // the SMS call's own limit
+              System.out.println(Math.min(smsTimeoutMs, budgetMs - spentMs));
+          }
+      }
+    answer: "800"
+    explain: "Only 3,000 - 2,200 = 800 ms of the budget is left. The call gets the smaller of its own 2,000 ms limit and the time left, so 800 ms."
+    reteach: "### Deadlines: one time budget for the whole chain"
+
+  - id: q03
+    type: mcq
+    concept: safe-retries
+    variants:
+      - { prompt: "Which answer from the payment provider is worth retrying with backoff?", choices: ["503 Service Unavailable", "400 Bad Request", "409 Conflict", "401 Unauthorized"], answer: 0 }
+      - { prompt: "The SMS provider answers 429 with Retry-After: 2. What should Spoke's client do?", choices: ["Wait at least 2 seconds, then try again", "Try again at once", "Give up for good, because 4xx is never retried", "Try again with a different API key"], answer: 0 }
+    explain: "Timeouts, 429 and 5xx may pass next time, and 429 tells you how long to wait. 400, 401, 404 and 409 fail the same way on every try."
+    reteach: "### Which failures to retry"
+
+  - id: q04
+    type: mcq
+    concept: safe-retries
+    variants:
+      - { prompt: "A call to charge rider-7 460 cents timed out. When is it safe to retry it?", choices: ["When every try sends the same Idempotency-Key, so the provider returns the first result", "Always, because a timeout means the charge never happened", "Never, because timeouts are permanent", "Only after waiting 30 seconds"], answer: 0 }
+      - { prompt: "Which Idempotency-Key suits every retry of rental-17's unlock charge?", choices: ["rental-17-unlock, the same on every try", "A new random UUID on every try", "The current time in milliseconds", "No key: the provider can tell retries apart by itself"], answer: 0 }
+    explain: "After a timeout you cannot know whether the charge happened. Sending the same key with every try lets the provider spot the repeat and return the first answer instead of charging twice."
+    reteach: "### Idempotency before retries"
+
+  - id: q05
+    type: predict-output
+    concept: safe-retries
+    prompt: "The provider is down. The rider app tries 2 times, and for each, the API tries 4 times. What does this print?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int providerCalls = 0;
+              for (int appTry = 1; appTry <= 2; appTry++) {
+                  for (int apiTry = 1; apiTry <= 4; apiTry++) {
+                      providerCalls++;   // every call fails
+                  }
+              }
+              System.out.println(providerCalls);
+          }
+      }
+    answer: "8"
+    explain: "Nested retries multiply: 2 × 4 = 8 calls for one tap. That is retry amplification, and why only one layer should retry."
+    reteach: "### Retry amplification: 3 × 3 × 3"
+
+  - id: q06
+    type: spot-the-bug
+    concept: safe-retries
+    prompt: "This loop wraps the payment provider. Which line is wrong?"
+    code: |
+      for (int attempt = 1; attempt <= 3; attempt++) {
+          try {
+              return provider.charge("rider-7", 460);
+          } catch (RuntimeException e) {
+              if (attempt == 3) throw e;
+              sleeper.sleep(backoff.delayMillis(attempt));
+          }
+      }
+    bugLine: 5
+    explain: "It retries every provider error, including 400 and 409, which fail the same way each time. Throw at once when the error is not retryable: if (!isRetryable(e) || attempt == 3) throw e;"
+    reteach: "### Which failures to retry"
+
+  - id: q07
+    type: predict-output
+    concept: backoff-and-jitter
+    prompt: "Base 100 ms, cap 1,000 ms. What are the ceilings for attempts 1 to 5?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              long base = 100;
+              long cap = 1_000;
+              StringBuilder out = new StringBuilder();
+              for (int attempt = 1; attempt <= 5; attempt++) {
+                  long ceiling = Math.min(cap, base * (1L << (attempt - 1)));
+                  out.append(ceiling).append(" ");
+              }
+              System.out.println(out.toString().trim());
+          }
+      }
+    answer: "100 200 400 800 1000"
+    explain: "The ceiling doubles after every failed attempt: 100, 200, 400, 800. The 5th would be 1,600, but the cap stops it at 1,000."
+    reteach: "### Exponential backoff, a cap and full jitter"
+
+  - id: q08
+    type: mcq
+    concept: backoff-and-jitter
+    variants:
+      - { prompt: "Why add full jitter to exponential backoff?", choices: ["So thousands of clients that failed together do not all retry at the same instant", "So each retry waits less than the one before", "So the server can tell the clients apart", "So retries skip the rate limiter"], answer: 0 }
+      - { prompt: "With full jitter and a ceiling of 800 ms, how long does a client wait?", choices: ["A random time from 0 to 800 ms", "Exactly 800 ms", "800 ms plus a random time up to 800 ms", "A random time from 400 to 800 ms"], answer: 0 }
+    explain: "Full jitter picks a random wait from 0 to the ceiling. Without it, everyone who failed together retries together, in waves that knock the provider down again."
+    reteach: "### Exponential backoff, a cap and full jitter"
+
+  - id: q09
+    type: predict-output
+    concept: rate-limiting
+    prompt: "A token bucket holds at most 10 tokens and refills 4 a second. What does this print?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              long capacity = 10;
+              long ratePerSecond = 4;
+              long tokens = 0;                 // the bucket was just emptied
+              long elapsedMs = 2_500;
+              tokens = Math.min(capacity, tokens + elapsedMs * ratePerSecond / 1_000);
+              tokens = tokens - 3;             // three requests arrive
+              elapsedMs = 5_000;
+              tokens = Math.min(capacity, tokens + elapsedMs * ratePerSecond / 1_000);
+              System.out.println(tokens);
+          }
+      }
+    answer: "10"
+    explain: "2.5 s at 4 a second earns 10 tokens. Three requests leave 7. Five more seconds earn 20, but the bucket never holds more than its capacity, 10."
+    reteach: "### Token bucket"
+
+  - id: q10
+    type: mcq
+    concept: rate-limiting
+    variants:
+      - { prompt: "A fixed window counter allows 100 requests a minute. What is the most it can let through between 08:00:59 and 08:01:01?", choices: ["200", "100", "101", "150"], answer: 0 }
+      - { prompt: "Which rate limiter counts the last 60 seconds exactly, but stores a time for every allowed request?", choices: ["Sliding window log", "Fixed window counter", "Sliding window counter", "Token bucket"], answer: 0 }
+    explain: "A fixed window allows a full 100 at the end of one minute and another 100 at the start of the next. A sliding log is exact because it keeps every time, which costs O(limit) memory per key."
+    reteach: "### Leaky bucket, and choosing one"
+
+  - id: q11
+    type: order
+    concept: circuit-breakers
+    prompt: "Put the life of a circuit breaker in order, from a healthy provider to healed."
+    items:
+      - "CLOSED: calls go through, and failures in a row are counted"
+      - "The 5th failure in a row opens the breaker"
+      - "OPEN: calls fail at once, without reaching the provider"
+      - "The open duration passes, and the breaker is half-open"
+      - "One trial call goes through and succeeds"
+      - "CLOSED again, with the failure count back at 0"
+    explain: "Closed counts failures; at the threshold it opens and fails fast. After the open duration it is half-open, and a trial call decides: success closes it, failure opens it again."
+    reteach: "### Circuit breakers: closed, open, half-open"
+
+  - id: q12
+    type: mcq
+    concept: bulkheads-and-degradation
+    variants:
+      - { prompt: "SMS and payment calls share one pool of 100 threads, and the SMS provider hangs. What does a bulkhead change?", choices: ["SMS may use only its own share, such as 20 threads, so payments keep theirs", "SMS calls get faster", "The SMS provider gets more of the threads", "Payments are retried more often"], answer: 0 }
+      - { prompt: "The SMS bulkhead's 20 slots are all busy when rider-9 starts a ride. What should happen?", choices: ["tryAcquire fails at once, the text is queued for later, and the rental still starts", "rider-9's request waits until a slot frees up, however long that takes", "The rental is refused", "Spoke adds a 21st slot for rider-9"], answer: 0 }
+    explain: "A bulkhead gives each dependency its own limited share, so a hanging SMS provider can only use up SMS slots. When they are full, fail fast and fall back: the text waits, the ride does not."
+    reteach: "### Bulkheads"

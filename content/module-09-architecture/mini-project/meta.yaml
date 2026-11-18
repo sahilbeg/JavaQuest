@@ -1,0 +1,23 @@
+id: module-09-architecture/mini-project
+title: "FEAT-09: Event-driven billing"
+order: 100
+minutes: 15
+prerequisites: [module-09-architecture/topic-10-kubernetes]
+concepts: [event-log, partitions, consumer-offsets, idempotent-consumer, dead-letter-queue]
+practice:
+  kind: code
+  runner: plain
+ticket:
+  key: FEAT-09
+  from: priya
+  title: "Billing that keeps up on its own"
+  body: >
+    Every time a ride ends, billing calls the rentals service to ask what to charge.
+    At rush hour rentals is busy, billing times out, and riders get their charges hours late or twice.
+    Can billing just listen for the RideEnded events instead, keep working when rentals is busy, and catch up afterwards?
+    The billing page also needs each rider's total for the month.
+hints:
+  - "Start with Fares and EventLog: they need no other class. Each partition is a List<LogRecord>, so a record's offset is simply its index in that list."
+  - "In poll, the order inside the loop is the whole design: handle(record.event()) first, then offsets.commit(GROUP, partition, record.offset() + 1). In handle, check store.isProcessed(ride.eventId()) before anything else."
+  - "For the retries, loop attempt = 1 to MAX_ATTEMPTS. Inside, try gateway.charge(...), then store.recordCharge(ride, paymentId) and return. Catch PaymentFailedException and keep the last one. After the loop, store.deadLetter(ride, \"payment failed after 3 attempts: \" + last.getMessage())."
+review: false

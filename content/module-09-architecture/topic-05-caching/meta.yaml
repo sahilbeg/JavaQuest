@@ -1,0 +1,23 @@
+id: module-09-architecture/topic-05-caching
+title: "Caching: hits, eviction and invalidation"
+order: 5
+minutes: 15
+prerequisites: [module-09-architecture/topic-04-messaging]
+concepts: [hit-ratio, cache-patterns, ttl-and-eviction, invalidation, stampede-and-single-flight, negative-caching, http-caching]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0905
+  from: theo
+  title: "Every app open hammers the profile service"
+  body: >
+    Every time a rider opens the app, we ask the rider-profile service for their profile, and it is drowning at rush hour.
+    Fare quotes are worse: the pricing service recomputes the same EBIKE quote thousands of times a minute, and each one takes 300 ms.
+    Can we keep answers we already have, without ever showing a rider someone else's data or an old price after a change?
+hints:
+  - "A cache keeps a copy of an answer close by. Count how often you find it there (a hit) and how often you must ask the slow service (a miss)."
+  - "A LinkedHashMap built with accessOrder = true keeps the least recently used key first, and removeEldestEntry lets it evict that key. On a write, save to the store first, then delete the cached copy."
+  - "For single flight, putIfAbsent a new CompletableFuture. If someone else's future comes back, join it. If yours went in, call the pricing service, then complete your future; on a failure, remove it before completing it exceptionally."
+review: true

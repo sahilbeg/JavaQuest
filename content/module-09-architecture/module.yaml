@@ -1,0 +1,6 @@
+id: module-09-architecture
+title: Architecture
+project: Growing up
+summary: Spoke is growing fast. Shape the code so it can change, split work across services and events, cache, scale, watch production, survive failures and run on Kubernetes.
+unlockAfter: module-08-backend/boss
+mascotIntro: "Yo! Spoke went from one city block to the whole of Riverton. Code that worked for ten riders now has to work for a hundred thousand. Time to think like an architect."

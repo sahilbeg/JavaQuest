@@ -1,0 +1,160 @@
+topic: module-09-architecture/topic-05-caching
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: hit-ratio
+    variants:
+      - { prompt: "A cache hit takes 1 ms. A miss takes 51 ms (1 ms to check the cache, then 50 ms for the profile service). What is the average at a 90% hit ratio?", choices: ["6 ms", "1 ms", "5.1 ms", "46 ms"], answer: 0 }
+      - { prompt: "A cache hit takes 1 ms. A miss takes 51 ms (1 ms to check the cache, then 50 ms for the profile service). What is the average at a 0% hit ratio?", choices: ["51 ms, slower than having no cache", "50 ms, the same as having no cache", "1 ms", "0 ms"], answer: 0 }
+      - { prompt: "10,000 profile requests arrive a minute. How many reach the profile service at a 99% hit ratio?", choices: ["100", "1,000", "9,900", "10"], answer: 0 }
+    explain: "Average = ratio × hit time + (1 − ratio) × miss time. At 90%: 0.9 × 1 + 0.1 × 51 = 6 ms. At 0% every request pays for the check and the store: 51 ms. At 99%, 1% of 10,000 = 100 requests reach the store."
+    reteach: "### Hits, misses and hit ratio"
+
+  - id: q02
+    type: predict-output
+    concept: hit-ratio
+    prompt: "A cache-aside loop over five app opens. What does it print?"
+    code: |
+      import java.util.HashMap;
+      import java.util.Map;
+
+      public class Main {
+          public static void main(String[] args) {
+              Map<String, String> cache = new HashMap<>();
+              int hits = 0;
+              int misses = 0;
+              for (String riderId : new String[] {"rider-7", "rider-7", "rider-8", "rider-7", "rider-8"}) {
+                  if (cache.containsKey(riderId)) {
+                      hits++;
+                  } else {
+                      misses++;
+                      cache.put(riderId, "profile of " + riderId);
+                  }
+              }
+              System.out.println(hits + " hits, " + misses + " misses");
+          }
+      }
+    answer: "3 hits, 2 misses"
+    explain: "The first rider-7 and the first rider-8 miss and fill the cache. The other three lookups hit. That is a hit ratio of 3 out of 5, or 60%."
+    reteach: "### Hits, misses and hit ratio"
+
+  - id: q03
+    type: mcq
+    concept: cache-patterns
+    variants:
+      - { prompt: "A write goes to the cache, which answers at once and writes to the store later, in batches. Which pattern is this?", choices: ["Write-behind", "Write-through", "Write-around", "Cache-aside"], answer: 0 }
+      - { prompt: "A write goes only to the store, skipping the cache, and the cache fills on the next read. Which pattern is this?", choices: ["Write-around", "Write-behind", "Write-through", "Read-through"], answer: 0 }
+      - { prompt: "The app checks the cache, loads from the store on a miss, and puts the answer in the cache itself. Which pattern is this?", choices: ["Cache-aside", "Read-through", "Write-through", "Write-behind"], answer: 0 }
+      - { prompt: "Why is write-behind a bad fit for recording payments?", choices: ["If the cache crashes before it writes to the store, the payments are lost", "It makes every payment slower", "It cannot store numbers", "It deletes the payment from the cache"], answer: 0 }
+    explain: "Cache-aside: the app checks, loads and fills. Write-through: cache and store both, before answering. Write-behind: cache now, store later, so a crash loses writes. Write-around: store only; the cache fills on the next read."
+    reteach: "### Write-behind and write-around"
+
+  - id: q04
+    type: mcq
+    concept: cache-patterns
+    variants:
+      - { prompt: "The profile endpoint caches its answer under the key profile:me. What goes wrong?", choices: ["The first rider's profile is cached and shown to every other rider", "Nothing, because each rider's phone has its own cache", "Every lookup misses, so the cache never helps", "The cache runs out of memory at once"], answer: 0 }
+      - { prompt: "Fare quotes are cached under quote:EBIKE:20:req-<request id>. What do you see in production?", choices: ["A 0% hit ratio, the same load on the pricing service, and memory filling with unused entries", "A 100% hit ratio", "Riders see each other's quotes", "The cache throws an error for each request"], answer: 0 }
+    explain: "A key must include everything the answer depends on, or riders share answers that are not theirs. It must include nothing else: a request id makes every key new, so every lookup misses and nothing is ever reused."
+    reteach: "### Designing the cache key"
+
+  - id: q05
+    type: predict-output
+    concept: ttl-and-eviction
+    prompt: "An LRU cache with room for two profiles. What does it print?"
+    code: |
+      import java.util.LinkedHashMap;
+      import java.util.Map;
+
+      public class Main {
+          public static void main(String[] args) {
+              Map<String, String> lru = new LinkedHashMap<>(16, 0.75f, true) {
+                  @Override
+                  protected boolean removeEldestEntry(Map.Entry<String, String> eldest) {
+                      return size() > 2;
+                  }
+              };
+              lru.put("rider-1", "Ada");
+              lru.put("rider-2", "Ben");
+              lru.get("rider-1");
+              lru.put("rider-3", "Cy");
+              System.out.println(lru.keySet());
+          }
+      }
+    answer: "[rider-1, rider-3]"
+    explain: "The get moves rider-1 to the most recently used end, so rider-2 becomes the least recently used. Putting rider-3 makes three keys, and removeEldestEntry drops rider-2."
+    reteach: "### Syntax: an LRU cache with LinkedHashMap"
+
+  - id: q06
+    type: fill-blank
+    concept: ttl-and-eviction
+    prompt: "Map<String, String> lru = new LinkedHashMap<>(16, 0.75f, ___);"
+    answers: ["true"]
+    explain: "The third argument turns on access order: every get or put moves the key to the end, so the first key is always the least recently used. With false, the map keeps insertion order, which makes a FIFO cache."
+    reteach: "### Syntax: an LRU cache with LinkedHashMap"
+
+  - id: q07
+    type: mcq
+    concept: ttl-and-eviction
+    variants:
+      - { prompt: "Why add a small random jitter to each cached profile's 10 minute TTL?", choices: ["So keys cached at the same moment do not all expire at the same moment", "So each profile is a little more accurate", "So the cache uses less memory", "So the hit ratio is easier to measure"], answer: 0 }
+      - { prompt: "At 08:00, every rider profile is cached within one minute, each with exactly a 10 minute TTL. What happens around 08:10?", choices: ["They all expire together, and the profile service gets every miss at once", "Nothing, because a TTL only counts reads", "The cache evicts them one by one with LRU", "The profiles refresh themselves without asking the store"], answer: 0 }
+    explain: "Keys cached together with the same TTL expire together, and every one of them misses at the same moment. A small random jitter on each TTL spreads the expiries out, so the store sees a steady trickle instead."
+    reteach: "### Jitter: do not expire everything at once"
+
+  - id: q08
+    type: order
+    concept: invalidation
+    prompt: "Ada changes her home station to uptown. Put the cache-aside update in order."
+    items:
+      - "The API receives the new home station"
+      - "Write uptown to the profile database"
+      - "Delete rider-7 from the cache"
+      - "The next read misses and loads uptown from the database"
+    explain: "Write the source of truth first, then delete the cached copy. Deleting first lets a read in between load the old profile and cache it again."
+    reteach: "### Invalidation: delete on write"
+
+  - id: q09
+    type: spot-the-bug
+    concept: invalidation
+    prompt: "This update runs on two servers at once for the same rider. Which line can leave an older profile cached?"
+    code: |
+      void update(RiderProfile profile) {
+          store.save(profile);
+          cache.put(profile.riderId(), profile);
+      }
+    bugLine: 3
+    explain: "If two updates race, the slower one can put its older profile into the cache last. Delete the key instead: cache.invalidate(profile.riderId()). Two deletes in any order leave the same, safe result."
+    reteach: "### Why delete beats update"
+
+  - id: q10
+    type: mcq
+    concept: stampede-and-single-flight
+    variants:
+      - { prompt: "The cached EBIKE 20 minute quote expires, and 500 requests call the pricing service in the same second. What is this, and what fixes it?", choices: ["A cache stampede; single flight lets one request load while the others wait", "Cache penetration; cache 'not found' answers", "A hot key; add more pricing servers", "A stale read; delete the key on write"], answer: 0 }
+      - { prompt: "In a single-flight loader, the one call to the pricing service fails. What should happen?", choices: ["The waiting requests get the error, the failed entry is removed, and the next request tries again", "The failure is cached so nobody calls the pricing service again", "The waiting requests each call the pricing service themselves at once", "The waiting requests wait forever"], answer: 0 }
+      - { prompt: "Why must a single-flight loader not call the slow pricing service inside a synchronized method?", choices: ["One slow quote would make requests for every other quote wait too", "synchronized methods cannot return long values", "The pricing service would be called twice", "It would cache failures"], answer: 0 }
+    explain: "Single flight puts a future in the map first, and only the request that put it loads. The others wait on that future. On a failure, remove the future before failing it, so the next request retries. Load outside any lock, so other keys are not blocked."
+    reteach: "### Cache stampede and single flight"
+
+  - id: q11
+    type: mcq
+    concept: negative-caching
+    variants:
+      - { prompt: "A broken script asks for rider-404, rider-405, rider-406... thousands a second. None exist, and each request reaches the profile service. What fixes it?", choices: ["Cache the 'not found' answer too, with a short TTL", "Make the profile TTL longer", "Switch from LRU to LFU", "Add jitter to the TTL"], answer: 0 }
+      - { prompt: "Why give a cached 'not found' answer a shorter TTL than a real profile?", choices: ["A rider who signs up just after a failed lookup would look missing for too long", "'Not found' answers use more memory", "Short TTLs make the hit ratio higher", "The profile service needs to count the misses"], answer: 0 }
+    explain: "Requests for missing keys pass through the cache every time: cache penetration. Negative caching stores 'not found', but briefly, and the entry is deleted when that rider is created."
+    reteach: "### Cache penetration and negative caching"
+
+  - id: q12
+    type: mcq
+    concept: http-caching
+    variants:
+      - { prompt: "The profile endpoint answers with Cache-Control: private, max-age=60. What does that allow?", choices: ["The rider's own phone may reuse the answer for 60 seconds; a shared CDN may not keep it", "Any CDN may keep it for 60 minutes", "Nobody may keep it at all", "The server must cache it for 60 seconds"], answer: 0 }
+      - { prompt: "The app sends If-None-Match: \"v12\" and the profile has not changed. What does the server answer?", choices: ["304 Not Modified, with no body", "200 OK with the full profile", "412 Precondition Failed", "204 No Content"], answer: 0 }
+      - { prompt: "The profile endpoint sends Cache-Control: max-age=60, stale-if-error=3600. The copy is 10 minutes old and the server answers 500. What may the app do?", choices: ["Reuse its old copy, because it is less than an hour past expiry", "Nothing: an expired copy may never be used", "Reuse the old copy forever", "Retry the request in a tight loop until it works"], answer: 0 }
+      - { prompt: "Which Cache-Control value suits a payment page?", choices: ["no-store", "public, max-age=3600", "private, max-age=60", "max-age=0, public"], answer: 0 }
+    explain: "max-age says how long a copy stays fresh; private keeps it on the user's own device; no-store forbids keeping it. With a matching ETag in If-None-Match, the server answers 304 and the client reuses its copy. stale-if-error lets a client reuse an expired copy for a limited time while the server fails."
+    reteach: "### HTTP caching: Cache-Control and ETag"

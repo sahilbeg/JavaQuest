@@ -1,0 +1,139 @@
+topic: module-09-architecture/topic-08-observability
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: three-signals
+    variants:
+      - { prompt: "Which signal answers \"is something wrong, and how much?\" most cheaply, so alerts are built on it?", choices: ["Metrics", "Logs", "Traces", "Heap dumps"], answer: 0 }
+      - { prompt: "Which signal shows where, across several services, one request spent its time?", choices: ["A trace", "A counter", "A gauge", "A health check"], answer: 0 }
+      - { prompt: "Which signal gives the exact exception and details for one failed request?", choices: ["Logs", "A counter", "A gauge", "A health check"], answer: 0 }
+    explain: "Metrics say that something is wrong, and they are cheap enough to alert on. Traces say where. Logs say why. A shared trace id joins them."
+    reteach: "### Three signals: logs, metrics and traces"
+
+  - id: q02
+    type: order
+    concept: three-signals
+    prompt: "Riders cannot end rides. Put the steps of a good investigation in order."
+    items:
+      - "A burn-rate alert on end-ride errors pages the on-call engineer"
+      - "The dashboard shows end-ride errors high and the payment pool full"
+      - "A failed trace shows the payment span taking 30 seconds"
+      - "A log search for that trace id shows the exact exception"
+    explain: "Metrics raise the alarm and narrow the area, a trace finds the slow hop, and the logs of that one trace explain why. The shared trace id is what lets you jump between them."
+    reteach: "## Worked example"
+
+  - id: q03
+    type: spot-the-bug
+    concept: structured-logging
+    prompt: "This login handler logs two lines. Which line must never ship?"
+    code: |
+      String riderId = request.riderId();
+      String authToken = request.header("Authorization");
+      log.info("login ok for {}", riderId);
+      log.debug("token was {}", authToken);
+      return session(riderId, authToken);
+    bugLine: 4
+    explain: "Anyone who reads that log can act as the rider. Secrets such as tokens and passwords never go in logs, not even at DEBUG. Log the rider id instead."
+    reteach: "### What never goes in a log"
+
+  - id: q04
+    type: predict-output
+    concept: structured-logging
+    prompt: "MDC keeps its values in a ThreadLocal, one copy per thread. What does this print?"
+    code: |
+      public class Main {
+          public static void main(String[] args) throws InterruptedException {
+              ThreadLocal<String> requestId = new ThreadLocal<>();
+              requestId.set("req-8f3a");
+              Thread worker = new Thread(() -> System.out.println(requestId.get()));
+              worker.start();
+              worker.join();
+              System.out.println(requestId.get());
+          }
+      }
+    answer: |
+      null
+      req-8f3a
+    explain: "The worker thread has its own empty copy, so it prints null. Only the main thread set the value. That is why a request id in the MDC must be copied into tasks you hand to a thread pool."
+    reteach: "### Correlation ids with MDC"
+
+  - id: q05
+    type: mcq
+    concept: metrics
+    variants:
+      - { prompt: "Which kind of metric fits \"bikes docked at Harbor right now\"?", choices: ["A gauge", "A counter", "A timer", "A trace"], answer: 0 }
+      - { prompt: "Which kind of metric fits \"rides ended since the server started\"?", choices: ["A counter", "A gauge", "A health indicator", "A span"], answer: 0 }
+      - { prompt: "Why count \"errors so far\" with a counter rather than a gauge read every 15 seconds?", choices: ["A counter never forgets, so a burst between two reads still shows up in its rate", "Gauges cannot hold whole numbers", "Counters are the only kind Prometheus stores", "A gauge would count each error twice"], answer: 0 }
+    explain: "A counter only goes up, and the monitoring system works out its rate. A gauge is a current value that rises and falls. A gauge of a count can miss a burst that came and went between reads."
+    reteach: "### Counter, gauge, timer and histogram"
+
+  - id: q06
+    type: mcq
+    concept: metrics
+    variants:
+      - { prompt: "Which tag is safe to put on an HTTP request metric?", choices: ["bike_type, with values CLASSIC, EBIKE and CARGO", "riderId", "rentalId", "The real path, such as /rentals/rental-17/end"], answer: 0 }
+      - { prompt: "A metric has 20 URIs × 4 methods × 8 statuses = 640 time series. Someone adds a riderId tag, and there are 100,000 riders. How many series can there be now?", choices: ["64,000,000", "100,640", "640", "6,400"], answer: 0 }
+      - { prompt: "Which uri tag value should a request to end rental-17 be counted under?", choices: ["/rentals/{id}/end", "/rentals/rental-17/end", "rental-17", "rider-7"], answer: 0 }
+    explain: "Every combination of tag values is its own time series, so a tag with many values multiplies them. Keep tags to a small, fixed set, and use the URI template, never the real path."
+    reteach: "### Labels and the cardinality explosion"
+
+  - id: q07
+    type: mcq
+    concept: distributed-tracing
+    variants:
+      - { prompt: "In traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01, which part stays the same on every hop of the request?", choices: ["4bf92f3577b34da6a3ce929d0e0e4736, the trace id", "00f067aa0ba902b7, the parent id", "01, the flags", "00, the version"], answer: 0 }
+      - { prompt: "The payment service ignores the incoming traceparent header and starts its own trace. What do you see?", choices: ["The request splits into two unrelated traces, so the slow payment step is missing from the API's waterfall", "Nothing changes, because trace ids are random anyway", "The API stops answering", "Every log line is lost"], answer: 0 }
+    explain: "The trace id is shared by every span of one request; the parent id names the span that made this call. Each hop must pass the header on, or the trace breaks in two."
+    reteach: "### Syntax: the traceparent header"
+
+  - id: q08
+    type: mcq
+    concept: distributed-tracing
+    variants:
+      - { prompt: "You want to keep every failed or slow trace, and only 1% of the normal ones. Which sampling does that?", choices: ["Tail sampling, which decides after the trace is complete", "Head sampling at 1%", "No sampling at all", "Sampling by rider id"], answer: 0 }
+      - { prompt: "Head sampling keeps 10% of traces. What is its main weakness?", choices: ["It decides before the request runs, so it also drops 90% of the rare failed and slow traces", "It keeps too many traces", "It cannot pass the traceparent header", "It only works for one service"], answer: 0 }
+    explain: "Head sampling decides at the start, before anyone knows if the request will fail. Tail sampling decides at the end, so it can keep the interesting traces, at the cost of holding spans in memory."
+    reteach: "### Sampling: head vs tail"
+
+  - id: q09
+    type: mcq
+    concept: health-checks
+    variants:
+      - { prompt: "What happens when an instance fails its readiness check?", choices: ["The load balancer stops sending it traffic, but it is not restarted", "The platform restarts it at once", "It deletes its database", "Nothing: readiness is only for dashboards"], answer: 0 }
+      - { prompt: "Why must the liveness check not include the database?", choices: ["A database blip would fail every instance at once, and restarting them all cannot fix the database", "Databases cannot be checked over HTTP", "Liveness checks run too rarely to see the database", "The database would restart instead"], answer: 0 }
+      - { prompt: "An instance is still starting up. Which check should say it is not ready yet?", choices: ["Readiness, so it gets no traffic until it can serve", "Liveness, so it is restarted", "Both, so it restarts and gets no traffic", "Neither: a starting server should take traffic at once"], answer: 0 }
+    explain: "Liveness failing means restart; readiness failing means no traffic for now. Readiness is OUT_OF_SERVICE during startup and shutdown. Liveness only checks the process itself, or a shared dependency causes a restart storm."
+    reteach: "### Liveness vs readiness"
+
+  - id: q10
+    type: spot-the-bug
+    concept: health-checks
+    prompt: "These are Spoke's Actuator settings. Which line can cause a restart storm?"
+    code: |
+      management.endpoints.web.exposure.include=health,info,prometheus
+      management.endpoint.health.probes.enabled=true
+      management.endpoint.health.group.liveness.include=livenessState,db
+      management.server.port=8081
+    bugLine: 3
+    explain: "Adding db to the liveness group means a short database outage fails liveness everywhere, so every instance is restarted together. Keep liveness to livenessState."
+    reteach: "### Liveness vs readiness"
+
+  - id: q11
+    type: fill-blank
+    concept: slos-and-alerting
+    prompt: "0.1% of 43,200 minutes = ___ minutes"
+    answers: ["43.2"]
+    explain: "30 days is 43,200 minutes. A 99.9% SLO allows 0.1% of them: 43.2 minutes of full outage a month. Last night's 40 minutes used about 93% of it."
+    reteach: "### SLI, SLO, SLA and error budgets"
+
+  - id: q12
+    type: mcq
+    concept: slos-and-alerting
+    variants:
+      - { prompt: "Which alert should wake someone up at 3 a.m.?", choices: ["End-ride requests are failing fast enough to burn the error budget at 14 times the normal pace", "CPU is above 90% on one server for 5 minutes", "One pod restarted once", "Disk is 60% full"], answer: 0 }
+      - { prompt: "The SLO allows 0.1% errors, and 0.5% of requests are failing. What is the burn rate?", choices: ["5", "0.5", "0.4", "50"], answer: 0 }
+      - { prompt: "Why should every page link to a runbook?", choices: ["So the half-asleep engineer knows what the alert means and the first safe steps", "So the alert fires more often", "Because runbooks replace dashboards", "So nobody has to write a postmortem"], answer: 0 }
+    explain: "Page on symptoms riders feel, such as a fast error-budget burn, not on causes such as CPU. Burn rate = current error rate / allowed error rate = 0.5 / 0.1 = 5. Every page should be actionable and link to a runbook."
+    reteach: "### Burn rate and alerting on symptoms"

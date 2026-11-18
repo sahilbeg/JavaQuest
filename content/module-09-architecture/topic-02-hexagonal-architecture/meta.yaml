@@ -1,0 +1,24 @@
+id: module-09-architecture/topic-02-hexagonal-architecture
+title: "Hexagonal architecture: ports and adapters"
+order: 2
+minutes: 15
+prerequisites: [module-09-architecture/topic-01-layered-architecture, module-06-craft/topic-02-solid]
+concepts: [ports-and-adapters, driving-and-driven-ports, dependency-inversion, framework-free-core, anti-corruption-layer, test-adapters, clean-onion-and-costs]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m09.hexagonal.SpokeRides
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0902
+  from: maya
+  title: "We're switching to PayRiver for payments"
+  body: >
+    We move all card payments to PayRiver next month. The old end-ride code has the old provider's JSON fields and status codes
+    mixed right into the fare logic, and nobody remembers what code 7 means. I don't want to do this surgery again in two years.
+    Can you give the core its own payment port and keep PayRiver in an adapter at the edge?
+hints:
+  - "The core (EndRideService) talks only to its ports: RentalStore, PaymentPort, RiderNotifier and the Clock. Everything PayRiver-shaped lives in PayRiverPaymentAdapter: the \"4.60\" text, the \"ok\" and \"declined\" words, and PayRiverException."
+  - "endRide: find the rental or throw, then minutes = (int) Duration.between(rental.startedAt(), now).toMinutes(), fare = rental.type().fareCents(minutes), result = payments.charge(...) once, store rental.end(now, fare, result), notify, return the receipt. Delete wasPaid."
+  - "In the adapter: BigDecimal.valueOf(cents, 2).toPlainString() gives \"4.60\" on every machine. toResult: null response or status -> FAILED; switch (status) { case \"ok\" -> PAID; case \"declined\" -> DECLINED; default -> FAILED; }. Wrap client.createCharge in try { ... } catch (PayRiverException e) { return PaymentResult.FAILED; }."
+review: true

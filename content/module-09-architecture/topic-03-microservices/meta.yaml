@@ -1,0 +1,21 @@
+id: module-09-architecture/topic-03-microservices
+title: "Microservices: when and why"
+order: 3
+minutes: 15
+prerequisites: [module-09-architecture/topic-02-hexagonal-architecture]
+concepts: [monoliths, microservice-tradeoffs, distributed-failures, service-boundaries, service-communication, sagas, evolving-services]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0903
+  from: priya
+  title: "An investor asks: why isn't Spoke on microservices?"
+  body: >
+    At yesterday's pitch an investor asked why Spoke is not on microservices "like everyone else". I promised her a real answer by Friday.
+    Can you learn what splitting our app into services would buy us, and what it would cost, so we can answer with numbers instead of buzzwords?
+hints:
+  - "Every call between services can be slow, lost or repeated. Along a chain of sync calls, availabilities multiply: 0.999 to the power 5 is about 0.995."
+  - "Draw service lines around business capabilities, such as Rentals, Payments, Fleet and Riders, each with its own database. Conway's law: one small team rarely gains from many services."
+  - "Across services there is no shared transaction. A saga runs one local step per service and, when a step fails, runs compensations in reverse order: refund, then release the bike."
+review: true

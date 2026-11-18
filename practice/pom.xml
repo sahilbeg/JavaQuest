@@ -265,6 +265,14 @@
                 <source>module-08-backend/topic-15-concurrent-writes/src</source>
                 <source>module-08-backend/topic-11-spring-security/src</source>
                 <source>module-08-backend/topic-12-api-docs-errors/src</source>
+                <source>module-09-architecture/topic-01-layered-architecture/src</source>
+                <source>module-09-architecture/topic-02-hexagonal-architecture/src</source>
+                <source>module-09-architecture/topic-04-messaging/src</source>
+                <source>module-09-architecture/topic-05-caching/src</source>
+                <source>module-09-architecture/topic-07-performance-profiling/src</source>
+                <source>module-09-architecture/topic-09-resilience/src</source>
+                <source>module-09-architecture/boss/src</source>
+                <source>module-09-architecture/mini-project/src</source>
               </sources>
             </configuration>
           </execution>
@@ -389,6 +397,14 @@
                 <source>module-08-backend/topic-15-concurrent-writes/test</source>
                 <source>module-08-backend/topic-11-spring-security/test</source>
                 <source>module-08-backend/topic-12-api-docs-errors/test</source>
+                <source>module-09-architecture/topic-01-layered-architecture/test</source>
+                <source>module-09-architecture/topic-02-hexagonal-architecture/test</source>
+                <source>module-09-architecture/topic-04-messaging/test</source>
+                <source>module-09-architecture/topic-05-caching/test</source>
+                <source>module-09-architecture/topic-07-performance-profiling/test</source>
+                <source>module-09-architecture/topic-09-resilience/test</source>
+                <source>module-09-architecture/boss/test</source>
+                <source>module-09-architecture/mini-project/test</source>
               </sources>
             </configuration>
           </execution>

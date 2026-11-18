@@ -1,0 +1,133 @@
+topic: module-09-architecture/topic-03-microservices
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: monoliths
+    variants:
+      - { prompt: "Which is a real strength of a monolith?", choices: ["Ending a ride and saving its fare can commit in one database transaction", "Each part can be deployed without the others", "Each part can use a different programming language", "A memory leak in one part cannot affect the others"], answer: 0 }
+      - { prompt: "Which problem shows up as a monolith grows very big?", choices: ["Many teams step on each other, and one slow test suite blocks everyone's release", "Method calls between its parts start to get lost on the network", "It can no longer use a database", "It must be rewritten in another language"], answer: 0 }
+    explain: "A monolith runs as one process, so calls are fast and one transaction can cover everything. Its trouble is size: many teams in one codebase and one release slow each other down."
+    reteach: "### The monolith, and what is good about it"
+
+  - id: q02
+    type: mcq
+    concept: microservice-tradeoffs
+    variants:
+      - { prompt: "Bike GPS pings arrive about 140 times as often as rides start. Which benefit of microservices does that point to?", choices: ["Independent scaling: run more copies of just the ping handling", "Technology choice: rewrite rides in another language", "Fault isolation: rides never fail", "Team autonomy: one team per ping"], answer: 0 }
+      - { prompt: "Payments has a bug. Which benefit lets Spoke ship the fix at noon without restarting unlocks?", choices: ["Independent deploys", "Two-phase commit", "A shared database", "Log compaction"], answer: 0 }
+      - { prompt: "A memory leak in Riders' photo upload cannot crash Rentals. Which benefit is that?", choices: ["Fault isolation", "Independent scaling", "Technology choice", "Eventual consistency"], answer: 0 }
+    explain: "Microservices buy independent deploys, independent scaling, team autonomy, fault isolation and technology choice. Each is worth it only when you really need it."
+    reteach: "### What you gain"
+
+  - id: q03
+    type: mcq
+    concept: monoliths
+    variants:
+      - { prompt: "A small team like Spoke's asks how to start. What is the usual advice?", choices: ["A modular monolith with strong walls, splitting a module out only for a real, measured reason", "One microservice per bounded context from day one", "One microservice per database table", "A plain monolith with no modules at all, forever"], answer: 0 }
+      - { prompt: "Which is a real reason to split a module out into its own service?", choices: ["One part needs far more capacity than the rest, like pings versus rides", "Everyone else uses microservices", "Microservices are more modern", "The code would look cleaner"], answer: 0 }
+    explain: "Splitting is cheap to start and expensive to undo. Start with a modular monolith, and split for scaling, team, isolation, technology or compliance needs you can show."
+    reteach: "### How to decide"
+
+  - id: q04
+    type: predict-output
+    concept: distributed-failures
+    prompt: "Three services in a chain, each up 99% of the time. What does this print?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              double each = 0.99;
+              double chain = each * each * each;
+              System.out.println(Math.round(chain * 10000) / 100.0);
+          }
+      }
+    answer: "97.03"
+    explain: "The chain works only when all three work: 0.99 × 0.99 × 0.99 = 0.970299, which rounds to 97.03%. Each service alone looks fine, but the chain is down about 3% of the time."
+    reteach: "### Availability multiplies"
+
+  - id: q05
+    type: mcq
+    concept: distributed-failures
+    variants:
+      - { prompt: "Which of these is one of the fallacies of distributed computing?", choices: ["The network is reliable", "Networks sometimes lose messages", "Remote calls need timeouts", "Servers can change address"], answer: 0 }
+      - { prompt: "\"Latency is zero\" is a fallacy. What does it mean for Spoke?", choices: ["Every hop between services adds time, and five hops in a row add up", "Phones and servers speak different protocols", "The network is never secure", "Bandwidth is unlimited inside a data centre"], answer: 0 }
+    explain: "Networks lose, delay and repeat messages. Believing otherwise is a fallacy, so every remote call needs a plan for being slow, lost or repeated."
+    reteach: "### The fallacies of distributed computing"
+
+  - id: q06
+    type: mcq
+    concept: service-boundaries
+    variants:
+      - { prompt: "Where should Spoke draw service boundaries?", choices: ["Around business capabilities, such as Rentals, Payments, Fleet and Riders", "Around technical layers, such as web, logic and data", "One service per database table", "One service per Java class"], answer: 0 }
+      - { prompt: "Every change to Rentals also needs a change to Payments. What does that tell you?", choices: ["The coupling between them is too high: the boundary is in the wrong place", "The two services have high cohesion, which is good", "Payments needs more copies", "Rentals should call Payments synchronously"], answer: 0 }
+    explain: "Cut along business capabilities (bounded contexts). Things that change together belong together; constant changes across a boundary mean high coupling."
+    reteach: "### Drawing boundaries: bounded contexts"
+
+  - id: q07
+    type: mcq
+    concept: service-boundaries
+    prompt: "Payments reads Rentals' rental table directly with SQL, to save an API call. What is the main danger?"
+    choices:
+      - "Rentals can rename a column and break Payments in production without any Payments change"
+      - "SQL is slower than HTTP"
+      - "Payments can no longer use transactions"
+      - "Rentals' database will refuse the connection"
+    answer: 0
+    explain: "A shared table is hidden coupling: the two services can no longer change or deploy on their own. Each table should have one owner, and others ask through its API or keep a copy from events."
+    reteach: "### Database per service"
+
+  - id: q08
+    type: mcq
+    concept: service-communication
+    variants:
+      - { prompt: "The rider app should call one address, and requests to /rentals/** and /riders/** reach different services. What does that?", choices: ["An API gateway", "A saga orchestrator", "A contract test", "Two-phase commit"], answer: 0 }
+      - { prompt: "Copies of Fleet start and stop all day with new addresses. How does Rentals find a healthy copy?", choices: ["Service discovery: a registry, or a DNS name, that tracks healthy copies", "Rentals stores Fleet's IP address in a constant", "It asks the rider app", "Through the shared database"], answer: 0 }
+    explain: "The gateway is the single front door for outside clients. Service discovery is the phone book that services use to find healthy copies of each other."
+    reteach: "### Front doors and phone books: gateway and discovery"
+
+  - id: q09
+    type: order
+    concept: sagas
+    prompt: "rider-9's unlock saga fails when the dock jams. Put what happens in order."
+    items:
+      - "Fleet reserves B-2001"
+      - "Payments charges 100 cents"
+      - "Opening the dock fails"
+      - "Payments refunds the 100 cents"
+      - "Fleet releases B-2001"
+    explain: "Each step commits locally. On failure, compensations run in reverse order: the newest step is undone first."
+    reteach: "### Sagas: a chain of local transactions"
+
+  - id: q10
+    type: mcq
+    concept: sagas
+    variants:
+      - { prompt: "Why do microservices usually avoid two-phase commit?", choices: ["It blocks with rows locked if the coordinator dies, and every participant must be up", "It cannot update more than one row", "It only works with NoSQL databases", "It is the same thing as a saga"], answer: 0 }
+      - { prompt: "In two-phase commit, what happens in the first phase?", choices: ["The coordinator asks every database to prepare, and each locks its rows and votes yes or no", "Every database commits at once", "Each service runs its compensation", "The coordinator publishes an event"], answer: 0 }
+    explain: "2PC asks everyone to prepare and vote, then commit. It holds locks while it waits and needs every participant up, so a dead coordinator or one slow database stalls them all."
+    reteach: "### Why not one big transaction?"
+
+  - id: q11
+    type: mcq
+    concept: sagas
+    variants:
+      - { prompt: "In a choreographed saga, who decides the next step?", choices: ["Nobody centrally: each service reacts to the events of the others", "An orchestrator that calls each service in turn", "The API gateway", "The rider's phone"], answer: 0 }
+      - { prompt: "Why would Spoke run its unlock saga with an orchestrator rather than choreography?", choices: ["The steps and their compensations stay readable in one place", "Orchestration needs no network calls", "Choreography cannot use events", "An orchestrator makes the saga a single database transaction"], answer: 0 }
+    explain: "Choreography spreads the flow across services that react to events. Orchestration puts the flow in one coordinator, which is easier to follow when there are many steps and failure paths."
+    reteach: "### Choreography or orchestration"
+
+  - id: q12
+    type: spot-the-bug
+    concept: evolving-services
+    prompt: "Rentals' v1 response had rentalId, riderId, bikeId and fareCents. Payments reads bikeId and prints it on every receipt. This new record ships while Payments still reads v1. Which line breaks Payments?"
+    code: |
+      record RentalResponse(
+          String rentalId,
+          String riderId,
+          String bikeCode,
+          long fareCents,
+          int minutes) {}
+    bugLine: 4
+    explain: "Renaming bikeId to bikeCode removes a field that Payments reads. With Jackson 3, a missing String field quietly becomes null, so nothing fails until Payments uses it, and receipts print null. Adding minutes on line 6 is safe. Use expand and contract: send both names until every caller has moved."
+    reteach: "### Changing an API without breaking callers"

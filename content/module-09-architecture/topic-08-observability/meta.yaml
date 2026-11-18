@@ -1,0 +1,22 @@
+id: module-09-architecture/topic-08-observability
+title: "Logs, metrics, traces and health checks"
+order: 8
+minutes: 15
+prerequisites: [module-09-architecture/topic-07-performance-profiling]
+concepts: [three-signals, structured-logging, metrics, distributed-tracing, health-checks, slos-and-alerting]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0908
+  from: theo
+  title: "Riders could not end rides for 40 minutes, and we heard it from Twitter"
+  body: >
+    Last night, from 21:40, riders could not end their rides for 40 minutes. No alarm went off. We found out from angry tweets,
+    and then spent ages grepping logs on six servers to learn it was the payment call. Next time I want an alert before the first
+    tweet, a dashboard that points at the broken part, and a trail from that alert to the exact failing request. Can you learn how?
+hints:
+  - "Each signal answers one question: metrics say that something is wrong, traces say where, and logs say why. A shared trace id joins them."
+  - "Metric tags must have a small, fixed set of values. A rider id as a tag makes one time series per rider. Liveness restarts a process, so it must never depend on the database."
+  - "An SLO of 99.9% over 30 days leaves 0.1% of 43,200 minutes: 43.2 minutes. Burn rate = current error rate / allowed error rate, and alerts page on symptoms riders feel."
+review: true

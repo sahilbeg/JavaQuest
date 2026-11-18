@@ -1,0 +1,134 @@
+topic: module-09-architecture/topic-02-hexagonal-architecture
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: ports-and-adapters
+    variants:
+      - { prompt: "In hexagonal architecture, which way do the dependencies point?", choices: ["Inward, towards the core with the business rules", "Downward, from the web to the database", "Outward, from the core to each adapter", "Both ways, between every pair of classes"], answer: 0 }
+      - { prompt: "What is a port?", choices: ["An interface the core defines, in its own words, for talking to the outside", "A network port number like 8080", "A class that wraps a provider's library", "A Spring configuration file"], answer: 0 }
+    explain: "A port is an interface the core owns. Every adapter depends on the core, so all dependencies point inward."
+    reteach: "### Ports and adapters"
+
+  - id: q02
+    type: mcq
+    concept: driving-and-driven-ports
+    prompt: "Which of these is a driving (primary) port?"
+    choices:
+      - "EndRideUseCase, called by the app's controller, the kiosk and tests"
+      - "PaymentPort, called by the core to charge a rider"
+      - "RentalStore, called by the core to save rentals"
+      - "Clock, asked by the core for the time"
+    answer: 0
+    explain: "A driving port is a use case the outside calls into the core. A controller, the kiosk, a CLI and tests all drive it."
+    reteach: "### Driving ports: how the world calls the core"
+
+  - id: q03
+    type: mcq
+    concept: driving-and-driven-ports
+    variants:
+      - { prompt: "Why does EndRideService take a java.time.Clock instead of calling Instant.now()?", choices: ["The clock is a driven port, so tests can pass a fixed clock and get the same fare on every run", "Instant.now() does not compile in a service class", "Clock is faster than Instant", "Spring needs a Clock to start the app"], answer: 0 }
+      - { prompt: "Which of these is a driven (secondary) port?", choices: ["RiderNotifier, which the core calls to tell a rider their ride ended", "EndRideUseCase, which a REST controller calls", "The REST controller itself", "A JUnit test class"], answer: 0 }
+    explain: "Driven ports are what the core needs from the outside: storage, payments, notifications and the time. A fixed test clock makes \"12 minutes, 460 cents\" true on every run."
+    reteach: "### Driven ports: what the core needs"
+
+  - id: q04
+    type: mcq
+    concept: dependency-inversion
+    variants:
+      - { prompt: "Who should own the PaymentPort interface, and where does it live?", choices: ["The core owns it and it lives in the core; the PayRiver adapter imports it", "PayRiver owns it, inside their library", "The adapter owns it, next to PayRiverPaymentAdapter", "The composition root owns it"], answer: 0 }
+      - { prompt: "What problem does a hexagon fix that plain layers leave behind?", choices: ["In layers, the service with the business rules still depends on storage and providers", "Layers cannot have more than three classes", "Layers do not allow REST controllers", "Layers make the code run slower"], answer: 0 }
+      - { prompt: "In a hexagon, which import is allowed?", choices: ["PayRiverPaymentAdapter imports the core's PaymentPort", "EndRideService imports PayRiverResponse", "RentalStore imports java.sql.ResultSet", "PaymentPort imports PayRiverClient"], answer: 0 }
+    explain: "In layers, the service depends on the persistence layer's interface. Dependency inversion moves the interface into the core, so the adapter depends on the core, never the other way round."
+    reteach: "### Dependency inversion: who owns the interface"
+
+  - id: q05
+    type: spot-the-bug
+    concept: framework-free-core
+    prompt: "This is meant to be a core port. Which line ties the core to PayRiver?"
+    code: |
+      package jq.m09.hexagonal;
+
+      public interface PaymentPort {
+          PayRiverResponse charge(String riderId, String rentalId, long amountCents);
+      }
+    bugLine: 4
+    explain: "The return type is PayRiver's own response. The port must speak Spoke's words, PaymentResult, and the adapter must translate PayRiver's status into it."
+    reteach: "### Syntax: a port and an adapter"
+
+  - id: q06
+    type: mcq
+    concept: framework-free-core
+    prompt: "What is the biggest win of a core with no Spring, SQL or provider imports?"
+    choices:
+      - "Its rules can be tested with plain JUnit and fakes, in milliseconds, and survive provider and framework changes"
+      - "It uses less memory at runtime"
+      - "It needs no constructor"
+      - "It can be deployed without a JVM"
+    answer: 0
+    explain: "The core stays plain Java, so its tests need no Spring context, database or network, and framework upgrades do not reach it."
+    reteach: "### The core imports no framework and no SQL"
+
+  - id: q07
+    type: mcq
+    concept: anti-corruption-layer
+    variants:
+      - { prompt: "PayRiver adds a new status, \"pending_review\". Which class should change?", choices: ["Only PayRiverPaymentAdapter, which translates PayRiver's words into PaymentResult", "EndRideService, to check for the new word", "PaymentPort, to return a String", "Every class that charges riders"], answer: 0 }
+      - { prompt: "What is an anti-corruption layer?", choices: ["A translating adapter that keeps a foreign system's formats and quirks out of your core", "A virus scanner for uploaded files", "A layer that encrypts the database", "A test that checks for null values"], answer: 0 }
+    explain: "The adapter is the only place that knows PayRiver's words. A new status changes one class, and the core keeps speaking PAID, DECLINED and FAILED."
+    reteach: "### Anti-corruption layer"
+
+  - id: q08
+    type: predict-output
+    concept: anti-corruption-layer
+    prompt: "An adapter turns 460 cents into PayRiver's amount like this. What does it print?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              long cents = 460;
+              System.out.println(cents / 100.0);
+          }
+      }
+    answer: "4.6"
+    explain: "A double prints without the trailing zero, so PayRiver gets \"4.6\" instead of \"4.60\". BigDecimal.valueOf(460, 2).toPlainString() always gives \"4.60\"."
+    reteach: "### Trap: money as text"
+
+  - id: q09
+    type: fill-blank
+    concept: framework-free-core
+    prompt: "EndRideUseCase endRide = new ___(store, payments, notifier, Clock.systemUTC());   // in the composition root"
+    answers: ["EndRideService"]
+    explain: "The composition root builds the adapters and passes them into the core class that implements the driving port. It is the only code that knows both sides."
+    reteach: "### The composition root"
+
+  - id: q10
+    type: mcq
+    concept: test-adapters
+    variants:
+      - { prompt: "How do you test that ending a ride charges 460 cents exactly once, without PayRiver?", choices: ["Plug a recording fake PaymentPort into the core and check its list of charges", "Call PayRiver's real servers with a test card", "Read the logs after a real ride", "It cannot be tested without PayRiver"], answer: 0 }
+      - { prompt: "What is a contract test for a port?", choices: ["One set of tests run against both the fake and the real adapter, so the fake cannot drift", "A test that reads the provider's legal contract", "A test that only checks method names", "A test that runs once a year"], answer: 0 }
+    explain: "Fakes on every driven port let core tests run in milliseconds. Contract tests keep the fakes honest against the real adapters."
+    reteach: "### In-memory adapters for tests"
+
+  - id: q11
+    type: mcq
+    concept: clean-onion-and-costs
+    prompt: "What do hexagonal, Onion and Clean architecture have in common?"
+    choices:
+      - "Source code dependencies point inward, towards the business rules"
+      - "They all need exactly six layers"
+      - "They all require Spring Boot"
+      - "They all put the database in the centre"
+    answer: 0
+    explain: "Cockburn's hexagon, Palermo's onion and Martin's Clean architecture draw it differently, but share the same dependency rule."
+    reteach: "### Clean and Onion: the same idea, other names"
+
+  - id: q12
+    type: mcq
+    concept: clean-onion-and-costs
+    variants:
+      - { prompt: "When is a full hexagon most likely overkill?", choices: ["A small CRUD service that stores and shows records, with few rules and nothing to swap", "A payment flow whose provider will change", "A core with rich rules called by an app, a kiosk and jobs", "A system that must outlive several framework upgrades"], answer: 0 }
+      - { prompt: "What is a real cost of hexagonal architecture?", choices: ["More interfaces and more mapping between outside models and domain models", "The core can no longer be unit tested", "Adapters cannot be replaced", "The business rules must move into the database"], answer: 0 }
+    explain: "Ports and mapping cost code and indirection. They pay off with rich rules, swappable providers and many entry points, not for simple CRUD."
+    reteach: "### The costs, and when it is overkill"

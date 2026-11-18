@@ -1,0 +1,22 @@
+id: module-09-architecture/topic-06-system-design
+title: "System design: scaling Spoke to ten cities"
+order: 6
+minutes: 15
+prerequisites: [module-09-architecture/topic-05-caching]
+concepts: [design-process, estimation, scaling-out, replication-and-sharding, consistency-and-cap, storage-choices, availability]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0906
+  from: maya
+  title: "Ten new cities: sketch the platform first"
+  body: >
+    Spoke launches in ten more cities next year, each about the size of Riverton.
+    Before anyone writes code, I want a sketch: how many requests, how much data, which parts we copy, split or put behind a queue, and what happens when a part fails.
+    Bring numbers, not guesses. We review it together on Friday.
+hints:
+  - "Start with requirements, then numbers. Peak traffic matters more than average traffic, and reads often outnumber writes many times over."
+  - "Scale the stateless parts by adding servers behind a load balancer. Scale the database step by step: indexes, caching, read replicas, and only then sharding."
+  - "Every choice is a trade-off. Say what you give up: replicas add lag, async replication can lose writes on failover, and during a network partition you choose consistency or availability."
+review: true

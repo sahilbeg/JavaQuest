@@ -1,0 +1,23 @@
+id: module-09-architecture/topic-04-messaging
+title: "Messaging, events and the outbox pattern"
+order: 4
+minutes: 15
+prerequisites: [module-09-architecture/topic-03-microservices]
+concepts: [async-messaging, queues-and-topics, partitions-and-offsets, delivery-guarantees, idempotent-consumers, transactional-outbox, event-design]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0904
+  from: theo
+  title: "Billing missed rides, then billed one that never ended"
+  body: >
+    Tuesday's broker hiccup lasted 40 seconds. Rides that ended in that window are ENDED in Rentals, but Billing never heard about them, so those riders rode for free.
+    On Thursday it went the other way: Billing charged rider-7 for rental-17, but the rental update had rolled back, and the ride is still ACTIVE.
+    Can you make a ride and its event succeed or fail together, and make Billing safe when an event arrives twice?
+hints:
+  - "Never write to the database and the broker as two separate steps. Write the event as a row in the outbox table, in the same transaction as the rental update. The relay publishes it later."
+  - "In endRide and handle: remember getAutoCommit(), setAutoCommit(false), do every write, commit(); rollback() and rethrow in catch; restore auto-commit in finally. In relayPending: SELECT ... WHERE sent = FALSE ORDER BY id, publish one, then mark it sent, and break on the first exception."
+  - "In handle, the processed_event INSERT is the duplicate check: catch (SQLException e) { if (\"23505\".equals(e.getSQLState())) { billingDb.rollback(); return false; } throw e; }. Then UPDATE rider_bill ... and, if it changed 0 rows, INSERT a new bill row with rides = 1."
+review: true
