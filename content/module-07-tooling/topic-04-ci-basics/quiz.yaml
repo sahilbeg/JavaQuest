@@ -35,7 +35,9 @@ questions:
       - { prompt: "Why does compiling come before the slower tests in a pipeline?", choices: ["So a cheap failure stops the pipeline early and you hear about it fast", "Because tests cannot run on Linux", "So the tests run twice", "Because publishing needs the tests to be skipped"], answer: 0 }
       - { prompt: "In CI, what is a runner?", choices: ["The machine that runs a job, usually fresh and thrown away afterwards", "A JUnit annotation that runs a test", "The person who presses Merge", "A Maven phase after package"], answer: 0 }
       - { prompt: "In CI, what is a trigger?", choices: ["The event that starts the pipeline, such as a push or a pull request", "A test that fails on purpose", "The jar the build produces", "A secret password"], answer: 0 }
-    explain: "A trigger starts the pipeline, a runner runs it, and cheap steps go first so failures show up fast."
+      - { prompt: "The kiosk has integration tests named RentalFlowIT, run by Failsafe. Why does CI run ./mvnw verify, not ./mvnw test?", choices: ["test stops before package, so Failsafe's integration tests would never run", "test cannot run on a Linux runner", "verify skips the slow unit tests", "verify uploads the jar to Maven Central"], answer: 0 }
+      - { prompt: "Which artifact name lets you trace a built jar back to the exact code it came from?", choices: ["kiosk-3f9c2a1.jar, named after the commit SHA", "kiosk-latest.jar", "kiosk-final.jar", "kiosk.jar"], answer: 0 }
+    explain: "A trigger starts the pipeline, a runner runs it, and cheap steps go first so failures show up fast. Surefire runs unit tests in test; Failsafe runs integration tests after package and fails the build in verify. Name each artifact by its version or commit SHA."
     reteach: "## Concept"
 
   - id: q05
@@ -59,9 +61,11 @@ questions:
     concept: workflow-file
     variants:
       - { prompt: "Where does a GitHub Actions workflow file live?", choices: [".github/workflows/ci.yml", "src/main/resources/ci.yml", "pom.xml", ".gitignore"], answer: 0 }
-      - { prompt: "What does the step uses: actions/checkout@v4 do?", choices: ["Copies the repository's code onto the runner", "Installs Java 21", "Merges the pull request", "Uploads the jar"], answer: 0 }
+      - { prompt: "What does the step uses: actions/checkout@v5 do?", choices: ["Copies the repository's code onto the runner", "Installs Java 21", "Merges the pull request", "Uploads the jar"], answer: 0 }
       - { prompt: "The upload step needs a secret key. Where should the key live?", choices: ["In the repository's Actions secrets, read with ${{ secrets.UPLOAD_KEY }}", "Typed straight into ci.yml", "In a Java constant in the code", "In the commit message"], answer: 0 }
-    explain: "The workflow is a YAML file in .github/workflows/. Actions like checkout are ready-made steps. Secrets live in the CI settings, never in the repository."
+      - { prompt: "Why pin an outside action to a full commit SHA instead of a tag like @v5?", choices: ["A tag can be moved to different code, but a commit SHA always names the same code", "SHAs make the action run faster", "GitHub no longer accepts tags", "Tags only work on Linux runners"], answer: 0 }
+      - { prompt: "A debugging step prints the upload key backwards, so it looks harmless. What shows in the log?", choices: ["The reversed key, which anyone can read backwards, because masking only hides the exact value", "*** in place of the reversed key", "Nothing: GitHub blocks the step", "An error, because secrets cannot be reversed"], answer: 0 }
+    explain: "The workflow is a YAML file in .github/workflows/. Actions like checkout are ready-made steps; pin outside ones by commit SHA, because a tag can move. Secrets live in the CI settings, never in the repository. Masking only hides the exact value, so never print a secret."
     reteach: "## Concept"
 
   - id: q08

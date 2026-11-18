@@ -1729,7 +1729,12 @@
           "prerequisites": [
             "module-07-tooling/topic-05-docker-basics"
           ],
-          "status": "planned"
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
         },
         {
           "id": "module-07-tooling/topic-07-shipping-to-production",
@@ -1738,7 +1743,12 @@
           "prerequisites": [
             "module-07-tooling/topic-06-git-undo"
           ],
-          "status": "planned"
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
         },
         {
           "id": "module-07-tooling/topic-08-shell-on-call",
@@ -1747,7 +1757,12 @@
           "prerequisites": [
             "module-07-tooling/topic-07-shipping-to-production"
           ],
-          "status": "planned"
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
         },
         {
           "id": "module-07-tooling/boss",
@@ -2063,7 +2078,7 @@
         },
         {
           "id": "module-09-architecture/topic-04-messaging",
-          "title": "Messaging and events",
+          "title": "Messaging, events and the outbox pattern",
           "practice": "code",
           "prerequisites": [
             "module-09-architecture/topic-03-microservices"
@@ -2119,7 +2134,7 @@
         },
         {
           "id": "module-09-architecture/topic-08-observability",
-          "title": "Logs, metrics and traces",
+          "title": "Logs, metrics, traces and health checks",
           "practice": "quiz",
           "prerequisites": [
             "module-09-architecture/topic-07-performance-profiling"
@@ -2132,11 +2147,29 @@
           }
         },
         {
+          "id": "module-09-architecture/topic-09-resilience",
+          "title": "Resilience: rate limits, retries and circuit breakers",
+          "practice": "code",
+          "prerequisites": [
+            "module-09-architecture/topic-08-observability"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "module-09-architecture/topic-10-kubernetes",
+          "title": "Running on Kubernetes",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-09-architecture/topic-09-resilience"
+          ],
+          "status": "planned"
+        },
+        {
           "id": "module-09-architecture/boss",
           "title": "INC-09: The live map falls over at peak",
           "practice": "code",
           "prerequisites": [
-            "module-09-architecture/topic-08-observability"
+            "module-09-architecture/topic-10-kubernetes"
           ],
           "status": "planned",
           "verification": {
@@ -2150,7 +2183,7 @@
           "title": "FEAT-09: Event-driven billing",
           "practice": "code",
           "prerequisites": [
-            "module-09-architecture/topic-08-observability"
+            "module-09-architecture/topic-10-kubernetes"
           ],
           "status": "planned",
           "verification": {
@@ -2225,7 +2258,7 @@
         },
         {
           "id": "module-10-professional/topic-05-interview-prep",
-          "title": "Interview prep: coding and behavioural",
+          "title": "Interview prep: coding, design and behavioural",
           "practice": "code",
           "prerequisites": [
             "module-10-professional/topic-04-estimation"

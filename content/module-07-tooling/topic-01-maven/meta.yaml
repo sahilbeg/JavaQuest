@@ -1,7 +1,7 @@
 id: module-07-tooling/topic-01-maven
 title: "Maven: POM, lifecycle, dependencies"
 order: 1
-minutes: 10
+minutes: 15
 prerequisites: [module-06-craft/boss]
 concepts: [coordinates, project-layout, lifecycle, dependencies, scopes, plugins]
 practice:

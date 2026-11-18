@@ -125,6 +125,120 @@ dependencies {
 
 Your code calls SLF4J, so it goes in `implementation`. Logback only does the printing at run time, so it goes in `runtimeOnly`.
 
+### api or implementation?
+
+When you build a **library**, a jar other projects use, swap the `java` plugin for `java-library`. It adds one more bucket, `api`.
+
+```kotlin
+plugins {
+    `java-library`
+}
+
+dependencies {
+    api("org.slf4j:slf4j-api:2.0.16")
+    implementation("com.google.code.gson:gson:2.11.0")
+}
+```
+
+- `api`: the library shows up in your public methods, say a method that returns an SLF4J `Logger`. Projects that use your library need it to compile, so Gradle hands it on to them.
+- `implementation`: you only use it inside. Projects that use your library never see it when they compile.
+
+Prefer `implementation`. Fewer jars leak into other projects, and changing an inside library does not force them to recompile.
+
+### Version conflicts: highest wins
+
+Gradle meets the same problem as Maven: one library, two versions in the tree. It settles it differently. **Gradle picks the highest version** it finds anywhere in the tree, however deep.
+
+Remember the practice folder's `slf4j-api` conflict from the Maven topic. Logback, near the top, asked for 2.0.19. A Spring jar, deep down, asked for 2.0.20.
+
+| | Maven | Gradle |
+|---|---|---|
+| The rule | Nearest wins | Highest wins |
+| `slf4j-api` for the practice tree | 2.0.19 | 2.0.20 |
+
+To see what Gradle picked, list the tree for one configuration:
+
+```bash
+./gradlew dependencies --configuration runtimeClasspath
+```
+
+An arrow marks a swapped version. `org.slf4j:slf4j-api:2.0.19 -> 2.0.20` reads "something asked for 2.0.19, and Gradle used 2.0.20". A `(*)` marks a branch already printed higher up. To ask about one library and who wanted which version, run `./gradlew dependencyInsight --dependency slf4j-api`.
+
+```animate
+title: Two tools, one conflict
+kind: scene
+nodes:
+  - { id: app, label: Your build, emoji: "📄", row: 0, col: 1 }
+  - { id: logback, label: logback-classic, emoji: "📦", row: 1, col: 0 }
+  - { id: spring, label: Spring jars, emoji: "📦", row: 1, col: 2 }
+  - { id: old, label: slf4j-api 2.0.19, emoji: "🧩", value: 2 steps, row: 2, col: 0 }
+  - { id: new, label: slf4j-api 2.0.20, emoji: "🧩", value: 5 steps, row: 2, col: 2 }
+steps:
+  - say: Your build needs Logback and Spring. Both need slf4j-api, at different versions.
+    send: [{ from: app, to: logback, label: needs }, { from: app, to: spring, label: needs }, { from: logback, to: old, label: wants }, { from: spring, to: new, label: wants }]
+  - say: Maven asks which copy is nearest. 2.0.19 is two steps away, so Maven keeps it.
+    focus: [old]
+    set: { old: Maven keeps this }
+  - say: Gradle asks which copy is highest. 2.0.20 is newer, so Gradle keeps it, however deep it sits.
+    focus: [new]
+    set: { new: Gradle keeps this }
+  - say: Same project, two tools, two answers. Check the tree whenever you move a project between them.
+    focus: [old, new]
+```
+
+Highest wins is usually the safer guess, because a newer minor or patch keeps old code working. But it can jump a whole major version without asking. One library deep down wants 3.0, and every library in the build now gets 3.0. Code built for 2.x can then fail at run time with `NoSuchMethodError`.
+
+### Syntax: pinning versions in Gradle
+
+```kotlin
+dependencies {
+    implementation("org.slf4j:slf4j-api") {
+        version {
+            strictly("2.0.20")
+        }
+    }
+}
+```
+
+`strictly` forces this exact version, even over a higher one deeper in the tree. Gradle stops with an error only if another strict rule asks for a different version.
+
+Gradle can use a Maven BOM too. Wrap it in `platform(...)`, then leave versions off the libraries it knows:
+
+```kotlin
+dependencies {
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:4.1.2"))
+    implementation("ch.qos.logback:logback-classic")
+}
+```
+
+Careful: in Gradle a `platform` only recommends versions. A higher version from deeper in the tree still wins, unlike Maven's BOM import. To force the BOM's versions, use `enforcedPlatform(...)` instead, or `strictly` on single libraries.
+
+### Syntax: a version catalog
+
+Many Gradle projects keep every version in one file, `gradle/libs.versions.toml`, called a **version catalog**. Gradle finds it by itself.
+
+```toml
+[versions]
+slf4j = "2.0.16"
+junit = "5.11.4"
+
+[libraries]
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+```
+
+The build script then names libraries instead of typing coordinates. Dashes become dots.
+
+```kotlin
+dependencies {
+    implementation(libs.slf4j.api)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+```
+
+An upgrade is one line in the catalog, and every module that uses the library moves with it.
+
 ### Tasks instead of phases
 
 Maven runs **phases** in a fixed line. Gradle runs **tasks**.
@@ -449,7 +563,7 @@ Write the matching `dependencies { }` block in the Kotlin DSL. Join each group, 
 
 - Gradle is a build tool like Maven. It reads a build script, `build.gradle.kts`, instead of `pom.xml`, with the same coordinates and Maven Central.
 - Gradle runs tasks such as `build`, `test`, `jar`, `run` and `clean`. Tasks form a graph, and Gradle runs only what your task needs.
-- Configurations replace scopes: `implementation`, `testImplementation`, `compileOnly` and `runtimeOnly`.
+- Configurations replace scopes: `implementation`, `testImplementation`, `compileOnly` and `runtimeOnly`. When two versions of one library meet, Gradle takes the highest; `./gradlew dependencies` shows the pick.
 - Unchanged tasks are skipped as `UP-TO-DATE`. The build cache and the daemon save more time.
 - Always use `./gradlew`. Output goes to `build/`, and jars land in `build/libs`.
 

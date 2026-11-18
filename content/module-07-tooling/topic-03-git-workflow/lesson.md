@@ -167,6 +167,49 @@ A **remote** is a copy of the repository on a server, such as GitHub. Its usual 
 - If both sides have new commits, Git stops and asks you to choose. `git pull --no-rebase` merges, and `git pull --rebase` rebases.
 - `git push -u origin fix/harbor-fare-rounding` uploads your branch. `-u` links it to the server copy, so later you can type just `git push`.
 
+### Syntax: clone
+
+```bash
+git clone <url>
+```
+
+`git clone` copies a whole repository from a server onto your laptop, with every commit. It makes a new folder named after the repository. It sets `origin` to that URL, and it checks out the default branch, usually `main`.
+
+```bash
+git clone https://github.com/<your-team>/kiosk.git
+cd kiosk
+git remote -v
+```
+
+Git prints `Cloning into 'kiosk'...` while it works. `git remote -v` then shows the URL that `origin` points at. Day one on any team starts with `git clone`.
+
+If you started with `git init` instead, as in module 0, there is no `origin` yet. Make an empty repository on the server, then connect it with `git remote add origin <url>` and run `git push -u origin main`.
+
+```callout tip
+Gojo says: nothing in this course needs a GitHub account. If you want to practise pushes and pull requests for real, a free account lets you make your own repositories.
+```
+
+### Logging in to push: SSH keys and tokens
+
+Cloning a public repository needs no login. Pushing always does. GitHub stopped accepting your account password for Git in 2021. You use one of two things instead.
+
+```callout jargon
+A **personal access token** is a long random password you make in GitHub's settings, only for tools like Git. An **SSH key** is a pair of files: a **private key** that never leaves your laptop, and a **public key** you give to the server.
+```
+
+- **A token over HTTPS.** Make one under Settings, then Developer settings. Give it only the repositories it needs, and an end date. When Git asks for a password, paste the token.
+- **An SSH key.** Make the pair once, then paste the `.pub` file's text into GitHub, under Settings, SSH and GPG keys. Clone with the SSH URL, `git@github.com:<your-team>/kiosk.git`.
+
+```bash
+ssh-keygen -t ed25519 -C "you@example.com"
+```
+
+This writes `~/.ssh/id_ed25519`, the private key, and `~/.ssh/id_ed25519.pub`, the public one.
+
+```callout warning
+Never share or commit the private key or a token. If one leaks, delete it in GitHub's settings at once and make a new one.
+```
+
 ### History safety: the golden rule of rebasing
 
 Rebasing makes new commits and drops the old ones. If you already pushed the old ones, a normal `git push` is refused, because it would drop commits on the server. If a teammate already pulled them, their copy and yours now disagree.
@@ -177,10 +220,61 @@ People "fix" the refusal with `git push --force`. That overwrites the server's b
 The golden rule: never rebase commits that other people already have. Rebase only your own branch, before or while only you work on it. If you must push a rebased branch, use `git push --force-with-lease`, never plain `--force`.
 ```
 
-`--force-with-lease` only overwrites the branch if it still matches what you last fetched. If a teammate pushed in the meantime, Git refuses:
+`--force-with-lease` only overwrites the branch if the server's copy still matches `origin/fix/harbor-fare-rounding`, your snapshot from the last fetch. If a teammate pushed and you have not fetched since, Git refuses:
 
 ```text
  ! [rejected]        fix/harbor-fare-rounding -> fix/harbor-fare-rounding (stale info)
+```
+
+### A hole in the lease: background fetches
+
+The lease compares the server with your last fetch. But many IDEs fetch quietly in the background every few minutes. After such a fetch, your snapshot already holds the teammate's new commit, even though you never looked at it. The lease passes, and your push wipes their work.
+
+```animate
+title: How a background fetch breaks the lease
+kind: scene
+nodes:
+  - { id: you, label: Your laptop, emoji: "💻", value: rebased branch, row: 0, col: 0 }
+  - { id: server, label: origin, emoji: "🗄️", value: your old commits, row: 0, col: 1 }
+  - { id: mate, label: Teammate, emoji: "🧑", row: 0, col: 2 }
+  - { id: ide, label: IDE background fetch, emoji: "🔄", row: 1, col: 0 }
+steps:
+  - say: You rebased your branch. Your commits are new copies, and the server still has the old ones.
+    focus: [you, server]
+  - say: A teammate pushes one more commit to the same branch.
+    send: { from: mate, to: server, label: git push }
+    set: { server: "old commits + teammate's" }
+  - say: Your IDE fetches by itself. Your snapshot of origin now includes the teammate's commit. You never saw it.
+    send: { from: server, to: ide, label: fetch, back: true }
+    set: { ide: snapshot up to date }
+  - say: You run git push --force-with-lease. The server matches your snapshot, so the lease passes. The teammate's commit is gone.
+    send: { from: you, to: server, label: "--force-with-lease" }
+    set: { server: your commits only }
+  - say: Rewind and add --force-if-includes. Git first checks that the teammate's commit is in your own branch. It is not, so Git refuses.
+    focus: [you]
+    set: { server: "old commits + teammate's" }
+```
+
+Here is the real result of that push:
+
+```text
+ + e0c7280...de556df fix/harbor-fare-rounding -> fix/harbor-fare-rounding (forced update)
+```
+
+The fix is one more flag, from Git 2.30 on:
+
+```bash
+git push --force-with-lease --force-if-includes
+```
+
+`--force-if-includes` also checks that the server's newest commit is somewhere in your branch's own history, meaning you really built on top of it. In the same situation, Git refuses:
+
+```text
+ ! [rejected]        fix/harbor-fare-rounding -> fix/harbor-fare-rounding (remote ref updated since checkout)
+```
+
+```callout tip
+Run `git config --global push.useForceIfIncludes true` once. Then every `--force-with-lease` push gets the extra check by itself.
 ```
 
 ### Pull requests
@@ -201,9 +295,37 @@ When the checks are green and a reviewer approves, someone clicks merge. GitHub 
 
 After the merge, delete the branch. Its work now lives in `main`, and old branches only cause confusion.
 
+Teams can also require approvals before anyone can merge. A `CODEOWNERS` file in the repository names who owns which folders. GitHub then asks those owners to review any PR that touches their files. Their approval is required only if branch protection's "Require review from Code Owners" setting is on.
+
 ```callout tip
 Keep PRs small: one ticket, one branch, one PR. A reviewer can read 100 lines carefully. Faced with 3,000 lines, they skim and click approve.
 ```
+
+### Commit messages that help
+
+A commit message is a note to the next person who reads the history. Often that person is you, a year later, hunting a bug. Most teams follow the same shape:
+
+```text
+Round Harbor fares up to the next 10 cents
+
+Harbor's coin kiosk only takes 10-cent coins, so a
+145-cent fare could not be paid. Refs SPK-0703.
+```
+
+- **The subject line** says what the commit does, as an order: "Round fares up", not "Rounded fares" or "fixes". Keep it under about 50 characters, with no full stop.
+- **A blank line**, then **the body**. It says *why*, which the diff cannot show. Wrap it at about 72 characters.
+
+Plain `git commit`, with no `-m`, opens an editor where you can write both parts.
+
+Many teams also use **Conventional Commits**: a short type in front of the subject.
+
+```text
+fix: round Harbor fares up to the next 10 cents
+feat: show free docks at Depot
+docs: explain the kiosk setup
+```
+
+`fix:` is a bug fix and `feat:` is a new feature. A `!`, as in `feat!:`, marks a breaking change. Tools read these types to write release notes and pick the next version number. A fix bumps the patch, a feature the minor, and a breaking change the major.
 
 ## Worked example
 
@@ -400,8 +522,8 @@ You should see `CONFLICT (content): Merge conflict in fares.txt`. Then:
 - A branch is a movable label on a commit. `git switch -c name` makes one and moves you onto it.
 - `git merge` fast-forwards when it can, and makes a merge commit when both sides changed.
 - A conflict means both sides changed the same lines. Edit, delete the markers, `git add`, then `git commit`, or back out with `git merge --abort`.
-- `git rebase main` replays your commits on top of `main` as new commits. Never rebase commits others have, and push with `--force-with-lease`.
-- A pull request asks to merge your branch, with review and CI checks. Keep it small and delete the branch after the merge.
+- `git rebase main` replays your commits on top of `main` as new commits. Never rebase commits others have, and push with `--force-with-lease --force-if-includes`.
+- `git clone` starts you on a project. A pull request asks to merge your branch, with review and CI checks. Keep it small, with clear commit messages, and delete the branch after the merge.
 
 ## Common mistakes
 

@@ -2,7 +2,7 @@ id: module-07-tooling/mini-project
 title: "FEAT-07: Package the kiosk as a runnable jar"
 order: 100
 minutes: 12
-prerequisites: [module-07-tooling/topic-05-docker-basics]
+prerequisites: [module-07-tooling/topic-08-shell-on-call]
 concepts: [jar-files, manifest, exit-codes, reproducible-builds]
 practice:
   kind: code

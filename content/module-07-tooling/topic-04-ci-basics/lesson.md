@@ -69,8 +69,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
@@ -85,8 +85,8 @@ Line by line:
 3. `jobs:` starts the list of jobs. This file has one job, called `build`.
 4. `runs-on: ubuntu-latest` asks GitHub for a fresh Linux runner.
 5. `steps:` starts the steps. Each `-` is one step, run from top to bottom.
-6. `uses: actions/checkout@v4` runs a ready-made action that copies your repository onto the runner. The `@v4` pins which version of the action you get.
-7. `uses: actions/setup-java@v4` installs a JDK. The lines under `with:` are its settings.
+6. `uses: actions/checkout@v5` runs a ready-made action that copies your repository onto the runner. `@v5` asks for major version 5 of the action. Actions get new major releases over time, and this one may already be past v5. Check each action's page for its current major release.
+7. `uses: actions/setup-java@v5` installs a JDK. The lines under `with:` are its settings.
 8. `distribution: temurin` picks Eclipse Temurin, a free build of Java. `java-version: '21'` matches your project.
 9. `cache: maven` saves downloaded libraries between runs, so later builds start faster.
 10. `run: ./mvnw -B verify` runs a shell command. `-B` means batch mode: Maven asks no questions and prints a plain log.
@@ -95,6 +95,79 @@ The quotes around `'21'` keep the version as text. Without quotes, YAML would re
 
 ```callout tip
 Gojo says: other CI systems, such as GitLab CI and Jenkins, use different file names and keys. The ideas are the same everywhere: triggers, jobs, steps, runners, green and red.
+```
+
+### Pinning an action you trust
+
+`@v5` is a **tag**: a label the action's owner can move to any commit, at any time. Whatever code sits behind that label runs in your pipeline, right next to your secrets.
+
+That is not a made-up danger. In March 2025, attackers took over a popular action, `tj-actions/changed-files`. They moved its version tags to their own code, which printed secrets into build logs. Every pipeline that used a tag ran it.
+
+A **commit SHA**, the long ID of one commit, can never be moved. So pin actions, especially ones from outside GitHub, by the full SHA:
+
+```yaml
+      - uses: actions/checkout@<full 40-character commit SHA>   # v5.0.0
+```
+
+You copy the SHA from the action's release page. The comment keeps the human-friendly version next to it. Tools like Dependabot, coming up below, can update pinned SHAs for you.
+
+```callout jargon
+A **supply-chain attack** goes after the tools and libraries you build with, instead of your own code. Pinning exact versions is the first defence.
+```
+
+### Syntax: a matrix build
+
+```yaml
+jobs:
+  build:
+    strategy:
+      matrix:
+        java: ['21', '25']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+      - run: ./mvnw -B verify
+```
+
+A **matrix** runs the same job once for each value in a list, side by side. Here the kiosk builds and tests on Java 21 and on Java 25. `${{ matrix.java }}` is replaced by each value in turn. A library that must work on several Java versions, or several operating systems, checks them all on every push.
+
+### Unit tests and integration tests
+
+```callout jargon
+A **unit test** checks one class on its own, in milliseconds, with no database or network. An **integration test** checks several real parts working together, such as your code and a real database. It is slower.
+```
+
+Maven runs the two kinds with two different plugins:
+
+| | Unit tests | Integration tests |
+|---|---|---|
+| Plugin | Surefire | Failsafe |
+| Class names | `FareCalculatorTest` | `RentalFlowIT` |
+| Phase that runs them | `test` | `integration-test`, after `package` |
+| Phase that fails the build | `test` | `verify` |
+
+Failsafe waits until `verify` to fail the build. That leaves room to stop a test server or database cleanly first.
+
+This is why CI runs `./mvnw verify`, not `./mvnw test`. `test` stops before `package`, so integration tests would never run. Failsafe is not switched on by default. You add it under `<build><plugins>`:
+
+```xml
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-failsafe-plugin</artifactId>
+  <version>3.5.6</version>
+  <executions>
+    <execution>
+      <goals>
+        <goal>integration-test</goal>
+        <goal>verify</goal>
+      </goals>
+    </execution>
+  </executions>
+</plugin>
 ```
 
 ### Checks on a pull request
@@ -124,12 +197,45 @@ An **artifact** is a file the build produces and keeps, such as the kiosk jar. A
           path: target/*.jar
 ```
 
-This step goes after the `./mvnw` step, at the same indentation.
+This step goes after the `./mvnw` step, at the same indentation. GitHub keeps these uploads for a limited time, 90 days unless the repository says otherwise. They are for checking a build, not for shipping.
 
 CI is the first part of a longer road:
 
 - **Continuous delivery**: every green build makes a release that is ready to ship. A person presses the button.
 - **Continuous deployment**: every green build goes live by itself, with no button at all.
+
+### Which build is this? Versioned artifacts
+
+A jar called `kiosk.jar` tells you nothing. Was it built before the Harbor fix, or after? So every artifact gets a name that points back to the exact code it came from.
+
+- **The release version**, like `kiosk-1.10.0.jar` or the image `spoke/kiosk:1.10.0`, for builds you ship.
+- **The commit SHA**, like `kiosk-3f9c2a1.jar`, for every build of every push. In GitHub Actions, `${{ github.sha }}` holds the commit's ID.
+
+Artifacts that matter live in an **artifact repository**, a server built to store them. Jars go to a Maven repository such as Nexus, Artifactory or GitHub Packages, which `./mvnw deploy` uploads to. Container images go to a container registry, as you will see in the Docker topic.
+
+```animate
+title: A push becomes an artifact
+kind: scene
+nodes:
+  - { id: dev, label: Your push, emoji: "💻", value: commit 3f9c2a1, row: 0, col: 0 }
+  - { id: runner, label: CI runner, emoji: "🤖", value: idle, row: 0, col: 1 }
+  - { id: repo, label: Artifact repository, emoji: "🗄️", value: empty, row: 0, col: 2 }
+steps:
+  - say: You push commit 3f9c2a1. CI hands it to a fresh runner.
+    send: { from: dev, to: runner, label: push }
+    set: { runner: building }
+  - say: The runner compiles, tests and packages once. Every check is green.
+    set: { runner: green }
+  - say: It uploads the jar under a name that points at the commit.
+    send: { from: runner, to: repo, label: kiosk-3f9c2a1.jar }
+    set: { repo: kiosk-3f9c2a1.jar }
+  - say: That file never changes again. Anyone can ask "which commit is this?" and get one exact answer.
+    focus: [repo]
+```
+
+Never overwrite a stored version. Once `1.10.0` is stored, a fix becomes `1.10.1`. Maven Central itself refuses to replace a release.
+
+How that one stored file travels safely to every kiosk is a later ticket: [Shipping to production](/t/module-07-tooling/topic-07-shipping-to-production).
 
 ### Secrets stay out of the repository
 
@@ -143,7 +249,41 @@ Store it in **Settings**, under **Secrets and variables**, then **Actions**. The
           UPLOAD_KEY: ${{ secrets.UPLOAD_KEY }}
 ```
 
-GitHub replaces the value with `***` if it ever appears in a log.
+If the exact value appears in a log, GitHub hides it as `***`. But masking only catches the text it knows. A changed secret, say encoded as base64, split in two or reversed, can print in plain sight. So never print a secret, even while debugging. If a step makes a new secret from an old one, hide it too with `echo "::add-mask::$VALUE"`.
+
+### Keeping dependencies safe
+
+Your code is only part of what you ship. Most of the jar's classes come from libraries, and libraries have security holes too.
+
+```callout jargon
+A **vulnerability** is a bug an attacker can use. A **CVE** (Common Vulnerabilities and Exposures) is the public ID of one known vulnerability, like `CVE-2021-44228`.
+```
+
+`CVE-2021-44228` is better known as **Log4Shell**. In December 2021, people found that Log4j, a very popular logging library, could be tricked by one logged line of text. A message like `${jndi:ldap://...}` made the server download and run an attacker's code. Any app that logged what a user typed was open.
+
+The hard part was not the fix. It was finding every app that had Log4j somewhere deep in its dependency tree. Teams that scanned their trees automatically knew within hours.
+
+Two habits protect you:
+
+- **Update bots.** Dependabot, built into GitHub, or Renovate opens a pull request whenever a library has a new version. CI tests the bump like any other change, and a person merges it.
+- **CVE scanning.** A CI step compares every jar in your tree with the list of known CVEs. GitHub's dependency alerts and OWASP Dependency-Check both do this. It can turn the build red on a serious one.
+
+### Syntax: Dependabot
+
+```yaml
+version: 2
+updates:
+  - package-ecosystem: maven
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+```
+
+This file is `.github/dependabot.yml`. Once a week, Dependabot checks the POM's libraries and the workflow's actions, and opens a pull request for each update. The `github-actions` part also keeps SHA-pinned actions up to date.
 
 ### Why it passes on your laptop and fails in CI
 
@@ -307,8 +447,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
@@ -401,9 +541,9 @@ Now change `06:59` to `07:00`, then `00:00`, then `12:30`. Predict each answer b
 
 ## Recap
 
-- Continuous integration builds and tests every push on a fresh machine, often, with fast feedback. Red means stop and fix.
-- A pipeline is jobs made of steps, started by a trigger and run on a runner. Order the steps cheap to slow so they fail fast.
-- A GitHub Actions workflow lives in `.github/workflows/`. Branch protection with required status checks keeps `main` green.
+- Continuous integration builds and tests every push on a fresh machine, often, with fast feedback. Red means stop and fix, and branch protection with required checks keeps `main` green.
+- A pipeline is jobs made of steps, started by a trigger and run on a runner. Order the steps cheap to slow so they fail fast. `./mvnw verify` runs unit tests (Surefire) and integration tests (Failsafe).
+- A GitHub Actions workflow lives in `.github/workflows/`. Pin outside actions by commit SHA, never print secrets, and let Dependabot and CVE scans watch your libraries. Name every artifact by its version or commit.
 - "Works on my machine" means your laptop helped: a local path, an uncommitted file, the clock, the time zone, test order or the network.
 - Pass in what changes: a `Path` (with `@TempDir` in tests) and a `Clock` (with `Clock.fixed` in tests). Fix flaky tests instead of re-running them.
 

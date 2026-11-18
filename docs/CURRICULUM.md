@@ -161,8 +161,11 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 3 | `module-07-tooling/topic-03-git-workflow` | Git branches, merges, rebases, pull requests | quiz | `module-07-tooling/topic-02-gradle` |
 | 4 | `module-07-tooling/topic-04-ci-basics` | Continuous integration basics | quiz | `module-07-tooling/topic-03-git-workflow` |
 | 5 | `module-07-tooling/topic-05-docker-basics` | Docker basics: images and containers | quiz | `module-07-tooling/topic-04-ci-basics` |
-| boss | `module-07-tooling/boss` | INC-07: The release pipeline is red | code | `module-07-tooling/topic-05-docker-basics` |
-| mini-project | `module-07-tooling/mini-project` | FEAT-07: Package the kiosk as a runnable jar | code | `module-07-tooling/topic-05-docker-basics` |
+| 6 | `module-07-tooling/topic-06-git-undo` | Undo and recover with Git | quiz | `module-07-tooling/topic-05-docker-basics` |
+| 7 | `module-07-tooling/topic-07-shipping-to-production` | Shipping to production: deploys, rollbacks and flags | quiz | `module-07-tooling/topic-06-git-undo` |
+| 8 | `module-07-tooling/topic-08-shell-on-call` | The shell on call: logs, processes and servers | quiz | `module-07-tooling/topic-07-shipping-to-production` |
+| boss | `module-07-tooling/boss` | INC-07: The release pipeline is red | code | `module-07-tooling/topic-08-shell-on-call` |
+| mini-project | `module-07-tooling/mini-project` | FEAT-07: Package the kiosk as a runnable jar | code | `module-07-tooling/topic-08-shell-on-call` |
 
 ## module-08-backend: Backend engineering (project: The Spoke API)
 
@@ -190,13 +193,15 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 1 | `module-09-architecture/topic-01-layered-architecture` | Layered architecture | code | `module-08-backend/boss` |
 | 2 | `module-09-architecture/topic-02-hexagonal-architecture` | Hexagonal architecture: ports and adapters | code | `module-09-architecture/topic-01-layered-architecture`, `module-06-craft/topic-02-solid` |
 | 3 | `module-09-architecture/topic-03-microservices` | Microservices: when and why | quiz | `module-09-architecture/topic-02-hexagonal-architecture` |
-| 4 | `module-09-architecture/topic-04-messaging` | Messaging and events | code | `module-09-architecture/topic-03-microservices` |
+| 4 | `module-09-architecture/topic-04-messaging` | Messaging, events and the outbox pattern | code | `module-09-architecture/topic-03-microservices` |
 | 5 | `module-09-architecture/topic-05-caching` | Caching | code | `module-09-architecture/topic-04-messaging` |
 | 6 | `module-09-architecture/topic-06-system-design` | System design basics | quiz | `module-09-architecture/topic-05-caching` |
 | 7 | `module-09-architecture/topic-07-performance-profiling` | Performance and profiling | code | `module-09-architecture/topic-06-system-design` |
-| 8 | `module-09-architecture/topic-08-observability` | Logs, metrics and traces | quiz | `module-09-architecture/topic-07-performance-profiling` |
-| boss | `module-09-architecture/boss` | INC-09: The live map falls over at peak | code | `module-09-architecture/topic-08-observability` |
-| mini-project | `module-09-architecture/mini-project` | FEAT-09: Event-driven billing | code | `module-09-architecture/topic-08-observability` |
+| 8 | `module-09-architecture/topic-08-observability` | Logs, metrics, traces and health checks | quiz | `module-09-architecture/topic-07-performance-profiling` |
+| 9 | `module-09-architecture/topic-09-resilience` | Resilience: rate limits, retries and circuit breakers | code | `module-09-architecture/topic-08-observability` |
+| 10 | `module-09-architecture/topic-10-kubernetes` | Running on Kubernetes | quiz | `module-09-architecture/topic-09-resilience` |
+| boss | `module-09-architecture/boss` | INC-09: The live map falls over at peak | code | `module-09-architecture/topic-10-kubernetes` |
+| mini-project | `module-09-architecture/mini-project` | FEAT-09: Event-driven billing | code | `module-09-architecture/topic-10-kubernetes` |
 
 ## module-10-professional: Professional skills (project: Full-time offer)
 
@@ -206,7 +211,7 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 2 | `module-10-professional/topic-02-reading-codebases` | Reading large codebases | quiz | `module-10-professional/topic-01-code-reviews` |
 | 3 | `module-10-professional/topic-03-documentation` | Writing documentation | quiz | `module-10-professional/topic-02-reading-codebases` |
 | 4 | `module-10-professional/topic-04-estimation` | Estimation and planning | quiz | `module-10-professional/topic-03-documentation` |
-| 5 | `module-10-professional/topic-05-interview-prep` | Interview prep: coding and behavioural | code | `module-10-professional/topic-04-estimation` |
+| 5 | `module-10-professional/topic-05-interview-prep` | Interview prep: coding, design and behavioural | code | `module-10-professional/topic-04-estimation` |
 | 6 | `module-10-professional/topic-06-capstone` | Capstone: full-stack Java service | code | `module-10-professional/topic-05-interview-prep` |
 | boss | `module-10-professional/boss` | INC-10: The mock interview loop | code | `module-10-professional/topic-06-capstone` |
 | mini-project | `module-10-professional/mini-project` | CAPSTONE: Capstone: launch Spoke in Bramford | code | `module-10-professional/topic-06-capstone` |

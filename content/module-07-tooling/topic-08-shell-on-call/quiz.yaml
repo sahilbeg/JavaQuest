@@ -1,0 +1,135 @@
+topic: module-07-tooling/topic-08-shell-on-call
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: pipes-and-grep
+    variants:
+      - { prompt: "Which command prints only how many lines of spoke.log contain ERROR?", choices: ["grep -c ERROR spoke.log", "grep -n ERROR spoke.log", "grep -v ERROR spoke.log", "grep -r ERROR spoke.log"], answer: 0 }
+      - { prompt: "Which command prints every line of spoke.log that does NOT contain INFO?", choices: ["grep -v INFO spoke.log", "grep -i INFO spoke.log", "grep -n INFO spoke.log", "grep -c INFO spoke.log"], answer: 0 }
+      - { prompt: "Which command finds 8080 in every file under src, with file names and line numbers?", choices: ["grep -rn 8080 src", "grep -c 8080 src", "find src -name 8080", "cat src | grep 8080"], answer: 0 }
+    explain: "grep -c counts matching lines, -v inverts the match, -n adds line numbers, and -r searches a whole folder."
+    reteach: "### Syntax: grep finds lines"
+
+  - id: q02
+    type: fill-blank
+    concept: ports-and-curl
+    prompt: "lsof ___ :8080   # show which process owns port 8080"
+    answers: ["-i"]
+    explain: "lsof -i :8080 lists the process listening at port 8080. Add -t to print only its PID."
+    reteach: "### Ports: \"Address already in use\""
+
+  - id: q03
+    type: mcq
+    concept: pipes-and-grep
+    variants:
+      - { prompt: "You want to watch new lines appear in the live server log as they are written. Which command?", choices: ["tail -f spoke.log", "head -n 10 spoke.log", "cat spoke.log", "wc -l spoke.log"], answer: 0 }
+      - { prompt: "The log on the server is 2 GB. Which is the safest way to browse it?", choices: ["less spoke.log, one screen at a time", "cat spoke.log", "Open it in a text editor that loads it all", "Copy it into a Java String"], answer: 0 }
+      - { prompt: "In less, how do you search for Harbor?", choices: ["Type /Harbor and press Enter, then n for the next match", "Press Ctrl+C, then type Harbor", "Type grep Harbor", "Press q, then Harbor"], answer: 0 }
+    explain: "tail -f follows a live log, less pages through big files safely, and / searches inside less."
+    reteach: "### Syntax: look at a file with head, tail and less"
+
+  - id: q04
+    type: order
+    concept: counting-with-pipelines
+    prompt: "Build the pipeline that prints the top 5 error types, from first command to last."
+    items:
+      - "grep ERROR spoke.log"
+      - "awk '{print $4}'"
+      - "sort"
+      - "uniq -c"
+      - "sort -rn"
+      - "head -n 5"
+    explain: "Keep the error lines, keep the type column, group equal names, count each group, rank by count, keep the top five."
+    reteach: "### Counting: awk, cut, sort, uniq -c and wc -l"
+
+  - id: q05
+    type: mcq
+    concept: environment-and-permissions
+    variants:
+      - { prompt: "You typed SPOKE_ENV=staging, then java Env.java printed SPOKE_ENV is null. What was missing?", choices: ["export, so programs you start can see the variable", "Quotes around staging", "A semicolon after staging", "chmod +x on Env.java"], answer: 0 }
+      - { prompt: "What does SPOKE_ENV=production java Env.java do?", choices: ["Sets SPOKE_ENV for that one command only", "Sets SPOKE_ENV forever, in every terminal", "Writes production into Env.java", "Exports SPOKE_ENV for every later command"], answer: 0 }
+      - { prompt: "Which command prints every environment variable?", choices: ["env", "echo $PATH", "export", "ls -l"], answer: 0 }
+      - { prompt: "You ran export SPOKE_ENV=staging, closed the terminal and opened a new one. Where must the line go to keep it?", choices: ["In ~/.zshrc", "In spoke.log", "In the .gitignore file", "Nowhere, export lasts forever"], answer: 0 }
+    explain: "export passes a variable to every program you start from that terminal. NAME=value command sets it for one command, and ~/.zshrc keeps it for good."
+    reteach: "### Environment variables and PATH"
+
+  - id: q06
+    type: spot-the-bug
+    concept: counting-with-pipelines
+    prompt: "This script should rank stations by number of errors, but each station shows up several times with small counts. Which line is wrong?"
+    code: |
+      grep ERROR spoke.log > errors.txt
+      awk '{print $7}' errors.txt > stations.txt
+      uniq -c stations.txt > counts.txt
+      sort -rn counts.txt | head -n 3
+    bugLine: 3
+    explain: "uniq -c only merges neighbouring lines, and the stations are not sorted yet. Use sort stations.txt | uniq -c."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: mcq
+    concept: processes-and-signals
+    variants:
+      - { prompt: "What is the difference between kill <pid> and kill -9 <pid>?", choices: ["kill asks the process to stop and lets it clean up; kill -9 ends it at once with no cleanup", "kill -9 is the polite one; kill is instant", "kill only works on Java programs", "There is no difference"], answer: 0 }
+      - { prompt: "A Java server will not stop. What should you try first?", choices: ["kill <pid>, then wait a few seconds", "kill -9 <pid> straight away", "Restart the whole machine", "Delete the jar file"], answer: 0 }
+      - { prompt: "ps aux | grep StationServer prints two lines. One of them ends in grep StationServer. What is it?", choices: ["The grep command itself, which matched its own words", "A second copy of the server", "A zombie server that must be killed", "The server's log file"], answer: 0 }
+      - { prompt: "What does the & do in java StationServer.java &?", choices: ["Starts the program in the background, so you get the prompt back", "Runs the program twice", "Sends its output to a file called &", "Stops the program when you press Enter"], answer: 0 }
+    explain: "Find the PID with ps aux | grep, ask politely with kill, and keep kill -9 as the last resort because it skips all cleanup."
+    reteach: "### Processes: ps and kill"
+
+  - id: q08
+    type: mcq
+    concept: exit-codes
+    variants:
+      - { prompt: "Which exit code means a program succeeded?", choices: ["0", "1", "137", "-1"], answer: 0 }
+      - { prompt: "A Java program ends with an uncaught exception. What exit code does it give?", choices: ["1", "0", "137", "143"], answer: 0 }
+      - { prompt: "A process ended with exit code 137. What most likely happened?", choices: ["It was killed with signal 9, kill -9", "It finished successfully", "It could not find its main class", "It was asked politely to stop with kill"], answer: 0 }
+      - { prompt: "Why does a CI step turn red when a command fails?", choices: ["The command ended with a non-zero exit code", "The command printed the word ERROR", "The command ran for too long", "The command wrote to a file"], answer: 0 }
+      - { prompt: "Where does the shell keep the exit code of the last command?", choices: ["In $?", "In $PATH", "In spoke.log", "In the PID"], answer: 0 }
+    explain: "0 means success and anything else means failure, and the shell keeps the last one in $?. A signal gives 128 plus its number: 143 for SIGTERM, 137 for SIGKILL."
+    reteach: "### Exit codes and $?"
+
+  - id: q09
+    type: mcq
+    concept: disk-and-remote
+    variants:
+      - { prompt: "Why do teams log in to servers with SSH keys instead of passwords?", choices: ["Keys cannot be guessed, and one person's key can be removed on its own", "Keys make the connection faster", "Passwords do not work with ssh", "Keys let you skip the server's login"], answer: 0 }
+      - { prompt: "What does scp intern@api-1.spoke.example:/var/log/spoke/api.log . do?", choices: ["Copies the server's log into your current folder", "Deletes the log on the server", "Opens a shell on the server", "Prints the log to your screen"], answer: 0 }
+      - { prompt: "What does ssh intern@api-1.spoke.example do?", choices: ["Opens a terminal on that server, logged in as intern", "Copies a file from that server", "Checks whether that server is healthy over HTTP", "Sends that server a kill signal"], answer: 0 }
+      - { prompt: "ssh-keygen made a key pair. Which part goes to the server?", choices: ["The public key", "The private key", "Both keys", "Neither: the server makes its own"], answer: 0 }
+    explain: "ssh opens a remote shell and scp copies files over the same connection. The private key never leaves your laptop; the server gets the public key."
+    reteach: "### Remote servers: ssh and scp"
+
+  - id: q10
+    type: mcq
+    concept: ports-and-curl
+    variants:
+      - { prompt: "What does curl -i add to curl's output?", choices: ["The status line and headers of the response", "Line numbers", "An ignore-case search", "A progress bar"], answer: 0 }
+      - { prompt: "Which curl sends a JSON body to /rentals with POST?", choices: ["curl -X POST -H 'Content-Type: application/json' -d '{\"bike\":\"B-1042\"}' http://localhost:8080/rentals", "curl -i http://localhost:8080/rentals", "curl -d POST http://localhost:8080/rentals", "curl -H POST -X '{\"bike\":\"B-1042\"}' http://localhost:8080/rentals"], answer: 0 }
+      - { prompt: "curl -i prints HTTP/1.1 201 Created first. What is that line?", choices: ["The response status: the request worked and made something new", "An error from curl itself", "The request body you sent", "The server's process id"], answer: 0 }
+      - { prompt: "In a curl command, what does -d '...' do?", choices: ["Sends that text as the request body", "Deletes the resource", "Prints debug output", "Downloads to a file"], answer: 0 }
+    explain: "curl sends HTTP requests from the terminal. -i shows the status and headers, -X picks the method, -H adds a header and -d sends a body."
+    reteach: "### Syntax: talk to a server with curl"
+
+  - id: q11
+    type: mcq
+    concept: environment-and-permissions
+    variants:
+      - { prompt: "CI fails with ./mvnw: Permission denied. What fixes it for good?", choices: ["git update-index --chmod=+x mvnw, then commit", "Delete mvnw", "Run the build as a different user", "Add mvnw to .gitignore"], answer: 0 }
+      - { prompt: "ls -l shows -rw-r--r-- for deploy.sh. Why does ./deploy.sh say permission denied?", choices: ["Nobody has the x (execute) permission", "Nobody can read the file", "The file is empty", "The file is in the wrong folder"], answer: 0 }
+      - { prompt: "Which command lets deploy.sh run as a program?", choices: ["chmod +x deploy.sh", "export deploy.sh", "sudo cat deploy.sh", "touch deploy.sh"], answer: 0 }
+    explain: "chmod +x adds the execute permission, so a file can run as a program. In Git, git update-index --chmod=+x stores that permission."
+    reteach: "### Permissions: chmod +x"
+
+  - id: q12
+    type: mcq
+    concept: disk-and-remote
+    variants:
+      - { prompt: "Which command shows how full each disk is?", choices: ["df -h", "du -sh", "ls -l", "top"], answer: 0 }
+      - { prompt: "The disk is full. Which command shows how much space the logs folder uses?", choices: ["du -sh logs", "df -h logs", "wc -l logs", "cat logs"], answer: 0 }
+      - { prompt: "Which command lists files under logs that are bigger than 100 MB?", choices: ["find logs -size +100M", "find logs -name 100M", "grep -r 100M logs", "du -100M logs"], answer: 0 }
+      - { prompt: "Old log files keep filling the disk. What is the lasting fix?", choices: ["Log rotation: start a new file each day and delete old ones", "Delete the disk", "Turn logging off forever", "Use kill -9 on the logger every week"], answer: 0 }
+    explain: "df -h shows how full each disk is, du -sh measures a folder, and find -size hunts big files. Log rotation stops old logs piling up."
+    reteach: "### Disks: df and du"

@@ -28,7 +28,9 @@ questions:
       - { prompt: "Which Dockerfile instruction sets the command that runs when a container starts?", choices: ["ENTRYPOINT", "RUN", "FROM", "EXPOSE"], answer: 0 }
       - { prompt: "What does EXPOSE 8080 do in a Dockerfile?", choices: ["It documents that the program listens on 8080, but opens nothing", "It publishes port 8080 to your computer", "It makes the server listen on 0.0.0.0", "It blocks every port except 8080"], answer: 0 }
       - { prompt: "When does a RUN instruction run?", choices: ["While the image is being built", "Every time a container starts", "Only when you run docker push", "When the container stops"], answer: 0 }
-    explain: "ENTRYPOINT runs at container start, RUN runs at build time, and EXPOSE is documentation only."
+      - { prompt: "Why add USER kiosk near the end of the kiosk's Dockerfile?", choices: ["So the program does not run as root, and an attacker who breaks in gets far less power", "So the image builds faster", "So the kiosk can listen on port 8080", "So docker push asks for a password"], answer: 0 }
+      - { prompt: "The kiosk's ENTRYPOINT is java -XX:MaxRAMPercentage=95 -jar app.jar. Its container keeps stopping with exit code 137 and OOMKilled true, with no Java error. What is the best fix?", choices: ["Lower MaxRAMPercentage, so Java leaves room outside the heap within the container's limit", "Raise MaxRAMPercentage to 100", "Add EXPOSE 8080", "Catch OutOfMemoryError in main"], answer: 0 }
+    explain: "ENTRYPOINT runs at container start, RUN runs at build time, and EXPOSE is documentation only. USER switches away from root, so a break-in gets a plain user's powers. -XX:MaxRAMPercentage sets the heap's share of the container's memory; if the whole container goes over its limit, the kernel kills it with exit code 137."
     reteach: "## Concept"
 
   - id: q04
@@ -96,16 +98,18 @@ questions:
     variants:
       - { prompt: "The same image must say Harbor at the Harbor kiosk. What do you change?", choices: ["Run it with -e KIOSK_STATION=Harbor", "Build a separate image for Harbor", "Edit the jar inside the running container", "Add EXPOSE Harbor to the Dockerfile"], answer: 0 }
       - { prompt: "System.getenv(\"KIOSK_STATION\") runs where that variable is not set. What does it return?", choices: ["null", "An empty string", "\"Riverside\"", "It throws an exception"], answer: 0 }
-    explain: "Pass settings with -e. In Java, System.getenv returns null for a missing variable, so give it a default."
+      - { prompt: "Where should the kiosk's database password come from?", choices: ["A secret manager, handed in when the container starts", "An ENV line in the Dockerfile", "An ARG with a default value in the Dockerfile", "A constant in the Java code"], answer: 0 }
+      - { prompt: "Why must a password never go in a Dockerfile ENV line?", choices: ["It is saved in the image, and docker history shows it to anyone who pulls the image", "ENV values are limited to 8 characters", "Java cannot read ENV values", "It makes the image twice as big"], answer: 0 }
+    explain: "Pass settings in with -e, so one image runs everywhere. System.getenv returns null for a missing variable, so give it a default. Secrets come from a secret manager at start time; anything in ENV or ARG is saved in the image for anyone to read."
     reteach: "## Concept"
 
   - id: q10
     type: mcq
     concept: configuration-and-volumes
-    prompt: "The Depot kiosk writes rides to /app/data. After a restart with --rm, the rides are gone. What is the fix?"
-    choices: ["Add -v kiosk-data:/app/data so the folder lives in a volume", "Add EXPOSE /app/data to the Dockerfile", "Use the latest tag", "Run the container with -d"]
-    answer: 0
-    explain: "Files inside a container vanish when it is removed. A volume keeps them outside the container."
+    variants:
+      - { prompt: "The Depot kiosk writes rides to /app/data. After a restart with --rm, the rides are gone. What is the fix?", choices: ["Add -v kiosk-data:/app/data so the folder lives in a volume", "Add EXPOSE /app/data to the Dockerfile", "Use the latest tag", "Run the container with -d"], answer: 0 }
+      - { prompt: "In compose.yaml, the kiosk service needs the PostgreSQL service named db. Which address does the kiosk use?", choices: ["db:5432", "localhost:5432", "127.0.0.1:5432", "kiosk:5432"], answer: 0 }
+    explain: "Files inside a container vanish when it is removed, so keep them in a volume. On Compose's network, each service name is also its address, so the kiosk reaches the database at db:5432."
     reteach: "## Concept"
 
   - id: q11

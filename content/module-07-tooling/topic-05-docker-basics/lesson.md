@@ -17,7 +17,7 @@ A container holds your jar, the exact Java version, and the files they need. You
 A container is lighter than a **virtual machine** (VM), a whole pretend computer with its own operating system inside. A container skips that. It shares the **kernel** of the computer it runs on, the core of the operating system that talks to the hardware. It only isolates your program's files, network and processes. So a container starts in about a second and uses little memory.
 
 ```callout tip
-Docker containers need a Linux kernel. On Mac and Windows, Docker Desktop runs one small hidden Linux VM, and all your containers share its kernel.
+The Linux containers you will use need a Linux kernel. On Mac and Windows, Docker Desktop runs one small hidden Linux VM, and all your containers share its kernel.
 ```
 
 ```callout analogy
@@ -100,6 +100,7 @@ A few more flags and commands you will use every day:
 | `docker ps` | Lists running containers |
 | `docker logs kiosk-harbor` | Shows what the container printed. Add `-f` to keep watching |
 | `docker stop kiosk-harbor` | Asks the container to stop |
+| `docker exec -it kiosk-harbor sh` | Opens a shell inside a running container, so you can look around |
 | `docker images` | Lists the images on your computer |
 
 ### Layers and the build cache
@@ -117,7 +118,23 @@ COPY src ./src
 RUN mvn -q package -DskipTests
 ```
 
-Change a Java file and only the last two steps rebuild. The slow dependency download stays cached. `dependency:go-offline` asks Maven to download every dependency the build needs.
+Change a Java file and only the last two steps rebuild. The slow dependency download stays cached. `dependency:go-offline` asks Maven to download the libraries and plugins the build needs. It misses a few jars that plugins fetch only while they run, such as the one Surefire uses to start JUnit. So `package` may still download a little.
+
+### Syntax: a cache mount
+
+```dockerfile
+RUN --mount=type=cache,target=/root/.m2 mvn -q package -DskipTests
+```
+
+**BuildKit**, Docker's builder, can keep a folder from one build to the next. `--mount=type=cache,target=/root/.m2` lends this `RUN` step Maven's download folder from the last build. The folder is not saved into the image, so the image stays small.
+
+```dockerfile
+COPY pom.xml .
+COPY src ./src
+RUN --mount=type=cache,target=/root/.m2 mvn -q package -DskipTests
+```
+
+Now even a change to `pom.xml` only downloads the new jars, not all of them. Many teams use this instead of the `go-offline` step. On a fresh CI runner the cache starts empty, unless the pipeline saves and restores it between runs.
 
 ### Syntax: multi-stage build
 
@@ -174,6 +191,10 @@ docker run --rm -p 9090:8080 spoke/kiosk:1.10.0
 
 `-p host:container` reads "your computer's port 9090 goes to the container's port 8080". Now `http://localhost:9090` on your laptop reaches the kiosk.
 
+```callout jargon
+An **IP address** is the number other computers use to reach a computer on a network, like `192.168.1.20`. `127.0.0.1` is special: it always means "this same computer". Module 8 covers networks properly.
+```
+
 The server inside must listen on `0.0.0.0`, which means "every network address". If it listens on `127.0.0.1`, it only accepts traffic from inside the container itself.
 
 ```java
@@ -218,6 +239,33 @@ public class Main {
 
 The sandbox does not set `KIOSK_STATION`, so it prints `Spoke kiosk ready at Riverside`. Inside a container started with `-e KIOSK_STATION=Harbor`, it would say Harbor.
 
+### Config from the environment, secrets from a vault
+
+Build one image, and run that same image everywhere: on your laptop, on the test servers and at every kiosk. Whatever differs between those places comes in from outside, when the container starts. That way, the image you tested is the image you ship.
+
+```callout jargon
+The **twelve-factor app** is a well-known list of twelve rules for apps that run on servers. Rule three says: keep **config**, everything that changes between places, in the environment, never in the code or the image.
+```
+
+Passwords and keys are config too, but they need more care. Never put a secret in the Dockerfile with `ENV` or `ARG`. It is saved in the image, and anyone who can pull the image can read it. Here is a tiny test image that tried:
+
+```bash
+docker history --format "{{.CreatedBy}}" kiosk-test
+```
+
+```text
+COPY app.txt /app/app.txt # buildkit
+ENV DB_PASSWORD=spoke-db-7f3a9c
+```
+
+If the build itself needs a secret, say to download from a private repository, use `RUN --mount=type=secret`. It lends the secret to that one step and never saves it in a layer.
+
+Real teams keep secrets in a **secret manager**. It is a locked service that stores them and gives each one only to the apps allowed to see it. It also logs every read. HashiCorp Vault and AWS Secrets Manager are two examples. When the container starts, the platform hands the secret in as an environment variable or a file.
+
+```callout warning
+If a secret leaks, **rotate** it: make a new one, switch the app to it, then turn the old one off. Deleting the line is not enough, because old images and the Git history still hold it.
+```
+
 ### Syntax: volumes
 
 Containers are throwaway. A file written inside a container disappears when the container is removed. A **volume** is storage that Docker keeps outside the container, so its files survive.
@@ -227,6 +275,87 @@ docker run -d --name kiosk-depot -v kiosk-data:/app/data spoke/kiosk:1.10.0
 ```
 
 `-v kiosk-data:/app/data` reads "keep the volume named `kiosk-data` at `/app/data` inside the container". Docker creates the volume if it is new. Start a fresh container with the same `-v`, and the ride log is still there.
+
+### Several containers: docker compose
+
+Real apps rarely run alone. In module 8 the Spoke API stores rentals in a database. **Docker Compose** starts several containers together, from one file called `compose.yaml`.
+
+```yaml
+services:
+  kiosk:
+    image: spoke/kiosk:1.10.0
+    ports:
+      - "8080:8080"
+    environment:
+      KIOSK_STATION: Harbor
+      DB_URL: jdbc:postgresql://db:5432/spoke
+      DB_USER: spoke
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: spoke
+      POSTGRES_USER: spoke
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U spoke -d spoke"]
+      interval: 5s
+      retries: 10
+
+volumes:
+  db-data:
+```
+
+- Each entry under `services` is one container. `db` runs the PostgreSQL database.
+- Compose puts both on one private network, where each **service name is also its address**. So the kiosk reaches the database at `db:5432`, not `localhost`.
+- `depends_on` with `service_healthy` starts the kiosk only after the database's health check passes.
+- `${DB_PASSWORD}` is read from your shell, or from a `.env` file next to `compose.yaml`. List `.env` in `.gitignore`.
+
+```bash
+docker compose up -d
+docker compose logs -f kiosk
+docker compose down
+```
+
+`up -d` starts everything in the background, `logs -f` follows one service, and `down` stops and removes the containers. The volume survives `down`. Add `-v` only when you really want the data gone.
+
+```animate
+title: Compose starts the kiosk and its database
+kind: scene
+nodes:
+  - { id: you, label: docker compose up, emoji: "💻", row: 0, col: 0 }
+  - { id: db, label: db container, emoji: "🐘", value: stopped, row: 0, col: 1 }
+  - { id: kiosk, label: kiosk container, emoji: "🚲", value: waiting, row: 0, col: 2 }
+  - { id: vol, label: db-data volume, emoji: "💾", row: 1, col: 1 }
+steps:
+  - say: Compose reads compose.yaml. The kiosk depends on db, so db starts first.
+    send: { from: you, to: db, label: start }
+    set: { db: starting }
+  - say: The database keeps its files in the db-data volume, so they survive a restart.
+    send: { from: db, to: vol, label: files }
+  - say: Every five seconds, pg_isready asks the database if it is ready. Then it reports healthy.
+    set: { db: healthy }
+  - say: Only now does Compose start the kiosk.
+    send: { from: you, to: kiosk, label: start }
+    set: { kiosk: running }
+  - say: The kiosk connects to db:5432. On Compose's network, the service name works as an address.
+    send: { from: kiosk, to: db, label: "db:5432" }
+```
+
+If `DB_PASSWORD` is not set, Compose does not stop. It warns once for each place the variable is used, then uses an empty password:
+
+```text
+WARN[0000] The "DB_PASSWORD" variable is not set. Defaulting to a blank string.
+WARN[0000] The "DB_PASSWORD" variable is not set. Defaulting to a blank string.
+```
+
+Write `${DB_PASSWORD:?set DB_PASSWORD first}` instead, and Compose refuses to start until you set it.
 
 ### Registries and tags
 
@@ -242,6 +371,53 @@ docker pull spoke/kiosk:1.10.0
 To use a company registry, put its address at the front of the name, for example `registry.example.com/spoke/kiosk:1.10.0`. You may need `docker login` first.
 
 If you leave the tag off, Docker uses the tag `latest`. That name does not mean newest. It is just whatever someone last pushed under that tag, so it can change under your feet. In production, always use a version tag, and make the tag match the version you released.
+
+### Production-ready images
+
+The images so far work. Before one runs at every kiosk, three more lines make it safer to run and easier to watch.
+
+```dockerfile
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+RUN useradd --system --uid 10001 kiosk \
+ && mkdir -p /app/data \
+ && chown kiosk /app/data
+COPY --from=build /src/target/kiosk.jar app.jar
+USER kiosk
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=3s CMD curl -fs http://localhost:8080/health || exit 1
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75", "-jar", "app.jar"]
+```
+
+- **`USER kiosk`.** Most images, Temurin's included, run your program as `root`, the all-powerful user, unless you say otherwise. If an attacker breaks into the kiosk, a plain user gives them far less power. The `RUN` line makes that user and lets it write to `/app/data`.
+- **`HEALTHCHECK`.** Docker runs this command every 30 seconds. If `/health` stops answering, `docker ps` shows the container as `unhealthy`, and tools that watch it can restart it. The Temurin image includes `curl`; check that yours does.
+- **`-XX:MaxRAMPercentage=75`.** It tells Java how much of the container's memory to use for the heap. The next card explains why.
+
+When something looks wrong in a running container, `docker exec -it kiosk-harbor sh` opens a shell inside it. You can read its files and check its environment, without stopping it.
+
+### Java inside a memory limit
+
+Each kiosk runs its container with a memory limit, such as `docker run -m 512m`. Java notices that limit. But by default it gives the heap only 25% of it: 128 MB out of 512 MB.
+
+`-XX:MaxRAMPercentage=75` raises the heap to 75%, here 384 MB. Leave the rest free, because Java also needs memory outside the heap: thread stacks, loaded classes and the JVM itself. You met the heap and the stack in [JVM memory](/t/module-05-advanced-java/topic-07-jvm-memory).
+
+If the whole container goes over its limit, the operating system kills it on the spot. Java gets no `OutOfMemoryError`, and there is no stack trace. The container just stops with **exit code 137**. Here a small test container, limited to 16 MB, runs a command that keeps eating memory. It uses `redis:7-alpine` only because that small image with a shell was already on the test machine; any small image with `sh` works.
+
+```bash
+docker run --name oom-demo -m 16m --memory-swap 16m redis:7-alpine sh -c 'tail /dev/zero'
+docker inspect --format '{{.State.OOMKilled}} {{.State.ExitCode}}' oom-demo
+```
+
+```text
+true 137
+```
+
+`OOMKilled` is `true`: the kernel's out-of-memory killer stopped it. 137 is 128 plus 9, and 9 is the signal number for "kill now".
+
+| What you see | What happened | Fix |
+|---|---|---|
+| `OutOfMemoryError: Java heap space`, with a stack trace | The heap is full, but the container is fine | Find the leak, or raise `MaxRAMPercentage` |
+| Exit code 137, `OOMKilled` true, no Java error | The whole container went over its limit | Lower `MaxRAMPercentage`, or raise the container's limit |
 
 ## Worked example
 
@@ -389,10 +565,10 @@ The answer: `pom.xml` and the dependency step move up, right after `WORKDIR`.
 ## Recap
 
 - An image is a read-only package, like a class. A container is a running copy, like an object.
-- A Dockerfile builds an image: `FROM`, `WORKDIR`, `COPY`, `RUN`, `ENV`, `EXPOSE` and `ENTRYPOINT`.
+- A Dockerfile builds an image: `FROM`, `WORKDIR`, `COPY`, `RUN`, `ENV`, `EXPOSE` and `ENTRYPOINT`. Production images add `USER`, a `HEALTHCHECK` and a Java memory share. Exit code 137 with `OOMKilled` true means the container went over its memory limit.
 - Each step makes a cached layer. Put rarely changed steps first, and use a multi-stage build for a small JRE image.
-- `-p host:container` publishes a port, and the server inside must listen on `0.0.0.0`.
-- Pass settings with `-e`, keep data in volumes with `-v`, and push version tags, not `latest`, to a registry.
+- `-p host:container` publishes a port, and the server inside must listen on `0.0.0.0`. `docker compose` starts several containers that reach each other by service name.
+- One image runs everywhere: settings come in with `-e`, secrets come from a secret manager and never sit in the image. Keep data in volumes with `-v`, and push version tags, not `latest`.
 
 ## Common mistakes
 

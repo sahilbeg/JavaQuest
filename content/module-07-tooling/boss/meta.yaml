@@ -2,7 +2,7 @@ id: module-07-tooling/boss
 title: "INC-07: The release pipeline is red"
 order: 99
 minutes: 12
-prerequisites: [module-07-tooling/topic-05-docker-basics]
+prerequisites: [module-07-tooling/topic-08-shell-on-call]
 concepts: [version-ordering, hard-coded-paths, configuration-defaults, injected-clock]
 practice:
   kind: code

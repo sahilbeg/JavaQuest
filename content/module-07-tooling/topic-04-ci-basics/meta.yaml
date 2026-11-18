@@ -1,7 +1,7 @@
 id: module-07-tooling/topic-04-ci-basics
 title: "Continuous integration basics"
 order: 4
-minutes: 10
+minutes: 15
 prerequisites: [module-07-tooling/topic-03-git-workflow]
 concepts: [continuous-integration, pipelines, workflow-file, branch-protection, works-on-my-machine, flaky-tests]
 practice:

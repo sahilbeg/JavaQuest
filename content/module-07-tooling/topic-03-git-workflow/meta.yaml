@@ -1,7 +1,7 @@
 id: module-07-tooling/topic-03-git-workflow
 title: "Git branches, merges, rebases, pull requests"
 order: 3
-minutes: 10
+minutes: 14
 prerequisites: [module-07-tooling/topic-02-gradle]
 concepts: [branches, merging, merge-conflicts, rebasing, pull-requests, history-safety]
 practice:

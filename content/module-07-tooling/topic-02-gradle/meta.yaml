@@ -1,7 +1,7 @@
 id: module-07-tooling/topic-02-gradle
 title: "Gradle basics"
 order: 2
-minutes: 9
+minutes: 13
 prerequisites: [module-07-tooling/topic-01-maven]
 concepts: [build-script, tasks, configurations, wrapper, incremental-builds, maven-vs-gradle]
 practice:

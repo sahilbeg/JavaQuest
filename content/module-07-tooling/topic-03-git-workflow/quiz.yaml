@@ -99,7 +99,9 @@ questions:
       - { prompt: "Which branch is it safe to rebase?", choices: ["Your own branch that nobody else has pulled", "main", "A branch another intern also pushes to", "Any branch, as long as you use --force"], answer: 0 }
       - { prompt: "Why use git push --force-with-lease instead of git push --force?", choices: ["It refuses if someone else pushed to the branch since your last fetch", "It is faster on big repositories", "It also creates a pull request", "It merges instead of overwriting"], answer: 0 }
       - { prompt: "You rebase a branch another intern also uses and run git push --force. What happens?", choices: ["The other intern's pushed commits disappear from the server", "Git merges both versions for you", "Git refuses with (stale info)", "Nothing, rebasing never changes commits"], answer: 0 }
-    explain: "Rebasing makes new commits. Never rebase commits others already have, and push a rebased branch of your own with --force-with-lease."
+      - { prompt: "A teammate pushed to your branch, then your IDE fetched in the background. You run git push --force-with-lease after a rebase. What happens?", choices: ["The push succeeds, and the teammate's commit is gone from the server", "Git refuses with (stale info)", "Git merges the teammate's commit in for you", "The push waits for a review"], answer: 0 }
+      - { prompt: "What does --force-if-includes add to --force-with-lease?", choices: ["It also refuses unless the server's newest commit is in your own branch's history", "It skips the lease check to push faster", "It force-pushes every branch at once", "It opens a pull request after the push"], answer: 0 }
+    explain: "Rebasing makes new commits. Never rebase commits others already have. A background fetch can make --force-with-lease pass anyway, so push your own rebased branch with --force-with-lease --force-if-includes."
     reteach: "## Concept"
 
   - id: q10
@@ -132,5 +134,7 @@ questions:
       - { prompt: "What does Squash and merge put on main?", choices: ["One new commit holding all the branch's changes", "Every branch commit plus a merge commit", "Every branch commit replayed with no merge commit", "Nothing until someone runs git pull"], answer: 0 }
       - { prompt: "Why keep pull requests small?", choices: ["Reviewers can read them carefully, and they merge sooner with fewer conflicts", "GitHub rejects pull requests over 100 lines", "Small pull requests skip the CI checks", "Big pull requests delete the branch"], answer: 0 }
       - { prompt: "What is a pull request?", choices: ["A page asking to merge your branch, with review and checks", "A command that downloads the newest main", "A branch that only Tsunade can push to", "A way to undo a merge"], answer: 0 }
-    explain: "A pull request asks to merge a branch, with a diff, review comments and CI checks. Small PRs get real reviews."
+      - { prompt: "Which commit subject line follows the usual conventions?", choices: ["Round Harbor fares up to the next 10 cents", "rounded fares.", "WIP", "Fixed the Harbor thing Tsunade mentioned and also tidied some files"], answer: 0 }
+      - { prompt: "With Conventional Commits, which subject marks a bug fix?", choices: ["fix: round Harbor fares up to 10 cents", "feat: round Harbor fares up to 10 cents", "docs: round Harbor fares up to 10 cents", "Round Harbor fares up to 10 cents!"], answer: 0 }
+    explain: "A pull request asks to merge a branch, with a diff, review comments and CI checks. Small PRs get real reviews. Good commits have a short subject written as an order, and a body that says why. Conventional Commits put a type such as fix: or feat: in front."
     reteach: "## Concept"

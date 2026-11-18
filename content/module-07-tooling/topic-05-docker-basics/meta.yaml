@@ -1,7 +1,7 @@
 id: module-07-tooling/topic-05-docker-basics
 title: "Docker basics: images and containers"
 order: 5
-minutes: 10
+minutes: 15
 prerequisites: [module-07-tooling/topic-04-ci-basics]
 concepts: [images-and-containers, dockerfile, layers-and-cache, ports, configuration-and-volumes, registries-and-tags]
 practice:

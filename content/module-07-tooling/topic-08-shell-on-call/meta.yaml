@@ -1,0 +1,22 @@
+id: module-07-tooling/topic-08-shell-on-call
+title: "The shell on call: logs, processes and servers"
+order: 8
+minutes: 15
+prerequisites: [module-07-tooling/topic-07-shipping-to-production]
+concepts: [pipes-and-grep, counting-with-pipelines, processes-and-signals, exit-codes, ports-and-curl, environment-and-permissions, disk-and-remote]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0708
+  from: sam
+  title: "Harbor riders can't pay, since this morning"
+  body: >
+    Riders at Harbor keep telling me their payment failed, and a few say the kiosk froze too.
+    Kakashi says the API server's log has the answers, but it's 400 lines and I can't read it.
+    Could you find out what is failing, at which stations, and since when?
+hints:
+  - "Build the answer one pipe at a time: start with grep ERROR spoke.log, check the output, then add the next step."
+  - "To count kinds of things, pull out one column with awk '{print $4}', then sort, then uniq -c. uniq only merges lines that sit next to each other, so sort comes first."
+  - "The full pipeline: grep ERROR spoke.log | awk '{print $4}' | sort | uniq -c | sort -rn | head -n 5. Swap $4 for $7 to count by station."
+review: true

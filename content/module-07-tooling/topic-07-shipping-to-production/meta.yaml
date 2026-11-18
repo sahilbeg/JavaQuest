@@ -1,0 +1,22 @@
+id: module-07-tooling/topic-07-shipping-to-production
+title: "Shipping to production: deploys, rollbacks and flags"
+order: 7
+minutes: 14
+prerequisites: [module-07-tooling/topic-06-git-undo]
+concepts: [build-once, deploy-strategies, health-checks-and-rollback, expand-and-contract, feature-flags, trunk-based-development, dora-metrics]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0707
+  from: theo
+  title: "Friday's release took every kiosk down"
+  body: >
+    Friday's kiosk release went to all five stations at once, and the new fare screen crashed on
+    every one of them. Rolling back took 40 minutes, because we had to rebuild the old version first.
+    Next release, I want it to reach one station first, and a way back that takes seconds.
+hints:
+  - "Build the jar once, give it a version, and send that same file to staging and then production. Never rebuild it per environment."
+  - "Canary: give the new version a small share of riders first, watch its errors, and widen only while it stays healthy. Keep the old version ready to switch back."
+  - "Ship new code switched off behind a feature flag. Deploying is not releasing: turn the flag on later, a few riders at a time, and turn it off again if anything breaks."
+review: true

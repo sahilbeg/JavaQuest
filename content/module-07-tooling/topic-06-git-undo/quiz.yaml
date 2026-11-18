@@ -1,0 +1,126 @@
+topic: module-07-tooling/topic-06-git-undo
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: amend
+    variants:
+      - { prompt: "What does git commit --amend do?", choices: ["Replaces your last commit with a new one that has a new ID", "Edits the last commit in place and keeps its ID", "Adds a second commit after the last one", "Undoes the last commit and deletes its changes"], answer: 0 }
+      - { prompt: "You committed with a typo in the message and have not pushed. What is the quickest fix?", choices: ["git commit --amend -m \"the right message\"", "git revert HEAD", "git reset --hard HEAD~1", "git stash"], answer: 0 }
+      - { prompt: "When should you NOT use git commit --amend?", choices: ["When the last commit is already pushed and others may have it", "When you forgot to stage a file", "When the message has a typo", "When you have not pushed yet"], answer: 0 }
+    explain: "Amend makes a brand-new commit in place of the last one. That is fine on your laptop, but it rewrites history once the commit is pushed."
+    reteach: "### Syntax: fix your last commit with --amend"
+
+  - id: q02
+    type: fill-blank
+    concept: cherry-pick
+    prompt: "git cherry-pick ___ 018fb06   # add a line saying where the copy came from"
+    answers: ["-x"]
+    explain: "-x adds \"(cherry picked from commit ...)\" to the message, so the fix on the release branch can be traced back to main."
+    reteach: "### Syntax: git cherry-pick copies one commit"
+
+  - id: q03
+    type: mcq
+    concept: stash
+    variants:
+      - { prompt: "You run git stash, but your new file NOTES.md stays in the folder. Why?", choices: ["Plain git stash skips untracked files; git stash push -u takes them too", "git stash only works on .java files", "NOTES.md is too small to stash", "The stash is full"], answer: 0 }
+      - { prompt: "What does git stash pop do?", choices: ["Puts the newest stash back into your folder and removes it from the stash list", "Deletes the newest stash without applying it", "Pushes the stash to the server", "Makes a commit from the stash"], answer: 0 }
+      - { prompt: "Where does a stash live?", choices: ["Only on your laptop, outside any branch", "On the server, in origin/stash", "Inside the newest commit on main", "In the .gitignore file"], answer: 0 }
+    explain: "A stash is a local shelf for half-done edits. Add -u for untracked files, and pop brings the newest stash back."
+    reteach: "### Syntax: park half-done work with git stash"
+
+  - id: q04
+    type: order
+    concept: stash
+    prompt: "You are halfway through feat/night-fare when an urgent fix comes in for main. Put the steps in order."
+    items:
+      - "git stash push -u -m \"night fare, half done\""
+      - "git switch main"
+      - "Make the fix, then git add, git commit and git push"
+      - "git switch feat/night-fare"
+      - "git stash pop"
+    explain: "Park your edits, switch, fix, switch back, then pop the stash to get your half-done work back."
+    reteach: "## Worked example"
+
+  - id: q05
+    type: mcq
+    concept: revert-vs-reset
+    variants:
+      - { prompt: "A bad commit is already pushed to main, and teammates have pulled it. How do you undo it?", choices: ["git revert <id>, then git push", "git reset --hard HEAD~1, then git push --force", "git commit --amend, then git push --force", "git rebase -i and drop the commit"], answer: 0 }
+      - { prompt: "What does git revert <id> do?", choices: ["Adds a new commit that does the opposite of that commit", "Deletes that commit from history", "Moves the branch label back to that commit", "Copies that commit to another branch"], answer: 0 }
+      - { prompt: "What is the main difference between git revert and git reset?", choices: ["Revert adds a new commit; reset moves the branch label and rewrites history", "Revert only works on unpushed commits; reset only on pushed ones", "Revert deletes files; reset only changes messages", "There is no difference"], answer: 0 }
+    explain: "Revert grows history, so it is safe on shared branches. Reset moves the label back, which rewrites history."
+    reteach: "### Revert or reset?"
+
+  - id: q06
+    type: mcq
+    concept: revert-vs-reset
+    variants:
+      - { prompt: "Which reset moves the branch back but keeps the changes staged, ready for one new commit?", choices: ["git reset --soft HEAD~2", "git reset --hard HEAD~2", "git reset HEAD~2", "git revert HEAD~2"], answer: 0 }
+      - { prompt: "Which reset also throws away the edits in your files?", choices: ["git reset --hard", "git reset --soft", "git reset --mixed", "git reset with no option"], answer: 0 }
+      - { prompt: "git reset HEAD~1 with no option is the same as which mode?", choices: ["--mixed: the label moves back and the changes become unstaged", "--soft: the changes stay staged", "--hard: the changes are thrown away", "It is not allowed without an option"], answer: 0 }
+    explain: "All three modes move the branch label. --soft keeps changes staged, --mixed (the default) unstages them, and --hard throws them away."
+    reteach: "### Syntax: git reset moves the branch label"
+
+  - id: q07
+    type: mcq
+    concept: reflog
+    variants:
+      - { prompt: "You ran git reset --hard HEAD~1 and your last commit vanished from git log. What now?", choices: ["Run git reflog, find the line before the reset, then git reset --hard HEAD@{n}", "Nothing can be done, the commit is deleted", "Run git revert HEAD", "Run git stash pop"], answer: 0 }
+      - { prompt: "Right after a reset, what does HEAD@{1} mean?", choices: ["Where HEAD was one move ago, before the reset", "The commit before the one you are on", "The first commit in the repository", "The newest stash"], answer: 0 }
+      - { prompt: "Which of these can git reflog NOT bring back?", choices: ["Edits you never committed before git reset --hard", "A commit lost after git reset --hard", "A commit dropped during git rebase -i", "The last commit of a deleted branch you once had checked out"], answer: 0 }
+    explain: "The reflog records every place HEAD has been, so lost commits can come back. It never saw uncommitted edits."
+    reteach: "### Syntax: git reflog finds \"lost\" commits"
+
+  - id: q08
+    type: fill-blank
+    concept: reflog
+    prompt: "git ___   # list every place HEAD has been"
+    answers: ["reflog", "reflog show"]
+    explain: "git reflog is Git's diary of every commit, switch, reset and rebase on your laptop."
+    reteach: "### Syntax: git reflog finds \"lost\" commits"
+
+  - id: q09
+    type: mcq
+    concept: cherry-pick
+    variants:
+      - { prompt: "main has a fare fix and an unfinished Depot screen. How do you get only the fix onto release/2.4?", choices: ["Switch to release/2.4 and git cherry-pick the fix's commit", "Merge main into release/2.4", "Rebase release/2.4 onto main", "git revert the Depot commit on main"], answer: 0 }
+      - { prompt: "What does git cherry-pick <id> do?", choices: ["Copies that commit's change onto your current branch as a new commit", "Moves that commit off its old branch", "Deletes every commit except that one", "Opens a pull request for that commit"], answer: 0 }
+      - { prompt: "Is git cherry-pick safe on a shared release branch?", choices: ["Yes, it only adds a new commit", "No, it rewrites every commit on the branch", "Only with --force", "Only if the branch has no commits yet"], answer: 0 }
+    explain: "Cherry-pick copies one change as a new commit on the branch you are on. It adds, so it is safe on shared branches."
+    reteach: "### Syntax: git cherry-pick copies one commit"
+
+  - id: q10
+    type: mcq
+    concept: interactive-rebase
+    variants:
+      - { prompt: "In the git rebase -i todo list, which commit is on the first line?", choices: ["The oldest commit on your branch", "The newest commit on your branch", "The newest commit on main", "The first commit in the repository"], answer: 0 }
+      - { prompt: "In a rebase todo list, what does fixup do?", choices: ["Melts the commit into the one above and keeps only the message of the commit above", "Keeps the commit and changes its message", "Deletes the commit", "Stops the rebase so you can edit files"], answer: 0 }
+      - { prompt: "Which todo word keeps a commit but lets you change its message?", choices: ["reword", "pick", "drop", "fixup"], answer: 0 }
+    explain: "The todo list runs top to bottom, oldest first. fixup and squash melt into the line above, reword renames, drop removes."
+    reteach: "### Syntax: tidy your branch with git rebase -i"
+
+  - id: q11
+    type: spot-the-bug
+    concept: rewriting-history
+    prompt: "These commands should fix a typo in a commit message on the shared main. Which line rewrites a commit teammates already pulled?"
+    code: |
+      git switch main
+      git pull
+      git log --oneline
+      git commit --amend -m "Raise unlock fee to 120 cents"
+      git push
+    bugLine: 4
+    explain: "After git pull, the last commit is one everyone has. Amending replaces it with a new commit, so the push is rejected. On shared branches, leave the typo or add a new commit."
+    reteach: "### The golden rule: never rewrite shared history"
+
+  - id: q12
+    type: mcq
+    concept: rewriting-history
+    variants:
+      - { prompt: "Which pair of commands only ADDS commits, so it is safe on main?", choices: ["git revert and git cherry-pick", "git reset and git rebase -i", "git commit --amend and git reset --soft", "git rebase -i and git commit --amend"], answer: 0 }
+      - { prompt: "What is the golden rule of undoing in Git?", choices: ["Never rewrite commits someone else may have pulled", "Never use git revert on main", "Always push with --force after an undo", "Only undo commits older than a week"], answer: 0 }
+      - { prompt: "Your own branch, which nobody else uses, was rebased after you pushed it. How should you push?", choices: ["git push --force-with-lease --force-if-includes", "git push --force", "git push, it always works", "git revert, then git push"], answer: 0 }
+    explain: "Amend, reset and rebase rewrite history, so keep them for unshared work. Revert and cherry-pick add commits and are safe everywhere."
+    reteach: "### The golden rule: never rewrite shared history"

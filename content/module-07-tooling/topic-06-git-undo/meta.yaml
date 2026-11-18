@@ -1,0 +1,22 @@
+id: module-07-tooling/topic-06-git-undo
+title: "Undo and recover with Git"
+order: 6
+minutes: 14
+prerequisites: [module-07-tooling/topic-05-docker-basics]
+concepts: [amend, stash, revert-vs-reset, reflog, cherry-pick, interactive-rebase, rewriting-history]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-0706
+  from: maya
+  title: "Ship the Harbor fix, and only the fix"
+  body: >
+    Harbor's kiosk runs release 2.4, and it still rounds fares wrong. The fix is already on main,
+    but so is the half-built Depot screen, which must not ship. Please get just the fix onto
+    release/2.4 today. Three people have pulled main, so nothing on main gets rewritten.
+hints:
+  - "Every Git undo is one of two kinds: add a new commit that cancels the old one, or move a branch label. On shared branches, only add."
+  - "To copy one commit to another branch, switch to that branch and run git cherry-pick -x with the commit's ID from git log."
+  - "Lost a commit after git reset --hard? Run git reflog, find the line from before the reset, and run git reset --hard HEAD@{n} with its number."
+review: true

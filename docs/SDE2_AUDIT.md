@@ -123,15 +123,15 @@ New tickets (before the boss):
 
 ## Phase 5: module 07, tooling
 
-- [ ] topic-01: dependency conflicts, `dependency:tree`, exclusions, BOMs, semantic versioning, fat jars
-- [ ] topic-02: Gradle's "highest wins"
-- [ ] topic-03: commit messages, `git clone`, SSH keys
-- [ ] topic-04: pin actions by SHA; secret masking limits; unit vs integration tests in CI; dependency scanning
-- [ ] topic-05: config from the environment, secrets never in images, non-root user, JVM memory in containers, `docker compose`
+- [x] topic-01: dependency conflicts, `dependency:tree`, exclusions, BOMs, semantic versioning, fat jars
+- [x] topic-02: Gradle's "highest wins"
+- [x] topic-03: commit messages, `git clone`, SSH keys
+- [x] topic-04: pin actions by SHA; secret masking limits; unit vs integration tests in CI; dependency scanning
+- [x] topic-05: config from the environment, secrets never in images, non-root user, JVM memory in containers, `docker compose`
 - New tickets:
-  - [ ] topic-06 Undo and recover with Git (placed after topic-03)
-  - [ ] topic-07 Shipping to production: environments, canaries, rollbacks, feature flags (placed after topic-04)
-  - [ ] topic-08 The shell on call: pipes, grep, logs, processes, ports, curl, ssh (placed first)
+  - [x] topic-06 Undo and recover with Git (placed after topic-03)
+  - [x] topic-07 Shipping to production: environments, canaries, rollbacks, feature flags (placed after topic-04)
+  - [x] topic-08 The shell on call: pipes, grep, logs, processes, ports, curl, ssh (placed first)
 
 ## Phase 6: module 08, backend
 
@@ -150,6 +150,11 @@ New tickets (before the boss):
 
 ## Phase 7: planned modules 09 and 10
 
-Add to the curriculum before they are written:
-- [ ] module 09: rate limiting (token bucket), circuit breakers, Kubernetes basics
-- [ ] module 10: a low-level design round in interview prep
+Added to the curriculum (CURRICULUM.md, build_state.json) before they are written:
+- [x] module 09 topic-09 "Resilience: rate limits, retries and circuit breakers" (token bucket, sliding window counters, circuit breakers, bulkheads)
+- [x] module 09 topic-10 "Running on Kubernetes" (pods, deployments, services, probes, resource limits, ConfigMaps and Secrets, rollouts)
+- [x] module 09 topic-04 now "Messaging, events and the outbox pattern" (module 08 topic-10 promises the outbox)
+- [x] module 09 topic-08 now "Logs, metrics, traces and health checks" (module 08 topic-03 promises Actuator)
+- [x] module 10 topic-05 now "Interview prep: coding, design and behavioural" (a low-level design round, building on SPK-0613, and a system design round)
+
+When C09 and C10 are built, they must deliver what earlier lessons promise: how rate limits are counted (module 08 topic-02), circuit breakers (module 08 topic-02), Actuator health (module 08 topic-03), the outbox for lost post-commit events (module 08 topic-10), deeper hexagonal architecture (module 06 topic-02).

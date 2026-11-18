@@ -77,7 +77,8 @@ questions:
       - { prompt: "A Maven dependency has scope provided. Which Gradle configuration matches it?", choices: ["compileOnly", "implementation", "runtimeOnly", "testImplementation"], answer: 0 }
       - { prompt: "A Maven dependency has scope runtime. Which Gradle configuration matches it?", choices: ["runtimeOnly", "compileOnly", "implementation", "testImplementation"], answer: 0 }
       - { prompt: "A Maven dependency has no scope, so it is compile. Which Gradle configuration matches it?", choices: ["implementation", "compileOnly", "runtimeOnly", "testImplementation"], answer: 0 }
-    explain: "compile is implementation, test is testImplementation, provided is compileOnly and runtime is runtimeOnly."
+      - { prompt: "With the java-library plugin, your library's public method returns an SLF4J Logger. Which configuration should slf4j-api use?", choices: ["api", "implementation", "compileOnly", "testImplementation"], answer: 0 }
+    explain: "compile is implementation, test is testImplementation, provided is compileOnly and runtime is runtimeOnly. With java-library, a library that appears in your public methods goes in api."
     reteach: "## Concept"
 
   - id: q09
@@ -121,5 +122,7 @@ questions:
       - { prompt: "Maven puts its jar in target/. Where does Gradle put it?", choices: ["build/libs/", "target/libs/", "out/", "gradle/wrapper/"], answer: 0 }
       - { prompt: "Which statement about Maven and Gradle is true?", choices: ["Both use groupId:artifactId:version and download from Maven Central", "Gradle cannot use libraries from Maven Central", "Maven projects cannot have tests", "Gradle puts source code in src/gradle/java"], answer: 0 }
       - { prompt: "Maven runs phases in a fixed line. What does Gradle run instead?", choices: ["Tasks in a graph, only the ones needed", "Every phase, always in the same order", "Scripts written in XML", "One giant task called all"], answer: 0 }
-    explain: "Gradle keeps Maven's coordinates, Maven Central and src layout. It runs tasks from a graph and writes output to build/."
+      - { prompt: "Logback, near the top of the tree, wants slf4j-api 2.0.19. A jar deep down wants 2.0.20. Which version does each tool use?", choices: ["Maven uses 2.0.19 (nearest wins), Gradle uses 2.0.20 (highest wins)", "Both use 2.0.20, the highest", "Both use 2.0.19, the nearest", "Both stop the build with a conflict error"], answer: 0 }
+      - { prompt: "In ./gradlew dependencies output, what does org.slf4j:slf4j-api:2.0.19 -> 2.0.20 mean?", choices: ["Something asked for 2.0.19, and Gradle used 2.0.20 instead", "Version 2.0.19 depends on version 2.0.20", "Gradle will upgrade it on the next build", "The jar moved to a different server"], answer: 0 }
+    explain: "Gradle keeps Maven's coordinates, Maven Central and src layout. It runs tasks from a graph and writes output to build/. In a version conflict, Maven keeps the nearest version and Gradle keeps the highest; an arrow like 2.0.19 -> 2.0.20 in ./gradlew dependencies shows Gradle's swap."
     reteach: "## Concept"

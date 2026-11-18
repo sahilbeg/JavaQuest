@@ -10,7 +10,9 @@ questions:
       - { prompt: "In dev.spoke:kiosk:1.0.0, what is the artifactId?", choices: ["kiosk", "dev.spoke", "1.0.0", "dev.spoke.kiosk"], answer: 0 }
       - { prompt: "In org.junit.jupiter:junit-jupiter:6.1.3, what is the groupId?", choices: ["org.junit.jupiter", "junit-jupiter", "6.1.3", "org.junit"], answer: 0 }
       - { prompt: "What does the version 1.0.0-SNAPSHOT tell you?", choices: ["It is work in progress and can still change", "It is a final release that never changes", "It was built on a build server", "It only contains tests"], answer: 0 }
-    explain: "A coordinate is groupId:artifactId:version: the team, the project and the release. A -SNAPSHOT version can still change; a release never does."
+      - { prompt: "slf4j-api goes from 2.0.19 to 2.0.20. Under semantic versioning, what kind of change is that?", choices: ["A bug fix that keeps old code working", "A breaking change that may need code changes", "A new feature", "A work-in-progress snapshot"], answer: 0 }
+      - { prompt: "A library you use goes from 2.4.1 to 3.0.0. What should you expect?", choices: ["Something old code relied on may have changed, so read the release notes and test", "Only bug fixes, so nothing to check", "Only new features, with nothing removed", "The same jar under a new name"], answer: 0 }
+    explain: "A coordinate is groupId:artifactId:version: the team, the project and the release. A -SNAPSHOT version can still change; a release never does. Under semantic versioning, MAJOR.MINOR.PATCH, a patch fixes bugs, a minor adds features, and a major may break old code."
     reteach: "## Concept"
 
   - id: q02
@@ -73,7 +75,10 @@ questions:
     variants:
       - { prompt: "Where does Maven keep the jars it downloads, so the next build needs no internet?", choices: ["~/.m2/repository", "target/lib", "src/main/resources", "Inside pom.xml"], answer: 0 }
       - { prompt: "Your POM lists logback-classic, and slf4j-api shows up too. What is slf4j-api?", choices: ["A transitive dependency: Logback needs it, so Maven fetched it", "A plugin", "A test-only dependency", "A mistake you must delete"], answer: 0 }
-    explain: "Maven downloads from Maven Central into ~/.m2/repository. It also fetches the libraries your libraries need."
+      - { prompt: "Logback brings slf4j-api 2.0.19, two steps below your POM. Down the Spring side, slf4j-api 2.0.20 sits five steps down. Which version does Maven use?", choices: ["2.0.19, because the nearest one wins", "2.0.20, because the newest one wins", "Both, one for each library", "Neither: the build stops with a conflict error"], answer: 0 }
+      - { prompt: "The build is green, but at run time a library throws NoSuchMethodError. What is the likely cause?", choices: ["Two versions of a library collided, and Maven picked one that lacks that method", "A test sits in the wrong folder", "The groupId in the POM has a typo", "The jar was built with -q"], answer: 0 }
+      - { prompt: "What does importing spring-boot-dependencies as a BOM give you?", choices: ["A list of versions tested together, so you can leave <version> off those libraries", "Every Spring jar added to your classpath", "A runnable fat jar", "A newer version of Maven"], answer: 0 }
+    explain: "Maven downloads from Maven Central into ~/.m2/repository, with the libraries your libraries need. When one library appears at two versions, the nearest one wins, even if it is older. A wrong pick shows up at run time as NoSuchMethodError or NoClassDefFoundError. A BOM in <dependencyManagement> pins versions that work together."
     reteach: "## Concept"
 
   - id: q09
@@ -92,13 +97,14 @@ questions:
       - { prompt: "Which scope do you get when a dependency has no <scope> tag?", choices: ["compile", "test", "runtime", "provided"], answer: 0 }
       - { prompt: "A database driver is needed when the kiosk runs, but your code never names its classes. Which scope fits?", choices: ["runtime", "test", "provided", "system"], answer: 0 }
       - { prompt: "Your code compiles against a jar that the web server already has, so you must not ship a second copy. Which scope fits?", choices: ["provided", "runtime", "test", "compile"], answer: 0 }
-    explain: "compile is everywhere and the default. test is for tests only. provided is there to compile but supplied later. runtime is there to run but not to compile."
+      - { prompt: "Inside <dependencyManagement>, which scope pulls in a BOM's list of versions?", choices: ["import", "compile", "provided", "test"], answer: 0 }
+    explain: "compile is everywhere and the default. test is for tests only. provided is there to compile but supplied later. runtime is there to run but not to compile. import only appears in <dependencyManagement>, with type pom, to copy in a BOM."
     reteach: "## Concept"
 
   - id: q11
     type: spot-the-bug
     concept: scopes
-    prompt: "PromoEngine in src/main/java logs with SLF4J, and the build fails with \"package org.slf4j does not exist\". Which line is the bug?"
+    prompt: "In a small project whose only library is Logback, PromoEngine in src/main/java logs with SLF4J. The build fails with \"package org.slf4j does not exist\". Which line is the bug?"
     code: |
       <dependency>
         <groupId>ch.qos.logback</groupId>
@@ -108,7 +114,7 @@ questions:
       </dependency>
     bugLine: 5
     explain: "test scope hides Logback, and the SLF4J it brings, from src/main/java. Remove the scope line so it is compile."
-    reteach: "## Try it"
+    reteach: "### Syntax: scope"
 
   - id: q12
     type: mcq
@@ -118,5 +124,6 @@ questions:
       - { prompt: "Which goal builds the jar during the package phase?", choices: ["jar:jar", "surefire:test", "compiler:compile", "dependency:tree"], answer: 0 }
       - { prompt: "In dependency:tree, what is tree?", choices: ["A goal of the dependency plugin", "A phase", "A scope", "An artifactId"], answer: 0 }
       - { prompt: "What does <maven.compiler.release>21</maven.compiler.release> in <properties> do?", choices: ["Tells the compiler plugin to build for Java 21", "Sets the kiosk's version to 21", "Downloads Maven 21", "Runs 21 tests"], answer: 0 }
-    explain: "Plugins do the real work. Each tool in a plugin is a goal, written plugin:goal, bound to a phase. Plugins also read settings from <properties>."
+      - { prompt: "Starting the kiosk jar on a kiosk computer fails with NoClassDefFoundError: org/slf4j/LoggerFactory. Which fix works?", choices: ["Build a fat jar, for example with the Shade plugin, so the libraries go inside it", "Give slf4j-api test scope", "Run ./mvnw clean before package", "Rename the jar to kiosk.jar"], answer: 0 }
+    explain: "Plugins do the real work. Each tool in a plugin is a goal, written plugin:goal, bound to a phase. Plugins also read settings from <properties>. A plain package jar holds only your classes; the Shade plugin builds a fat jar with every runtime library inside."
     reteach: "## Concept"

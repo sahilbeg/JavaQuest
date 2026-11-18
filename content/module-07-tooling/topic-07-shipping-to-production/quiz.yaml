@@ -1,0 +1,144 @@
+topic: module-07-tooling/topic-07-shipping-to-production
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: build-once
+    variants:
+      - { prompt: "Staging tested kiosk 2.5.0. Why should production get the same file instead of a fresh build?", choices: ["A fresh build can pick up a different library, JDK or commit, so production would run untested code", "Fresh builds are not allowed on Linux servers", "Building twice makes the jar twice as big", "Production servers cannot run Maven"], answer: 0 }
+      - { prompt: "What does promoting an artifact mean?", choices: ["Sending the exact same built file on to the next environment", "Rebuilding the code with production settings", "Merging a branch into main", "Giving the artifact a higher version number"], answer: 0 }
+      - { prompt: "Which tag lets anyone tell exactly what code is running?", choices: ["spoke/kiosk:2.5.0-a41c9e2", "spoke/kiosk:latest", "spoke/kiosk:new", "spoke/kiosk:prod"], answer: 0 }
+    explain: "Build once in CI, give the artifact a version that never changes meaning, and promote that same file from staging to production."
+    reteach: "### Build once, deploy many"
+
+  - id: q02
+    type: fill-blank
+    concept: feature-flags
+    prompt: "return values.getOrDefault(name, ___);   // a flag nobody has set is off"
+    answers: ["false"]
+    explain: "An unknown flag should be off. That way, new code stays hidden until someone turns it on on purpose."
+    reteach: "### Feature flags"
+
+  - id: q03
+    type: mcq
+    concept: deploy-strategies
+    variants:
+      - { prompt: "What is a canary release?", choices: ["Sending a small share of traffic to the new version first, then more while it stays healthy", "Stopping every old server, then starting the new ones", "Running two full copies and switching all traffic at once", "Releasing only on Fridays"], answer: 0 }
+      - { prompt: "Which strategy causes downtime?", choices: ["Recreate: stop every old server, then start the new ones", "Rolling", "Blue-green", "Canary"], answer: 0 }
+      - { prompt: "In a rolling deploy, what must you plan for?", choices: ["Old and new versions run side by side for a while", "Every rider is moved in one instant", "The service is down until the last server is replaced", "You need double the servers for the whole day"], answer: 0 }
+    explain: "Recreate has downtime. Rolling swaps a few servers at a time, so versions mix. Blue-green flips all traffic. Canary tries a small share first."
+    reteach: "### Deploy strategies"
+
+  - id: q04
+    type: mcq
+    concept: deploy-strategies
+    variants:
+      - { prompt: "You want to switch back in seconds and can afford a second full set of servers for an hour. Which strategy fits?", choices: ["Blue-green", "Recreate", "Rolling", "Rebuilding on the server"], answer: 0 }
+      - { prompt: "A risky change should reach only 5% of riders until its error rate looks normal. Which strategy fits?", choices: ["Canary", "Recreate", "Blue-green with an instant full switch", "A long-lived branch"], answer: 0 }
+      - { prompt: "What is the main cost of blue-green deploys?", choices: ["You run two full copies of production during the switch", "Riders see downtime during the switch", "Rollback takes as long as a full rebuild", "Old and new versions mix for hours"], answer: 0 }
+    explain: "Blue-green buys an instant switch back with a second full environment. Canary limits how many riders a bug can reach to a small share."
+    reteach: "### Deploy strategies"
+
+  - id: q05
+    type: mcq
+    concept: health-checks-and-rollback
+    variants:
+      - { prompt: "What is a health check?", choices: ["A small request, like GET /health, that a server answers with OK when it can do its job", "A doctor's visit for the on-call engineer", "A unit test that runs in CI", "A review of a pull request"], answer: 0 }
+      - { prompt: "When does an automatic rollback happen?", choices: ["When a number such as the error rate crosses a limit set before the deploy", "Whenever a developer pushes to main", "Every night at midnight", "Only when a rider phones support"], answer: 0 }
+      - { prompt: "Production broke right after a deploy. What is the fastest safe first step?", choices: ["Redeploy the previous artifact, which already exists", "git revert the commit and wait for the full pipeline", "Debug the bug live on the production server", "Rebuild the old version from source"], answer: 0 }
+    explain: "Health checks and preset limits let the pipeline roll back by itself. By hand, redeploy the previous artifact first, then fix main."
+    reteach: "### Health checks and automatic rollback"
+
+  - id: q06
+    type: order
+    concept: health-checks-and-rollback
+    prompt: "An alert fires: kiosk 2.5.0 errors jumped after the deploy. Put the response in order."
+    items:
+      - "Redeploy the previous artifact, 2.4.1"
+      - "Check that the error rate is back to normal"
+      - "Revert or fix the bad change on main"
+      - "Ship the fix as 2.5.1 through the normal pipeline"
+    explain: "Stop the harm first with the fast road, confirm it worked, then fix main and ship the fix the normal way."
+    reteach: "### Rolling back: redeploy first, revert second"
+
+  - id: q07
+    type: mcq
+    concept: expand-and-contract
+    variants:
+      - { prompt: "Version 2.5.0 dropped the bike_type column that 2.4.1 reads. What happens if you roll back to 2.4.1?", choices: ["2.4.1 fails too, because its column is gone", "The column comes back with the old code", "Nothing, rollbacks never touch the database", "Git restores the column"], answer: 0 }
+      - { prompt: "Why must a database change work with both the old and the new code?", choices: ["So you can still roll back, and so both versions work during a rolling deploy", "Because SQL cannot delete columns", "So the database runs faster", "Because staging has no database"], answer: 0 }
+      - { prompt: "When is it safe to drop an old column?", choices: ["In a later release, once no running version reads or writes it", "In the same release that stops using it", "Before the new code is deployed", "Never, columns can never be dropped"], answer: 0 }
+    explain: "A rollback swaps code, not the database. Expand first, and contract in a later release, so every running version still works."
+    reteach: "### Database changes: expand, then contract"
+
+  - id: q08
+    type: order
+    concept: expand-and-contract
+    prompt: "Rename the rentals column bike_type to bike_kind with zero downtime. Put the releases in order."
+    items:
+      - "Add the new column bike_kind"
+      - "Deploy code that writes both columns, and copy the old values across"
+      - "Deploy code that reads bike_kind and stops using bike_type"
+      - "Drop bike_type once no running version reads or writes it"
+    explain: "Expand, move readers and writers over one release at a time, then contract. Every step can be rolled back."
+    reteach: "### Database changes: expand, then contract"
+
+  - id: q09
+    type: predict-output
+    concept: feature-flags
+    prompt: "What does this print?"
+    code: |
+      import java.util.HashMap;
+      import java.util.Map;
+
+      public class Main {
+          public static void main(String[] args) {
+              Map<String, Boolean> flags = new HashMap<>();
+              flags.put("night-discount", true);
+              flags.put("night-discount", false);
+              long fare = 100 + 10 * 15L;
+              if (flags.getOrDefault("night-discount", false)) {
+                  fare -= 50;
+              }
+              if (flags.getOrDefault("cargo-promo", false)) {
+                  fare -= 25;
+              }
+              System.out.println(fare);
+          }
+      }
+    answer: "250"
+    explain: "The kill switch turned night-discount back off, and cargo-promo was never set, so it defaults to off. The fare is 100 + 10 × 15 = 250."
+    reteach: "### Feature flags"
+
+  - id: q10
+    type: mcq
+    concept: feature-flags
+    variants:
+      - { prompt: "What does it mean that deploy is not release?", choices: ["New code can reach production switched off, and riders get it later when a flag is turned on", "Deploys only happen at night", "A release is a Git branch, a deploy is a tag", "Code must be deployed twice before release"], answer: 0 }
+      - { prompt: "The new night discount is misbehaving in production. What is the fastest way to stop it?", choices: ["Turn its feature flag off, a kill switch with no deploy", "Revert the commit and wait for CI", "Rebuild the jar without the feature", "Ask riders not to ride at night"], answer: 0 }
+      - { prompt: "Why put each rider in a fixed bucket from their id during a 10% rollout?", choices: ["So the same rider gets the same answer on every ride", "So the rollout picks new riders every minute", "Because random numbers are not allowed in Java", "So the flag turns itself off"], answer: 0 }
+      - { prompt: "A feature has been fully on for months. What should happen to its flag?", choices: ["Delete the flag check and the old code path", "Keep it forever, just in case", "Rename it and reuse it for the next feature", "Turn it off again to save memory"], answer: 0 }
+    explain: "Flags let you deploy code switched off, release it gradually, kill it in seconds, and they must be cleaned up once the feature is fully on."
+    reteach: "### Feature flags"
+
+  - id: q11
+    type: mcq
+    concept: trunk-based-development
+    variants:
+      - { prompt: "What is trunk-based development?", choices: ["Everyone merges small changes into main at least daily, with unfinished work behind flags", "Each feature lives on its own branch for months, then merges at once", "Only the lead engineer may commit to main", "Every commit is deployed without tests"], answer: 0 }
+      - { prompt: "What goes wrong with a branch that lives for six weeks?", choices: ["It drifts from main, so the final merge is huge, full of conflicts and hard to test", "Git deletes branches after a month", "It cannot be pushed to the server", "Its commits lose their IDs"], answer: 0 }
+      - { prompt: "In trunk-based development, how does half-built code reach main without riders seeing it?", choices: ["It hides behind a feature flag that is off", "It stays on a long-lived branch", "It is commented out", "It is deployed to staging only, forever"], answer: 0 }
+    explain: "Trunk-based teams merge small pieces into main all day, keep main shippable, and hide unfinished work behind flags."
+    reteach: "### Trunk-based development"
+
+  - id: q12
+    type: mcq
+    concept: dora-metrics
+    variants:
+      - { prompt: "Which of these is NOT one of the four DORA metrics?", choices: ["Lines of code written per day", "Deployment frequency", "Change failure rate", "Time to restore service"], answer: 0 }
+      - { prompt: "What does lead time for changes measure?", choices: ["How long from a commit to that commit running in production", "How long a pull request waits for review", "How long the team lead spends on a change", "How long a deploy's health check takes"], answer: 0 }
+      - { prompt: "What does change failure rate measure?", choices: ["The share of deploys that cause a problem in production", "How many tests fail in CI each day", "How many commits get reverted on branches", "How often servers restart"], answer: 0 }
+      - { prompt: "What did the DORA research find about speed and safety?", choices: ["They go together: top teams deploy often and also fail less and recover faster", "Teams must choose one: fast or safe", "Deploying often always causes more failures", "Only slow teams recover quickly"], answer: 0 }
+    explain: "DORA's four metrics are deployment frequency, lead time for changes, change failure rate and time to restore service. Strong teams do well on all four."
+    reteach: "### DORA metrics: is the team shipping well?"
