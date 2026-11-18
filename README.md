@@ -10,29 +10,50 @@ Learn Java from zero to a professional, job-ready engineer, through a story. You
 
 Everything runs on your own laptop. There is no account and nothing is sent anywhere.
 
-## Quick start
+## Quick start: one command
 
-You need **macOS**, **JDK 21 or newer**, a web browser, and an internet connection for the first start.
+You need a **Mac** and an internet connection for the first start. Paste this into Terminal:
 
 ```bash
-git clone https://github.com/sahilbeg/JavaQuest.git
-cd JavaQuest
-./run.sh
+git clone https://github.com/sahilbeg/JavaQuest.git ~/JavaQuest && ~/JavaQuest/run.sh
 ```
 
-Then open **http://localhost:2026**.
+That one command downloads JavaQuest into `~/JavaQuest`, checks your laptop, builds the app, starts it, and opens **http://localhost:2026** in your browser.
 
-The first start builds the app and downloads its libraries, so it can take a few minutes. Later starts take a few seconds. Leave the terminal open while you learn, and press `Ctrl+C` to stop.
+While the repository is private, GitHub asks you to sign in. Ask its owner for access first. Once the repository is public, this also works, and on later runs it updates your copy before starting:
 
-## Installing Java
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/sahilbeg/JavaQuest/main/install.sh)
+```
 
-Check what you have:
+The first start downloads about 300 MB of tools and libraries and builds the app, so it can take a few minutes. Later starts take seconds: just run `~/JavaQuest/run.sh`. Leave the terminal open while you learn, and press `Ctrl+C` to stop.
+
+### What `run.sh` checks for you
+
+Before it starts anything, `run.sh` checks your laptop and says exactly what to fix:
+
+| Check | If something is wrong |
+|---|---|
+| macOS | On Windows it stops. Linux gets a warning, because it is untested. |
+| Java 21 or newer | If your default Java is older but a JDK 21+ is installed, it uses that one and tells you how to make it the default. With no JDK 21 at all, it offers to install Temurin 21 with Homebrew, or tells you how. |
+| The port (2026) | If JavaQuest is already running there, it just opens it. If another program uses the port, it suggests another one. |
+| Disk space and internet | Checked on the first start only, because that's when it downloads. |
+
+To see the checks without starting anything:
+
+```bash
+./run.sh --check
+```
+
+## Installing Java yourself
+
+`run.sh` offers to install Java for you. To do it yourself instead, check what you have:
 
 ```bash
 java -version
 ```
 
-The first line must say version 21 or higher. If it doesn't, install a JDK. One way on macOS, with [Homebrew](https://brew.sh):
+The first line must say version 21 or higher. If it doesn't, install a JDK. One way, with [Homebrew](https://brew.sh):
 
 ```bash
 brew install --cask temurin@21
@@ -73,7 +94,9 @@ Your code lives in `practice/<module>/<ticket>/src/`. Open the `practice` folder
 
 | Command | What it does |
 |---|---|
-| `./run.sh` | Learn. http://localhost:2026, your progress in `~/.javaquest`. |
+| `./run.sh` | Check the laptop, build if needed, start, and open http://localhost:2026. Your progress is in `~/.javaquest`. |
+| `./run.sh --check` | Only check the laptop, and say what to fix. |
+| `./run.sh --no-browser` | Start without opening the browser. |
 | `./run.sh --server.port=2030` | The same, on another port. |
 | `./run.sh --author` | Every ticket open, on http://localhost:2027, with a separate database in `~/.javaquest-author`. For writing and reviewing content. Your learning is untouched. |
 | `./run.sh --javaquest.data-dir=<folder>` | Keep progress in another folder, for example a throwaway one. |
@@ -82,17 +105,19 @@ Your code lives in `practice/<module>/<ticket>/src/`. Open the `practice` folder
 
 ## Troubleshooting
 
-**"JavaQuest needs Java 21 or newer"** or **"Java was not found".** Install JDK 21 and point `JAVA_HOME` at it, as shown in [Installing Java](#installing-java). Then run `./run.sh` again.
+**"JavaQuest needs Java 21 or newer".** Let `run.sh` install it with Homebrew when it asks, or install JDK 21 yourself, as shown in [Installing Java yourself](#installing-java-yourself). Then run `./run.sh` again.
 
-**"Port 2026 is already in use".** JavaQuest is probably already running in another terminal: open http://localhost:2026. To run a second copy, use another port, for example `./run.sh --server.port=2030`.
+**"Port 2026 is used by another program".** Something else is using JavaQuest's port. Start on another one, for example `./run.sh --server.port=2030`. (If JavaQuest itself is already running there, `run.sh` just opens it.)
 
-**The first start fails while downloading.** The first build needs the internet to fetch Maven and the libraries. Check your connection (and any company proxy), then run `./run.sh` again. It carries on where it stopped.
+**"The build failed" on the first start.** The first build needs the internet to fetch Maven and the libraries. Check your connection (and any company proxy), then run `./run.sh` again. It carries on where it stopped.
 
 **The page says "Lost the connection to JavaQuest" or "Something went wrong".** The app stopped. Look at the terminal for the error, then start it again with `./run.sh`.
 
 **Checks time out.** Spring tickets start a whole application, so their first run is slower. Most plain tickets stop a run after 10 seconds, so a timeout there usually means an endless loop. Look for a `while` loop that never ends.
 
 **Saving in the IDE doesn't run the checks.** Make sure you edit files under `practice/<module>/<ticket>/src/`, not `skeleton/` or `solution/`. You can always press **Run checks** in the browser.
+
+**"Git is not installed".** On a Mac, run `xcode-select --install`, then try again.
 
 **A commit is refused with "Unstage those files".** The repository has a guard that stops commits from changing a ticket's `src/` folder (your own code), so the course stays clean for other learners. Commit your code somewhere else, or keep it locally.
 
