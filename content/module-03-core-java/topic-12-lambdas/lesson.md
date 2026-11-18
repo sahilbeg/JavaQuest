@@ -62,8 +62,8 @@ Java works out the types from where you use the lambda. You can still write them
 ```java nocompile
 r -> r.minutes() > 30
 (a, b) -> {
-    int diff = a.minutes() - b.minutes();
-    return diff;
+    int byMinutes = Integer.compare(a.minutes(), b.minutes());
+    return byMinutes;
 }
 ```
 
@@ -101,6 +101,55 @@ A method reference is a shorter lambda. Use it when the lambda only calls one me
 ```callout tip
 Gojo says: Read `Ride::minutes` as "use each ride's minutes". Read `String::toUpperCase` as "make each string upper case".
 ```
+
+### The four kinds of method reference
+
+```java nocompile
+Integer::parseInt      // a static method:            s -> Integer.parseInt(s)
+System.out::println    // a method on one object:     x -> System.out.println(x)
+Ride::minutes          // a method on each parameter: r -> r.minutes()
+ArrayList::new         // a constructor:              () -> new ArrayList<>()
+```
+
+Every method reference is one of these four. The part before `::` is a class or an object. The part after it is a method name, or `new` for a constructor.
+
+- **Static method**: `Integer::parseInt` passes the parameter into a static method.
+- **Method on one object**: `System.out::println` always calls `println` on the same `System.out`.
+- **Method on each parameter**: `Ride::minutes` calls `minutes()` on whichever ride comes in.
+- **Constructor**: `ArrayList::new` makes a new object each time it runs. You will see it in topic 14, where streams collect into a fresh list.
+
+### Effectively final: what a lambda can see
+
+A lambda can use local variables from the method around it. Java calls this **capturing** them. There is one rule: a captured local variable must never change after it gets its value.
+
+```java run
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        List<Integer> minutes = new ArrayList<>(List.of(3, 25, 1, 40));
+        List<Integer> removed = new ArrayList<>();
+        int limit = 5;
+        minutes.removeIf(m -> {
+            if (m < limit) {
+                removed.add(m);
+                return true;
+            }
+            return false;
+        });
+        System.out.println(minutes + " " + removed);
+    }
+}
+```
+
+It prints `[25, 40] [3, 1]`. `limit` is never changed, so the lambda may read it.
+
+```callout jargon
+A variable is **effectively final** when you never assign it again after its first value, even though you did not write `final`. A lambda may capture only final or effectively final local variables.
+```
+
+Why the rule? A lambda may run later, after the method moved on. Java hands it a copy of the value. If the variable could still change, the copy and the variable would disagree. Note that `removed.add(m)` is allowed: the variable `removed` still points to the same list. Only the list's contents change.
 
 ### Syntax: forEach and removeIf
 
@@ -194,10 +243,10 @@ record Ride(String bikeId, String station, String type, int minutes) {}
 
 ## Recap
 
-- A lambda is `parameters -> body`. It replaces a whole class when the interface has one method to fill in.
-- A one-expression body needs no braces and no `return`.
+- A lambda is `parameters -> body`. It replaces a whole class when the interface has one method to fill in. A one-expression body needs no braces and no `return`.
 - `Comparator.comparing(key)` sorts by a key. `thenComparing` breaks ties and `reversed()` flips the order.
-- A method reference such as `Ride::minutes` is a shorter lambda that calls one method.
+- A method reference such as `Ride::minutes`, `Integer::parseInt` or `ArrayList::new` is a shorter lambda that calls one method or constructor.
+- A lambda can only capture local variables that are effectively final.
 - `forEach` runs a lambda for every item. `removeIf` deletes the items that match.
 
 ## Common mistakes
@@ -205,10 +254,10 @@ record Ride(String bikeId, String station, String type, int minutes) {}
 **1. Writing return without braces.**
 
 ```java nocompile
-rides.sort((a, b) -> return a.minutes() - b.minutes());
+rides.sort((a, b) -> return Integer.compare(a.minutes(), b.minutes()));
 ```
 
-The compiler says `error: illegal start of expression`. Fix: drop `return`, as in `(a, b) -> a.minutes() - b.minutes()`. Or keep it inside braces: `(a, b) -> { return a.minutes() - b.minutes(); }`.
+The compiler says `error: illegal start of expression`. Fix: drop `return`, as in `(a, b) -> Integer.compare(a.minutes(), b.minutes())`. Or keep it inside braces: `(a, b) -> { return Integer.compare(a.minutes(), b.minutes()); }`. Never write `a.minutes() - b.minutes()`: subtraction can overflow and give the wrong sign, as topic 6 showed.
 
 **2. Adding brackets to a method reference.**
 

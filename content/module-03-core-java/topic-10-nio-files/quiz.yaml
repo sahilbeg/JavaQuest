@@ -118,3 +118,21 @@ questions:
     answer: 0
     explain: "The system decides the order, and it can change. Sort the names when order matters."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: read-write-files
+    prompt: "A ride log has fifty million lines. Which way of reading it keeps memory use small?"
+    choices: ["Files.newBufferedReader in try-with-resources, one readLine() at a time", "Files.readAllLines, then loop over the list", "Files.readString, then split on \\n", "Files.copy it first, then readAllLines the copy"]
+    answer: 0
+    explain: "readAllLines and readString load the whole file into memory. A BufferedReader holds only one line at a time."
+    reteach: "### Large files: read line by line"
+
+  - id: q12
+    type: mcq
+    concept: copy-and-move
+    prompt: "You rewrite report.csv. Readers must never see a half-written report. What is the safe pattern?"
+    choices: ["Write report.csv.tmp, then Files.move it over report.csv with ATOMIC_MOVE and REPLACE_EXISTING", "Call Files.writeString(report, ...) twice", "Check Files.exists(report) before writing", "Delete report.csv first, then write it"]
+    answer: 0
+    explain: "An atomic move swaps the whole new file in at once. Writing in place can leave half a file if the program stops midway."
+    reteach: "### Safe writes: temp file, then move"

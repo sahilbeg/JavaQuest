@@ -129,3 +129,32 @@ questions:
       - "System.out.println(d.toMinutes());"
     explain: "You need both moments before you can measure the Duration between them, and the Duration before you print it."
     reteach: "## Worked example"
+
+  - id: q11
+    type: mcq
+    concept: time-zones
+    prompt: "A ride starts at 01:50 and ends at 03:10 on the night New York's clocks jump forward an hour. Duration.between on two LocalDateTime values says 80 minutes. What is the safe fix?"
+    choices: ["Measure between ZonedDateTime or Instant values, which know about the missing hour", "Subtract 60 minutes by hand every March", "Use Period.between instead", "Format both times first, then compare the text"]
+    answer: 0
+    explain: "LocalDateTime has no zone, so it cannot see the clock change. ZonedDateTime and Instant measure the real 20 minutes."
+    reteach: "### Daylight saving time"
+
+  - id: q12
+    type: predict-output
+    concept: period
+    code: |
+      import java.time.LocalDate;
+      import java.time.Period;
+      import java.time.temporal.ChronoUnit;
+
+      public class Main {
+          public static void main(String[] args) {
+              LocalDate from = LocalDate.of(2027, 1, 15);
+              LocalDate to = LocalDate.of(2027, 3, 20);
+              System.out.println(Period.between(from, to).getDays());
+              System.out.println(ChronoUnit.DAYS.between(from, to));
+          }
+      }
+    answer: "5\n64"
+    explain: "The Period is 2 months and 5 days, and getDays() returns only the 5. ChronoUnit.DAYS.between counts all 64 days."
+    reteach: "### Syntax: Period for days and months"

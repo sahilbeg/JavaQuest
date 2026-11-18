@@ -153,3 +153,39 @@ questions:
     answer: 0
     explain: "instanceof checks the real object first. The code inside the if only runs for real e-bikes, so the cast can never fail."
     reteach: "## Common mistakes"
+
+  - id: q11
+    type: predict-output
+    concept: compile-time-choice
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Bike a = new Bike("B-1042");
+              Object o = new Bike("B-1042");
+              System.out.println(a.equals(o));
+          }
+      }
+
+      class Bike {
+          private String id;
+
+          Bike(String id) {
+              this.id = id;
+          }
+
+          public boolean equals(Bike other) {
+              return id.equals(other.id);
+          }
+      }
+    answer: "false"
+    explain: "equals(Bike) is an overload, chosen at compile time. o is declared as Object, so Object's equals runs. It only checks if both are the same object."
+    reteach: "### What is chosen at compile time"
+
+  - id: q12
+    type: mcq
+    concept: compile-time-choice
+    prompt: "Bike and EBike both declare a field called name. Bike b = new EBike(); Which name does b.name read?"
+    choices: ["Bike's, because fields are picked from the declared type", "EBike's, because the object is an EBike", "Both, joined together", "Neither: it does not compile"]
+    answer: 0
+    explain: "Fields are not polymorphic. The subclass field only hides the parent's, and the declared type Bike picks which one you get."
+    reteach: "### Fields and static methods do not dispatch"

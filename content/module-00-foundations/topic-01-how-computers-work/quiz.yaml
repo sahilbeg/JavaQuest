@@ -92,3 +92,21 @@ questions:
     answer: 0
     explain: "More RAM is a bigger workbench, so more apps fit at once."
     reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: bits-bytes
+    variants:
+      - { prompt: "How many different values can one byte (8 bits) hold?", choices: ["256", "8", "16", "1,000"], answer: 0 }
+      - { prompt: "In binary, the places are worth 8, 4, 2 and 1. What number is 0101?", choices: ["5", "101", "3", "4"], answer: 0 }
+    explain: "Each extra bit doubles the count, so 8 bits give 2 to the power 8 = 256 values. In 0101 the 4 and the 1 are on, so it is 4 + 1 = 5."
+    reteach: "### Everything is numbers: bits and bytes"
+
+  - id: q12
+    type: mcq
+    concept: operating-system
+    variants:
+      - { prompt: "What is a process?", choices: ["A program that is running right now", "A file kept in storage", "One worker inside the CPU", "A cable that connects a screen"], answer: 0 }
+      - { prompt: "A program ends with exit code 0. What does that mean?", choices: ["It finished without problems", "It crashed", "It used no memory", "It never started"], answer: 0 }
+    explain: "The OS runs each program as a process with its own space in RAM. When a process ends, exit code 0 means everything went fine."
+    reteach: "### The operating system: the shop manager"

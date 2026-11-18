@@ -1,7 +1,7 @@
 id: module-03-core-java/topic-16-optional
 title: "Optional"
 order: 16
-minutes: 9
+minutes: 12
 prerequisites: [module-03-core-java/topic-15-streams-advanced]
 concepts: [optional-basics, creating-optionals, unwrapping, optional-map, optional-from-streams, when-not-to-use]
 practice:

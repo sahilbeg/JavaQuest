@@ -1,7 +1,7 @@
 id: module-01-basics/topic-06-switch
 title: "Switch statements and switch expressions"
 order: 6
-minutes: 9
+minutes: 11
 prerequisites: [module-01-basics/topic-05-if-else]
 concepts: [switch-statement, break-fall-through, switch-expression, multiple-labels, switch-on-strings]
 practice:

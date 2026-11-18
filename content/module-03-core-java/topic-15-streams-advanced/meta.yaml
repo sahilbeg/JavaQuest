@@ -1,9 +1,9 @@
 id: module-03-core-java/topic-15-streams-advanced
 title: "Streams: grouping, reducing, flatMap"
 order: 15
-minutes: 10
+minutes: 12
 prerequisites: [module-03-core-java/topic-14-streams-basics]
-concepts: [grouping-by, partitioning-by, to-map-merge, reduce, flat-map, joining]
+concepts: [grouping-by, partitioning-by, to-map-merge, reduce, flat-map, joining, stream-side-effects]
 practice:
   kind: code
   runner: plain

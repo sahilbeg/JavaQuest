@@ -1,7 +1,7 @@
 id: module-01-basics/topic-03-operators
 title: "Operators and expressions"
 order: 3
-minutes: 9
+minutes: 13
 prerequisites: [module-01-basics/topic-02-primitive-types]
 concepts: [arithmetic, precedence, modulo, compound-assignment, increment, string-concatenation]
 practice:

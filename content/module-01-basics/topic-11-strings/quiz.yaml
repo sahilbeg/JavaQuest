@@ -113,3 +113,36 @@ questions:
     answers: ["startsWith"]
     explain: "startsWith checks only the beginning of the text. contains would also be true for \"B-\" in the middle, so it is the wrong check here."
     reteach: "## Concept"
+
+  - id: q11
+    type: predict-output
+    concept: string-equality
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String a = "Uptown";
+              String b = "Uptown";
+              String part = "Up";
+              String c = part + "town";
+              System.out.println(a == b);
+              System.out.println(a == c);
+          }
+      }
+    answer: "true\nfalse"
+    explain: "Literals in quotes share one object from the string pool, so a == b is true by luck. c is built while the program runs, so it is a new object, and a == c is false."
+    reteach: "### Why == sometimes works"
+
+  - id: q12
+    type: predict-output
+    concept: char-arithmetic
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              char digit = '4';
+              System.out.println(digit - '0' + 1);
+              System.out.println((char) ('a' + 2));
+          }
+      }
+    answer: "5\nc"
+    explain: "'4' - '0' is the distance between the two codes, 4. Adding 1 gives 5. 'a' + 2 is the code two letters after a, and the cast turns it back into the char c."
+    reteach: "### Characters are numbers"

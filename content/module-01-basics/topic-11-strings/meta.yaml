@@ -1,9 +1,9 @@
 id: module-01-basics/topic-11-strings
 title: "Strings and their methods"
 order: 11
-minutes: 10
+minutes: 14
 prerequisites: [module-01-basics/topic-10-arrays]
-concepts: [string-methods, trim-and-case, searching-strings, substring, string-equality, immutability]
+concepts: [string-methods, trim-and-case, searching-strings, substring, string-equality, immutability, char-arithmetic]
 practice:
   kind: code
   runner: plain

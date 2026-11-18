@@ -1,7 +1,7 @@
 id: module-03-core-java/topic-12-lambdas
 title: "Lambdas and method references"
 order: 12
-minutes: 10
+minutes: 12
 prerequisites: [module-03-core-java/topic-11-date-time]
 concepts: [lambda-syntax, comparator-lambda, comparing-then-comparing, method-reference, foreach-removeif]
 practice:

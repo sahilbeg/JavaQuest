@@ -133,6 +133,90 @@ public class Main {
 }
 ```
 
+### Syntax: anyMatch, allMatch, noneMatch, min
+
+```java nocompile
+boolean any = rides.stream().anyMatch(r -> r.minutes() < 2);     // at least one?
+boolean all = rides.stream().allMatch(r -> r.minutes() > 0);     // every one?
+boolean none = rides.stream().noneMatch(r -> r.minutes() > 120); // not a single one?
+Ride shortest = rides.stream().min(Comparator.comparingInt(Ride::minutes)).orElse(null);
+```
+
+The three match methods answer yes-or-no questions. They stop as soon as they know the answer. `anyMatch` stops at the first match, so it never reads the rest of a long list.
+
+`min` and `max` take a comparator and find the smallest or biggest item. Like `average`, they give back a box that is empty for an empty stream. `orElse(null)` opens it here. The Optional topic shows better ways.
+
+```java run
+import java.util.Comparator;
+import java.util.List;
+
+public class Main {
+    record Ride(String bikeId, int minutes) { }
+
+    public static void main(String[] args) {
+        List<Ride> rides = List.of(
+                new Ride("B-1042", 25),
+                new Ride("B-2001", 1),
+                new Ride("B-3300", 40));
+
+        System.out.println(rides.stream().anyMatch(r -> r.minutes() < 2));
+        System.out.println(rides.stream().allMatch(r -> r.minutes() > 0));
+        System.out.println(rides.stream().noneMatch(r -> r.minutes() > 120));
+        System.out.println(rides.stream().max(Comparator.comparingInt(Ride::minutes)).orElse(null));
+        System.out.println(rides.stream().min(Comparator.comparingInt(Ride::minutes)).orElse(null));
+        List<Ride> none = List.of();
+        System.out.println(none.stream().allMatch(r -> r.minutes() > 1000));
+    }
+}
+```
+
+It prints `true` three times, then `Ride[bikeId=B-3300, minutes=40]` and `Ride[bikeId=B-2001, minutes=1]`, and finally `true` once more.
+
+That last `true` is a trap: `allMatch` on an empty stream returns `true`. With no rides, no ride breaks the rule. Check for an empty list first if that matters.
+
+### Syntax: Stream.of, IntStream.range and boxed
+
+```java nocompile
+Stream.of("Harbor", "Uptown", "Depot")   // a stream from the values you list
+IntStream.range(0, 4)                    // 0, 1, 2, 3: the end is left out
+IntStream.rangeClosed(1, 4)              // 1, 2, 3, 4: the end is included
+IntStream.range(0, 3).boxed()            // turns int values into Integer objects
+```
+
+You do not always start from a list. `Stream.of` makes a stream from a few values. `IntStream.range` counts for you, like a `for` loop.
+
+An `IntStream` holds plain `int` values, so it cannot become a `List<Integer>` directly. `boxed()` wraps each `int` in an `Integer`. `mapToObj` turns each number into any object you like.
+
+```java run
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(Stream.of("Harbor", "Uptown", "Depot").count());
+        System.out.println(IntStream.range(0, 4).sum());
+        System.out.println(IntStream.rangeClosed(1, 4).sum());
+
+        List<String> docks = IntStream.rangeClosed(1, 3)
+                .mapToObj(n -> "Harbor-" + n)
+                .toList();
+        System.out.println(docks);
+
+        List<Integer> numbers = IntStream.range(0, 3).boxed().toList();
+        System.out.println(numbers);
+
+        Set<String> types = Stream.of("ebike", "classic", "ebike")
+                .collect(Collectors.toSet());
+        System.out.println(types.size());
+    }
+}
+```
+
+It prints `3`, `6`, `10`, `[Harbor-1, Harbor-2, Harbor-3]`, `[0, 1, 2]` and `2`. `Collectors.toSet()` gathers the items into a `Set`, so the repeated `ebike` counts once.
+
 ### Streams are lazy and single use
 
 **Lazy** means intermediate steps do nothing until a terminal operation asks for a result. A pipeline with `filter` and `map` but no terminal step runs no code at all.
@@ -195,8 +279,8 @@ Then add a third pipeline that prints how many rides are classic, with `count()`
 
 - A stream is a pipeline over a collection: a source, some steps, and one terminal operation.
 - `filter` drops items, `map` swaps them, and `toList()` or `collect(Collectors.toList())` gathers them.
-- `mapToInt` gives number methods like `sum` and `average`. Use `average().orElse(0.0)` for a safe average.
-- `sorted`, `limit` and `distinct` order, cut and remove repeats.
+- `mapToInt` gives number methods like `sum` and `average`. `IntStream.range` counts, and `boxed()` turns the numbers back into objects.
+- `sorted`, `limit` and `distinct` order, cut and remove repeats. `anyMatch`, `allMatch`, `noneMatch`, `min` and `max` answer questions about the whole stream.
 - Streams are lazy and single use. Start a new stream for each question.
 
 ## Common mistakes

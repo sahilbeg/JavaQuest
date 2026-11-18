@@ -111,6 +111,57 @@ Here is why. If that line worked, you could call `things.add(42)`. Now a number 
 This rule has a name: generics are **invariant**. `List<String>` and `List<Object>` are two unrelated types, even though `String` and `Object` are related.
 ```
 
+### Syntax: ? extends and ? super
+
+```java nocompile
+static long totalMinutes(List<? extends Number> values) { ... }   // reads Numbers out
+static void addTestRides(List<? super Integer> out) { ... }        // puts Integers in
+```
+
+Invariance is safe but strict. A **wildcard**, written `?`, loosens it in a safe way.
+
+- `List<? extends Number>` accepts a `List<Integer>`, a `List<Long>` or a `List<Number>`. You can **read** each item as a `Number`. You cannot add to it, because Java does not know which list it really is.
+- `List<? super Integer>` accepts a `List<Integer>`, a `List<Number>` or a `List<Object>`. You can **put** Integers into it. Reading only gives you `Object`.
+
+```java run
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+    static long totalMinutes(List<? extends Number> values) {
+        long sum = 0;
+        for (Number n : values) {
+            sum += n.longValue();
+        }
+        return sum;
+    }
+
+    static void addTestRides(List<? super Integer> out) {
+        out.add(5);
+        out.add(12);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(totalMinutes(List.of(10, 25)));
+        System.out.println(totalMinutes(List.of(40L)));
+
+        List<Number> numbers = new ArrayList<>();
+        List<Object> things = new ArrayList<>();
+        addTestRides(numbers);
+        addTestRides(things);
+        System.out.println(numbers + " " + things);
+    }
+}
+```
+
+It prints `35`, `40` and `[5, 12] [5, 12]`. Calling `values.add(5)` inside `totalMinutes` would fail with `error: incompatible types: int cannot be converted to CAP#1`.
+
+```callout jargon
+**PECS** means "producer extends, consumer super". If a parameter produces items for you to read, use `? extends T`. If it consumes items you put in, use `? super T`.
+```
+
+You will see this in the JDK itself. `List<E>` has `sort(Comparator<? super E> c)`. A comparator consumes the items it compares, so a comparator written for any `Number` can also sort a `List<Integer>`.
+
 ### Syntax: bounded types
 
 Sometimes `T` must be able to do something. To add numbers, `T` must be a number. A **bounded type** limits which types can replace `T`.
@@ -149,6 +200,38 @@ static <T extends Comparable<T>> T biggest(T a, T b) { ... }
 ```
 
 `Comparable<T>` is an interface for types that can compare themselves. It has one method: `a.compareTo(b)`. It returns a negative number when `a` comes first, zero when they are equal, and a positive number when `a` comes after `b`. `String` and `Integer` already implement it. The next topic shows how to add it to your own classes.
+
+### Generics disappear at run time
+
+Generics are checked by the compiler, then thrown away. At run time, a `List<String>` and a `List<Integer>` are both plain `ArrayList` objects.
+
+```java run
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        List<String> names = new ArrayList<>();
+        List<Integer> numbers = new ArrayList<>();
+        System.out.println(names.getClass() == numbers.getClass());
+        System.out.println(names.getClass().getName());
+    }
+}
+```
+
+It prints `true` and `java.util.ArrayList`. This is called **type erasure**.
+
+```callout jargon
+**Type erasure** means the compiler removes type arguments after checking them. The running program does not know what `T` was.
+```
+
+So three things are impossible inside a generic class, because they need `T` at run time:
+
+- `new T()` gives `error: unexpected type ... required: class found: type parameter T`.
+- `new T[10]` gives `error: generic array creation`.
+- `o instanceof List<String>` gives `error: Object cannot be safely cast to List<String>`.
+
+The usual fix is to ask the caller for what you need, such as a `List<T>` instead of an array.
 
 ## Worked example
 
@@ -210,10 +293,10 @@ public class Main {
 
 ## Recap
 
-- A generic class declares a type parameter like `<T>` and uses `T` as a type inside.
+- A generic class declares a type parameter like `<T>` and uses `T` as a type inside. The compiler erases `T` after checking it.
 - The user picks the real type: `Box<String>`, `Box<Integer>`. The diamond `<>` repeats it for you.
 - A generic method puts `<T>` before its return type, and Java works out `T` from the arguments.
-- `List<String>` is not a `List<Object>`. Generics are invariant.
+- `List<String>` is not a `List<Object>`. Generics are invariant. Use `? extends T` to read and `? super T` to write (PECS).
 - Bounds like `<T extends Number>` and `<T extends Comparable<T>>` let you call `doubleValue()` or `compareTo` on `T`.
 
 ## Common mistakes
@@ -249,3 +332,18 @@ static T <T> lastOf(List<T> items) {
 ```
 
 The compiler says: `error: cannot find symbol ... symbol: class T`, among other errors. The `<T>` must come before the return type: `static <T> T lastOf(List<T> items)`.
+
+**4. Using a raw type.**
+
+```java nocompile
+List raw = new ArrayList();
+raw.add(42);
+List<String> names = raw;
+String first = names.get(0);
+```
+
+The compiler only says `Note: Main.java uses unchecked or unsafe operations.` Then the program crashes: `java.lang.ClassCastException: class java.lang.Integer cannot be cast to class java.lang.String`. Java could not check the raw list. Always write the type argument: `List<String> raw = new ArrayList<>();`. Treat every "unchecked" warning as a bug to fix.
+
+```callout jargon
+A **raw type** is a generic type used without its `<...>`, like plain `List`. It exists only for very old code.
+```

@@ -1,9 +1,9 @@
 id: module-01-basics/topic-04-console-io
 title: "Input and output with the console"
 order: 4
-minutes: 9
+minutes: 11
 prerequisites: [module-01-basics/topic-03-operators]
-concepts: [print-vs-println, scanner, reading-numbers, reading-lines, prompts, nextline-pitfall]
+concepts: [print-vs-println, scanner, reading-numbers, reading-lines, prompts, nextline-pitfall, input-validation]
 practice:
   kind: code
   runner: plain

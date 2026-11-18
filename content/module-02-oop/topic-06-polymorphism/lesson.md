@@ -2,7 +2,7 @@
 
 Think about a school fire drill. The teacher does not shout one order to the tall kids and another to the short kids. She says "everyone walk outside". Each student walks in their own way, but one order covers them all.
 
-Jiraiya wants the same thing for the fleet. Right now the report has one loop for classic bikes, one for e-bikes and one for cargo bikes. She wants one loop that says "every bike, tell me your fare", and each bike answers with its own price.
+Jiraiya wants the same thing for the fleet. Right now the report has one loop for classic bikes, one for e-bikes and one for cargo bikes. He wants one loop that says "every bike, tell me your fare", and each bike answers with its own price.
 
 ## Concept
 
@@ -63,6 +63,10 @@ class CargoBike extends Bike {
         return 0.25;
     }
 }
+```
+
+```callout tip
+These prices are `double` dollars, to match this ticket's code. Real billing counts whole cents in a `long`, because `double` cannot store most cent values exactly. The static members topic explains why.
 ```
 
 ### Syntax: a superclass variable holding a subclass object
@@ -141,6 +145,99 @@ The variable type still matters for one thing. It decides which methods you are 
 ```java nocompile
 Bike b = new EBike("B-2001", 80);
 b.getBattery();   // does not compile: Bike has no getBattery()
+```
+
+### What is chosen at compile time
+
+Dynamic dispatch only picks between **overrides**. When a name is **overloaded**, the compiler picks the version early. It looks only at the declared types, never at the real object.
+
+Here `Bike` writes `equals(Bike other)`. That is an overload, not an override, because `Object`'s version takes an `Object`.
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        Bike a = new Bike("B-1042");
+        Bike b = new Bike("B-1042");
+        Object o = b;
+        System.out.println(a.equals(b));
+        System.out.println(a.equals(o));
+    }
+}
+
+class Bike {
+    private String id;
+
+    public Bike(String id) {
+        this.id = id;
+    }
+
+    public boolean equals(Bike other) {
+        return id.equals(other.id);
+    }
+}
+```
+
+It prints `true`, then `false`. It is the same bike both times. But `o` is declared as `Object`, so the compiler picks `Object`'s own `equals`. That one only checks if both arrows point at one object.
+
+```callout jargon
+**Compile time** is when `javac` turns your code into bytecode. **Run time** is when the program actually runs. Overloads are chosen at compile time. Overrides are chosen at run time.
+```
+
+```callout warning
+This bug hides in real code, because collections call `equals(Object)`. A list or set (module 3) never sees your `equals(Bike)`. The equals topic shows the right way to write it.
+```
+
+### Fields and static methods do not dispatch
+
+Only instance methods are polymorphic. A field or a static method is picked from the declared type, just like an overload.
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        Bike b = new EBike();
+        System.out.println(b.name);
+        System.out.println(b.label());
+        System.out.println(b.kind());
+    }
+}
+
+class Bike {
+    String name = "bike";
+
+    static String kind() {
+        return "Bike.kind";
+    }
+
+    String label() {
+        return "Bike.label";
+    }
+}
+
+class EBike extends Bike {
+    String name = "ebike";
+
+    static String kind() {
+        return "EBike.kind";
+    }
+
+    @Override
+    String label() {
+        return "EBike.label";
+    }
+}
+```
+
+It prints `bike`, `EBike.label`, then `Bike.kind`. Only `label()`, the instance method, followed the arrow to the e-bike.
+
+- `EBike` now has two `name` fields. Its own one **hides** the parent's, and `b.name` reads the `Bike` one.
+- A static method with the same name also only hides the parent's. Try `@Override` on it: Java says `static methods cannot be annotated with @Override`.
+
+```callout jargon
+To **hide** a field or static method means to declare one with the same name in a subclass. Both copies exist, and the declared type picks which one you get.
+```
+
+```callout tip
+Gojo says: keep fields `private` and call static methods with their class name, `EBike.kind()`. Then this trap cannot bite you.
 ```
 
 ### Syntax: an array of the superclass type
@@ -392,7 +489,7 @@ Gojo says: reach for `instanceof` only when you need something that one kind of 
 ## Recap
 
 - A `Bike` variable or a `Bike[]` array can hold any subclass object, such as an `EBike` or a `CargoBike`.
-- When you call an overridden method, the real object's version runs. This is dynamic dispatch.
+- When you call an overridden method, the real object's version runs. This is dynamic dispatch. Overloads, fields and static methods are picked at compile time, from the declared type.
 - The variable type decides which methods you may call. `Bike` has no `getBattery()`.
 - `b instanceof EBike` tests the real kind. `if (b instanceof EBike e)` tests it and gives you an `EBike` variable.
 - A cast like `(EBike) b` only works when the object really is an `EBike`.

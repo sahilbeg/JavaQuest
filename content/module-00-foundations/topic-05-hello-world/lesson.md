@@ -31,7 +31,8 @@ public class Hello {
 ```
 
 - `class Hello` creates a class called `Hello`.
-- The file must have the same name: `Hello.java`.
+- A `public` class must live in a file with the same name: `Hello.java`. Capital letters count.
+- A class without `public` may sit in a file with another name. Most teams still match the names, so files are easy to find.
 - The curly braces `{ }` show where the class starts and ends.
 
 ### Syntax: the main method
@@ -182,7 +183,7 @@ Java cares about capital letters. `System` works, `system` does not.
 
 ## Recap
 
-- A Java program lives inside a **class**, and the file name matches the class name.
+- A Java program lives inside a **class**. A `public` class lives in a file with the same name.
 - Java starts running at the `main` method.
 - `System.out.println("...")` prints text and moves to a new line.
 - Text in double quotes is a **String**.

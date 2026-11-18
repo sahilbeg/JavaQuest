@@ -136,3 +136,33 @@ questions:
       - "        .toList();"
     explain: "Flatten first so you have rides. Then take the ids, drop repeats, and collect."
     reteach: "## Try it"
+
+  - id: q11
+    type: mcq
+    concept: stream-side-effects
+    prompt: "Which line collects the bike ids of long rides in the way streams are meant to be used?"
+    choices: ["List<String> ids = rides.stream().filter(r -> r.minutes() > 30).map(Ride::bikeId).toList();", "rides.stream().filter(r -> r.minutes() > 30).forEach(r -> ids.add(r.bikeId()));", "rides.parallelStream().forEach(r -> ids.add(r.bikeId()));", "rides.stream().map(r -> ids.add(r.bikeId())).count();"]
+    answer: 0
+    explain: "The other three change an outside list from inside a lambda. That is a side effect, and it breaks when the stream runs in parallel."
+    reteach: "### When not to use a stream"
+
+  - id: q12
+    type: predict-output
+    concept: grouping-by
+    code: |
+      import java.util.List;
+      import java.util.Map;
+      import java.util.TreeMap;
+      import java.util.stream.Collectors;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> stations = List.of("Uptown", "Harbor", "Uptown", "Depot");
+              Map<String, Long> counts = stations.stream()
+                      .collect(Collectors.groupingBy(s -> s, TreeMap::new, Collectors.counting()));
+              System.out.println(counts);
+          }
+      }
+    answer: "{Depot=1, Harbor=1, Uptown=2}"
+    explain: "TreeMap::new makes groupingBy build a TreeMap, so the stations come out sorted. counting() counts each pile."
+    reteach: "### Syntax: groupingBy into a sorted map"

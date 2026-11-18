@@ -125,7 +125,34 @@ questions:
     type: mcq
     concept: constants
     prompt: "What happens if code runs Prices.UNLOCK_FEE = 0.50; and UNLOCK_FEE is static final?"
-    choices: ["A compile error: cannot assign a value to final variable", "The fee changes to 0.50 for every bike", "The fee changes only for the next ride", "The program prints a warning and keeps 1.00"]
+    choices: ["A compile error: cannot assign a value to static final variable", "The fee changes to 0.50 for every bike", "The fee changes only for the next ride", "The program prints a warning and keeps 1.00"]
     answer: 0
     explain: "final means the value is fixed. The compiler refuses any new assignment."
     reteach: "## Common mistakes"
+
+  - id: q11
+    type: predict-output
+    concept: final-arrays
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Prices.PER_MINUTE[0] = 99;
+              System.out.println(Prices.PER_MINUTE[0]);
+          }
+      }
+
+      class Prices {
+          public static final long[] PER_MINUTE = {15, 30, 25};
+      }
+    answer: "99"
+    explain: "final stops PER_MINUTE from pointing at a new array. It does not stop anyone changing what is inside the array."
+    reteach: "### A final array can still change"
+
+  - id: q12
+    type: mcq
+    concept: static-fields
+    prompt: "The exercise needs resetCounter() so each test starts from B-1001. What does that tell you about the static counter?"
+    choices: ["It is shared global state that survives from one test to the next", "The counter is broken and resets itself at random", "Static fields are reset every time a new object is created", "Tests cannot read static fields without it"]
+    answer: 0
+    explain: "A static field lives as long as the program. Every test shares it, so a method exists only to wipe it. That is a warning sign of global state."
+    reteach: "### When not to use static"

@@ -127,3 +127,33 @@ questions:
     answers: [":"]
     explain: "A for-each loop uses a colon: for (Type name : list)."
     reteach: "## Concept"
+
+  - id: q11
+    type: predict-output
+    concept: immutable-lists
+    code: |
+      import java.util.ArrayList;
+      import java.util.Collections;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> ids = new ArrayList<>(List.of("B-1042"));
+              List<String> view = Collections.unmodifiableList(ids);
+              List<String> copy = List.copyOf(ids);
+              ids.add("B-2001");
+              System.out.println(view.size() + " " + copy.size());
+          }
+      }
+    answer: "2 1"
+    explain: "unmodifiableList is a read-only view, so it sees the new item. List.copyOf made a separate copy, so it keeps one item."
+    reteach: "### Copies and read-only views"
+
+  - id: q12
+    type: mcq
+    concept: immutable-lists
+    prompt: "A class keeps a private List<Ride> rides. What should its getter return so callers cannot change the class's list?"
+    choices: ["List.copyOf(rides)", "rides", "Arrays.asList(rides)", "new LinkedList<>()"]
+    answer: 0
+    explain: "Returning rides hands out your own list, and the caller could clear it. List.copyOf gives an unmodifiable copy."
+    reteach: "### Copies and read-only views"

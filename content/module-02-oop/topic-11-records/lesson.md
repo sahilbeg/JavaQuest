@@ -119,7 +119,7 @@ steps:
 
 ### Records cannot change
 
-Every field in a record is `final`. That means it gets a value once and keeps it forever. A record has no setters.
+Every field in a record is `final`. That means it gets a value once and keeps it forever. A record has no setters. (A field that points at an array is a special case. You will see it in a moment.)
 
 ```callout analogy
 A record is like a printed receipt. To fix a mistake, you print a new receipt. You never scribble on the old one.
@@ -169,7 +169,141 @@ public class Main {
 }
 ```
 
-This prints `0`. A faulty dock that reports minus 4 minutes no longer charges a strange fare.
+This prints `0`. A faulty dock that reports minus 4 minutes is billed as a 0 minute ride, not a negative fare.
+
+### Clamp or refuse?
+
+Turning -4 into 0 is called **clamping**. It hides the bad value. Most of the time, a bad value means a bug somewhere else. Hiding it lets the bug keep running.
+
+```callout jargon
+To **clamp** a value is to push it back inside allowed limits. -4 minutes becomes 0, the lowest allowed value.
+```
+
+So the usual choice in real code is to refuse, loudly. Throw an `IllegalArgumentException`, like the constructors in topic 2:
+
+```java run crash
+public class Main {
+    record Ride(String bikeId, String type, int minutes) {
+        Ride {
+            if (minutes < 0) {
+                throw new IllegalArgumentException("minutes cannot be negative: " + minutes);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Ride ok = new Ride("B-1042", "ebike", 12);
+        System.out.println(ok.minutes());
+        Ride broken = new Ride("B-2001", "ebike", -4);
+        System.out.println(broken.minutes());
+    }
+}
+```
+
+It prints `12`, then stops with `java.lang.IllegalArgumentException: minutes cannot be negative: -4`. No broken ride ever exists.
+
+Clamp only when you know where the bad value comes from, and 0 is the honest answer. Spoke's old docks sometimes report a few minutes below zero when their clock drifts. Kakashi decided those rides count as 0 minutes. Your exercise follows that rule, so it clamps.
+
+```callout tip
+Default to refusing. Clamp only when the team has agreed that the bad value is known noise, and say so in a comment.
+```
+
+### final freezes the arrow, not the object
+
+A record's fields are `final`. For a number like `minutes`, that is the end of the story. But a field that holds an object only holds an arrow to it. `final` stops the arrow from moving. It does not stop anyone changing the object at the end of the arrow.
+
+An array is an object. Watch a "fixed" trip change under your feet:
+
+```animate
+title: final froze the arrow, not the array
+kind: code
+code: |
+  public class Main {
+      record Trip(String rentalId, String[] stops) { }
+
+      public static void main(String[] args) {
+          String[] stops = {"Riverside", "Harbor"};
+          Trip trip = new Trip("rental-17", stops);
+          stops[1] = "Depot";
+          System.out.println(trip.stops()[1]);
+      }
+  }
+steps:
+  - line: 5
+    vars: { stops: "@arr" }
+    objects: { arr: { type: "String[]", fields: { "0": '"Riverside"', "1": '"Harbor"' } } }
+    say: main builds an array of two stops. The variable stops holds an arrow to it.
+  - line: 6
+    vars: { trip: "@t" }
+    objects: { t: { type: Trip, fields: { rentalId: '"rental-17"', stops: "@arr" } } }
+    say: The record stores the arrow it was given, not a copy. Now two arrows point at one array.
+  - line: 7
+    objects: { arr: { type: "String[]", fields: { "0": '"Riverside"', "1": '"Harbor"' } } }
+    say: main changes slot 1 through its own arrow. The record's final field cannot stop this. It never moved.
+  - line: 7
+    objects: { arr: { type: "String[]", fields: { "0": '"Riverside"', "1": '"Depot"' } } }
+    say: The array now says Depot. There is only one array, so the trip sees it too.
+  - line: 8
+    out: Depot
+    say: The trip was meant to be a fixed receipt. It now lists a stop the rider never made.
+```
+
+There is a second surprise. A record's `equals` compares an array component with `==`. Two trips with the same stops in two different arrays are not equal.
+
+```java run
+public class Main {
+    record Trip(String rentalId, String[] stops) { }
+
+    public static void main(String[] args) {
+        Trip a = new Trip("rental-17", new String[] {"Riverside", "Depot"});
+        Trip b = new Trip("rental-17", new String[] {"Riverside", "Depot"});
+        System.out.println(a.equals(b));
+    }
+}
+```
+
+It prints `false`. Avoid array components in records. Module 3 brings lists, which compare their items properly.
+
+### Immutable classes and defensive copies
+
+```callout jargon
+An **immutable** object can never change after it is built, like a String. A **defensive copy** is a copy you make so outside code cannot reach your object's insides.
+```
+
+To make an object truly immutable, follow this recipe:
+
+1. Make the class `final`, so no child class can add changing parts. A record already is.
+2. Make every field `private final`. A record already does.
+3. Write no setters.
+4. **Copy in:** copy any array or list you are given, in the constructor.
+5. **Copy out:** return a copy from any getter, never your own array.
+6. A "change" method returns a new object, like `withMinutes(20)`.
+
+```java run
+public class Main {
+    record Trip(String rentalId, String[] stops) {
+        Trip {
+            stops = stops.clone();
+        }
+
+        public String[] stops() {
+            return stops.clone();
+        }
+    }
+
+    public static void main(String[] args) {
+        String[] stops = {"Riverside", "Harbor"};
+        Trip trip = new Trip("rental-17", stops);
+        stops[1] = "Depot";
+        trip.stops()[0] = "Uptown";
+        System.out.println(trip.stops()[0] + " -> " + trip.stops()[1]);
+    }
+}
+```
+
+It prints `Riverside -> Harbor`. `clone()` on an array builds a new array with the same items. The compact constructor copies in, and the accessor copies out. Neither change reached the trip.
+
+With lists from module 3, the copy is one call: `stops = List.copyOf(stops);`. It makes a list nobody can change.
 
 ### Syntax: methods in a record
 
@@ -228,6 +362,10 @@ Line by line:
 5. `ride.fare()` returns `1.00 + 10 * 0.30`, which prints `4.0`.
 6. The second ride has the same components, so `equals` prints `true`.
 
+```callout warning
+The exercise keeps `fare()` as a `double` of dollars, to stay small. Real billing never does that, because `double` cannot hold 0.1 exactly. It stores whole cents in a `long`: 100 cents to unlock, plus 30 cents a minute for an e-bike. The [static members](/t/module-02-oop/topic-04-static-members) ticket explains why.
+```
+
 ## Try it
 
 Change the worked example above. Make the ride a `"cargo"` ride with `-7` minutes. Predict the fare first, then press Run. You should see `1.0`, because the minutes become 0.
@@ -237,7 +375,7 @@ Change the worked example above. Make the ride a `"cargo"` ride with `-7` minute
 - A record is a short class for plain data: `record Ride(String bikeId, String type, int minutes) { }`.
 - Accessors use the component name: `ride.minutes()`.
 - Java writes `equals`, `hashCode` and `toString` from the components.
-- Record fields are final, and the record cannot be extended.
+- Record fields are final, but `final` freezes the arrow, not the object. Copy arrays in and out.
 - A compact constructor `Ride { ... }` can clean up values before they are stored.
 
 ## Common mistakes

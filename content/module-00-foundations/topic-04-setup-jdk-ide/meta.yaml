@@ -1,9 +1,9 @@
 id: module-00-foundations/topic-04-setup-jdk-ide
 title: "Installing the JDK and an IDE"
 order: 4
-minutes: 8
+minutes: 11
 prerequisites: [module-00-foundations/topic-03-terminal-basics]
-concepts: [jdk-jre-jvm, lts-version, install-jdk, check-version, ide-project]
+concepts: [jdk-jre-jvm, lts-version, install-jdk, check-version, path-java-home, ide-project]
 practice:
   kind: quiz
 xp: { quiz: 50, code: 0 }

@@ -1,9 +1,9 @@
 id: module-02-oop/topic-08-interfaces
 title: "Interfaces and default methods"
 order: 8
-minutes: 9
+minutes: 12
 prerequisites: [module-02-oop/topic-07-abstract-classes]
-concepts: [interface, implements, multiple-interfaces, interface-type, default-method]
+concepts: [interface, implements, multiple-interfaces, interface-type, default-method, default-conflict, abstract-vs-interface]
 practice:
   kind: code
   runner: plain

@@ -161,3 +161,20 @@ questions:
     answer: 0
     explain: "extends says what a class is and allows one parent. implements says what it can do and allows many."
     reteach: "## Concept"
+
+  - id: q11
+    type: fill-blank
+    concept: default-conflict
+    prompt: "return Chargeable.___.status() + \", \" + Lockable.super.status();"
+    answers: ["super"]
+    explain: "When two interfaces give a default with the same name, the class overrides it. InterfaceName.super.method() calls one interface's default."
+    reteach: "### Two defaults with the same name"
+
+  - id: q12
+    type: mcq
+    concept: abstract-vs-interface
+    prompt: "Every Vehicle needs an id field and a constructor that sets it. Which tool fits that shared part?"
+    choices: ["An abstract class, because it can hold fields and constructors", "An interface, because it can hold fields and constructors", "An interface with a default constructor", "Neither: shared fields are not possible in Java"]
+    answer: 0
+    explain: "An interface has no instance fields and no constructors. Shared state and setup belong in an abstract class."
+    reteach: "### Abstract class or interface?"

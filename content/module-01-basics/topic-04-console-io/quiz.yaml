@@ -122,3 +122,12 @@ questions:
     bugLine: 3
     explain: "Scanner is used without import java.util.Scanner; so Java cannot find it on line 3."
     reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: input-validation
+    prompt: "A rider might type letters instead of minutes. Which call checks that a whole number is waiting, without reading it?"
+    choices: ["in.hasNextInt()", "in.nextInt()", "in.nextLine()", "in.hasNextLine()"]
+    answer: 0
+    explain: "hasNextInt() peeks at the next input and says true only for a whole number. nextInt() reads it, and crashes on letters. hasNextLine() is true for any line, even ten."
+    reteach: "### Syntax: checking with hasNextInt"

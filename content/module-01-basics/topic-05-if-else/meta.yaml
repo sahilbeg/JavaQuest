@@ -1,9 +1,9 @@
 id: module-01-basics/topic-05-if-else
 title: "Decisions: if, else, boolean logic"
 order: 5
-minutes: 9
+minutes: 12
 prerequisites: [module-01-basics/topic-04-console-io]
-concepts: [boolean-expressions, comparison-operators, if-else, logical-operators, string-equals]
+concepts: [boolean-expressions, comparison-operators, if-else, logical-operators, string-equals, short-circuit, ternary]
 practice:
   kind: code
   runner: plain

@@ -114,3 +114,28 @@ questions:
     answer: 0
     explain: "A text block opens and closes with three double quotes."
     reteach: "## Concept"
+
+  - id: q11
+    type: predict-output
+    concept: money-in-cents
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              double dollars = 0.1 + 0.2;
+              long cents = 10 + 20;
+              System.out.println(dollars);
+              System.out.println(cents);
+          }
+      }
+    answer: "0.30000000000000004\n30"
+    explain: "A double cannot hold 0.1 or 0.2 exactly, so the sum is a tiny bit off. Whole cents in a long are always exact, which is why billing counts cents."
+    reteach: "### Money: count cents, not dollars"
+
+  - id: q12
+    type: mcq
+    concept: money-in-cents
+    prompt: "Which line makes a BigDecimal worth exactly ten cents?"
+    choices: ["new BigDecimal(\"0.10\")", "new BigDecimal(0.1)", "new BigDecimal(0.10f)", "(BigDecimal) 0.10"]
+    answer: 0
+    explain: "Build a BigDecimal from text. new BigDecimal(0.1) copies the double's tiny error, a float has the same problem, and a double cannot be cast to BigDecimal."
+    reteach: "### A preview of BigDecimal"

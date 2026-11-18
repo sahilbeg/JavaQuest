@@ -145,3 +145,36 @@ questions:
     answer: 0
     explain: "A public field has no door to guard it. A setter can check every change."
     reteach: "## Hook"
+
+  - id: q11
+    type: mcq
+    concept: access-levels
+    variants:
+      - { prompt: "A field is declared as int docks; with no access keyword. Who can use it directly?", choices: ["Any class in the same package", "Only code inside its own class", "Any class anywhere", "Only child classes in other packages"], answer: 0 }
+      - { prompt: "Which list orders the access levels from narrowest to widest?", choices: ["private, package-private, protected, public", "public, protected, package-private, private", "private, protected, package-private, public", "package-private, private, public, protected"], answer: 0 }
+    explain: "No keyword means package-private: classes in the same package can use it. The order is private, package-private, protected, public."
+    reteach: "### The four access levels"
+
+  - id: q12
+    type: predict-output
+    concept: defensive-copies
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Station s = new Station();
+              int[] mine = s.getRideMinutes();
+              mine[0] = 99;
+              System.out.println(s.getRideMinutes()[0]);
+          }
+      }
+
+      class Station {
+          private final int[] rideMinutes = {12, 30, 7};
+
+          public int[] getRideMinutes() {
+              return rideMinutes;
+          }
+      }
+    answer: "99"
+    explain: "The getter returns the array itself, not a copy. main changes Station's private array through it. Return Arrays.copyOf(rideMinutes, rideMinutes.length) to stop the leak."
+    reteach: "### Getters that leak"

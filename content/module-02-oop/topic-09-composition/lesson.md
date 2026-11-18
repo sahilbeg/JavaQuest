@@ -177,7 +177,117 @@ classDiagram
 - You need more than one of the thing. A class can extend only one parent, yet it can hold 12 docks.
 - You want to swap a part later. A field can point to a different object; a parent class is fixed forever.
 
-When you are unsure, start with composition. It ties classes together less tightly.
+When you are unsure, start with composition. It ties classes together less tightly. The next card shows what "tightly" costs.
+
+### Why inheritance breaks
+
+A subclass quietly depends on how its parent works **inside**. If that hidden detail changes, or you guess it wrong, the subclass breaks. This is called the **fragile base class** problem.
+
+```callout jargon
+A **base class** is another name for a parent class. The **fragile base class** problem: a change inside the parent, or a wrong guess about it, breaks a subclass that never changed.
+```
+
+Say another team wrote `ArrivalLog`. You want to count arrivals, so you extend it and add 1 in both `add` and `addAll`.
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        CountingLog log = new CountingLog();
+        log.addAll(new String[] { "B-1042", "B-2001", "B-3300" });
+        System.out.println("Bikes counted: " + log.count);
+    }
+}
+
+// Another team's class. You only know its method names.
+class ArrivalLog {
+    private final String[] ids = new String[100];
+    private int size = 0;
+
+    void add(String id) {
+        ids[size] = id;
+        size++;
+    }
+
+    void addAll(String[] newIds) {
+        for (String id : newIds) {
+            add(id);   // reuses add inside
+        }
+    }
+}
+
+class CountingLog extends ArrivalLog {
+    int count = 0;
+
+    @Override
+    void add(String id) {
+        count++;
+        super.add(id);
+    }
+
+    @Override
+    void addAll(String[] newIds) {
+        count += newIds.length;
+        super.addAll(newIds);
+    }
+}
+```
+
+It prints `Bikes counted: 6` for 3 bikes. Your `addAll` adds 3. Then the parent's `addAll` calls `add` for each bike. Because of overriding, that runs **your** `add`, which adds 3 more.
+
+```callout warning
+Java's own `HashSet` works the same way inside: its `addAll` calls `add`. A counting subclass of `HashSet` double-counts in exactly this way.
+```
+
+### The fix: hold it, don't extend it
+
+Keep the `ArrivalLog` in a field and delegate to it. Now the parent's inner `add` calls stay inside `ArrivalLog`. They never reach your code.
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        CountingLog log = new CountingLog();
+        log.addAll(new String[] { "B-1042", "B-2001", "B-3300" });
+        System.out.println("Bikes counted: " + log.count());
+    }
+}
+
+class ArrivalLog {
+    private final String[] ids = new String[100];
+    private int size = 0;
+
+    void add(String id) {
+        ids[size] = id;
+        size++;
+    }
+
+    void addAll(String[] newIds) {
+        for (String id : newIds) {
+            add(id);
+        }
+    }
+}
+
+class CountingLog {
+    private final ArrivalLog log = new ArrivalLog();   // has-a, not is-a
+    private int count = 0;
+
+    void add(String id) {
+        count++;
+        log.add(id);
+    }
+
+    void addAll(String[] newIds) {
+        count += newIds.length;
+        log.addAll(newIds);
+    }
+
+    int count() {
+        return count;
+    }
+}
+```
+
+It prints `Bikes counted: 3`. `CountingLog` depends only on what `ArrivalLog` promises, not on how it works inside. If the other team rewrites `addAll` tomorrow, your count stays right.
 
 ## Worked example
 
@@ -292,11 +402,11 @@ Park two more bikes and run it again. Then change the array to `new Dock[20]` an
 
 ## Recap
 
-- Is-a means inheritance with `extends`. Has-a means composition: one object holds another in a field.
-- Say the sentence out loud. If "A has a B" sounds right, hold a B in a field.
+- Is-a means inheritance with `extends`. Has-a means composition: one object holds another in a field. Say the sentence out loud to choose.
 - `new Dock[12]` makes 12 empty slots. Fill each one with `new Dock()`, usually in the constructor.
 - Delegation means a method passes the work to an object it holds, like `docks[i].park(bike)`.
 - Prefer composition when you need many parts, or when "is a" sounds wrong.
+- A subclass depends on its parent's insides (the fragile base class problem). Holding the object in a field avoids that.
 
 ## Common mistakes
 

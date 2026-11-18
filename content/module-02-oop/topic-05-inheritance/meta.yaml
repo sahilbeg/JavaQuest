@@ -1,7 +1,7 @@
 id: module-02-oop/topic-05-inheritance
 title: "Inheritance and super"
 order: 5
-minutes: 10
+minutes: 13
 prerequisites: [module-02-oop/topic-04-static-members]
 concepts: [extends, inherited-members, super-constructor, overriding, super-method, protected]
 practice:

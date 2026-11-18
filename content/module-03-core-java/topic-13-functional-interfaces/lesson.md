@@ -49,7 +49,7 @@ interface Promotion {
 This note says "this interface must have exactly one abstract method". If someone adds a second abstract method later, the compiler stops with an error. The interface works without the note, but the note guards it.
 
 ```callout tip
-A functional interface may still have `default` and `static` methods. Only the abstract methods count, and there must be exactly one.
+A functional interface may still have `default` and `static` methods. Only the abstract methods count, and there must be exactly one. Methods that every object already has, such as `equals`, do not count either. That is why `Comparator`, which lists `equals`, is still a functional interface.
 ```
 
 ### The built-in functional interfaces
@@ -98,15 +98,15 @@ String start = homeStation.get();   // "Riverside"
 ### Syntax: UnaryOperator
 
 ```java nocompile
-UnaryOperator<Double> addUnlockFee = fare -> fare + 1.00;
-double total = addUnlockFee.apply(3.0);   // 4.0
+UnaryOperator<Long> addUnlockFee = cents -> cents + 100;
+long total = addUnlockFee.apply(150L);   // 250 cents
 ```
 
 ### Syntax: BiFunction
 
 ```java nocompile
-BiFunction<Integer, Double, Double> fare = (minutes, price) -> 1.00 + minutes * price;
-double cost = fare.apply(10, 0.15);   // 2.5
+BiFunction<Integer, Long, Long> fare = (minutes, centsPerMinute) -> 100 + minutes * centsPerMinute;
+long cost = fare.apply(10, 15L);   // 250 cents
 ```
 
 Here is a run snippet that uses four of them together:
@@ -120,7 +120,7 @@ import java.util.function.Supplier;
 public class Main {
     public static void main(String[] args) {
         Predicate<Integer> isLong = minutes -> minutes >= 30;
-        Function<Integer, Double> classicFare = minutes -> 1.00 + minutes * 0.15;
+        Function<Integer, Long> classicFare = minutes -> 100 + minutes * 15L;
         Consumer<String> show = text -> System.out.println("Kiosk: " + text);
         Supplier<String> station = () -> "Old Mill";
 
@@ -152,8 +152,8 @@ Predicate<Integer> extreme = isHuge.or(minutes -> minutes < 2);
 `Function` has `andThen`. It feeds the result of the first function into the second one.
 
 ```java nocompile
-Function<Integer, Double> fare = minutes -> 1.00 + minutes * 0.15;
-Function<Double, String> money = amount -> String.format("$%.2f", amount);
+Function<Integer, Long> fare = minutes -> 100 + minutes * 15L;
+Function<Long, String> money = cents -> String.format(Locale.ROOT, "$%d.%02d", cents / 100, cents % 100);
 
 Function<Integer, String> receipt = fare.andThen(money);
 receipt.apply(10);   // "$2.50"
@@ -164,6 +164,7 @@ receipt.apply(10);   // "$2.50"
 ```
 
 ```java run
+import java.util.Locale;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -177,12 +178,71 @@ public class Main {
         System.out.println(normalLong.test(150));
         System.out.println(isLong.negate().test(10));
 
-        Function<Integer, Double> fare = minutes -> 1.00 + minutes * 0.15;
-        Function<Double, String> money = amount -> String.format("$%.2f", amount);
+        Function<Integer, Long> fare = minutes -> 100 + minutes * 15L;
+        Function<Long, String> money = cents -> String.format(Locale.ROOT, "$%d.%02d", cents / 100, cents % 100);
         System.out.println(fare.andThen(money).apply(10));
     }
 }
 ```
+
+### Syntax: primitive versions
+
+```java nocompile
+ToIntFunction<Ride> minutesOf = Ride::minutes;     // Ride in, plain int out
+IntPredicate isShort = m -> m < 5;                 // plain int in, boolean out
+Function<String, String> same = Function.identity(); // gives back its input unchanged
+```
+
+`Function<Integer, Long>` works with wrapper objects, so every number gets boxed. That costs a little time. For plain numbers, `java.util.function` has versions without boxing: `IntPredicate`, `IntFunction`, `ToIntFunction`, `ToLongFunction` and more. Their method names say the type, such as `applyAsInt`.
+
+```callout jargon
+**Boxing** is wrapping a plain `int` in an `Integer` object. **Unboxing** is taking it back out. Java does both for you, but each one makes or reads an object.
+```
+
+`Comparator.comparingInt(Ride::minutes)` is the same idea for sorting. It reads each ride's minutes as a plain `int`. `Function.identity()` is a function that returns what it gets, handy when a method asks for a function but you want the item itself.
+
+### Checked exceptions inside lambdas
+
+`Function.apply` has no `throws` clause. So a lambda that fills it in cannot throw a checked exception, such as the `IOException` from reading a file.
+
+```java nocompile
+Function<Path, List<String>> readLog = path -> Files.readAllLines(path);
+```
+
+The compiler says: `error: unreported exception IOException; must be caught or declared to be thrown`.
+
+You have two ways out. One: catch it inside the lambda and wrap it in an unchecked exception. Java has one made for this, `UncheckedIOException`.
+
+```java run
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.function.Function;
+
+public class Main {
+    public static void main(String[] args) {
+        Function<Path, List<String>> readLog = path -> {
+            try {
+                return Files.readAllLines(path);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        };
+
+        try {
+            readLog.apply(Path.of("missing-harbor-log.csv"));
+        } catch (UncheckedIOException e) {
+            System.out.println("Could not read: " + e.getCause().getMessage());
+        }
+    }
+}
+```
+
+It prints `Could not read: missing-harbor-log.csv`. The original `IOException` is kept as the cause.
+
+Two: skip the lambda and write a plain `for` loop in a method that says `throws IOException`. When file work is the main job, the loop is often clearer. You will meet the same wall with streams in topic 14.
 
 ## Worked example
 
@@ -225,6 +285,10 @@ interface Promotion {
 
 The fare loop never changes. A new deal is one more lambda in the list.
 
+```callout tip
+Gojo says: this example and the practice keep fares as a `double`, so a percent discount is one line. Real Spoke billing holds fares as `long` cents and rounds once, at the end. Topic 8 shows `BigDecimal` for that rounding.
+```
+
 ## Try it
 
 Add a third promotion called `flatOff` that takes 0.50 off any fare. Put it at the end of `thisWeek` in the worked example, then press **Run**. You should see `2.3`.
@@ -234,10 +298,10 @@ Then try a `Predicate<Integer>` of your own. Make it true for rides under 5 minu
 ## Recap
 
 - A functional interface has exactly one abstract method. A lambda fills in that method.
-- `@FunctionalInterface` makes the compiler check the "exactly one" rule.
+- `@FunctionalInterface` makes the compiler check the "exactly one" rule. You can write your own when the built-in ones do not fit.
 - `java.util.function` gives you `Predicate`, `Function`, `Consumer`, `Supplier`, `UnaryOperator` and `BiFunction`.
 - `and`, `or` and `negate` combine predicates. `andThen` chains functions.
-- You can write your own functional interface when the built-in ones do not fit your words.
+- A lambda for `Function` cannot throw a checked exception. Wrap it, for example in `UncheckedIOException`.
 
 ## Common mistakes
 
@@ -265,7 +329,7 @@ Java says: `cannot find symbol ... method apply(int)`. Each interface names its 
 **A lambda with the wrong number of inputs.**
 
 ```java nocompile
-BiFunction<Integer, Double, Double> fare = minutes -> 1.00 + minutes * 0.15;
+BiFunction<Integer, Long, Long> fare = minutes -> 100 + minutes * 15L;
 ```
 
-Java says: `incompatible types: incompatible parameter types in lambda expression`. A `BiFunction` takes two inputs, so the lambda needs two names: `(minutes, price) -> 1.00 + minutes * price`.
+Java says: `incompatible types: incompatible parameter types in lambda expression`. A `BiFunction` takes two inputs, so the lambda needs two names: `(minutes, centsPerMinute) -> 100 + minutes * centsPerMinute`.

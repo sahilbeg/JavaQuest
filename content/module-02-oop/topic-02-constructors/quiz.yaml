@@ -153,3 +153,21 @@ questions:
       - "}"
     explain: "The header comes first, then the this(...) call as the first line, then the closing brace."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: invariants
+    prompt: "Every station must have at least 1 dock. Where should the code check this rule?"
+    choices: ["In the constructor, throwing an IllegalArgumentException if docks is less than 1", "In main, after new Station(...) has finished", "Nowhere, because an int can never be negative", "In println, before the station is shown"]
+    answer: 0
+    explain: "The constructor is the gate. If it refuses bad values, no broken station can ever exist."
+    reteach: "### Checking the rules: invariants"
+
+  - id: q12
+    type: mcq
+    concept: invariants
+    prompt: "What does this.id = Objects.requireNonNull(id, \"id must not be null\"); do when id is null?"
+    choices: ["It stops with a NullPointerException carrying the message", "It stores an empty String instead", "It stores null and carries on", "It is a compile error"]
+    answer: 0
+    explain: "requireNonNull hands the value back if it is not null. If it is null, it throws a NullPointerException with your message."
+    reteach: "### Checking the rules: invariants"

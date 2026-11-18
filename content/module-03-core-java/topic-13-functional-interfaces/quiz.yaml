@@ -90,7 +90,7 @@ questions:
   - id: q08
     type: fill-blank
     concept: built-in-interfaces
-    prompt: "___<Integer, Double, Double> fare = (minutes, price) -> 1.00 + minutes * price;"
+    prompt: "___<Integer, Long, Long> fare = (minutes, centsPerMinute) -> 100 + minutes * centsPerMinute;"
     answers: ["BiFunction"]
     explain: "BiFunction takes two inputs and gives back one result."
     reteach: "## Concept"
@@ -122,3 +122,12 @@ questions:
     bugLine: 6
     explain: "A Consumer's method is accept. The line should be show.accept(\"Harbor\");"
     reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: built-in-interfaces
+    prompt: "Function<Path, List<String>> f = p -> Files.readAllLines(p); does not compile. Why?"
+    choices: ["readAllLines throws the checked IOException, and Function.apply has no throws clause", "Function cannot return a List", "Path cannot be a lambda parameter", "A lambda can never call a static method"]
+    answer: 0
+    explain: "A lambda that fills in Function.apply cannot throw a checked exception. Catch it inside and wrap it in UncheckedIOException, or use a plain loop."
+    reteach: "### Checked exceptions inside lambdas"

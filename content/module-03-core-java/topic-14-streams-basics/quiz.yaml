@@ -116,3 +116,38 @@ questions:
     answer: 0
     explain: "Intermediate steps only run when a terminal operation asks for a result."
     reteach: "## Concept"
+
+  - id: q11
+    type: predict-output
+    concept: matching
+    code: |
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<Integer> minutes = List.of(25, 1, 40);
+              List<Integer> none = List.of();
+              System.out.println(minutes.stream().anyMatch(m -> m < 2));
+              System.out.println(minutes.stream().allMatch(m -> m < 30));
+              System.out.println(none.stream().allMatch(m -> m < 30));
+          }
+      }
+    answer: "true\nfalse\ntrue"
+    explain: "1 is under 2, so anyMatch is true. 40 is not under 30, so allMatch is false. On an empty stream, allMatch is true, because no item breaks the rule."
+    reteach: "### Syntax: anyMatch, allMatch, noneMatch, min"
+
+  - id: q12
+    type: predict-output
+    concept: number-streams
+    code: |
+      import java.util.stream.IntStream;
+
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(IntStream.range(1, 4).sum());
+              System.out.println(IntStream.rangeClosed(1, 4).sum());
+          }
+      }
+    answer: "6\n10"
+    explain: "range(1, 4) is 1, 2, 3, which adds to 6. rangeClosed(1, 4) includes the 4, which adds to 10."
+    reteach: "### Syntax: Stream.of, IntStream.range and boxed"

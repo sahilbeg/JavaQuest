@@ -1,7 +1,7 @@
 id: module-03-core-java/topic-10-nio-files
 title: "NIO: Path and Files"
 order: 10
-minutes: 9
+minutes: 11
 prerequisites: [module-03-core-java/topic-09-file-io]
 concepts: [path, read-write-files, create-and-check, copy-and-move, list-folder, charset]
 practice:

@@ -1,7 +1,7 @@
 id: module-03-core-java/topic-02-lists
 title: "List, ArrayList, LinkedList"
 order: 2
-minutes: 10
+minutes: 12
 prerequisites: [module-03-core-java/topic-01-collections-overview]
 concepts: [list-methods, looping-lists, concurrent-modification, arraylist-vs-linkedlist, immutable-lists]
 practice:

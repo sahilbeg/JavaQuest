@@ -1,9 +1,9 @@
 id: module-02-oop/topic-11-records
 title: "Records"
 order: 11
-minutes: 9
+minutes: 12
 prerequisites: [module-02-oop/topic-10-equals-hashcode-tostring]
-concepts: [record-syntax, accessors, generated-methods, immutability, compact-constructor, record-methods]
+concepts: [record-syntax, accessors, generated-methods, immutability, compact-constructor, record-methods, defensive-copies]
 practice:
   kind: code
   runner: plain

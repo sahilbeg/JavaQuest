@@ -23,9 +23,9 @@ questions:
   - id: q03
     type: fill-blank
     concept: boolean-and-char
-    prompt: "boolean isMember = ___;"
-    answers: ["true", "false"]
-    explain: "A boolean holds true or false, written without quotes."
+    prompt: "boolean isMember = ___;   // this rider IS a member"
+    answers: ["true"]
+    explain: "A boolean holds true or false, written without quotes. A member gets true."
     reteach: "## Concept"
 
   - id: q04
@@ -125,3 +125,27 @@ questions:
       - "System.out.println(average);"
     explain: "Each line uses the variable from the line before it. rides is 45 / 22, which is 2, so the average is 22.5."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: overflow
+    prompt: "int top = Integer.MAX_VALUE; What is top + 1?"
+    choices: ["-2147483648, because the int wraps around", "2147483648, one more than the top", "An ArithmeticException", "A compile error"]
+    answer: 0
+    explain: "+ on ints never checks for overflow. The value wraps around to the most negative int. Only Math.addExact throws an ArithmeticException."
+    reteach: "### Past the top: overflow"
+
+  - id: q12
+    type: predict-output
+    concept: rounding
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(Math.round(2.5));
+              System.out.println((int) -2.9);
+              System.out.println(Math.floor(-2.9));
+          }
+      }
+    answer: "3\n-2\n-3.0"
+    explain: "Math.round rounds 2.5 up to 3. A cast cuts toward zero, so -2.9 becomes -2. Math.floor always goes down, to -3.0, and gives back a double."
+    reteach: "### Rounding instead of cutting"

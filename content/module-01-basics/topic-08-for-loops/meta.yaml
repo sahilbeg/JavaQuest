@@ -1,7 +1,7 @@
 id: module-01-basics/topic-08-for-loops
 title: "Counting loops: for, break, continue"
 order: 8
-minutes: 9
+minutes: 10
 prerequisites: [module-01-basics/topic-07-while-loops]
 concepts: [for-loop, counting-down, step-size, nested-loops, break, continue]
 practice:

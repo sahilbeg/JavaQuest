@@ -61,6 +61,47 @@ String s3 = maybe.orElseThrow();                  // throw NoSuchElementExceptio
 Optional also has get(). It throws when the box is empty, just like orElseThrow(). Prefer orElseThrow(), because its name says what can happen.
 ```
 
+### Syntax: orElseThrow with your own exception
+
+```java nocompile
+Bike bike = findBike(bikeId).orElseThrow(() -> new BikeNotFoundException(bikeId));
+```
+
+Plain `orElseThrow()` throws a vague `NoSuchElementException: No value present`. Give it a lambda that makes your own exception instead. The lambda runs only when the box is empty. Real services use this line all the time, for example to turn "no such bike" into a "not found" reply to the app.
+
+```java run
+import java.util.Map;
+import java.util.Optional;
+
+public class Main {
+    static final Map<String, String> DOCKS = Map.of("B-1042", "Harbor", "B-2001", "Uptown");
+
+    static Optional<String> findStation(String bikeId) {
+        return Optional.ofNullable(DOCKS.get(bikeId));
+    }
+
+    public static void main(String[] args) {
+        String station = findStation("B-1042")
+                .orElseThrow(() -> new BikeNotFoundException("B-1042"));
+        System.out.println(station);
+
+        try {
+            findStation("B-9999").orElseThrow(() -> new BikeNotFoundException("B-9999"));
+        } catch (BikeNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+class BikeNotFoundException extends RuntimeException {
+    BikeNotFoundException(String bikeId) {
+        super("No bike with id " + bikeId);
+    }
+}
+```
+
+It prints `Harbor`, then `No bike with id B-9999`.
+
 ### Syntax: map and ifPresent
 
 `map` changes the value inside the box and gives you a new box. An empty box stays empty, and the lambda never runs.
@@ -75,6 +116,51 @@ String shout = maybe.map(String::toUpperCase).orElse("NONE");
 ```java nocompile
 maybe.ifPresent(s -> System.out.println("Docked at " + s));
 ```
+
+### Syntax: filter, flatMap and ifPresentOrElse
+
+```java nocompile
+box.filter(b -> b.type().equals("ebike"))          // keep the value only if the test passes
+box.flatMap(id -> findBike(id))                    // the lambda itself returns an Optional
+box.ifPresentOrElse(b -> show(b), () -> showNone()) // one lambda for full, one for empty
+```
+
+- `filter` empties the box when the test fails.
+- `flatMap` is for a lambda that already returns an `Optional`. With `map`, you would get a box inside a box, `Optional<Optional<Bike>>`. `flatMap` keeps one box.
+- `ifPresentOrElse` is `ifPresent` with a second lambda for the empty case.
+
+```java run
+import java.util.Map;
+import java.util.Optional;
+
+public class Main {
+    record Bike(String id, String type) { }
+
+    static final Map<String, Bike> BIKES = Map.of("B-1042", new Bike("B-1042", "ebike"));
+    static final Map<String, String> RENTAL_BIKE = Map.of("rental-17", "B-1042", "rental-18", "B-7777");
+
+    static Optional<String> bikeIdFor(String rentalId) {
+        return Optional.ofNullable(RENTAL_BIKE.get(rentalId));
+    }
+
+    static Optional<Bike> findBike(String bikeId) {
+        return Optional.ofNullable(BIKES.get(bikeId));
+    }
+
+    public static void main(String[] args) {
+        for (String rental : new String[] {"rental-17", "rental-18", "rental-99"}) {
+            bikeIdFor(rental)
+                    .flatMap(Main::findBike)
+                    .filter(b -> b.type().equals("ebike"))
+                    .ifPresentOrElse(
+                            b -> System.out.println(rental + ": e-bike " + b.id()),
+                            () -> System.out.println(rental + ": no e-bike"));
+        }
+    }
+}
+```
+
+It prints `rental-17: e-bike B-1042`, then `rental-18: no e-bike` (bike B-7777 is unknown), then `rental-99: no e-bike` (no such rental). Not one `if` and not one `null`.
 
 ### Syntax: Optional from streams
 
@@ -100,6 +186,8 @@ void dock(Optional<String> station) { }   // avoid: callers must wrap every valu
 ```
 
 A field or parameter of type `Optional` adds a box around every value for no gain. Never return `null` from a method whose return type is `Optional`. That brings back the very crash you were avoiding.
+
+For lists, skip `Optional` too. A method that finds rides should return an empty list, not `Optional<List<Ride>>`. An empty list already means "nothing found", and callers can loop over it with no check.
 
 ## Worked example
 
@@ -171,9 +259,9 @@ Change the 80 to 5 and run it again. Then swap `orElse("no rides")` for `orElseT
 
 - `Optional<T>` is a box that holds one value or nothing. It warns callers that the answer may be missing.
 - Make one with `Optional.of`, `Optional.ofNullable` or `Optional.empty()`.
-- Get the value with `orElse`, `orElseGet` or `orElseThrow`. Check with `isPresent` or `isEmpty`.
-- `map` changes the value inside, and `ifPresent` runs code only when a value is there.
-- Stream methods such as `findFirst` and `max` return an `Optional`. Use `Optional` for return values only.
+- Get the value with `orElse`, `orElseGet` or `orElseThrow(() -> new YourException(...))`. Avoid `isPresent()` followed by `get()`.
+- `map`, `filter` and `flatMap` work on the value inside. `ifPresent` and `ifPresentOrElse` run code for a full or an empty box.
+- Stream methods such as `findFirst` and `max` return an `Optional`. Use `Optional` for return values only, and return an empty list instead of `Optional<List>`.
 
 ## Common mistakes
 
@@ -219,3 +307,16 @@ public class Main {
 ```
 
 The program crashes with `java.util.NoSuchElementException: No value present`. Use `orElseThrow` only when a missing value is a real bug. Otherwise give a default with `orElse(0)`.
+
+**4. Checking isPresent, then calling get.**
+
+```java nocompile
+Optional<String> station = findStation("B-1042");
+if (station.isPresent()) {
+    System.out.println("Docked at " + station.get());
+} else {
+    System.out.println("Not docked");
+}
+```
+
+This works, but it is the old `null` check wearing a costume. Nothing stops someone from deleting the `if` and keeping the `get()`, which then crashes. Write it in one step: `station.ifPresentOrElse(s -> System.out.println("Docked at " + s), () -> System.out.println("Not docked"));`, or `System.out.println(station.map(s -> "Docked at " + s).orElse("Not docked"));`.

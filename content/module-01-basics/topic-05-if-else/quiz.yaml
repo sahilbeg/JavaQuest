@@ -23,9 +23,9 @@ questions:
   - id: q03
     type: fill-blank
     concept: comparison-operators
-    prompt: "if (minutes ___ 0) { System.out.println(\"No ride\"); }"
-    answers: ["==", "<="]
-    explain: "`==` checks for exactly 0. `<=` also works, because it is true for 0 and anything below."
+    prompt: "if (minutes ___ 0) { System.out.println(\"Ride in progress\"); }   // true for any minutes except exactly 0"
+    answers: ["!="]
+    explain: "`!=` means not equal to. It is true for every value except 0. `==` would do the opposite, and `>` would miss negative numbers."
     reteach: "## Concept"
 
   - id: q04
@@ -128,3 +128,36 @@ questions:
     bugLine: 4
     explain: "The semicolon after the condition ends the if, so the braces always run."
     reteach: "## Common mistakes"
+
+  - id: q11
+    type: predict-output
+    concept: short-circuit
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String code = null;
+              if (code != null && code.startsWith("B")) {
+                  System.out.println("bike");
+              } else {
+                  System.out.println("no code");
+              }
+          }
+      }
+    answer: "no code"
+    explain: "code != null is false, so && stops right there. startsWith is never called, so there is no crash, and the else block runs."
+    reteach: "### && and || stop early"
+
+  - id: q12
+    type: predict-output
+    concept: ternary
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int minutes = 12;
+              String size = minutes > 30 ? "long" : "short";
+              System.out.println(size);
+          }
+      }
+    answer: "short"
+    explain: "12 > 30 is false, so the ternary picks the value after the colon, \"short\"."
+    reteach: "### Syntax: the ternary operator"

@@ -6,7 +6,7 @@ Spoke has the same problem. Someone typed `new Vehicle(...)` into the Old Mill k
 
 ## Concept
 
-In the last two topics you built a family of classes. `Vehicle` was the parent. `ClassicBike`, `EBike` and `CargoBike` extended it. The trouble is that `Vehicle` itself was a normal class, so anyone could create one.
+In the last two topics you built a family of classes. `Bike` was the parent, and `EBike` and `CargoBike` extended it. In this topic, let's rename the parent to `Vehicle`. The plain pedal bike gets its own subclass, `ClassicBike`, next to the other two. The trouble is that `Vehicle` is still a normal class, so anyone can create one.
 
 ```callout jargon
 An **abstract class** is a class you can never create objects from. It exists only to be extended. The opposite, a normal class you can create objects from, is called a **concrete class**.

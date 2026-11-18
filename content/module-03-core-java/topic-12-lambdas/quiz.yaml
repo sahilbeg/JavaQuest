@@ -29,12 +29,12 @@ questions:
       public class Main {
           public static void main(String[] args) {
               List<Integer> minutes = new ArrayList<>(List.of(25, 8, 40, 3));
-              minutes.sort((a, b) -> b - a);
+              minutes.sort((a, b) -> Integer.compare(b, a));
               System.out.println(minutes);
           }
       }
     answer: "[40, 25, 8, 3]"
-    explain: "b - a puts bigger numbers first, so the list goes from longest to shortest."
+    explain: "Swapping a and b inside Integer.compare flips the order, so bigger numbers come first. The list goes from longest to shortest."
     reteach: "## Concept"
 
   - id: q04
@@ -107,12 +107,12 @@ questions:
       public class Main {
           public static void main(String[] args) {
               List<Integer> minutes = new ArrayList<>(List.of(25, 8, 40));
-              minutes.sort((a, b) -> return a - b);
+              minutes.sort((a, b) -> return Integer.compare(a, b));
               System.out.println(minutes);
           }
       }
     bugLine: 7
-    explain: "A lambda body without braces cannot use return. Write (a, b) -> a - b."
+    explain: "A lambda body without braces cannot use return. Write (a, b) -> Integer.compare(a, b)."
     reteach: "## Common mistakes"
 
   - id: q09
@@ -126,10 +126,28 @@ questions:
   - id: q10
     type: order
     concept: lambda-syntax
-    prompt: "Put the parts of the lambda in order: (a, b) -> a.minutes() - b.minutes()"
+    prompt: "Put the parts of the lambda in order: (a, b) -> Integer.compare(a.minutes(), b.minutes())"
     items:
       - "(a, b)"
       - "->"
-      - "a.minutes() - b.minutes()"
+      - "Integer.compare(a.minutes(), b.minutes())"
     explain: "A lambda starts with its parameters, then the arrow, then the body."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: lambda-syntax
+    prompt: "int limit = 5; rides.removeIf(r -> r.minutes() < limit); limit = 10; Why does this not compile?"
+    choices: ["limit is captured by the lambda, so it must be effectively final, and limit = 10 changes it", "removeIf cannot take a lambda", "A lambda cannot read any local variable", "limit must be a long"]
+    answer: 0
+    explain: "A lambda may capture only local variables that never change after their first value. The later limit = 10 breaks that rule."
+    reteach: "### Effectively final: what a lambda can see"
+
+  - id: q12
+    type: mcq
+    concept: method-reference
+    prompt: "Which lambda does ArrayList::new stand for, where a no-argument function is expected?"
+    choices: ["() -> new ArrayList<>()", "list -> list.add(new ArrayList<>())", "() -> ArrayList.new()", "x -> ArrayList.of(x)"]
+    answer: 0
+    explain: "A constructor reference calls new each time it runs. With no parameters, it is () -> new ArrayList<>()."
+    reteach: "### The four kinds of method reference"

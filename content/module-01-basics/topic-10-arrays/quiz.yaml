@@ -125,3 +125,28 @@ questions:
     bugLine: 4
     explain: "For arrays, length has no brackets. Write rides.length."
     reteach: "## Common mistakes"
+
+  - id: q11
+    type: predict-output
+    concept: aliasing
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int[] a = {12, 45, 7};
+              int[] b = a;
+              b[0] = 99;
+              System.out.println(a[0]);
+          }
+      }
+    answer: "99"
+    explain: "b = a copies the arrow, not the array. a and b point at the same array, so a change through b shows up through a."
+    reteach: "### Two names, one array"
+
+  - id: q12
+    type: mcq
+    concept: arrays-helpers
+    prompt: "int[] x = {1, 2}; int[] y = {1, 2}; Which check is true?"
+    choices: ["Arrays.equals(x, y)", "x == y", "x.toString().equals(\"[1, 2]\")", "None of them"]
+    answer: 0
+    explain: "x and y are two separate arrays, so x == y is false. An array's own toString gives something like [I@2473b9ce. Arrays.equals compares the values slot by slot, so it is true."
+    reteach: "### Syntax: printing and comparing arrays"

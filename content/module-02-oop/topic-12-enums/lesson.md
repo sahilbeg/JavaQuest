@@ -148,6 +148,30 @@ enum Membership {
 }
 ```
 
+### A new constant breaks the build, on purpose
+
+A switch expression must give back a value for every possible input. So the compiler checks that you covered every constant. Say someone adds `TANDEM` to `BikeType`, but forgets the price:
+
+```java nocompile
+enum BikeType { CLASSIC, EBIKE, CARGO, TANDEM }
+
+static long centsPerMinute(BikeType type) {
+    return switch (type) {
+        case CLASSIC -> 15;
+        case EBIKE -> 30;
+        case CARGO -> 25;
+    };
+}
+```
+
+The compiler says:
+
+```text
+error: the switch expression does not cover all possible input values
+```
+
+That error is a gift. Every switch that forgot tandems now fails before any rider sees a wrong price. Do not add a `default` case just to silence it. A `default` would quietly price tandems like something else.
+
 ### Syntax: fields, constructor and methods
 
 An enum can carry data, just like a class. Each constant passes values to a constructor.
@@ -172,6 +196,148 @@ enum BikeType {
 - A semicolon ends the list of constants when more code follows.
 - The constructor has no `public`. Java calls it once per constant, and you never write `new BikeType(...)`.
 - `pricePerMinute()` is a normal method. Call it on a constant: `BikeType.EBIKE.pricePerMinute()`.
+
+```callout warning
+Your exercise stores dollars in a `double` to stay small. Real billing stores whole cents in a `long`, because `double` cannot hold 0.15 exactly: `CLASSIC(15), EBIKE(30), CARGO(25)`. The new examples below use cents.
+```
+
+### A different method body per constant
+
+A field works when only a number differs between constants. Sometimes the steps differ too. Then each constant can carry its own body for a method.
+
+```java run
+public class Main {
+    enum Discount {
+        NONE {
+            long apply(long cents) { return cents; }
+        },
+        HALF_PRICE {
+            long apply(long cents) { return cents / 2; }
+        },
+        CAPPED {
+            long apply(long cents) { return Math.min(cents, 500); }
+        };
+
+        abstract long apply(long cents);
+    }
+
+    public static void main(String[] args) {
+        long fare = 700;   // a 20 minute e-bike ride: 100 + 20 * 30
+        for (Discount d : Discount.values()) {
+            System.out.println(d + ": " + d.apply(fare) + " cents");
+        }
+    }
+}
+```
+
+It prints `NONE: 700 cents`, `HALF_PRICE: 350 cents` and `CAPPED: 500 cents`.
+
+- The enum declares `abstract long apply(long cents);`, like an abstract class.
+- Each constant fills it in with its own braces after its name.
+- If you add a constant and forget its body, the code does not compile.
+
+### Enums can implement an interface
+
+An enum cannot `extend` another class. Java already gives every enum a parent. But an enum can `implement` any interface, just like a class or a record.
+
+```java run
+public class Main {
+    interface Describable {
+        String describe();
+    }
+
+    enum Membership implements Describable {
+        BASIC, PLUS, PRO;
+
+        public String describe() {
+            return name() + " member";
+        }
+    }
+
+    record Station(String name) implements Describable {
+        public String describe() {
+            return name + " station";
+        }
+    }
+
+    public static void main(String[] args) {
+        Describable[] things = { Membership.PRO, new Station("Harbor") };
+        for (Describable d : things) {
+            System.out.println(d.describe());
+        }
+    }
+}
+```
+
+It prints `PRO member`, then `Harbor station`. Code that takes a `Describable` does not care whether it got an enum constant or a record.
+
+### EnumMap and EnumSet
+
+Often you want one value per constant, such as how many bikes of each type sit at Riverside. Java has two tools built for enums.
+
+```callout jargon
+A **map** stores pairs: a key and its value, like a word and its meaning. A **set** stores items with no repeats. Module 3 covers both in depth.
+```
+
+```java run
+import java.util.EnumMap;
+import java.util.EnumSet;
+
+public class Main {
+    enum BikeType { CLASSIC, EBIKE, CARGO }
+
+    public static void main(String[] args) {
+        EnumMap<BikeType, Integer> docked = new EnumMap<>(BikeType.class);
+        docked.put(BikeType.CARGO, 2);
+        docked.put(BikeType.CLASSIC, 9);
+        System.out.println(docked);
+        System.out.println(docked.get(BikeType.CLASSIC));
+
+        EnumSet<BikeType> needCharging = EnumSet.of(BikeType.EBIKE);
+        System.out.println(needCharging.contains(BikeType.EBIKE));
+        System.out.println(EnumSet.complementOf(needCharging));
+    }
+}
+```
+
+It prints:
+
+```text
+{CLASSIC=9, CARGO=2}
+9
+true
+[CLASSIC, CARGO]
+```
+
+- `EnumMap<BikeType, Integer>` maps each bike type to a whole number. The angle brackets name the key type and the value type.
+- It keeps keys in declared order, so `CLASSIC` prints first even though `CARGO` went in first.
+- `EnumSet.of(...)` makes a set of constants. `complementOf` gives every constant not in it.
+- Both are very fast, because inside they just use each constant's position.
+
+### Store the name, never the ordinal
+
+Every constant has a position, called its **ordinal**, counted from 0. `CARGO.ordinal()` is 2. It is tempting to save that number in a file or database. Don't.
+
+```java run
+public class Main {
+    enum BikeType { CLASSIC, EBIKE, CARGO }
+
+    public static void main(String[] args) {
+        BikeType t = BikeType.CARGO;
+        System.out.println(t.ordinal());
+        System.out.println(t.name());
+        System.out.println(BikeType.valueOf(t.name()));
+    }
+}
+```
+
+It prints `2`, `CARGO`, then `CARGO`. Now imagine someone adds `TANDEM` between `EBIKE` and `CARGO`. Cargo moves to position 3. Every old ride saved as `2` now loads as a tandem.
+
+The name does not move when the list changes. Save `t.name()`, and read it back with `BikeType.valueOf(...)`.
+
+```callout tip
+Never rename a constant that is already saved somewhere, either. A saved `"CARGO"` cannot find a constant called `CARGO_BIKE`.
+```
 
 ## Worked example
 
@@ -221,11 +387,11 @@ In the worked example, change `level` to `Membership.PRO`. Predict the first two
 
 ## Recap
 
-- An enum is a type with a fixed list of constants, like `BikeType.EBIKE`.
-- A misspelled constant is a compile error, so typos never reach a rider.
+- An enum is a fixed list of constants, like `BikeType.EBIKE`. A misspelled constant does not compile.
 - `values()` lists every constant. `valueOf("CARGO")` turns exact text into a constant.
 - Compare enums with `==`, and switch on them using bare constant names.
-- Enums can have fields, a constructor and methods, such as `pricePerMinute()`.
+- Enums can have fields, methods, a body per constant, and can implement interfaces.
+- Save `name()`, never `ordinal()`. A switch expression must cover every constant.
 
 ## Common mistakes
 

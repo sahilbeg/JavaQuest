@@ -54,6 +54,41 @@ Files.write(log, lines, StandardCharsets.UTF_8);
 A **charset** is the same idea as the character encoding from the last topic. `StandardCharsets.UTF_8` names the UTF-8 charset.
 ```
 
+### Large files: read line by line
+
+`readAllLines` loads the whole file into memory at once. That is fine for a day of kiosk rides. A log with fifty million lines would fill the memory and crash the program with `OutOfMemoryError`.
+
+For a big file, read one line at a time. Only one line sits in memory.
+
+```java run
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        Path log = Files.createTempFile("rides", ".csv");
+        Files.writeString(log, "B-1042,Riverside,ebike,25\nB-2001,Harbor,classic,10\nB-3300,Uptown,cargo,40\n");
+
+        long ebikeRides = 0;
+        try (BufferedReader reader = Files.newBufferedReader(log, StandardCharsets.UTF_8)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains(",ebike,")) {
+                    ebikeRides++;
+                }
+            }
+        }
+        System.out.println("E-bike rides: " + ebikeRides);
+        Files.delete(log);
+    }
+}
+```
+
+It prints `E-bike rides: 1`. `Files.newBufferedReader` opens the file, so it goes in try-with-resources. `readLine()` returns `null` at the end. After topic 14 you can also use `Files.lines(log)`, which needs try-with-resources too.
+
 ### Syntax: open options
 
 To add to the end of a file, pass **open options** after the charset:
@@ -75,7 +110,7 @@ if (!Files.exists(log)) {
 Files.createDirectories(Path.of("archive", "2026"));
 ```
 
-- `Files.exists(path)` returns `true` if the file or folder is there.
+- `Files.exists(path)` returns `true` if the file or folder is there. The answer is only true for that instant: another program could delete the file a moment later.
 - `Files.createDirectories(path)` makes the folder and any missing parents. It does nothing if the folder already exists.
 
 ### Syntax: copy and move
@@ -88,6 +123,47 @@ Files.move(log, archive.resolve("rides-2026-11-11.csv"));
 - `Files.copy(from, to)` makes a second file. The original stays.
 - `Files.move(from, to)` takes the file away from `from` and puts it at `to`. It can also rename a file.
 - Both throw an exception if `to` already exists.
+
+### Safe writes: temp file, then move
+
+What if the power fails halfway through `Files.writeString(report, ...)`? The report is left half written, and the old version is gone too.
+
+The safe pattern: write the new content to a temp file next to it. Then move the temp file over the real one in a single step.
+
+```java run
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        Path folder = Files.createTempDirectory("kiosk");
+        Path report = folder.resolve("report.csv");
+        Files.writeString(report, "old report\n");
+
+        Path temp = folder.resolve("report.csv.tmp");
+        Files.writeString(temp, "Harbor,45\nUptown,12\n", StandardCharsets.UTF_8);
+        Files.move(temp, report, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+
+        System.out.print(Files.readString(report));
+        System.out.println("Temp still there? " + Files.exists(temp));
+        Files.delete(report);
+        Files.delete(folder);
+    }
+}
+```
+
+It prints `Harbor,45`, `Uptown,12` and `Temp still there? false`.
+
+- `ATOMIC_MOVE` makes the move happen all at once. Any reader sees either the whole old report or the whole new one, never half.
+- With `ATOMIC_MOVE`, Java ignores the other options. Whether an existing file is replaced depends on the operating system. Linux and macOS replace it. `REPLACE_EXISTING` is kept to show what you mean.
+- Keep the temp file in the same folder as the target. Across folders or disks, the move cannot be atomic and throws `AtomicMoveNotSupportedException`.
+
+```callout jargon
+**Atomic** means "all or nothing". An atomic step either fully happens or does not happen at all. Nobody can see it half done.
+```
 
 ### Syntax: listing a folder
 
@@ -192,15 +268,15 @@ public class Main {
 ```
 
 ```callout tip
-Gojo says: before you read a file that might be missing, check `Files.exists`. Then you can return an empty list instead of crashing.
+Gojo says: checking `Files.exists` before you read is fine when only your program touches the file. If another program can delete it in between, the check is already stale. Then skip the check: read, and catch `NoSuchFileException`.
 ```
 
 ## Recap
 
 - `Path.of` builds a path. `resolve` goes into a folder, and `getFileName` gives the last part.
-- `Files.readAllLines` and `Files.writeString` read and write a whole file in one call.
+- `Files.readAllLines` and `Files.writeString` read and write a whole file in one call. For a huge file, read line by line with `Files.newBufferedReader`.
 - Add `StandardOpenOption.CREATE` and `APPEND` to add to the end of a file.
-- `Files.exists`, `createDirectories`, `copy` and `move` manage files and folders.
+- `Files.exists`, `createDirectories`, `copy` and `move` manage files and folders. Write to a temp file, then `move` it with `ATOMIC_MOVE`.
 - Loop over a folder with `Files.newDirectoryStream`, and sort the names yourself.
 
 ## Common mistakes

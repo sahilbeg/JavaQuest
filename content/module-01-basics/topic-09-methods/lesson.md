@@ -212,6 +212,57 @@ for (int i = 0; i < 3; i++) {
 // i and doubled do not exist here
 ```
 
+### Java passes a copy
+
+When you call a method, Java copies each argument into the parameter box. The method works on its own copy. So changing a parameter never changes the caller's variable. This rule is called **pass-by-value**.
+
+```animate
+title: The method changes only its copy
+kind: code
+code: |
+  public static void addTip(int fareCents) {
+      fareCents = fareCents + 50;
+      System.out.println("Inside: " + fareCents);
+  }
+
+  public static void main(String[] args) {
+      int fare = 250;
+      addTip(fare);
+      System.out.println("Outside: " + fare);
+  }
+steps:
+  - line: 7
+    vars: { fare: 250 }
+    say: main stores a fare of 250 cents.
+  - line: 8
+    say: main calls addTip(fare). Java reads the 250 out of fare and passes that number along.
+  - line: 1
+    vars: { fareCents: 250 }
+    say: addTip gets a brand new box, fareCents, holding a copy of 250. It has no link back to fare.
+  - line: 2
+    vars: { fareCents: 300 }
+    say: addTip adds a 50 cent tip to its own box. fare in main is not touched.
+  - line: 3
+    out: "Inside: 300"
+    say: Inside the method, the copy holds 300.
+  - line: 9
+    vars: { fareCents: null }
+    out: "Outside: 250"
+    say: addTip has ended and its copy is gone. main's fare still holds 250.
+```
+
+To change the caller's value, give the new value back with `return`, and let the caller store it:
+
+```java nocompile
+public static int withTip(int fareCents) {
+    return fareCents + 50;
+}
+
+fare = withTip(fare);   // fare now holds 300
+```
+
+Arrays and other objects are passed the same way, but there is a twist. The copy is a copy of the arrow, not of the object. Topic 10 shows what that means in "A method gets a copy of the arrow".
+
 ### Syntax: method overloading
 
 Two methods may share a name if their parameter lists differ. This is called **overloading**.
@@ -290,7 +341,7 @@ Give each method one job and a name that says what it gives back, like `unlockFe
 - A method is a named block of code. You define it once and call it many times.
 - Parameters receive the arguments you pass in, matched by position.
 - The return type says what comes back. `void` means nothing comes back.
-- Local variables exist only inside the block where you create them.
+- Local variables exist only inside the block where you create them. A parameter is a copy, so changing it never changes the caller's variable.
 - Overloaded methods share a name but take different parameters.
 
 ## Common mistakes

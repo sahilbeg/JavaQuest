@@ -145,3 +145,29 @@ questions:
     answer: 0
     explain: "try-with-resources only accepts AutoCloseable objects. Java calls their close() method for you."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: service-rules
+    prompt: "endRental() is called on a rental that has already ended. The rental id is valid. Which built-in exception fits best?"
+    choices: ["IllegalStateException", "IllegalArgumentException", "NumberFormatException", "OutOfMemoryError"]
+    answer: 0
+    explain: "The argument is fine, but the object is in the wrong state for this call. That is IllegalStateException. IllegalArgumentException means the value itself is wrong."
+    reteach: "### Rules for real services"
+
+  - id: q12
+    type: predict-output
+    concept: bigdecimal
+    code: |
+      import java.math.BigDecimal;
+
+      public class Main {
+          public static void main(String[] args) {
+              BigDecimal a = new BigDecimal("2.0");
+              BigDecimal b = new BigDecimal("2.00");
+              System.out.println(a.equals(b) + " " + (a.compareTo(b) == 0));
+          }
+      }
+    answer: "false true"
+    explain: "equals also compares the scale, so 2.0 and 2.00 differ. compareTo compares only the amount, so it returns 0."
+    reteach: "### Money with BigDecimal"

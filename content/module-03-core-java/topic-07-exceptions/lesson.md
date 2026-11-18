@@ -159,6 +159,10 @@ try {
 
 This prints `Bad number` and then `Done`.
 
+```callout warning
+Never write `return` inside `finally`. It throws away any exception still on its way up, and the caller never hears about the problem. The compiler only warns with `-Xlint:finally`: `finally clause cannot complete normally`.
+```
+
 ### Letting an exception go up
 
 You do not have to catch an exception where it happens. If a method does not catch it, the exception leaves that method. It goes up to the caller, the method that called it. The caller can catch it there.

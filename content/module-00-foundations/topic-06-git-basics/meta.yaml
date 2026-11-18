@@ -1,9 +1,9 @@
 id: module-00-foundations/topic-06-git-basics
 title: "Git basics: init, add, commit, log"
 order: 6
-minutes: 8
+minutes: 13
 prerequisites: [module-00-foundations/topic-05-hello-world]
-concepts: [version-control, repository, staging-area, commit, commit-history]
+concepts: [version-control, repository, staging-area, commit, commit-history, inspect-changes, undo-restore, gitignore]
 practice:
   kind: quiz
 xp: { quiz: 50, code: 0 }

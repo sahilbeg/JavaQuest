@@ -1,9 +1,9 @@
 id: module-01-basics/topic-09-methods
 title: "Methods: parameters, return values, scope"
 order: 9
-minutes: 9
+minutes: 11
 prerequisites: [module-01-basics/topic-08-for-loops]
-concepts: [defining-methods, parameters, return-values, calling-methods, scope, overloading]
+concepts: [defining-methods, parameters, return-values, calling-methods, scope, overloading, pass-by-value]
 practice:
   kind: code
   runner: plain

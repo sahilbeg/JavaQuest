@@ -117,3 +117,34 @@ questions:
     answers: ["++"]
     explain: "++ adds one to a variable. It is the same as ridesToday += 1."
     reteach: "## Concept"
+
+  - id: q11
+    type: predict-output
+    concept: modulo
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(-7 % 3);
+              System.out.println(Math.floorMod(-7, 3));
+              System.out.println(7.0 / 0);
+          }
+      }
+    answer: "-1\n2\nInfinity"
+    explain: "In Java, % takes the sign of the left number, so -7 % 3 is -1. Math.floorMod gives the maths answer, 2. A double divided by 0 gives Infinity instead of crashing."
+    reteach: "### Edge cases: negatives and %"
+
+  - id: q12
+    type: predict-output
+    concept: increment
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int count = 3;
+              int a = count++;
+              int b = ++count;
+              System.out.println(a + " " + b);
+          }
+      }
+    answer: "3 5"
+    explain: "count++ hands out the old value, 3, then count becomes 4. ++count adds one first, making 5, then hands out 5."
+    reteach: "### Prefix and postfix ++"

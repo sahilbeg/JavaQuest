@@ -120,6 +120,52 @@ rides.sort(longestFirst);
 
 Every comparator object has a `reversed()` method. It returns a new comparator with the opposite order. You never need to flip the signs by hand.
 
+### Sorted sets trust compare, not equals
+
+A `TreeSet` and a `TreeMap` never call `equals`. To decide whether two items are the same, they ask the comparator. If `compare` returns 0, the second item counts as a duplicate and is dropped, with no error.
+
+```java run
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
+
+public class Main {
+    record Ride(String bikeId, int minutes) { }
+
+    static class ByMinutes implements Comparator<Ride> {
+        public int compare(Ride a, Ride b) {
+            return Integer.compare(a.minutes(), b.minutes());
+        }
+    }
+
+    static class ByBike implements Comparator<Ride> {
+        public int compare(Ride a, Ride b) {
+            return a.bikeId().compareTo(b.bikeId());
+        }
+    }
+
+    public static void main(String[] args) {
+        Set<Ride> risky = new TreeSet<>(new ByMinutes());
+        risky.add(new Ride("B-1042", 25));
+        risky.add(new Ride("B-2001", 25));
+        System.out.println(risky.size());
+
+        Set<Ride> safe = new TreeSet<>(new ByMinutes().thenComparing(new ByBike()));
+        safe.add(new Ride("B-1042", 25));
+        safe.add(new Ride("B-2001", 25));
+        System.out.println(safe.size());
+    }
+}
+```
+
+It prints `1`, then `2`. Both rides took 25 minutes, so `ByMinutes` called them equal and the first set lost one ride.
+
+The fix is a tie-breaker. `thenComparing(other)` returns a comparator that uses `other` only when the first one returns 0. Now two different rides never compare as 0.
+
+```callout jargon
+A comparator is **consistent with equals** when `compare(a, b) == 0` exactly when `a.equals(b)`. Sorted sets and maps behave strangely with any comparator that is not.
+```
+
 ### Syntax: Iterator
 
 An **iterator** is an object that walks through a collection one item at a time. You get one by calling `iterator()` on a list.
@@ -224,7 +270,7 @@ public class Main {
 - `Comparable` gives a class its natural order through `compareTo(other)`.
 - `Collections.sort(list)` and `list.sort(comparator)` sort a list in place.
 - A `Comparator` class has `compare(a, b)` and gives you any other order. `Integer.compare` handles numbers.
-- For two keys, return the first comparison unless it is zero, then compare the second key.
+- For two keys, return the first comparison unless it is zero, or use `thenComparing`. A `TreeSet` drops items that compare as 0.
 - `reversed()` flips a comparator. An `Iterator` with `hasNext`, `next` and `remove` deletes items safely.
 
 ## Common mistakes

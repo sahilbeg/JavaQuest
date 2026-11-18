@@ -42,6 +42,14 @@ entries.sort(Map.Entry.<String, Integer>comparingByValue().reversed()
         .thenComparing(Map.Entry.comparingByKey()));
 ```
 
+`<String, Integer>` after `Map.Entry.` is a **type witness**: you tell Java the key and value types by hand. Java cannot work them out when you chain `.reversed()` straight onto the call. Leave it out and the compiler says `incompatible types: Comparator<Entry<Object,V>> cannot be converted to Comparator<? super Entry<String,Integer>>`.
+
+```callout jargon
+A **type witness** is a type argument written by hand in front of a generic method call, like `Map.Entry.<String, Integer>comparingByValue()`.
+```
+
+A simpler way to get largest first is `Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder())`. Alone, as `entries.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()))`, it needs no witness. You still need `thenComparing` for the alphabetical tie-break.
+
 You may also use a stream with `sorted(...)` and `limit(n)`.
 
 ## The tiers

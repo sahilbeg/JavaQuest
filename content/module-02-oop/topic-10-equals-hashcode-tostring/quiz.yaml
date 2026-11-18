@@ -148,7 +148,51 @@ questions:
       - "    if (!(other instanceof Bike that)) {"
       - "        return false;"
       - "    }"
-      - "    return id.equals(that.id);"
+      - "    return Objects.equals(id, that.id);"
       - "}"
-    explain: "First rule out anything that is not a Bike. Only then can you read that.id and compare."
+    explain: "First rule out anything that is not a Bike. Only then can you read that.id and compare. Objects.equals stays safe even if an id is null."
     reteach: "## Concept"
+
+  - id: q11
+    type: predict-output
+    concept: mutable-keys
+    code: |
+      import java.util.HashSet;
+      import java.util.Set;
+
+      public class Main {
+          public static void main(String[] args) {
+              Bike bike = new Bike("B-1042");
+              Set<Bike> lost = new HashSet<>();   // a set that holds Bike objects
+              lost.add(bike);
+              bike.setId("B-1043");
+              System.out.println(lost.contains(bike));
+              System.out.println(lost.size());
+          }
+      }
+
+      class Bike {
+          private String id;
+          Bike(String id) { this.id = id; }
+          void setId(String id) { this.id = id; }
+          @Override
+          public boolean equals(Object other) {
+              return other instanceof Bike that && id.equals(that.id);
+          }
+          @Override
+          public int hashCode() {
+              return id.hashCode();
+          }
+      }
+    answer: "false\n1"
+    explain: "The set stored the bike in the bucket for B-1042. After the id changed, contains looks in the bucket for B-1043 and misses it, though the object is still inside."
+    reteach: "### A key that changes gets lost"
+
+  - id: q12
+    type: mcq
+    concept: equals-contract
+    prompt: "Bike.equals uses instanceof Bike. EBike adds a battery field and overrides equals with instanceof EBike. bike.equals(ebike) is true. What does ebike.equals(bike) return?"
+    choices: ["false, so the symmetry rule is broken", "true, so every rule still holds", "false, so the reflexive rule is broken", "It throws a NullPointerException"]
+    answer: 0
+    explain: "A plain Bike is not an EBike, so the instanceof EBike check fails. a.equals(b) and b.equals(a) disagree, which breaks symmetry."
+    reteach: "### The subclass trap: instanceof or getClass"

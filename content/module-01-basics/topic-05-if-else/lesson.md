@@ -203,6 +203,74 @@ boolean busy = minutes > 60 || minutes < 2;  // false
 `&&` is a door with two locks. You need both keys. `||` is a house with two doors. Either one lets you in.
 ```
 
+### && and || stop early
+
+Java reads `&&` and `||` from left to right, and it stops as soon as it knows the answer. This is called **short-circuit** evaluation.
+
+- `a && b`: if `a` is false, the whole thing is false. Java never looks at `b`.
+- `a || b`: if `a` is true, the whole thing is true. Java never looks at `b`.
+
+That lets the left side act as a **guard** that protects the right side. Say a rider typed nothing, so the code is `null`.
+
+```callout jargon
+**null** means "no object here". A String variable can hold null instead of an arrow to some text. Calling a method on null crashes with a `NullPointerException`.
+```
+
+```animate
+title: The guard on the left
+kind: code
+code: |
+  String code = null;
+  if (code != null && code.startsWith("B")) {
+      System.out.println("Bike code");
+  } else {
+      System.out.println("No code typed");
+  }
+steps:
+  - line: 1
+    vars: { code: "null" }
+    say: The rider pressed Enter without typing a code. code holds null, not text.
+  - line: 2
+    say: Java checks the left side first. code != null is false.
+  - line: 2
+    say: false && anything is false, so Java skips startsWith completely. Calling it on null would have crashed.
+  - line: 4
+    say: The condition was false, so the else block runs.
+  - line: 5
+    out: No code typed
+    say: The kiosk answers politely instead of crashing. Always put the safety check on the left.
+```
+
+A single `&` also means AND, but it always checks both sides. Swap `&&` for `&` and the guard stops working:
+
+```java run crash
+public class Main {
+    public static void main(String[] args) {
+        String code = null;
+        System.out.println(code != null & code.startsWith("B"));
+    }
+}
+```
+
+The program crashes with a `java.lang.NullPointerException`. Use `&&` and `||` for conditions. The same trick protects other risky steps. `rides != 0 && total / rides > 30` never divides by zero, because the division runs only when `rides` is not 0.
+
+### Syntax: the ternary operator
+
+```java nocompile
+type name = condition ? valueIfTrue : valueIfFalse;
+```
+
+The **ternary operator** is a tiny if-else that gives back a value. It reads as "is this true? then this one, otherwise that one".
+
+```java
+int minutes = 45;
+String size = minutes > 30 ? "long ride" : "short ride";   // "long ride"
+boolean member = true;
+System.out.println("Unlock fee: " + (member ? 0 : 100) + " cents");
+```
+
+Use it for a short choice between two values. When either side needs more than one step, write a normal if-else. It is easier to read.
+
 ### Syntax: comparing Strings
 
 ```java
@@ -244,7 +312,11 @@ public class Main {
 3. No condition matched, so the `else` block runs.
 4. The rider pays for 12 extra minutes: `12 * 0.15`, which prints `1.7999999999999998`. That is 1.80 with a tiny rounding error.
 
-A `double` stores most decimals as a very close guess, so tiny rounding digits like these are normal.
+A `double` stores most decimals as a very close guess, so tiny rounding digits like these appear.
+
+```callout warning
+That is fine for a distance, but a rider must never be charged 1.7999999999999998. Real billing never uses double for money. It counts whole cents in a `long`, so 12 minutes at 15 cents is exactly `180`. Topic 12 shows how. Real Spoke billing uses cents. A few later exercises keep doubles to stay small, and their lessons point it out.
+```
 
 ## Try it
 
@@ -277,7 +349,7 @@ Next, change `station` to `"Old Mill"` and run it again.
 - A `boolean` is `true` or `false`, and comparisons like `minutes > 30` produce one.
 - `if` runs code only when its condition is `true`, and `else` runs when it is `false`.
 - `else if` checks more conditions in order, and the first match wins.
-- `&&` means both, `||` means either, and `!` flips a boolean.
+- `&&` means both, `||` means either, and `!` flips a boolean. `&&` and `||` stop as soon as they know the answer, so put guards like `code != null` on the left.
 - Compare Strings with `.equals(...)`, never with `==`.
 
 ## Common mistakes

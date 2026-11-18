@@ -1,9 +1,9 @@
 id: module-03-core-java/topic-11-date-time
 title: "java.time: dates, times, durations"
 order: 11
-minutes: 10
+minutes: 13
 prerequisites: [module-03-core-java/topic-10-nio-files]
-concepts: [local-date-time, create-and-parse, date-arithmetic, duration, period, formatting]
+concepts: [local-date-time, create-and-parse, date-arithmetic, duration, period, formatting, time-zones]
 practice:
   kind: code
   runner: plain

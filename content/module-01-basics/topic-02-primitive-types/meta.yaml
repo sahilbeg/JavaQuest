@@ -1,9 +1,9 @@
 id: module-01-basics/topic-02-primitive-types
 title: "Primitive types and casting"
 order: 2
-minutes: 9
+minutes: 14
 prerequisites: [module-01-basics/topic-01-variables]
-concepts: [primitive-types, double, boolean-and-char, casting, integer-division]
+concepts: [primitive-types, double, boolean-and-char, casting, integer-division, overflow, rounding]
 practice:
   kind: code
   runner: plain

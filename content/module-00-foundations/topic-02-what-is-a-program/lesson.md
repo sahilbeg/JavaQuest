@@ -100,6 +100,57 @@ java Hello
 - You give it the class name only. Leave off `.class`.
 - The JVM loads `Hello.class` and runs it.
 
+### Inside the JVM: interpreter and JIT
+
+How does the JVM run bytecode? It uses two helpers of its own, one after the other.
+
+First comes the **interpreter**. It reads the bytecode one instruction at a time and does what each one says. It starts at once, but it is slow. It is like a mechanic checking the picture manual before every single turn of the wrench.
+
+Meanwhile, the JVM counts how often each piece of code runs. Code that runs again and again is called **hot**. The **JIT compiler** turns hot code into machine code for your exact CPU. From then on, that code runs at full speed.
+
+```callout jargon
+**Machine code** is the CPU's own number codes, the only thing a CPU can run directly. **JIT** stands for just-in-time. The JIT compiles while your program is already running, just in time for the next call.
+```
+
+```animate
+title: Hot code gets faster
+kind: scene
+nodes:
+  - { id: cls, label: Fare.class, emoji: "📦", value: bytecode }
+  - { id: interp, label: Interpreter, emoji: "📖", value: idle }
+  - { id: jit, label: JIT compiler, emoji: "⚡", value: idle }
+  - { id: cpu, label: CPU, emoji: "🧠", value: waiting }
+steps:
+  - say: The JVM loads the bytecode for fareFor(), the piece of code that works out a rider's fare.
+    focus: [cls]
+  - say: The first rider ends a ride. The interpreter reads fareFor() step by step and tells the CPU what to do. It works, but slowly.
+    send: [{ from: cls, to: interp, label: bytecode }, { from: interp, to: cpu, label: one step at a time }]
+    set: { interp: "runs: 1", cpu: slow }
+  - say: Riders keep coming, and fareFor() runs thousands of times. The JVM notices. This is hot code.
+    set: { interp: "hot!" }
+    focus: [interp]
+  - say: The JIT compiler takes the hot bytecode and turns it into machine code for this exact CPU.
+    send: { from: interp, to: jit, label: "hot: fareFor()" }
+    set: { jit: compiling }
+  - say: Now fareFor() runs as machine code, straight on the CPU. Every fare after this is much faster.
+    send: { from: jit, to: cpu, label: machine code }
+    set: { jit: done, cpu: fast }
+  - say: Code that runs only once, such as start-up, stays in the interpreter. Compiling it would cost more time than it saves.
+    focus: [interp]
+```
+
+When you check your Java version in a later ticket, the last line says `mixed mode`. That means the interpreter and the JIT are working together.
+
+### Warm-up: why the first requests are slow
+
+When a Java server starts, none of its code is hot yet. The first requests run in the interpreter, so they are slower. After a while, the JIT has compiled the busy code, and the server speeds up. This is called **warm-up**.
+
+Teams plan for it. Before a fresh server takes all its traffic, they often send it practice requests, or let traffic in slowly. Then real riders never wait on a cold server.
+
+```callout tip
+A classic interview question: "Is Java compiled or interpreted?" The answer is both. `javac` compiles source code to bytecode. Then the JVM interprets the bytecode, and the JIT compiles the hot parts to machine code.
+```
+
 ### Compile errors and run-time errors
 
 Errors can show up at two different times. A **compile error** happens when `javac` finds a mistake, such as a missing semicolon. No `.class` file is made, so nothing runs. A **run-time error** happens later, while the JVM is running your program. The code was valid, but something went wrong during the run.
@@ -172,7 +223,7 @@ Changing a `.java` file does nothing until you compile it again. The JVM runs th
 
 - A program is a list of instructions. Source code is the text you write in a `.java` file.
 - `javac` is the compiler. It checks your code and turns it into bytecode in a `.class` file.
-- The JVM runs bytecode, so the same `.class` file works on any computer with a JVM.
+- The JVM runs bytecode, so the same `.class` file works on any computer with a JVM. It interprets bytecode first, then the JIT turns hot code into fast machine code.
 - Compile with `javac Hello.java`. Run with `java Hello`.
 - Compile errors stop the build. Run-time errors happen while the program runs.
 

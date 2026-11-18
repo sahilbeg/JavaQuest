@@ -1,9 +1,9 @@
 id: module-02-oop/topic-12-enums
 title: "Enums with fields and methods"
 order: 12
-minutes: 9
+minutes: 13
 prerequisites: [module-02-oop/topic-11-records]
-concepts: [enum-basics, values-valueof, enum-switch, enum-fields, enum-comparison]
+concepts: [enum-basics, values-valueof, enum-switch, enum-fields, enum-comparison, enum-evolution]
 practice:
   kind: code
   runner: plain

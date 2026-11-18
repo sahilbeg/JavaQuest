@@ -109,6 +109,10 @@ mkdir -p spoke/logs
 
 `mkdir` makes a new folder. The `-p` option makes every missing folder along the path in one go.
 
+```callout jargon
+An **option**, also called a flag, is a word that starts with a dash, such as `-p`. It changes how a command behaves.
+```
+
 ### Syntax: touch
 
 ```bash
@@ -138,6 +142,12 @@ Type the first few letters of a name, then press Tab. The shell finishes the nam
 ```
 
 Spoke's servers run Linux, where names are **case sensitive**. That means capital letters matter: `Logs` and `logs` are two different folders there. Your Mac usually ignores capitals in file names. So a slip can work on your laptop and fail on the server. Type names exactly every time.
+
+### Two safety rules: Ctrl+C and rm
+
+Sometimes a command keeps running and the prompt never comes back. Press **Ctrl+C**, the Control key and C together. The shell stops the running program, prints `^C`, and shows the prompt again.
+
+You will also meet `rm notes.txt`, which removes a file. Be careful with it. `rm` does not use the Trash, and there is no undo. Check the name, and run `pwd`, before you press Enter.
 
 ## Worked example
 

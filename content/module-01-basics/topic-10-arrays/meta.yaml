@@ -1,9 +1,9 @@
 id: module-01-basics/topic-10-arrays
 title: "Arrays and 2D arrays"
 order: 10
-minutes: 9
+minutes: 14
 prerequisites: [module-01-basics/topic-09-methods]
-concepts: [array-creation, indexes, array-length, array-loops, index-out-of-bounds, two-d-arrays]
+concepts: [array-creation, indexes, array-length, array-loops, index-out-of-bounds, two-d-arrays, aliasing, arrays-helpers]
 practice:
   kind: code
   runner: plain

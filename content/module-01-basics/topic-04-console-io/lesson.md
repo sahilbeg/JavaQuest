@@ -50,7 +50,13 @@ Scanner in = new Scanner(System.in);
 - `in` is just a variable name. You can pick another name.
 
 ```callout jargon
-`new` builds a fresh object from a class. Here it builds one Scanner that you then use through the variable `in`.
+An **object** is a value that Java builds in memory, usually with `new`. It holds data and has methods you call with a dot. Your variable holds an arrow to the object, called a **reference**, not the object itself. Module 02 is all about objects.
+```
+
+Here `new` builds one Scanner object, and the variable `in` holds the arrow to it.
+
+```callout jargon
+**Standard input** is the stream of text a program reads, and `System.in` is Java's name for it. Usually it comes from the keyboard. It can also come from a file or from another program. `System.out` is **standard output**, where `println` writes.
 ```
 
 ```callout analogy
@@ -175,6 +181,39 @@ steps:
     say: That empty rest is the trap. After nextInt(), call nextLine() once before you read a line of text.
 ```
 
+### Syntax: checking with hasNextInt
+
+```java nocompile
+boolean ready = in.hasNextInt();
+```
+
+Riders make typos. If someone types `ten`, `nextInt()` crashes the kiosk. `hasNextInt()` peeks at the next input without reading it. It answers `true` only when a whole number is waiting.
+
+A real kiosk keeps asking until the answer is a number. The `while` line below means "repeat this block as long as the test is true", and `!` means "not". Topics 05 and 07 teach them properly.
+
+```java run
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner("ten\n12\n");
+        System.out.println("How many minutes did you ride?");
+        while (!in.hasNextInt()) {
+            String bad = in.nextLine();
+            System.out.println("[" + bad + "] is not a number. Please type digits.");
+        }
+        int minutes = in.nextInt();
+        System.out.println("Minutes: " + minutes);
+    }
+}
+```
+
+The pretend rider first types `ten`. `hasNextInt()` says `false`, so the kiosk reads the bad line, throws it away, and asks again. Then `12` arrives, and `nextInt()` reads it safely. It prints the complaint once, then `Minutes: 12`.
+
+```callout tip
+Never trust input from a person, a file or another computer. Check it before you use it. This is called **validation**.
+```
+
 ## Worked example
 
 This program plays the kiosk. The pretend rider types `10`.
@@ -227,7 +266,7 @@ Read input in the same order the person types it. A Scanner never goes backwards
 - `print` stays on the line. `println` moves to a new line.
 - Add `import java.util.Scanner;` and create `new Scanner(System.in)` to read the keyboard.
 - `nextInt()` reads a whole number, `nextDouble()` a decimal, and `nextLine()` a full line.
-- Print a prompt before you read, so the person knows what to type.
+- Print a prompt before you read, and check with `hasNextInt()` before you read a number.
 - After `nextInt()`, call `nextLine()` once to skip the rest of that line.
 
 ## Common mistakes
@@ -257,7 +296,7 @@ public class Main {
 }
 ```
 
-The program crashes with `java.util.InputMismatchException`. `nextInt()` only understands digits such as `10`. Type the number as digits.
+The program crashes with `java.util.InputMismatchException`. `nextInt()` only understands digits such as `10`. Riders will type words sometimes, so the fix belongs in your code: check with `hasNextInt()` first and ask again, as in "Syntax: checking with hasNextInt".
 
 **Calling nextLine right after nextInt.**
 

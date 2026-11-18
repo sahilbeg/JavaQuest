@@ -64,8 +64,41 @@ Map<String, List<String>> bikes = rides.stream()
 ```
 
 ```callout tip
-A map from groupingBy has no fixed order. To print it in alphabetical order, copy it into a TreeMap first: new TreeMap<>(map).
+A map from groupingBy has no fixed order. To print it in alphabetical order, copy it into a TreeMap first: new TreeMap<>(map). Or build a TreeMap straight away, as the next card shows.
 ```
+
+### Syntax: groupingBy into a sorted map
+
+```java nocompile
+Map<String, Long> perStation = rides.stream()
+        .collect(Collectors.groupingBy(Ride::station, TreeMap::new, Collectors.counting()));
+```
+
+`groupingBy` has a three-part form: the key, a **map factory**, and the downstream collector. The map factory says which kind of map to build. `TreeMap::new` is a constructor reference, so the piles come out sorted by key.
+
+```java run
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
+public class Main {
+    record Ride(String bikeId, String station, int minutes) { }
+
+    public static void main(String[] args) {
+        List<Ride> rides = List.of(
+                new Ride("B-1042", "Uptown", 25),
+                new Ride("B-2001", "Harbor", 10),
+                new Ride("B-3300", "Old Mill", 40),
+                new Ride("B-7777", "Harbor", 15));
+        Map<String, Long> perStation = rides.stream()
+                .collect(Collectors.groupingBy(Ride::station, TreeMap::new, Collectors.counting()));
+        System.out.println(perStation);
+    }
+}
+```
+
+It prints `{Harbor=2, Old Mill=1, Uptown=1}`, in alphabetical order every time.
 
 ### Syntax: partitioningBy
 
@@ -119,6 +152,8 @@ int longestMinutes = rides.stream().map(Ride::minutes).reduce(0, Math::max);
 String ids = rides.stream().map(Ride::bikeId).reduce("", (a, b) -> a + b);
 ```
 
+The last line works, but it is slow for long lists. Each `+` copies the whole string built so far. For strings, use `Collectors.joining()`, shown below.
+
 ### Syntax: flatMap
 
 Sometimes each item holds a list of its own. Each station keeps its own log, so you get a `List<List<Ride>>`. `flatMap` turns every inner list into a stream and joins them into one long stream.
@@ -149,6 +184,28 @@ String names = List.of("Harbor", "Uptown").stream().collect(Collectors.joining("
 ```
 
 The items must be strings already. Use `map` first if they are not.
+
+### When not to use a stream
+
+Streams read well for "filter, change, collect". They are the wrong tool in a few cases.
+
+**Side effects.** A lambda in a stream should only compute a value. It should not change anything outside the stream.
+
+```java nocompile
+List<String> ids = new ArrayList<>();
+rides.stream().filter(r -> r.minutes() > 30).forEach(r -> ids.add(r.bikeId()));   // avoid
+List<String> longIds = rides.stream().filter(r -> r.minutes() > 30).map(Ride::bikeId).toList(); // do this
+```
+
+The first line works today, but it breaks the moment someone makes the stream parallel.
+
+```callout jargon
+A **side effect** is anything a piece of code changes outside itself, such as adding to an outside list or printing. A **parallel stream** splits the work across several threads, which are workers that run at the same time.
+```
+
+**Parallel streams.** `rides.parallelStream()` runs the lambdas on several threads at once. Those threads come from one common pool that the whole program shares, so a slow parallel job can slow everything else. With `forEach(ids::add)` on a plain `ArrayList`, the threads trip over each other. With 100,000 numbers, the list ends up with fewer than 100,000 items, a different number each run, and sometimes it crashes with `ArrayIndexOutOfBoundsException`. A `.boxed().toList()` version keeps all 100,000. Parallel streams only pay off for big, CPU-heavy work with no shared state. Measure before you use one.
+
+**When a loop is clearer.** Use a plain `for` loop when you need to stop early with `break`, need the index, call methods that throw checked exceptions, or update several things at once. A clear loop beats a clever stream.
 
 ## Worked example
 
@@ -235,7 +292,7 @@ Change `", "` to `" | "` and run it again. Then remove `.distinct()` and see B-1
 - `groupingBy(key)` sorts items into piles in a `Map`. Add a downstream collector such as `counting()` or `summingInt(...)` to get one value per pile.
 - `partitioningBy(test)` splits items into a `true` pile and a `false` pile.
 - `toMap(key, value, merge)` builds a map, and the merge function decides what to keep when two keys clash.
-- `reduce(identity, rule)` folds a whole stream into one value.
+- `reduce(identity, rule)` folds a whole stream into one value. Keep stream lambdas free of side effects, and use a loop when it reads better.
 - `flatMap` turns a list of lists into one stream, and `joining(", ")` glues strings together.
 
 ## Common mistakes

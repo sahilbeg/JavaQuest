@@ -1,9 +1,9 @@
 id: module-01-basics/topic-12-stringbuilder-formatting
 title: "StringBuilder and text formatting"
 order: 12
-minutes: 9
+minutes: 13
 prerequisites: [module-01-basics/topic-11-strings]
-concepts: [string-format, format-widths, stringbuilder, string-concatenation-loops, text-blocks]
+concepts: [string-format, format-widths, stringbuilder, string-concatenation-loops, text-blocks, money-in-cents]
 practice:
   kind: code
   runner: plain

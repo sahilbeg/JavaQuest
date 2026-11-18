@@ -96,3 +96,21 @@ questions:
     answer: 0
     explain: "Saving a file in the topic's src folder makes JavaQuest run the checks."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: path-java-home
+    prompt: "Which command shows the folder of the java program your shell will start?"
+    choices: ["which java", "java -version", "javac java", "ls java"]
+    answer: 0
+    explain: "which looks through the folders on your PATH and prints the first java it finds. java -version only says which version runs, not where it lives."
+    reteach: "### How the terminal finds java: PATH and JAVA_HOME"
+
+  - id: q12
+    type: mcq
+    concept: path-java-home
+    prompt: "Temurin 21 is installed, but java -version still shows 1.8 in a new Terminal window. What is the likely cause?"
+    choices: ["JAVA_HOME or PATH in ~/.zshrc points at the old JDK", "Java 21 cannot run on a Mac", "VS Code is not installed yet", "The javac compiler is missing from Java 21"]
+    answer: 0
+    explain: "The shell runs the java that PATH and JAVA_HOME point to. Fix the old line in ~/.zshrc, then open a new Terminal."
+    reteach: "### How the terminal finds java: PATH and JAVA_HOME"

@@ -122,3 +122,32 @@ questions:
       - "System.out.println(label);"
     explain: "Find the longest ride first. Then map it to a label, give a default, and print."
     reteach: "## Try it"
+
+  - id: q11
+    type: mcq
+    concept: optional-map
+    prompt: "findBike(id) returns Optional<Bike>. bikeIdFor(rental) returns Optional<String>. Which call gives an Optional<Bike>, not a box inside a box?"
+    choices: ["bikeIdFor(rental).flatMap(id -> findBike(id))", "bikeIdFor(rental).map(id -> findBike(id))", "bikeIdFor(rental).filter(id -> findBike(id))", "bikeIdFor(rental).orElse(findBike(id))"]
+    answer: 0
+    explain: "The lambda already returns an Optional. map would wrap it again into Optional<Optional<Bike>>. flatMap keeps one box."
+    reteach: "### Syntax: filter, flatMap and ifPresentOrElse"
+
+  - id: q12
+    type: predict-output
+    concept: unwrapping
+    code: |
+      import java.util.Optional;
+
+      public class Main {
+          public static void main(String[] args) {
+              Optional<String> station = Optional.empty();
+              try {
+                  station.orElseThrow(() -> new IllegalStateException("No station for B-9999"));
+              } catch (IllegalStateException e) {
+                  System.out.println(e.getMessage());
+              }
+          }
+      }
+    answer: "No station for B-9999"
+    explain: "The box is empty, so orElseThrow runs the lambda and throws your exception with your message."
+    reteach: "### Syntax: orElseThrow with your own exception"

@@ -76,6 +76,52 @@ This is the most useful map pattern of all. Read the old total, or 0 for a new k
 
 To count rides instead of minutes, add 1 each time: `counts.put(type, counts.getOrDefault(type, 0) + 1);`.
 
+### Syntax: merge, computeIfAbsent, putIfAbsent
+
+```java nocompile
+counts.merge(key, 1, Integer::sum);                            // add 1, or start at 1
+lists.computeIfAbsent(key, k -> new ArrayList<>()).add(item);  // make the list once, then add
+map.putIfAbsent(key, value);                                   // put only if the key is missing
+```
+
+The counting pattern looks the key up twice: once to read, once to put. These three methods do the job in one call. Professional code uses them all the time.
+
+- `merge(key, 1, Integer::sum)` puts 1 for a new key. For a key that is there, it adds the old value and 1. `Integer::sum` is a short way to say "add the two numbers". Topic 12 explains the `::`.
+- `computeIfAbsent(key, k -> new ArrayList<>())` returns the list for that key. If the key is missing, it first runs the arrow part to make an empty list and stores it. Topic 12 explains arrows too.
+- `putIfAbsent(key, value)` keeps the first value. A later call with the same key changes nothing.
+
+```java run
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        List<String> types = List.of("ebike", "classic", "ebike", "cargo", "ebike");
+        Map<String, Integer> counts = new TreeMap<>();
+        for (String type : types) {
+            counts.merge(type, 1, Integer::sum);
+        }
+        System.out.println(counts);
+
+        Map<String, List<String>> bikesAt = new TreeMap<>();
+        bikesAt.computeIfAbsent("Harbor", k -> new ArrayList<>()).add("B-1042");
+        bikesAt.computeIfAbsent("Harbor", k -> new ArrayList<>()).add("B-2001");
+        bikesAt.computeIfAbsent("Uptown", k -> new ArrayList<>()).add("B-3300");
+        System.out.println(bikesAt);
+
+        Map<String, String> firstRider = new HashMap<>();
+        firstRider.putIfAbsent("B-1042", "rental-17");
+        firstRider.putIfAbsent("B-1042", "rental-18");
+        System.out.println(firstRider);
+    }
+}
+```
+
+It prints `{cargo=1, classic=1, ebike=3}`, then `{Harbor=[B-1042, B-2001], Uptown=[B-3300]}`, then `{B-1042=rental-17}`.
+
+```callout jargon
+A **multimap** is a map where one key has many values, like each station and all its bikes. In Java you build one as a `Map<String, List<String>>` with `computeIfAbsent`.
+```
+
 ### Syntax: looping over a map
 
 ```java nocompile
@@ -118,6 +164,39 @@ A printed map shows `{key=value, ...}`. The `TreeMap` sorted the stations for yo
 ```callout tip
 Keys follow the same rules as set values. A `HashMap` uses `equals` and `hashCode` on its keys. `String` keys are always safe.
 ```
+
+### Navigating a TreeMap
+
+Because a `TreeMap` keeps its keys sorted, it can answer "what is the nearest key?" questions. Declare it as `TreeMap` (or `NavigableMap`) to get these methods.
+
+```java run
+import java.util.TreeMap;
+
+public class Main {
+    public static void main(String[] args) {
+        TreeMap<Integer, String> shifts = new TreeMap<>();
+        shifts.put(6, "Tsunade");
+        shifts.put(14, "Kakashi");
+        shifts.put(22, "Itachi");
+
+        System.out.println(shifts.floorKey(15));
+        System.out.println(shifts.floorEntry(15).getValue());
+        System.out.println(shifts.ceilingKey(15));
+        System.out.println(shifts.firstEntry());
+        System.out.println(shifts.headMap(22));
+        System.out.println(shifts.floorKey(3));
+    }
+}
+```
+
+The keys are the hours when each shift starts. Who is on duty at 15:00? It prints `14`, `Kakashi`, `22`, `6=Tsunade`, `{6=Tsunade, 14=Kakashi}` and `null`.
+
+- `floorKey(15)` is the biggest key that is 15 or less. `ceilingKey(15)` is the smallest key that is 15 or more.
+- `firstEntry()` and `lastEntry()` give the smallest and biggest pairs.
+- `headMap(22)` is every pair with a key below 22.
+- Each returns `null` when there is no such key, like `floorKey(3)`. Check for it.
+
+Real uses: price tiers ("which tier does a 45-minute ride fall in?") and time buckets ("which hour does this ride belong to?").
 
 ## Worked example
 
@@ -179,9 +258,9 @@ public class Main {
 
 - A `Map` links each key to one value. A key appears at most once.
 - `put` adds or replaces. `get` returns `null` for a missing key. `getOrDefault` returns your fallback.
-- The counting pattern: `map.put(key, map.getOrDefault(key, 0) + amount);`.
+- The counting pattern: `map.put(key, map.getOrDefault(key, 0) + amount);`, or in one call `map.merge(key, amount, Integer::sum);`.
 - Loop with `keySet()`, `values()` or `entrySet()`. Use `entrySet()` when you need key and value.
-- `HashMap` has no order. `TreeMap` keeps its keys sorted.
+- `HashMap` has no order. `TreeMap` keeps its keys sorted and finds the nearest key with `floorKey` and `ceilingKey`.
 
 ## Common mistakes
 

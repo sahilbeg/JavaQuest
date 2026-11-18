@@ -134,7 +134,37 @@ class Prices {
 - Together, `static final` makes a **constant**: a fixed value the whole program shares.
 - Constant names use CAPITAL_LETTERS with underscores between the words.
 
-A constant can be `public` safely. Nobody can change it, so there is nothing to protect. That is different from the battery in the last topic.
+A constant that holds a number or a `String` can be `public` safely. Nobody can change it, so there is nothing to protect. That is different from the battery in the last topic. One kind of constant is not safe, though: an array. The next card shows why.
+
+```callout warning
+Gojo says: these prices are `double` to keep the first examples short, and the exercise uses them too. Real billing never stores money in a `double`. A `double` holds most decimals only nearly, so `Prices.fare(Prices.CLASSIC, 9)` prints `2.3499999999999996`, not `2.35`. Real fare code counts whole cents in a `long`: `UNLOCK_FEE = 100`, `CLASSIC = 15`. Then 9 minutes is exactly `235` cents. [Module 1's last ticket](/t/module-01-basics/topic-12-stringbuilder-formatting) shows the cents way.
+```
+
+### A final array can still change
+
+`final` freezes the variable, not the object it points to. For an `int` or a `String`, that is the same thing. For an array, it is not.
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        Prices.PER_MINUTE[1] = 0;     // allowed: the array itself is not final
+        System.out.println(Prices.PER_MINUTE[1]);
+    }
+}
+
+class Prices {
+    // per-minute prices in cents: CLASSIC, EBIKE, CARGO
+    public static final long[] PER_MINUTE = {15, 30, 25};
+}
+```
+
+It prints `0`. Any code anywhere just made e-bikes free. `final` only stops `Prices.PER_MINUTE = new long[] {0, 0, 0};`. That line fails with `cannot assign a value to static final variable PER_MINUTE`.
+
+```callout analogy
+`final` glues the arrow to one box. You cannot point the arrow at a new box. But anyone can still open the box and swap what is inside.
+```
+
+The fix: make the array `private`, or share a list nobody can change, such as `List.of(15L, 30L, 25L)` (lists come in module 3). Better still, use one constant per price, as `Prices` does.
 
 ### Syntax: a static method
 
@@ -194,6 +224,131 @@ class Bike {
 Java says: `non-static variable this cannot be referenced from a static context`. If a method needs one bike's data, make it an instance method.
 
 The other direction is fine. An instance method can use static fields and call static methods, because the class is always there.
+
+### Syntax: a utility class
+
+```java
+final class Fares {
+    private Fares() { }   // nobody can make a Fares object
+
+    static final long UNLOCK_CENTS = 100;
+
+    static long cents(long perMinute, int minutes) {
+        return UNLOCK_CENTS + perMinute * minutes;
+    }
+}
+```
+
+A class that holds only static methods and constants is a **utility class**. Java's own `Math` is one. Nobody needs a `Fares` object, so the constructor is `private`. Then `new Fares()` fails with `Fares() has private access in Fares`. `final` on the class stops anyone from extending it.
+
+`Fares.cents(30, 10)` returns `400`: 100 cents to unlock plus 10 minutes at 30 cents.
+
+### Syntax: a static factory method
+
+```java nocompile
+static Bike ebike(String id) {
+    return new Bike(id, "EBIKE");
+}
+```
+
+A **static factory method** is a static method that builds and returns an object. It is an extra way in, beside the constructor.
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        Bike b = Bike.ebike("B-1042");
+        System.out.println(b.describe());
+    }
+}
+
+class Bike {
+    private final String id;
+    private final String type;
+
+    private Bike(String id, String type) {
+        this.id = id;
+        this.type = type;
+    }
+
+    static Bike classic(String id) {
+        return new Bike(id, "CLASSIC");
+    }
+
+    static Bike ebike(String id) {
+        return new Bike(id, "EBIKE");
+    }
+
+    String describe() {
+        return id + " " + type;
+    }
+}
+```
+
+It prints `B-1042 EBIKE`. The name says what you get, which a constructor cannot do. Java uses this style a lot: `List.of(...)`, `Integer.valueOf(...)`.
+
+### When not to use static
+
+A static field that can change is **global state**. Any code in the program can read it and change it, and you cannot tell who did.
+
+```callout jargon
+**Global state** is data that the whole program shares and can change. Bugs in it are hard to find, because any line could be the culprit.
+```
+
+Our bike `counter` is global state, and it already shows the cost:
+
+- **Tests leak into each other.** The counter survives from one test to the next. That is why the exercise needs `resetCounter()`. A method that exists only to clean up for tests is a warning sign.
+- **Two jobs at once break it.** A big server runs many tasks at the same time. Two of them can run `counter++` together and both hand out `B-1043`. Module 5 shows why and how to fix it.
+- **One per program.** If Spoke opens a second city, both cities share one counter.
+
+Real code keeps a counter like this in an object, such as a `BikeRegistry`, and passes that object to whoever needs it. Static is great for constants, utility methods and factory methods. Be wary of static fields that change.
+
+### Classes inside classes
+
+You can write a class inside another class. It is called a **nested class**. There are two kinds, and the difference is `static`.
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        Station uptown = new Station("Uptown");
+        Station.Dock d1 = uptown.new Dock(1);
+        Station.Sign sign = new Station.Sign("Welcome");
+        System.out.println(d1.label());
+        System.out.println(sign.text());
+    }
+}
+
+class Station {
+    private final String name;
+
+    Station(String name) {
+        this.name = name;
+    }
+
+    class Dock {                  // inner class: needs a Station
+        private final int number;
+        Dock(int number) { this.number = number; }
+        String label() { return name + " dock " + number; }
+    }
+
+    static class Sign {           // static nested class: stands alone
+        private final String text;
+        Sign(String text) { this.text = text; }
+        String text() { return text; }
+    }
+}
+```
+
+It prints `Uptown dock 1`, then `Welcome`.
+
+```callout jargon
+An **inner class** is a nested class without `static`. Each object keeps a hidden link to one outer object, so `Dock` can read `name`. A **static nested class** has no such link. It is a normal class that lives inside another one's name.
+```
+
+- A `Dock` needs a `Station` to exist: `uptown.new Dock(1)`.
+- A `Sign` stands alone. If it tried to read `name`, Java would say `non-static variable name cannot be referenced from a static context`.
+- The hidden link costs memory and can keep a big outer object alive. Prefer `static` nested classes unless you really need the outer object.
+
+Later lessons put `record Ride` and `enum BikeType` inside `Main`. Records and enums nested in a class are always static, so they need no `Main` object.
 
 ## Worked example
 
@@ -323,4 +478,4 @@ Java says: `non-static method getId() cannot be referenced from a static context
 Prices.UNLOCK_FEE = 0.50;
 ```
 
-Java says: `cannot assign a value to final variable UNLOCK_FEE`. A constant is fixed for good. If the price really changes, edit the line where the constant is declared.
+Java says: `cannot assign a value to static final variable UNLOCK_FEE`. A constant is fixed for good. If the price really changes, edit the line where the constant is declared.

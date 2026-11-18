@@ -1,9 +1,9 @@
 id: module-02-oop/topic-10-equals-hashcode-tostring
 title: "equals, hashCode and toString"
 order: 10
-minutes: 10
+minutes: 14
 prerequisites: [module-02-oop/topic-09-composition]
-concepts: [object-class, to-string, identity-vs-equality, equals-override, hash-code]
+concepts: [object-class, to-string, identity-vs-equality, equals-override, hash-code, equals-contract, mutable-keys]
 practice:
   kind: code
   runner: plain

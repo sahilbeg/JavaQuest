@@ -129,3 +129,30 @@ questions:
     answer: 0
     explain: "A finished ride never changes, so it suits a record. The others change over time and need a normal class."
     reteach: "## Concept"
+
+  - id: q11
+    type: predict-output
+    concept: immutability
+    code: |
+      public class Main {
+          record Trip(String rentalId, String[] stops) { }
+
+          public static void main(String[] args) {
+              String[] stops = {"Riverside", "Harbor"};
+              Trip trip = new Trip("rental-17", stops);
+              stops[0] = "Uptown";
+              System.out.println(trip.stops()[0]);
+          }
+      }
+    answer: "Uptown"
+    explain: "The record's final field holds an arrow to the same array main changed. final froze the arrow, not the array."
+    reteach: "### final freezes the arrow, not the object"
+
+  - id: q12
+    type: mcq
+    concept: defensive-copies
+    prompt: "A record Trip(String rentalId, String[] stops) must never change after it is built. What should its compact constructor do?"
+    choices: ["Store a copy of the array, with stops = stops.clone();", "Nothing, because record fields are final", "Mark the stops parameter final", "Set the array to null after storing it"]
+    answer: 0
+    explain: "final only stops the field pointing somewhere else. Copying the array in means outside code holds no arrow to the record's own array."
+    reteach: "### Immutable classes and defensive copies"

@@ -116,7 +116,7 @@ questions:
           }
       }
     bugLine: 6
-    explain: "super(id) must be the first line of the constructor."
+    explain: "In Java 21, super(id) must be the first line of the constructor. The parent part is built before the child part."
     reteach: "## Common mistakes"
 
   - id: q08
@@ -148,3 +148,49 @@ questions:
     answers: ["super"]
     explain: "super.describe() calls the parent's version of describe()."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: overriding
+    prompt: "In Bike, fareCents is declared public final long fareCents(int minutes). What happens if EBike overrides fareCents?"
+    choices: ["A compile error: the overridden method is final", "EBike's version runs for e-bikes", "Bike's version runs, and EBike's is ignored without a warning", "It compiles only with @Override above it"]
+    answer: 0
+    explain: "final on a method means no subclass may override it. The compiler refuses the override."
+    reteach: "### final: no overriding here"
+
+  - id: q12
+    type: predict-output
+    concept: overriding
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              new EBike(80);
+          }
+      }
+
+      class Bike {
+          public Bike() {
+              System.out.println(describe());
+          }
+
+          public String describe() {
+              return "Bike";
+          }
+      }
+
+      class EBike extends Bike {
+          private int battery;
+
+          public EBike(int battery) {
+              super();
+              this.battery = battery;
+          }
+
+          @Override
+          public String describe() {
+              return "EBike " + battery + "%";
+          }
+      }
+    answer: "EBike 0%"
+    explain: "Bike's constructor runs first and calls the EBike override. EBike's constructor has not stored 80 yet, so battery is still 0."
+    reteach: "### A constructor that calls an override"

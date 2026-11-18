@@ -232,6 +232,35 @@ A **nested loop** is a loop inside another loop. The inner loop runs all the way
 Give the inner counter a different name. If both loops use `i`, Java says `variable i is already defined`.
 ```
 
+### Syntax: labelled break
+
+```java nocompile
+outer:
+for (...) {
+    for (...) {
+        break outer;   // leave both loops at once
+    }
+}
+```
+
+A plain `break` leaves only the innermost loop. To leave both loops at once, put a **label**, a name and a colon, in front of the outer loop. Then write `break` with that name.
+
+```java
+search:
+for (int row = 1; row <= 3; row++) {
+    for (int dock = 1; dock <= 4; dock++) {
+        System.out.print(row + "-" + dock + " ");
+        if (row == 2 && dock == 3) {
+            System.out.println("free dock found");
+            break search;
+        }
+    }
+}
+System.out.println("Done");
+```
+
+This stops at dock 2-3 and prints `Done`. Row 3 is never visited. `continue search;` works too: it jumps to the next turn of the outer loop. Use labels rarely. A small method with `return` is often clearer.
+
 ## Worked example
 
 This program lists the docks and adds up a batch of classic bike fares.

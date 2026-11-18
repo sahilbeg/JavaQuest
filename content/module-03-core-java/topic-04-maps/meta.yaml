@@ -1,7 +1,7 @@
 id: module-03-core-java/topic-04-maps
 title: "Map, HashMap, TreeMap"
 order: 4
-minutes: 10
+minutes: 12
 prerequisites: [module-03-core-java/topic-03-sets]
 concepts: [key-value, map-methods, map-iteration, counting-pattern, hashmap-vs-treemap]
 practice:

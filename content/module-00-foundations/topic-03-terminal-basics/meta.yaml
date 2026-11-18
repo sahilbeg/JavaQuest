@@ -1,7 +1,7 @@
 id: module-00-foundations/topic-03-terminal-basics
 title: "The terminal: files, folders, commands"
 order: 3
-minutes: 8
+minutes: 9
 prerequisites: [module-00-foundations/topic-02-what-is-a-program]
 concepts: [shell-basics, folder-tree, paths, navigation, file-commands, case-sensitivity]
 practice:

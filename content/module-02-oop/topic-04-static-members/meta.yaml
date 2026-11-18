@@ -1,9 +1,9 @@
 id: module-02-oop/topic-04-static-members
 title: "Static fields and methods"
 order: 4
-minutes: 9
+minutes: 14
 prerequisites: [module-02-oop/topic-03-encapsulation]
-concepts: [static-fields, constants, static-methods, static-vs-instance, class-name-access]
+concepts: [static-fields, constants, static-methods, static-vs-instance, class-name-access, final-arrays]
 practice:
   kind: code
   runner: plain

@@ -87,3 +87,30 @@ questions:
     answer: 0
     explain: "Git commands only work inside a repository. Move into the right folder or run git init."
     reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: inspect-changes
+    variants:
+      - { prompt: "You ran git add notes.txt. Which command shows what your next commit will save?", choices: ["git diff --staged", "git diff", "git log --oneline", "git restore notes.txt"], answer: 0 }
+      - { prompt: "You staged notes.txt with git add. Plain git diff now prints nothing. Why?", choices: ["git diff shows only changes that are not staged yet", "The change was lost", "git add made a commit", "notes.txt is in .gitignore"], answer: 0 }
+    explain: "Plain git diff shows only changes that are not staged. git diff --staged shows what is on the parts tray, ready for the next commit."
+    reteach: "### See before you save: git diff"
+
+  - id: q11
+    type: mcq
+    concept: undo-restore
+    prompt: "You wiped notes.txt by mistake. You have not staged it, and the old version was committed. Which command brings it back?"
+    choices: ["git restore notes.txt", "git add notes.txt", "git commit -m \"Undo\"", "git log notes.txt"]
+    answer: 0
+    explain: "git restore puts the file back the way it was when you last staged or committed it. The edits you had not staged are gone for good."
+    reteach: "### Undo: git restore"
+
+  - id: q12
+    type: mcq
+    concept: gitignore
+    prompt: "Which file should go in .gitignore instead of being committed?"
+    choices: [".env with the payment API key", "Hello.java", "README.md", ".gitignore"]
+    answer: 0
+    explain: "Secrets must never go in Git. Anyone who can read the repo could read them, and the history keeps them even after you delete them."
+    reteach: "### What never goes in Git: .gitignore"

@@ -130,3 +130,30 @@ questions:
       - "}"
     explain: "The class declares <T>, then uses T for the field and the return type."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: wildcards
+    prompt: "A method only reads numbers from its list and adds them up. Which parameter type accepts a List<Integer> and a List<Long>?"
+    choices: ["List<? extends Number>", "List<Number>", "List<? super Number>", "List<Object>"]
+    answer: 0
+    explain: "The list produces numbers for you to read, so use extends (PECS). List<Number> is invariant and rejects a List<Integer>."
+    reteach: "### Syntax: ? extends and ? super"
+
+  - id: q12
+    type: predict-output
+    concept: type-erasure
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> a = new ArrayList<>();
+              List<Integer> b = new ArrayList<>();
+              System.out.println(a.getClass() == b.getClass());
+          }
+      }
+    answer: "true"
+    explain: "Type erasure removes <String> and <Integer> after compiling. At run time both are plain ArrayList objects."
+    reteach: "### Generics disappear at run time"

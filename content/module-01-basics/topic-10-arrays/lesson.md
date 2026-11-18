@@ -291,6 +291,135 @@ public class Main {
 }
 ```
 
+### Two names, one array
+
+An array is an object, so an array variable holds an arrow to it, called a **reference** (topic 04). The `=` sign copies the arrow, not the array. After `int[] b = a;` there are two names for one array.
+
+```animate
+title: Two arrows, one array
+kind: code
+code: |
+  int[] a = {12, 45, 7};
+  int[] b = a;
+  b[0] = 99;
+  System.out.println(a[0]);
+  int[] c = a.clone();
+  c[0] = 1;
+  System.out.println(a[0] + " " + c[0]);
+steps:
+  - line: 1
+    objects: { a1: { type: "int[]", fields: { "0": 12, "1": 45, "2": 7 } } }
+    vars: { a: "@a1" }
+    say: Java builds one array of ride minutes. a holds an arrow to it.
+  - line: 2
+    vars: { b: "@a1" }
+    say: b = a copies the arrow, not the array. Now two arrows point at the same array.
+  - line: 3
+    objects: { a1: { type: "int[]", fields: { "0": 99, "1": 45, "2": 7 } } }
+    say: b[0] = 99 follows b's arrow and changes slot 0 of that one array.
+  - line: 4
+    out: "99"
+    say: a follows its arrow to the same array, so a[0] is 99 too. Nothing was copied.
+  - line: 5
+    objects: { a2: { type: "int[]", fields: { "0": 99, "1": 45, "2": 7 } } }
+    vars: { c: "@a2" }
+    say: clone() builds a second array with the same values. c points at the new one.
+  - line: 6
+    objects: { a2: { type: "int[]", fields: { "0": 1, "1": 45, "2": 7 } } }
+    say: Changing the copy leaves the original alone.
+  - line: 7
+    out: "99 1"
+    say: Two separate arrays now, so they can hold different values.
+```
+
+```callout jargon
+**Aliasing** means two variables point at the same object. A change made through one name shows up through the other.
+```
+
+In production, aliasing causes bugs that seem to come from nowhere. One part of the code "borrows" an array, sorts it, and every other part sees the new order. Copy an array before you hand it to code that may change it.
+
+### Syntax: printing and comparing arrays
+
+```java nocompile
+String text = Arrays.toString(rides);
+boolean same = Arrays.equals(rides, other);
+```
+
+Printing an array directly does not show its values. `System.out.println(rides)` prints something like `[I@2473b9ce`. That means "an int array", followed by a code Java made for it. The code can differ between machines and runs.
+
+The `java.util.Arrays` class has helpers. Add `import java.util.Arrays;` at the top of the file.
+
+```java run
+import java.util.Arrays;
+
+public class Main {
+    public static void main(String[] args) {
+        int[] rides = {12, 45, 7};
+        int[] same = {12, 45, 7};
+        System.out.println(Arrays.toString(rides));
+        System.out.println(rides == same);
+        System.out.println(Arrays.equals(rides, same));
+    }
+}
+```
+
+It prints `[12, 45, 7]`, `false` and `true`. `==` asks "are these the same arrow?" Two separate arrays are never `==`, even with equal values. `Arrays.equals` compares the values slot by slot.
+
+### Syntax: copying an array
+
+```java nocompile
+int[] copy = Arrays.copyOf(rides, rides.length);
+```
+
+`Arrays.copyOf` builds a new array and copies the values in. The second number is the new length. A longer length pads the end with default values, so `Arrays.copyOf(rides, 5)` gives `[12, 45, 7, 0, 0]`.
+
+`rides.clone()` also makes a copy of the same length. Either way, the copy is a separate array, so changing it leaves the original alone.
+
+### Syntax: fill and sort
+
+```java nocompile
+Arrays.fill(docks, 1);
+Arrays.sort(times);
+```
+
+```java
+int[] docks = new int[4];
+java.util.Arrays.fill(docks, 1);        // [1, 1, 1, 1]
+int[] times = {30, 7, 45, 12};
+java.util.Arrays.sort(times);           // [7, 12, 30, 45]
+String[] stations = {"Uptown", "Harbor", "Old Mill"};
+java.util.Arrays.sort(stations);        // [Harbor, Old Mill, Uptown]
+```
+
+- `Arrays.fill` puts the same value in every slot.
+- `Arrays.sort` puts the values in order, smallest first. Strings go in alphabetical order, with capital letters before small ones. It changes the array itself and gives back nothing.
+
+Writing `java.util.Arrays` in full works without an import. Usually you import it once instead.
+
+### A method gets a copy of the arrow
+
+Topic 09 showed that Java passes a copy. With an array, the copy is a copy of the arrow. So the method's arrow points at the caller's array, and changes to its slots are seen by the caller. Pointing the parameter at a new array is not seen.
+
+```java run
+import java.util.Arrays;
+
+public class Main {
+    public static void addMinute(int[] rides) {
+        rides[0] = rides[0] + 1;       // changes the caller's array
+        rides = new int[] {0, 0, 0};   // moves only the method's own arrow
+        rides[1] = 99;                 // changes the new array, which nobody else sees
+    }
+
+    public static void main(String[] args) {
+        int[] rides = {12, 45, 7};
+        addMinute(rides);
+        System.out.println(Arrays.toString(rides));
+    }
+}
+```
+
+It prints `[13, 45, 7]`. The first line followed the shared arrow. After the second line, the method's arrow pointed somewhere else, so `99` never reached `main`.
+
 ## Worked example
 
 This program counts the bikes at a small row of docks.
@@ -345,8 +474,8 @@ Now change `s < rides.length` to `s <= rides.length` and run it again. Read the 
 ## Recap
 
 - An array holds a fixed number of values of one type.
-- Indexes start at 0, and the last index is `length - 1`.
-- `array.length` gives the number of elements.
+- Indexes start at 0, and the last index is `array.length - 1`.
+- `b = a` copies the arrow, not the array. Use `Arrays.toString`, `Arrays.equals` and `Arrays.copyOf` to print, compare and copy.
 - Use a classic for loop when you need the index, and an enhanced for loop when you only need the values.
 - A 2D array is an array of rows: `grid[row][column]`.
 

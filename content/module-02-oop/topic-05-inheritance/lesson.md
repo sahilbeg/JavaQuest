@@ -111,6 +111,10 @@ class EBike extends Bike {
 `super(...)` must be the very first line of the constructor. Java builds the parent part of the object first, then the child part.
 ```
 
+```callout tip
+Newer Java note: from Java 25, lines that do not use the half-built object may come before `super(...)`, such as checking a parameter. This course uses Java 21, so keep `super(...)` first.
+```
+
 If `Bike` had a constructor with no parameters, Java would call it for you. `Bike` only has `Bike(String id)`, so you must write `super(id)` yourself.
 
 ### One object, two parts
@@ -165,7 +169,11 @@ steps:
 
 ### Syntax: overriding a method
 
-An e-bike costs 0.30 per minute. You change that one method by writing it again in the child with the same name, parameters and return type. This is called **overriding**.
+An e-bike costs 0.30 per minute. You change that one method by writing it again in the child with the same signature. This is called **overriding**.
+
+```callout jargon
+A method's **signature** is its name plus the types of its parameters, in order. `fare(int)` is a signature. To override, the child uses the same signature and a matching return type.
+```
 
 ```java nocompile
 class EBike extends Bike {
@@ -264,6 +272,73 @@ class Bike {
 ```
 
 `protected` sits between `private` and `public`. Subclasses (and classes in the same package) can use the field directly. Classes in the same package are the files that share the same `package` line at the top. Most of the time, keep fields `private` and give the child a getter. That way the parent stays in charge of its own data.
+
+### final: no overriding here
+
+Sometimes a parent must not let a child change a method. Billing is a good example: nobody should rewrite how a fare adds up. Mark the method `final`.
+
+```java
+class Bike {
+    public long perMinuteCents() {
+        return 15;
+    }
+
+    public final long fareCents(int minutes) {
+        return 100 + perMinuteCents() * minutes;
+    }
+}
+```
+
+Real fare code counts whole cents in a `long`, so this card does too. A child may still override `perMinuteCents()`. But if `EBike` tries to override `fareCents`, Java says `fareCents(int) in EBike cannot override fareCents(int) in Bike` and `overridden method is final`.
+
+You can also mark a whole class `final`. Then nobody can extend it at all. `String` is a final class. Try `class FakeReceipt extends Receipt` when `Receipt` is final, and Java says `cannot inherit from final Receipt`.
+
+```callout tip
+Gojo says: a class that was not designed to be extended is safer as `final`. You can always remove `final` later. Adding it after others have extended the class breaks their code.
+```
+
+### A constructor that calls an override
+
+Here is a sneaky bug. The parent's constructor calls a method, and the child overrides that method.
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        new EBike("B-2001", 80);
+    }
+}
+
+class Bike {
+    private final String id;
+
+    public Bike(String id) {
+        this.id = id;
+        System.out.println("New: " + describe());   // calls an overridable method
+    }
+
+    public String describe() {
+        return "Bike " + id;
+    }
+}
+
+class EBike extends Bike {
+    private final int battery;
+
+    public EBike(String id, int battery) {
+        super(id);
+        this.battery = battery;
+    }
+
+    @Override
+    public String describe() {
+        return super.describe() + " at " + battery + "%";
+    }
+}
+```
+
+It prints `New: Bike B-2001 at 0%`, not 80%. The `Bike` part is built first. Its constructor calls `describe()`, and Java runs the `EBike` override. But `EBike`'s constructor has not run yet, so `battery` still holds its default, 0. A `String` field would still be `null`.
+
+The rule: a constructor should only call methods that are `private`, `static` or `final`. Those cannot be overridden, so they never reach a half-built child.
 
 ## Worked example
 

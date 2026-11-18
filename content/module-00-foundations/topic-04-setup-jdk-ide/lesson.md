@@ -12,6 +12,8 @@ Java comes in a few pieces. Their names sound alike, so take them one at a time.
 - **JRE** (Java Runtime Environment): the JVM plus the extra files it needs to run programs. It can run Java, but it can't build it.
 - **JDK** (Java Development Kit): everything in the JRE, plus tools for building programs. The most important tool is `javac`, the Java compiler.
 
+The JRE is mostly an old word now. Since Java 11, Oracle no longer offers a separate JRE, and developers always install the full JDK. You will still hear the name in older guides.
+
 ```callout jargon
 A compiler is a program that turns the code you write into code the computer can run. For Java, that tool is called javac.
 ```
@@ -32,11 +34,11 @@ flowchart TB
 
 ### Which version?
 
-Java gets a new version twice a year. Some versions are marked **LTS**, which means long-term support. An LTS version gets fixes and security updates for many years. Java 21 is an LTS version, and it's the one Spoke uses. So you install Java 21.
+Java gets a new version twice a year. Some versions are marked **LTS**, which means long-term support. An LTS version gets fixes and security updates for many years. Recent LTS versions are 17, 21 and 25. Most companies run an LTS version in production. Java 21 is the one Spoke uses, so you install Java 21.
 
 ### Installing the JDK on a Mac
 
-The recommended way is the **Eclipse Temurin 21** installer. Temurin is a free build of the JDK. You get it from **adoptium.net**. It comes as a `.pkg` file, which is a normal Mac installer you double-click.
+The recommended way is the **Eclipse Temurin 21** installer. Temurin is a free build of the JDK. You get it from **adoptium.net**. Several companies build the JDK from the same open source code, called OpenJDK. Temurin, Amazon Corretto and Oracle's JDK are common ones, and they all run your code the same way. It comes as a `.pkg` file, which is a normal Mac installer you double-click.
 
 If you already use Homebrew, you can install it with one command instead. Homebrew is a tool that installs apps from Terminal.
 
@@ -59,6 +61,52 @@ javac -version
 ```
 
 This asks the compiler which version it is. If this works, you have a full JDK.
+
+### How the terminal finds java: PATH and JAVA_HOME
+
+When you type `java`, how does the shell know which program to start? Your Mac may even hold several JDKs. The answer is two environment variables.
+
+```callout jargon
+An **environment variable** is a named setting that the shell keeps. It hands these settings to every program it starts. You can print one with `echo`, such as `echo $PATH`.
+```
+
+**PATH** is a list of folders, joined by colons. When you type a command, the shell looks in each folder in order and runs the first match. `which java` shows the one it found:
+
+```text
+% echo $PATH
+/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin
+% which java
+/usr/bin/java
+```
+
+Your PATH will probably be longer. On a Mac, `/usr/bin/java` is a small launcher from Apple. It looks at **JAVA_HOME**, the folder of the JDK you want. If JAVA_HOME is empty, it picks the newest JDK installed. Build tools such as Maven read JAVA_HOME too.
+
+To see every JDK on your Mac, run this:
+
+```text
+% /usr/libexec/java_home -V
+Matching Java Virtual Machines (2):
+    21.0.13 (arm64) "Eclipse Adoptium" - "OpenJDK 21.0.13" /Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home
+    1.8.511.33 (arm64) "Oracle Corporation" - "Java" /Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home
+/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home
+```
+
+Each line is one installed Java, with its version and folder. Here an old Java 8 (written `1.8`) hides next to Temurin 21. The last line is the one your Mac picks by default.
+
+### Syntax: point JAVA_HOME at Java 21
+
+```bash
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+export PATH="$JAVA_HOME/bin:$PATH"
+```
+
+These two lines pin Java 21. The first asks `java_home` for the JDK 21 folder and stores it in JAVA_HOME. The second puts that JDK's `bin` folder at the front of PATH, so its `java` and `javac` win.
+
+Most Macs work without this. You need it only when an older Java keeps showing up. To keep the lines, add them to `~/.zshrc`. That is a settings file zsh reads every time a new Terminal window opens. Run `touch ~/.zshrc`, then `open -e ~/.zshrc` to edit it in TextEdit. Paste the two lines at the end, save, and open a new Terminal window.
+
+```callout warning
+A line in `~/.zshrc` that points JAVA_HOME at an old JDK beats everything you install. If Java 21 is installed but an old version shows up, look in `~/.zshrc` first.
+```
 
 ### What is an IDE?
 
@@ -99,6 +147,10 @@ steps:
 ```
 
 ### Opening the practice project
+
+```callout jargon
+A **repository** is a project folder whose history of changes is saved by Git. You meet Git two tickets from now. A **library** is code someone else wrote that you reuse, such as JUnit for checks. A **build tool** compiles a whole project, fetches its libraries and runs its checks in one go. **Maven** is a popular build tool for Java.
+```
 
 JavaQuest keeps your exercises in the `practice/` folder of this repository. Each exercise lives in `practice/<module>/<topic>/src`. When you save a file there, JavaQuest notices and runs the checks for you.
 
@@ -160,7 +212,7 @@ Gojo says: open a fresh Terminal window after installing. An old window may not 
 
 - The **JVM** runs Java code. The **JDK** adds tools like `javac` to build it.
 - You install the JDK, version **21**, because it's an LTS version.
-- `java -version` and `javac -version` both should show 21.
+- `java -version` and `javac -version` both should show 21. If not, check PATH and JAVA_HOME.
 - An **IDE** such as VS Code, with the Extension Pack for Java, helps you write and run code.
 - Open the `practice` folder in VS Code. Saving a file in `src` makes JavaQuest run the checks.
 
@@ -172,7 +224,11 @@ macOS shows a message like `The operation couldn't be completed. Unable to locat
 
 **An older Java shows up.**
 
-You see: `java version "1.8.0_..."` or `openjdk version "17..."`. Your Mac has an older JDK too. Install Temurin 21, open a new Terminal, and check again. In VS Code, press **Cmd+Shift+P**, run **Java: Configure Java Runtime**, and pick 21.
+You see: `java version "1.8.0_..."` or `openjdk version "17..."`. Your Mac has an older JDK too. Install Temurin 21, open a new Terminal, and check again.
+
+Still old? Then JAVA_HOME or PATH points at the old JDK. Run `echo $JAVA_HOME` and `which java` to see which one. Look in `~/.zshrc` for a line that sets JAVA_HOME or PATH to an old folder. Replace it with the two lines from "Syntax: point JAVA_HOME at Java 21", then open a new Terminal.
+
+In VS Code, press **Cmd+Shift+P**, run **Java: Configure Java Runtime**, and pick 21.
 
 **Imports are red in the IDE.**
 

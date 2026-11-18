@@ -152,3 +152,12 @@ questions:
     answer: "[25, 8] 2"
     explain: "95 and 140 are over 60, so the iterator removes them. Two items go."
     reteach: "## Try it"
+
+  - id: q11
+    type: mcq
+    concept: multi-key-sort
+    prompt: "A TreeSet uses a comparator that compares only minutes. You add two different rides that both took 25 minutes. What is the set's size?"
+    choices: ["1", "2", "0", "It throws an exception"]
+    answer: 0
+    explain: "A TreeSet asks the comparator, not equals. compare returned 0, so the second ride counted as a duplicate and was dropped."
+    reteach: "### Sorted sets trust compare, not equals"

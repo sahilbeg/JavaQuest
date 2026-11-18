@@ -39,7 +39,7 @@ class EBike implements Chargeable {
 }
 ```
 
-`implements Chargeable` means "EBike keeps the Chargeable promise". The class must write a body for every method in the interface. Mark those methods `public`, because interface methods are always public.
+`implements Chargeable` means "EBike keeps the Chargeable promise". The class must write a body for every method in the interface. Mark those methods `public`. An interface method without a body is public, even when the interface leaves the word out.
 
 A scooter makes the same promise in its own way:
 
@@ -141,6 +141,44 @@ A **default method** is an interface method with a body. It starts with the word
 
 A class can still write its own `needsCharge()` to replace the default one.
 
+### Syntax: static and private interface methods
+
+Since Java 8 an interface may hold `static` methods, and since Java 9 `private` ones too.
+
+```java
+interface Chargeable {
+    int batteryLevel();
+
+    default boolean needsCharge() {
+        return isBelow(20);
+    }
+
+    private boolean isBelow(int limit) {
+        return batteryLevel() < limit;
+    }
+
+    static int clamp(int percent) {
+        return Math.max(0, Math.min(100, percent));
+    }
+}
+```
+
+- A `private` method is a helper for the default methods. Implementing classes cannot see or call it.
+- A `static` method belongs to the interface itself. Call it with the interface name: `Chargeable.clamp(130)` gives 100.
+- A static interface method is not inherited. `new Scooter().clamp(5)` does not compile.
+
+### Constants in an interface
+
+An interface cannot have normal fields. Any field you write is a constant, even without the words.
+
+```java
+interface Chargeable {
+    int LOW = 20;   // really: public static final int LOW = 20;
+}
+```
+
+`Chargeable.LOW` is shared and can never change. Use this for a value that belongs to the promise itself. Do not use an interface only as a box of constants: a small class or an enum fits that job better.
+
 ### Syntax: implementing several interfaces
 
 A class can extend only one parent class. It can implement as many interfaces as it likes. Separate them with commas.
@@ -158,11 +196,75 @@ class EBike extends Vehicle implements Chargeable, Lockable {
 ### extends or implements?
 
 - `extends` says what a class **is**. An `EBike` is a `Vehicle`. It inherits fields, constructors and method bodies. You get one parent only.
-- `implements` says what a class **can do**. An `EBike` can be charged. An interface has no fields to inherit. You can implement many interfaces.
+- `implements` says what a class **can do**. An `EBike` can be charged. An interface has no instance fields, only constants, so it gives objects no state. You can implement many interfaces.
 
 ```callout tip
 A quick test: if you can say "X is a Y", use extends. If you can say "X can do Y", use an interface. Interface names often end in "able" for that reason.
 ```
+
+### Two defaults with the same name
+
+Two interfaces can each give a default method with the same name. A class that implements both now has two bodies for one method.
+
+```java nocompile
+interface Chargeable {
+    default String status() { return "battery ok"; }
+}
+
+interface Lockable {
+    default String status() { return "locked"; }
+}
+
+class EBike implements Chargeable, Lockable {
+}
+```
+
+Java refuses to guess. It says: `types Chargeable and Lockable are incompatible;` with `class EBike inherits unrelated defaults for status() from types Chargeable and Lockable`.
+
+The fix: override the method in the class. Inside, `Chargeable.super.status()` calls one interface's default.
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(new EBike().status());
+    }
+}
+
+interface Chargeable {
+    default String status() {
+        return "battery ok";
+    }
+}
+
+interface Lockable {
+    default String status() {
+        return "locked";
+    }
+}
+
+class EBike implements Chargeable, Lockable {
+    @Override
+    public String status() {
+        return Chargeable.super.status() + ", " + Lockable.super.status();
+    }
+}
+```
+
+It prints `battery ok, locked`.
+
+### Abstract class or interface?
+
+Both can hold abstract methods and methods with bodies. So how do you choose?
+
+| | Abstract class | Interface |
+|---|---|---|
+| Fields | any fields: data every subclass keeps | constants only |
+| Constructors | yes | no |
+| How many per class | one parent | as many as you like |
+| Says | what a thing **is** | what a thing **can do** |
+
+Pick an abstract class when related classes share fields and constructor code, like every `Vehicle` having an id. Pick an interface for an ability that unrelated classes share, like charging. When in doubt, start with an interface: it ties a class down less.
+
 
 ## Worked example
 
@@ -293,7 +395,7 @@ class Scooter implements Chargeable {
 - A class keeps the promise with `implements` and writes every method as `public`.
 - A class can implement several interfaces, but it extends only one class.
 - An interface type works as a variable, array or parameter type. It accepts any class that implements it.
-- A default method has a body, and every implementing class gets it for free.
+- A default method has a body, and every implementing class gets it for free. If two defaults clash, override and pick one with `Chargeable.super.status()`.
 
 ## Common mistakes
 
@@ -311,7 +413,7 @@ class Scooter implements Chargeable {
 }
 ```
 
-Java says: `batteryLevel() in Scooter cannot implement batteryLevel() in Chargeable` with `attempting to assign weaker access privileges; was public`. Interface methods are always public. Write `public int batteryLevel()`.
+Java says: `batteryLevel() in Scooter cannot implement batteryLevel() in Chargeable` with `attempting to assign weaker access privileges; was public`. An interface method without a body is public, even with no `public` written. Write `public int batteryLevel()`.
 
 **Using extends with an interface.**
 

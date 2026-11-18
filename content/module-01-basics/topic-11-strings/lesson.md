@@ -69,6 +69,21 @@ System.out.println("b-1042".toUpperCase());   // B-1042
 System.out.println("Old Mill".toLowerCase()); // old mill
 ```
 
+### Syntax: Locale.ROOT for codes
+
+```java nocompile
+String upper = text.toUpperCase(Locale.ROOT);
+```
+
+`toUpperCase()` follows the computer's language setting, called its **locale**. Most languages agree on capitals, but Turkish does not. In Turkish, the capital of `i` is `İ`, with a dot on top.
+
+```java
+System.out.println("title".toUpperCase(java.util.Locale.forLanguageTag("tr")));   // TİTLE
+System.out.println("title".toUpperCase(java.util.Locale.ROOT));                   // TITLE
+```
+
+On a server set to Turkish, `"title".toUpperCase()` would not equal `"TITLE"`, and a code check fails for no clear reason. For codes, ids and keys, pass `Locale.ROOT`, which means "no particular language". Add `import java.util.Locale;` at the top of the file. JavaQuest runs your ticket's checks with English settings, so plain `toUpperCase()` is fine there.
+
 ### Syntax: trim and strip
 
 ```java nocompile
@@ -143,7 +158,7 @@ boolean sameIgnoringCase = a.equalsIgnoreCase(b);
 
 - `equals` is `true` when both Strings hold exactly the same characters.
 - `equalsIgnoreCase` does the same check but treats `b` and `B` as equal.
-- `==` checks something else. An **object** is one value Java has stored. `==` asks whether two names point at the very same stored value. Two Strings can hold equal text and still be different objects.
+- `==` checks something else. Remember from topic 04: an **object** is a value Java builds in memory, and your variable holds an arrow to it, called a reference. `==` asks whether two arrows point at the very same object. Two Strings can hold equal text and still be different objects.
 
 Watch `equals` and `==` give different answers for the same text:
 
@@ -176,6 +191,34 @@ steps:
 ```callout warning
 Always compare String text with `equals`. The `==` check sometimes looks like it works, then fails on text built while the program runs.
 ```
+
+### Why == sometimes works
+
+Java keeps one shared copy of every String written in quotes in your code. This store is called the **string pool**. Two identical literals get the same arrow, so `==` says `true` by luck. Text built while the program runs, by `+`, `toUpperCase()` or a Scanner, is a fresh object outside the pool.
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        String a = "Harbor";
+        String b = "Harbor";
+        String part = "Har";
+        String c = part + "bor";
+        System.out.println(a == b);
+        System.out.println(a == c);
+        System.out.println(a.equals(c));
+    }
+}
+```
+
+It prints `true`, `false`, `true`. `a` and `b` share one pooled object. `c` holds the same letters in a new object. This is the trap: a small test with literals passes, then real typed input fails. Use `equals` every time.
+
+### Syntax: null-safe equals
+
+```java nocompile
+boolean atHarbor = "Harbor".equals(station);
+```
+
+If `station` is `null`, then `station.equals("Harbor")` crashes with a `NullPointerException`. Turn it around and put the literal first. A literal is never null, and `"Harbor".equals(null)` simply gives back `false`.
 
 ### Strings never change
 
@@ -216,6 +259,36 @@ A String is like a printed ticket. You cannot rub out the ink. You print a new t
 ```
 
 You can also chain methods. Each call works on the new String from the call before it: `raw.trim().toUpperCase()`.
+
+### Characters are numbers
+
+Inside the computer, every `char` is stored as a number, its character code. `'A'` is 65, `'B'` is 66, and `'a'` is 97. The digits `'0'` to `'9'` sit side by side, and so do the letters `'a'` to `'z'`. So you can do maths with chars:
+
+```java
+System.out.println('A' + 1);            // 66, a char plus an int gives an int
+System.out.println((char) ('A' + 1));   // B, cast back to see the letter
+char digit = '7';
+int value = digit - '0';                // 7, the distance from '0'
+System.out.println(value * 2);          // 14
+```
+
+`digit - '0'` turns a digit character into its number. `ch - 'a'` turns a lower-case letter into 0 for `a`, 1 for `b`, up to 25 for `z`. That makes a neat letter counter with an array of 26 slots:
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        String name = "harbor";
+        int[] counts = new int[26];
+        for (int i = 0; i < name.length(); i++) {
+            char ch = name.charAt(i);
+            counts[ch - 'a']++;
+        }
+        System.out.println("r appears " + counts['r' - 'a'] + " times");
+    }
+}
+```
+
+It prints `r appears 2 times`. Counting with `ch - 'a'` is a classic trick in coding interviews.
 
 ## Worked example
 
@@ -285,7 +358,7 @@ Put square brackets around text when you print it. Then you can see hidden space
 
 - Every String has methods: `length`, `charAt`, `toUpperCase`, `toLowerCase`, `trim`, `strip`, `contains`, `startsWith`, `indexOf`, `substring` and `replace`.
 - Indexes start at 0. The last index is `length() - 1`.
-- Compare text with `equals` or `equalsIgnoreCase`. Keep `==` away from Strings.
+- Compare text with `equals` or `equalsIgnoreCase`, literal first: `"Harbor".equals(station)`. Keep `==` away from Strings, even when it seems to work.
 - Strings are immutable. Store the new String a method gives back, or it is lost.
 
 ## Common mistakes

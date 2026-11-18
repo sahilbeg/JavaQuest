@@ -116,7 +116,7 @@ public boolean equals(Object other) {
     if (!(other instanceof Bike that)) {
         return false;
     }
-    return id.equals(that.id);
+    return Objects.equals(id, that.id);
 }
 ```
 
@@ -124,7 +124,7 @@ Read it top to bottom:
 
 1. Same object? Then it is certainly equal.
 2. Not a `Bike`, or `null`? Then it is not equal.
-3. Otherwise compare the ids with `String`'s own `equals`.
+3. Otherwise compare the ids. `Objects.equals` (from `java.util.Objects`) is like `id.equals(that.id)`, but it is also safe when an id is `null`.
 
 The parameter type must be `Object`. Writing `equals(Bike other)` creates a new method that nobody calls. `@Override` catches that mistake.
 
@@ -175,6 +175,182 @@ steps:
     focus: [b0, b2]
 ```
 
+### The rules every equals must keep
+
+Lookup tools, sorting and tests all trust your `equals`. So every `equals` must keep five promises. Together they are called the **equals contract**.
+
+```callout jargon
+A **contract** is a set of promises a method makes. Other code relies on them without reading your code. Break one, and that code quietly gives wrong answers.
+```
+
+| Rule | In plain words |
+|---|---|
+| Reflexive | `a.equals(a)` is always `true`. A bike equals itself. |
+| Symmetric | If `a.equals(b)` is `true`, then `b.equals(a)` is `true` too. |
+| Transitive | If `a` equals `b` and `b` equals `c`, then `a` equals `c`. |
+| Consistent | Ask again and you get the same answer, unless a compared field changed. |
+| Not null | `a.equals(null)` is `false`. It never crashes. |
+
+Comparing one `final` id keeps all five. The `instanceof` check gives you the last one for free, because `null instanceof Bike` is `false`.
+
+### The subclass trap: instanceof or getClass
+
+Trouble starts when a subclass adds a field and compares it too. Here `EBike` adds `battery`:
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        Bike plain = new Bike("B-1042");
+        EBike charged = new EBike("B-1042", 80);
+        System.out.println(plain.equals(charged));
+        System.out.println(charged.equals(plain));
+    }
+}
+
+class Bike {
+    final String id;
+    Bike(String id) { this.id = id; }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Bike that)) {
+            return false;
+        }
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+}
+
+class EBike extends Bike {
+    final int battery;
+    EBike(String id, int battery) {
+        super(id);
+        this.battery = battery;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof EBike that)) {
+            return false;
+        }
+        return id.equals(that.id) && battery == that.battery;
+    }
+}
+```
+
+It prints `true`, then `false`. An `EBike` is a `Bike`, but a plain `Bike` is not an `EBike`. Symmetry is broken, so a lookup tool may find the bike or miss it, depending on the order it compares.
+
+The fix depends on what "same" means:
+
+- For Spoke, the id alone names a bike. So `EBike` should not override `equals` at all.
+- If a subclass truly needs its own fields in `equals`, compare classes instead of using `instanceof`. Then a `Bike` never equals an `EBike`:
+
+```java nocompile
+if (other == null || getClass() != other.getClass()) {
+    return false;
+}
+```
+
+### A key that changes gets lost
+
+```callout jargon
+A **HashSet** is Java's ready-made lookup tool. It keeps each item once. It uses `hashCode` to pick a bucket and `equals` inside that bucket. Module 3 covers it fully.
+```
+
+A set stores an object in the bucket for its hash code **at the moment it was added**. Change a field that `hashCode` uses, and the set looks in the wrong bucket. In the code, `Set<Bike>` means a set that holds `Bike` objects. `<>` repeats that type.
+
+```java run
+import java.util.HashSet;
+import java.util.Set;
+
+public class Main {
+    public static void main(String[] args) {
+        Bike bike = new Bike("B-1042");
+        Set<Bike> lost = new HashSet<>();
+        lost.add(bike);
+        System.out.println(lost.contains(bike));
+
+        bike.setId("B-1043");   // the crew re-labels the bike
+        System.out.println(lost.contains(bike));
+        System.out.println(lost.size());
+    }
+}
+
+class Bike {
+    private String id;
+    Bike(String id) { this.id = id; }
+    void setId(String id) { this.id = id; }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Bike that && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+}
+```
+
+It prints `true`, `false`, `1`. The very same object is still inside the set, yet `contains` cannot find it. In production, this looks like data that vanished.
+
+The fix: build `equals` and `hashCode` only from fields that never change. Make them `final`, as `id` is in the exercise.
+
+### Fields that may be null: Objects.equals
+
+`id.equals(that.id)` calls a method on `id`. If `id` is `null`, there is no object to call it on, and the program crashes:
+
+```java run crash
+public class Main {
+    public static void main(String[] args) {
+        Bike unlabelled = new Bike(null);
+        Bike tagged = new Bike("B-1042");
+        System.out.println(unlabelled.equals(tagged));
+    }
+}
+
+class Bike {
+    private final String id;
+    Bike(String id) { this.id = id; }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Bike that)) {
+            return false;
+        }
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+}
+```
+
+```text
+Exception in thread "main" java.lang.NullPointerException: Cannot invoke "String.equals(Object)" because "this.id" is null
+```
+
+`Objects.equals(id, that.id)` checks for `null` first. Two `null`s are equal, and one `null` is not equal to text. `Objects.hash(id)` is null-safe in the same way. Use them for any field that might be `null`.
+
+### Copying a bike: a copy constructor
+
+Sometimes you want a new object with the same values. Write a **copy constructor**: a constructor that takes another object of the same class.
+
+```java nocompile
+Bike(Bike other) {
+    this(other.id, other.type);
+}
+```
+
+`Object` also has a `clone()` method. It is awkward to use correctly, so most teams avoid it. A copy constructor is plain, readable Java.
+
 ## Worked example
 
 ```java run
@@ -213,7 +389,7 @@ class Bike {
         if (!(other instanceof Bike that)) {
             return false;
         }
-        return id.equals(that.id);
+        return Objects.equals(id, that.id);
     }
 
     @Override
@@ -277,11 +453,11 @@ It prints `Different bikes: 2`. Now change `report[i].equals(report[j])` to `rep
 
 ## Recap
 
-- Every class extends `Object`, which gives it `toString()`, `equals(Object)` and `hashCode()`.
-- Override `toString()` so `println` shows readable text such as `Bike[B-1042, ebike]`.
+- Every class extends `Object`. Override its `toString()` so `println` shows readable text such as `Bike[B-1042, ebike]`.
 - `==` on objects checks identity. `equals` checks meaning, once you override it.
 - Override `equals(Object other)` with `instanceof Bike that`, then compare the fields that matter.
 - Equal objects must have equal hash codes. Build `hashCode()` from the same fields as `equals`.
+- Keep the equals contract. Compare only fields that never change, and use `Objects.equals` when a field may be `null`.
 
 ## Common mistakes
 

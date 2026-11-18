@@ -1,9 +1,9 @@
 id: module-02-oop/topic-03-encapsulation
 title: "Encapsulation: private fields and getters"
 order: 3
-minutes: 9
+minutes: 13
 prerequisites: [module-02-oop/topic-02-constructors]
-concepts: [private-fields, getters, setters, validation, read-only-fields]
+concepts: [private-fields, getters, setters, validation, read-only-fields, access-levels, defensive-copies]
 practice:
   kind: code
   runner: plain

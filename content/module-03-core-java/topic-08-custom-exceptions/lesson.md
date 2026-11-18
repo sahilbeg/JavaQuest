@@ -12,10 +12,12 @@ Java has two families of exceptions.
 
 - An **unchecked exception** extends `RuntimeException`. The compiler does not force anyone to handle it. `NumberFormatException` and `IllegalArgumentException` are unchecked. They usually mean a bug or a bad value.
 - A **checked exception** extends `Exception` but not `RuntimeException`. The compiler checks that every caller handles it. It means "this can go wrong even when your code is correct", such as a full station or a missing file.
+- A third branch, `Error`, sits beside `Exception`. Errors such as `OutOfMemoryError` mean the JVM itself is in trouble. They are unchecked, and your code should not catch them.
 
 ```mermaid
 flowchart TD
-  T["Throwable"] --> E["Exception: checked"]
+  T["Throwable"] --> X["Error: unchecked, the JVM is in trouble"]
+  T --> E["Exception: checked"]
   E --> R["RuntimeException: unchecked"]
   R --> I["IllegalArgumentException"]
   I --> N["NumberFormatException"]
@@ -146,6 +148,154 @@ class Session implements AutoCloseable {
 try-with-resources is like a door that shuts itself. However you leave the room, calmly or running, the door closes behind you.
 ```
 
+### Several resources and suppressed exceptions
+
+One `try` can open several resources, separated by `;`. Java closes them in reverse order: the last one opened closes first. What if `close()` throws too, while another exception is already flying?
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        try (Light light = new Light(); Lock lock = new Lock()) {
+            System.out.println("Unlocking B-1042");
+            throw new IllegalStateException("Lock jammed");
+        } catch (IllegalStateException e) {
+            System.out.println("Caught: " + e.getMessage());
+            for (Throwable s : e.getSuppressed()) {
+                System.out.println("Suppressed: " + s.getMessage());
+            }
+        }
+    }
+}
+
+class Light implements AutoCloseable {
+    public void close() {
+        System.out.println("Light closed");
+    }
+}
+
+class Lock implements AutoCloseable {
+    public void close() {
+        System.out.println("Lock closed");
+        throw new IllegalStateException("Lock would not close");
+    }
+}
+```
+
+The output:
+
+```
+Unlocking B-1042
+Lock closed
+Light closed
+Caught: Lock jammed
+Suppressed: Lock would not close
+```
+
+The first problem, `Lock jammed`, is the one you catch. The close problem is not lost. Java attaches it as a **suppressed** exception, and `getSuppressed()` returns it. Stack traces print it too, under `Suppressed:`.
+
+```callout jargon
+A **suppressed exception** is a second problem that happened while Java was already handling a first one. It rides along inside the first exception.
+```
+
+### Syntax: multi-catch
+
+```java nocompile
+catch (NumberFormatException | ArrayIndexOutOfBoundsException e) { ... }
+```
+
+When two exception types need the same handling, list them in one `catch` with `|` between them. You write the handling once.
+
+```java run
+public class Main {
+    static int parseMinutes(String[] parts) {
+        try {
+            return Integer.parseInt(parts[1]);
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            System.out.println("Skipped a bad line: " + e.getClass().getSimpleName());
+            return 0;
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(parseMinutes("B-1042,25".split(",")));
+        System.out.println(parseMinutes("B-2001,oops".split(",")));
+        System.out.println(parseMinutes("B-3300".split(",")));
+    }
+}
+```
+
+It prints `25`, then a skipped `NumberFormatException` and `0`, then a skipped `ArrayIndexOutOfBoundsException` and `0`. The two types in one multi-catch cannot be parent and child. That would be a compile error, since the parent already covers the child.
+
+### Rules for real services
+
+A **service** is a program that runs all day and answers requests, like the Spoke API. Its exception handling follows a few rules.
+
+- **Catch only what you can handle.** `catch (Exception e)` also swallows every bug, such as a `NullPointerException`. Never catch `Throwable` or `Error`: you cannot fix a JVM out of memory.
+- **Log or rethrow, never both.** If every layer logs and rethrows, one problem fills the log three times. Handle it in one place, usually at the top.
+- **Pick the right built-in type.** `IllegalArgumentException` means "this value is wrong", like `-5` minutes. `IllegalStateException` means "the value is fine, but not now", like ending a rental that already ended.
+- **Fail fast on null.** Check inputs at the door, in the constructor, so the error points at the real culprit.
+
+```java nocompile
+record Rental(String id, String bikeId) {
+    Rental {
+        Objects.requireNonNull(bikeId, "bikeId must not be null");   // import java.util.Objects;
+    }
+}
+```
+
+`new Rental("rental-18", null)` now fails at once with `java.lang.NullPointerException: bikeId must not be null`. Without the check, it would fail much later, somewhere far away.
+
+```callout jargon
+To **log** is to write a line about what happened into the service's log, a diary that engineers read when something breaks.
+```
+
+### Money with BigDecimal
+
+Module 01 showed why money is counted in whole cents in a `long`: a `double` cannot hold 0.10 exactly. Sometimes you need parts of a cent, such as a 7.25% tax. Then use `BigDecimal` from `java.math`. It stores decimals exactly.
+
+```java run
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(new BigDecimal(0.1));
+        System.out.println(new BigDecimal("0.10"));
+
+        BigDecimal fare = new BigDecimal("8.50");
+        BigDecimal tax = fare.multiply(new BigDecimal("0.0725"));
+        System.out.println(tax);
+        System.out.println(tax.setScale(2, RoundingMode.HALF_EVEN));
+        System.out.println(new BigDecimal("0.125").setScale(2, RoundingMode.HALF_EVEN));
+
+        BigDecimal a = new BigDecimal("2.0");
+        BigDecimal b = new BigDecimal("2.00");
+        System.out.println(a.equals(b));
+        System.out.println(a.compareTo(b) == 0);
+    }
+}
+```
+
+The output:
+
+```
+0.1000000000000000055511151231257827021181583404541015625
+0.10
+0.616250
+0.62
+0.12
+false
+true
+```
+
+- Build a `BigDecimal` from a String, `new BigDecimal("0.10")`. `new BigDecimal(0.1)` copies the double's error exactly.
+- `setScale(2, RoundingMode.HALF_EVEN)` rounds to 2 decimal places. `HALF_EVEN` sends an exact half to the even digit, so 0.125 becomes 0.12. Banks use it because it does not lean up or down over many sums.
+- `equals` also compares the **scale**, the number of decimal places. So `2.0` and `2.00` are not equal. Compare amounts with `compareTo(...) == 0`.
+
+```callout tip
+Gojo says: this ticket's practice still returns prices like 0.15 as a `double`, as the old kiosk did. New Spoke code uses `long` cents, or `BigDecimal` when it needs parts of a cent.
+```
+
 ## Worked example
 
 This program docks bikes at a tiny station with 2 docks. A session opens for each bike and closes on its own.
@@ -209,22 +359,22 @@ Run this program. Then change `"ebike"` to `"tandem"` and run it again. Read the
 
 ```java run
 public class Main {
-    static double pricePerMinute(String type) {
+    static long centsPerMinute(String type) {
         if (type.equals("classic")) {
-            return 0.15;
+            return 15;
         }
         if (type.equals("ebike")) {
-            return 0.30;
+            return 30;
         }
         if (type.equals("cargo")) {
-            return 0.25;
+            return 25;
         }
         throw new UnknownBikeTypeException(type);
     }
 
     public static void main(String[] args) {
         try {
-            System.out.println(pricePerMinute("ebike"));
+            System.out.println(centsPerMinute("ebike"));
         } catch (UnknownBikeTypeException e) {
             System.out.println("Problem: " + e.getMessage());
         }
@@ -238,7 +388,7 @@ class UnknownBikeTypeException extends RuntimeException {
 }
 ```
 
-`pricePerMinute` has no `throws` label. `UnknownBikeTypeException` is unchecked, so the compiler does not ask for one.
+`centsPerMinute` has no `throws` label. `UnknownBikeTypeException` is unchecked, so the compiler does not ask for one.
 
 ```callout warning
 Do not turn a checked exception into silence with an empty catch. The compiler made you look at the problem. Return a clear message, or pass it on.
@@ -249,8 +399,8 @@ Do not turn a checked exception into silence with an empty catch. The compiler m
 - A **checked** exception extends `Exception`. Every caller must catch it or declare it with `throws`.
 - An **unchecked** exception extends `RuntimeException`. The compiler does not force anyone to handle it.
 - Write your own exception as a class, and pass the message up with `super(message)`. Read it with `getMessage()`.
-- When you catch one exception and throw a clearer one, pass the original as the cause.
-- try-with-resources closes any `AutoCloseable` object for you, even when the block throws.
+- When you catch one exception and throw a clearer one, pass the original as the cause. Catch only what you can handle, and log or rethrow, never both.
+- try-with-resources closes any `AutoCloseable` object for you, last opened first, even when the block throws. Count money in `long` cents, or `BigDecimal` made from a String.
 
 ## Common mistakes
 

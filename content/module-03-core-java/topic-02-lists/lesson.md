@@ -170,7 +170,9 @@ for (String id : ids) {
 An ArrayList is a row of numbered lockers: jump straight to locker 500. A LinkedList is a chain of people holding hands: to reach person 500, you walk down the chain.
 ```
 
-Both have the same `List` methods. Pick `ArrayList` unless you have measured a problem. Declare the variable as `List`, so you can swap the class with one word:
+When an ArrayList's hidden array is full, it makes a bigger one, about one and a half times the size, and copies everything over. That copy is rare, so `add` at the end is still cheap on average.
+
+Both have the same `List` methods. Pick `ArrayList` unless you have measured a problem. In real code, `LinkedList` is almost never the right pick. If you need a fast front, `ArrayDeque` beats it, and module 04 covers it. Declare the variable as `List`, so you can swap the class with one word:
 
 ```java nocompile
 List<String> ids = new LinkedList<>();   // import java.util.LinkedList;
@@ -183,6 +185,48 @@ List<String> stations = List.of("Riverside", "Old Mill", "Harbor", "Uptown");
 ```
 
 `List.of` makes a list in one line. That list is **unmodifiable**: it can never change. Calling `add`, `remove` or `set` on it throws an `UnsupportedOperationException`. Use it for fixed data, like the four stations. To get a list you can change, copy it: `new ArrayList<>(List.of(...))`.
+
+### Copies and read-only views
+
+There are two ways to hand out a list that nobody can change. They behave very differently.
+
+```java run
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        List<String> ids = new ArrayList<>(List.of("B-1042", "B-2001"));
+        List<String> view = Collections.unmodifiableList(ids);
+        List<String> copy = List.copyOf(ids);
+        ids.add("B-3300");
+        System.out.println("view: " + view);
+        System.out.println("copy: " + copy);
+    }
+}
+```
+
+It prints `view: [B-1042, B-2001, B-3300]` and `copy: [B-1042, B-2001]`.
+
+- `Collections.unmodifiableList(ids)` is a **view**: a read-only window onto the same list. You cannot change it through the view, but when `ids` changes, the view shows it.
+- `List.copyOf(ids)` makes a separate, unmodifiable copy. Later changes to `ids` do not reach it.
+
+```callout jargon
+A **view** is an object that shows another collection's items without copying them. Changes to the original show through the view.
+```
+
+Three more traps:
+
+- `List.of`, `List.copyOf` and `Map.of` throw `NullPointerException` if any item is `null`. `Map.of` also throws `IllegalArgumentException: duplicate key` if a key appears twice.
+- `Arrays.asList("Riverside", "Harbor")` is **fixed-size**. `set` works, but `add` and `remove` throw `UnsupportedOperationException`.
+- A getter should never return its own private list. The caller could `clear()` it and wreck your object. Return `List.copyOf(rides)` instead.
+
+```java nocompile
+public List<Ride> rides() {
+    return List.copyOf(rides);   // the caller gets a copy, not our list
+}
+```
 
 ## Worked example
 
@@ -254,7 +298,7 @@ When it works, it prints `[B-1042, B-2001]`.
 - `contains` and `indexOf` search with `equals`. `indexOf` gives `-1` when the item is missing.
 - Removing inside a for-each loop usually throws `ConcurrentModificationException`. Removing the second-to-last item silently skips the last one. Loop backwards with an index, or build a new list.
 - `ArrayList` is fast at `get(i)`. `LinkedList` is fast at adding to the front. Start with `ArrayList`.
-- `List.of(...)` makes a list that can never change.
+- `List.of(...)` and `List.copyOf(...)` make lists that can never change. `Collections.unmodifiableList` is only a read-only view of a list that can.
 
 ## Common mistakes
 

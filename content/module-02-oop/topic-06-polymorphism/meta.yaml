@@ -1,9 +1,9 @@
 id: module-02-oop/topic-06-polymorphism
 title: "Polymorphism and overriding"
 order: 6
-minutes: 10
+minutes: 12
 prerequisites: [module-02-oop/topic-05-inheritance]
-concepts: [superclass-reference, dynamic-dispatch, superclass-arrays, instanceof, casting]
+concepts: [superclass-reference, dynamic-dispatch, superclass-arrays, instanceof, casting, compile-time-choice]
 practice:
   kind: code
   runner: plain

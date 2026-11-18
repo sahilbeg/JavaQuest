@@ -46,6 +46,29 @@ An **access modifier** is a keyword such as `public` or `private` that says whic
 
 Now the field is safe. But nobody outside can read it either. You fix that with methods.
 
+### The four access levels
+
+`private` is the strictest of four access levels. Each one opens the door a little wider.
+
+| Keyword | Who can use the field or method |
+|---|---|
+| `private` | only code inside the same class |
+| *(no keyword)* | any class in the same package |
+| `protected` | the same package, plus child classes anywhere (topic 5) |
+| `public` | any class, anywhere |
+
+```callout jargon
+**Package-private** is the level you get when you write no keyword at all. Classes in the same **package** (the same `package` line at the top) can use it. Classes outside cannot.
+```
+
+A package is a wall around a group of classes. If `docks` has no keyword, a class in another package that reads `tool.docks` gets: `docks is not public in Tool; cannot be accessed from outside package`.
+
+One more rule: a file can hold only one `public` top-level class, and the file must be named after it. Put `public class Extra` inside `Card.java`, and Java says: `class Extra is public, should be declared in a file named Extra.java`.
+
+```callout tip
+Start every field at `private`. Open a method up to `public` only when other code really needs it. In topic 1 the exercise used `public` everywhere to keep things simple. From now on, you choose.
+```
+
 ### Syntax: a getter
 
 ```java
@@ -182,6 +205,14 @@ class Station {
 
 Here `setFreeDocks(30)` changes nothing, because a Spoke kiosk has only 12 docks. Pick the style that fits the rule. For a battery, clamping makes sense: you cannot charge past full.
 
+```callout warning
+In production code, quietly ignoring a bad value hides bugs. The caller thinks 30 was stored, and the mistake shows up hours later, far away. Most teams **fail fast**: they throw `new IllegalArgumentException(...)` at once, like the constructors in the last topic. Clamp only when the rule itself says so, like a battery that stops at full.
+```
+
+```callout jargon
+**Fail fast** means stopping with a clear error the moment something is wrong, instead of carrying on with a bad value.
+```
+
 ```callout tip
 Write the check once, in the setter. Then let the constructor and other methods call the setter. One check means one place to fix.
 ```
@@ -218,6 +249,93 @@ flowchart LR
   A -->|"setBattery(140)"| B
   B -->|"checked value only"| C["private int battery"]
   A -. "bike.battery = 140 (blocked)" .-> C
+```
+
+### Getters that leak
+
+`private` guards the field, but not always the thing it points to. An array is an object. A getter that returns the array hands out the arrow to your own private data.
+
+```java run
+import java.util.Arrays;
+
+public class Main {
+    public static void main(String[] args) {
+        Station harbor = new Station();
+        int[] mine = harbor.getRideMinutes();
+        mine[0] = 0;
+        System.out.println("Leaky:  " + harbor.getRideMinutes()[0]);
+
+        SafeStation depot = new SafeStation();
+        int[] copy = depot.getRideMinutes();
+        copy[0] = 0;
+        System.out.println("Copied: " + depot.getRideMinutes()[0]);
+    }
+}
+
+class Station {
+    private final int[] rideMinutes = {12, 30, 7};
+
+    public int[] getRideMinutes() {
+        return rideMinutes;
+    }
+}
+
+class SafeStation {
+    private final int[] rideMinutes = {12, 30, 7};
+
+    public int[] getRideMinutes() {
+        return Arrays.copyOf(rideMinutes, rideMinutes.length);
+    }
+}
+```
+
+It prints `Leaky:  0`, then `Copied: 12`. `main` changed Harbor's private data through the getter. Depot handed out a copy, so its own array stayed safe. Even `final` did not help: it freezes the arrow, not the array.
+
+```callout jargon
+A **defensive copy** is a fresh copy of your internal data that you hand out (or take in) instead of the original. Changing the copy cannot hurt your object.
+```
+
+`Arrays.copyOf(array, length)` makes a new array with the same values. In module 3 you meet lists, which have the same trap. There you return `List.copyOf(list)`, a copy nobody can change.
+
+### Behaviour, not setters
+
+A setter for every field is barely better than a `public` field. Callers still do the thinking, then push the answer in. Spread over many classes, the rules get lost.
+
+```java nocompile
+// Ask, then decide outside: the rule lives in the caller
+wallet.setBalanceCents(wallet.getBalanceCents() - 300);
+
+// Tell the object what happened: the rule lives inside
+wallet.pay(300);
+```
+
+Give the class methods that do a real job, such as `pay`, `charge` or `ride`. Each one checks its own rules.
+
+```java
+class Wallet {
+    private long balanceCents;
+
+    public Wallet(long balanceCents) {
+        this.balanceCents = balanceCents;
+    }
+
+    public long getBalanceCents() {
+        return balanceCents;
+    }
+
+    public void pay(long cents) {
+        if (cents > balanceCents) {
+            throw new IllegalArgumentException("not enough money: need " + cents + ", have " + balanceCents);
+        }
+        balanceCents -= cents;
+    }
+}
+```
+
+There is no `setBalanceCents`, so nobody can make up money. Money is kept as whole cents in a `long`, as module 1 showed.
+
+```callout jargon
+**Tell, don't ask** is a design rule: tell an object what to do, rather than asking for its data and deciding for it.
 ```
 
 ## Worked example
@@ -333,10 +451,10 @@ Inside the class, you can still write `battery = 500;` directly. `private` only 
 ## Recap
 
 - Mark fields `private`, so only the class itself can touch them.
-- A **getter** such as `getBattery()` lets other code read a field.
-- A **setter** such as `setBattery(int)` lets other code change a field, through a check.
-- Validate inside the setter: clamp a bad value into range, or ignore it.
-- A field with a getter and no setter is **read-only**. Add `final` to fix it after the constructor.
+- Four access levels, narrowest first: `private`, package-private (no keyword), `protected`, `public`.
+- A **getter** lets other code read a field. A **setter** lets it change one, through a check.
+- Validate every change. Clamp only when the rule says so; otherwise fail fast with `IllegalArgumentException`.
+- A field with a getter, no setter and `final` is **read-only**. Return copies, never your own arrays, and prefer methods that do a job (`charge`, `pay`) over setters.
 
 ## Common mistakes
 

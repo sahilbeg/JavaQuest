@@ -115,3 +115,12 @@ questions:
       - "System.out.println(both);"
     explain: "Copy Harbor into a new TreeSet, keep only Uptown's bikes, then print."
     reteach: "## Worked example"
+
+  - id: q11
+    type: mcq
+    concept: equals-hashcode
+    prompt: "You add a Spot to a HashSet, then change the field its hashCode uses. What does set.contains(spot) usually return?"
+    choices: ["false, because the set looks in the wrong bucket", "true, because it is the same object", "It throws ConcurrentModificationException", "It does not compile"]
+    answer: 0
+    explain: "The set filed the spot under its old hashCode. After the change, contains looks in the new bucket and misses it."
+    reteach: "### Never change a value inside a HashSet"

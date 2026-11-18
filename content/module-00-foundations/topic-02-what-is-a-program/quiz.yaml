@@ -102,3 +102,25 @@ questions:
     answer: 0
     explain: "javac found the mistake before the program ran. That makes it a compile error."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: jit
+    prompt: "An interviewer asks: \"Is Java compiled or interpreted?\" Which answer is right?"
+    choices:
+      - "Both: javac compiles to bytecode, then the JVM interprets it and the JIT compiles hot code"
+      - "Only interpreted: the JVM reads the .java file line by line"
+      - "Only compiled: javac turns source code straight into machine code"
+      - "Neither: the CPU reads .java files directly"
+    answer: 0
+    explain: "javac compiles source code to bytecode. The JVM interprets that bytecode, and the JIT turns hot code into machine code."
+    reteach: "### Inside the JVM: interpreter and JIT"
+
+  - id: q12
+    type: mcq
+    concept: jit
+    prompt: "A Java server just started. Why are its first requests slower than later ones?"
+    choices: ["No code is hot yet, so it still runs in the interpreter", "javac is still compiling the .java files", "The CPU must cool down first", "The JVM deletes the .class files after each request"]
+    answer: 0
+    explain: "This is warm-up. Once code runs often, the JIT compiles it to machine code and the server speeds up."
+    reteach: "### Warm-up: why the first requests are slow"

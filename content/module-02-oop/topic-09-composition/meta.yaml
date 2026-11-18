@@ -1,9 +1,9 @@
 id: module-02-oop/topic-09-composition
 title: "Composition over inheritance"
 order: 9
-minutes: 9
+minutes: 11
 prerequisites: [module-02-oop/topic-08-interfaces]
-concepts: [has-a-vs-is-a, object-fields, arrays-of-objects, delegation, choosing-composition]
+concepts: [has-a-vs-is-a, object-fields, arrays-of-objects, delegation, choosing-composition, fragile-base-class]
 practice:
   kind: code
   runner: plain

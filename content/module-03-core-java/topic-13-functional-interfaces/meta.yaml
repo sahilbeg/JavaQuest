@@ -1,7 +1,7 @@
 id: module-03-core-java/topic-13-functional-interfaces
 title: "Functional interfaces"
 order: 13
-minutes: 9
+minutes: 12
 prerequisites: [module-03-core-java/topic-12-lambdas]
 concepts: [functional-interface, functional-interface-annotation, built-in-interfaces, combining-functions, custom-functional-interface]
 practice:

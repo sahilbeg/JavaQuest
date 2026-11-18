@@ -1,9 +1,9 @@
 id: module-00-foundations/topic-02-what-is-a-program
 title: "What a program is: source, compiler, bytecode, JVM"
 order: 2
-minutes: 8
+minutes: 10
 prerequisites: [module-00-foundations/topic-01-how-computers-work]
-concepts: [program, source-code, compiler, bytecode, jvm, compile-vs-run-errors]
+concepts: [program, source-code, compiler, bytecode, jvm, jit, compile-vs-run-errors]
 practice:
   kind: quiz
 xp: { quiz: 50, code: 0 }

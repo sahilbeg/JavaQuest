@@ -1,9 +1,9 @@
 id: module-00-foundations/topic-01-how-computers-work
 title: "How computers work: CPU, memory and storage"
 order: 1
-minutes: 8
+minutes: 11
 prerequisites: []
-concepts: [cpu, memory, storage, input-output, working-together]
+concepts: [cpu, memory, storage, input-output, working-together, bits-bytes, operating-system]
 practice:
   kind: quiz
 xp: { quiz: 50, code: 0 }

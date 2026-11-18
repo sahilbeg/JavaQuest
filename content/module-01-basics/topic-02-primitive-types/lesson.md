@@ -12,15 +12,20 @@ In the last topic you met `int` and `String`. Java has a small set of built in t
 A **primitive type** is one of Java's basic building blocks. Its name is all lowercase, like `int` or `double`. `String` starts with a capital letter because it is a class, so it is not a primitive.
 ```
 
-Here are the five you need now:
+Java has exactly eight of them. Each one is a box of a fixed size, measured in **bits**, the 0s and 1s from [How computers work](/t/module-00-foundations/topic-01-how-computers-work). More bits means a bigger range.
 
-| Type | Holds | Example |
-|---|---|---|
-| `int` | a whole number | `int docks = 12;` |
-| `long` | a very big whole number | `long totalRides = 3000000000L;` |
-| `double` | a number with a decimal point | `double km = 2.5;` |
-| `boolean` | `true` or `false` | `boolean isMember = true;` |
-| `char` | a single character | `char size = 'M';` |
+| Type | Holds | Size | Range | Example |
+|---|---|---|---|---|
+| `byte` | a tiny whole number | 8 bits | -128 to 127 | `byte level = 3;` |
+| `short` | a small whole number | 16 bits | -32,768 to 32,767 | `short year = 2026;` |
+| `int` | a whole number | 32 bits | about -2.1 to 2.1 billion | `int docks = 12;` |
+| `long` | a very big whole number | 64 bits | about -9.2 to 9.2 billion billion | `long totalRides = 3000000000L;` |
+| `float` | a decimal, less exact | 32 bits | about 7 correct digits | `float speed = 18.5f;` |
+| `double` | a decimal | 64 bits | about 15 correct digits | `double km = 2.5;` |
+| `boolean` | `true` or `false` | not fixed | `true`, `false` | `boolean isMember = true;` |
+| `char` | a single character | 16 bits | 65,536 different characters | `char size = 'M';` |
+
+You will use five of them every day: `int`, `long`, `double`, `boolean` and `char`. `byte`, `short` and `float` save memory in special cases, such as raw file data or huge tables of numbers.
 
 ### Syntax: double
 
@@ -28,7 +33,7 @@ Here are the five you need now:
 double distanceKm = 2.5;
 ```
 
-A `double` holds numbers with a decimal point. Use it for distances, prices and averages.
+A `double` holds numbers with a decimal point. Use it for distances, speeds and averages.
 
 ```java
 double fare = 4.0;
@@ -37,6 +42,10 @@ double eBikeRate = 0.30;
 ```
 
 Java prints a whole-number double with `.0`, so `double fare = 4;` prints as `4.0`.
+
+```callout warning
+A double stores most decimals as a very close guess, so `0.1 + 0.2` gives `0.30000000000000004`. That is fine for a distance. Real billing never uses double for money. It counts whole cents in a `long`, so 15 cents is exactly `15`. These first tickets use double prices to keep things simple. Topic 12 shows the cents way. Real Spoke billing uses cents. A few later exercises keep doubles to stay small, and their lessons point it out.
+```
 
 ### Syntax: boolean
 
@@ -72,6 +81,90 @@ long totalRides = 3000000000L;
 
 An `int` stops at about 2.1 billion. A `long` holds much bigger whole numbers. Put an `L` at the end of a big number so Java reads it as a long.
 
+### Syntax: literals have types
+
+```java
+long big = 3000000000L;
+float speed = 18.5f;
+```
+
+```callout jargon
+A **literal** is a value typed straight into the code, like `12`, `2.5`, `'E'` or `"Harbor"`.
+```
+
+Every literal already has a type, before it goes into any box:
+
+- A whole number like `12` is an `int`. Add `L` to make it a long: `12L`.
+- A number with a point like `3.0` is a `double`. Add `f` to make it a float: `3.0f`.
+- `'E'` is a `char`, and `"E"` is a String.
+
+That is why `long big = 3000000000;` fails with `integer number too large`. Java reads `3000000000` as an int first, and it does not fit. In the same way, `float speed = 18.5;` fails with `possible lossy conversion from double to float`.
+
+```callout tip
+Write a capital `L`, never a small `l`. In many fonts `10l` looks like the number 101.
+```
+
+### Syntax: var
+
+```java
+var minutes = 20;
+```
+
+With `var`, Java works out the type from the value on the right. Here `20` is an int literal, so `minutes` is an int box, forever. It is still a typed box. You just let Java write the type for you.
+
+```java
+var station = "Harbor";   // a String
+var km = 2.5;             // a double
+var total = 20L;          // a long
+```
+
+- `var` works only for variables inside a method, and only with a starting value. `var total;` fails with `cannot infer type for local variable total`.
+- The value decides the type. `var price = 4;` makes an int, not a double.
+
+This course mostly writes the type out, so you can always see it.
+
+### Past the top: overflow
+
+An int box has 32 bits, so its biggest value is 2,147,483,647. Java names it `Integer.MAX_VALUE`. What happens if you add one more?
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        int top = Integer.MAX_VALUE;
+        System.out.println(top);
+        System.out.println(top + 1);
+    }
+}
+```
+
+It prints `2147483647`, then `-2147483648`. There is no error and no warning. The number wraps around to the most negative int.
+
+```callout jargon
+**Overflow** happens when a result is too big for its box. Java's whole-number types wrap around silently, like a car's distance counter rolling from 999999 back to 000000.
+```
+
+Silent is the dangerous part. An int counting cents tops out near $21 million. A busy company passes that quickly, and the total suddenly turns negative. That is why money totals use `long`.
+
+### Syntax: Math.addExact
+
+```java nocompile
+int sum = Math.addExact(a, b);
+```
+
+`Math.addExact` adds like `+`, but it refuses to wrap. If the answer does not fit, the program stops with an error instead.
+
+```java run crash
+public class Main {
+    public static void main(String[] args) {
+        int top = Integer.MAX_VALUE;
+        int next = Math.addExact(top, 1);
+        System.out.println(next);
+    }
+}
+```
+
+The program stops with `java.lang.ArithmeticException: integer overflow`. A loud crash sounds bad, but it beats a fare that is silently wrong. `Math.subtractExact` and `Math.multiplyExact` do the same for `-` and `*`.
+
 ### Why 2.5 does not fit in an int
 
 An int box only fits whole numbers. Java refuses to squash 2.5 in by itself:
@@ -88,12 +181,53 @@ Java says: `incompatible types: possible lossy conversion from double to int`. T
 double km = 7;
 ```
 
-Going the other way is safe. Every whole number fits in a double box. Java converts it for you, and `km` holds `7.0`. This automatic move to a bigger type is called **widening**.
+Going the other way is safe. Every int fits in a double box exactly. Java converts it for you, and `km` holds `7.0`. This automatic move to a bigger type is called **widening**.
 
 ```java
 int minutes = 20;
 double exact = minutes;   // exact holds 20.0
 long big = minutes;       // an int fits in a long too
+```
+
+One small catch: a double keeps only about 15 to 16 digits. A huge long, past 9 million billion, can lose its last digit when it widens into a double.
+
+### Too late to widen
+
+Widening happens only when the value moves into the box. The sum on the right is worked out first, using the types it has. If every number there is an int, the sum is done in int, and it can overflow before it ever reaches the long box.
+
+```animate
+title: The sum overflows before it reaches the long
+kind: code
+code: |
+  int days = 30;
+  long ms = days * 24 * 60 * 60 * 1000;
+  long fixed = days * 24 * 60 * 60 * 1000L;
+  System.out.println(ms);
+  System.out.println(fixed);
+steps:
+  - line: 1
+    vars: { days: 30 }
+    say: A monthly bike pass lasts 30 days. We want that time in milliseconds, thousandths of a second.
+  - line: 2
+    say: Every number on the right is an int, so Java multiplies in int. The true answer is 2,592,000,000, past the int limit.
+  - line: 2
+    vars: { ms: -1702967296 }
+    say: The int sum wraps around to a negative number. Only then is it widened into the long box. Too late.
+  - line: 3
+    say: Here the last number is 1000L, a long. Multiplying by a long makes the answer a long.
+  - line: 3
+    vars: { fixed: 2592000000 }
+    say: A long has room for 2,592,000,000, so the answer is right.
+  - line: 4
+    out: "-1702967296"
+    say: The broken version prints a negative time. No error, just a wrong number.
+  - line: 5
+    out: "2592000000"
+    say: The fixed version is correct. Once a long joins in, every step after it is done in long. Put the L first to be safe.
+```
+
+```callout tip
+When a sum could get big, put the `L` on the first number: `30L * 24 * 60 * 60 * 1000`. Then every step is done in long.
 ```
 
 ### Syntax: casting
@@ -111,7 +245,7 @@ double c = (double) 5;  // 5.0
 ```
 
 ```callout warning
-A cast to int cuts off the decimal part. It never rounds up, so `(int) 2.9` gives `2`.
+A cast to int cuts off the decimal part. It never rounds up, so `(int) 2.9` gives `2`. It always cuts toward zero, so `(int) -2.9` gives `-2`.
 ```
 
 Watch a ride distance move between a double box and an int box:
@@ -145,6 +279,38 @@ steps:
   - line: 6
     out: "2.0"
     say: The double box prints 2.0. Java always shows a double with a decimal point.
+```
+
+### Rounding instead of cutting
+
+A cast cuts. When you want proper rounding, use Java's `Math` tools:
+
+```java
+long a = Math.round(2.5);     // 3, rounds to the nearest whole number
+long b = Math.round(-2.5);    // -2, a half always rounds up, toward +
+double c = Math.floor(2.7);   // 2.0, always down
+double d = Math.ceil(2.1);    // 3.0, always up
+double e = Math.floor(-2.9);  // -3.0, down means toward the more negative side
+int f = (int) -2.9;           // -2, a cast cuts toward zero
+```
+
+Two traps hide here:
+
+- `Math.round` of a double gives back a **long**, not an int. So `int r = Math.round(2.7);` fails with `possible lossy conversion from long to int`. Write `int r = (int) Math.round(2.7);`.
+- `Math.floor` and `Math.ceil` give back a double, such as `2.0`. Cast it if you need an int.
+
+### Syntax: Math.max, min and abs
+
+```java
+int bigger = Math.max(3, 7);    // 7
+int smaller = Math.min(3, 7);   // 3
+int size = Math.abs(-5);        // 5, the distance from zero
+```
+
+`Math.max` and `Math.min` pick the larger or smaller of two values. `Math.abs` drops the minus sign.
+
+```callout warning
+`Math.abs(Integer.MIN_VALUE)` is still `-2147483648`. The int range goes one further below zero than above it, so +2147483648 does not fit and wraps back around.
 ```
 
 ### The integer division surprise
@@ -277,9 +443,9 @@ public class Main {
 
 - Use `int` for whole numbers, `double` for decimals, `boolean` for true or false, `char` for one character, and `long` for very big whole numbers.
 - Java widens a smaller type into a bigger one for you, like an int into a double.
-- A cast such as `(int) 2.9` forces a conversion and cuts off the decimal part.
-- An int divided by an int gives an int: `5 / 2` is `2`.
-- Cast before you divide to keep the decimals: `(double) 5 / 2` is `2.5`.
+- A cast such as `(int) 2.9` cuts toward zero. `Math.round` rounds properly.
+- An int divided by an int gives an int: `5 / 2` is `2`. Cast first to keep the decimals: `(double) 5 / 2` is `2.5`.
+- An int past about 2.1 billion overflows and wraps around silently. Use `long`, or `Math.addExact` to fail loudly.
 
 ## Common mistakes
 

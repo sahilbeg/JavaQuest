@@ -2,7 +2,7 @@
 
 Jiraiya holds up a photo of a crumpled receipt. The ride line says `$2.4999999`. The prices wander left and right like a bike with a flat tyre. The maths was right, but the receipt looks broken.
 
-Computers store many decimal numbers with tiny rounding errors. Riders should never see them. In this lesson you learn to round prices to two decimals, line them up in columns, and build long text quickly.
+Computers store many decimal numbers with tiny rounding errors. Riders should never see them. In this lesson you learn to round prices to two decimals, line them up in columns, and build long text quickly. You also learn why real billing keeps those errors out completely, by counting whole cents.
 
 ## Concept
 
@@ -35,7 +35,7 @@ String d = String.format("%s has %d docks", "Uptown", 12); // Uptown has 12 dock
 `%.2f` rounds the number. `2.4999999` becomes `2.50`.
 
 ```callout warning
-`%.2f` follows your computer's language setting. JavaQuest's checks always use a decimal point.
+`%.2f` follows your computer's language setting. On a German laptop, `2.5` prints as `2,50`. JavaQuest's checks always use a decimal point. "Syntax: String.format with Locale.ROOT" shows the fix for real code.
 ```
 
 ```callout warning
@@ -53,6 +53,72 @@ String text = "pattern".formatted(value1, value2);
 ```java
 String e = "$%.2f".formatted(1.0);   // $1.00
 ```
+
+### Syntax: String.format with Locale.ROOT
+
+```java nocompile
+String text = String.format(Locale.ROOT, "pattern", value1, value2);
+```
+
+A **locale** is a computer's language and country setting. It decides how numbers look. Germany writes a decimal comma, so the same line can print two different things:
+
+```java
+System.out.println(String.format(java.util.Locale.GERMANY, "%.2f", 2.5));   // 2,50
+System.out.println(String.format(java.util.Locale.ROOT, "%.2f", 2.5));      // 2.50
+```
+
+Pass `Locale.ROOT` first when the text is for another program, such as a file, a log or a web response. Then it looks the same on every server. Add `import java.util.Locale;` at the top of the file. JavaQuest runs your ticket's checks with English settings, so the plain `String.format` in your ticket is fine.
+
+### Money: count cents, not dollars
+
+A double cannot hold `0.1` exactly. It holds the closest number it can, which is a tiny bit off. Small errors pile up as you add:
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(0.1 + 0.2);
+        double total = 0;
+        for (int i = 0; i < 10; i++) {
+            total = total + 0.1;
+        }
+        System.out.println(total);
+        System.out.println(total == 1.0);
+        System.out.println(String.format("%.2f", total));
+    }
+}
+```
+
+It prints `0.30000000000000004`, `0.9999999999999999`, `false` and `1.00`. `%.2f` makes the receipt look right, but the wrong number is still inside. Comparisons fail, and over millions of rides the drift becomes real money.
+
+Real billing never uses double for money. It counts whole **cents** in a `long`. Whole numbers are always exact:
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        long fareCents = 100 + 12 * 30;   // unlock fee + 12 e-bike minutes
+        System.out.println(fareCents);
+        System.out.println(String.format("$%d.%02d", fareCents / 100, fareCents % 100));
+    }
+}
+```
+
+It prints `460`, then `$4.60`. You do the maths in cents and turn cents into dollars only when you print. `%02d` pads a number to two digits with a zero, so 5 cents shows as `05`.
+
+Your first tickets used double prices to keep things simple. Real Spoke billing uses cents. A few later exercises keep doubles to stay small, and their lessons point it out.
+
+### A preview of BigDecimal
+
+Some sums do not land on whole cents, such as 8.875% tax on a fare. For that, Java has `BigDecimal`, a type that stores decimals exactly. Module 03 comes back to it. Here are the two rules to remember:
+
+```java
+java.math.BigDecimal price = new java.math.BigDecimal("0.10");
+System.out.println(price.add(new java.math.BigDecimal("0.20")));   // 0.30
+System.out.println(new java.math.BigDecimal(0.1));
+// 0.1000000000000000055511151231257827021181583404541015625
+```
+
+- Build it from text: `new BigDecimal("0.10")`. Never from a double: `new BigDecimal(0.1)` copies the double's error exactly, all 55 digits of it.
+- Compare values with `compareTo`, not `equals`. `equals` also checks the number of decimal places, so `0.10` and `0.1` are not equal. `a.compareTo(b) == 0` means the same amount.
 
 ### Syntax: widths
 
@@ -140,9 +206,11 @@ String result = sb.toString();
 ```
 
 - A **StringBuilder** is a box of text that you *can* change.
-- `new StringBuilder()` makes an empty one. The word `new` creates a fresh object. An **object** is a value that has its own methods, like a String or a StringBuilder.
+- `new StringBuilder()` makes an empty one. As in topic 04, `new` builds a fresh **object**: a value in memory with data and methods, which your variable points at with an arrow.
 - `append(x)` adds `x` to the end. It accepts Strings, numbers and characters.
 - `toString()` gives back the finished text as a normal String.
+
+You may see `StringBuffer` in old code. It does the same job, but more slowly, because it is built to be used by several jobs running at the same time. Use `StringBuilder`.
 
 Watch `append` write into one single object:
 
@@ -240,10 +308,10 @@ Print a ruler line such as `12345678901234567890` above your output. It helps yo
 
 ## Recap
 
-- `String.format` and `formatted` fill placeholders: `%s` for text, `%d` for whole numbers, `%.2f` for money.
+- `String.format` and `formatted` fill placeholders: `%s` for text, `%d` for whole numbers, `%.2f` for decimals. Pass `Locale.ROOT` for text other programs read.
 - A width like `%8s` pads on the left. A minus, as in `%-12s`, pads on the right.
-- Using `+` in a loop copies text again and again. A `StringBuilder` with `append` avoids that.
-- Call `toString()` to get the finished String out of a StringBuilder.
+- Using `+` in a loop copies text again and again. A `StringBuilder` with `append` avoids that, and `toString()` gives back the finished String.
+- Money is counted in whole cents in a `long`. `%.2f` only hides a double's errors.
 - Text blocks use `"""` for fixed text over several lines.
 
 ## Common mistakes
@@ -255,7 +323,7 @@ double fare = 0.1 + 0.2;
 System.out.println("$" + fare);
 ```
 
-You see `$0.30000000000000004`. Fix: `System.out.println(String.format("$%.2f", fare));` prints `$0.30`.
+You see `$0.30000000000000004`. Fix: `System.out.println(String.format("$%.2f", fare));` prints `$0.30`. That fixes the receipt. To fix the maths too, keep money in whole cents, as in "Money: count cents, not dollars".
 
 **Using %d for a decimal.**
 

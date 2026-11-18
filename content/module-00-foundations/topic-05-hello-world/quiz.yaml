@@ -58,10 +58,10 @@ questions:
   - id: q06
     type: mcq
     concept: class
-    prompt: "A class is called Greeter. What must the file be called?"
+    prompt: "A public class is called Greeter. What must its file be called?"
     choices: ["Greeter.java", "greeter.java", "Main.java", "Greeter.class"]
     answer: 0
-    explain: "The file name matches the class name exactly, plus .java at the end."
+    explain: "A public class must live in a file named exactly like the class, plus .java at the end."
     reteach: "## Concept"
 
   - id: q07

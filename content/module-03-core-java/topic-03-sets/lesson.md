@@ -117,6 +117,48 @@ How does a `HashSet` know two values are "the same"? It asks `hashCode()` to fin
 
 `String`, `Integer` and records already have good versions. Your own class needs both overrides. Without them, two `Bike` objects with the same id count as two bikes.
 
+### Never change a value inside a HashSet
+
+A `HashSet` files each value in a bucket chosen by its `hashCode()` at the moment you add it. If you then change a field that `hashCode` uses, the value sits in the wrong bucket. The set can no longer find it.
+
+```java run
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+public class Main {
+    public static void main(String[] args) {
+        Spot spot = new Spot("Harbor");
+        Set<Spot> busy = new HashSet<>();
+        busy.add(spot);
+        spot.station = "Uptown";
+        System.out.println(busy.contains(spot));
+        System.out.println(busy.size());
+    }
+}
+
+class Spot {
+    String station;
+    Spot(String station) { this.station = station; }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof Spot s && station.equals(s.station);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(station);
+    }
+}
+```
+
+It prints `false` and then `1`. The spot is still in the set, but `contains` and `remove` look in the new bucket and miss it. The same thing happens to a `HashMap` key.
+
+```callout tip
+Gojo says: use values that cannot change as set items and map keys: `String`, `Integer`, records with final fields. If you must change one, remove it first, change it, then add it back.
+```
+
 ## Worked example
 
 Count the different bikes and find the bikes seen at two stations.
@@ -178,7 +220,7 @@ public class Main {
 - `HashSet` has no order, `LinkedHashSet` keeps insertion order, `TreeSet` keeps values sorted.
 - `contains`, `remove` and `size` work like they do on a list. There is no `get`.
 - `addAll`, `retainAll` and `removeAll` give union, intersection and difference. They change the set you call them on.
-- Sets compare values with `equals` and `hashCode`, so your own classes need both.
+- Sets compare values with `equals` and `hashCode`, so your own classes need both. Never change a field they use while the value is in a set.
 
 ## Common mistakes
 

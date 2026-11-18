@@ -132,3 +132,22 @@ questions:
     bugLine: 3
     explain: "unlockFee promises a double, but \"1.00\" in quotes is a String. Write return 1.00; without quotes."
     reteach: "## Common mistakes"
+
+  - id: q11
+    type: predict-output
+    concept: pass-by-value
+    code: |
+      public class Main {
+          public static void addMinute(int minutes) {
+              minutes = minutes + 1;
+          }
+
+          public static void main(String[] args) {
+              int minutes = 10;
+              addMinute(minutes);
+              System.out.println(minutes);
+          }
+      }
+    answer: "10"
+    explain: "Java passes a copy of 10 into addMinute. The method changes only its own copy, so main's minutes still holds 10. Return the new value if the caller needs it."
+    reteach: "### Java passes a copy"

@@ -153,6 +153,10 @@ class Station {
 - It must be the **first line** of the constructor.
 - The real setup now lives in one place, so a fix happens once.
 
+```callout tip
+Java 25 relaxed the "first line" rule a little. Lines that do not touch `this` may now come before `this(...)` or `super(...)`. This course uses Java 21, where the call must be first.
+```
+
 ```animate
 title: One constructor hands over to another
 kind: code
@@ -204,6 +208,55 @@ steps:
 
 ```callout warning
 Writing any constructor removes the free one. If you never write a constructor, Java gives you an empty one, so `new Bike()` works. Once you write `Bike(String id, String type)`, plain `new Bike()` stops compiling.
+```
+
+### Checking the rules: invariants
+
+A constructor that asks for an id is a good start. But `new Bike(null, null)` still compiles and runs. The bike is built with no id at all.
+
+```callout jargon
+An **invariant** is a rule that must be true for every object of a class, all the time. "Every bike has an id" is an invariant.
+```
+
+The constructor is the gate, so it should check the rules before it fills in the fields. If a value breaks a rule, it refuses to build the object.
+
+```callout jargon
+An **exception** is Java's way of saying "stop, something is wrong here". `throw` raises one. Module 3 covers exceptions properly. For now, think of it as a loud, early alarm.
+```
+
+```java run crash
+import java.util.Objects;
+
+public class Main {
+    public static void main(String[] args) {
+        Station ok = new Station("Harbor", 20);
+        System.out.println(ok.name + ": " + ok.docks + " docks");
+        Station bad = new Station("Depot", -3);
+        System.out.println("never printed");
+    }
+}
+
+class Station {
+    String name;
+    int docks;
+
+    Station(String name, int docks) {
+        this.name = Objects.requireNonNull(name, "name must not be null");
+        if (docks < 1) {
+            throw new IllegalArgumentException("docks must be at least 1, got " + docks);
+        }
+        this.docks = docks;
+    }
+}
+```
+
+It prints `Harbor: 20 docks`, then stops with `java.lang.IllegalArgumentException: docks must be at least 1, got -3`.
+
+- `Objects.requireNonNull(name, "...")` hands back `name` if it is not null. If it is null, it stops the program with a `NullPointerException` and your message.
+- `throw new IllegalArgumentException("...")` stops the constructor when an argument breaks a rule. No half-built station ever escapes.
+
+```callout tip
+Failing loudly at `new` is much better than a crash later. The error points at the exact line that passed the bad value, not at some screen a rider tapped an hour after.
 ```
 
 ## Worked example
@@ -279,9 +332,9 @@ A constructor is the place to set every field the object cannot live without. Th
 
 - A **constructor** has the class name, no return type, and runs once when `new` builds the object.
 - `this.field = field;` copies a parameter into the field with the same name.
-- A class can have several constructors with different parameters: **overloading**.
-- `this(...)` calls another constructor of the same class. It must be the first line.
+- A class can have several constructors with different parameters (**overloading**). `this(...)` on the first line calls another one.
 - Once you write any constructor, Java stops giving you the empty default one.
+- A constructor guards the class's **invariants**: it refuses bad values with `Objects.requireNonNull` or an `IllegalArgumentException`.
 
 ## Common mistakes
 

@@ -169,3 +169,12 @@ questions:
       - "return -1;"
     explain: "Loop over the docks, ask each one if it is free, delegate the parking, and return -1 only after the loop finds nothing."
     reteach: "## Worked example"
+
+  - id: q11
+    type: mcq
+    concept: fragile-base-class
+    prompt: "CountingLog extends ArrivalLog and adds to its count in both add and addAll. Adding 3 bikes with addAll counts 6. Why?"
+    choices: ["The parent's addAll calls add, which now runs the subclass's add and counts again", "addAll always runs twice in Java", "count is static, so it is shared", "super.addAll copies the array twice"]
+    answer: 0
+    explain: "The subclass depended on how the parent works inside. Holding an ArrivalLog in a field and delegating to it avoids the double count."
+    reteach: "### Why inheritance breaks"

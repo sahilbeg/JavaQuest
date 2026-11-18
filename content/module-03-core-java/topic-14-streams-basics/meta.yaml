@@ -1,9 +1,9 @@
 id: module-03-core-java/topic-14-streams-basics
 title: "Streams: filter, map, collect"
 order: 14
-minutes: 9
+minutes: 12
 prerequisites: [module-03-core-java/topic-13-functional-interfaces]
-concepts: [stream-pipeline, filter-map, number-streams, collect-to-list, sorted-limit-distinct, lazy-single-use]
+concepts: [stream-pipeline, filter-map, number-streams, collect-to-list, sorted-limit-distinct, lazy-single-use, matching]
 practice:
   kind: code
   runner: plain

@@ -96,6 +96,10 @@ switch (type) {
 
 A switch can check Strings. It compares the text the same way `.equals` does, so capital letters matter. `"EBike"` will not match `"ebike"`.
 
+```callout warning
+If the String is `null`, the switch crashes with a `NullPointerException`, even when there is a `default`. Java 21 lets you add `case null ->` to an arrow switch to handle it.
+```
+
 Watch the switch jump to the matching case:
 
 ```animate
@@ -219,6 +223,42 @@ public static String size(String type) {
 
 You can `return` the switch directly from a method.
 
+### Syntax: arrow cases with yield
+
+```java nocompile
+case "cargo" -> {
+    // several steps
+    yield value;
+}
+```
+
+An arrow case can run a whole block in curly braces. Inside a switch expression, `yield` hands back the block's value, like `return` does for a method.
+
+```java
+String type = "cargo";
+int minutes = 20;
+long cents = switch (type) {
+    case "classic" -> 15L * minutes;
+    case "cargo" -> {
+        System.out.println("Cargo bikes cost more per minute.");
+        yield 25L * minutes;
+    }
+    default -> 0;
+};
+System.out.println(cents);   // 500
+```
+
+Arrows also work in a plain switch statement that gives back nothing. Each case runs only its own line, with no fall-through and no `break`:
+
+```java
+String type = "ebike";
+switch (type) {
+    case "classic" -> System.out.println("Classic bike");
+    case "ebike", "cargo" -> System.out.println("Big battery or big basket");
+    default -> System.out.println("Unknown bike");
+}
+```
+
 ## Worked example
 
 This program prices a 20 minute ride for each bike type.
@@ -251,6 +291,10 @@ public class Main {
 4. The fare is `1.00 + 20 * 0.25`, so the program prints `Fare: 6.0`.
 
 The value `-1` is a signal. No real price is negative, so `-1` means "I do not know this bike".
+
+```callout warning
+A `-1` signal is a beginner shortcut, and your ticket uses it. Real code avoids it, because a caller who forgets to check can add `-1` into a total by mistake. Professionals throw an exception instead (module 03), or use an enum, a type that lists only the real bike types (module 02).
+```
 
 ## Try it
 

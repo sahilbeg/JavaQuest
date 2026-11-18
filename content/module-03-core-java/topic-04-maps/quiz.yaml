@@ -121,3 +121,41 @@ questions:
       - "}"
     explain: "Make the map, loop once, read the old total, then put back the new one."
     reteach: "## Worked example"
+
+  - id: q11
+    type: predict-output
+    concept: counting-pattern
+    code: |
+      import java.util.*;
+
+      public class Main {
+          public static void main(String[] args) {
+              Map<String, Integer> counts = new TreeMap<>();
+              for (String type : List.of("cargo", "ebike", "cargo")) {
+                  counts.merge(type, 1, Integer::sum);
+              }
+              System.out.println(counts);
+          }
+      }
+    answer: "{cargo=2, ebike=1}"
+    explain: "merge puts 1 for a new key and adds 1 to an existing one. The TreeMap prints its keys in order."
+    reteach: "### Syntax: merge, computeIfAbsent, putIfAbsent"
+
+  - id: q12
+    type: predict-output
+    concept: hashmap-vs-treemap
+    code: |
+      import java.util.TreeMap;
+
+      public class Main {
+          public static void main(String[] args) {
+              TreeMap<Integer, String> shifts = new TreeMap<>();
+              shifts.put(6, "Tsunade");
+              shifts.put(14, "Kakashi");
+              shifts.put(22, "Itachi");
+              System.out.println(shifts.floorEntry(23).getValue());
+          }
+      }
+    answer: "Itachi"
+    explain: "floorEntry(23) finds the biggest key that is 23 or less. That is 22, which maps to Itachi."
+    reteach: "### Navigating a TreeMap"

@@ -25,7 +25,7 @@ int remainder = 7 % 3;   // 1
 - `+` adds and `-` subtracts.
 - `*` multiplies. Java uses a star because a keyboard has no × key.
 - `/` divides.
-- `%` gives the **remainder** after dividing. People call it "modulo" or "mod".
+- `%` gives the **remainder** after dividing. People often call it "mod", but it is not quite maths' modulo. The two differ for negative numbers, as you will see below.
 
 Here are a few more short examples:
 
@@ -88,6 +88,59 @@ steps:
     out: 2 h 10 min
     say: The receipt joins both boxes into one line of text.
 ```
+
+### Edge cases: dividing by zero
+
+What is the average ride length when there were zero rides? With ints, Java refuses to answer:
+
+```java run crash
+public class Main {
+    public static void main(String[] args) {
+        int totalMinutes = 120;
+        int rides = 0;
+        System.out.println(totalMinutes / rides);
+    }
+}
+```
+
+The program stops with `java.lang.ArithmeticException: / by zero`. The same happens with `%` and an int 0.
+
+Doubles behave differently. They never crash. They give back special values instead:
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(7.0 / 0);
+        System.out.println(-7.0 / 0);
+        double nothing = 0.0 / 0;
+        System.out.println(nothing);
+        System.out.println(nothing == nothing);
+        System.out.println(Double.isNaN(nothing));
+    }
+}
+```
+
+It prints `Infinity`, `-Infinity`, `NaN`, `false` and `true`. NaN is never equal to anything, not even itself. So test for it with `Double.isNaN(x)`, never with `==`.
+
+```callout jargon
+**NaN** stands for "Not a Number". It is the double you get from a sum with no sensible answer, such as 0.0 / 0.
+```
+
+In production, the crash is the friendly case: you see it at once. A NaN slips through quietly, and a rider's receipt shows "Average: NaN min". Check for zero before you divide. Topic 05 shows how.
+
+### Edge cases: negatives and %
+
+In Java, the answer of `%` takes the sign of the number on the left:
+
+```java
+System.out.println(7 % 3);                  // 1
+System.out.println(-7 % 3);                 // -1
+System.out.println(Math.floorMod(-7, 3));   // 2
+```
+
+That surprises people who test for odd numbers with `n % 2 == 1`. For `n = -3`, `n % 2` is `-1`, so the test says "not odd". Write `n % 2 != 0` instead. It works for every int.
+
+`Math.floorMod` gives the maths-class answer, which is never negative when the right side is positive. It is handy for things that wrap around, like a clock. Thirty minutes before midnight is `Math.floorMod(-30, 1440)`, which is `1410`, or 23:30. Plain `-30 % 1440` would give `-30`.
 
 ### Syntax: precedence and brackets
 
@@ -193,6 +246,44 @@ steps:
     say: After two minutes the ride costs 130 cents.
 ```
 
+### Prefix and postfix ++
+
+`++` can go after the name (`count++`, **postfix**) or before it (`++count`, **prefix**). On a line of its own, both add one. The difference shows when you use the value in the same line:
+
+- `count++` hands out the old value, then adds one.
+- `++count` adds one first, then hands out the new value.
+
+```animate
+title: count++ versus ++count
+kind: code
+code: |
+  int count = 5;
+  int a = count++;
+  int b = ++count;
+  System.out.println(a + " " + b + " " + count);
+steps:
+  - line: 1
+    vars: { count: 5 }
+    say: Five bikes are docked at Harbor.
+  - line: 2
+    vars: { a: 5 }
+    say: count++ hands out the old value first. a gets 5.
+  - line: 2
+    vars: { count: 6 }
+    say: Then the ++ happens, and count becomes 6.
+  - line: 3
+    vars: { count: 7 }
+    say: ++count adds one first. count becomes 7.
+  - line: 3
+    vars: { b: 7 }
+    say: Then it hands out the new value. b gets 7.
+  - line: 4
+    out: "5 7 7"
+    say: Both lines added one to count. They handed out different values.
+```
+
+Later, with arrays, you may see `rides[count++] = minutes;`. It stores a value at slot `count`, then moves `count` on to the next slot. Anywhere else, keep `++` on its own line, so nobody has to think about the order.
+
 ### Syntax: joining text with +
 
 When one side of `+` is a String, Java joins the two values into one String. This is called **concatenation**.
@@ -209,6 +300,26 @@ Java reads `+` from left to right. Once it has made a String, every later `+` jo
 System.out.println("Total: " + 1 + 2);    // Total: 12
 System.out.println("Total: " + (1 + 2));  // Total: 3
 ```
+
+### Bitwise operators
+
+Every int is stored as 32 bits, the 0s and 1s from [How computers work](/t/module-00-foundations/topic-01-how-computers-work). **Bitwise operators** work on those bits one column at a time. Here are 5 and 3, showing only their last four bits:
+
+```
+5      = 0101
+3      = 0011
+5 & 3  = 0001  = 1    1 where both have a 1
+5 | 3  = 0111  = 7    1 where either has a 1
+5 ^ 3  = 0110  = 6    1 where they differ
+5 << 1 = 1010  = 10   every bit moves one place left
+```
+
+- `~` flips every bit, so `~5` is `-6`.
+- `<<` shifts left, which doubles the number for each place. `>>` shifts right, which halves it: `20 >> 2` is `5`.
+- `>>>` also shifts right, but it fills the left side with 0s, even for negative numbers. `-8 >> 1` is `-4`, but `-8 >>> 28` is `15`.
+- `Integer.toBinaryString(5)` shows the bits as text: `101`.
+
+You will rarely write these in everyday code. You will read them inside libraries, for example where Java's HashMap mixes the bits of a hash code with `^` and `>>>`. They also pack many yes or no flags into one int.
 
 ## Worked example
 
@@ -266,8 +377,8 @@ If a number looks wrong, add brackets to show the order you mean. The answer oft
 
 ## Recap
 
-- `+`, `-`, `*` and `/` do maths. `%` gives the remainder.
-- Dividing two ints drops the decimal part.
+- `+`, `-`, `*` and `/` do maths. `%` gives the remainder, which takes the sign of the left number.
+- Dividing two ints drops the decimal part. Dividing an int by 0 crashes, and a double gives `Infinity` or `NaN`.
 - `*`, `/` and `%` run before `+` and `-`. Brackets run first of all.
 - `+=` and `-=` update a variable. `++` adds one and `--` takes one away.
 - `+` with a String joins text together.

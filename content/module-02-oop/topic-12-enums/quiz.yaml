@@ -138,3 +138,21 @@ questions:
     answers: ["=="]
     explain: "Compare enum constants with ==."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: enum-evolution
+    prompt: "Spoke saves each ride's bike type in a database. Which value should it save?"
+    choices: ["type.name(), such as \"CARGO\"", "type.ordinal(), such as 2", "type.hashCode()", "The position of the type in values()"]
+    answer: 0
+    explain: "A name stays the same when someone adds or reorders constants. An ordinal or position moves, so old rows would load as the wrong type."
+    reteach: "### Store the name, never the ordinal"
+
+  - id: q12
+    type: mcq
+    concept: enum-evolution
+    prompt: "A switch expression returns a price for CLASSIC, EBIKE and CARGO, with no default. Someone adds TANDEM to BikeType. What happens?"
+    choices: ["The code no longer compiles, because the switch does not cover TANDEM", "TANDEM rides cost 0 cents", "TANDEM rides use the CLASSIC price", "The program crashes the first time any switch runs"]
+    answer: 0
+    explain: "A switch expression must cover every constant. The compiler points at each switch that forgot TANDEM, before any rider sees a wrong price."
+    reteach: "### A new constant breaks the build, on purpose"

@@ -1,9 +1,9 @@
 id: module-03-core-java/topic-08-custom-exceptions
 title: "Checked vs unchecked, custom exceptions, try-with-resources"
 order: 8
-minutes: 10
+minutes: 14
 prerequisites: [module-03-core-java/topic-07-exceptions]
-concepts: [checked-unchecked, throws-clause, custom-exception, exception-cause, try-with-resources]
+concepts: [checked-unchecked, throws-clause, custom-exception, exception-cause, try-with-resources, service-rules, bigdecimal]
 practice:
   kind: code
   runner: plain
