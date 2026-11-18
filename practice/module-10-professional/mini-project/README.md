@@ -84,6 +84,20 @@ The schema is created in code, in the constructor. Table `rentals`: `id` (primar
 - The 6th request answers `429` type `rate-limited`, title `Too many requests`, and the header `Retry-After`: the seconds until the oldest counted request leaves the window, rounded **up**, at least 1. Five requests from 09:00:00 to 09:00:40, then one at 09:00:50: `Retry-After: 10`. At 09:00:59.4 it would be `1`, never `0`.
 - The limit is per rider: one busy rider never slows down another.
 
+## The rubric: after the checks are green
+
+The six stages prove the service works. Before you call it done, review your own code like a teammate would. Mark each line **Meets** or **Not yet**:
+
+1. **Correctness:** a retry with the same `Idempotency-Key` never makes a second rental, and every request ends in exactly one answer.
+2. **Design:** controllers only translate HTTP; no rule moved out of the core; `LaunchWiring` is the only place that builds objects.
+3. **Errors:** every `RentalException` kind maps to one status, in `LaunchProblems` only; no stack trace or SQL text reaches a rider.
+4. **Data:** every SQL statement uses `?` parameters; the UNIQUE constraint, not a Java check, stops double rentals.
+5. **Limits:** `RiderRateLimiter` is safe when two requests arrive at once, and it drops old timestamps, so one busy rider cannot fill the memory.
+6. **Readability:** clear names, no leftover `TODO` lines, no dead code, short methods.
+7. **Tests:** you added one check of your own for a case the stages miss, such as ending the same rental twice through the API.
+
+"Ready to ship" means every stage green and every line at Meets. Then compare your code with Tsunade's solution, which opens once your checks pass.
+
 ## How the checks work
 
 Each stage class uses `@SpringBootTest` with its own `spring.datasource.url` (an H2 database in memory), `@AutoConfigureMockMvc` to send requests without a network, and a test clock that starts every check at `2026-11-18T09:00:00Z`. Stage 5 also reads the `rentals` table with `JdbcTemplate`, and Stage 6 builds a `HealthController` by hand to see it before the stations are loaded.

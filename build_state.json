@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "lastUpdated": "2026-11-18T16:28:42+05:30",
+  "lastUpdated": "2026-11-18T16:48:03+05:30",
   "phase": "PHASE 1: build",
-  "milestone": "M5",
-  "resumeHere": "C10 is committed at status ui_wired; every content module (0 to 10) is written. The CAPSTONE feature already has its brief and staged tests (Stage1..Stage6), and the Java Pro kudos now fires on it. Next: M5 (a capstone rubric, the final badge and a completion screen in the app), then M6 release hardening. Modules 0 to 10 still need your read-through to reach done.",
+  "milestone": "M6",
+  "resumeHere": "M5 is committed: the capstone has a brief, six staged check classes and a self-review rubric; the app has the /offer completion screen, a launch dialog and the Full-time offer kudos. Next: M6 release hardening (fresh-clone test on macOS, README; Windows deferred). Modules 0 to 10 still need your read-through to reach done.",
   "statusValues": [
     "planned",
     "content_written",
@@ -61,9 +61,10 @@
     "UX overhaul (user feedback): playful redesign, journey map, mastery gating with author mode, lesson player with short cards, animation engine (code and scene, checked by check-content), first-visit walkthroughs; 56 animations added to modules 0 to 2 and reviewed",
     "SDE2 audit (docs/SDE2_AUDIT.md): modules 0 to 8 deepened to SDE 2 level; 17 new tickets (M04 13-20, M05 14-15, M06 13, M07 06-08, M08 13-15); module 9 gains resilience and Kubernetes topics; every module independently reviewed; all checks green",
     "C09: module 9 Architecture (4 quiz topics, 6 code topics: layered (Spring), hexagonal, messaging + transactional outbox (H2), caching, performance, resilience), INC-09 (live map cache: key, stampede, stale-if-error) and FEAT-09 (event-driven billing on a partitioned log); 3 independent reviews (about 40 findings) fixed; all checks green",
-    "C10: module 10 Professional skills (4 quiz topics: code reviews, reading codebases, documentation, estimation; interview prep and the city-aware capstone core as code), INC-10 (mock interview loop: edge cases, O(n) follow-up, concurrent-safe extensible design) and CAPSTONE (Spring Boot Bramford launch in six staged test classes); Java Pro kudos moved to the capstone; 2 independent reviews (about 30 findings) fixed; all checks green"
+    "C10: module 10 Professional skills (4 quiz topics: code reviews, reading codebases, documentation, estimation; interview prep and the city-aware capstone core as code), INC-10 (mock interview loop: edge cases, O(n) follow-up, concurrent-safe extensible design) and CAPSTONE (Spring Boot Bramford launch in six staged test classes); Java Pro kudos moved to the capstone; 2 independent reviews (about 30 findings) fixed; all checks green",
+    "M5: capstone rubric (lesson card and README), /offer completion screen (Tsunade's offer letter, printable), launch dialog on closing the capstone, Full-time offer kudos, kudos earnedOn dates; kudos toasts name the teammate; tested in a throwaway author app"
   ],
-  "nextTask": "M5: capstone rubric, final badge and completion screen",
+  "nextTask": "M6: fresh-clone test on macOS (one command start) and a README with setup, troubleshooting and limits",
   "openDecisions": [
     "A real VoiceOver pass needs a person",
     "Modules 0 to 10 read-through by you before marking them done"
@@ -74,7 +75,7 @@
     "M2": "done",
     "M3": "done",
     "M4": "done",
-    "M5": "in_progress",
+    "M5": "done",
     "C00": "ui_wired",
     "C01": "ui_wired",
     "C02": "ui_wired",
@@ -86,7 +87,7 @@
     "C08": "ui_wired",
     "C09": "ui_wired",
     "C10": "ui_wired",
-    "M6": "planned",
+    "M6": "in_progress",
     "M0": "done"
   },
   "modules": [

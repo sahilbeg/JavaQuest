@@ -69,8 +69,8 @@ Large modules (12 or more topics) may split into two commits, one per half. The 
 
 ## M5: Capstone
 
-- [ ] Capstone brief, staged tests, rubric
-- [ ] Final badge and completion screen
+- [x] Capstone brief, staged tests, rubric
+- [x] Final badge and completion screen
 
 ## M6: Release hardening
 

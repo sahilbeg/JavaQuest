@@ -142,6 +142,26 @@ Six stages, one test class each. Do them in order, and run the checks after each
 
 After stage 5, stages 1 to 4 must still pass, now on the database. That is the hexagon paying off: you swapped storage, and not one rule moved.
 
+### The rubric: green checks are the floor
+
+All six stages green means the feature works. That is the floor, not the finish line. At a big tech firm, a reviewer also asks: would I be happy to be on call for this?
+
+So once your checks pass, review your own code against Tsunade's rubric. Mark each line **Meets** or **Not yet**.
+
+| Area | Meets the SDE 2 bar when… |
+|---|---|
+| Correctness | A retry with the same `Idempotency-Key` never makes a second rental, and every request ends in exactly one answer. |
+| Design | Controllers only translate HTTP. No rule moved out of the core, and `LaunchWiring` is the only place that builds objects. |
+| Errors | Every `RentalException` kind maps to one status, in `LaunchProblems` only. No stack trace or SQL text reaches a rider. |
+| Data | Every SQL statement uses `?` parameters, never string concatenation. The UNIQUE constraint, not a Java check, stops double rentals. |
+| Limits | `RiderRateLimiter` is safe when two requests arrive at once, and it drops old timestamps, so one busy rider cannot fill the memory. |
+| Readability | Names say what things are. No leftover `TODO` lines, no dead code, and no method longer than a screen. |
+| Tests | You added one check of your own for a case the six stages miss, such as ending the same rental twice through the API. |
+
+```callout tip
+"Ready to ship" means every stage green **and** every rubric line at Meets. Tsunade's solution opens once your checks pass. Compare yours with it line by line, the way a reviewer would.
+```
+
 ## Recap
 
 - The service is the capstone core plus adapters around it. Controllers drive it; JDBC, the fleet and events are driven. One composition root wires them.
