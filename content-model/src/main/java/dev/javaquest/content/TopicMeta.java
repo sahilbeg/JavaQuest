@@ -79,7 +79,7 @@ public record TopicMeta(
     }
 
     public TopicMeta {
-        require(id != null && id.matches("module-\\d{2}-[a-z0-9-]+/(topic-\\d{2}-[a-z0-9-]+|boss|mini-project)"),
+        require(id != null && id.matches("module-\\d{2}[a-z]?-[a-z0-9-]+/(topic-\\d{2}-[a-z0-9-]+|boss|mini-project)"),
                 "id must look like module-NN-name/topic-NN-name, got: " + id);
         require(title != null && !title.isBlank(), "title is required");
         require(minutes >= 1 && minutes <= 15, "minutes must be between 1 and 15, got: " + minutes);

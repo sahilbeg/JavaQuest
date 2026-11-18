@@ -143,6 +143,20 @@ class ContentCatalogTest {
     }
 
     @Test
+    void aModuleInsertedLaterSortsBetweenItsNeighbours() throws IOException {
+        for (String module : List.of("module-02-oop", "module-01a-tools")) {
+            Path dir = Files.createDirectories(content.resolve(module));
+            Files.writeString(dir.resolve("module.yaml"), "id: " + module + "\ntitle: " + module + "\n");
+        }
+
+        var ids = ContentCatalog.load(content, practice).modules().stream().map(ModuleInfo::id).toList();
+
+        assertEquals(List.of("module-01-basics", "module-01a-tools", "module-02-oop"), ids);
+        assertThrows(IllegalArgumentException.class,
+                () -> new ModuleInfo("module-1a-tools", "Tools", null, null, null, null));
+    }
+
+    @Test
     void incidentWithAQuizIsRejected() throws IOException {
         Path boss = Files.createDirectories(content.resolve("module-01-basics/boss"));
         Files.writeString(boss.resolve("meta.yaml"), META.replace("module-01-basics/topic-01-variables", "module-01-basics/boss")
