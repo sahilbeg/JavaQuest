@@ -1,0 +1,136 @@
+topic: module-09a-platform/topic-07-config-and-secrets
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: twelve-factor-config
+    variants:
+      - { prompt: "Spoke's pipeline builds spoke-api-staging.jar and spoke-api-prod.jar, each with its own settings inside. What is the main problem?", choices: ["The jar that reaches production is not the jar that was tested in staging", "Two jars take twice the disk space", "Spring Boot cannot read settings packed in a jar", "Staging needs more settings than production"], answer: 0 }
+      - { prompt: "Which value belongs in config, outside the code, by the twelve-factor rule?", choices: ["The database URL, which is different in dev, staging and prod", "The 100-cent unlock fee rule in the fare calculator", "The list of REST endpoints", "The name of the Rental class"], answer: 0 }
+      - { prompt: "A Dockerfile has the line ENV SPOKE_DB_URL=jdbc:postgresql://db-prod.spoke.internal/spoke. What is wrong with it?", choices: ["It bakes one environment's setting into the image, so the same image cannot run everywhere", "ENV lines are ignored by Spring Boot", "The URL must be in lower case", "Nothing: the image now works in every environment"], answer: 0 }
+    explain: "Config is whatever differs between environments, and it must arrive when the app starts, not when it is built. Then one image is tested in staging and the very same image runs in production."
+    reteach: "### One build for every environment"
+
+  - id: q02
+    type: mcq
+    concept: property-precedence
+    variants:
+      - { prompt: "application.yml says spoke.db.pool-size: 10, application-staging.yml says 20, and the staging Pod has SPOKE_DB_POOLSIZE=30. The profile staging is on. Which pool size does the app use?", choices: ["30", "20", "10", "The app refuses to start because of the conflict"], answer: 0 }
+      - { prompt: "The environment has SPOKE_DB_POOLSIZE=30, and someone starts the app with --spoke.db.pool-size=40. Which pool size does the app use?", choices: ["40", "30", "The value from application.yml", "The app refuses to start because of the conflict"], answer: 0 }
+      - { prompt: "application.yml says spoke.city: Riverton, and the active profile's file says spoke.city: Bramford. Nothing else sets it. Which city does the app use?", choices: ["Bramford", "Riverton", "Both, as a list", "Neither: the app fails to start"], answer: 0 }
+    explain: "From lowest to highest: defaults, application.yml, the profile file, environment variables, Java system properties, command-line arguments, test settings. The highest source that sets a key wins."
+    reteach: "### Which source wins"
+
+  - id: q03
+    type: fill-blank
+    concept: relaxed-binding
+    prompt: "___=25     # the environment variable that sets spoke.db.pool-size"
+    answers: ["SPOKE_DB_POOLSIZE"]
+    explain: "The documented rule: dots become underscores, dashes are removed, and everything is in capitals. spoke.db.pool-size becomes SPOKE_DB_POOLSIZE."
+    reteach: "### Relaxed binding: SPOKE_DB_URL is spoke.db.url"
+
+  - id: q04
+    type: predict-output
+    concept: relaxed-binding
+    prompt: "This applies the documented rule for turning a key into an environment variable name. What does it print?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String key = "spoke.payment.api-key";
+              String env = key.replace(".", "_").replace("-", "").toUpperCase();
+              System.out.println(env);
+          }
+      }
+    answer: "SPOKE_PAYMENT_APIKEY"
+    explain: "Dots become underscores, the dash disappears, and the name goes to capitals: SPOKE_PAYMENT_APIKEY."
+    reteach: "### Relaxed binding: SPOKE_DB_URL is spoke.db.url"
+
+  - id: q05
+    type: spot-the-bug
+    concept: fail-fast-validation
+    prompt: "A deploy forgot spoke.db.username, and the app started anyway. It failed on the first ride. Which line lets that happen?"
+    code: |
+      @ConfigurationProperties("spoke.db")
+      record DbSettings(
+              @NotBlank String url,
+              @NotBlank String username,
+              @Min(1) @Max(50) int poolSize) {}
+    bugLine: 1
+    explain: "The rules are there, but without @Validated next to @ConfigurationProperties nobody checks them. The missing username becomes null and the app starts. With @Validated, Spring stops at startup with APPLICATION FAILED TO START and lists every broken property."
+    reteach: "### Syntax: @ConfigurationProperties with @Validated"
+
+  - id: q06
+    type: mcq
+    concept: fail-fast-validation
+    variants:
+      - { prompt: "A new spoke-api version has a config bug that @Validated catches at startup. What happens during the rolling update?", choices: ["The new Pods never become ready, so most old Pods keep serving (all of them with maxUnavailable: 0) and the rollout stalls", "Every Pod restarts at once and riders see errors", "The new Pods start and fail on the first request", "Kubernetes ignores the error and marks the Pods ready"], answer: 0 }
+      - { prompt: "Spring's APPLICATION FAILED TO START message for a bad config includes an Origin line. What does it tell you?", choices: ["Which property source the bad value came from, such as commandLineArgs", "Which class threw the first exception", "The git commit that changed the value", "The host of the database"], answer: 0 }
+    explain: "Failing fast turns a config bug into a stalled deploy instead of a rider-facing outage. Spring lists every broken property, its value, the reason, and the source it came from."
+    reteach: "### Fail fast: a bad config stops the start"
+
+  - id: q07
+    type: mcq
+    concept: secret-stores
+    variants:
+      - { prompt: "Why use a secret manager such as Vault or AWS Secrets Manager instead of a private config repository?", choices: ["It encrypts secrets, limits who may read each one, and logs every read", "It makes the app start faster", "It removes the need for any configuration", "It turns secrets into feature flags"], answer: 0 }
+      - { prompt: "How does spoke-api on Kubernetes prove who it is to Vault, without a stored password?", choices: ["Vault trusts the Pod's service account token, which the platform provides", "It sends the database password", "It sends its image tag", "Vault lets any Pod in the cluster read every secret"], answer: 0 }
+      - { prompt: "The payment key was used from an unknown machine last night. Which secret manager feature tells you which identity read it, and when?", choices: ["The audit log, which records every read", "Encryption at rest", "Rotation", "Relaxed binding"], answer: 0 }
+    explain: "A secret manager stores secrets encrypted, applies least privilege, and audits every read: who, which secret, when. The platform vouches for the app's identity, so no password is needed to fetch the password."
+    reteach: "### Secret managers: Vault and AWS Secrets Manager"
+
+  - id: q08
+    type: mcq
+    concept: secret-stores
+    variants:
+      - { prompt: "Why are mounted files a safer default than environment variables for the database password?", choices: ["Environment variables are inherited by child processes and often dumped by crash reports", "Files are encrypted by Java", "Environment variables cannot hold special characters", "Spring Boot cannot read environment variables"], answer: 0 }
+      - { prompt: "Which Spring Boot setting reads every file under /etc/spoke/secrets/ as a property?", choices: ["spring.config.import: \"optional:configtree:/etc/spoke/secrets/\"", "spring.profiles.active: secrets", "management.endpoint.env.show-values: always", "spoke.db.url: ${secrets}"], answer: 0 }
+    explain: "Environment variables leak through child processes, /proc and crash dumps, and need a restart to change. Spring's configtree import turns each file under a folder into a property, so /etc/spoke/secrets/spoke/db/password becomes spoke.db.password."
+    reteach: "### Environment variables or mounted files?"
+
+  - id: q09
+    type: order
+    concept: secret-hygiene
+    prompt: "The leaked database password must be rotated without downtime. Put the steps in order."
+    items:
+      - "Create a new database password while the old one still works"
+      - "Roll out spoke-api with the new password"
+      - "Check that nothing logs in with the old password any more"
+      - "Switch the old password off"
+    explain: "Rotation needs an overlap. Both passwords work while the app moves to the new one. Only when nothing uses the old one do you switch it off. Deleting the line from git alone does nothing, because history keeps it."
+    reteach: "### Rotation and short-lived credentials"
+
+  - id: q10
+    type: predict-output
+    concept: secret-hygiene
+    prompt: "Spoke logs its database settings at startup. What does this print?"
+    code: |
+      public class Main {
+          record DbSettings(String username, String password) {}
+
+          public static void main(String[] args) {
+              System.out.println(new DbSettings("spoke_api", "hunter2"));
+          }
+      }
+    answer: "DbSettings[username=spoke_api, password=hunter2]"
+    explain: "A record's toString prints every field, so logging the settings logs the password. Override toString to print password=******, or keep the password out of anything that gets logged."
+    reteach: "### Masking secrets in logs and actuator"
+
+  - id: q11
+    type: mcq
+    concept: twelve-factor-config
+    variants:
+      - { prompt: "Which value belongs in a feature flag service, not in config?", choices: ["night-discount switched on for 10% of riders", "The database URL for staging", "The connection pool size", "The payment provider's API key"], answer: 0 }
+      - { prompt: "Why is an environment variable a poor kill switch?", choices: ["Changing it needs a restart of every Pod, which is too slow in an emergency", "Environment variables cannot hold true or false", "Kill switches must live in git", "Spring Boot ignores boolean environment variables"], answer: 0 }
+    explain: "Config changes with a deploy and differs by environment. A feature flag changes at runtime, in seconds, and can differ by rider or percentage. A kill switch must flip without a restart."
+    reteach: "### Feature flags are not config"
+
+  - id: q12
+    type: mcq
+    concept: environment-guards
+    variants:
+      - { prompt: "Which guard stops staging from using the production database even when every setting is wrong?", choices: ["Separate networks, so staging cannot reach production's database at all", "A longer connection timeout", "A comment in application.yml", "Turning on more logging"], answer: 0 }
+      - { prompt: "A startup guard sees spoke.env=staging and the database host db-prod.spoke.internal. What should it do?", choices: ["Refuse to start, naming the environment and the host but never the password", "Start, and log a warning", "Switch spoke.env to prod", "Start, but only allow reads"], answer: 0 }
+      - { prompt: "What should application.yml use as its default database URL?", choices: ["localhost, so a forgotten override fails safely", "The production URL, since production matters most", "The staging URL, since staging is in the middle", "A random host, chosen at startup"], answer: 0 }
+    explain: "Stack guards: separate networks and credentials, no production defaults, a startup check that compares spoke.env with the database host, and a log line saying where the app is."
+    reteach: "### Guarding against the wrong environment"

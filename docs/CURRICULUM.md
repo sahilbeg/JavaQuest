@@ -9,7 +9,7 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 - Every topic follows: Hook -> Concept -> Worked example -> Try it -> Quiz -> Coding challenge -> Recap and common mistakes.
 - Practice `code` means a JUnit exercise in `practice/`. Practice `quiz` means quiz plus a guided activity (tool topics, theory topics). Mastery for `quiz` topics is the quiz alone.
 - Every module ends with a boss challenge, shown as an incident (`INC-MM`), and a mini-project, shown as a feature (`FEAT-MM`). The story for each is in `docs/STORY.md`.
-- Every topic is shown as a ticket keyed `SPK-MMTT`, for example `SPK-0105`. Tickets added after a module was first built keep the next free key, so a key can be out of step with the `#` column (for example SPK-0813 comes first in module 08).
+- Every topic is shown as a ticket keyed `SPK-MMTT`, for example `SPK-0105`. Tickets added after a module was first built keep the next free key, so a key can be out of step with the `#` column (for example SPK-0813 comes first in module 08). Modules inserted later carry a letter in their id and the next free numbers in their keys: `module-09a-platform` is SPK-11TT, INC-11 and FEAT-11, and `module-09b-data` is SPK-12TT, INC-12 and FEAT-12. They sit between modules 09 and 10.
 
 ## module-00-foundations: How computers and programs work (project: Day one)
 
@@ -208,11 +208,41 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | boss | `module-09-architecture/boss` | INC-09: The live map falls over at peak | code | `module-09-architecture/topic-10-kubernetes` |
 | mini-project | `module-09-architecture/mini-project` | FEAT-09: Event-driven billing | code | `module-09-architecture/topic-10-kubernetes` |
 
+## module-09a-platform: Platform and DevOps (project: Ship it everywhere)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `module-09a-platform/topic-01-dockerfiles` | Production Dockerfiles: layers, multi-stage builds and small, safe images | code | `module-09-architecture/boss` |
+| 2 | `module-09a-platform/topic-02-docker-compose` | Docker Compose: running Spoke and its database locally | quiz | `module-09a-platform/topic-01-dockerfiles` |
+| 3 | `module-09a-platform/topic-03-github-actions` | GitHub Actions in depth: workflows, caching, secrets and releases | code | `module-09a-platform/topic-02-docker-compose` |
+| 4 | `module-09a-platform/topic-04-kubernetes-manifests` | Kubernetes manifests: Deployments, Services, probes and rollouts | code | `module-09a-platform/topic-03-github-actions` |
+| 5 | `module-09a-platform/topic-05-helm-kustomize` | Helm and Kustomize: one app, many environments | quiz | `module-09a-platform/topic-04-kubernetes-manifests` |
+| 6 | `module-09a-platform/topic-06-infrastructure-as-code` | Infrastructure as code: Terraform, state and GitOps | quiz | `module-09a-platform/topic-05-helm-kustomize` |
+| 7 | `module-09a-platform/topic-07-config-and-secrets` | Configuration and secrets: twelve-factor apps and secret stores | code | `module-09a-platform/topic-06-infrastructure-as-code` |
+| 8 | `module-09a-platform/topic-08-monitoring-stack` | The monitoring stack: Prometheus, PromQL, Grafana and alerts | quiz | `module-09a-platform/topic-07-config-and-secrets` |
+| boss | `module-09a-platform/boss` | INC-11: The deploy that took Spoke down | code | `module-09a-platform/topic-08-monitoring-stack` |
+| mini-project | `module-09a-platform/mini-project` | FEAT-11: One-click deploys | code | `module-09a-platform/topic-08-monitoring-stack` |
+
+## module-09b-data: Data in depth (project: Know your data)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `module-09b-data/topic-01-advanced-sql` | Advanced SQL: joins, window functions and CTEs | code | `module-09a-platform/boss` |
+| 2 | `module-09b-data/topic-02-index-internals` | How indexes work: B-trees, LSM trees and query plans | code | `module-09b-data/topic-01-advanced-sql` |
+| 3 | `module-09b-data/topic-03-transaction-internals` | Inside transactions: MVCC, the write-ahead log and isolation | quiz | `module-09b-data/topic-02-index-internals` |
+| 4 | `module-09b-data/topic-04-nosql-modeling` | NoSQL data modelling: key-value, document and wide-column | quiz | `module-09b-data/topic-03-transaction-internals` |
+| 5 | `module-09b-data/topic-05-redis-patterns` | Redis patterns: caches, counters, leaderboards and locks | code | `module-09b-data/topic-04-nosql-modeling` |
+| 6 | `module-09b-data/topic-06-replication-sharding` | Replication and sharding: lag, quorums and consistent hashing | code | `module-09b-data/topic-05-redis-patterns` |
+| 7 | `module-09b-data/topic-07-data-pipelines` | Data pipelines: batch, streams and DAG schedulers like Airflow | code | `module-09b-data/topic-06-replication-sharding` |
+| 8 | `module-09b-data/topic-08-postgres-in-production` | Postgres in production: pooling, partitions, JSONB and backups | quiz | `module-09b-data/topic-07-data-pipelines` |
+| boss | `module-09b-data/boss` | INC-12: Month-end reports grind the database | code | `module-09b-data/topic-08-postgres-in-production` |
+| mini-project | `module-09b-data/mini-project` | FEAT-12: The rider statements data mart | code | `module-09b-data/topic-08-postgres-in-production` |
+
 ## module-10-professional: Professional skills (project: Full-time offer)
 
 | # | Topic ID | Title | Practice | Prerequisites |
 |---|---|---|---|---|
-| 1 | `module-10-professional/topic-01-code-reviews` | Giving and receiving code reviews | quiz | `module-09-architecture/boss` |
+| 1 | `module-10-professional/topic-01-code-reviews` | Giving and receiving code reviews | quiz | `module-09b-data/boss` |
 | 2 | `module-10-professional/topic-02-reading-codebases` | Reading large codebases | quiz | `module-10-professional/topic-01-code-reviews` |
 | 3 | `module-10-professional/topic-03-documentation` | Writing documentation | quiz | `module-10-professional/topic-02-reading-codebases` |
 | 4 | `module-10-professional/topic-04-estimation` | Estimation and planning | quiz | `module-10-professional/topic-03-documentation` |
@@ -223,6 +253,6 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 
 ## Totals
 
-- Modules: 11
-- Lessons: 133
-- Graded units including bosses and mini-projects: 155
+- Modules: 13
+- Lessons: 149
+- Graded units including bosses and mini-projects: 175

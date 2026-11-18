@@ -1,0 +1,22 @@
+id: module-09a-platform/topic-02-docker-compose
+title: "Docker Compose: running Spoke and its database locally"
+order: 2
+minutes: 15
+prerequisites: [module-09a-platform/topic-01-dockerfiles]
+concepts: [services-and-images, networking-and-ports, volumes-and-data, environment-and-secrets, health-and-startup-order, profiles-and-overrides, compose-for-testing]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-1102
+  from: maya
+  title: "New hires lose their first day to setup"
+  body: >
+    Two engineers joined on Monday, and both spent the whole day getting Postgres, Redis and the API running on their laptops.
+    One had the wrong Postgres version, the other had a port clash, and neither could follow our 14-step setup page.
+    I want one file and one command that starts everything, the same way on every laptop. Can you learn how Compose would do it?
+hints:
+  - "Inside a container, localhost is that container. Services on the same Compose network reach each other by service name: db:5432, redis:6379."
+  - "Plain depends_on only waits for a container to start. Add a healthcheck and condition: service_healthy to wait until Postgres really accepts connections."
+  - "Named volumes survive docker compose down; only down -v deletes them. Postgres runs its init scripts only when its data folder is empty."
+review: true

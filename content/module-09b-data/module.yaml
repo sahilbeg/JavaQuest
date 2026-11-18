@@ -1,0 +1,6 @@
+id: module-09b-data
+title: Data in depth
+project: Know your data
+summary: Go deep on data. Write serious SQL, learn how indexes and transactions really work, model data for NoSQL and Redis, replicate and shard it, and build pipelines that run every night.
+unlockAfter: module-09a-platform/boss
+mascotIntro: "Yo! Every rider, ride and fare lives in a database. Engineers who truly understand data are the ones teams fight over."

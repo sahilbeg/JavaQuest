@@ -1,0 +1,134 @@
+topic: module-09b-data/topic-04-nosql-modeling
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: nosql-tradeoffs
+    variants:
+      - { prompt: "Ride history moves to DynamoDB, keyed by rider. Which request becomes hardest?", choices: ["Finance's new question: average fare by station and weekday, over all rides", "Get rider-7's last 50 rides", "Add a finished ride for rider-7", "Get rider-7's profile and rides together"], answer: 0 }
+      - { prompt: "Which of these do most NoSQL stores give up to scale out?", choices: ["Joins across tables, chosen freely at query time", "Storing data on disk", "Reading one item by its key", "Keeping copies of data on several machines"], answer: 0 }
+    explain: "NoSQL tables are built for the questions you planned. Joins, ad-hoc queries, constraints and easy multi-item transactions are what you trade for scale-out and predictable latency."
+    reteach: "### What you give up"
+
+  - id: q02
+    type: mcq
+    concept: consistency-and-choice
+    variants:
+      - { prompt: "Spoke has 100,000 riders. 'My rides' must load in under 10 ms in every city. What is the best first step?", choices: ["Measure the Postgres query with an index on (rider_id, started_at DESC), then add a replica or cache near each city", "Move all ride history to DynamoDB at once", "Store every ride inside the rider's row as one big JSON array", "Move ride history to a graph database"], answer: 0 }
+      - { prompt: "Which situation is the strongest reason to keep data in PostgreSQL rather than a NoSQL store?", choices: ["Payments that need transactions and constraints, and reports whose questions change every month", "A few fixed questions over billions of rows written in many regions", "Millions of writes a second spread across many machines", "A screen that always reads one known key"], answer: 0 }
+    explain: "With the right index, Postgres reads a rider's last 50 rides in one short index range read. Distance, not the database, usually dominates the 10 ms. Keep Postgres when you need transactions, constraints and changing questions."
+    reteach: "### When Postgres is still the right answer"
+
+  - id: q03
+    type: order
+    concept: access-patterns
+    prompt: "You are designing ride history for a NoSQL store. Put the steps in order."
+    items:
+      - "List every access pattern, with its rate and its latency target"
+      - "Choose a partition key so each pattern reads a single partition"
+      - "Choose sort keys or clustering columns so rows come back in the order the pattern needs"
+      - "Add a table or index for each pattern the main keys cannot serve, copying data where needed"
+      - "Load test with realistic traffic, watching for hot or oversized partitions"
+    explain: "NoSQL design starts from the questions. Keys come from the patterns, extra tables or indexes cover the rest, and a load test proves the partitions stay small and evenly used."
+    reteach: "### Access patterns first"
+
+  - id: q04
+    type: mcq
+    concept: dynamodb-design
+    variants:
+      - { prompt: "Every GPS ping from every city is stored with PK = DAY#2026-11-18. At 08:00, writes are throttled although the table has spare capacity. Why?", choices: ["Every write goes to one partition, which has its own write ceiling", "DynamoDB cannot store more than 1,000 items a day", "Ping items are bigger than 400 KB", "On-demand tables never throttle, so it must be a network fault"], answer: 0 }
+      - { prompt: "Which partition key spreads GPS ping writes best?", choices: ["BIKE#B-1042#2026-11-18: one bike, one day", "DAY#2026-11-18", "CITY#riverton", "PINGS"], answer: 0 }
+    explain: "Throughput is limited per partition. A key that every writer shares makes one hot partition. Keys with many values used evenly, such as bike plus day, spread the load."
+    reteach: "### Hot partitions and capacity"
+
+  - id: q05
+    type: mcq
+    concept: document-stores
+    variants:
+      - { prompt: "In MongoDB, each rider document holds a rides array with every ride the rider has taken. What eventually goes wrong?", choices: ["The array grows forever, saves slow down, and the document hits the 16 MB limit", "MongoDB sorts the array alphabetically on every save", "Two riders cannot have rides with the same bike", "Nothing: documents can grow without limit"], answer: 0 }
+      - { prompt: "The profile screen shows a rider's last 3 rides. All rides live in their own rides collection. What is the subset pattern?", choices: ["Also embed a small copy of just the latest 3 rides in the rider document", "Embed every ride in the rider document", "Store the profile inside each ride document", "Run a Scan of the rides collection on every profile view"], answer: 0 }
+    explain: "An unbounded array is the classic document trap: bigger writes, heavier reads, and a hard 16 MB document limit. Keep rides in their own collection, and embed a small bounded subset when a screen needs it."
+    reteach: "### Traps: unbounded arrays and the 16 MB limit"
+
+  - id: q06
+    type: mcq
+    concept: document-stores
+    variants:
+      - { prompt: "A MongoDB ride document must show the start station's name on the receipt, exactly as it was that day. What should it hold?", choices: ["An embedded copy of the station's id and name", "Only the station id, joined with $lookup on every receipt", "The whole station document with its list of every ride", "Nothing: receipts should never show station names"], answer: 0 }
+      - { prompt: "Which data should a ride document reference by id rather than embed?", choices: ["The rider, whose details change and are shared by thousands of rides", "The ride's minutes and fare", "The bike type at the time of the ride", "The start and end times"], answer: 0 }
+    explain: "Embed what is read with the parent, belongs to it, is bounded and rarely changes. Reference what is shared, grows or changes often."
+    reteach: "### Embed or reference"
+
+  - id: q07
+    type: fill-blank
+    concept: wide-column-stores
+    prompt: ") WITH CLUSTERING ORDER BY (started_at ___, rental_id ASC);   -- a rider's newest ride first"
+    answers: ["DESC"]
+    explain: "Clustering columns sort rows inside a partition on disk. DESC on started_at stores the newest ride first, so LIMIT 50 reads the latest 50 with no sort at query time."
+    reteach: "### Syntax: a Cassandra table"
+
+  - id: q08
+    type: mcq
+    concept: wide-column-stores
+    variants:
+      - { prompt: "rides_by_station has PRIMARY KEY ((station_id), started_at, rental_id). After a year, reads for Harbor time out while quiet stations are fine. Why?", choices: ["Harbor's partition holds every ride it ever saw: a wide partition. Add a day bucket to the partition key", "Cassandra cannot sort by started_at", "Harbor's rides need a strongly consistent read", "Cassandra keeps only a year of data"], answer: 0 }
+      - { prompt: "Why does rides_by_station_day use PRIMARY KEY ((station_id, day), started_at, rental_id)?", choices: ["The day bucket keeps each partition to one station's rides for one day, a bounded size", "Cassandra requires a date in every primary key", "It lets the query skip naming the station", "It makes rides sort by rental id"], answer: 0 }
+    explain: "A partition that grows forever gets slow to read and repair. Bucketing adds a time slice to the partition key, so each partition stays a bounded size."
+    reteach: "### Wide partitions and buckets"
+
+  - id: q09
+    type: spot-the-bug
+    concept: wide-column-stores
+    prompt: "Cassandra refuses one of these queries unless ALLOW FILTERING is added. Which line?"
+    code: |
+      CREATE TABLE rides_by_rider (
+          rider_id text, started_at timestamp, rental_id text, from_station text,
+          PRIMARY KEY ((rider_id), started_at, rental_id)
+      ) WITH CLUSTERING ORDER BY (started_at DESC, rental_id ASC);
+      SELECT * FROM rides_by_rider WHERE rider_id = 'rider-7' LIMIT 50;
+      SELECT * FROM rides_by_rider WHERE from_station = 'harbor';
+    bugLine: 6
+    explain: "A Cassandra query must name the partition key. Line 6 filters on from_station only, so it would have to read every partition on every machine. The fix is a second table keyed for that question."
+    reteach: "### One table per query"
+
+  - id: q10
+    type: mcq
+    concept: dynamodb-design
+    variants:
+      - { prompt: "Items look like PK = RIDER#rider-7, SK = RIDE#2026-11-18T08:10#rental-17. Which request returns rider-7's last 50 rides?", choices: ["Query PK = RIDER#rider-7 and begins_with(SK, RIDE#), ScanIndexForward = false, Limit = 50", "Scan the table with a filter on rider-7, then sort in the app", "GetItem with PK = RIDER#rider-7 and no sort key", "Query PK = RIDE#rental-17"], answer: 0 }
+      - { prompt: "A Scan with a filter returns 50 items from a table of 10 million. What do you pay for?", choices: ["Reading every item the Scan touched, not just the 50 returned", "Only the 50 items returned", "Nothing extra: filters are free", "Only the items the filter dropped"], answer: 0 }
+    explain: "A Query names one partition key and reads only that item collection, sorted by sort key. A Scan reads every item, and its filter runs after the read, so you pay for all of it."
+    reteach: "### Query, not scan"
+
+  - id: q11
+    type: predict-output
+    concept: dynamodb-design
+    prompt: "This models one DynamoDB partition and a Query with a sort key BETWEEN. Text sort keys compare character by character. What does it print?"
+    code: |
+      import java.util.TreeMap;
+
+      public class Main {
+          public static void main(String[] args) {
+              TreeMap<String, String> harborToday = new TreeMap<>();   // one partition: STATION#harbor#2026-11-18
+              harborToday.put("2026-11-18T09:00#rental-19", "rider-3");
+              harborToday.put("2026-11-18T07:55#rental-16", "rider-2");
+              harborToday.put("2026-11-18T08:40#rental-18", "rider-9");
+              harborToday.put("2026-11-18T08:10#rental-17", "rider-7");
+              // like a DynamoDB Query: sort key BETWEEN "2026-11-18T08:00" AND "2026-11-18T09:00"
+              System.out.println(harborToday.subMap("2026-11-18T08:00", true, "2026-11-18T09:00", true).values());
+          }
+      }
+    answer: "[rider-7, rider-9]"
+    explain: "Keys sort as text, so the map returns them in time order. 07:55 is before the range. 2026-11-18T09:00#rental-19 sorts after 2026-11-18T09:00, because it is longer with the same start, so it is outside the range too."
+    reteach: "### DynamoDB: partition key and sort key"
+
+  - id: q12
+    type: mcq
+    concept: consistency-and-choice
+    variants:
+      - { prompt: "Cassandra keeps 3 copies. Writes and reads both use QUORUM. Why does a read see the latest successful write?", choices: ["2 + 2 > 3, so every read group shares at least one copy with every write group", "QUORUM waits for all 3 copies on both reads and writes", "Cassandra locks the row between the write and the read", "QUORUM reads always go to the machine that took the write"], answer: 0 }
+      - { prompt: "A rider ends a ride, and 'My rides' reads from a DynamoDB GSI straight after. The new ride is missing. Why?", choices: ["GSIs are updated asynchronously and only support eventually consistent reads", "The ride was over 400 KB", "GSIs only hold items older than one day", "The Query used ScanIndexForward = false"], answer: 0 }
+      - { prompt: "Which DynamoDB read can be strongly consistent?", choices: ["A Query on the table itself with ConsistentRead set", "Any read on a GSI with ConsistentRead set", "A Scan of a GSI", "None: DynamoDB never offers strong reads"], answer: 0 }
+    explain: "Copies agree after a moment, so you choose how many to wait for. Quorum reads and writes overlap when R + W > N. DynamoDB offers strong reads on the table and LSIs, never on GSIs."
+    reteach: "### Consistency settings"

@@ -1,0 +1,25 @@
+id: module-09a-platform/boss
+title: "INC-11: The deploy that took Spoke down"
+order: 99
+minutes: 15
+prerequisites: [module-09a-platform/topic-08-monitoring-stack]
+concepts: [immutable-image-tags, image-digests, rollout-rounding, availability-floor, graceful-shutdown, readiness-draining]
+practice:
+  kind: code
+  runner: plain
+  timeoutSeconds: 30
+ticket:
+  key: INC-11
+  from: theo
+  title: "The deploy that took Spoke down"
+  body: >
+    Friday's 17:00 deploy of 2.6.0 went wrong three ways at once.
+    Some pods ran an old build, because we deploy the tag latest and one node still had Tuesday's copy.
+    The rollout stopped all 30 pods together, so riders got 503s for four minutes.
+    And the old pods were killed with unlocks still running, so riders saw errors half-way through an unlock.
+    Please fix the deploy tooling so none of this can happen on the next Friday.
+hints:
+  - "Bronze: build the tag with version + \"-\" + commitSha.substring(0, 12), after checking both with regular expressions such as \\d+\\.\\d+\\.\\d+ and [0-9a-f]{40}. In requireImmutable, handle a digest after @ first. Otherwise find the tag with image.indexOf(':', image.lastIndexOf('/') + 1), and accept it only if it matches \\d+\\.\\d+\\.\\d+-[0-9a-f]{12}."
+  - "Silver: resolve is ready. In plan, check what was written first: resolve(value, 100, false) gives the number as written, so both 0 is refused. After resolving, if (surge == 0 && unavailable == 0) unavailable = 1, cap it at replicas, then check the floor. Then loop while oldPods > 0 or newPods < replicas, working out stopped, then started, then serving, with the README's three formulas."
+  - "Gold: keep a CountDownLatch drained = new CountDownLatch(1). shutdown sets ready = false first, counts down at once if nothing is in flight, then calls drained.await(gracePeriod.toMillis(), TimeUnit.MILLISECONDS). In handle, return Response.shuttingDown() when !ready, check ready again after inFlight.incrementAndGet(), and in finally count down when the count reaches 0 and !ready."
+review: false

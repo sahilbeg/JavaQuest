@@ -1,0 +1,24 @@
+id: module-09b-data/topic-01-advanced-sql
+title: "Advanced SQL: joins, window functions and CTEs"
+order: 1
+minutes: 15
+prerequisites: [module-09a-platform/boss]
+concepts: [query-order, outer-joins-and-null, semi-and-anti-joins, window-functions, ranking-and-top-n, ctes-and-recursion]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-1201
+  from: priya
+  title: "Rider reports I can actually trust"
+  body: >
+    Before the rider newsletter goes out, I need numbers I can trust: the top 3 riders at each station every month,
+    how many days pass between each rider's rides, and revenue running day by day.
+    I also want every rider who has never tried an e-bike, so we can offer them a free one, and which stations
+    a rider can reach within a few hops on the new bike lanes. Can you write these queries for me?
+hints:
+  - "Work one constant at a time, and build each query in layers with WITH: first count or pick the rows, then rank or compare them, then filter and sort. A window function cannot go in WHERE, so filter on it one layer up."
+  - "RANK() OVER (PARTITION BY station_id, ride_month ORDER BY rides DESC) gives tied riders the same place. LAG(started_at) OVER (PARTITION BY rider_id ORDER BY started_at, id) reads the rider's previous ride. NOT EXISTS stays correct when a guest ride has rider_id NULL; NOT IN does not."
+  - "Running totals: SUM(SUM(fare_cents)) OVER (ORDER BY ride_day ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW), and 2 PRECEDING for the last three days. Tiers: LEFT JOIN ride, then COUNT(r.id), not COUNT(*). Lanes: WITH RECURSIVE reach(station_id, hops) AS (SELECT to_id, 1 ... WHERE from_id = ? UNION ALL SELECT l.to_id, r.hops + 1 ... WHERE r.hops < ?), then GROUP BY station_id with MIN(hops)."
+review: true

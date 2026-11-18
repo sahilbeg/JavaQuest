@@ -273,6 +273,19 @@
                 <source>module-09-architecture/topic-09-resilience/src</source>
                 <source>module-09-architecture/boss/src</source>
                 <source>module-09-architecture/mini-project/src</source>
+                <source>module-09a-platform/topic-01-dockerfiles/src</source>
+                <source>module-09a-platform/topic-03-github-actions/src</source>
+                <source>module-09a-platform/topic-04-kubernetes-manifests/src</source>
+                <source>module-09a-platform/topic-07-config-and-secrets/src</source>
+                <source>module-09a-platform/boss/src</source>
+                <source>module-09a-platform/mini-project/src</source>
+                <source>module-09b-data/topic-01-advanced-sql/src</source>
+                <source>module-09b-data/topic-02-index-internals/src</source>
+                <source>module-09b-data/topic-05-redis-patterns/src</source>
+                <source>module-09b-data/topic-06-replication-sharding/src</source>
+                <source>module-09b-data/topic-07-data-pipelines/src</source>
+                <source>module-09b-data/boss/src</source>
+                <source>module-09b-data/mini-project/src</source>
                 <source>module-10-professional/topic-05-interview-prep/src</source>
                 <source>module-10-professional/topic-06-capstone/src</source>
                 <source>module-10-professional/boss/src</source>
@@ -409,6 +422,19 @@
                 <source>module-09-architecture/topic-09-resilience/test</source>
                 <source>module-09-architecture/boss/test</source>
                 <source>module-09-architecture/mini-project/test</source>
+                <source>module-09a-platform/topic-01-dockerfiles/test</source>
+                <source>module-09a-platform/topic-03-github-actions/test</source>
+                <source>module-09a-platform/topic-04-kubernetes-manifests/test</source>
+                <source>module-09a-platform/topic-07-config-and-secrets/test</source>
+                <source>module-09a-platform/boss/test</source>
+                <source>module-09a-platform/mini-project/test</source>
+                <source>module-09b-data/topic-01-advanced-sql/test</source>
+                <source>module-09b-data/topic-02-index-internals/test</source>
+                <source>module-09b-data/topic-05-redis-patterns/test</source>
+                <source>module-09b-data/topic-06-replication-sharding/test</source>
+                <source>module-09b-data/topic-07-data-pipelines/test</source>
+                <source>module-09b-data/boss/test</source>
+                <source>module-09b-data/mini-project/test</source>
                 <source>module-10-professional/topic-05-interview-prep/test</source>
                 <source>module-10-professional/topic-06-capstone/test</source>
                 <source>module-10-professional/boss/test</source>

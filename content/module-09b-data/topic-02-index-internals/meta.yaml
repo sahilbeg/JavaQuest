@@ -1,0 +1,23 @@
+id: module-09b-data/topic-02-index-internals
+title: "How indexes work: B-trees, LSM trees and query plans"
+order: 2
+minutes: 15
+prerequisites: [module-09b-data/topic-01-advanced-sql]
+concepts: [pages-and-fan-out, bplus-tree-operations, clustered-and-covering, composite-index-order, index-pitfalls, lsm-trees, query-plans]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-1202
+  from: theo
+  title: "One bike's ride history reads 40 million rows"
+  body: >
+    Looking up a rider's rides is instant. But when a bike comes in damaged, the "every ride on this bike between two times" report takes over a minute.
+    The query plan says it reads all 40 million rows to return a couple of dozen, and it slows every rider's app while it runs.
+    Before anyone adds a random index, can you work out how indexes really find rows, and which one this report needs?
+hints:
+  - "Start with childIndex and findLeaf: count the separators that are <= key, follow that child, and pass every node you visit through read(...). get then just looks inside the leaf it reaches."
+  - "insert returns a Split when a node overflows. A leaf split keeps the first (maxKeys + 1) / 2 entries, links the new right leaf in with next, and copies the right leaf's first key up. A branch split moves its middle key up. When the root splits, put makes a new root and height goes up by 1."
+  - "range: findLeaf(from), then scan keys in order; return when a key > toInclusive, add values for keys >= from, and only after a whole leaf go on with read(leaf.next). IndexAdvisor: walk the index columns; equality columns count and continue, the range column counts and stops, anything else stops."
+review: true

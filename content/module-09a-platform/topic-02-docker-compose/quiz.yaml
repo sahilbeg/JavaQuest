@@ -1,0 +1,137 @@
+topic: module-09a-platform/topic-02-docker-compose
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: services-and-images
+    variants:
+      - { prompt: "You fixed a bug in the API's Java code and ran docker compose up -d. The old behaviour is still there. Why?", choices: ["Compose reused the image it built before; run up --build", "Compose caches the API's HTTP answers", "The database volume still holds the old code", "depends_on stopped the API from restarting"], answer: 0 }
+      - { prompt: "The api service has both build: . and image: ghcr.io/spoke/spoke-api:dev. What does Compose do?", choices: ["Builds from the Dockerfile and names the result ghcr.io/spoke/spoke-api:dev", "Ignores build and always pulls the image", "Refuses to start: a service may have only one of them", "Builds the image and pushes it to the registry"], answer: 0 }
+    explain: "build: builds from a Dockerfile, and image: names the result. Compose builds only when no image exists yet, so after a code change you need docker compose up --build."
+    reteach: "### image or build"
+
+  - id: q02
+    type: mcq
+    concept: networking-and-ports
+    variants:
+      - { prompt: "Inside the api container, SPRING_DATASOURCE_URL is jdbc:postgresql://localhost:5432/spoke. What happens?", choices: ["The connection fails: localhost is the api container itself", "It reaches the db service", "It reaches the Postgres running on your laptop", "Compose rewrites localhost to db"], answer: 0 }
+      - { prompt: "In a container on the spoke network, pg_isready -h localhost says no response, but pg_isready -h db says accepting connections. Why?", choices: ["localhost is the container running the command; db is the database service's name", "pg_isready only works with service names", "The database blocks the word localhost", "db is a faster route to the same place"], answer: 0 }
+    explain: "Every container has its own localhost. To reach another service, use its service name and its container port, such as db:5432."
+    reteach: "### localhost inside a container"
+
+  - id: q03
+    type: fill-blank
+    concept: profiles-and-overrides
+    prompt: "docker compose ___ tools up -d   # start the usual services, plus adminer"
+    answers: ["--profile"]
+    explain: "adminer has profiles: [tools], so a plain up skips it. --profile tools switches that profile on, and setting COMPOSE_PROFILES=tools does the same. Services without profiles always start."
+    reteach: "### Profiles"
+
+  - id: q04
+    type: mcq
+    concept: networking-and-ports
+    variants:
+      - { prompt: "What does expose: [\"6379\"] on the redis service do?", choices: ["Publishes nothing; it only records which port the service uses", "Publishes 6379 on your laptop", "Lets other containers reach redis, which they otherwise could not", "Opens 6379 to the internet"], answer: 0 }
+      - { prompt: "Why write ports: \"127.0.0.1:55432:5432\" rather than \"55432:5432\"?", choices: ["Only your own laptop can reach the database, not others on the same Wi-Fi", "It makes the database faster", "Other containers need it to reach db", "Compose requires an IP address in every port"], answer: 0 }
+      - { prompt: "The db service has ports: \"127.0.0.1:55432:5432\". How does the api container reach the database?", choices: ["db:5432", "db:55432", "localhost:55432", "127.0.0.1:5432"], answer: 0 }
+    explain: "ports publishes a container port on the laptop, host first, and 127.0.0.1 keeps it private to the laptop. expose publishes nothing. Containers on one network reach each other's container ports directly."
+    reteach: "### ports or expose"
+
+  - id: q05
+    type: order
+    concept: environment-and-secrets
+    prompt: "Put a new hire's first-day setup in order."
+    items:
+      - "git clone git@github.com:spoke/spoke-api.git && cd spoke-api"
+      - "cp .env.example .env"
+      - "docker compose up -d --wait"
+      - "docker compose ps"
+    explain: "The repository brings compose.yaml and .env.example. Copying it to .env fills ${DB_PASSWORD:?...}, so up can start; --wait returns once everything is healthy, and ps shows the result."
+    reteach: "## Worked example"
+
+  - id: q06
+    type: spot-the-bug
+    concept: volumes-and-data
+    prompt: "The new init script never runs, and the last query fails with relation \"bike\" does not exist. Which line should change to start from a fresh database?"
+    code: |
+      git pull                         # brings db/init/02-bikes.sql
+      docker compose down
+      docker compose up -d --wait
+      docker compose exec db psql -U spoke -d spoke -c 'SELECT * FROM bike;'
+    bugLine: 2
+    explain: "Postgres runs its init scripts only when its data folder is empty. Plain down keeps the old volume, so Postgres logs Skipping initialization. down -v wipes it; migrations avoid the problem for real schemas."
+    reteach: "### Trap: a stale volume with an old schema"
+
+  - id: q07
+    type: mcq
+    concept: environment-and-secrets
+    variants:
+      - { prompt: "compose.yaml is committed to Git. Where should the local database password come from?", choices: ["${DB_PASSWORD}, filled in from a git-ignored .env file", "Written straight into compose.yaml", "An ENV line in the Dockerfile", "A comment at the top of compose.yaml"], answer: 0 }
+      - { prompt: "Why give Postgres its password through Compose's secrets: instead of an environment variable?", choices: ["The secret is a file in /run/secrets, which does not show up in docker inspect the way environment variables do", "Secrets make Postgres start faster", "Environment variables cannot hold passwords", "Secrets are stored in the image, so they never get lost"], answer: 0 }
+    explain: "Keep real values out of compose.yaml: ${...} reads them from the shell or a git-ignored .env, and secrets: mounts them as files. Commit a .env.example with fake values."
+    reteach: "### Trap: secrets in compose files"
+
+  - id: q08
+    type: predict-output
+    concept: environment-and-secrets
+    prompt: ".env says DB_PORT=55432, and you run DB_PORT=56000 docker compose up -d. This model follows Compose's rule. What does it print?"
+    code: |
+      import java.util.Map;
+
+      public class Main {
+          public static void main(String[] args) {
+              Map<String, String> shell = Map.of("DB_PORT", "56000");
+              Map<String, String> dotEnv = Map.of("DB_PORT", "55432");
+              String value = shell.containsKey("DB_PORT") ? shell.get("DB_PORT") : dotEnv.get("DB_PORT");
+              if (value == null || value.isEmpty()) {
+                  value = "5432";   // the :-5432 default
+              }
+              System.out.println("127.0.0.1:" + value + ":5432");
+          }
+      }
+    answer: "127.0.0.1:56000:5432"
+    explain: "For ${...}, a variable set in your shell wins over the same name in .env, and the :- default is used only when both are unset or empty."
+    reteach: "### Environment variables and .env"
+
+  - id: q09
+    type: mcq
+    concept: health-and-startup-order
+    variants:
+      - { prompt: "api has depends_on: [db]. Postgres needs 4 seconds before it accepts connections. What does Compose do?", choices: ["Starts api right after the db container starts, without waiting for Postgres to be ready", "Waits until Postgres accepts connections, then starts api", "Starts api before db", "Refuses to start until you add a health check"], answer: 0 }
+      - { prompt: "A one-off migrate service must finish before the API starts. Which condition does the API's depends_on need?", choices: ["service_completed_successfully", "service_started", "service_healthy", "service_restarted"], answer: 0 }
+    explain: "The short form only orders the starts. service_healthy waits for the health check, and service_completed_successfully waits for a job to exit with code 0. Keep retries in the app as well."
+    reteach: "### depends_on: started is not ready"
+
+  - id: q10
+    type: spot-the-bug
+    concept: health-and-startup-order
+    prompt: "db never becomes healthy, so the API never starts. Which line is wrong?"
+    code: |
+      db:
+        image: postgres:16-alpine
+        healthcheck:
+          test: ["CMD", "curl", "-f", "http://localhost:5432"]
+          interval: 5s
+          retries: 10
+    bugLine: 4
+    explain: "Postgres does not speak HTTP, and the image has no curl anyway. Use a tool the image already has: test: [\"CMD-SHELL\", \"pg_isready -U spoke -d spoke\"]."
+    reteach: "### Health checks"
+
+  - id: q11
+    type: mcq
+    concept: profiles-and-overrides
+    variants:
+      - { prompt: "compose.yaml publishes the api on 8080. compose.override.yaml gives the api ports: [\"5005:5005\"]. What does the api publish?", choices: ["Both 8080 and 5005", "Only 5005, because the override replaces the list", "Only 8080, because compose.yaml wins", "Nothing: Compose reports a conflict"], answer: 0 }
+      - { prompt: "Which command prints the final file, with compose.override.yaml merged in and every ${...} filled in?", choices: ["docker compose config", "docker compose ps", "docker compose logs", "docker compose exec"], answer: 0 }
+    explain: "Compose merges compose.override.yaml on top automatically. Maps merge by key and port lists are added together. docker compose config shows the merged result without starting anything."
+    reteach: "### Override files"
+
+  - id: q12
+    type: mcq
+    concept: compose-for-testing
+    variants:
+      - { prompt: "A CI job starts Postgres and Redis with Compose, then runs ./mvnw verify. Which start command makes sure Postgres is healthy before the first test?", choices: ["docker compose up -d --wait db redis", "docker compose up -d db redis", "docker compose config", "docker compose ps"], answer: 0 }
+      - { prompt: "You want to run one database test straight from the IDE, with no setup step first. Which fits best?", choices: ["Testcontainers, which starts the database from inside the test", "Compose started by the CI job", "A bind mount of the test folder", "A tools profile in compose.yaml"], answer: 0 }
+    explain: "up --wait returns only when every service is running and healthy, so tests never race the database. Testcontainers starts a fresh container from the test itself, which suits running one test in the IDE."
+    reteach: "### Compose for integration tests"

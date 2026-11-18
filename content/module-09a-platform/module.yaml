@@ -1,0 +1,6 @@
+id: module-09a-platform
+title: Platform and DevOps
+project: Ship it everywhere
+summary: Package Spoke into small, safe images, run it locally with Compose, build and release it with GitHub Actions, deploy it to Kubernetes, manage config and secrets, and watch it with Prometheus.
+unlockAfter: module-09-architecture/boss
+mascotIntro: "Yo! Writing the code is half the job. Now you'll be the one who ships it, every day, without waking anyone up."

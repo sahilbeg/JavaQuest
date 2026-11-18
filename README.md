@@ -2,7 +2,7 @@
 
 Learn Java from zero to a professional, job-ready engineer, through a story. You join **Spoke**, a bike-sharing startup, as an intern. Every lesson is a ticket from a teammate, and every fix is checked by real JUnit tests. By the end you launch Spoke in a second city and get a full-time offer.
 
-- **11 modules, 155 units:** from "what is a program" to data structures and algorithms, concurrency, Spring Boot, databases, system design, observability, Kubernetes and the interview loop.
+- **13 modules, 175 units:** from "what is a program" to data structures and algorithms, concurrency, Spring Boot, system design, hands-on DevOps (Docker, GitHub Actions, Kubernetes, Terraform, Prometheus), databases in depth (SQL, indexes, transactions, NoSQL, Redis, sharding, data pipelines) and the interview loop.
 - **Lessons** play as short cards with animations. **Onboarding checks** (quizzes) need 80% to pass.
 - **Fixes** are real Java you write in the browser or in your own IDE. The app runs the tests and shows what failed.
 - **Incidents** (production bugs with bronze, silver and gold tiers) and **features** close each module. The **capstone** is a Spring Boot service you build in six stages.

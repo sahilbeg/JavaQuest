@@ -1,0 +1,135 @@
+topic: module-09a-platform/topic-06-infrastructure-as-code
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: why-iac
+    variants:
+      - { prompt: "Staging and prod drifted apart after someone changed prod by clicking in the cloud console. What does infrastructure as code give Spoke that the console does not?", choices: ["A reviewed, versioned record in git of what should exist, which a tool applies the same way every time", "Faster clicking in the console", "Cheaper servers", "Automatic bug fixes in the Java code"], answer: 0 }
+      - { prompt: "Which problem is infrastructure as code NOT meant to solve?", choices: ["Bugs in the fare calculation in the Java code", "Not knowing who changed the database size, and why", "Changes going live with no review", "Rebuilding an environment by hand and missing a step"], answer: 0 }
+    explain: "Infrastructure as code brings git history, pull request review, reuse and CI to networks, databases and buckets. It does not fix application logic."
+    reteach: "### Infrastructure as code"
+
+  - id: q02
+    type: mcq
+    concept: declarative-terraform
+    variants:
+      - { prompt: "A Terraform file says one bucket named spoke-receipts-prod should exist. You apply it twice. What happens the second time?", choices: ["Nothing: the bucket already matches, so the plan is empty", "A second bucket is created", "The bucket is deleted and created again", "Terraform fails because the bucket exists"], answer: 0 }
+      - { prompt: "What is the difference between a declarative and an imperative setup?", choices: ["Declarative describes the result and the tool works out the steps; imperative lists the steps", "Declarative is written in Java; imperative in YAML", "Declarative only works in the cloud console", "There is none"], answer: 0 }
+    explain: "Declarative files describe what should exist. The tool compares that with reality and acts on the difference, so applying twice changes nothing: it is idempotent."
+    reteach: "### Declarative versus imperative"
+
+  - id: q03
+    type: order
+    concept: declarative-terraform
+    prompt: "Put a Terraform change to prod in order."
+    items:
+      - "Change the .tf files on a branch and open a pull request"
+      - "CI runs terraform init, then terraform plan -out=tfplan"
+      - "A reviewer reads the plan posted on the pull request"
+      - "The pull request is merged and prod is approved"
+      - "CI runs terraform apply tfplan, applying exactly the reviewed plan"
+    explain: "init connects providers and state, plan shows what would change, people review the plan, and apply of the saved plan file runs exactly what was reviewed."
+    reteach: "### Plans in pull requests"
+
+  - id: q04
+    type: predict-output
+    concept: drift-and-plan
+    prompt: "These are the actions in a plan. A replacement (-/+) counts as one add and one destroy. What does the summary say?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String[] lines = {"+ aws_sqs_queue.ride_events", "~ aws_db_instance.rides", "-/+ aws_s3_bucket.receipts", "+ aws_s3_bucket.exports"};
+              int add = 0, change = 0, destroy = 0;
+              for (String line : lines) {
+                  if (line.startsWith("-/+")) { add++; destroy++; }
+                  else if (line.startsWith("+")) add++;
+                  else if (line.startsWith("~")) change++;
+                  else if (line.startsWith("-")) destroy++;
+              }
+              System.out.println("Plan: " + add + " to add, " + change + " to change, " + destroy + " to destroy.");
+          }
+      }
+    answer: "Plan: 3 to add, 1 to change, 1 to destroy."
+    explain: "Two creates and the new half of the replacement make 3 to add. The ~ is 1 change. The old receipts bucket is destroyed: 1 to destroy. A -/+ on a bucket of data means losing that data."
+    reteach: "### Reading a plan"
+
+  - id: q05
+    type: mcq
+    concept: state-and-locking
+    variants:
+      - { prompt: "What does the Terraform state file hold?", choices: ["Each resource address in the code, mapped to its real object's id and last-seen attributes", "Only the .tf files, copied", "The cloud console's login history", "A list of the team's git commits"], answer: 0 }
+      - { prompt: "A bucket exists in the cloud, but it is in neither the state file nor the code. What does terraform plan do about it?", choices: ["Nothing: objects not in state are invisible to Terraform", "Plans to destroy it", "Imports it automatically", "Fails with an error"], answer: 0 }
+    explain: "State maps addresses like aws_db_instance.rides to real objects. Terraform only manages what is in its state or its code. Something in neither, it never sees or touches."
+    reteach: "### The state file"
+
+  - id: q06
+    type: mcq
+    concept: state-and-locking
+    variants:
+      - { prompt: "Tsunade and Kakashi run terraform apply on prod at the same moment. What stops them corrupting the state?", choices: ["A state lock taken by the remote backend: the second one waits or fails", "Git merges the two state files", "Terraform runs both and keeps the bigger file", "Nothing can stop it"], answer: 0 }
+      - { prompt: "Why do teams keep Terraform state in a remote backend instead of a local file?", choices: ["So everyone and CI share one up-to-date, locked copy", "Because local files cannot hold JSON", "So Terraform runs faster on laptops", "Because providers refuse local state"], answer: 0 }
+    explain: "A remote backend such as S3 or GCS gives one shared state, with a lock so only one plan or apply writes it at a time. Turn on versioning to roll a broken state back."
+    reteach: "### Remote state and locking"
+
+  - id: q07
+    type: spot-the-bug
+    concept: state-and-locking
+    prompt: "This file is committed to git. Which line puts a secret in both the repository and the state file?"
+    code: |
+      resource "aws_db_instance" "rides" {
+        identifier     = "spoke-rides-prod"
+        engine         = "postgres"
+        instance_class = "db.m6g.large"
+        username       = "spoke"
+        password       = "r1ders-2026!"
+      }
+    bugLine: 6
+    explain: "A literal password lives in git forever, and Terraform also stores it in plain text in the state. Use manage_master_user_password = true so AWS creates and keeps it, and rotate the leaked one."
+    reteach: "### State traps: never hand-edit, secrets live in state"
+
+  - id: q08
+    type: mcq
+    concept: drift-and-plan
+    variants:
+      - { prompt: "The code says db.m6g.large, but someone raised prod to db.m6g.xlarge in the console. What does the next terraform plan show?", choices: ["~ instance_class \"db.m6g.xlarge\" -> \"db.m6g.large\": an update to put the code's value back", "No changes: Terraform trusts the console", "A new, second database", "An error that the state is corrupt"], answer: 0 }
+      - { prompt: "A plan shows drift on the prod database. What should the team do first?", choices: ["Find out why it was changed, then make the code say what is right, through a pull request", "Apply at once so the code wins", "Delete the state file", "Turn off the nightly plan"], answer: 0 }
+    explain: "plan reads the real objects, so a change made outside the code shows as an update back to the code's value. The click may have stopped an outage, so find out why before applying."
+    reteach: "### Drift: when reality wanders"
+
+  - id: q09
+    type: mcq
+    concept: modules-and-environments
+    variants:
+      - { prompt: "Why do many teams give staging and prod separate directories, each with its own backend, instead of one folder with workspaces?", choices: ["Each environment gets its own state, credentials and visible differences, so a staging change cannot touch prod", "Workspaces cannot store state", "Directories make Terraform faster", "Modules only work with directories"], answer: 0 }
+      - { prompt: "One state file holds both staging and prod. What is the risk?", choices: ["A plan meant for staging can change prod, and every apply needs prod credentials", "Terraform refuses to plan", "Staging becomes read-only", "None: one state is the recommended layout"], answer: 0 }
+    explain: "Separate state per environment limits the blast radius. Separate directories calling shared modules also put every difference in code, with each folder's own backend and credentials."
+    reteach: "### Environments: workspaces or directories"
+
+  - id: q10
+    type: fill-blank
+    concept: modules-and-environments
+    prompt: "lifecycle { ___ = true }   # any plan that would delete the rides database fails"
+    answers: ["prevent_destroy"]
+    explain: "prevent_destroy makes Terraform stop with an error instead of destroying or replacing the resource. Pair it with deletion_protection on the database itself."
+    reteach: "### lifecycle: prevent_destroy and friends"
+
+  - id: q11
+    type: mcq
+    concept: gitops-reconciliation
+    variants:
+      - { prompt: "Prod runs Argo CD with self-heal on. Someone changes replicas with kubectl edit. What happens?", choices: ["Argo CD sees the cluster differs from git and puts it back", "The change stays, and git is updated to match", "Argo CD deletes the Deployment", "Nothing: Argo CD only acts on new commits"], answer: 0 }
+      - { prompt: "In GitOps, how does a new image tag reach the prod cluster?", choices: ["CI commits the new tag to the config repo, and an agent inside the cluster pulls and applies it", "CI runs kubectl apply with the cluster's admin key", "An engineer logs into each node", "The registry copies the image onto every node by itself"], answer: 0 }
+      - { prompt: "What is one security advantage of GitOps pull over push-based deploys?", choices: ["The cluster's powerful credentials stay inside the cluster; CI only writes to git", "Images no longer need tags", "No pull request reviews are needed", "Secrets can be stored in plain text in git"], answer: 0 }
+    explain: "An agent such as Argo CD or Flux reconciles the cluster with git, and self-heal reverts changes made outside git. CI only writes to git, so it never holds the cluster's admin keys."
+    reteach: "### GitOps: the cluster pulls from git"
+
+  - id: q12
+    type: mcq
+    concept: policy-as-code
+    variants:
+      - { prompt: "Spoke's rule: no S3 bucket may be public. Where does policy as code enforce it?", choices: ["An OPA policy checks the plan in CI and fails the check before apply", "A reviewer remembers to look every time", "The rule is written in the README", "AWS deletes public buckets every night"], answer: 0 }
+      - { prompt: "What is OPA?", choices: ["Open Policy Agent: an engine that checks configuration, such as a Terraform plan, against rules written in Rego", "A Terraform provider for AWS", "A Kubernetes controller that scales Pods", "A secret manager"], answer: 0 }
+    explain: "Policy as code turns rules into automatic checks. OPA policies, written in Rego, read the plan as JSON and deny it with a reason, before anything reaches the cloud."
+    reteach: "### Policy as code"

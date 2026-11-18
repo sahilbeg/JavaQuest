@@ -1,0 +1,23 @@
+id: module-09a-platform/topic-04-kubernetes-manifests
+title: "Kubernetes manifests: Deployments, Services, probes and rollouts"
+order: 4
+minutes: 15
+prerequisites: [module-09a-platform/topic-03-github-actions]
+concepts: [deployment-anatomy, labels-and-selectors, probe-tuning, resources-and-qos, rollout-math, availability-and-security, validating-manifests]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-1104
+  from: theo
+  title: "Our first manifests: a Service with no Pods, and Pods that keep dying"
+  body: >
+    We wrote spoke-api's first real manifests by hand and applied them to staging. The Service matched no Pods, so every call failed.
+    Then the Pods were OOMKilled every few hours under load. Both mistakes sat in the YAML, in plain sight.
+    From now on, every manifest gets checked in CI before it reaches a cluster. Can you build that check?
+hints:
+  - "Write selects, pinned and checksDependency first: every rule uses them. For pinned, cut the image at the last '/' before you look for ':', so a registry port such as localhost:5000 is not taken for a tag."
+  - "runAsNonRoot: take securityContext.get(\"runAsNonRoot\") when containsKey says it is there, else the Pod's value, then Boolean.TRUE.equals(it). targetPort: use port when targetPort is null; a Number must be a containerPort, text must be a port name."
+  - "RolloutMath with whole numbers: up = (p * replicas + 99) / 100, down = p * replicas / 100. Reject written zeros first; if both round to 0, unavailable = 1; cap it at replicas. plan: loop until (0, replicas), adding then removing, and record after each change."
+review: true

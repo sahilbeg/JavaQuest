@@ -1,0 +1,88 @@
+package jq.m11.incident;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Plans a rolling update the way Spoke's deploy tool runs it: in waves, never with fewer than
+ * minAvailable pods serving riders.
+ */
+public final class RolloutPlanner {
+
+    private static final Pattern COUNT = Pattern.compile("\\d+");
+    private static final Pattern PERCENT = Pattern.compile("(\\d+)%");
+
+    private RolloutPlanner() {
+    }
+
+    /**
+     * Ready to use, as in the Kubernetes manifests ticket. Turns a maxSurge or maxUnavailable value into a number
+     * of pods. "3" is 3 pods. "25%" is 25% of replicas, rounded up when roundUp is true (maxSurge) and down when
+     * it is false (maxUnavailable). Anything else throws IllegalArgumentException.
+     */
+    public static int resolve(String value, int replicas, boolean roundUp) {
+        if (value == null) {
+            throw new IllegalArgumentException("a rollout setting is missing");
+        }
+        if (COUNT.matcher(value).matches()) {
+            return Integer.parseInt(value);
+        }
+        Matcher percent = PERCENT.matcher(value);
+        if (percent.matches()) {
+            long scaled = (long) replicas * Integer.parseInt(percent.group(1));
+            return (int) (roundUp ? (scaled + 99) / 100 : scaled / 100);
+        }
+        throw new IllegalArgumentException("a rollout setting is a whole number like 2 or a percentage like 25%, not " + value);
+    }
+
+    public static RolloutPlan plan(int replicas, String maxSurge, String maxUnavailable, int minAvailable) {
+        if (replicas < 1) {
+            throw new IllegalArgumentException("replicas must be at least 1, but was " + replicas);
+        }
+        if (minAvailable < 0 || minAvailable > replicas) {
+            throw new IllegalArgumentException("minAvailable must be from 0 to " + replicas + ", but was " + minAvailable);
+        }
+        if (resolve(maxSurge, 100, false) == 0 && resolve(maxUnavailable, 100, false) == 0) {
+            throw new IllegalArgumentException("maxSurge and maxUnavailable cannot both be 0: no pod could ever be replaced");
+        }
+        if (maxUnavailable.endsWith("%") && resolve(maxUnavailable, 100, false) > 100) {
+            throw new IllegalArgumentException("maxUnavailable cannot be above 100%, but was " + maxUnavailable);
+        }
+        int surge = resolve(maxSurge, replicas, true);
+        int unavailable = resolve(maxUnavailable, replicas, false);
+        if (surge == 0 && unavailable == 0) {
+            unavailable = 1;   // rounding made both 0: Kubernetes allows one unavailable pod
+        }
+        unavailable = Math.min(unavailable, replicas);
+        if (replicas - unavailable < minAvailable) {
+            throw new UnsafeRolloutException("maxUnavailable " + maxUnavailable + " lets " + unavailable + " of "
+                    + replicas + " pods stop at once, leaving " + (replicas - unavailable)
+                    + " serving; at least " + minAvailable + " must keep serving");
+        }
+
+        List<Wave> waves = new ArrayList<>();
+        int oldPods = replicas;
+        int newPods = 0;
+        while (oldPods > 0 || newPods < replicas) {
+            int stopped = Math.max(0, Math.min(oldPods, oldPods + newPods - (replicas - unavailable)));
+            int started = Math.max(0, Math.min(replicas - newPods, replicas + surge - (oldPods - stopped) - newPods));
+            int serving = oldPods - stopped + newPods;
+            // Ready-made guards: a plan that cannot move, or never ends, fails with a message.
+            if (stopped == 0 && started == 0) {
+                throw new IllegalStateException("the rollout makes no progress after wave " + waves.size()
+                        + ": no pod can stop or start with surge " + surge + " and unavailable " + unavailable
+                        + " (did you skip README step 5?)");
+            }
+            if (waves.size() >= 2 * replicas + 2) {
+                throw new IllegalStateException("the rollout still is not finished after " + waves.size()
+                        + " waves; check the wave formulas in the README");
+            }
+            oldPods -= stopped;
+            newPods += started;
+            waves.add(new Wave(waves.size() + 1, started, stopped, serving, oldPods, newPods));
+        }
+        return new RolloutPlan(replicas, surge, unavailable, waves);
+    }
+}

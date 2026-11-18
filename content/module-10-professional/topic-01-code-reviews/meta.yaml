@@ -2,7 +2,7 @@ id: module-10-professional/topic-01-code-reviews
 title: "Giving and receiving code reviews"
 order: 1
 minutes: 15
-prerequisites: [module-09-architecture/boss]
+prerequisites: [module-09b-data/boss]
 concepts: [why-review, pull-request-flow, what-to-look-for, writing-comments, review-decisions, receiving-feedback]
 practice:
   kind: quiz

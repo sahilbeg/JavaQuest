@@ -1,0 +1,23 @@
+id: module-09a-platform/topic-01-dockerfiles
+title: "Production Dockerfiles: layers, multi-stage builds and small, safe images"
+order: 1
+minutes: 15
+prerequisites: [module-09-architecture/boss]
+concepts: [layers-and-build-cache, base-images, multi-stage-builds, non-root-and-signals, pinning-and-scanning, secrets-in-images]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-1101
+  from: theo
+  title: "The spoke-api image is 1.1 GB, and the scanner is unhappy"
+  body: >
+    The spoke-api image is 1.1 GB, and every commit rebuilds it from scratch in 9 minutes, even a one-line fix.
+    This morning the security scan flagged it too: it runs as root, with a full JDK and curl inside.
+    Can you make the image small, fast to build and safe, and give us a checker so it stays that way?
+hints:
+  - "Do the parser first: skip blank and # lines, glue lines ending in a backslash with one space, and keep the number of the line where the instruction started."
+  - "Split into stages at each FROM; the final stage is the last one. Follow FROM <stage name> back to a real image with baseImage(stages, last). Sort at the end with Comparator.comparingInt(Finding::line).thenComparing(Finding::rule)."
+  - "LayerCache.rebuilds: boolean invalidated = false; for each step i, if not yet invalidated, set invalidated = (i >= previous.size() || !previous.get(i).instruction().equals(step.instruction()) || readsChange(step, changed)); if invalidated, add i + 1."
+review: true

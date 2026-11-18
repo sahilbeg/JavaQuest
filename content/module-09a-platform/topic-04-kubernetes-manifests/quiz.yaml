@@ -1,0 +1,152 @@
+topic: module-09a-platform/topic-04-kubernetes-manifests
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: deployment-anatomy
+    variants:
+      - { prompt: "In a Deployment manifest, where do you list the containers each Pod runs?", choices: ["spec.template.spec.containers", "spec.containers", "metadata.containers", "spec.selector.containers"], answer: 0 }
+      - { prompt: "In a Deployment manifest, what does spec.selector.matchLabels decide?", choices: ["Which Pods the Deployment owns", "Which nodes the Pods may run on", "Which image tag the Pods use", "How many Pods may be replaced at once"], answer: 0 }
+    explain: "A Deployment has two specs. The outer spec is about copies, the selector and updates. The Pod template's own spec, spec.template.spec, lists the containers. matchLabels picks the Pods the Deployment owns."
+    reteach: "### Syntax: a Deployment manifest"
+
+  - id: q02
+    type: fill-blank
+    concept: deployment-anatomy
+    prompt: "image: ghcr.io/spoke/spoke-api@___:3f9c2e1a7b8d4c6e5f0a1b2c3d4e5f60718293a4b5c6d7e8f9a0b1c2d3e4f5a6"
+    answers: ["sha256"]
+    explain: "A digest is written sha256: followed by 64 hex characters. It is a hash of the image's contents, so unlike a tag it can never point at a different build."
+    reteach: "### Image tags and digests"
+
+  - id: q03
+    type: spot-the-bug
+    concept: labels-and-selectors
+    prompt: "The selector is what the team wants. Which line makes the API server refuse this Deployment?"
+    code: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: spoke-api
+      spec:
+        replicas: 3
+        selector:
+          matchLabels: { app: spoke-api }
+        template:
+          metadata:
+            labels: { app: spoke-api-web }
+          spec:
+            containers:
+              - name: api
+                image: ghcr.io/spoke/spoke-api:2.6.0-3f9c2b7a1d4e
+    bugLine: 11
+    explain: "Every selector label must be on the Pod template. The template says app: spoke-api-web, so the Deployment could never see its own Pods. Make it app: spoke-api; extra labels are fine."
+    reteach: "### Selector and template labels: why they must match"
+
+  - id: q04
+    type: mcq
+    concept: labels-and-selectors
+    variants:
+      - { prompt: "The Pods are labelled app: spoke-api and pass readiness. The Service's selector is app: spoke. What happens to calls to http://spoke-api?", choices: ["They fail: the Service has no endpoints", "They reach the Pods, because spoke is the start of spoke-api", "Kubernetes refuses to create the Service", "Kubernetes relabels the Pods to match the Service"], answer: 0 }
+      - { prompt: "A Service port says port: 80 and has no targetPort. Which port on the Pod does traffic go to?", choices: ["80", "8080", "The Pod's first containerPort", "A random free port"], answer: 0 }
+    explain: "A Service selects Pods by exact label values, and Kubernetes allows a Service that matches nothing, so it does not warn you. targetPort defaults to the same number as port."
+    reteach: "### Service: port, targetPort and named ports"
+
+  - id: q05
+    type: predict-output
+    concept: probe-tuning
+    prompt: "A liveness probe has periodSeconds 5 and failureThreshold 6. About how many seconds after the app freezes is it restarted?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int periodSeconds = 5;
+              int failureThreshold = 6;
+              System.out.println(failureThreshold * periodSeconds);
+          }
+      }
+    answer: "30"
+    explain: "The probe must fail 6 times in a row, 5 seconds apart, so about 6 × 5 = 30 seconds, plus up to one timeout."
+    reteach: "### Probe timing: the arithmetic"
+
+  - id: q06
+    type: mcq
+    concept: probe-tuning
+    variants:
+      - { prompt: "Which path is safe for spoke-api's livenessProbe?", choices: ["/actuator/health/liveness", "/actuator/health", "/actuator/health/db", "/internal/redis/ping"], answer: 0 }
+      - { prompt: "spoke-api has a startupProbe that has not passed yet. What are its liveness and readiness probes doing?", choices: ["Nothing: they are switched off until the startup probe passes once", "Running as normal, every periodSeconds", "Liveness runs, but readiness waits", "Running, but Kubernetes ignores their failures"], answer: 0 }
+    explain: "Liveness checks only the app's own state; the full /actuator/health includes the database. Until the startup probe passes once, liveness and readiness are switched off, so a slow start is never mistaken for a stuck app."
+    reteach: "### Probes wired to Actuator"
+
+  - id: q07
+    type: mcq
+    concept: resources-and-qos
+    variants:
+      - { prompt: "Every container sets memory request = memory limit and a CPU request, but no CPU limit. Which QoS class is the Pod?", choices: ["Burstable", "Guaranteed", "BestEffort", "Throttled"], answer: 0 }
+      - { prompt: "A Pod sets no requests and no limits at all. Which QoS class is it?", choices: ["BestEffort, evicted first when the node runs short of memory", "Guaranteed, evicted last", "Burstable, evicted last", "BestEffort, never evicted"], answer: 0 }
+      - { prompt: "Which Pod is in the Guaranteed QoS class?", choices: ["Every container has CPU and memory limits, each equal to its request", "Every container has a memory limit", "Every container has a CPU request", "The Pod has a PodDisruptionBudget"], answer: 0 }
+    explain: "Guaranteed needs CPU and memory limits equal to the requests in every container. No requests or limits at all is BestEffort, evicted first. Anything in between, such as no CPU limit, is Burstable."
+    reteach: "### Requests, limits and QoS classes"
+
+  - id: q08
+    type: predict-output
+    concept: resources-and-qos
+    prompt: "spoke-api gets a 2Gi memory limit and -XX:MaxRAMPercentage=75. How many MiB may the heap use?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              long limitMiB = 2048;
+              int maxRamPercentage = 75;
+              System.out.println(limitMiB * maxRamPercentage / 100);
+          }
+      }
+    answer: "1536"
+    explain: "75% of 2,048 MiB is 1,536 MiB. The other 512 MiB is left for classes, compiled code, thread stacks and buffers outside the heap."
+    reteach: "### Memory limit vs MaxRAMPercentage"
+
+  - id: q09
+    type: predict-output
+    concept: rollout-math
+    prompt: "6 replicas with the default maxSurge 25% and maxUnavailable 25%. How many Pods can there be during the rollout?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int replicas = 6;
+              int surge = (int) Math.ceil(replicas * 25 / 100.0);
+              int unavailable = (int) Math.floor(replicas * 25 / 100.0);
+              System.out.println((replicas - unavailable) + " to " + (replicas + surge));
+          }
+      }
+    answer: "5 to 8"
+    explain: "25% of 6 is 1.5. maxSurge rounds up to 2 and maxUnavailable rounds down to 1, so between 5 and 8 Pods."
+    reteach: "### Rolling update math: surge rounds up, unavailable rounds down"
+
+  - id: q10
+    type: mcq
+    concept: rollout-math
+    variants:
+      - { prompt: "replicas: 3, maxSurge: 0, maxUnavailable: 25%. What does Kubernetes do during a rollout?", choices: ["Allows 1 unavailable Pod, because both values came out as 0", "Refuses the Deployment, because both values are 0", "Starts the rollout and never finishes it", "Uses a maxSurge of 1 instead"], answer: 0 }
+      - { prompt: "A Deployment says maxSurge: 0% and maxUnavailable: 0. What happens when you apply it?", choices: ["The API server refuses it", "It is accepted, and Kubernetes allows 1 unavailable Pod", "It is accepted, and every rollout gets stuck", "0% is read as the default, 25%"], answer: 0 }
+    explain: "Writing zero for both (0 or 0%) is refused, because no Pod could ever be replaced. When rounding turns a non-zero percentage into 0 and the other is 0, Kubernetes sets maxUnavailable to 1 instead."
+    reteach: "### The zero-zero rule"
+
+  - id: q11
+    type: mcq
+    concept: availability-and-security
+    variants:
+      - { prompt: "Nodes are upgraded one by one. What stops a drain from evicting so many spoke-api Pods that fewer than 2 are left?", choices: ["A PodDisruptionBudget with minAvailable: 2", "maxUnavailable: 0 in the rolling update strategy", "A readinessProbe", "A topology spread constraint"], answer: 0 }
+      - { prompt: "Which of these does a PodDisruptionBudget NOT protect against?", choices: ["A node that suddenly loses power", "kubectl drain before a node upgrade", "An eviction asked for through the eviction API", "A planned node replacement that drains the node first"], answer: 0 }
+    explain: "A PDB limits voluntary disruptions: drains and evictions ask it first. A crashing node asks nobody, and rolling updates follow maxUnavailable instead."
+    reteach: "### PodDisruptionBudget: surviving node maintenance"
+
+  - id: q12
+    type: order
+    concept: validating-manifests
+    prompt: "Put Spoke's manifest pipeline in order, cheapest check first."
+    items:
+      - "Parse the YAML, catching bad indentation"
+      - "Validate against the Kubernetes schema, for example with kubeconform"
+      - "Run the team's policy checks, such as ManifestCheck"
+      - "Run kubectl apply --dry-run=server and kubectl diff against staging"
+      - "Run kubectl apply"
+    explain: "Offline checks come first because they are cheap: parse, schema, then team policy. Then the server dry-run and diff need a cluster. Only then apply."
+    reteach: "### Checks in CI: policy as code"

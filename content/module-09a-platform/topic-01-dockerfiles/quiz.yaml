@@ -1,0 +1,136 @@
+topic: module-09a-platform/topic-01-dockerfiles
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: layers-and-build-cache
+    variants:
+      - { prompt: "The build stage runs COPY pom.xml ., then RUN mvn dependency:go-offline, then COPY src ./src, then RUN mvn package. You change one Java file in src. Which step is the first to miss the cache?", choices: ["COPY src ./src", "COPY pom.xml .", "RUN mvn dependency:go-offline", "RUN mvn package"], answer: 0 }
+      - { prompt: "Why can RUN apt-get update stay cached for months, with stale package lists?", choices: ["For RUN, Docker checks only the command text and the parent layer, never what the command downloads", "apt-get update never changes any files", "Docker refreshes the package lists itself on every build", "The package lists are left out by .dockerignore"], answer: 0 }
+    explain: "A RUN step is reused when its parent layer and its text match. COPY also compares the checksums of the files it copies, so COPY src is the first step that sees the change, and every step after it rebuilds."
+    reteach: "### How the build cache decides"
+
+  - id: q02
+    type: order
+    concept: layers-and-build-cache
+    prompt: "Put the build stage in the order that keeps the dependency download cached when only Java code changes. As in the lesson, the wrapper's .mvn/ folder goes in before the mvnw script."
+    items:
+      - "FROM maven:3.9.11-eclipse-temurin-21 AS build"
+      - "WORKDIR /src"
+      - "COPY .mvn/ .mvn/"
+      - "COPY mvnw pom.xml ./"
+      - "RUN ./mvnw -q -B dependency:go-offline"
+      - "COPY src ./src"
+      - "RUN ./mvnw -q -B package -DskipTests"
+    explain: "The wrapper needs .mvn/ and mvnw, and the download depends only on them and pom.xml, so it sits right after copying them. The code comes after it, so a code change busts only the last two steps."
+    reteach: "### Dependencies in their own layer"
+
+  - id: q03
+    type: spot-the-bug
+    concept: layers-and-build-cache
+    prompt: "Every one-line code change downloads all the dependencies again. Which line causes it?"
+    code: |
+      FROM maven:3.9.11-eclipse-temurin-21 AS build
+      WORKDIR /src
+      COPY . .
+      RUN mvn -q -B dependency:go-offline
+      RUN mvn -q -B package -DskipTests
+    bugLine: 3
+    explain: "COPY . . reads every file in the project, so any change busts it, and the download below it runs again. Copy pom.xml first, download, then copy src."
+    reteach: "### Cache busting: order your steps"
+
+  - id: q04
+    type: mcq
+    concept: base-images
+    variants:
+      - { prompt: "Which base image belongs in the final, running stage of spoke-api's image?", choices: ["eclipse-temurin:21.0.8_9-jre", "eclipse-temurin:21", "maven:3.9.11-eclipse-temurin-21", "eclipse-temurin:21-jdk"], answer: 0 }
+      - { prompt: "What does the image eclipse-temurin:21, with no -jre or -jdk, contain?", choices: ["A full JDK", "Only the Java runtime", "Alpine Linux and a runtime", "A distroless runtime with no shell"], answer: 0 }
+      - { prompt: "Why does a smaller base image usually bring fewer security findings?", choices: ["Fewer packages inside means fewer known CVEs, and less for an attacker to use", "Small images are encrypted", "Scanners skip images under 300 MB", "Small images cannot run as root"], answer: 0 }
+    explain: "Build with a JDK, run with a JRE or distroless image, pinned to an exact version. eclipse-temurin:21 alone is the JDK. Every package left out is one less thing to patch."
+    reteach: "### Choosing a base image"
+
+  - id: q05
+    type: mcq
+    concept: multi-stage-builds
+    variants:
+      - { prompt: "In a multi-stage build, what ends up in the image you push?", choices: ["Only the final stage, including what it copied with COPY --from", "Every stage, stacked on top of each other", "Only the first stage", "The build stage's sources, compressed"], answer: 0 }
+      - { prompt: "What does docker build --target build . do?", choices: ["Builds the stages needed for the stage named build, and stops there", "Builds every stage except the one named build", "Pushes the build stage to a registry", "Runs the tests in every stage"], answer: 0 }
+    explain: "Only the last stage ships: Maven, the JDK and the sources stay behind. --target picks a different stage to stop at, which CI uses to run tests."
+    reteach: "### Syntax: a multi-stage Maven build"
+
+  - id: q06
+    type: mcq
+    concept: multi-stage-builds
+    variants:
+      - { prompt: "Why split spoke-api's Spring Boot fat jar into four layers in the image?", choices: ["A normal commit then changes only the small application layer, so servers pull about 1 MB instead of 61 MB", "The JVM can then start without a heap", "Docker cannot run a fat jar", "It encrypts the library jars"], answer: 0 }
+      - { prompt: "Which of the four Spring Boot layers holds your own classes, and changes on almost every commit?", choices: ["application", "dependencies", "spring-boot-loader", "snapshot-dependencies"], answer: 0 }
+    explain: "java -Djarmode=tools -jar app.jar extract --layers splits the jar into dependencies, spring-boot-loader, snapshot-dependencies and application. Copied in that order, a code change only replaces the last, small layer."
+    reteach: "### Spring Boot layered jars"
+
+  - id: q07
+    type: predict-output
+    concept: non-root-and-signals
+    prompt: "The image starts Java from a script that does not use exec. What exit code does docker stop end with?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int sigterm = 15;
+              int sigkill = 9;
+              boolean javaIsPid1 = false;   // the shell is PID 1 and does not pass SIGTERM on
+              int signalThatEndsJava = javaIsPid1 ? sigterm : sigkill;
+              System.out.println(128 + signalThatEndsJava);
+          }
+      }
+    answer: "137"
+    explain: "SIGTERM goes to PID 1, the shell, and stops there. After the timeout Docker sends SIGKILL, signal 9, so the exit code is 128 + 9 = 137. With Java as PID 1 it would be 143."
+    reteach: "### PID 1 and signals"
+
+  - id: q08
+    type: spot-the-bug
+    concept: non-root-and-signals
+    prompt: "docker stop always waits the full 10 seconds and ends with exit code 137. Which line is to blame?"
+    code: |
+      FROM eclipse-temurin:21.0.8_9-jre
+      WORKDIR /app
+      COPY target/spoke-api.jar spoke-api.jar
+      USER 10001
+      ENTRYPOINT java -jar spoke-api.jar
+    bugLine: 5
+    explain: "Shell form runs the command through /bin/sh -c, so Java may not be PID 1 and may never get SIGTERM. Use exec form: ENTRYPOINT [\"java\", \"-jar\", \"spoke-api.jar\"]."
+    reteach: "### Syntax: exec form, and scripts that exec"
+
+  - id: q09
+    type: mcq
+    concept: non-root-and-signals
+    variants:
+      - { prompt: "Why write USER 10001 rather than USER spoke?", choices: ["Kubernetes can only check that a container is not root when the user is a number", "Docker does not allow names in USER", "A number makes the image smaller", "Docker runs named users as root anyway"], answer: 0 }
+      - { prompt: "What is the main reason not to run spoke-api as root inside its container?", choices: ["If an attacker breaks in and escapes the container, root inside could become root on the server", "Root cannot listen on port 8080", "Java refuses to start as root", "Root makes the image bigger"], answer: 0 }
+    explain: "Containers share the host's kernel, so root inside is dangerous if the walls fail. Use a numeric id, such as USER 10001, so Kubernetes can verify runAsNonRoot."
+    reteach: "### Run as a non-root user"
+
+  - id: q10
+    type: fill-blank
+    concept: pinning-and-scanning
+    prompt: "FROM eclipse-temurin:21.0.8_9-jre@___:<the 64 hex digits of the exact image>"
+    answers: ["sha256"]
+    explain: "A digest names one exact image by its sha256 fingerprint and never moves, unlike a tag. With both, Docker uses the digest and the tag is for humans."
+    reteach: "### Tags, digests and pinning"
+
+  - id: q11
+    type: mcq
+    concept: pinning-and-scanning
+    variants:
+      - { prompt: "Which tool looks inside a built image and lists packages with known CVEs?", choices: ["Trivy", "hadolint", "Maven", "docker compose"], answer: 0 }
+      - { prompt: "spoke-api's image passed its Trivy scan on Monday. Nothing was rebuilt, yet on Friday the same image fails the scan. Why?", choices: ["New CVEs were published for packages already in the image", "The image's layers changed on their own", "Trivy only works on new images", "The tag latest was added to it"], answer: 0 }
+    explain: "A scanner such as Trivy compares the image's packages with public CVE lists, which grow every day. hadolint lints the Dockerfile instead. Scan on a schedule, not only at build time."
+    reteach: "### Linting and scanning: hadolint and Trivy"
+
+  - id: q12
+    type: mcq
+    concept: secrets-in-images
+    variants:
+      - { prompt: "A Dockerfile passes a token with ARG REPO_TOKEN and deletes the file it wrote at the end of the same RUN. Who can read the token?", choices: ["Anyone who can pull the image, with docker history", "Nobody, because the file was deleted", "Only the root user inside a running container", "Only the person who ran docker build"], answer: 0 }
+      - { prompt: "A Dockerfile copies settings.xml, with a password inside, in one step and deletes it in the next step. Is the password gone from the image?", choices: ["No: it is still in the COPY step's layer, which every server downloads", "Yes: the later layer removes it for good", "Yes, if the image is pushed with --squash-secrets", "No, but only root inside the container can see it"], answer: 0 }
+    explain: "ARG and ENV values are saved in the image history, and a deleted file lives on in the layer that added it. Use a BuildKit secret mount at build time, and the platform at run time."
+    reteach: "### Secrets never go in a layer"

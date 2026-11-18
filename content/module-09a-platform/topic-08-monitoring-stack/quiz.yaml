@@ -1,0 +1,140 @@
+topic: module-09a-platform/topic-08-monitoring-stack
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: scraping
+    variants:
+      - { prompt: "One spoke-api Pod froze and stopped answering. Which query lists it?", choices: ["up{job=\"spoke-api\"} == 0", "rate(up[5m]) > 0", "spoke_rides_ended_total == 0", "sum(up) by (le)"], answer: 0 }
+      - { prompt: "Why does a pull model notice a dead server at once?", choices: ["Prometheus expects an answer on every scrape, so a missing answer shows up as up = 0", "Dead servers push a final message before they stop", "Grafana pings every server each second", "Alertmanager scrapes the servers too"], answer: 0 }
+      - { prompt: "A nightly batch job runs for 20 seconds and ends. How should it report its metrics?", choices: ["Push them to a Pushgateway, which Prometheus scrapes", "Wait to be scraped, as a normal service does", "Write them to the Grafana database", "Send them to Alertmanager"], answer: 0 }
+    explain: "Prometheus pulls from each target on a beat and writes up = 1 or 0 for every scrape, so a silent target is spotted at once. A job too short to be scraped pushes to a Pushgateway instead."
+    reteach: "### Pull: targets, scrapes and up"
+
+  - id: q02
+    type: mcq
+    concept: exposition-format
+    variants:
+      - { prompt: "Which line is a sample of a counter, written the conventional way?", choices: ["spoke_rides_ended_total{bike_type=\"EBIKE\"} 48211", "spoke_bikes_available{station=\"harbor\"} 7", "# TYPE spoke_rides_ended_total counter", "spoke_unlock_ms{station=\"harbor\"} 120"], answer: 0 }
+      - { prompt: "spoke_rides_ended_total{bike_type=\"EBIKE\"} and spoke_rides_ended_total{bike_type=\"CLASSIC\"} appear on one page. How many time series is that?", choices: ["Two: a name plus each exact label set is one series", "One: they share a name", "Four: two names and two labels", "None until Prometheus aggregates them"], answer: 0 }
+    explain: "A time series is a name plus one exact set of labels. Counters end in _total and use base units. # HELP and # TYPE lines describe the metric; the other lines are samples."
+    reteach: "### The exposition format, line by line"
+
+  - id: q03
+    type: mcq
+    concept: exposition-format
+    variants:
+      - { prompt: "spoke_unlock_seconds_bucket{le=\"0.3\"} is 980 and spoke_unlock_seconds_count is 1000. What does 980 mean?", choices: ["980 unlocks took 0.3 seconds or less", "980 unlocks took between 0.1 and 0.3 seconds", "980 unlocks took more than 0.3 seconds", "The slowest unlock took 980 ms"], answer: 0 }
+      - { prompt: "Which value always equals a histogram's _count?", choices: ["The bucket with le=\"+Inf\"", "The bucket with the smallest le", "_sum", "_sum divided by the number of buckets"], answer: 0 }
+      - { prompt: "How do you get the average unlock time from a histogram?", choices: ["_sum divided by _count", "The middle bucket's le", "The +Inf bucket divided by _sum", "histogram_quantile(0.5, ...), always"], answer: 0 }
+    explain: "Buckets are cumulative: le=\"0.3\" counts everything at or under 0.3 s, so le=\"+Inf\" counts everything and equals _count. _sum / _count is the average."
+    reteach: "### Histograms on the wire"
+
+  - id: q04
+    type: predict-output
+    concept: promql-rate
+    prompt: "A counter is scraped five times: 50, 80, 110, 20, 50. The Pod restarted after 110. This applies Prometheus's reset rule. What does it print?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              long[] samples = {50, 80, 110, 20, 50};
+              long increase = 0;
+              for (int i = 1; i < samples.length; i++) {
+                  long delta = samples[i] - samples[i - 1];
+                  if (delta < 0) {
+                      delta = samples[i];
+                  }
+                  increase += delta;
+              }
+              System.out.println(increase);
+          }
+      }
+    answer: "110"
+    explain: "30 + 30, then the drop from 110 to 20 is a reset, so the whole 20 counts, then 30 more: 110. Without the reset rule, the total would be wrong by 110."
+    reteach: "### Counter resets"
+
+  - id: q05
+    type: mcq
+    concept: promql-rate
+    variants:
+      - { prompt: "Which function suits an alert on the request rate?", choices: ["rate(x[5m]), which averages over the whole window", "irate(x[5m]), which uses only the last two samples", "x itself, the raw counter", "deriv(x[5m])"], answer: 0 }
+      - { prompt: "Kakashi asks how many rides ended in the last hour. Which query answers that?", choices: ["sum(increase(spoke_rides_ended_total[1h]))", "sum(irate(spoke_rides_ended_total[1h]))", "sum(spoke_rides_ended_total)", "max(rate(spoke_rides_ended_total[1h]))"], answer: 0 }
+      - { prompt: "Why can increase(x[1h]) return 2391.6 when rides are whole?", choices: ["Prometheus extrapolates to the window's edges", "Counters store fractions of rides", "The scrape interval is wrong", "irate was used by mistake"], answer: 0 }
+    explain: "rate averages the per-second increase over the window, which suits alerts. irate uses the last two samples, which suits spiky graphs. increase is rate times the window, extrapolated to the edges, so it can be fractional."
+    reteach: "### rate, irate and increase"
+
+  - id: q06
+    type: fill-blank
+    concept: promql-aggregation
+    prompt: "histogram_quantile(0.99, sum by (___) (rate(http_server_requests_seconds_bucket{job=\"spoke-api\"}[5m])))"
+    answers: ["le"]
+    explain: "The buckets from all 30 Pods are added up bucket by bucket, so le must survive the sum. Then histogram_quantile estimates the fleet's p99 once."
+    reteach: "### Percentiles from histograms"
+
+  - id: q07
+    type: mcq
+    concept: promql-aggregation
+    variants:
+      - { prompt: "Which query gives the request rate per endpoint across all 30 Pods?", choices: ["sum by (uri) (rate(http_server_requests_seconds_count[5m]))", "rate(sum by (uri) (http_server_requests_seconds_count)[5m:])", "sum(http_server_requests_seconds_count) by (uri)", "avg by (uri) (http_server_requests_seconds_count)"], answer: 0 }
+      - { prompt: "What labels does sum by (uri) (rate(http_server_requests_seconds_count[5m])) keep?", choices: ["Only uri", "Every label except uri", "uri, job and instance", "None at all"], answer: 0 }
+      - { prompt: "You want to add up the Pods but keep every other label, including ones added later. Which form fits?", choices: ["sum without (instance, pod) (...)", "sum by (instance, pod) (...)", "avg by (uri) (...)", "topk(5, ...)"], answer: 0 }
+    explain: "Rate each series first, then aggregate. sum by keeps only the listed labels; sum without removes the listed ones and keeps the rest."
+    reteach: "### Aggregation: sum by and without"
+
+  - id: q08
+    type: mcq
+    concept: alerting-and-routing
+    variants:
+      - { prompt: "An alerting rule has for: 5m. Its condition becomes true at 02:00 and stays true. When does it fire?", choices: ["At about 02:05; until then it is pending", "At 02:00", "At 02:05, but only if a human approves it", "Every 5 minutes, as a new alert each time"], answer: 0 }
+      - { prompt: "Where does an alerting rule put the runbook link?", choices: ["In its annotations, such as runbook_url", "In its labels, such as severity", "In expr", "In the scrape config"], answer: 0 }
+      - { prompt: "Which part of an alerting rule does Alertmanager use to pick the team to notify?", choices: ["Its labels, such as team and severity", "Its annotations", "Its for duration", "Its group name"], answer: 0 }
+    explain: "expr is the condition, for keeps it pending until it has held that long, labels drive routing, and annotations carry text for the human: a summary and the runbook link."
+    reteach: "### Alerting rules"
+
+  - id: q09
+    type: mcq
+    concept: alerting-and-routing
+    variants:
+      - { prompt: "The database goes down, and 40 spoke-api alerts fire with it. Which Alertmanager feature mutes them while the database alert fires?", choices: ["Inhibition", "Grouping", "A silence", "Routing"], answer: 0 }
+      - { prompt: "30 Pods fail at once, and Alertmanager sends one page instead of 30. Which feature did that?", choices: ["Grouping, with group_by", "Inhibition", "A silence", "Recording rules"], answer: 0 }
+      - { prompt: "The database team plans two hours of maintenance tonight. What should they add so nobody is paged for it?", choices: ["A silence with matchers and an end time", "An inhibit rule, forever", "A new route to nowhere", "A longer scrape interval"], answer: 0 }
+    explain: "Grouping bundles related alerts into one message. Routing picks the receiver from labels. A silence mutes matching alerts until a set time. Inhibition mutes symptoms while a cause alert fires."
+    reteach: "### Alertmanager: grouping, routing, silences and inhibition"
+
+  - id: q10
+    type: mcq
+    concept: alerting-and-routing
+    variants:
+      - { prompt: "Twenty people open a dashboard whose ten panels each run a heavy p99 query. What fixes the load on Prometheus?", choices: ["Recording rules that compute the queries once and save them as new series", "A shorter scrape interval", "More histogram buckets", "Using irate instead of rate"], answer: 0 }
+      - { prompt: "What does the recording rule name job:http_server_requests_errors:ratio_rate5m tell you?", choices: ["It is aggregated per job, and is an error ratio of 5-minute rates", "It fires a page every 5 minutes", "It keeps data for 5 minutes", "It is scraped from the job label"], answer: 0 }
+    explain: "A recording rule runs a query on every evaluation and stores the answer as a cheap new series. Its name follows level:metric:operations."
+    reteach: "### Recording rules"
+
+  - id: q11
+    type: predict-output
+    concept: burn-rate-alerts
+    prompt: "A service has a 99.5% SLO. The fast-burn page uses 2% of a 30-day budget in 1 hour. This computes the error ratio, in percent, above which it pages. What does it print?"
+    code: |
+      import java.util.Locale;
+
+      public class Main {
+          public static void main(String[] args) {
+              double budgetPercent = 100 - 99.5;
+              double burnRate = 0.02 * 30 * 24 / 1;
+              System.out.printf(Locale.ROOT, "%.1f%n", burnRate * budgetPercent);
+          }
+      }
+    answer: "7.2"
+    explain: "The burn rate is 2% × 720 h ÷ 1 h = 14.4, the same for any SLO. The budget is 0.5%, so it pages above 14.4 × 0.5% = 7.2% errors. For 99.9% the line would be 1.44%."
+    reteach: "### Multi-window burn-rate alerts"
+
+  - id: q12
+    type: mcq
+    concept: cardinality
+    variants:
+      - { prompt: "http_server_requests has 640 label combinations and 10 histogram buckets, on each of 30 Pods. About how many bucket series is that?", choices: ["192,000", "6,400", "640", "19,200"], answer: 0 }
+      - { prompt: "Someone adds a rider_id label to the unlock counter, and Prometheus runs out of memory. Why?", choices: ["Each rider id makes new series, so 100,000 riders multiply the series count", "Labels are stored as strings, which are slow", "rate() cannot read labels", "Prometheus cannot scrape counters with labels"], answer: 0 }
+      - { prompt: "Which query lists the ten metric names with the most series?", choices: ["topk(10, count by (__name__) ({__name__=~\".+\"}))", "topk(10, rate(up[5m]))", "count(up)", "sum by (le) (up)"], answer: 0 }
+    explain: "Every distinct label set is a series that costs memory, and hosted services bill per series. 640 × 10 × 30 = 192,000. A label with many values, such as rider ids, multiplies that. count by (__name__) finds the worst metrics."
+    reteach: "### Cardinality costs memory and money"

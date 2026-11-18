@@ -1,0 +1,22 @@
+id: module-09b-data/topic-04-nosql-modeling
+title: "NoSQL data modelling: key-value, document and wide-column"
+order: 4
+minutes: 15
+prerequisites: [module-09b-data/topic-03-transaction-internals]
+concepts: [nosql-tradeoffs, access-patterns, document-stores, wide-column-stores, dynamodb-design, consistency-and-choice]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-1204
+  from: priya
+  title: "Last 50 rides in under 10 ms, in every city"
+  body: >
+    Riders love the new "My rides" screen, and it must show each rider's last 50 rides in under 10 ms, in every city.
+    One team says Postgres can't keep up and wants to move all ride history to DynamoDB. Another says that is overkill.
+    Before we decide, can you learn how NoSQL databases model data, and tell me what we would gain and what we would give up?
+hints:
+  - "NoSQL design starts from the questions the app asks, not from the things it stores. Write the access patterns down first."
+  - "Make each question read one partition. For 'a rider's last 50 rides', the partition key is the rider, and the rows are sorted by start time, newest first."
+  - "DynamoDB: PK RIDER#rider-7, SK RIDE#2026-11-18T08:10#rental-17, then Query with begins_with(SK, 'RIDE#'), ScanIndexForward false, Limit 50. Cassandra: PRIMARY KEY ((rider_id), started_at, rental_id) WITH CLUSTERING ORDER BY (started_at DESC, rental_id ASC)."
+review: true

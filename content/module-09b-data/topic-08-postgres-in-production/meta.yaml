@@ -1,0 +1,22 @@
+id: module-09b-data/topic-08-postgres-in-production
+title: "Postgres in production: pooling, partitions, JSONB and backups"
+order: 8
+minutes: 15
+prerequisites: [module-09b-data/topic-07-data-pipelines]
+concepts: [connection-pooling, query-plans, vacuum-and-bloat, partitioning-and-jsonb, online-migrations, backups-and-recovery, replicas-and-managed]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-1208
+  from: theo
+  title: "Out of connections, a locked table, and backups nobody has tested"
+  body: >
+    Three things this morning. At 8 a.m. the API ran out of database connections, and new pods could not even start.
+    At 10, a migration locked the rides table for a whole minute, and nobody could end a ride.
+    And when I asked whether last night's backup would actually restore, nobody knew. Can you learn how to run Postgres properly before it bites us again?
+hints:
+  - "Every Postgres connection is a whole process. Small pools win: about CPU cores × 2 real connections in total, a budget for the maximum number of app copies, and PgBouncer in transaction mode when there are many copies."
+  - "In EXPLAIN ANALYZE, compare each node's estimated rows with its actual rows. A big gap means stale statistics: run ANALYZE. Sort pg_stat_statements by total time to find what to tune first."
+  - "Migrations: SET lock_timeout = '2s' and retry, CREATE INDEX CONCURRENTLY, expand and contract. Backups: base backup plus archived WAL for point-in-time recovery, and restore drills to prove your RPO and RTO."
+review: true

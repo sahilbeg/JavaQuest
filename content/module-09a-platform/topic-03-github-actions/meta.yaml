@@ -1,0 +1,23 @@
+id: module-09a-platform/topic-03-github-actions
+title: "GitHub Actions in depth: workflows, caching, secrets and releases"
+order: 3
+minutes: 15
+prerequisites: [module-09a-platform/topic-02-docker-compose]
+concepts: [workflow-anatomy, triggers-and-forks, job-graphs-and-matrices, caching-and-speed, token-permissions-and-secrets, supply-chain-pinning, release-pipelines]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-1103
+  from: theo
+  title: "A fork went for our secrets, and CI takes 25 minutes"
+  body: >
+    Last night a fork's pull request ran a test that hunted for our deploy key, and CI gave it every secret we have.
+    CI also takes 25 minutes, so people merge without waiting, and releases are still built by hand on my laptop.
+    Can you build a checker for unsafe workflows, and help me turn CI into a real release line?
+hints:
+  - "Load the file with new Yaml(new SafeConstructor(new LoaderOptions())).load(text). An unquoted on: comes back under the key Boolean.TRUE, so look up \"on\" first and then Boolean.TRUE."
+  - "A uses: value is fine if it starts with ./ or docker://, or its owner (the part before the first /) is actions or github. Otherwise the text after the last @ must match [0-9a-f]{40}. Steps count from 0 in where: jobs.build.steps[0]."
+  - "waves: count each job's unfinished needs. Wave 1 is every job at 0, in file order; after a wave, lower the count of every job that needed it. Jobs left over mean a cycle. jobCount: build every combination, removeIf an exclude entry matches, then add 1 for each include that agrees with no combination on its axis keys."
+review: true

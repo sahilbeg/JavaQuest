@@ -1,0 +1,22 @@
+id: module-09a-platform/topic-08-monitoring-stack
+title: "The monitoring stack: Prometheus, PromQL, Grafana and alerts"
+order: 8
+minutes: 15
+prerequisites: [module-09a-platform/topic-07-config-and-secrets]
+concepts: [scraping, exposition-format, promql-rate, promql-aggregation, alerting-and-routing, burn-rate-alerts, cardinality]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-1108
+  from: theo
+  title: "Thirty Pods of metrics, and nobody is watching"
+  body: >
+    Every spoke-api Pod serves its numbers at /actuator/prometheus, but nothing collects them. We have no dashboards, and no alert that pages anyone.
+    Last Tuesday end-ride failed for 25 minutes, and we heard about it from Itachi's support queue, not from a pager.
+    Can you learn the Prometheus stack well enough to tell me which queries, dashboards and alerts we need?
+hints:
+  - "Prometheus pulls: it scrapes each target's metrics page on a beat and writes up = 0 when a scrape fails. On Kubernetes it finds the Pods itself, through service discovery."
+  - "Rate first, then sum: sum by (uri) (rate(counter[5m])). For p99 across Pods, add the buckets with sum by (le), then call histogram_quantile once. Never average percentiles."
+  - "An alert needs for, labels and a runbook link. Page on burn rate: 14.4 over both 1 hour and 5 minutes spends 2% of a 30-day budget in an hour."
+review: true

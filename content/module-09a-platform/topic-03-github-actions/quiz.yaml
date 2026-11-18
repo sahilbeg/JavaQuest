@@ -1,0 +1,153 @@
+topic: module-09a-platform/topic-03-github-actions
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: workflow-anatomy
+    variants:
+      - { prompt: "What is the difference between uses: and run: in a workflow step?", choices: ["uses: runs a published action; run: runs your own shell commands on the runner", "uses: runs on GitHub's servers; run: runs on your laptop", "uses: is for Java steps; run: is for everything else", "There is none: they are two spellings of the same key"], answer: 0 }
+      - { prompt: "A step in the build job writes target/spoke-api.jar. Can a later step in the same job read it?", choices: ["Yes: steps in one job share the same runner and its disk", "No: every step gets a fresh runner", "Only if the file is uploaded as an artifact first", "Only if the step uses actions/cache"], answer: 0 }
+      - { prompt: "env: is set at the workflow, the job and the step, all with the same variable name. Which value does the step see?", choices: ["The step's own value: the closest level wins", "The workflow's value: the top level wins", "Whichever is longest", "None: the run fails on a duplicate name"], answer: 0 }
+    explain: "A step either uses an action or runs shell commands. Steps of one job share a runner and its disk; separate jobs do not. For env, the closest level wins."
+    reteach: "### Workflow anatomy"
+
+  - id: q02
+    type: predict-output
+    concept: workflow-anatomy
+    prompt: "SnakeYAML follows YAML 1.1. What does this print?"
+    code: |
+      import java.util.Map;
+      import org.yaml.snakeyaml.LoaderOptions;
+      import org.yaml.snakeyaml.Yaml;
+      import org.yaml.snakeyaml.constructor.SafeConstructor;
+
+      public class Main {
+          public static void main(String[] args) {
+              Map<?, ?> workflow = new Yaml(new SafeConstructor(new LoaderOptions())).load("on: push\njobs: {}\n");
+              System.out.println(workflow.get("on") + " " + workflow.get(Boolean.TRUE));
+          }
+      }
+    answer: "null push"
+    explain: "In YAML 1.1 an unquoted on means the boolean true, so the key is Boolean.TRUE. get(\"on\") finds nothing and prints null; get(Boolean.TRUE) finds push."
+    reteach: "### The YAML trap: on means true"
+
+  - id: q03
+    type: mcq
+    concept: triggers-and-forks
+    variants:
+      - { prompt: "A fork's pull request starts a pull_request_target workflow that checks out github.event.pull_request.head.sha and runs ./mvnw verify. What is the risk?", choices: ["The stranger's code runs with Spoke's secrets and a token that can write", "None: pull_request_target never has secrets", "The build is slower, because forks are not cached", "GitHub refuses to run it, so CI stays pending"], answer: 0 }
+      - { prompt: "A fork's pull request starts a workflow with on: pull_request. Which is true?", choices: ["It gets no secrets, and its GITHUB_TOKEN is read-only", "It gets every repository secret", "It runs the workflow file from the base branch, not the pull request", "It cannot check out the pull request's code"], answer: 0 }
+      - { prompt: "What is pull_request_target safe for?", choices: ["Jobs that never run the pull request's code, such as adding a label or a comment", "Building and testing a fork's code with secrets", "Deploying a fork's code to staging", "Running a fork's integration tests against prod"], answer: 0 }
+    explain: "pull_request_target runs with the target repository's secrets and a token that can write. Checking out and running the fork's code there is a pwn request. Build and test forks with plain pull_request, which gets no secrets."
+    reteach: "### Forks: pull_request and pull_request_target"
+
+  - id: q04
+    type: mcq
+    concept: triggers-and-forks
+    variants:
+      - { prompt: "A nightly scan uses schedule with cron: '0 3 * * *'. When does it run?", choices: ["Around 03:00 UTC, on the default branch, possibly a little late", "At 03:00 in the time zone of whoever wrote it", "At 03:00 UTC on every branch that has the file", "Every 3 minutes"], answer: 0 }
+      - { prompt: "Kakashi wants a Run workflow button that asks whether to redeploy staging or prod. Which trigger is that?", choices: ["workflow_dispatch, with a choice input", "schedule", "pull_request_target", "workflow_call"], answer: 0 }
+      - { prompt: "Which on: block starts the release workflow when a tag like v2.6.0 is pushed?", choices: ["push: with tags: ['v*']", "pull_request: with tags: ['v*']", "schedule: with tags: ['v*']", "workflow_call: with tags: ['v*']"], answer: 0 }
+    explain: "schedule uses cron in UTC on the default branch and can start late. workflow_dispatch adds a manual button with typed inputs. push with tags: starts on matching tags."
+    reteach: "### Triggers: what starts a workflow"
+
+  - id: q05
+    type: predict-output
+    concept: job-graphs-and-matrices
+    prompt: "This counts a matrix with os [ubuntu, windows, macos], java [21, 25], one exclude and one include. What does it print?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              String[] os = {"ubuntu", "windows", "macos"};
+              int[] java = {21, 25};
+              int jobs = 0;
+              for (String o : os) {
+                  for (int j : java) {
+                      if (o.equals("macos") && j == 21) continue;   // exclude: { os: macos, java: 21 }
+                      jobs++;
+                  }
+              }
+              jobs += 1;   // include: { os: ubuntu, java: 17 } agrees with no combination
+              System.out.println(jobs);
+          }
+      }
+    answer: "6"
+    explain: "3 × 2 = 6 combinations. The exclude removes macos with 21: 5. The include matches no combination, because no job has java 17, so it adds one: 6."
+    reteach: "### Matrix builds: how many jobs?"
+
+  - id: q06
+    type: mcq
+    concept: job-graphs-and-matrices
+    variants:
+      - { prompt: "Jobs: build and lint have no needs; test needs build; deploy needs [test, lint]. Which jobs start first?", choices: ["build and lint, at the same time", "build only, then lint", "All four at once", "lint, because it comes first alphabetically"], answer: 0 }
+      - { prompt: "deploy needs test, and test failed. deploy has no if: condition. What happens to deploy?", choices: ["It is skipped", "It runs anyway, after test", "It runs first, before test", "It retries test three times"], answer: 0 }
+      - { prompt: "Jobs: build needs scan, scan needs image, image needs build. What happens?", choices: ["GitHub refuses to start the workflow: the needs form a loop", "They all run at the same time", "They run in file order", "Only build runs"], answer: 0 }
+    explain: "Jobs run at the same time unless needs makes one wait, so jobs with no needs start together. A job whose need failed is skipped unless if: always() says otherwise. A needs loop has no first job, so it is an error."
+    reteach: "### needs: jobs as a graph"
+
+  - id: q07
+    type: mcq
+    concept: caching-and-speed
+    variants:
+      - { prompt: "The workflow caches ~/.m2/repository with key: maven. Spring is upgraded in pom.xml. What happens on later runs?", choices: ["The old cache is restored and never refreshed, so the new libraries download every run", "The cache updates itself with the new libraries", "The build fails because the cache is out of date", "GitHub deletes the cache at once"], answer: 0 }
+      - { prompt: "There is no cache with the exact key maven-Linux-ab12. restore-keys says maven-Linux-. What is restored?", choices: ["The newest cache whose key starts with maven-Linux-", "Nothing: only exact keys are restored", "Every cache whose key starts with maven-Linux-, merged", "The oldest cache in the repository"], answer: 0 }
+    explain: "A saved cache never changes, so a fixed key is saved once and never refreshed. Put hashFiles('**/pom.xml') in the key. When there is no exact match, restore-keys restores the newest cache that starts with the prefix."
+    reteach: "### Caching: stop downloading the internet"
+
+  - id: q08
+    type: mcq
+    concept: caching-and-speed
+    variants:
+      - { prompt: "CI has concurrency group ci-${{ github.ref }} with cancel-in-progress: true. You push twice to your pull request, a minute apart. What happens?", choices: ["The first run is cancelled, and the second runs", "Both runs finish", "The second run waits for the first to finish", "Both runs are cancelled"], answer: 0 }
+      - { prompt: "Why should the deploy-prod job use cancel-in-progress: false?", choices: ["Cancelling a deploy halfway can leave some servers on the old version and some on the new", "Deploys cannot be in a concurrency group", "It makes the deploy run faster", "cancel-in-progress only works on pull requests"], answer: 0 }
+    explain: "A concurrency group allows one running run. cancel-in-progress: true cancels the stale one, which suits CI on a pull request. Deploys should queue and finish, so they never stop halfway."
+    reteach: "### Concurrency: cancel the stale run"
+
+  - id: q09
+    type: fill-blank
+    concept: token-permissions-and-secrets
+    prompt: "  ___: write     # lets this job ask GitHub for an OIDC token"
+    answers: ["id-token"]
+    explain: "id-token: write lets the job ask GitHub for a signed, short-lived OIDC token, which the cloud trades for temporary credentials. No cloud key is stored."
+    reteach: "### OIDC: cloud access without stored keys"
+
+  - id: q10
+    type: mcq
+    concept: token-permissions-and-secrets
+    variants:
+      - { prompt: "A job's permissions block lists only contents: read. What may its GITHUB_TOKEN do with packages?", choices: ["Nothing: every scope you do not list becomes none", "Read and write, the repository default", "Read only", "Write only"], answer: 0 }
+      - { prompt: "Which permissions value gives a job's GITHUB_TOKEN no access at all?", choices: ["permissions: {}", "permissions: write-all", "permissions: read-all", "Leaving permissions out"], answer: 0 }
+      - { prompt: "A workflow has no permissions: key anywhere. What may its GITHUB_TOKEN do?", choices: ["Whatever the repository's default allows, which may include writes", "Nothing at all", "Only read the code", "Everything, in every repository of the organisation"], answer: 0 }
+    explain: "Once you list a scope, the rest become none; {} gives no access. With no permissions key, the token gets the repository default, which may allow writes, so always write the block down."
+    reteach: "### permissions: a least-privilege GITHUB_TOKEN"
+
+  - id: q11
+    type: spot-the-bug
+    concept: supply-chain-pinning
+    prompt: "Spoke trusts actions/ and github/ actions on a tag. Which line breaks Spoke's pinning rule?"
+    code: |
+      steps:
+        - uses: actions/checkout@v5
+        - uses: actions/setup-java@v5
+          with:
+            java-version: '21'
+        - uses: docker/login-action@v3
+        - run: ./mvnw -B verify
+    bugLine: 6
+    explain: "docker/login-action comes from outside GitHub's own owners and uses the tag v3, which its owner can move to other code. Pin it to a full 40-character commit SHA, with the version in a comment."
+    reteach: "### Pin actions to a full commit SHA"
+
+  - id: q12
+    type: order
+    concept: release-pipelines
+    prompt: "Put Spoke's release pipeline in order."
+    items:
+      - "Tsunade pushes the tag v2.6.0"
+      - "One job compiles and runs every test"
+      - "The image is built once and pushed to ghcr.io/spoke/spoke-api, tagged with the version and commit, 2.6.0-3f9c2b7a1d4e"
+      - "The staging job deploys that image and runs smoke tests"
+      - "A reviewer approves the prod environment"
+      - "The prod job deploys the same image"
+    explain: "A tag starts the release. Build and test once, push one image named by its version and commit, prove it on staging, wait for approval, then deploy those same bytes to prod."
+    reteach: "### A release pipeline: from tag to production"

@@ -2,5 +2,5 @@ id: module-10-professional
 title: Professional skills
 project: Full-time offer
 summary: Work like a mid-level engineer. Review code, find your way in a big codebase, write docs people read, plan and estimate, pass the interview loop, then launch Spoke in a second city.
-unlockAfter: module-09-architecture/boss
+unlockAfter: module-09b-data/boss
 mascotIntro: "Yo! You can build it. Now let's make you the engineer everyone wants on their team, and get you that full-time offer."

@@ -1,0 +1,128 @@
+topic: module-09b-data/topic-02-index-internals
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: pages-and-fan-out
+    prompt: "Each node holds about 200 keys. How many levels reach 50 million rows?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              long rows = 50_000_000L;
+              int fanOut = 200;
+              int levels = 0;
+              long reach = 1;
+              while (reach < rows) {
+                  reach *= fanOut;
+                  levels++;
+              }
+              System.out.println("levels: " + levels);
+          }
+      }
+    answer: "levels: 4"
+    explain: "Each level multiplies the reach by the fan-out: 200, 40,000, 8 million, then 1.6 billion. Three levels reach only 8 million, so it takes 4. The height is about log base 200 of 50 million."
+    reteach: "### How tall is the tree?"
+
+  - id: q02
+    type: mcq
+    concept: index-pitfalls
+    variants:
+      - { prompt: "type has an index, and WHERE type = 'CLASSIC' matches half of all bikes. The planner picks a full table scan. Why?", choices: ["Fetching half the rows through the index means many random page reads; one scan in order is cheaper", "The index is broken and must be rebuilt", "Planners never use indexes on text columns", "Only the primary key can use an index"], answer: 0 }
+      - { prompt: "Which column picks out the fewest rows for one value, so an index on it narrows a search the most?", choices: ["rider_id, with 100,000 different riders", "status: AVAILABLE, RENTED or MAINTENANCE", "type: CLASSIC, EBIKE or CARGO", "is_member: true or false"], answer: 0 }
+    explain: "Selectivity is the share of rows a test keeps. A rare value, like one rider, is worth an index. A test that keeps a big share of the table is cheaper as one sequential scan, so the planner skips the index on purpose."
+    reteach: "### Selectivity: when a full scan wins"
+
+  - id: q03
+    type: mcq
+    concept: bplus-tree-operations
+    variants:
+      - { prompt: "Why are B+ trees good at range queries such as started_at BETWEEN two times?", choices: ["The leaves are sorted and linked, so after one search down the scan walks sideways", "Every branch node holds a copy of every row", "They hash each key into a bucket", "They keep a separate copy of the table for each range"], answer: 0 }
+      - { prompt: "About how many pages does a B+ tree range scan read?", choices: ["The height, plus one page for each further leaf it walks to", "One page per row in the whole table", "Every leaf in the tree", "The height multiplied by the number of results"], answer: 0 }
+    explain: "A range search goes down once to the first key, reading one page per level. Then it follows the leaf links to the right, one page per further leaf, until a key passes the end. The rows come out already sorted."
+    reteach: "### Range scans walk the linked leaves"
+
+  - id: q04
+    type: mcq
+    concept: bplus-tree-operations
+    variants:
+      - { prompt: "A new key belongs in a leaf that is already full. What happens?", choices: ["The leaf splits in two, and a separator key goes up to the parent", "The insert is refused", "The whole tree is rebuilt from scratch", "The leaf grows past the page size"], answer: 0 }
+      - { prompt: "When does a B+ tree grow one level taller?", choices: ["Only when the root splits", "Every time any leaf splits", "After every 1,000 inserts", "When a leaf becomes half empty"], answer: 0 }
+      - { prompt: "Why do random UUID keys make a B+ tree index slower to write than a growing id?", choices: ["New keys land on random pages, splitting pages all over the tree and leaving them half full", "UUIDs cannot be sorted", "UUIDs always go into the root page", "A growing id never needs a page at all"], answer: 0 }
+    explain: "A full page splits, sending half its entries to a new page and a separator up to the parent. Only a root split adds a level, so every leaf stays at the same depth. Keys that always grow fill the rightmost page; random keys split pages everywhere."
+    reteach: "### Inserts and page splits"
+
+  - id: q05
+    type: mcq
+    concept: clustered-and-covering
+    variants:
+      - { prompt: "In MySQL's InnoDB, what does a secondary index store next to each key?", choices: ["The row's primary key value, used to search the primary key tree", "The whole row", "Nothing else", "A hash of the row"], answer: 0 }
+      - { prompt: "In PostgreSQL, where do a table's rows live?", choices: ["In a heap, and every index, even the primary key's, points into it", "Inside the primary key's B+ tree", "Inside every index, in full", "In a hash table keyed by row id"], answer: 0 }
+      - { prompt: "Why is a short primary key a good idea in InnoDB?", choices: ["Every secondary index entry carries a copy of it, so a short key keeps every index small", "Short keys are the only ones that can be sorted", "InnoDB refuses keys longer than 8 bytes", "It makes the table a heap"], answer: 0 }
+    explain: "InnoDB clusters rows in the primary key's tree, and secondary indexes point to rows by primary key, so a lookup searches two trees. PostgreSQL keeps rows in a heap, and every index points at a row's page and slot."
+    reteach: "### Clustered and secondary indexes"
+
+  - id: q06
+    type: mcq
+    concept: clustered-and-covering
+    variants:
+      - { prompt: "In PostgreSQL, which index lets SELECT minutes FROM ride WHERE bike_id = ? AND started_at BETWEEN ? AND ? skip the table entirely?", choices: ["(bike_id, started_at) INCLUDE (minutes)", "(bike_id, started_at)", "(minutes)", "(started_at) INCLUDE (bike_id)"], answer: 0 }
+      - { prompt: "What is an index-only scan?", choices: ["Answering a query from index pages alone, without reading the table's rows", "A scan that reads every index in the database", "A query that only lists index names", "Reading the table without any index"], answer: 0 }
+    explain: "A covering index holds every column the query filters on and returns. INCLUDE carries extra columns in the leaves without sorting by them. Then the plan can be an Index Only Scan."
+    reteach: "### Covering indexes and index-only scans"
+
+  - id: q07
+    type: mcq
+    concept: composite-index-order
+    variants:
+      - { prompt: "There is an index on (rider_id, started_at). Which query cannot jump into it?", choices: ["WHERE started_at > ?", "WHERE rider_id = ?", "WHERE rider_id = ? AND started_at > ?", "WHERE rider_id = ? ORDER BY started_at"], answer: 0 }
+      - { prompt: "Index (bike_id, rider_id, started_at). The query is WHERE bike_id = ? AND started_at > ?. How many index columns narrow the search?", choices: ["1", "2", "3", "0"], answer: 0 }
+    explain: "A composite index narrows a search using its columns from the left, each tested with =, until the first range. A query that skips the first column cannot jump in. Skipping rider_id leaves started_at out of order inside each bike."
+    reteach: "### Composite indexes and the leftmost prefix"
+
+  - id: q08
+    type: mcq
+    concept: composite-index-order
+    variants:
+      - { prompt: "Kakashi's report filters WHERE bike_id = ? AND started_at BETWEEN ? AND ?. Which index fits best?", choices: ["(bike_id, started_at)", "(started_at, bike_id)", "(started_at)", "(minutes, bike_id)"], answer: 0 }
+      - { prompt: "The same report uses an index on (started_at, bike_id). What happens?", choices: ["It jumps to the start time but reads every bike's rides in that range", "It cannot use the index at all", "It reads only the one bike's rides, as fast as possible", "The database refuses to run the query"], answer: 0 }
+    explain: "Put the columns tested with = first and the one range column last. With the range first, every bike's rides in the time range sit together, so the bike test can only throw rows away after reading them."
+    reteach: "### Column order: equality first, range last"
+
+  - id: q09
+    type: mcq
+    concept: index-pitfalls
+    variants:
+      - { prompt: "email has an index. Why does WHERE LOWER(email) = 'rider7@spoke.example' scan every row?", choices: ["The index is sorted by email, not by LOWER(email), so the database must compute LOWER for each row", "LOWER is not allowed in WHERE", "Indexes never work on text", "The index only stores upper-case letters"], answer: 0 }
+      - { prompt: "phone is a VARCHAR column with an index. Why does WHERE phone = 07007 scan the whole table?", choices: ["The database casts every phone to a number to compare, which is a function on the column", "Numbers can never use an index", "07007 is not valid SQL", "The index only holds letters"], answer: 0 }
+    explain: "An index is sorted by the column's stored value. A function or an implicit cast changes the value before comparing, so the sorted order is useless. Fix it with an expression index, or by comparing with the column's own type."
+    reteach: "### Why an index is not used: functions and casts"
+
+  - id: q10
+    type: mcq
+    concept: index-pitfalls
+    variants:
+      - { prompt: "email has an index, and name does not. Which WHERE can use the email index?", choices: ["email LIKE 'Rider7%'", "email LIKE '%@spoke.example'", "email = 'a@spoke.example' OR name = 'Ada'", "LOWER(email) LIKE 'rider7%'"], answer: 0 }
+      - { prompt: "email and name each have their own index. H2 scans every row for WHERE email = ? OR name = ?. Which rewrite let H2 use both indexes?", choices: ["Two SELECTs, one per test, joined with UNION", "Swapping the two tests around the OR", "Adding ORDER BY email", "Wrapping the whole test in brackets"], answer: 0 }
+    explain: "LIKE with a fixed start is a range in the sorted index. A leading % cannot jump anywhere. Each single-column index can find only one side of an OR, so H2 gave up; a UNION lets each half use its own index."
+    reteach: "### More ways to lose an index: LIKE and OR"
+
+  - id: q11
+    type: mcq
+    concept: lsm-trees
+    variants:
+      - { prompt: "Why are writes fast in an LSM tree?", choices: ["They go to an in-memory memtable and a log, and reach the data files later as big sequential writes", "They skip writing to disk", "They update one B+ tree page in place", "They are only allowed once per key"], answer: 0 }
+      - { prompt: "How does an LSM tree delete a key?", choices: ["It writes a tombstone, a newer entry that says the key is gone", "It rewrites every SSTable at once", "It removes the key from the SSTable file in place", "It cannot delete keys"], answer: 0 }
+      - { prompt: "Which system stores data in an LSM tree?", choices: ["Cassandra", "PostgreSQL", "MySQL InnoDB", "Oracle"], answer: 0 }
+    explain: "An LSM tree appends each write to a log and puts it in a sorted memtable in memory. A full memtable is flushed as an SSTable, a sorted file that never changes. Updates and deletes are just newer entries, and compaction cleans up later."
+    reteach: "### LSM trees: memtable and SSTables"
+
+  - id: q12
+    type: mcq
+    concept: query-plans
+    variants:
+      - { prompt: "A PostgreSQL plan shows Seq Scan on ride with Rows Removed by Filter: 39999976 and rows=24. What does it tell you?", choices: ["It read the whole table and threw almost every row away; an index on the filter columns could help", "It used the best index", "The query returned 39,999,988 rows", "The table is empty"], answer: 0 }
+      - { prompt: "In EXPLAIN ANALYZE, the estimate says rows=20 but the actual rows are 250,000. What is the likely cause?", choices: ["Stale statistics, so the planner guessed wrong; run ANALYZE on the table", "The query has a syntax error", "The index is too small", "EXPLAIN ANALYZE never shows real numbers"], answer: 0 }
+      - { prompt: "Why wrap EXPLAIN ANALYZE of a DELETE in BEGIN and ROLLBACK?", choices: ["EXPLAIN ANALYZE really runs the statement, so it would really delete the rows", "EXPLAIN cannot run outside a transaction", "It makes the plan more accurate", "ROLLBACK prints the plan"], answer: 0 }
+    explain: "Seq Scan reads every row, and Rows Removed by Filter is the waste. cost and rows are the planner's guesses; actual rows are the truth, and a big gap means stale statistics. EXPLAIN ANALYZE executes the statement for real."
+    reteach: "### Reading EXPLAIN ANALYZE in PostgreSQL"

@@ -1,0 +1,143 @@
+topic: module-09b-data/topic-06-replication-sharding
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: leader-follower
+    variants:
+      - { prompt: "With asynchronous replication, the leader tells the app \"committed\" and then dies a moment later. What can happen?", choices: ["The write is lost if no follower had received it yet", "Nothing can be lost, because the leader answered", "The app gets an error instead of \"committed\"", "Every follower rolls back to the day before"], answer: 0 }
+      - { prompt: "Why do many teams make exactly one follower synchronous and the rest asynchronous?", choices: ["Confirmed writes survive a leader crash, but one slow follower does not hold up every write", "It makes every read see the newest data on every follower", "Asynchronous followers cannot be read from", "Postgres allows only one follower in total"], answer: 0 }
+      - { prompt: "Every follower is synchronous. One follower's disk fails. What happens to writes?", choices: ["They wait, or stop, because the leader waits for every follower to confirm", "Nothing changes", "They go faster, with one follower fewer", "They go to the broken follower and are lost"], answer: 0 }
+    explain: "Synchronous replication waits for a follower before saying committed: nothing confirmed is lost, but each write pays a round trip, and a dead synchronous follower blocks writes. Asynchronous answers at once and can lose the last writes on failover. One synchronous follower plus asynchronous ones is the usual middle."
+    reteach: "### Synchronous or asynchronous"
+
+  - id: q02
+    type: mcq
+    concept: replication-lag
+    variants:
+      - { prompt: "Ada starts a rental, which the leader stores at log position 42. To give her read-your-writes, which follower may answer her next read?", choices: ["One that has replayed position 42 or later", "Any follower, chosen at random", "Only a follower that is still at position 41", "No follower ever; every read must go to the leader forever"], answer: 0 }
+      - { prompt: "Which fix gives read-your-writes while keeping most reads on followers?", choices: ["Remember the log position each session wrote, and only read from followers that have reached it", "Send every read to the leader", "Make the follower's cache TTL longer", "Shard the rides table by rider_id"], answer: 0 }
+      - { prompt: "The POST that started rental-17 already returned the new rental. What is often the cheapest fix for the vanishing rental?", choices: ["Show the rental the app already has, without asking a follower again", "Wait 10 minutes before reloading", "Turn off replication", "Add a second leader"], answer: 0 }
+    explain: "A lagging follower has not replayed the rider's write yet. Read from the leader after a write, or remember the position written and use only followers that have reached it, or simply use the answer the write returned."
+    reteach: "### Three fixes for read-your-writes"
+
+  - id: q03
+    type: predict-output
+    concept: replication-lag
+    prompt: "Ada's write is at log position 42. The router takes the first follower, in order, that has reached it. What does it print?"
+    code: |
+      import java.util.LinkedHashMap;
+      import java.util.Map;
+
+      public class Main {
+          public static void main(String[] args) {
+              Map<String, Long> applied = new LinkedHashMap<>();
+              applied.put("replica-1", 40L);
+              applied.put("replica-2", 43L);
+              applied.put("replica-3", 45L);
+              long adaWrote = 42;
+
+              String chosen = "leader";
+              for (Map.Entry<String, Long> follower : applied.entrySet()) {
+                  if (follower.getValue() >= adaWrote) {
+                      chosen = follower.getKey();
+                      break;
+                  }
+              }
+              System.out.println(chosen);
+          }
+      }
+    answer: "replica-2"
+    explain: "replica-1 is at 40, before Ada's write at 42, so it would hide her rental. replica-2 is at 43, which includes position 42, and it comes first in the order, so the loop stops there."
+    reteach: "### Three fixes for read-your-writes"
+
+  - id: q04
+    type: mcq
+    concept: replication-lag
+    variants:
+      - { prompt: "Ada, who has changed nothing, views the Harbor station page twice. The first read shows B-1042 docked; the second, from another follower, shows an older state without it. Which guarantee is broken?", choices: ["Monotonic reads", "Read-your-writes", "Split brain", "W + R > N"], answer: 0 }
+      - { prompt: "How do sticky sessions give monotonic reads?", choices: ["Each rider's reads always go to the same follower, and one follower never goes backwards", "Each rider's writes go to a different leader", "Every read waits for every follower", "The rider's app caches every answer forever"], answer: 0 }
+    explain: "Monotonic reads means never seeing time go backwards. Two followers with different lag can show a newer state, then an older one. Keep a rider on one follower, or remember the highest position the rider has seen and only use followers at or beyond it."
+    reteach: "### Monotonic reads and sticky sessions"
+
+  - id: q05
+    type: mcq
+    concept: failover-and-split-brain
+    variants:
+      - { prompt: "The old leader was only cut off, not dead. After a failover it comes back and keeps accepting writes. What is this, and what guards against it?", choices: ["Split brain; a leader term that rises on each failover, so writes from an older term are refused", "Replication lag; read from the leader", "A hot shard; add virtual nodes", "Read repair; run anti-entropy"], answer: 0 }
+      - { prompt: "Leader term 7 was replaced by term 8 after a failover. A write arrives tagged with term 7. What should the followers and the storage do?", choices: ["Refuse it, because it comes from an old leader", "Accept it, because it arrived last", "Accept it only if it is a delete", "Promote the term 7 leader again"], answer: 0 }
+    explain: "Split brain is two machines both acting as leader. Each leader gets a term number, and everyone refuses anything from an older term: the fencing token idea at the scale of a database. STONITH is the blunt version: cut off the old leader first."
+    reteach: "### Split brain and fencing"
+
+  - id: q06
+    type: order
+    concept: failover-and-split-brain
+    prompt: "Put the steps of a failover in order."
+    items:
+      - "The leader stops answering heartbeats"
+      - "After the timeout, the leader is declared dead"
+      - "The follower with the highest replayed log position is promoted"
+      - "The other followers and the apps are pointed at the new leader"
+    explain: "First notice the failure, after a timeout that must not be too short or too long. Then promote the most up-to-date follower, so the fewest writes are lost. Then repoint everyone."
+    reteach: "### Failover, step by step"
+
+  - id: q07
+    type: mcq
+    concept: quorums
+    variants:
+      - { prompt: "N = 3. Which W and R guarantee that every read group shares a replica with every successful write?", choices: ["W = 2, R = 2", "W = 1, R = 1", "W = 1, R = 2", "W = 2, R = 1"], answer: 0 }
+      - { prompt: "N = 5 and W = 3. What is the smallest R that guarantees overlap?", choices: ["3", "2", "1", "5"], answer: 0 }
+      - { prompt: "N = 3, W = 3, R = 1. What is the downside?", choices: ["A write fails whenever any one replica is down", "Reads can miss the latest write", "Reads must wait for all three replicas", "Nothing; it is strictly better than W = 2, R = 2"], answer: 0 }
+    explain: "Overlap needs W + R > N. For N = 3, 2 + 2 = 4 > 3. For N = 5 and W = 3, R must be at least 3, since 3 + 3 = 6 > 5. W = N makes reads cheap, but every write needs every replica up."
+    reteach: "### Quorums: N, W and R"
+
+  - id: q08
+    type: spot-the-bug
+    concept: quorums
+    prompt: "This quorum read waits for R answers. Which line can return an old value?"
+    code: |
+      ReadResult read(List<ReplicaAnswer> answers) {
+          if (answers.size() < r) throw new QuorumNotReachedException("too few answers");
+          ReplicaAnswer chosen = answers.get(0);
+          return new ReadResult(chosen.value(), chosen.version(), List.of());
+      }
+    bugLine: 3
+    explain: "The first replica to answer may be the stale one. A quorum read must compare versions and keep the highest, then repair the replicas that answered with older versions."
+    reteach: "### Quorums: N, W and R"
+
+  - id: q09
+    type: mcq
+    concept: quorums
+    variants:
+      - { prompt: "Two servers write rental-17 almost at once. The database uses last write wins, and server A's clock runs 2 s fast. A's write was really first. What can happen?", choices: ["A's older write wins, and B's newer write is silently dropped", "Both writes are kept for the app to merge", "The database reports a conflict error", "The database keeps whichever replica answered first"], answer: 0 }
+      - { prompt: "What can vector clocks tell you that one timestamp per write cannot?", choices: ["Whether two writes were concurrent, so both can be kept and merged", "The exact wall-clock time of each write", "Which replica is the leader", "How many shards hold the key"], answer: 0 }
+    explain: "Last write wins keeps the highest timestamp and silently drops the rest, so a fast clock can make an older write win. Vector clocks keep a counter per replica, which shows whether one write came after another or whether they were concurrent."
+    reteach: "### Versions, last write wins and vector clocks"
+
+  - id: q10
+    type: fill-blank
+    concept: sharding
+    prompt: "SELECT create_distributed_table('rides', '___');   -- the column Spoke's busiest ride queries name"
+    answers: ["rider_id"]
+    explain: "Spoke's busiest queries are a rider's active rental and ride history, which both name one rider. Sharding by rider_id keeps each rider's rides on one shard, and it has many evenly used values, unlike city_id."
+    reteach: "### Choosing a shard key"
+
+  - id: q11
+    type: mcq
+    concept: consistent-hashing
+    variants:
+      - { prompt: "Four shards sit on a hash ring with 100 virtual nodes each. A fifth shard joins. Roughly which riders move?", choices: ["About one in five, all of them to the new shard", "About four in five, to every shard", "None, until the next restart", "Every rider, once"], answer: 0 }
+      - { prompt: "Why give each shard 100 points on the ring instead of 1?", choices: ["With one point each, shards get very uneven slices of the ring; many points even them out", "So each key is stored 100 times", "So the hash function runs faster", "So no key ever moves when a shard joins"], answer: 0 }
+      - { prompt: "Shards are picked with hash(rider) mod N. Going from 4 to 5 shards moves about how many riders?", choices: ["About 80%", "About 20%", "About 1%", "None"], answer: 0 }
+    explain: "On a ring, a new shard only takes the keys that now meet one of its points first: about 1/5 when going from 4 to 5 shards, and all of them go to it. Virtual nodes even out the slices. With mod N, changing N moves most keys: about 80% from 4 to 5."
+    reteach: "### Consistent hashing with virtual nodes"
+
+  - id: q12
+    type: mcq
+    concept: cross-shard-queries
+    variants:
+      - { prompt: "Rides are sharded by rider_id. Which query must ask every shard?", choices: ["How many rides started at Harbor today", "rider-7's active rental", "rider-7's ride history", "rider-7's rides in March"], answer: 0 }
+      - { prompt: "A scatter-gather query asks ten shards at once. Each shard is slow 1% of the time, independently. Roughly how often is the whole query slow?", choices: ["About 10% of the time", "About 1% of the time", "About 0.1% of the time", "Never, because the shards work in parallel"], answer: 0 }
+    explain: "A query that does not name the shard key must scatter to every shard and gather the answers. Each extra shard adds load and another chance of a slow answer, so the slowest shard sets the speed: 1 − 0.99^10 is about 10%."
+    reteach: "### Cross-shard queries: scatter-gather"

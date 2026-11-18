@@ -1,0 +1,22 @@
+id: module-09a-platform/topic-06-infrastructure-as-code
+title: "Infrastructure as code: Terraform, state and GitOps"
+order: 6
+minutes: 15
+prerequisites: [module-09a-platform/topic-05-helm-kustomize]
+concepts: [why-iac, declarative-terraform, state-and-locking, drift-and-plan, modules-and-environments, gitops-reconciliation, policy-as-code]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-1106
+  from: maya
+  title: "Staging and prod are twins that stopped matching"
+  body: >
+    A change passed every check in staging this morning and broke prod an hour later.
+    Somebody clicked a change into the cloud console months ago, and nobody knows what it was, or why.
+    Can you learn how to keep our infrastructure in code, so git tells us exactly what exists?
+hints:
+  - "Declarative code says what should exist; terraform plan compares it with the state and the real cloud, and lists + create, ~ update, - destroy and -/+ replace before anything changes."
+  - "The state file maps each resource address to a real object. Keep it remote, locked and encrypted, never in git and never edited by hand: it even holds secrets in plain text."
+  - "Drift is a change made outside the code, and plan shows it as ~. Fix it in code through a pull request. GitOps does the same for the cluster: Argo CD or Flux pull desired state from git and reconcile."
+review: true

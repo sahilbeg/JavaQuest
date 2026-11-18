@@ -1,0 +1,23 @@
+id: module-09b-data/topic-07-data-pipelines
+title: "Data pipelines: batch, streams and DAG schedulers like Airflow"
+order: 7
+minutes: 15
+prerequisites: [module-09b-data/topic-06-replication-sharding]
+concepts: [batch-and-streaming, etl-and-warehouses, idempotent-partitions, backfills-and-late-data, dag-scheduling, airflow-concepts, data-quality]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-1207
+  from: priya
+  title: "Three scripts, run by hand, every night"
+  body: >
+    Every night someone runs three scripts by hand to build yesterday's ride report: extract, clean, load.
+    Last Tuesday the clean script failed, the load ran anyway, and the morning numbers were silently wrong. Nobody noticed until Friday.
+    Can you build us a small scheduler that runs these in order, retries, stops when something breaks, and can rebuild the days we missed?
+hints:
+  - "Start with Dag: the scheduler runs nothing until order() works. Order is Kahn's algorithm from the topological sort ticket, with a PriorityQueue<String> so the alphabetically first ready task always goes next."
+  - "Kahn finds cycles for free: any task that never made it into the order is stuck in, or behind, a cycle. Put those names in a TreeSet and throw InvalidDagException with them. Check duplicates and unknown upstream names before Kahn."
+  - "runOne: if any upstream is not SUCCESS, record UPSTREAM_FAILED and return. Otherwise for (int attempt = 1; ; attempt++) { count it; try { action.run(date); record SUCCESS; return; } catch (Exception e) { if (attempt > maxRetries) { record FAILED; return; } waits.add(new RetryWait(name, date, retryDelay)); } }"
+review: true

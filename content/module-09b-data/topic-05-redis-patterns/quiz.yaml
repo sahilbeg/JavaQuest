@@ -1,0 +1,142 @@
+topic: module-09b-data/topic-05-redis-patterns
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: redis-basics
+    variants:
+      - { prompt: "Two Spoke servers send INCR rides:today at the same moment. Why is no count lost?", choices: ["Redis runs one command at a time on its main thread, so each INCR reads, adds and writes with nothing in between", "Redis writes the key to disk before answering", "The two servers' clocks are kept in sync", "Redis retries the second INCR until it succeeds"], answer: 0 }
+      - { prompt: "Someone runs KEYS * on the production Redis, which holds ten million keys. What happens?", choices: ["Every other command waits while it walks all the keys, so every API server stalls", "Only that person's connection slows down", "Redis runs KEYS on a background thread", "Redis refuses KEYS on large databases"], answer: 0 }
+    explain: "Redis runs every command on one main thread, one after another. That makes each single command atomic, and it also means one slow command, like KEYS on millions of keys, blocks everyone. SCAN walks keys in small batches instead."
+    reteach: "### One thread runs every command"
+
+  - id: q02
+    type: mcq
+    concept: redis-basics
+    variants:
+      - { prompt: "Redis runs with the AOF log and appendfsync everysec. The machine loses power. What may be lost?", choices: ["About the last second of writes", "Nothing at all", "Every write since the server started", "Only keys that have a TTL"], answer: 0 }
+      - { prompt: "Redis saves only RDB snapshots, every 5 minutes. It crashes 4 minutes after the last one. What is lost?", choices: ["About 4 minutes of writes, everything since that snapshot", "Nothing, because a snapshot is written after every command", "Only the last second of writes", "Every key, because RDB files cannot be loaded back"], answer: 0 }
+      - { prompt: "The Redis primary dies, and Sentinel promotes a replica. Why can a few writes the primary had answered OK to be missing?", choices: ["Replication is asynchronous: the primary answers before the replica has the write", "Sentinel deletes the newest keys on purpose", "Replicas only copy keys that have a TTL", "The primary sends writes to replicas once a day"], answer: 0 }
+    explain: "RDB is a point-in-time snapshot, so a crash loses everything since the last one. AOF with everysec flushes its log once a second, so about one second can be lost. Replication is asynchronous, so a failover can lose writes the replica had not received. That is why money never lives only in Redis."
+    reteach: "### Persistence and replicas"
+
+  - id: q03
+    type: mcq
+    concept: data-types-and-expiry
+    variants:
+      - { prompt: "TTL rider:7:home answers -1. What does that mean?", choices: ["The key exists and never expires", "The key does not exist", "The key expires in 1 second", "The key has just expired"], answer: 0 }
+      - { prompt: "TTL rider:999:home answers -2. What does that mean?", choices: ["The key does not exist, or it has already expired", "The key exists and never expires", "The key expires in 2 seconds", "The key holds the wrong type"], answer: 0 }
+      - { prompt: "A key has 40 seconds of its TTL left. You run a plain SET on it with a new value and no options. What does TTL answer now?", choices: ["-1, because a plain SET throws away the old TTL", "40, because SET keeps the TTL", "-2, because SET deletes the key", "60, because SET restarts the TTL"], answer: 0 }
+      - { prompt: "A counter has 40 seconds of its TTL left. You run INCR on it. What does TTL answer now?", choices: ["40: INCR changes the value but keeps the TTL", "-1: INCR removes the TTL", "-2: INCR deletes the key", "60: INCR restarts the TTL"], answer: 0 }
+    explain: "TTL answers the seconds left, -1 for a key with no expiry, and -2 for a key that does not exist. A plain SET replaces the key and throws its TTL away. INCR, HSET and ZINCRBY change the value and keep the TTL."
+    reteach: "### Expiry: EXPIRE and TTL"
+
+  - id: q04
+    type: mcq
+    concept: data-types-and-expiry
+    variants:
+      - { prompt: "One Redis holds cached profiles, each with a TTL, and billing locks and counters with no TTL. When memory fills, which policy makes room for new cache entries without ever evicting a lock?", choices: ["volatile-lru", "allkeys-lru", "allkeys-random", "allkeys-lfu"], answer: 0 }
+      - { prompt: "A Redis is a pure cache: every key can be loaded again from Postgres. Which maxmemory-policy fits?", choices: ["allkeys-lru", "noeviction", "volatile-lru, with no TTL on any key", "no maxmemory limit at all"], answer: 0 }
+      - { prompt: "Redis reaches maxmemory under the default policy, noeviction. What happens?", choices: ["Writes are refused with an out-of-memory error; reads still work", "The least recently used keys are evicted", "Redis restarts and empties itself", "Keys with a TTL expire early"], answer: 0 }
+    explain: "noeviction, the default, refuses writes when memory is full. allkeys- policies may evict any key, which suits a pure cache. volatile- policies only evict keys that have a TTL, so keys without one, like locks and counters, are never evicted."
+    reteach: "### Eviction: maxmemory and its policies"
+
+  - id: q05
+    type: spot-the-bug
+    concept: atomic-counters-and-rate-limits
+    prompt: "This transaction runs on every request to count rider-7's requests per 60 s window. A rider who sends one request every 10 seconds is never reset to 0. Which line is the bug?"
+    code: |
+      MULTI
+      INCR rate:rider-7
+      EXPIRE rate:rider-7 60
+      EXEC
+    bugLine: 3
+    explain: "Without NX, every request runs EXPIRE again and pushes the deadline 60 s forward, so a rider who never pauses for a whole minute keeps one counter forever. EXPIRE rate:rider-7 60 NX only sets a TTL when there is none (Redis 7.0 and later)."
+    reteach: "### The INCR-then-EXPIRE race, and three fixes"
+
+  - id: q06
+    type: mcq
+    concept: atomic-counters-and-rate-limits
+    variants:
+      - { prompt: "Each of Spoke's 30 API servers keeps rider-7's request count in its own memory, with a limit of 100 a minute. The load balancer spreads requests evenly. How many requests a minute can rider-7 really get through?", choices: ["3,000", "100", "130", "30"], answer: 0 }
+      - { prompt: "Why does the limiter key rate:rider-7:29386011 end with the minute number?", choices: ["So every server builds the same key for the same minute, and a new minute starts a fresh counter", "So Redis sorts the keys by time", "So the key is unique for every request", "So the TTL can be left out entirely"], answer: 0 }
+    explain: "Counters in each server's memory give every server its own allowance: 30 × 100 = 3,000. One counter in Redis, under a key every server builds the same way, counts all of them. The minute number in the key starts a new counter each minute; the TTL only cleans up old keys."
+    reteach: "### A rate limiter shared by every server"
+
+  - id: q07
+    type: predict-output
+    concept: leaderboards
+    prompt: "A Java comparator plays ZREVRANGE for this week's board. What does it print?"
+    code: |
+      import java.util.ArrayList;
+      import java.util.Comparator;
+      import java.util.List;
+
+      public class Main {
+          record Entry(String rider, double rides) {}
+
+          public static void main(String[] args) {
+              List<Entry> board = new ArrayList<>(List.of(
+                      new Entry("rider-3", 5), new Entry("rider-12", 8), new Entry("rider-9", 5), new Entry("rider-40", 5)));
+              board.sort(Comparator.comparingDouble(Entry::rides).thenComparing(Entry::rider).reversed());
+              List<String> names = new ArrayList<>();
+              for (Entry e : board) {
+                  names.add(e.rider());
+              }
+              System.out.println(String.join(" ", names));
+          }
+      }
+    answer: "rider-12 rider-9 rider-40 rider-3"
+    explain: "rider-12 has the highest score, 8. The other three tie on 5, so they go in reverse text order. Text compares character by character after \"rider-\": '9' > '4' > '3'. That matches ZREVRANGE in Redis."
+    reteach: "### Syntax: sorted-set commands"
+
+  - id: q08
+    type: fill-blank
+    concept: leaderboards
+    prompt: "ZREVRANGE leaderboard:2026-W47 0 9 ___"
+    answers: ["WITHSCORES"]
+    explain: "ZREVRANGE gives places 0 to 9, the top ten, highest score first. WITHSCORES adds each member's score to the reply."
+    reteach: "### Syntax: sorted-set commands"
+
+  - id: q09
+    type: mcq
+    concept: distributed-locks
+    variants:
+      - { prompt: "Why does each lock holder store a random token as the lock key's value?", choices: ["So the release can check the key still holds its own token before deleting it", "So Redis can sort the lock holders", "So the lease lasts longer", "So two servers can hold the lock at once"], answer: 0 }
+      - { prompt: "Why must the release check and delete in one Lua script, rather than GET then DEL from Java?", choices: ["The lease can run out between the GET and the DEL, so the DEL could remove another server's lock", "Java cannot send DEL to Redis", "Lua scripts run faster than DEL", "GET does not work on lock keys"], answer: 0 }
+      - { prompt: "What does PX 600000 do in SET lock:billing-2026-11-18 7f3a9c NX PX 600000?", choices: ["Gives the lock a 10 minute lease, so it frees itself if the holder crashes", "Makes 600,000 servers wait", "Retries the SET for 10 minutes", "Only sets the key if it already exists"], answer: 0 }
+    explain: "SET key token NX PX ms takes the lock in one atomic command: NX only if it is free, PX for a lease that frees a crashed holder's lock. The token proves ownership, and the Lua script checks it and deletes in one atomic step."
+    reteach: "### A distributed lock: SET NX PX, and a safe release"
+
+  - id: q10
+    type: order
+    concept: distributed-locks
+    prompt: "Put the nightly billing story in order, from the first event to the last."
+    items:
+      - "Server A takes the lock with a 30 s lease and fencing token 33"
+      - "Server A freezes in a 40 s garbage-collection pause"
+      - "The lease runs out and Redis deletes the lock key"
+      - "Server B takes the lock with fencing token 34 and charges rental-17"
+      - "Server A wakes up, and the ledger refuses its write with token 33"
+    explain: "A lease frees a dead holder's lock, but a paused holder wakes up still believing it holds the lock. Only the protected resource can catch it, by refusing any token lower than one it has already seen."
+    reteach: "### When a lease runs out: pauses and fencing tokens"
+
+  - id: q11
+    type: mcq
+    concept: streams-and-pubsub
+    variants:
+      - { prompt: "A worker restarts for 20 seconds. During that time, ride-end messages are sent with PUBLISH. What happens to them, for that worker?", choices: ["They are lost: pub/sub only delivers to whoever is listening right now", "Redis keeps them until the worker comes back", "They are delivered twice when it comes back", "PUBLISH waits until every subscriber is back"], answer: 0 }
+      - { prompt: "In a stream consumer group, a worker reads an entry and crashes before XACK. What happens to the entry?", choices: ["It stays in the pending entries list, and another worker can claim it", "It is deleted from the stream", "It is delivered to every worker in the group", "It is lost, as with pub/sub"], answer: 0 }
+    explain: "Pub/sub stores nothing, so a subscriber that is away misses messages: fine for hints. A stream stores entries, and a consumer group tracks which ones each worker read but did not acknowledge, so work that must be done is never silently dropped."
+    reteach: "### Pub/sub and streams"
+
+  - id: q12
+    type: mcq
+    concept: redis-at-scale
+    variants:
+      - { prompt: "In Redis Cluster, one Lua script touches rider:{rider-7}:profile and rider:{rider-7}:wallet. Why does it work?", choices: ["Only rider-7, inside the braces, is hashed, so both keys land in the same slot", "Lua scripts may touch keys in any slot", "Redis Cluster copies every key to every node", "The keys start with the same letters"], answer: 0 }
+      - { prompt: "How many hash slots does Redis Cluster split all keys into?", choices: ["16,384", "1,024", "65,536", "One per node"], answer: 0 }
+      - { prompt: "A team puts the hash tag {spoke} on every key, so any script can touch any keys. What goes wrong?", choices: ["Every key lands in one slot, so one primary takes all the load", "Nothing; it is the recommended setup", "Redis refuses keys with braces", "Every command gets a CROSSSLOT error"], answer: 0 }
+    explain: "A key's slot is CRC16(key) mod 16,384, and a hash tag hashes only the part in braces. Related keys with the same tag share a slot, so multi-key commands work. One tag on everything piles every key onto one slot."
+    reteach: "### Redis Cluster: slots and hash tags"

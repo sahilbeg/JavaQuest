@@ -1,0 +1,23 @@
+id: module-09b-data/topic-05-redis-patterns
+title: "Redis patterns: caches, counters, leaderboards and locks"
+order: 5
+minutes: 15
+prerequisites: [module-09b-data/topic-04-nosql-modeling]
+concepts: [redis-basics, data-types-and-expiry, atomic-counters-and-rate-limits, leaderboards, distributed-locks, streams-and-pubsub, redis-at-scale]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-1205
+  from: theo
+  title: "The leaderboard hammers Postgres, and billing ran twice"
+  body: >
+    We only use Redis as a cache, and it shows. The weekly rider leaderboard runs a heavy Postgres query on every app open.
+    The per-rider rate limiter counts on each of our 30 API servers separately, so a rider really gets 30 times the limit.
+    And last night two servers both ran the nightly billing job, and some riders were charged twice. Can you put Redis to proper work?
+hints:
+  - "Every MiniRedis method is synchronized, like Redis's one thread. Start with removeIfExpired: a key with a deadline is gone once now() >= deadline. Call it at the start of every command, and every expired key becomes invisible."
+  - "TTL: -2 for a missing key, -1 for no deadline, otherwise (millis + 500) / 1000. For ties, Comparator.comparingDouble(ScoredMember::score).thenComparing(ScoredMember::member).reversed() reverses both parts, as ZREVRANGE does."
+  - "tryAcquire: take tokens.get(), then do everything else inside one redis.atomically(r -> ...): if r.set(\"lock:\" + name, token, SetOptions.nxPx(leaseMillis)) is null, return Optional.empty(); otherwise r.incr(\"fence:\" + name) is the fencing token. release: redis.atomically(r -> lease.token().equals(r.get(key)) && r.del(key) == 1)."
+review: true

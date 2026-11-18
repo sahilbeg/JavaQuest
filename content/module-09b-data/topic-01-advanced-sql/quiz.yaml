@@ -1,0 +1,171 @@
+topic: module-09b-data/topic-01-advanced-sql
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: query-order
+    variants:
+      - { prompt: "In which logical order does a database apply these clauses?", choices: ["FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY", "SELECT, FROM, WHERE, GROUP BY, HAVING, ORDER BY", "FROM, GROUP BY, WHERE, HAVING, SELECT, ORDER BY", "FROM, WHERE, SELECT, GROUP BY, HAVING, ORDER BY"], answer: 0 }
+      - { prompt: "Which clause runs right after WHERE, in the logical order?", choices: ["GROUP BY", "SELECT", "HAVING", "ORDER BY"], answer: 0 }
+      - { prompt: "ORDER BY rides DESC works, even though rides is an alias made in SELECT. Why?", choices: ["ORDER BY runs after SELECT, so the alias already exists", "ORDER BY runs before SELECT and makes the alias", "Aliases work in every clause", "ORDER BY ignores aliases and sorts by the first column"], answer: 0 }
+    explain: "The logical order is FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY, then LIMIT. SELECT names the columns, so only ORDER BY, which runs after it, can use those names everywhere."
+    reteach: "### The order a query really runs in"
+
+  - id: q02
+    type: spot-the-bug
+    concept: query-order
+    code: |
+      SELECT rider_id,
+             SUM(fare_cents) AS total_cents
+      FROM ride
+      WHERE total_cents > 1000
+      GROUP BY rider_id;
+    bugLine: 4
+    explain: "WHERE runs before GROUP BY and SELECT, so total_cents does not exist yet, and H2 says Column \"TOTAL_CENTS\" not found. A test on a group total belongs in HAVING SUM(fare_cents) > 1000."
+    reteach: "### Why an alias fails in WHERE"
+
+  - id: q03
+    type: mcq
+    concept: outer-joins-and-null
+    variants:
+      - { prompt: "rider LEFT JOIN ride LEFT JOIN bike should list every rider with a count of e-bike rides. Riders with zero vanish. What is the most likely cause?", choices: ["b.type = 'EBIKE' is in WHERE, which drops the rows the LEFT JOIN kept", "LEFT JOIN never keeps riders with no rides", "COUNT cannot count zero", "GROUP BY drops riders with NULLs"], answer: 0 }
+      - { prompt: "In rider p LEFT JOIN ride r ON ..., where should a test on r.start_station_id go so that every rider still appears?", choices: ["In the ON clause of the join", "In WHERE", "In HAVING", "In ORDER BY"], answer: 0 }
+    explain: "WHERE runs after the join and throws away any row where the test is not true. For a rider with no match, the right side is NULL, so the test is UNKNOWN and the rider is dropped. In ON, the test only decides which right rows match."
+    reteach: "### ON or WHERE in an outer join"
+
+  - id: q04
+    type: mcq
+    concept: outer-joins-and-null
+    variants:
+      - { prompt: "What does NULL = NULL give in SQL?", choices: ["UNKNOWN, so a WHERE with it keeps no rows", "TRUE", "FALSE", "An error"], answer: 0 }
+      - { prompt: "What does (NULL = 1) OR TRUE give?", choices: ["TRUE", "UNKNOWN", "FALSE", "An error"], answer: 0 }
+      - { prompt: "What does (NULL = 1) AND FALSE give?", choices: ["FALSE", "UNKNOWN", "TRUE", "An error"], answer: 0 }
+      - { prompt: "What does NULL + 5 give?", choices: ["NULL", "5", "0", "An error"], answer: 0 }
+    explain: "Any comparison with NULL is UNKNOWN. OR with TRUE is TRUE whatever the other side is, and AND with FALSE is FALSE. Arithmetic with NULL gives NULL."
+    reteach: "### NULL and three-valued logic"
+
+  - id: q05
+    type: mcq
+    concept: outer-joins-and-null
+    variants:
+      - { prompt: "rider p LEFT JOIN ride r, grouped by rider. Dee has no rides. What do COUNT(*) and COUNT(r.id) give for Dee?", choices: ["1 and 0", "0 and 0", "1 and 1", "NULL and 0"], answer: 0 }
+      - { prompt: "No ride started at Depot. Which expression gives 0 for Depot's total minutes, not NULL?", choices: ["COALESCE(SUM(minutes), 0)", "SUM(minutes)", "MAX(minutes)", "AVG(minutes)"], answer: 0 }
+      - { prompt: "The ride table has 8 rows, and one has rider_id NULL. What does COUNT(rider_id) give?", choices: ["7", "8", "1", "NULL"], answer: 0 }
+    explain: "COUNT(*) counts rows, including a LEFT JOIN's row full of NULLs. COUNT(column) skips NULLs. SUM over no rows is NULL, so wrap it in COALESCE to show 0."
+    reteach: "### COUNT(*), COUNT(column) and COALESCE"
+
+  - id: q06
+    type: mcq
+    concept: semi-and-anti-joins
+    variants:
+      - { prompt: "WHERE p.id NOT IN (SELECT r.rider_id FROM ride r WHERE ...). The subquery returns 'rider-2' and NULL. Which riders come back?", choices: ["None at all", "Every rider except rider-2", "Only rider-2", "Every rider"], answer: 0 }
+      - { prompt: "ride.rider_id can be NULL for guest rides. Which anti-join stays correct?", choices: ["WHERE NOT EXISTS (SELECT 1 FROM ride r WHERE r.rider_id = p.id AND ...)", "WHERE p.id NOT IN (SELECT r.rider_id FROM ride r WHERE ...)", "WHERE p.id <> ALL (SELECT r.rider_id FROM ride r WHERE ...)", "WHERE p.id NOT IN (SELECT DISTINCT r.rider_id FROM ride r WHERE ...)"], answer: 0 }
+    explain: "x NOT IN (a, NULL) means x <> a AND x <> NULL. The second half is UNKNOWN, so the whole test is never true and no row passes. <> ALL means the same thing, and DISTINCT keeps the NULL. NOT EXISTS only asks whether a matching row exists, so a NULL cannot break it."
+    reteach: "### The NOT IN trap"
+
+  - id: q07
+    type: predict-output
+    concept: semi-and-anti-joins
+    prompt: "Rider-1 has three rides and rider-2 has one. What does it print?"
+    code: |
+      import java.sql.*;
+      
+      public class Main {
+          public static void main(String[] args) throws SQLException {
+              try (Connection db = DriverManager.getConnection("jdbc:h2:mem:quiz");
+                   Statement sql = db.createStatement()) {
+                  sql.execute("""
+                      CREATE TABLE rider (id VARCHAR(10));
+                      CREATE TABLE ride (id INT, rider_id VARCHAR(10));
+                      INSERT INTO rider VALUES ('rider-1'), ('rider-2'), ('rider-3');
+                      INSERT INTO ride VALUES (1, 'rider-1'), (2, 'rider-1'), (3, 'rider-1'), (4, 'rider-2');
+                      """);
+                  ResultSet joined = sql.executeQuery("SELECT COUNT(*) FROM rider p JOIN ride r ON r.rider_id = p.id");
+                  joined.next();
+                  int joinCount = joined.getInt(1);
+                  ResultSet exists = sql.executeQuery(
+                          "SELECT COUNT(*) FROM rider p WHERE EXISTS (SELECT 1 FROM ride r WHERE r.rider_id = p.id)");
+                  exists.next();
+                  System.out.println("join: " + joinCount + ", exists: " + exists.getInt(1));
+              }
+          }
+      }
+    answer: "join: 4, exists: 2"
+    explain: "A join makes one row per matching pair: rider-1 three times and rider-2 once, 4 rows. EXISTS is a semi-join: it keeps each rider with at least one ride, once. Rider-3 has no rides, so neither query counts them."
+    reteach: "### Semi-joins: EXISTS"
+
+  - id: q08
+    type: fill-blank
+    concept: window-functions
+    prompt: "SELECT id, ___(minutes) OVER (PARTITION BY rider_id ORDER BY started_at) AS prev_minutes FROM ride;"
+    answers: ["LAG"]
+    explain: "LAG reads a column from the row before, inside the same partition. LEAD reads the row after. The first ride of each rider has no row before, so it gets NULL."
+    reteach: "### LAG and LEAD"
+
+  - id: q09
+    type: mcq
+    concept: window-functions
+    variants:
+      - { prompt: "SUM(fare_cents) OVER (ORDER BY started_at), with no frame. Rides 6 and 7 started at the same moment. What do their two rows show?", choices: ["The same running total, which already includes both fares", "Two different totals, one fare apart", "NULL for the second ride", "An error about duplicate values"], answer: 0 }
+      - { prompt: "Which frame adds up a running total one row at a time, even when ORDER BY values tie?", choices: ["ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW", "RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW", "No frame at all", "ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING"], answer: 0 }
+      - { prompt: "Which frame adds up this row and the two rows before it?", choices: ["ROWS BETWEEN 2 PRECEDING AND CURRENT ROW", "ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW", "ROWS BETWEEN CURRENT ROW AND 2 FOLLOWING", "RANGE BETWEEN 2 PRECEDING AND 2 FOLLOWING"], answer: 0 }
+    explain: "With ORDER BY and no frame, the default is RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW, which treats tied rows as one step. ROWS counts physical rows. N PRECEDING reaches N rows back."
+    reteach: "### Running totals and frames"
+
+  - id: q10
+    type: predict-output
+    concept: ranking-and-top-n
+    prompt: "Rides of 30, 20, 20 and 15 minutes. What does it print?"
+    code: |
+      import java.sql.*;
+      
+      public class Main {
+          public static void main(String[] args) throws SQLException {
+              try (Connection db = DriverManager.getConnection("jdbc:h2:mem:quiz");
+                   Statement sql = db.createStatement()) {
+                  sql.execute("""
+                      CREATE TABLE ride (id INT, minutes INT);
+                      INSERT INTO ride VALUES (1, 30), (2, 20), (3, 20), (4, 15);
+                      """);
+                  ResultSet rows = sql.executeQuery("""
+                      SELECT RANK() OVER (ORDER BY minutes DESC) AS r,
+                             DENSE_RANK() OVER (ORDER BY minutes DESC) AS d
+                      FROM ride ORDER BY minutes DESC, id
+                      """);
+                  StringBuilder ranks = new StringBuilder();
+                  StringBuilder dense = new StringBuilder();
+                  while (rows.next()) {
+                      ranks.append(rows.getInt("r")).append(' ');
+                      dense.append(rows.getInt("d")).append(' ');
+                  }
+                  System.out.println("RANK: " + ranks.toString().trim());
+                  System.out.println("DENSE_RANK: " + dense.toString().trim());
+              }
+          }
+      }
+    answer: |
+      RANK: 1 2 2 4
+      DENSE_RANK: 1 2 2 3
+    explain: "Both give the tied 20-minute rides place 2. RANK then skips to 4, because three rides come before the 15-minute one. DENSE_RANK leaves no gap and gives 3."
+    reteach: "### ROW_NUMBER, RANK and DENSE_RANK on ties"
+
+  - id: q11
+    type: mcq
+    concept: ranking-and-top-n
+    variants:
+      - { prompt: "Jiraiya wants exactly two rides per station, never more. Which ranking fits?", choices: ["ROW_NUMBER() with a tie-breaker such as id in its ORDER BY", "RANK()", "DENSE_RANK()", "COUNT(*)"], answer: 0 }
+      - { prompt: "Jiraiya wants every ride in the top two places at each station, with tied rides sharing a place. Which ranking fits?", choices: ["RANK()", "ROW_NUMBER()", "LAG()", "SUM() OVER ()"], answer: 0 }
+      - { prompt: "A top-2 query writes WHERE place <= 2 in the same SELECT that computes place with RANK() OVER (...). What happens?", choices: ["It fails, because place does not exist yet when WHERE runs; filter in an outer query", "It works and returns the top two", "It returns every row", "It returns only rows with place 1"], answer: 0 }
+    explain: "ROW_NUMBER gives every row its own number, so it caps the count. RANK lets ties share a place. Either way, the rank only exists after the SELECT step, so filter on it one layer up, in a CTE or subquery."
+    reteach: "### Top N per group"
+
+  - id: q12
+    type: mcq
+    concept: ctes-and-recursion
+    variants:
+      - { prompt: "When does a recursive CTE stop?", choices: ["When a round of the recursive step adds no new rows", "After exactly one round", "When the anchor returns no rows the second time", "When the database runs out of memory, always"], answer: 0 }
+      - { prompt: "In H2, the bike lanes form a loop, and a recursive CTE with UNION ALL counts hops with no hops limit. What happens?", choices: ["It never finishes, because every trip round the loop makes new rows with a bigger hop count", "UNION ALL removes the repeats, so it stops", "It stops after the first round", "The database refuses to start it"], answer: 0 }
+      - { prompt: "In WITH RECURSIVE reach AS (anchor UNION ALL step), how often does the anchor run?", choices: ["Once, at the start", "Once per round", "Once per row in the table", "Never; only the step runs"], answer: 0 }
+    explain: "The anchor runs once. The step then runs on the rows the last round produced, until a round adds nothing. With a loop and a growing hop count, every round adds new rows, so a stop condition such as WHERE r.hops < 3 is required."
+    reteach: "### Recursive CTEs"

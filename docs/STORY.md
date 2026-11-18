@@ -53,6 +53,8 @@ Characters speak only in tickets, chat and incidents. A lesson may name the team
 | 07 Tooling | Shipping safely | Fix the build, branch and merge, CI checks, a Docker image | INC-07: the release pipeline is red | FEAT-07: package the kiosk as a runnable jar |
 | 08 Backend | The Spoke API | HTTP, REST design, Spring Boot rentals API, validation, SQL, JPA, transactions for pay-and-unlock, rider login | INC-08: half-finished rentals after a crash | FEAT-08: the station availability API |
 | 09 Architecture | Growing up | Layers, ports and adapters, ride events, caching station status, scaling, observability | INC-09: the live map falls over at peak | FEAT-09: event-driven billing |
+| 09a Platform and DevOps | Ship it everywhere | Production Docker images, Compose, GitHub Actions, Kubernetes manifests, Helm, Terraform, secrets, Prometheus | INC-11: the deploy that took Spoke down | FEAT-11: one-click deploys |
+| 09b Data in depth | Know your data | Advanced SQL, index internals, MVCC, NoSQL, Redis, replication and sharding, data pipelines, Postgres in production | INC-12: month-end reports grind the database | FEAT-12: the rider statements data mart |
 | 10 Professional | Full-time offer | Review teammates' pull requests, find your way in a big codebase, write docs, estimate, interview | INC-10: the mock interview loop | Capstone: launch Spoke in Bramford |
 
 ## Career ladder

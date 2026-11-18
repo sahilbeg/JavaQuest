@@ -1,0 +1,141 @@
+topic: module-09b-data/topic-03-transaction-internals
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: order
+    concept: write-ahead-log
+    prompt: "A transaction moves B-1042 to truck-3 and commits in PostgreSQL. Put what happens in order."
+    items:
+      - "The UPDATE changes page 812 in the buffer pool and adds a WAL record describing the change"
+      - "COMMIT appends a commit record to the WAL"
+      - "The WAL is forced onto the disk with fsync"
+      - "The application is told the commit succeeded"
+      - "Later, a checkpoint writes the dirty page 812 to the table file"
+    explain: "The rule is log first. The change lives in memory and in the WAL; at commit the WAL is fsynced, and only then does the client hear 'committed'. Pages reach the table files later."
+    reteach: "### The write-ahead log"
+
+  - id: q02
+    type: mcq
+    concept: write-ahead-log
+    variants:
+      - { prompt: "The power fails right after a COMMIT returned, before the changed page reached the table file. What happens on restart?", choices: ["Crash recovery replays the WAL from the last checkpoint, so the committed change is back", "The change is lost, because the page never reached the table file", "PostgreSQL asks the application to send the transaction again", "The whole table is restored from last night's backup"], answer: 0 }
+      - { prompt: "What does a checkpoint buy PostgreSQL?", choices: ["Crash recovery only has to replay the WAL written after it", "Commits no longer need an fsync", "Old row versions are removed from the tables", "Every running transaction gets a fresh snapshot"], answer: 0 }
+    explain: "A commit is durable once its WAL record is on disk. Recovery redoes the WAL in order. A checkpoint writes every dirty page to the table files, so recovery can start from it instead of from the very beginning."
+    reteach: "### Crash recovery and checkpoints"
+
+  - id: q03
+    type: mcq
+    concept: mvcc-snapshots
+    variants:
+      - { prompt: "In PostgreSQL, what does UPDATE fare SET cents_per_minute = 35 do to the row?", choices: ["Writes a new version and sets the old version's xmax to this transaction's id", "Overwrites the value 30 with 35 in place", "Deletes the row and waits for vacuum to insert the new one", "Locks the whole table until the transaction commits"], answer: 0 }
+      - { prompt: "A row version has xmin = 310 and xmax = 0. What does that mean?", choices: ["Transaction 310 created it, and nobody has updated or deleted it yet", "Transaction 310 deleted it", "It is a dead tuple waiting for vacuum", "It was created before the database started"], answer: 0 }
+    explain: "PostgreSQL's MVCC never overwrites a row. Each version records its creator (xmin) and the transaction that ended it (xmax, 0 while nobody has)."
+    reteach: "### MVCC: every row has versions"
+
+  - id: q04
+    type: predict-output
+    concept: mvcc-snapshots
+    prompt: "This models the visibility rule for the EBIKE fare row. The snapshot was taken when only transaction 100 had committed. What does it print?"
+    code: |
+      import java.util.Set;
+
+      public class Main {
+          record Version(long cents, int xmin, int xmax) {}
+
+          public static void main(String[] args) {
+              Set<Integer> committed = Set.of(100);   // only 100 had committed when the snapshot was taken
+              Version[] ebikeFare = {
+                  new Version(30, 100, 205),
+                  new Version(35, 205, 310),
+                  new Version(40, 310, 0)
+              };
+              for (Version v : ebikeFare) {
+                  boolean born = committed.contains(v.xmin());
+                  boolean ended = v.xmax() != 0 && committed.contains(v.xmax());
+                  if (born && !ended) {
+                      System.out.println(v.cents());
+                  }
+              }
+          }
+      }
+    answer: "30"
+    explain: "Version 30 was created by 100 (committed) and ended by 205 (not committed in this snapshot), so it is visible. 35 and 40 were created by transactions the snapshot does not count as committed."
+    reteach: "### Snapshots: which version you see"
+
+  - id: q05
+    type: mcq
+    concept: isolation-in-postgres
+    variants:
+      - { prompt: "Under READ COMMITTED in PostgreSQL, a report runs two SELECTs in one transaction. A fare change commits between them. What does the second SELECT see?", choices: ["The new fare, because each statement takes a new snapshot", "The old fare, because the snapshot was taken at BEGIN", "An error with SQLState 40001", "Nothing until the fare change is vacuumed"], answer: 0 }
+      - { prompt: "When does a REPEATABLE READ transaction in PostgreSQL take its snapshot?", choices: ["At its first statement, and it keeps that snapshot until it ends", "At BEGIN, even if the first query runs much later", "Before every statement", "Only when it writes its first row"], answer: 0 }
+      - { prompt: "Finance's month-end report runs ten queries and needs them all to agree. Which level gives it one frozen moment in PostgreSQL?", choices: ["REPEATABLE READ", "READ COMMITTED", "READ UNCOMMITTED", "None: each query always sees the newest data"], answer: 0 }
+    explain: "READ COMMITTED takes a new snapshot per statement. REPEATABLE READ takes one at the first statement and keeps it: that is snapshot isolation, ideal for multi-query reports."
+    reteach: "### READ COMMITTED and REPEATABLE READ in PostgreSQL"
+
+  - id: q06
+    type: mcq
+    concept: isolation-in-postgres
+    variants:
+      - { prompt: "Under REPEATABLE READ in PostgreSQL, Ben updates Harbor's row, which Ana changed and committed after Ben's snapshot was taken. What happens?", choices: ["Ben's transaction fails with SQLState 40001 and must be retried", "Ben silently overwrites Ana's change", "Ben's update applies to the version in his snapshot", "Ben waits forever"], answer: 0 }
+      - { prompt: "Under READ COMMITTED in PostgreSQL, Ben's UPDATE station SET docked = docked - 1 waits for Ana's uncommitted update of the same row. Ana commits. What does Ben's update do?", choices: ["Re-reads the newest version, re-checks its WHERE, and subtracts 1 from Ana's result", "Fails with SQLState 40001", "Subtracts 1 from the value Ben's earlier SELECT saw, losing Ana's change", "Is skipped, because the row changed"], answer: 0 }
+    explain: "Two writers on one row queue. When the first commits, READ COMMITTED applies the second update to the newest version. REPEATABLE READ cannot without breaking its frozen snapshot, so it fails with 40001."
+    reteach: "### When two writers hit the same row"
+
+  - id: q07
+    type: mcq
+    concept: write-skew
+    variants:
+      - { prompt: "Both Harbor moves ran under REPEATABLE READ, yet Harbor ended with 4 bikes. Why did snapshot isolation not stop it?", choices: ["The two transactions wrote different rows, so there was no clash for it to detect", "REPEATABLE READ allows dirty reads", "The WAL was not flushed before the second commit", "Vacuum removed Ana's change before Ben read it"], answer: 0 }
+      - { prompt: "Which situation has the shape of write skew?", choices: ["Two riders each see dock 4 free at 09:00, and each inserts a reservation row", "Two editors both add 5 to the same fare row with UPDATE ... SET fare = fare + 5", "A report reads a fare change that is later rolled back", "One transaction reads the same row twice and gets two values"], answer: 0 }
+    explain: "Write skew: two transactions read the same set, each decides, and each writes a different row. Snapshot isolation only notices two writes to the same row, so both commit."
+    reteach: "### Write skew: right checks, wrong result"
+
+  - id: q08
+    type: fill-blank
+    concept: write-skew
+    prompt: "BEGIN ISOLATION LEVEL ___;   -- PostgreSQL tracks read-write dependencies and fails one dispatcher with 40001"
+    answers: ["SERIALIZABLE"]
+    explain: "PostgreSQL's SERIALIZABLE uses serializable snapshot isolation (SSI). It catches write skew by failing one transaction with 40001, so every caller needs a retry loop."
+    reteach: "### Fix 1: SERIALIZABLE, with retries"
+
+  - id: q09
+    type: spot-the-bug
+    concept: write-skew
+    prompt: "Both dispatchers run this at the same moment under READ COMMITTED, and Harbor still drops below 5. Which line is wrong?"
+    code: |
+      BEGIN;
+      SELECT id FROM station WHERE id = 'harbor' FOR SHARE;
+      SELECT count(*) FROM bike WHERE station = 'harbor';
+      UPDATE bike SET station = 'truck-3' WHERE id = 'B-1043';   -- only if count - 1 >= 5
+      COMMIT;
+    bugLine: 2
+    explain: "Two FOR SHARE locks do not block each other, so both dispatchers pass line 2 at once. FOR UPDATE makes the second wait until the first commits; its count then sees the move."
+    reteach: "### Fix 2: lock what the decision reads"
+
+  - id: q10
+    type: mcq
+    concept: vacuum-and-long-transactions
+    variants:
+      - { prompt: "The rental table holds 100 MB of live rows but takes 1 GB on disk. What is the most likely cause?", choices: ["Dead tuples from updates piled up faster than vacuum could free them: bloat", "The WAL is stored inside the table file", "Indexes are always ten times bigger than tables", "Each row is padded to a full 8 KB page"], answer: 0 }
+      - { prompt: "What does a plain VACUUM do in PostgreSQL?", choices: ["Marks space used by dead tuples as free for new rows, usually without shrinking the file", "Rewrites the table compactly while blocking all reads and writes", "Deletes rows older than 30 days", "Writes all dirty pages to disk, like a checkpoint"], answer: 0 }
+    explain: "Every UPDATE leaves a dead version. VACUUM frees that space for reuse; VACUUM FULL rewrites the table but blocks all access while it runs. Bloat is dead space piling up faster than vacuum frees it."
+    reteach: "### Dead tuples, vacuum and bloat"
+
+  - id: q11
+    type: mcq
+    concept: vacuum-and-long-transactions
+    variants:
+      - { prompt: "A reporting session has been 'idle in transaction' for three hours. Which harm does it cause?", choices: ["Vacuum cannot remove versions that died since it started, so tables everywhere bloat", "None, because it is idle", "It makes every commit wait for an extra fsync", "It turns off the write-ahead log"], answer: 0 }
+      - { prompt: "endRide() locks the rental row, then calls the payment provider over HTTP inside the same transaction. The provider slows to 30 s. What happens?", choices: ["Row locks are held for 30 s per ride, sessions pile up idle in transaction, and vacuum falls behind", "Nothing: the transaction pauses and costs nothing while it waits", "PostgreSQL commits the transaction early to free the locks", "The payment call runs faster inside a transaction"], answer: 0 }
+    explain: "An open transaction pins its snapshot, so vacuum cannot clean anything that died after it began. It also keeps its locks. Keep transactions short and move slow calls outside them."
+    reteach: "### Why long-running transactions hurt"
+
+  - id: q12
+    type: mcq
+    concept: two-phase-commit
+    variants:
+      - { prompt: "In two-phase commit, the coordinator crashes after every database ran PREPARE TRANSACTION. What is the database-level problem?", choices: ["The prepared transactions keep their locks and block vacuum, even across restarts, until someone resolves them", "The prepared changes are lost at the next restart", "Each database commits on its own after a timeout", "Nothing: PREPARE TRANSACTION holds no locks"], answer: 0 }
+      - { prompt: "Unlocking reserves a bike in Fleet's database and charges 100 cents in Payments' database. How should it stay correct?", choices: ["A saga of local transactions with compensations, using an outbox for the events", "Two-phase commit across both databases for every move", "One REPEATABLE READ transaction that connects to both databases", "SERIALIZABLE isolation on both databases"], answer: 0 }
+    explain: "A prepared transaction is a long-running transaction that survives a restart, so a dead coordinator leaves locks held and vacuum blocked. Between services, prefer sagas and the outbox."
+    reteach: "### Two-phase commit, and why services avoid it"

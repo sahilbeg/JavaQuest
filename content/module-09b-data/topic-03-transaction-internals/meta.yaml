@@ -1,0 +1,22 @@
+id: module-09b-data/topic-03-transaction-internals
+title: "Inside transactions: MVCC, the write-ahead log and isolation"
+order: 3
+minutes: 15
+prerequisites: [module-09b-data/topic-02-index-internals]
+concepts: [write-ahead-log, mvcc-snapshots, isolation-in-postgres, write-skew, vacuum-and-long-transactions, two-phase-commit]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-1203
+  from: maya
+  title: "Two dispatchers emptied Harbor, and both checks said it was fine"
+  body: >
+    Harbor must keep at least 5 bikes docked at rush hour. At 08:05 two dispatchers each moved one bike out of Harbor at the same moment.
+    Both apps checked first, and both checks said "still above the minimum". Harbor ended up with 4.
+    Both moves ran inside transactions, so nobody understands how. Can you go inside the database and find out what really happened?
+hints:
+  - "Each transaction read a snapshot: a photo of the data taken when it started. Neither photo showed the other dispatcher's move."
+  - "Nothing clashed, because the two transactions changed two different bikes. That anomaly is write skew, and snapshot isolation lets it through."
+  - "Make the two moves collide: lock Harbor's station row with SELECT ... FOR UPDATE under READ COMMITTED, keep a docked counter with a CHECK constraint, or run SERIALIZABLE and retry on SQLState 40001."
+review: true

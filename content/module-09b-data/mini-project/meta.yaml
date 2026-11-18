@@ -1,0 +1,23 @@
+id: module-09b-data/mini-project
+title: "FEAT-12: The rider statements data mart"
+order: 100
+minutes: 15
+prerequisites: [module-09b-data/topic-08-postgres-in-production]
+concepts: [time-zone-month-ranges, rank-and-lag, idempotent-rebuild, data-quality-checks, backfills]
+practice:
+  kind: code
+  runner: plain
+  timeoutSeconds: 30
+ticket:
+  key: FEAT-12
+  from: priya
+  title: "Monthly statements for every rider"
+  body: >
+    Riders keep asking what they spent with us last month. I want a monthly statement in the app: rides, total, longest ride, their rank in their city, and the change from last month.
+    Build it every night from the raw rides. If the job runs twice, or we rerun last quarter after a fix, riders must see exactly the same numbers.
+    And please don't publish a month that doesn't add up. A wrong statement is worse than a late one.
+hints:
+  - "Stage 1: MonthRange.of is month.atDay(1).atStartOfDay(RIVERTON).withZoneSameInstant(ZoneOffset.UTC).toOffsetDateTime(), and the same for the next month. In runMonth, prepare BUILD_SQL, setString(1, month.toString()), setObject(2, range.start()), setObject(3, range.end()), executeUpdate()."
+  - "Stage 2: read the previous month too (started_at >= previous start AND < this month's end), tag rows with CASE WHEN started_at >= ? THEN 1 ELSE 0 END AS is_current, GROUP BY city, rider_id, is_current, then total_cents - LAG(total_cents) OVER (PARTITION BY city, rider_id ORDER BY is_current), RANK() OVER (PARTITION BY city ORDER BY total_cents DESC), WHERE is_current = 1."
+  - "Stage 3: setAutoCommit(false); DELETE FROM rider_monthly_statement WHERE statement_month = ?; run BUILD_SQL; QualityChecks.verify(connection, range); commit(). Wrap it in try/catch (SQLException | RuntimeException e) { connection.rollback(); ... }. Stage 5 is a for loop with month = month.plusMonths(1)."
+review: false

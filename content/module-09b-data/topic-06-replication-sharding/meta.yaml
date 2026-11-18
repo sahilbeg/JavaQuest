@@ -1,0 +1,23 @@
+id: module-09b-data/topic-06-replication-sharding
+title: "Replication and sharding: lag, quorums and consistent hashing"
+order: 6
+minutes: 15
+prerequisites: [module-09b-data/topic-05-redis-patterns]
+concepts: [leader-follower, replication-lag, failover-and-split-brain, quorums, sharding, consistent-hashing, cross-shard-queries]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-1206
+  from: theo
+  title: "Rentals vanish right after they start"
+  body: >
+    Riders are reporting a spooky one: they start a ride, the app reloads, and the rental is gone, so they tap Unlock again.
+    It comes back a second later. I traced it to the app reading from a database replica that had not caught up yet.
+    And separately, the rides table no longer fits on one machine. Can you sort out where reads go and how we split the data?
+hints:
+  - "Ring: put hash(node + \"#\" + i) for i from 0 to virtualNodes - 1 into a TreeMap<Long, String>. nodeFor takes ring.ceilingEntry(hash(key)), and wraps to ring.firstEntry() when that is null."
+  - "Router: keep a Map<String, Long> of the highest position each session has seen. write and read both raise it with seen.merge(session, position, Math::max). replicaFor walks log.followers() in order and takes the first with appliedPosition >= seen, else LEADER."
+  - "QuorumReader.read: check answers.size() < r first. Find the answer with the highest version, then loop again: a lower version goes into needRepair; the same version with !Objects.equals(value, newest.value()) throws IllegalStateException."
+review: true

@@ -1,0 +1,120 @@
+topic: module-09b-data/topic-08-postgres-in-production
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: connection-pooling
+    prompt: "Postgres allows 100 connections and keeps 3 for admins. The autoscaler can run up to 24 API pods. What does this print?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int maxConnections = 100;
+              int reserved = 3;
+              int maxPods = 24;
+              int poolPerPod = 5;
+              int wanted = maxPods * poolPerPod;
+              System.out.println(wanted + " " + (wanted <= maxConnections - reserved ? "fits" : "too many"));
+          }
+      }
+    answer: "120 too many"
+    explain: "24 pods × 5 = 120 connections, but only 100 - 3 = 97 are usable. Budget for the maximum number of pods, not the usual number."
+    reteach: "### Pool math across servers"
+
+  - id: q02
+    type: mcq
+    concept: connection-pooling
+    variants:
+      - { prompt: "Spoke's database server has 8 CPU cores and fast SSDs. What does the cores × 2 starting point suggest?", choices: ["About 16 to 20 busy connections in total, then measure", "About 800 connections, to be safe", "100 connections for each API pod", "Exactly 1 connection, to avoid locks"], answer: 0 }
+      - { prompt: "Why does a pool of 10 connections often beat a pool of 200 for the same database?", choices: ["The database can only work on about as many queries as it has cores; extra connections just queue and fight inside it", "Each connection makes queries run twice as fast", "Postgres refuses pools bigger than 10", "Small pools skip the network"], answer: 0 }
+    explain: "A database works on about as many things at once as it has cores. More connections add switching and memory inside the database, so a small pool and a cheap queue in the app usually win."
+    reteach: "### Why small pools win"
+
+  - id: q03
+    type: mcq
+    concept: connection-pooling
+    variants:
+      - { prompt: "Spoke puts PgBouncer in transaction mode in front of Postgres. Which of these breaks?", choices: ["A plain SET meant to last for the whole session", "A transaction with BEGIN and COMMIT", "A SELECT by primary key", "An index on rides"], answer: 0 }
+      - { prompt: "45 pods with pools of 5 open 225 connections to PgBouncer in transaction mode. What does PgBouncer do with them?", choices: ["Lends each transaction one of a few real database connections, so the 225 share about 20", "Opens 225 real connections to Postgres", "Raises max_connections to 225", "Caches query results so Postgres is not needed"], answer: 0 }
+    explain: "In transaction mode, a real connection is lent for one transaction and then returned. Many clients share few connections, but session state such as a plain SET can land on another client's transaction."
+    reteach: "### PgBouncer and transaction pooling"
+
+  - id: q04
+    type: mcq
+    concept: query-plans
+    variants:
+      - { prompt: "A plan line reads: (cost=0.43..2189.10 rows=812 width=32) (actual time=0.025..13.950 rows=790 loops=1). Which numbers are the planner's guesses?", choices: ["cost and rows=812", "actual time and rows=790", "loops=1 only", "13.950 and 790"], answer: 0 }
+      - { prompt: "What does EXPLAIN ANALYZE do that plain EXPLAIN does not?", choices: ["It really runs the query, and adds actual times and row counts to the plan", "It only shows the planner's estimates", "It creates the missing indexes", "It runs the query twice and averages it"], answer: 0 }
+    explain: "cost and rows in the first brackets are estimates. EXPLAIN ANALYZE really runs the query and adds the actual time, rows and loops, so wrap writes in BEGIN and ROLLBACK."
+    reteach: "### Reading EXPLAIN ANALYZE"
+
+  - id: q05
+    type: mcq
+    concept: query-plans
+    variants:
+      - { prompt: "The planner estimated 5 rows from rides and chose a Nested Loop. The real count was 400,000, and the query ran for minutes. What should you try first?", choices: ["ANALYZE rides, so the planner's statistics are fresh", "Restart Postgres", "Raise max_connections", "VACUUM FULL rides"], answer: 0 }
+      - { prompt: "Right after a bulk load of 2 million rides, some plans turn bad until autovacuum gets round to the table. Why?", choices: ["The statistics the planner guesses from are stale until ANALYZE runs", "The load deleted the indexes", "Postgres disables the planner during loads", "Bulk loads always leave the table locked"], answer: 0 }
+    explain: "The planner picks a plan from its row estimates, and estimates come from statistics. When they are stale, the guess is wrong, and so is the plan. ANALYZE refreshes them."
+    reteach: "### When estimates lie"
+
+  - id: q06
+    type: mcq
+    concept: vacuum-and-bloat
+    variants:
+      - { prompt: "The rides table keeps 1 million live rows, but gets updated all day. Why does it keep growing on disk?", choices: ["Each UPDATE leaves a dead row version until vacuum makes its space reusable", "Postgres never reuses space", "Every UPDATE adds a new index", "The WAL is stored inside the table"], answer: 0 }
+      - { prompt: "A session was left idle inside an open transaction for six hours. What does that do to vacuum?", choices: ["Vacuum cannot remove dead rows that transaction might still see, so bloat grows", "Nothing: vacuum ignores idle sessions", "Vacuum runs faster, because the session is idle", "Vacuum deletes the session's rows"], answer: 0 }
+    explain: "Updates and deletes leave dead tuples, and vacuum makes their space reusable. It cannot clean rows an open transaction might still need, so one long-open transaction lets bloat grow."
+    reteach: "### Autovacuum, dead tuples and bloat"
+
+  - id: q07
+    type: mcq
+    concept: partitioning-and-jsonb
+    variants:
+      - { prompt: "rides is partitioned by month on started_at. What is the best way to remove rides older than five years?", choices: ["Detach and drop the old monthly partitions", "DELETE FROM rides WHERE started_at < the cut-off", "TRUNCATE rides", "VACUUM FULL rides"], answer: 0 }
+      - { prompt: "rides is partitioned by month on started_at. Which query gets partition pruning?", choices: ["WHERE started_at >= '2026-11-01' AND started_at < '2026-12-01'", "WHERE rider_id = 'rider-7'", "WHERE bike_id = 'B-1042'", "SELECT count(*) FROM rides"], answer: 0 }
+    explain: "Partition pruning needs a filter on the partition key, so Postgres can skip the other months. Dropping an old partition is instant, while a huge DELETE takes hours and leaves dead tuples."
+    reteach: "### Partitioning big tables"
+
+  - id: q08
+    type: mcq
+    concept: partitioning-and-jsonb
+    variants:
+      - { prompt: "Which data fits a JSONB column best?", choices: ["Raw webhook payloads from the payments partner, whose fields vary", "The rider_id of every ride, used in joins", "The fare_cents of every ride, summed in reports", "The station id each dock belongs to"], answer: 0 }
+      - { prompt: "Which index makes WHERE details @> '{\"battery\": \"low\"}' fast?", choices: ["A GIN index on details", "A B-tree index on details", "A B-tree index on bike_id", "No index can help with JSONB"], answer: 0 }
+    explain: "JSONB suits data whose shape varies, and a GIN index speeds up @> and ?. Anything you filter, join or sum by belongs in a real column."
+    reteach: "### JSONB: when it fits"
+
+  - id: q09
+    type: fill-blank
+    concept: online-migrations
+    prompt: "CREATE INDEX ___ rental_bike_id_idx ON rental (bike_id);   -- without blocking writes"
+    answers: ["CONCURRENTLY"]
+    explain: "CREATE INDEX CONCURRENTLY builds the index while rentals keep being written. It takes longer, cannot run inside a transaction, and leaves an INVALID index to drop if it fails."
+    reteach: "### Online schema changes"
+
+  - id: q10
+    type: mcq
+    concept: online-migrations
+    variants:
+      - { prompt: "An ALTER TABLE rides waits behind a 60-second report query. Why do riders' plain SELECTs on rides hang too?", choices: ["They queue behind the ALTER's waiting request for an exclusive lock", "ALTER TABLE uses all the CPU", "A SELECT needs an exclusive lock of its own", "Autovacuum pauses every query during a migration"], answer: 0 }
+      - { prompt: "Why run SET lock_timeout = '2s' before a migration?", choices: ["If the lock is not granted within 2 s, the ALTER gives up instead of blocking everyone queued behind it; then retry", "It makes the ALTER itself run faster", "It stops the ALTER after it has run for 2 s", "It lets riders' queries skip the lock queue"], answer: 0 }
+    explain: "A waiting ACCESS EXCLUSIVE request blocks every lock request behind it, even plain reads. A short lock_timeout makes the migration give up quickly, so the queue drains, and a retry runs later."
+    reteach: "### Online schema changes"
+
+  - id: q11
+    type: mcq
+    concept: backups-and-recovery
+    variants:
+      - { prompt: "At 14:32 someone runs DELETE FROM rides with no WHERE. Which backup setup can restore the database to 14:31:59?", choices: ["A base backup plus archived WAL, replayed up to that time", "A nightly pg_dump at 02:00", "A read replica", "RAID disks on the server"], answer: 0 }
+      - { prompt: "Spoke only takes a pg_dump at 02:00 each night. The disk dies at 17:00. How much data is lost?", choices: ["Everything since 02:00: 15 hours of changes", "Nothing, because pg_dump records every change", "Only the last 5 minutes", "Only the last transaction"], answer: 0 }
+    explain: "A pg_dump restores to the moment it started. A base backup plus archived WAL can replay changes up to any chosen second: point-in-time recovery. A replica copies the DELETE too."
+    reteach: "### Backups: logical and physical"
+
+  - id: q12
+    type: mcq
+    concept: replicas-and-managed
+    variants:
+      - { prompt: "Spoke moves to Amazon RDS. Which job is still Spoke's own?", choices: ["Choosing indexes, sizing pools and writing safe migrations", "Patching the operating system", "Replacing failed disks", "Running the automated nightly snapshots"], answer: 0 }
+      - { prompt: "Which job does a managed Postgres such as RDS or Cloud SQL do for Spoke?", choices: ["Failing over to a standby when the primary dies", "Tuning Spoke's slow queries", "Choosing the size of Spoke's connection pools", "Proving that Spoke's restore meets its RTO"], answer: 0 }
+    explain: "Managed Postgres runs the servers: hardware, patches, automated backups and failover. Your schema, queries, pools, migrations and restore drills are still yours."
+    reteach: "### Managed Postgres: what RDS and Cloud SQL do for you"

@@ -1,0 +1,24 @@
+id: module-09b-data/boss
+title: "INC-12: Month-end reports grind the database"
+order: 99
+minutes: 15
+prerequisites: [module-09b-data/topic-08-postgres-in-production]
+concepts: [outer-join-filters, null-aggregates, sargable-ranges, composite-indexes, keyset-pagination]
+practice:
+  kind: code
+  runner: plain
+  timeoutSeconds: 30
+ticket:
+  key: INC-12
+  from: theo
+  title: "Month-end reports grind the database"
+  body: >
+    On 1 November finance ran October's report. Depot and Uptown were missing, so the station totals did not add up to the month.
+    The report query also held the database for minutes, and rentals slowed down for every rider while it ran.
+    Then the city council's ride export came back with some rides twice and others not at all.
+    Please fix all three before the next month-end. Finance wants the right numbers first.
+hints:
+  - "Bronze: in a LEFT JOIN, a WHERE condition on the right table throws away the NULL rows kept for stations without rides. Move the month filter into ON. Then COUNT(r.id), not COUNT(*), wrap the SUM in COALESCE(SUM(r.fare_cents), 0), and ORDER BY revenue_cents DESC, s.id."
+  - "Silver: in migrate, CREATE INDEX IF NOT EXISTS ride_station_started_idx ON ride(station_id, started_at). In the ON, replace both EXTRACTs with r.started_at >= ? AND r.started_at < ?, and in bind setObject the LocalDateTime values month.atDay(1).atStartOfDay() and month.plusMonths(1).atDay(1).atStartOfDay()."
+  - "Gold: split the cursor at '|' (split(\"\\\\|\")), parse the two parts, and for a non-null cursor add AND (started_at > ? OR (started_at = ? AND id > ?)). ORDER BY started_at, id LIMIT ?, no OFFSET. When the page is full, nextCursor = last.startedAt() + \"|\" + last.id(); otherwise null."
+review: false

@@ -1,0 +1,22 @@
+id: module-09a-platform/topic-05-helm-kustomize
+title: "Helm and Kustomize: one app, many environments"
+order: 5
+minutes: 15
+prerequisites: [module-09a-platform/topic-04-kubernetes-manifests]
+concepts: [environment-drift, kustomize-overlays, kustomize-generators, helm-charts, helm-releases, choosing-and-secrets]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-1105
+  from: maya
+  title: "Three copies of the same YAML, and they keep drifting"
+  body: >
+    Our dev, staging and prod folders started as copies of the same YAML. Now all three differ, and nobody knows which differences are on purpose.
+    Last week staging got the new probe settings and prod never did.
+    Can you learn how to keep one source for every environment, with only the real differences written down?
+hints:
+  - "Kustomize patches plain YAML: a base folder plus one overlay per environment. Render with kubectl kustomize overlays/prod and read what comes out."
+  - "A strategic merge patch merges lists such as containers by name, so the name must match the base exactly. configMapGenerator adds a hash of the contents to the name, so a config change rolls the Pods."
+  - "Helm fills Go templates from values: values.yaml first, then each -f file in order, then --set wins. Every upgrade is a revision, and helm rollback adds a new revision with an old one's settings."
+review: true

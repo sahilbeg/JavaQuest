@@ -1,0 +1,132 @@
+topic: module-09b-data/topic-07-data-pipelines
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: batch-and-streaming
+    variants:
+      - { prompt: "Jiraiya wants fare totals per bike type for every day of last year. Which approach fits best?", choices: ["A nightly batch job that loads each day into a warehouse", "A streaming job that updates the totals every second", "Running the query on the production database each morning", "Asking riders to report their fares"], answer: 0 }
+      - { prompt: "Which Spoke feature needs stream processing rather than a nightly batch?", choices: ["The live map of bikes in use right now", "Last month's fare report", "A yearly summary for investors", "Rebuilding last week's report after a bug fix"], answer: 0 }
+    explain: "Batch suits answers that can wait hours: it is simpler to build, test and rerun. Stream only when the answer is needed within seconds or minutes, like the live map."
+    reteach: "### Batch and streaming"
+
+  - id: q02
+    type: mcq
+    concept: etl-and-warehouses
+    variants:
+      - { prompt: "What does ELT do differently from ETL?", choices: ["It loads the raw data first, then transforms it inside the warehouse, usually with SQL", "It transforms the data in a separate program before loading it", "It skips the extract step", "It loads the data back into the production database"], answer: 0 }
+      - { prompt: "Why do most teams keep the raw rides in the warehouse, not only the cleaned ones?", choices: ["A buggy transform can be fixed and run again from the raw data", "Raw data is always smaller than cleaned data", "Warehouses refuse cleaned data", "SQL only works on raw tables"], answer: 0 }
+    explain: "ELT loads raw data untouched, then transforms it in the warehouse. Because the raw data stays, any transform can be fixed and rerun without extracting everything again."
+    reteach: "### ETL and ELT"
+
+  - id: q03
+    type: predict-output
+    concept: idempotent-partitions
+    prompt: "The load runs three times: the first try and two retries. What does this print?"
+    code: |
+      import java.util.HashMap;
+      import java.util.Map;
+
+      public class Main {
+          public static void main(String[] args) {
+              Map<String, Long> appended = new HashMap<>();
+              Map<String, Long> overwritten = new HashMap<>();
+              for (int run = 1; run <= 3; run++) {
+                  appended.merge("2026-11-17", 1460L, Long::sum);
+                  overwritten.put("2026-11-17", 1460L);
+              }
+              System.out.println(appended.get("2026-11-17") + " " + overwritten.get("2026-11-17"));
+          }
+      }
+    answer: "4380 1460"
+    explain: "merge with Long::sum appends: three runs add 1,460 three times. put replaces the partition, so any number of runs leaves 1,460. Only the second job is idempotent."
+    reteach: "### Idempotent jobs: overwrite, never append"
+
+  - id: q04
+    type: spot-the-bug
+    concept: airflow-concepts
+    prompt: "This task is called with the run's logical date. A backfill of 2026-11-03 gives the wrong report. Which line is the bug?"
+    code: |
+      void loadReport(LocalDate logicalDate) {
+          List<ReportRow> rows = buildRows(logicalDate);
+          LocalDate day = LocalDate.now().minusDays(1);
+          warehouse.replacePartition(day, rows);
+      }
+    bugLine: 3
+    explain: "The task reads the clock instead of using its logical date. Backfilled on 18 November, it writes 2026-11-03's rows into the 2026-11-17 partition. Use logicalDate everywhere."
+    reteach: "### The logical date is not the run time"
+
+  - id: q05
+    type: mcq
+    concept: backfills-and-late-data
+    variants:
+      - { prompt: "A bug dropped CARGO rides from 1 to 14 November. It is fixed now. What makes rerunning those 14 days safe?", choices: ["Each job takes its date as a parameter and replaces only that date's partition", "Running all 14 days at the same moment", "Appending the missing CARGO rows by hand", "Running the jobs without a date, so they pick it themselves"], answer: 0 }
+      - { prompt: "During a 14-day backfill, why run only two or three dates at once?", choices: ["So the backfill does not swamp the source database", "Because a DAG can only ever run one task", "So the jobs become idempotent", "Because dates must run in alphabetical order"], answer: 0 }
+    explain: "A backfill reruns past dates. It is safe when every job is parameterised by date and replaces its own partition. Capping how many run at once protects the databases it reads."
+    reteach: "### Backfills"
+
+  - id: q06
+    type: mcq
+    concept: backfills-and-late-data
+    variants:
+      - { prompt: "A stream's watermark is at 08:10. A 'ride ended' event arrives whose ride ended at 08:03. What is it?", choices: ["Late: it is older than the watermark, so it is dropped or saved for a later fix", "On time, because it arrived just now", "A duplicate of another event", "Proof that the watermark is wrong and must move back"], answer: 0 }
+      - { prompt: "What does a stream's watermark of 08:10 claim?", choices: ["Events whose event time is before 08:10 have probably all arrived", "The server's clock says 08:10", "No more events will arrive today", "The nightly batch job starts at 08:10"], answer: 0 }
+    explain: "A watermark is an estimate about event time: everything before it has probably arrived. An event older than the watermark is late, and goes to a late-data table or is dropped."
+    reteach: "### Late data and watermarks"
+
+  - id: q07
+    type: order
+    concept: dag-scheduling
+    prompt: "The DAG is extract_rides >> clean_rides >> load_report >> check_totals. Put the tasks in the order the scheduler runs them."
+    items:
+      - "extract_rides"
+      - "clean_rides"
+      - "load_report"
+      - "check_totals"
+    explain: "A task becomes ready only when every upstream task has succeeded. In a chain, that gives exactly one order: a topological order of the DAG."
+    reteach: "### DAGs and how a scheduler orders them"
+
+  - id: q08
+    type: mcq
+    concept: dag-scheduling
+    variants:
+      - { prompt: "The DAG is extract_rides >> clean_rides >> load_report. clean_rides fails on every retry. What happens to load_report?", choices: ["It is marked upstream_failed and never runs", "It runs on the uncleaned rides", "It runs after a 5-minute delay", "It is retried three times on its own"], answer: 0 }
+      - { prompt: "clean_rides waits for load_report, and load_report waits for clean_rides. What does the orchestrator do with this DAG?", choices: ["Refuses it: it is a cycle, so neither task could ever become ready", "Runs clean_rides first, because of the alphabet", "Runs both at the same time", "Runs them in the order they were written in the file"], answer: 0 }
+    explain: "A task runs only when all its upstream tasks succeeded; below a failure, tasks are upstream_failed. A cycle means no task in it can ever be ready, so the DAG is refused."
+    reteach: "### DAGs and how a scheduler orders them"
+
+  - id: q09
+    type: mcq
+    concept: airflow-concepts
+    prompt: "A DAG with schedule \"@daily\", start_date 1 November and catchup=True is deployed for the first time on 18 November. Each run covers one full day. How many runs does Airflow create at once?"
+    choices: ["17: one per logical date from 1 to 17 November", "1: only the latest day", "18: one per day up to and including 18 November", "0: catchup only works with a backfill command"]
+    answer: 0
+    explain: "Catchup creates a run for every interval since start_date that has finished and not yet run. 18 November is not over yet, so its run comes tomorrow: 17 runs."
+    reteach: "### Catchup and backfill in Airflow"
+
+  - id: q10
+    type: fill-blank
+    concept: airflow-concepts
+    prompt: "\"retries\": ___,   # 4 attempts in all"
+    answers: ["3"]
+    explain: "retries counts the extra attempts after the first one. 1 first try + 3 retries = 4 attempts."
+    reteach: "### Retries and timeouts"
+
+  - id: q11
+    type: mcq
+    concept: airflow-concepts
+    variants:
+      - { prompt: "Five DAGs query the rides read replica, which copes with only 2 queries at once. Which Airflow feature limits them?", choices: ["A pool with 2 slots", "A sensor", "An XCom", "catchup=False"], answer: 0 }
+      - { prompt: "The payments partner drops a settlement file in S3 at a different time each night. Which Airflow feature waits for it before the reconcile task starts?", choices: ["A sensor with a timeout", "A pool", "An XCom", "catchup=True"], answer: 0 }
+    explain: "A sensor waits until something is true, such as a file existing. A pool caps how many tasks use one shared resource at once."
+    reteach: "### Sensors and pools"
+
+  - id: q12
+    type: mcq
+    concept: data-quality
+    variants:
+      - { prompt: "Every task succeeded, but the report shows 0 rides for Tuesday. Which check would have failed the run?", choices: ["A row count check: at least 1 row, and close to last Tuesday's count", "More retries with backoff", "A pool with 2 slots", "catchup=False"], answer: 0 }
+      - { prompt: "The report says 2,920 cents for 2026-11-17, but the day's rides add up to 1,460. Which check catches this?", choices: ["Totals that reconcile with the source", "Freshness of the newest ride", "No nulls in bike_type", "A sensor timeout"], answer: 0 }
+    explain: "Quality checks test the data, not the code: row counts, nulls, freshness and totals that reconcile. When one fails, the run fails, so wrong numbers never look green."
+    reteach: "### Data-quality checks that fail the run"

@@ -2,11 +2,11 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-18T17:11:11+05:30
+- **Last updated:** 2026-11-18T18:23:38+05:30
 - **Phase:** PHASE 1: build
-- **Milestone:** M6
-- **Resume here:** Every milestone is built: M0 to M6 and C00 to C10. M6 added README.md and run.sh checks (Java 21+, port in use, commit guard switched on in a clone), tested on a fresh clone on macOS. What is left needs a person: the browser read-through of modules 0 to 10 (./run.sh --author) and a real VoiceOver pass. Windows support (run.bat) is deferred until requested.
-- **Next task:** Your browser read-through of modules 0 to 10 (moves them from ui_wired to done); then a real VoiceOver pass
+- **Milestone:** C09B
+- **Resume here:** Modules 09a (Platform and DevOps) and 09b (Data in depth) are committed at ui_wired, between modules 09 and 10; module 10 now unlocks after 09b. Every milestone is built. What is left needs a person: the browser read-through of modules 0 to 10 and a real VoiceOver pass. Windows support stays deferred.
+- **Next task:** Your browser read-through of modules 0 to 10 (09a and 09b included), which moves them from ui_wired to done; then a real VoiceOver pass
 
 ## Completed tasks
 
@@ -61,6 +61,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - C10: module 10 Professional skills (4 quiz topics: code reviews, reading codebases, documentation, estimation; interview prep and the city-aware capstone core as code), INC-10 (mock interview loop: edge cases, O(n) follow-up, concurrent-safe extensible design) and CAPSTONE (Spring Boot Bramford launch in six staged test classes); Java Pro kudos moved to the capstone; 2 independent reviews (about 30 findings) fixed; all checks green
 - M5: capstone rubric (lesson card and README), /offer completion screen (Tsunade's offer letter, printable), launch dialog on closing the capstone, Full-time offer kudos, kudos earnedOn dates; kudos toasts name the teammate; tested in a throwaway author app
 - M6: fresh-clone test on macOS (one command builds and starts; grading verified end to end in the clone); run.sh checks Java 21+, reports a busy port, and switches on the commit guard in a clone; README with quick start, Java install, how you learn, progress and backups, commands, troubleshooting and limits
+- C09A/C09B: module 09a Platform and DevOps (Dockerfiles, Compose, GitHub Actions, Kubernetes manifests, Helm/Kustomize, Terraform/GitOps, config and secrets, Prometheus; INC-11 the deploy that took Spoke down, FEAT-11 one-click deploys) and module 09b Data in depth (advanced SQL, B+ tree index internals, MVCC/WAL, NoSQL modelling, Redis patterns, replication and sharding, data pipelines with Airflow concepts and a Java DAG scheduler, Postgres in production; INC-12 month-end reports, FEAT-12 rider statements data mart); content model allows module-NNa ids; 4 independent reviews (about 45 findings, one image-tag format module-wide) fixed; all checks green
 
 ## Decisions
 
@@ -80,11 +81,12 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - Incident tiers come from test class names ending BronzeTest, SilverTest, GoldTest
 - Animations: every topic has at least one ```animate block; modules 0 to 2 done in the UX round, modules 3 to 8 to follow, new modules include them from C09
 - Tickets added after a module was built get the next free SPK key; the order a ticket appears in comes from meta.yaml order, not the key or folder number
+- Two modules inserted before module 10 (user request): module-09a-platform (Docker, Compose, GitHub Actions, Kubernetes manifests, Helm/Kustomize, Terraform/GitOps, config and secrets, Prometheus) and module-09b-data (advanced SQL, index internals, MVCC, NoSQL modelling, Redis patterns, replication/sharding, data pipelines with Airflow concepts in Java, Postgres in production). Ids carry a letter (module-09a-*) so no existing id changes; ticket keys SPK-11TT/SPK-12TT, INC-11/12, FEAT-11/12; packages jq.m11/jq.m12. Airflow is taught as concepts plus a Java DAG scheduler, not as a Python tool.
 
 ## Open decisions
 
 - A real VoiceOver pass needs a person
-- Modules 0 to 10 read-through by you before marking them done
+- Modules 0 to 10, 09a and 09b read-through by you before marking them done
 
 ## Blockers
 
@@ -104,6 +106,8 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | C07 | ui_wired |
 | C08 | ui_wired |
 | C09 | ui_wired |
+| C09A | ui_wired |
+| C09B | ui_wired |
 | C10 | ui_wired |
 | M0 | done |
 | M1 | done |
@@ -127,6 +131,8 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-07-tooling | Shipping safely | 10 | ui_wired |
 | module-08-backend | The Spoke API | 17 | ui_wired |
 | module-09-architecture | Growing up | 12 | ui_wired |
+| module-09a-platform | Ship it everywhere | 10 | ui_wired |
+| module-09b-data | Know your data | 10 | ui_wired |
 | module-10-professional | Full-time offer | 8 | ui_wired |
 
 ## Topics past `planned`
@@ -280,6 +286,26 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-09-architecture/topic-10-kubernetes | ui_wired | None | None |
 | module-09-architecture/boss | ui_wired | True | True |
 | module-09-architecture/mini-project | ui_wired | True | True |
+| module-09a-platform/topic-01-dockerfiles | ui_wired | True | True |
+| module-09a-platform/topic-02-docker-compose | ui_wired | None | None |
+| module-09a-platform/topic-03-github-actions | ui_wired | True | True |
+| module-09a-platform/topic-04-kubernetes-manifests | ui_wired | True | True |
+| module-09a-platform/topic-05-helm-kustomize | ui_wired | None | None |
+| module-09a-platform/topic-06-infrastructure-as-code | ui_wired | None | None |
+| module-09a-platform/topic-07-config-and-secrets | ui_wired | True | True |
+| module-09a-platform/topic-08-monitoring-stack | ui_wired | None | None |
+| module-09a-platform/boss | ui_wired | True | True |
+| module-09a-platform/mini-project | ui_wired | True | True |
+| module-09b-data/topic-01-advanced-sql | ui_wired | True | True |
+| module-09b-data/topic-02-index-internals | ui_wired | True | True |
+| module-09b-data/topic-03-transaction-internals | ui_wired | None | None |
+| module-09b-data/topic-04-nosql-modeling | ui_wired | None | None |
+| module-09b-data/topic-05-redis-patterns | ui_wired | True | True |
+| module-09b-data/topic-06-replication-sharding | ui_wired | True | True |
+| module-09b-data/topic-07-data-pipelines | ui_wired | True | True |
+| module-09b-data/topic-08-postgres-in-production | ui_wired | None | None |
+| module-09b-data/boss | ui_wired | True | True |
+| module-09b-data/mini-project | ui_wired | True | True |
 | module-10-professional/topic-01-code-reviews | ui_wired | None | None |
 | module-10-professional/topic-02-reading-codebases | ui_wired | None | None |
 | module-10-professional/topic-03-documentation | ui_wired | None | None |

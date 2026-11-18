@@ -1,0 +1,125 @@
+topic: module-09a-platform/topic-05-helm-kustomize
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: environment-drift
+    variants:
+      - { prompt: "Spoke copied its YAML into dev/, staging/ and prod/ folders. Why do the copies drift apart?", choices: ["Every change must be made by hand in each copy, and some copies get missed", "Kubernetes edits the files in each folder over time", "YAML files change when they are copied", "Each cluster rewrites the files it is given"], answer: 0 }
+      - { prompt: "Which set-up stops dev, staging and prod from drifting apart?", choices: ["One shared source, with only each environment's real differences written down", "A full copy of the YAML per environment, compared by hand each week", "Editing the live objects with kubectl edit in each environment", "A separate git repository for each environment"], answer: 0 }
+    explain: "Copies drift because each change has to be repeated by hand. Keeping one shared source and writing down only the differences means a fix reaches every environment on the next render."
+    reteach: "### The many-environments problem"
+
+  - id: q02
+    type: mcq
+    concept: kustomize-overlays
+    variants:
+      - { prompt: "What does kubectl kustomize overlays/prod do?", choices: ["Prints the rendered YAML for prod, changing nothing in any cluster", "Applies prod's YAML to the cluster", "Edits the files in base/ to match prod", "Downloads prod's live objects into the folder"], answer: 0 }
+      - { prompt: "In a Kustomize set-up, where do prod's differences live?", choices: ["In overlays/prod, as changes on top of the shared base", "In base/, inside if statements", "In a values-prod.yaml file", "Only in the live cluster"], answer: 0 }
+    explain: "An overlay points at the base and lists its own changes. kubectl kustomize only renders and prints the result, offline; kubectl apply -k is the command that applies."
+    reteach: "### Kustomize: a base and overlays"
+
+  - id: q03
+    type: spot-the-bug
+    concept: kustomize-overlays
+    prompt: "The base's only container is named api. This patch should raise its memory limit. Which line is wrong?"
+    code: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: spoke-api
+      spec:
+        template:
+          spec:
+            containers:
+              - name: spoke-api
+                resources:
+                  limits:
+                    memory: 1Gi
+    bugLine: 9
+    explain: "A strategic merge patch matches containers by name. No container is called spoke-api, so Kustomize adds a second container with no image instead of changing api. Use name: api."
+    reteach: "### Strategic merge patches"
+
+  - id: q04
+    type: fill-blank
+    concept: kustomize-overlays
+    prompt: "    ___: 2.6.1-8e41d07c5a92          # under images:, the tag to use for ghcr.io/spoke/spoke-api"
+    answers: ["newTag"]
+    explain: "An images: entry names the image as it appears in the base, then newTag sets the tag. newName changes the repository, and digest pins an exact build."
+    reteach: "### images: changing the tag without touching YAML"
+
+  - id: q05
+    type: mcq
+    concept: kustomize-generators
+    variants:
+      - { prompt: "With configMapGenerator, you change SMS_TIMEOUT_MS from 2000 to 2500 and apply. Why are the Pods replaced?", choices: ["The ConfigMap gets a new hashed name, so the Deployment's Pod template changes", "Kubernetes restarts every Pod whose ConfigMap changed", "Kustomize deletes the old Pods by itself", "The hash makes Pods reread the ConfigMap every minute"], answer: 0 }
+      - { prompt: "Why is the ConfigMap called spoke-api-config-d785hk4gkh, not spoke-api-config?", choices: ["The suffix is a hash of its contents, so new contents get a new name", "The suffix is random, so two applies never clash", "The suffix is the date the ConfigMap was made", "The suffix marks the ConfigMap as secret"], answer: 0 }
+    explain: "configMapGenerator adds a hash of the contents to the name and updates every reference. Changed contents mean a new name, which changes the Pod template and starts a rollout."
+    reteach: "### configMapGenerator and the hash suffix"
+
+  - id: q06
+    type: mcq
+    concept: kustomize-overlays
+    variants:
+      - { prompt: "An overlay adds commonLabels: { env: staging } to a Deployment that is already running. What happens on apply?", choices: ["It is rejected: commonLabels also changes the selector, which is immutable", "Only the Pods get the label, and the apply succeeds", "Kustomize skips objects that already exist", "The label is added, and nothing restarts"], answer: 0 }
+      - { prompt: "An overlay sets namePrefix: staging-. What happens to the Deployment's reference to the ConfigMap spoke-api-config?", choices: ["It is renamed too, so it still finds the renamed ConfigMap", "It keeps the old name and no longer finds the ConfigMap", "Kustomize refuses to rename objects that others refer to", "Only the Deployment is renamed; the ConfigMap keeps its name"], answer: 0 }
+    explain: "commonLabels writes its labels into selectors too, and a Deployment's selector cannot change, so use labels: with pairs instead. namePrefix renames objects and every reference to them together."
+    reteach: "### namePrefix, namespace and labels"
+
+  - id: q07
+    type: mcq
+    concept: helm-charts
+    variants:
+      - { prompt: "In a Helm template, what does replicas: {{ .Values.replicaCount }} do?", choices: ["Fills in replicaCount from the merged values when the chart is rendered", "Reads the live replica count from the cluster", "Asks the person installing to type a number", "Leaves the braces in the YAML for Kubernetes to fill in"], answer: 0 }
+      - { prompt: "What does {{- toYaml .Values.resources | nindent 12 }} do?", choices: ["Writes the resources map as YAML, starting on a new line, indented 12 spaces", "Checks that resources has 12 keys", "Sets the CPU request to 12", "Indents the whole file by 12 spaces"], answer: 0 }
+    explain: "Helm renders Go templates: {{ .Values.x }} inserts a value, toYaml turns a map into YAML, and nindent starts a new line and indents it. Kubernetes only ever sees the finished YAML."
+    reteach: "### Syntax: a Helm template"
+
+  - id: q08
+    type: mcq
+    concept: helm-charts
+    variants:
+      - { prompt: "values.yaml says replicaCount: 2 and values-prod.yaml says 6. You run helm upgrade --install spoke-api ./spoke-api -f values-prod.yaml --set replicaCount=8. How many replicas?", choices: ["8", "6", "2", "16"], answer: 0 }
+      - { prompt: "values.yaml says replicaCount: 2. You pass -f values-prod.yaml (replicaCount: 6), then -f values-hotfix.yaml (replicaCount: 4). How many replicas?", choices: ["4", "6", "2", "12"], answer: 0 }
+    explain: "values.yaml is the weakest. Each -f file overrides the ones before it, in order, and --set beats them all."
+    reteach: "### Values files per environment"
+
+  - id: q09
+    type: order
+    concept: helm-releases
+    prompt: "Put the life of the spoke-api release in order."
+    items:
+      - "helm upgrade --install finds no release, so it installs revision 1"
+      - "The same command with tag 2.6.1-8e41d07c5a92 upgrades it to revision 2"
+      - "Errors climb, and helm history lists revisions 1 and 2"
+      - "helm rollback spoke-api 1 creates revision 3, with revision 1's settings"
+    explain: "upgrade --install installs the first time and upgrades after that. Every change is a numbered revision, and a rollback adds a new revision rather than erasing history."
+    reteach: "### Releases: upgrade --install, history and rollback"
+
+  - id: q10
+    type: mcq
+    concept: helm-charts
+    variants:
+      - { prompt: "A pull request changes one line in the chart's _helpers.tpl. What lets reviewers see what it really changes?", choices: ["CI renders the chart for every environment and shows the rendered diff", "Reading _helpers.tpl very carefully", "Running helm rollback after the merge if something breaks", "Checking that the chart's version number went up"], answer: 0 }
+      - { prompt: "Five values files have slowly grown long and differ in many places. What is the fix?", choices: ["Keep defaults in values.yaml, and keep each environment file to its real differences", "Copy values.yaml into every environment file", "Move every value into --set flags in the pipeline", "Give each environment its own copy of the templates"], answer: 0 }
+    explain: "One small template change can change every object, so review the rendered YAML that CI produces. Values files drift like copied folders do, so keep them short: only real differences."
+    reteach: "### Traps: indentation, drift and un-rendered reviews"
+
+  - id: q11
+    type: mcq
+    concept: choosing-and-secrets
+    variants:
+      - { prompt: "Spoke needs an ingress controller, and its makers publish an official Helm chart. What is the usual choice?", choices: ["Install their chart, adjusting it with values or a Kustomize overlay", "Copy its YAML by hand into three folders", "Rewrite it from scratch as a Kustomize base", "Run it outside Kubernetes on a laptop"], answer: 0 }
+      - { prompt: "Which feature does Helm have that plain Kustomize does not?", choices: ["Releases with numbered revisions and a rollback command", "Patching plain YAML", "Setting a namespace on every object", "Rendering the final YAML before applying it"], answer: 0 }
+    explain: "Helm is built for packaging and sharing, and it records releases you can roll back. Kustomize patches plain YAML, and git is its history. Using both together is common."
+    reteach: "### Choosing: Kustomize, Helm, or both"
+
+  - id: q12
+    type: mcq
+    concept: choosing-and-secrets
+    variants:
+      - { prompt: "Where should the prod database password be kept?", choices: ["In a secret store, with an ExternalSecret in git that names it", "In values-prod.yaml, since the repository is private", "In a base64 Secret in the Kustomize base", "In a ConfigMap in the prod overlay"], answer: 0 }
+      - { prompt: "With Sealed Secrets, what do you commit to git?", choices: ["A SealedSecret, encrypted with the cluster controller's public key", "The plain Secret with base64 values", "The controller's private key", "The password, in a comment for the team"], answer: 0 }
+    explain: "Secret values never go into git. External Secrets keeps only a reference in git and fetches the value from a store; Sealed Secrets commits an encrypted copy that only the cluster's controller can open."
+    reteach: "### Secrets across environments"

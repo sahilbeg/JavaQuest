@@ -1,0 +1,24 @@
+id: module-09a-platform/mini-project
+title: "FEAT-11: One-click deploys"
+order: 100
+minutes: 15
+prerequisites: [module-09a-platform/topic-08-monitoring-stack]
+concepts: [pipeline-as-code, stage-gates, approval-expiry, canary-analysis, audit-log, idempotent-resume]
+practice:
+  kind: code
+  runner: plain
+ticket:
+  key: FEAT-11
+  from: priya
+  title: "One-click deploys"
+  body: >
+    Shipping spoke-api means following a 14-step wiki page, and only two people dare to do it.
+    I want any engineer to ship safely with one click.
+    The steps should live in a file next to the code, a person should approve before real riders see the change,
+    and the canary should decide for itself whether to promote or roll back.
+    And when something fails at step 9, please don't make us start again from step 1.
+hints:
+  - "Start with CanaryAnalysis: two comparisons, error rate first, then p99 in long maths: canary.p99Millis() * 100 > baseline.p99Millis() * (100 + max) fails. Then PipelineLoader: check each level with instanceof patterns, such as if (!(top.get(\"name\") instanceof String name) || name.isBlank()), and throw a PipelineException naming the key."
+  - "In advance, loop over pipeline.stages(), continue past SUCCEEDED ones, and switch on stage.type(). APPROVAL and a failed ANALYSIS or stage end with return. Wrap executor.execute(stage) in try/catch (RuntimeException e) and turn the exception into StageResult.failed(\"threw \" + e)."
+  - "In approve, the deadline is run.approvalRequestedAt().plus(Duration.ofMinutes(stage.approvalMinutes())), and the approval has expired when !clock.instant().isBefore(deadline). In resume, find the FAILED stage, set it back to PENDING, record RESUMED for it, then call advance(run): it skips everything that already succeeded."
+review: false

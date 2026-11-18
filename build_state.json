@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "lastUpdated": "2026-11-18T17:11:11+05:30",
+  "lastUpdated": "2026-11-18T18:23:38+05:30",
   "phase": "PHASE 1: build",
-  "milestone": "M6",
-  "resumeHere": "Every milestone is built: M0 to M6 and C00 to C10. M6 added README.md and run.sh checks (Java 21+, port in use, commit guard switched on in a clone), tested on a fresh clone on macOS. What is left needs a person: the browser read-through of modules 0 to 10 (./run.sh --author) and a real VoiceOver pass. Windows support (run.bat) is deferred until requested.",
+  "milestone": "C09B",
+  "resumeHere": "Modules 09a (Platform and DevOps) and 09b (Data in depth) are committed at ui_wired, between modules 09 and 10; module 10 now unlocks after 09b. Every milestone is built. What is left needs a person: the browser read-through of modules 0 to 10 and a real VoiceOver pass. Windows support stays deferred.",
   "statusValues": [
     "planned",
     "content_written",
@@ -63,12 +63,13 @@
     "C09: module 9 Architecture (4 quiz topics, 6 code topics: layered (Spring), hexagonal, messaging + transactional outbox (H2), caching, performance, resilience), INC-09 (live map cache: key, stampede, stale-if-error) and FEAT-09 (event-driven billing on a partitioned log); 3 independent reviews (about 40 findings) fixed; all checks green",
     "C10: module 10 Professional skills (4 quiz topics: code reviews, reading codebases, documentation, estimation; interview prep and the city-aware capstone core as code), INC-10 (mock interview loop: edge cases, O(n) follow-up, concurrent-safe extensible design) and CAPSTONE (Spring Boot Bramford launch in six staged test classes); Java Pro kudos moved to the capstone; 2 independent reviews (about 30 findings) fixed; all checks green",
     "M5: capstone rubric (lesson card and README), /offer completion screen (Tsunade's offer letter, printable), launch dialog on closing the capstone, Full-time offer kudos, kudos earnedOn dates; kudos toasts name the teammate; tested in a throwaway author app",
-    "M6: fresh-clone test on macOS (one command builds and starts; grading verified end to end in the clone); run.sh checks Java 21+, reports a busy port, and switches on the commit guard in a clone; README with quick start, Java install, how you learn, progress and backups, commands, troubleshooting and limits"
+    "M6: fresh-clone test on macOS (one command builds and starts; grading verified end to end in the clone); run.sh checks Java 21+, reports a busy port, and switches on the commit guard in a clone; README with quick start, Java install, how you learn, progress and backups, commands, troubleshooting and limits",
+    "C09A/C09B: module 09a Platform and DevOps (Dockerfiles, Compose, GitHub Actions, Kubernetes manifests, Helm/Kustomize, Terraform/GitOps, config and secrets, Prometheus; INC-11 the deploy that took Spoke down, FEAT-11 one-click deploys) and module 09b Data in depth (advanced SQL, B+ tree index internals, MVCC/WAL, NoSQL modelling, Redis patterns, replication and sharding, data pipelines with Airflow concepts and a Java DAG scheduler, Postgres in production; INC-12 month-end reports, FEAT-12 rider statements data mart); content model allows module-NNa ids; 4 independent reviews (about 45 findings, one image-tag format module-wide) fixed; all checks green"
   ],
-  "nextTask": "Your browser read-through of modules 0 to 10 (moves them from ui_wired to done); then a real VoiceOver pass",
+  "nextTask": "Your browser read-through of modules 0 to 10 (09a and 09b included), which moves them from ui_wired to done; then a real VoiceOver pass",
   "openDecisions": [
     "A real VoiceOver pass needs a person",
-    "Modules 0 to 10 read-through by you before marking them done"
+    "Modules 0 to 10, 09a and 09b read-through by you before marking them done"
   ],
   "blockers": [],
   "milestones": {
@@ -89,7 +90,9 @@
     "C09": "ui_wired",
     "C10": "ui_wired",
     "M6": "done",
-    "M0": "done"
+    "M0": "done",
+    "C09A": "ui_wired",
+    "C09B": "ui_wired"
   },
   "modules": [
     {
@@ -162,7 +165,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:33+05:30"
+            "verifiedAt": "2026-11-18T18:20:05+05:30"
           }
         },
         {
@@ -190,7 +193,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:31+05:30"
+            "verifiedAt": "2026-11-18T18:20:03+05:30"
           }
         },
         {
@@ -204,7 +207,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:32+05:30"
+            "verifiedAt": "2026-11-18T18:20:04+05:30"
           }
         }
       ],
@@ -226,7 +229,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:35+05:30"
+            "verifiedAt": "2026-11-18T18:20:08+05:30"
           }
         },
         {
@@ -240,7 +243,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:36+05:30"
+            "verifiedAt": "2026-11-18T18:20:09+05:30"
           }
         },
         {
@@ -254,7 +257,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:37+05:30"
+            "verifiedAt": "2026-11-18T18:20:10+05:30"
           }
         },
         {
@@ -268,7 +271,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:38+05:30"
+            "verifiedAt": "2026-11-18T18:20:11+05:30"
           }
         },
         {
@@ -282,7 +285,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:39+05:30"
+            "verifiedAt": "2026-11-18T18:20:11+05:30"
           }
         },
         {
@@ -296,7 +299,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:40+05:30"
+            "verifiedAt": "2026-11-18T18:20:12+05:30"
           }
         },
         {
@@ -310,7 +313,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:41+05:30"
+            "verifiedAt": "2026-11-18T18:20:13+05:30"
           }
         },
         {
@@ -324,7 +327,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:42+05:30"
+            "verifiedAt": "2026-11-18T18:20:14+05:30"
           }
         },
         {
@@ -338,7 +341,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:42+05:30"
+            "verifiedAt": "2026-11-18T18:20:15+05:30"
           }
         },
         {
@@ -352,7 +355,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:43+05:30"
+            "verifiedAt": "2026-11-18T18:20:16+05:30"
           }
         },
         {
@@ -366,7 +369,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:44+05:30"
+            "verifiedAt": "2026-11-18T18:20:17+05:30"
           }
         },
         {
@@ -380,7 +383,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:45+05:30"
+            "verifiedAt": "2026-11-18T18:20:18+05:30"
           }
         },
         {
@@ -394,7 +397,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:34+05:30"
+            "verifiedAt": "2026-11-18T18:20:06+05:30"
           }
         },
         {
@@ -408,7 +411,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:34+05:30"
+            "verifiedAt": "2026-11-18T18:20:07+05:30"
           }
         }
       ],
@@ -430,7 +433,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:48+05:30"
+            "verifiedAt": "2026-11-18T18:20:20+05:30"
           }
         },
         {
@@ -444,7 +447,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:49+05:30"
+            "verifiedAt": "2026-11-18T18:20:21+05:30"
           }
         },
         {
@@ -458,7 +461,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:49+05:30"
+            "verifiedAt": "2026-11-18T18:20:22+05:30"
           }
         },
         {
@@ -472,7 +475,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:50+05:30"
+            "verifiedAt": "2026-11-18T18:20:23+05:30"
           }
         },
         {
@@ -486,7 +489,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:51+05:30"
+            "verifiedAt": "2026-11-18T18:20:24+05:30"
           }
         },
         {
@@ -500,7 +503,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:52+05:30"
+            "verifiedAt": "2026-11-18T18:20:25+05:30"
           }
         },
         {
@@ -514,7 +517,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:53+05:30"
+            "verifiedAt": "2026-11-18T18:20:26+05:30"
           }
         },
         {
@@ -528,7 +531,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:54+05:30"
+            "verifiedAt": "2026-11-18T18:20:27+05:30"
           }
         },
         {
@@ -542,7 +545,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:55+05:30"
+            "verifiedAt": "2026-11-18T18:20:28+05:30"
           }
         },
         {
@@ -556,7 +559,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:55+05:30"
+            "verifiedAt": "2026-11-18T18:20:28+05:30"
           }
         },
         {
@@ -570,7 +573,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:56+05:30"
+            "verifiedAt": "2026-11-18T18:20:29+05:30"
           }
         },
         {
@@ -584,7 +587,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:57+05:30"
+            "verifiedAt": "2026-11-18T18:20:30+05:30"
           }
         },
         {
@@ -598,7 +601,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:46+05:30"
+            "verifiedAt": "2026-11-18T18:20:18+05:30"
           }
         },
         {
@@ -612,7 +615,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:47+05:30"
+            "verifiedAt": "2026-11-18T18:20:19+05:30"
           }
         }
       ],
@@ -634,7 +637,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26+05:30"
+            "verifiedAt": "2026-11-18T18:20:33+05:30"
           }
         },
         {
@@ -648,7 +651,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:01+05:30"
+            "verifiedAt": "2026-11-18T18:20:34+05:30"
           }
         },
         {
@@ -662,7 +665,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:02+05:30"
+            "verifiedAt": "2026-11-18T18:20:35+05:30"
           }
         },
         {
@@ -676,7 +679,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:03+05:30"
+            "verifiedAt": "2026-11-18T18:20:36+05:30"
           }
         },
         {
@@ -691,7 +694,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:03+05:30"
+            "verifiedAt": "2026-11-18T18:20:37+05:30"
           }
         },
         {
@@ -705,7 +708,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:04+05:30"
+            "verifiedAt": "2026-11-18T18:20:38+05:30"
           }
         },
         {
@@ -719,7 +722,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:05+05:30"
+            "verifiedAt": "2026-11-18T18:20:38+05:30"
           }
         },
         {
@@ -733,7 +736,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:06+05:30"
+            "verifiedAt": "2026-11-18T18:20:39+05:30"
           }
         },
         {
@@ -747,7 +750,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:07+05:30"
+            "verifiedAt": "2026-11-18T18:20:40+05:30"
           }
         },
         {
@@ -761,7 +764,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:08+05:30"
+            "verifiedAt": "2026-11-18T18:20:41+05:30"
           }
         },
         {
@@ -775,7 +778,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:09+05:30"
+            "verifiedAt": "2026-11-18T18:20:42+05:30"
           }
         },
         {
@@ -789,7 +792,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:10+05:30"
+            "verifiedAt": "2026-11-18T18:20:43+05:30"
           }
         },
         {
@@ -803,7 +806,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:10+05:30"
+            "verifiedAt": "2026-11-18T18:20:44+05:30"
           }
         },
         {
@@ -817,7 +820,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:11+05:30"
+            "verifiedAt": "2026-11-18T18:20:45+05:30"
           }
         },
         {
@@ -831,7 +834,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:12+05:30"
+            "verifiedAt": "2026-11-18T18:20:46+05:30"
           }
         },
         {
@@ -845,7 +848,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:13+05:30"
+            "verifiedAt": "2026-11-18T18:20:47+05:30"
           }
         },
         {
@@ -859,7 +862,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:58+05:30"
+            "verifiedAt": "2026-11-18T18:20:31+05:30"
           }
         },
         {
@@ -873,7 +876,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:25:59+05:30"
+            "verifiedAt": "2026-11-18T18:20:32+05:30"
           }
         }
       ],
@@ -895,7 +898,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:16+05:30"
+            "verifiedAt": "2026-11-18T18:20:49+05:30"
           }
         },
         {
@@ -909,7 +912,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:17+05:30"
+            "verifiedAt": "2026-11-18T18:20:50+05:30"
           }
         },
         {
@@ -923,7 +926,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:18+05:30"
+            "verifiedAt": "2026-11-18T18:20:51+05:30"
           }
         },
         {
@@ -937,7 +940,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:19+05:30"
+            "verifiedAt": "2026-11-18T18:20:52+05:30"
           }
         },
         {
@@ -951,7 +954,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:20+05:30"
+            "verifiedAt": "2026-11-18T18:20:53+05:30"
           }
         },
         {
@@ -965,7 +968,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:20+05:30"
+            "verifiedAt": "2026-11-18T18:20:54+05:30"
           }
         },
         {
@@ -979,7 +982,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:21+05:30"
+            "verifiedAt": "2026-11-18T18:20:55+05:30"
           }
         },
         {
@@ -994,7 +997,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:22+05:30"
+            "verifiedAt": "2026-11-18T18:20:55+05:30"
           }
         },
         {
@@ -1008,7 +1011,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:23+05:30"
+            "verifiedAt": "2026-11-18T18:20:56+05:30"
           }
         },
         {
@@ -1022,7 +1025,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:24+05:30"
+            "verifiedAt": "2026-11-18T18:20:57+05:30"
           }
         },
         {
@@ -1036,7 +1039,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:25+05:30"
+            "verifiedAt": "2026-11-18T18:20:58+05:30"
           }
         },
         {
@@ -1050,7 +1053,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:26+05:30"
+            "verifiedAt": "2026-11-18T18:20:59+05:30"
           }
         },
         {
@@ -1064,7 +1067,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:27+05:30"
+            "verifiedAt": "2026-11-18T18:21+05:30"
           }
         },
         {
@@ -1078,7 +1081,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:28+05:30"
+            "verifiedAt": "2026-11-18T18:21:01+05:30"
           }
         },
         {
@@ -1092,7 +1095,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:29+05:30"
+            "verifiedAt": "2026-11-18T18:21:02+05:30"
           }
         },
         {
@@ -1106,7 +1109,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:30+05:30"
+            "verifiedAt": "2026-11-18T18:21:03+05:30"
           }
         },
         {
@@ -1120,7 +1123,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:30+05:30"
+            "verifiedAt": "2026-11-18T18:21:04+05:30"
           }
         },
         {
@@ -1134,7 +1137,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:31+05:30"
+            "verifiedAt": "2026-11-18T18:21:05+05:30"
           }
         },
         {
@@ -1148,7 +1151,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:32+05:30"
+            "verifiedAt": "2026-11-18T18:21:06+05:30"
           }
         },
         {
@@ -1162,7 +1165,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:33+05:30"
+            "verifiedAt": "2026-11-18T18:21:07+05:30"
           }
         },
         {
@@ -1176,7 +1179,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:14+05:30"
+            "verifiedAt": "2026-11-18T18:20:47+05:30"
           }
         },
         {
@@ -1190,7 +1193,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:15+05:30"
+            "verifiedAt": "2026-11-18T18:20:48+05:30"
           }
         }
       ],
@@ -1212,7 +1215,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:42+05:30"
+            "verifiedAt": "2026-11-18T18:21:15+05:30"
           }
         },
         {
@@ -1226,7 +1229,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:43+05:30"
+            "verifiedAt": "2026-11-18T18:21:16+05:30"
           }
         },
         {
@@ -1240,7 +1243,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:45+05:30"
+            "verifiedAt": "2026-11-18T18:21:17+05:30"
           }
         },
         {
@@ -1255,7 +1258,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:46+05:30"
+            "verifiedAt": "2026-11-18T18:21:18+05:30"
           }
         },
         {
@@ -1269,7 +1272,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:47+05:30"
+            "verifiedAt": "2026-11-18T18:21:19+05:30"
           }
         },
         {
@@ -1283,7 +1286,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:48+05:30"
+            "verifiedAt": "2026-11-18T18:21:20+05:30"
           }
         },
         {
@@ -1339,7 +1342,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:49+05:30"
+            "verifiedAt": "2026-11-18T18:21:21+05:30"
           }
         },
         {
@@ -1353,7 +1356,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:50+05:30"
+            "verifiedAt": "2026-11-18T18:21:22+05:30"
           }
         },
         {
@@ -1367,7 +1370,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:50+05:30"
+            "verifiedAt": "2026-11-18T18:21:23+05:30"
           }
         },
         {
@@ -1381,7 +1384,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:51+05:30"
+            "verifiedAt": "2026-11-18T18:21:24+05:30"
           }
         },
         {
@@ -1395,7 +1398,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:54+05:30"
+            "verifiedAt": "2026-11-18T18:21:27+05:30"
           }
         },
         {
@@ -1409,7 +1412,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:02+05:30"
+            "verifiedAt": "2026-11-18T18:21:34+05:30"
           }
         },
         {
@@ -1423,7 +1426,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:40+05:30"
+            "verifiedAt": "2026-11-18T18:21:13+05:30"
           }
         },
         {
@@ -1437,7 +1440,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:26:41+05:30"
+            "verifiedAt": "2026-11-18T18:21:14+05:30"
           }
         }
       ],
@@ -1459,7 +1462,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:05+05:30"
+            "verifiedAt": "2026-11-18T18:21:37+05:30"
           }
         },
         {
@@ -1473,7 +1476,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:06+05:30"
+            "verifiedAt": "2026-11-18T18:21:38+05:30"
           }
         },
         {
@@ -1487,7 +1490,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:06+05:30"
+            "verifiedAt": "2026-11-18T18:21:39+05:30"
           }
         },
         {
@@ -1501,7 +1504,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:07+05:30"
+            "verifiedAt": "2026-11-18T18:21:40+05:30"
           }
         },
         {
@@ -1515,7 +1518,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:08+05:30"
+            "verifiedAt": "2026-11-18T18:21:41+05:30"
           }
         },
         {
@@ -1529,7 +1532,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:09+05:30"
+            "verifiedAt": "2026-11-18T18:21:41+05:30"
           }
         },
         {
@@ -1557,7 +1560,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:10+05:30"
+            "verifiedAt": "2026-11-18T18:21:42+05:30"
           }
         },
         {
@@ -1572,7 +1575,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:11+05:30"
+            "verifiedAt": "2026-11-18T18:21:44+05:30"
           }
         },
         {
@@ -1586,7 +1589,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:12+05:30"
+            "verifiedAt": "2026-11-18T18:21:44+05:30"
           }
         },
         {
@@ -1600,7 +1603,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:13+05:30"
+            "verifiedAt": "2026-11-18T18:21:45+05:30"
           }
         },
         {
@@ -1614,7 +1617,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:14+05:30"
+            "verifiedAt": "2026-11-18T18:21:46+05:30"
           }
         },
         {
@@ -1628,7 +1631,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:15+05:30"
+            "verifiedAt": "2026-11-18T18:21:47+05:30"
           }
         },
         {
@@ -1642,7 +1645,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:03+05:30"
+            "verifiedAt": "2026-11-18T18:21:35+05:30"
           }
         },
         {
@@ -1656,7 +1659,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:04+05:30"
+            "verifiedAt": "2026-11-18T18:21:36+05:30"
           }
         }
       ],
@@ -1790,7 +1793,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:16+05:30"
+            "verifiedAt": "2026-11-18T18:21:48+05:30"
           }
         },
         {
@@ -1804,7 +1807,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:17+05:30"
+            "verifiedAt": "2026-11-18T18:21:49+05:30"
           }
         }
       ],
@@ -1868,7 +1871,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:30+05:30"
+            "verifiedAt": "2026-11-18T18:22:02+05:30"
           }
         },
         {
@@ -1883,7 +1886,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:33+05:30"
+            "verifiedAt": "2026-11-18T18:22:05+05:30"
           }
         },
         {
@@ -1897,7 +1900,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:35+05:30"
+            "verifiedAt": "2026-11-18T18:22:07+05:30"
           }
         },
         {
@@ -1911,7 +1914,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:37+05:30"
+            "verifiedAt": "2026-11-18T18:22:09+05:30"
           }
         },
         {
@@ -1925,7 +1928,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:39+05:30"
+            "verifiedAt": "2026-11-18T18:22:10+05:30"
           }
         },
         {
@@ -1939,7 +1942,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:57+05:30"
+            "verifiedAt": "2026-11-18T18:22:28+05:30"
           }
         },
         {
@@ -1953,7 +1956,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:40+05:30"
+            "verifiedAt": "2026-11-18T18:22:11+05:30"
           }
         },
         {
@@ -1968,7 +1971,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:44+05:30"
+            "verifiedAt": "2026-11-18T18:22:15+05:30"
           }
         },
         {
@@ -1982,7 +1985,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:48+05:30"
+            "verifiedAt": "2026-11-18T18:22:19+05:30"
           }
         },
         {
@@ -1996,7 +1999,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:58+05:30"
+            "verifiedAt": "2026-11-18T18:22:29+05:30"
           }
         },
         {
@@ -2010,7 +2013,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:52+05:30"
+            "verifiedAt": "2026-11-18T18:22:23+05:30"
           }
         },
         {
@@ -2024,7 +2027,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:55+05:30"
+            "verifiedAt": "2026-11-18T18:22:27+05:30"
           }
         },
         {
@@ -2038,7 +2041,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:21+05:30"
+            "verifiedAt": "2026-11-18T18:21:53+05:30"
           }
         },
         {
@@ -2052,7 +2055,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:26+05:30"
+            "verifiedAt": "2026-11-18T18:21:58+05:30"
           }
         }
       ],
@@ -2074,7 +2077,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:28:04+05:30"
+            "verifiedAt": "2026-11-18T18:22:35+05:30"
           }
         },
         {
@@ -2089,7 +2092,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:28:04+05:30"
+            "verifiedAt": "2026-11-18T18:22:36+05:30"
           }
         },
         {
@@ -2117,7 +2120,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:28:06+05:30"
+            "verifiedAt": "2026-11-18T18:22:37+05:30"
           }
         },
         {
@@ -2131,7 +2134,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:28:09+05:30"
+            "verifiedAt": "2026-11-18T18:22:40+05:30"
           }
         },
         {
@@ -2159,7 +2162,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:28:10+05:30"
+            "verifiedAt": "2026-11-18T18:22:41+05:30"
           }
         },
         {
@@ -2187,7 +2190,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:28:11+05:30"
+            "verifiedAt": "2026-11-18T18:22:42+05:30"
           }
         },
         {
@@ -2215,7 +2218,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:27:59+05:30"
+            "verifiedAt": "2026-11-18T18:22:30+05:30"
           }
         },
         {
@@ -2229,11 +2232,307 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:28+05:30"
+            "verifiedAt": "2026-11-18T18:22:31+05:30"
           }
         }
       ],
       "project": "Growing up"
+    },
+    {
+      "id": "module-09a-platform",
+      "title": "Platform and DevOps",
+      "status": "ui_wired",
+      "topics": [
+        {
+          "id": "module-09a-platform/topic-01-dockerfiles",
+          "title": "Production Dockerfiles: layers, multi-stage builds and small, safe images",
+          "practice": "code",
+          "prerequisites": [
+            "module-09-architecture/boss"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T18:22:55+05:30"
+          }
+        },
+        {
+          "id": "module-09a-platform/topic-02-docker-compose",
+          "title": "Docker Compose: running Spoke and its database locally",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-09a-platform/topic-01-dockerfiles"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-09a-platform/topic-03-github-actions",
+          "title": "GitHub Actions in depth: workflows, caching, secrets and releases",
+          "practice": "code",
+          "prerequisites": [
+            "module-09a-platform/topic-02-docker-compose"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T18:22:56+05:30"
+          }
+        },
+        {
+          "id": "module-09a-platform/topic-04-kubernetes-manifests",
+          "title": "Kubernetes manifests: Deployments, Services, probes and rollouts",
+          "practice": "code",
+          "prerequisites": [
+            "module-09a-platform/topic-03-github-actions"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T18:22:57+05:30"
+          }
+        },
+        {
+          "id": "module-09a-platform/topic-05-helm-kustomize",
+          "title": "Helm and Kustomize: one app, many environments",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-09a-platform/topic-04-kubernetes-manifests"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-09a-platform/topic-06-infrastructure-as-code",
+          "title": "Infrastructure as code: Terraform, state and GitOps",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-09a-platform/topic-05-helm-kustomize"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-09a-platform/topic-07-config-and-secrets",
+          "title": "Configuration and secrets: twelve-factor apps and secret stores",
+          "practice": "code",
+          "prerequisites": [
+            "module-09a-platform/topic-06-infrastructure-as-code"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T18:22:58+05:30"
+          }
+        },
+        {
+          "id": "module-09a-platform/topic-08-monitoring-stack",
+          "title": "The monitoring stack: Prometheus, PromQL, Grafana and alerts",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-09a-platform/topic-07-config-and-secrets"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-09a-platform/boss",
+          "title": "INC-11: The deploy that took Spoke down",
+          "practice": "code",
+          "prerequisites": [
+            "module-09a-platform/topic-08-monitoring-stack"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T18:22:53+05:30"
+          }
+        },
+        {
+          "id": "module-09a-platform/mini-project",
+          "title": "FEAT-11: One-click deploys",
+          "practice": "code",
+          "prerequisites": [
+            "module-09a-platform/topic-08-monitoring-stack"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T18:22:54+05:30"
+          }
+        }
+      ],
+      "project": "Ship it everywhere"
+    },
+    {
+      "id": "module-09b-data",
+      "title": "Data in depth",
+      "status": "ui_wired",
+      "topics": [
+        {
+          "id": "module-09b-data/topic-01-advanced-sql",
+          "title": "Advanced SQL: joins, window functions and CTEs",
+          "practice": "code",
+          "prerequisites": [
+            "module-09a-platform/boss"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T18:23:02+05:30"
+          }
+        },
+        {
+          "id": "module-09b-data/topic-02-index-internals",
+          "title": "How indexes work: B-trees, LSM trees and query plans",
+          "practice": "code",
+          "prerequisites": [
+            "module-09b-data/topic-01-advanced-sql"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T18:23:03+05:30"
+          }
+        },
+        {
+          "id": "module-09b-data/topic-03-transaction-internals",
+          "title": "Inside transactions: MVCC, the write-ahead log and isolation",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-09b-data/topic-02-index-internals"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-09b-data/topic-04-nosql-modeling",
+          "title": "NoSQL data modelling: key-value, document and wide-column",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-09b-data/topic-03-transaction-internals"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-09b-data/topic-05-redis-patterns",
+          "title": "Redis patterns: caches, counters, leaderboards and locks",
+          "practice": "code",
+          "prerequisites": [
+            "module-09b-data/topic-04-nosql-modeling"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T18:23:04+05:30"
+          }
+        },
+        {
+          "id": "module-09b-data/topic-06-replication-sharding",
+          "title": "Replication and sharding: lag, quorums and consistent hashing",
+          "practice": "code",
+          "prerequisites": [
+            "module-09b-data/topic-05-redis-patterns"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T18:23:05+05:30"
+          }
+        },
+        {
+          "id": "module-09b-data/topic-07-data-pipelines",
+          "title": "Data pipelines: batch, streams and DAG schedulers like Airflow",
+          "practice": "code",
+          "prerequisites": [
+            "module-09b-data/topic-06-replication-sharding"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T18:23:06+05:30"
+          }
+        },
+        {
+          "id": "module-09b-data/topic-08-postgres-in-production",
+          "title": "Postgres in production: pooling, partitions, JSONB and backups",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-09b-data/topic-07-data-pipelines"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": null,
+            "skeletonFails": null,
+            "verifiedAt": null
+          }
+        },
+        {
+          "id": "module-09b-data/boss",
+          "title": "INC-12: Month-end reports grind the database",
+          "practice": "code",
+          "prerequisites": [
+            "module-09b-data/topic-08-postgres-in-production"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T18:23+05:30"
+          }
+        },
+        {
+          "id": "module-09b-data/mini-project",
+          "title": "FEAT-12: The rider statements data mart",
+          "practice": "code",
+          "prerequisites": [
+            "module-09b-data/topic-08-postgres-in-production"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T18:23:01+05:30"
+          }
+        }
+      ],
+      "project": "Know your data"
     },
     {
       "id": "module-10-professional",
@@ -2245,7 +2544,7 @@
           "title": "Giving and receiving code reviews",
           "practice": "quiz",
           "prerequisites": [
-            "module-09-architecture/boss"
+            "module-09b-data/boss"
           ],
           "status": "ui_wired",
           "verification": {
@@ -2307,7 +2606,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:28:26+05:30"
+            "verifiedAt": "2026-11-18T18:23:21+05:30"
           }
         },
         {
@@ -2321,7 +2620,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:28:27+05:30"
+            "verifiedAt": "2026-11-18T18:23:22+05:30"
           }
         },
         {
@@ -2335,7 +2634,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:28:21+05:30"
+            "verifiedAt": "2026-11-18T18:23:16+05:30"
           }
         },
         {
@@ -2349,7 +2648,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T16:28:25+05:30"
+            "verifiedAt": "2026-11-18T18:23:20+05:30"
           }
         }
       ],
@@ -2372,6 +2671,7 @@
     "File watcher: directory-watcher (native FSEvents), measured 0.36 to 0.39 s save to start",
     "Incident tiers come from test class names ending BronzeTest, SilverTest, GoldTest",
     "Animations: every topic has at least one ```animate block; modules 0 to 2 done in the UX round, modules 3 to 8 to follow, new modules include them from C09",
-    "Tickets added after a module was built get the next free SPK key; the order a ticket appears in comes from meta.yaml order, not the key or folder number"
+    "Tickets added after a module was built get the next free SPK key; the order a ticket appears in comes from meta.yaml order, not the key or folder number",
+    "Two modules inserted before module 10 (user request): module-09a-platform (Docker, Compose, GitHub Actions, Kubernetes manifests, Helm/Kustomize, Terraform/GitOps, config and secrets, Prometheus) and module-09b-data (advanced SQL, index internals, MVCC, NoSQL modelling, Redis patterns, replication/sharding, data pipelines with Airflow concepts in Java, Postgres in production). Ids carry a letter (module-09a-*) so no existing id changes; ticket keys SPK-11TT/SPK-12TT, INC-11/12, FEAT-11/12; packages jq.m11/jq.m12. Airflow is taught as concepts plus a Java DAG scheduler, not as a Python tool."
   ]
 }
