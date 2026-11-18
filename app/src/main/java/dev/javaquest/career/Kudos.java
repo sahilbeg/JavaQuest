@@ -15,7 +15,7 @@ public final class Kudos {
                         Map<String, List<String>> unitsByModule, int bossesBeaten, int goldBosses) {}
 
     public static final String HELLO_WORLD_TOPIC = "module-00-foundations/topic-05-hello-world";
-    public static final String CAPSTONE_TOPIC = "module-10-professional/topic-06-capstone";
+    public static final String CAPSTONE_TOPIC = "module-10-professional/mini-project";
 
     public static final List<Definition> ALL = List.of(
             new Definition("hello-world", "Hello, World", "maya", "Your laptop builds Java. Welcome to the team!", "Close SPK-0005"),

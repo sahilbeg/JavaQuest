@@ -91,7 +91,7 @@ Badges appear as kudos from teammates.
 | Memory Palace | 50 good reviews |
 | Incident resolved | Pass the bronze checks of any incident |
 | Gold standard | Pass the gold checks of any incident |
-| Java Pro | Master `module-10-professional/topic-06-capstone` |
+| Java Pro | Master `module-10-professional/mini-project` (the capstone, CAPSTONE: Launch Spoke in Bramford) |
 
 The rules live in `Kudos.java`. A project only counts as shipped once its incident exists in the content.
 
