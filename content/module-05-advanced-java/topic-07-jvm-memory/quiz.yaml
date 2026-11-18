@@ -53,17 +53,19 @@ questions:
     variants:
       - { prompt: "Which flag sets the maximum heap size?", choices: ["-Xmx", "-Xss", "-Xlog", "-cp"], answer: 0 }
       - { prompt: "Which flag sets the stack size of each thread?", choices: ["-Xss", "-Xmx", "-Xlog", "-cp"], answer: 0 }
-    explain: "-Xmx sets the maximum heap. -Xss sets each thread's stack size."
+      - { prompt: "Which flag makes the JVM save a heap dump by itself when it runs out of heap?", choices: ["-XX:+HeapDumpOnOutOfMemoryError", "-Xss", "-XX:MaxRAMPercentage=75", "-cp"], answer: 0 }
+      - { prompt: "In a container, which flag sizes the heap as a share of the container's memory?", choices: ["-XX:MaxRAMPercentage", "-Xss", "-XX:+HeapDumpOnOutOfMemoryError", "-cp"], answer: 0 }
+    explain: "-Xmx sets the maximum heap. -Xss sets each thread's stack size. -XX:+HeapDumpOnOutOfMemoryError saves a .hprof file when the heap runs out. -XX:MaxRAMPercentage=75 gives the heap 75% of the container and leaves room for everything else."
     reteach: "## Concept"
 
   - id: q07
     type: mcq
     concept: memory-leak
-    prompt: "Kakashi doubles the Harbor kiosk's heap with -Xmx, but the leak stays. What happens?"
-    choices: ["The kiosk crashes later with the same error", "The kiosk never crashes again", "The kiosk crashes sooner", "The error turns into StackOverflowError"]
-    answer: 0
-    explain: "A bigger heap only gives the leak more room. The list still grows until the heap is full."
-    reteach: "## Common mistakes"
+    variants:
+      - { prompt: "Kakashi doubles the Harbor kiosk's heap with -Xmx, but the leak stays. What happens?", choices: ["The kiosk crashes later with the same error", "The kiosk never crashes again", "The kiosk crashes sooner", "The error turns into StackOverflowError"], answer: 0 }
+      - { prompt: "The kiosk keeps crashing with OutOfMemoryError: Java heap space. How do you find out which objects fill the heap?", choices: ["Take a heap dump and look at its dominator tree", "Read the last line of the stack trace only", "Raise -Xss", "Restart the kiosk every night"], answer: 0 }
+    explain: "A bigger heap only gives the leak more room. A heap dump, read in a tool like Eclipse MAT, shows in its dominator tree which objects keep the most memory alive."
+    reteach: "### Reading a heap dump"
 
   - id: q08
     type: fill-blank

@@ -118,3 +118,21 @@ questions:
     answer: 0
     explain: "It wraps each call in synchronized. It works, but the java.util.concurrent collections usually do the job better."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: chm-traps
+    variants:
+      - { prompt: "What happens when you call put(\"Harbor\", null) on a ConcurrentHashMap?", choices: ["It throws NullPointerException", "It stores null like a HashMap does", "It removes the Harbor key", "It stores 0"], answer: 0 }
+      - { prompt: "Inside fares.computeIfAbsent(\"Harbor\", ...), the function calls fares.computeIfAbsent(\"Harbor\", ...) again. What happens?", choices: ["It throws IllegalStateException: Recursive update", "It returns the value twice", "It works fine, because the map is thread-safe", "It compiles but is ignored"], answer: 0 }
+    explain: "ConcurrentHashMap allows no null keys or values, because null from get() means missing. Its compute functions must be short and must never touch the same map, or you get a Recursive update error, wrong values or a hang."
+    reteach: "### ConcurrentHashMap traps"
+
+  - id: q12
+    type: mcq
+    concept: chm-traps
+    prompt: "Moving a bike does docks.merge(from, -1, Integer::sum) and then docks.merge(to, 1, Integer::sum) on a ConcurrentHashMap. Another thread adds up all the docks. What can it see?"
+    choices: ["A total that is one bike short, between the two merges", "Always the right total, because each merge is atomic", "A ConcurrentModificationException", "A compile error"]
+    answer: 0
+    explain: "Each merge is atomic on its own, but the two together are not. A rule that ties two keys together needs your own lock around both updates and around the reader."
+    reteach: "### What ConcurrentHashMap does not promise"

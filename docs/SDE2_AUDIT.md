@@ -93,19 +93,19 @@ New tickets (before the boss):
 
 ## Phase 3: module 05, advanced Java
 
-- [ ] topic-01: processes, threads, cores, context switches; interruption
-- [ ] topic-02: deadlock's four conditions, finding a deadlock with a thread dump, `tryLock`, livelock and starvation, private lock objects
-- [ ] topic-03: production executors (`ThreadPoolExecutor`, bounded queues, rejection, sizing, named threads), `submit` swallows exceptions, shutdown sequence, timeouts
-- [ ] topic-04: which thread runs a stage, `allOf` failure, `orTimeout`, `cancel` does not interrupt
-- [ ] topic-05: pinning fixed in JDK 24, file I/O; limit with a `Semaphore`
-- [ ] topic-06: ConcurrentHashMap pitfalls
-- [ ] topic-07: diagnosing OutOfMemoryError, heap dumps, container memory
-- [ ] topic-08: fix "G1 does most of that work while your program runs"; GC tuning basics
-- [ ] topic-09: class initialisation is thread-safe; `NoSuchMethodError` from version conflicts
-- [ ] money as `double` in topics 08, 09, 11, 12 (callouts)
+- [x] topic-01: processes, threads, cores, context switches; interruption
+- [x] topic-02: deadlock's four conditions, finding a deadlock with a thread dump, `tryLock`, livelock and starvation, private lock objects
+- [x] topic-03: production executors (`ThreadPoolExecutor`, bounded queues, rejection, sizing, named threads), `submit` swallows exceptions, shutdown sequence, timeouts
+- [x] topic-04: which thread runs a stage, `allOf` failure, `orTimeout`, `cancel` does not interrupt
+- [x] topic-05: pinning fixed in JDK 24, file I/O; limit with a `Semaphore`
+- [x] topic-06: ConcurrentHashMap pitfalls
+- [x] topic-07: diagnosing OutOfMemoryError, heap dumps, container memory
+- [x] topic-08: fix "G1 does most of that work while your program runs"; GC tuning basics
+- [x] topic-09: class initialisation is thread-safe; `NoSuchMethodError` from version conflicts
+- [x] money as `double` in topics 08, 09, 11, 12 (callouts)
 - New tickets:
-  - [ ] topic-14 The Java Memory Model: visibility, `volatile`, happens-before, safe publication (placed after topic-02)
-  - [ ] topic-15 Coordinating threads: latches, semaphores, barriers, read-write locks (placed after topic-06)
+  - [x] topic-14 The Java Memory Model: visibility, `volatile`, happens-before, safe publication (placed after topic-02)
+  - [x] topic-15 Coordinating threads: latches, semaphores, barriers, read-write locks (placed after topic-06)
 
 ## Phase 4: module 06, craft
 

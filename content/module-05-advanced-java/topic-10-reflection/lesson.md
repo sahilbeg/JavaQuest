@@ -224,6 +224,61 @@ So use reflection for tools that must work on any class: debug screens, test run
 
 Frameworks use reflection all the time. A **framework** is a big library that calls your code. JUnit finds every method marked `@Test` with reflection and calls it. Spring builds your objects with reflection and fills in their fields.
 
+### Dynamic proxies
+
+Reflection can do one more trick: make an object that pretends to implement an interface. Every call on it goes to one method of yours, called an **invocation handler**. That object is a **dynamic proxy**.
+
+```java run
+import java.lang.reflect.Proxy;
+
+public class Main {
+    public static void main(String[] args) {
+        PaymentService real = rider -> "charged " + rider;
+
+        PaymentService wrapped = (PaymentService) Proxy.newProxyInstance(
+                PaymentService.class.getClassLoader(),
+                new Class<?>[] { PaymentService.class },
+                (proxy, method, methodArgs) -> {
+                    System.out.println("begin transaction");
+                    Object result = method.invoke(real, methodArgs);
+                    System.out.println("commit");
+                    return result;
+                });
+
+        System.out.println(wrapped.charge("r1"));
+    }
+}
+
+interface PaymentService {
+    String charge(String rider);
+}
+```
+
+The caller thinks it is talking to a normal `PaymentService`. The proxy runs code before and after the real call. Spring's `@Transactional`, in the [transactions ticket](/t/module-08-backend/topic-10-transactions), uses the same idea: a proxy starts and commits a transaction around your method. By default Spring builds a subclass proxy instead, so it works even without an interface.
+
+### Reflection and Java's modules
+
+`setAccessible(true)` works on your own classes. On the JDK's own classes it usually fails. Since Java 9, the JDK is split into **modules**, and a module decides which of its packages others may open up.
+
+```java run crash
+import java.lang.reflect.Field;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        Field value = String.class.getDeclaredField("value");
+        value.setAccessible(true);
+    }
+}
+```
+
+The real error starts like this (the id at the very end changes every run):
+
+```text
+Exception in thread "main" java.lang.reflect.InaccessibleObjectException: Unable to make field private final byte[] java.lang.String.value accessible: module java.base does not "opens java.lang" to unnamed module
+```
+
+The JDK protects its insides on purpose. If an old library hits this error, update the library. The flag `--add-opens` can force the door open, but it is a stopgap, not a fix.
+
 ## Worked example
 
 This program is a small version of Itachi's debug screen. One method describes a plain class, and another describes a record.

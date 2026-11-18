@@ -1,0 +1,142 @@
+topic: module-05-advanced-java/topic-14-memory-model
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: stale-reads
+    variants:
+      - { prompt: "A sensor thread loops while (!stop). Main later sets the plain field stop = true. Why can the loop run forever?", choices: ["The sensor thread may keep its old copy of stop, and the JIT may read the field only once", "Java forbids two threads from using the same static field", "Setting stop throws an exception that nobody catches", "A boolean field can only be set once"], answer: 0 }
+      - { prompt: "What is a stale read?", choices: ["Reading an out-of-date value, because another thread's write is not visible yet", "Reading a field that was never declared", "Reading a value from a file on disk", "Reading a field more often than the CPU allows"], answer: 0 }
+    explain: "Cores keep fast copies of values, and the JIT may skip repeat reads. Without volatile or a lock, nothing forces the thread to see the new value."
+    reteach: "### The loop that never ends"
+
+  - id: q02
+    type: mcq
+    concept: lazy-singleton
+    prompt: "In double-checked locking, what can go wrong if the instance field is NOT volatile?"
+    choices: ["Another thread can see a non-null reference to a table whose fields are not set yet", "The lock is taken on every call, so it is slow but always correct", "The compiler rejects the second null check", "Every call builds a brand new table"]
+    answer: 0
+    explain: "The first null check reads the field without the lock. Without volatile, the reference can become visible before the constructor's writes do."
+    reteach: "### Double-checked locking, broken and fixed"
+
+  - id: q03
+    type: fill-blank
+    concept: volatile
+    prompt: "private ___ boolean running = true;"
+    answers: ["volatile"]
+    explain: "volatile makes every write to running visible to every thread that reads it, so a stop flag works."
+    reteach: "### Syntax: volatile"
+
+  - id: q04
+    type: mcq
+    concept: volatile-not-atomic
+    prompt: "Four threads each run hits++ 10,000 times on static volatile int hits. What does the program print?"
+    choices: ["Usually less than 40000, and the number changes between runs", "Always exactly 40000", "Nothing: volatile int fields cannot use ++", "It always throws ConcurrentModificationException"]
+    answer: 0
+    explain: "volatile gives visibility, not atomicity. hits++ is still read, add, write, so two threads can read the same old value."
+    reteach: "### volatile is not atomic"
+
+  - id: q05
+    type: spot-the-bug
+    concept: volatile-not-atomic
+    prompt: "Many threads call record() at the same time. Which line loses updates?"
+    code: |
+      class RideCounter {
+          private volatile int rides = 0;
+          void record() {
+              rides++;
+          }
+          int total() {
+              return rides;
+          }
+      }
+    bugLine: 4
+    explain: "rides++ is three steps even on a volatile field. Use an AtomicInteger and rides.incrementAndGet()."
+    reteach: "### volatile is not atomic"
+
+  - id: q06
+    type: mcq
+    concept: happens-before
+    prompt: "Which of these does NOT create a happens-before link between two threads?"
+    choices: ["Both threads use the same plain field, with no lock and no volatile", "Thread A calls start() on thread B", "Thread A calls join() on thread B", "One thread puts an item in a BlockingQueue and another takes it out"]
+    answer: 0
+    explain: "Locks, volatile, start, join, Future.get and concurrent collections all create happens-before. A plain shared field creates nothing."
+    reteach: "### Happens-before"
+
+  - id: q07
+    type: predict-output
+    concept: happens-before
+    code: |
+      public class Main {
+          static int fare = 0;
+
+          public static void main(String[] args) throws InterruptedException {
+              Thread pricer = new Thread(() -> fare = 400);
+              pricer.start();
+              pricer.join();
+              System.out.println("Fare: " + fare);
+          }
+      }
+    answer: "Fare: 400"
+    explain: "Everything the pricer thread did happens-before join() returns. So main is guaranteed to see 400, even though fare is not volatile."
+    reteach: "### Happens-before"
+
+  - id: q08
+    type: mcq
+    concept: safe-publication
+    prompt: "A thread builds an object with plain, non-final fields and stores it in a plain static field. Another thread reads that field with no lock. What can happen?"
+    choices: ["It can see the reference before it sees the fields, so the object looks half-built", "Nothing: storing a reference is always safe", "The program does not compile", "The garbage collector removes the object"]
+    answer: 0
+    explain: "Without a happens-before link, the reference can become visible before the field writes. Publish through a volatile field, a lock, a concurrent collection, or use final fields."
+    reteach: "### Safe publication"
+
+  - id: q09
+    type: order
+    concept: safe-publication
+    prompt: "Put these in the order that safely hands the fare from a writer thread to a reader thread. Only ready is volatile."
+    items:
+      - "fare = 400;          // writer: plain write"
+      - "ready = true;        // writer: volatile write"
+      - "if (ready) {         // reader: volatile read sees true"
+      - "use(fare);           // reader: sees 400"
+    explain: "The plain write comes before the volatile write. A reader that sees ready == true is then guaranteed to see fare == 400."
+    reteach: "### Syntax: a volatile flag that hands over data"
+
+  - id: q10
+    type: spot-the-bug
+    concept: immutable-objects
+    prompt: "The caller keeps adding bikes to its list after building a DockList. Which line lets those changes leak in?"
+    code: |
+      final class DockList {
+          private final List<String> bikes;
+
+          DockList(List<String> bikes) {
+              this.bikes = bikes;
+          }
+
+          List<String> bikes() {
+              return bikes;
+          }
+      }
+    bugLine: 5
+    explain: "final only stops the field pointing somewhere else. The caller's list can still change. Store a copy: this.bikes = List.copyOf(bikes);"
+    reteach: "### Immutable objects are thread-safe"
+
+  - id: q11
+    type: mcq
+    concept: immutable-objects
+    prompt: "Why can many threads read an immutable object without any lock?"
+    choices: ["Its state never changes after the constructor, and Java guarantees final fields are visible once it finishes", "Java gives every thread its own copy of every immutable object", "The JVM pauses the other threads while one reads a final field", "Immutable objects can only be used by one thread"]
+    answer: 0
+    explain: "Nothing ever changes, so there is nothing to race on. The final-field promise means every thread sees the constructor's values."
+    reteach: "### Immutable objects are thread-safe"
+
+  - id: q12
+    type: mcq
+    concept: lazy-singleton
+    prompt: "Why is the holder-class idiom thread-safe without volatile or synchronized in your code?"
+    choices: ["Java sets up a class exactly once, and other threads wait until it is done", "Nested classes always run on the main thread", "Other threads cannot read static fields", "The compiler copies the object into every thread"]
+    answer: 0
+    explain: "Holder is set up on the first get(), exactly once, under a lock the JVM takes for you. Every thread then sees the finished INSTANCE."
+    reteach: "### Syntax: holder-class idiom"

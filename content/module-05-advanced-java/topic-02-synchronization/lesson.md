@@ -132,6 +132,20 @@ synchronized (this) {
 
 A synchronized block locks only the lines inside the braces. The object in the brackets is the lock to take. Use a block when only a few lines of a longer method need protecting.
 
+### Syntax: a private lock object
+
+```java nocompile
+private final Object lock = new Object();
+
+void increment() {
+    synchronized (lock) {
+        count++;
+    }
+}
+```
+
+In real code, lock a private field instead of `this`. Any code that can see your object can also write `synchronized (dock)`. A stranger could then hold your lock and stall your methods. Nobody outside the class can reach a private lock object.
+
 ### Syntax: ReentrantLock
 
 `java.util.concurrent.locks.ReentrantLock` is a lock you hold in a field and control by hand.
@@ -173,7 +187,194 @@ Two threads can both pass the check when `bikes` is 1. Then both act, and `bikes
 A **deadlock** happens when two threads each hold one lock and wait forever for the other's lock. Thread A holds lock 1 and wants lock 2. Thread B holds lock 2 and wants lock 1. Neither can move, and the program freezes.
 ```
 
-The usual cause is two threads taking the same locks in opposite order. The fix is a fixed lock order: every thread takes the locks in the same order. For example, when moving a bike between Harbor and Uptown, always lock the dock whose name comes first in the alphabet.
+The usual cause is two threads taking the same locks in opposite order. The fix is a fixed lock order: every thread takes the locks in the same order. For example, when moving credit between two rider wallets, always lock the wallet with the smaller id first.
+
+### The four conditions for deadlock
+
+A deadlock needs all four of these at once. Break any one and it cannot happen.
+
+1. **Mutual exclusion**: a lock can be held by only one thread.
+2. **Hold and wait**: a thread keeps one lock while it waits for another.
+3. **No preemption**: nobody can take a lock away from the thread holding it.
+4. **Circular wait**: thread A waits for B, and B waits for A, in a circle.
+
+Locks need the first three to work at all. So in practice you break the fourth one. Give every lock a rank, and always take locks in rank order. Then no circle can form.
+
+```java nocompile
+void transfer(Wallet a, Wallet b, long cents) {
+    Wallet low = a.id() < b.id() ? a : b;      // rank: the smaller id goes first
+    Wallet high = (low == a) ? b : a;
+    synchronized (low) {
+        synchronized (high) {
+            a.take(cents);
+            b.add(cents);
+        }
+    }
+}
+```
+
+Say rider 17 sends credit to rider 42 while rider 42 sends credit to rider 17. Both transfers lock wallet 17 first. One waits for the other, and nobody waits in a circle.
+
+```animate
+title: Two transfers, two wallets
+kind: scene
+nodes:
+  - { id: t1, label: transfer-1, emoji: "💸", value: idle, row: 0, col: 0 }
+  - { id: w17, label: wallet-17 lock, emoji: "🔒", value: free, row: 0, col: 2 }
+  - { id: w42, label: wallet-42 lock, emoji: "🔒", value: free, row: 1, col: 2 }
+  - { id: t2, label: transfer-2, emoji: "💸", value: idle, row: 1, col: 0 }
+steps:
+  - say: transfer-1 sends credit from wallet 17 to wallet 42. transfer-2 sends credit the other way.
+    focus: [t1, t2]
+  - say: transfer-1 takes the wallet-17 lock. At the same moment, transfer-2 takes the wallet-42 lock.
+    send: [{ from: t1, to: w17, label: lock }, { from: t2, to: w42, label: lock }]
+    set: { w17: transfer-1, w42: transfer-2 }
+  - say: transfer-1 now asks for wallet 42. transfer-2 holds it, so transfer-1 waits.
+    send: { from: t1, to: w42, label: lock? }
+    set: { t1: BLOCKED }
+  - say: transfer-2 asks for wallet 17. transfer-1 holds it, so transfer-2 waits too.
+    send: { from: t2, to: w17, label: lock? }
+    set: { t2: BLOCKED }
+  - say: Each waits for the other, in a circle. Neither ever lets go. That is a deadlock.
+    focus: [t1, t2]
+  - say: The fix is lock order. If both transfers lock the smaller id first, the circle can never form.
+    focus: [w17]
+```
+
+### Thread states
+
+Every thread is in one state at a time. You see these names in thread dumps, so learn them now. `Thread.getState()` returns them as an enum.
+
+| State | What the thread is doing |
+|---|---|
+| `NEW` | Created, but `start()` not called yet |
+| `RUNNABLE` | Running, or ready to run when a core is free |
+| `BLOCKED` | Waiting to enter a `synchronized` block that another thread holds |
+| `WAITING` | Waiting with no time limit, for example in `join()` or `lock()` |
+| `TIMED_WAITING` | Waiting with a time limit, for example in `Thread.sleep(100)` |
+| `TERMINATED` | Finished |
+
+Two threads stuck in `BLOCKED` forever, each holding what the other wants, is a deadlock. Threads stuck on a `ReentrantLock` show as `WAITING` instead.
+
+### Finding a deadlock
+
+A deadlocked program does not crash. It just stops doing anything. To see why, take a **thread dump**.
+
+```callout jargon
+A **thread dump** is a snapshot of every thread in a running JVM: its name, its state, the line it is on and the locks it holds.
+```
+
+Here is a real deadlock. Two transfers lock wallets 17 and 42 in opposite order. It never finishes, so do not run it in the app.
+
+```java nocompile
+public class WalletDeadlock {
+    static final Wallet wallet17 = new Wallet(17);
+    static final Wallet wallet42 = new Wallet(42);
+
+    static void pause() {
+        try { Thread.sleep(100); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+    }
+
+    public static void main(String[] args) {
+        new Thread(() -> {
+            synchronized (wallet17) { pause(); synchronized (wallet42) { System.out.println("paid"); } }
+        }, "transfer-1").start();
+        new Thread(() -> {
+            synchronized (wallet42) { pause(); synchronized (wallet17) { System.out.println("paid"); } }
+        }, "transfer-2").start();
+    }
+}
+
+record Wallet(long id) { }
+```
+
+While it hangs, open a second terminal. `jcmd` with no arguments lists the running Java programs and their process ids (pid). Then ask for a dump:
+
+```bash
+jcmd                       # find the pid, for example 53938 WalletDeadlock
+jcmd 53938 Thread.print    # print every thread
+jstack 53938               # an older tool that prints the same dump
+```
+
+At the end of the dump, the JVM has already found the circle for you:
+
+```text
+Found one Java-level deadlock:
+=============================
+"transfer-1":
+  waiting to lock monitor 0x00000008f8cc49a0 (object 0x0000000312415f18, a Wallet),
+  which is held by "transfer-2"
+
+"transfer-2":
+  waiting to lock monitor 0x00000008f8cc4a80 (object 0x0000000312415f00, a Wallet),
+  which is held by "transfer-1"
+```
+
+Read it like a story: transfer-1 waits for a lock held by transfer-2, and transfer-2 waits for a lock held by transfer-1. Further down, each thread shows `BLOCKED (on object monitor)` and the exact source line. Named threads make this readable, which is one more reason to name them.
+
+```callout tip
+In production, take two or three dumps a few seconds apart. A thread that sits on the same line in every dump is stuck.
+```
+
+### Syntax: tryLock with a timeout
+
+```java nocompile
+if (lock.tryLock(200, TimeUnit.MILLISECONDS)) {
+    try { /* work */ } finally { lock.unlock(); }
+} else {
+    // could not get the lock in time: give up or retry later
+}
+```
+
+`synchronized` waits forever. A `ReentrantLock` can wait for a limited time instead. `tryLock` returns `true` if it got the lock, or `false` when time runs out. A thread that gives up can let go of the locks it already holds, so it never waits forever while holding them.
+
+```java run
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        ReentrantLock wallet42 = new ReentrantLock();
+        wallet42.lock();   // main holds the wallet-42 lock for the whole demo
+
+        Thread transfer = new Thread(() -> {
+            try {
+                if (wallet42.tryLock(200, TimeUnit.MILLISECONDS)) {
+                    try {
+                        System.out.println("transfer-1 paid");
+                    } finally {
+                        wallet42.unlock();
+                    }
+                } else {
+                    System.out.println("transfer-1: wallet 42 is busy, will retry later");
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }, "transfer-1");
+
+        transfer.start();
+        transfer.join();
+        wallet42.unlock();
+    }
+}
+```
+
+The transfer waits 200 milliseconds, then gives up instead of hanging forever. Lock order is still the first fix. `tryLock` is the safety net.
+
+### Livelock, starvation and fair locks
+
+Two more ways threads can get stuck without crashing:
+
+```callout jargon
+**Livelock**: threads keep reacting to each other, so none makes progress. Two transfers both give up, wait the same time and retry, again and again. Fix: wait a small random time before retrying.
+```
+
+```callout jargon
+**Starvation**: one thread almost never gets the lock, because others keep grabbing it first. It is alive, but its work never happens.
+```
+
+By default, `synchronized` and `ReentrantLock` are unfair. A thread that just arrived may jump ahead of one that has waited a long time. That is faster overall. `new ReentrantLock(true)` makes a **fair** lock: the longest-waiting thread goes next. Fair locks are slower, so use them only when starvation is a real problem.
 
 ## Worked example
 
@@ -227,7 +428,7 @@ Line by line:
 
 1. `tryUnlock` is synchronized, so the check `bikes > 0` and the change `bikes--` happen while one thread holds the lock.
 2. The first rider to get the lock takes the bike. The others find `bikes` at 0 and get `false`.
-3. `bikesLeft` is synchronized too, so it always reads the latest value.
+3. `bikesLeft` is synchronized too, so it always reads the latest value. Without the lock, a thread could see an old value. The [Java Memory Model ticket](/t/module-05-advanced-java/topic-14-memory-model), later in this module, explains why.
 4. `main` joins every rider before printing the count.
 
 Exactly one rider gets the bike. Which rider wins can change between runs. `Bikes left: 0` is always the last line.
@@ -238,11 +439,11 @@ In the worked example, change the dock to hold 2 bikes and start 10 riders. Coun
 
 ## Recap
 
-- A race condition is a bug whose result depends on thread timing.
-- `count++` is read, add, write. Two threads can lose updates.
+- A race condition is a bug whose result depends on thread timing. `count++` is read, add, write, so two threads can lose updates.
 - `synchronized` lets one thread at a time hold an object's intrinsic lock.
 - `ReentrantLock` does the same by hand: call `lock()`, and `unlock()` in `finally`.
-- Keep a check and its act under one lock. Take several locks in a fixed order to avoid deadlock.
+- Keep a check and its act under one lock, and lock a private object rather than `this`.
+- Deadlock needs a circle of waiting threads. Take locks in a fixed order, find a hang with `jcmd <pid> Thread.print`, and use `tryLock` with a timeout as a safety net.
 
 ## Common mistakes
 

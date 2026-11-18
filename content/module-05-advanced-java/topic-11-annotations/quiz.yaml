@@ -140,5 +140,5 @@ questions:
     prompt: "Lombok writes getters for you when you put @Getter on a field. When does it do this?"
     choices: ["While javac compiles the code", "While the program runs, through reflection", "When the JVM loads the class", "Only inside the IDE"]
     answer: 0
-    explain: "Lombok is a compile-time annotation processor. It runs inside the compiler and changes what gets compiled."
+    explain: "Lombok runs inside the compiler as an annotation processor. Unlike a standard processor, which can only write new files, it uses javac internals to add the getter to your class while it compiles."
     reteach: "## Concept"

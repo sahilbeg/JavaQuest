@@ -146,3 +146,12 @@ questions:
     bugLine: 6
     explain: "The method name is misspelled. The compiler cannot check text, so line 6 throws NoSuchMethodException at run time. That is one cost of reflection."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: dynamic-proxies
+    prompt: "Spring wraps your PaymentService so a transaction starts before charge() and commits after it. Which Java feature makes that possible?"
+    choices: ["A dynamic proxy: an object that implements the interface and sends every call to a handler", "A static initializer block", "A record component", "A WeakReference"]
+    answer: 0
+    explain: "java.lang.reflect.Proxy makes an object that implements an interface. Every call goes to an invocation handler, which can run code before and after the real method."
+    reteach: "### Dynamic proxies"

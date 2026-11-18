@@ -16,7 +16,7 @@ Every thread you made so far is a **platform thread**. Java asks the operating s
 The **operating system** (OS) is the program that runs your computer, such as macOS, Windows or Linux. An **OS thread** is a thread the OS creates and schedules. A **platform thread** is a Java thread that holds one OS thread for its whole life.
 ```
 
-OS threads are expensive. Each one reserves memory for its stack, often about a megabyte. OS threads cost much more memory, so you can usually run far fewer of them.
+OS threads are expensive. Each one reserves memory for its stack, often about a megabyte. So one machine can run thousands of them, not millions.
 
 That is why the executors topic used a fixed pool. A small pool shares a few platform threads among many tasks. The catch is waiting. When a pooled thread calls the payment service, it sits idle until the answer comes back. The other riders queue behind it.
 
@@ -164,7 +164,7 @@ Ten thousand threads each sleep 10 milliseconds. Because sleeping virtual thread
 
 ### When virtual threads help
 
-Virtual threads help when tasks spend most of their time **waiting**. Waiting is called **blocking** or **I/O** (input and output): network calls, database queries, reading files, `Thread.sleep`.
+Virtual threads help when tasks spend most of their time **waiting**. Waiting is called **blocking** or **I/O** (input and output): network calls, database queries, `Thread.sleep`.
 
 They do not help with **CPU-heavy work**, such as counting primes or sorting a huge list. That work keeps a carrier busy the whole time. You still have only one carrier per core, so it runs no faster than a fixed pool.
 
@@ -172,13 +172,82 @@ They do not help with **CPU-heavy work**, such as counting primes or sorting a h
 |---|---|
 | Waiting on the payment service | Yes |
 | Reading telemetry from 5,000 dock sensors over the network | Yes |
+| Reading many files from the local disk | A little |
 | Computing a fare report with heavy maths | No |
+
+Why only "a little" for files? On most systems, a file read keeps its carrier busy until it ends. The JVM makes up for it by adding spare carriers for a while. That works, but it is not the cheap parking that network waits get.
 
 ### Pinning, in one line
 
 ```callout warning
 A virtual thread that waits inside a `synchronized` block can get **pinned** on Java 21. Pinned means it stays stuck to its carrier and blocks it. Keep slow waits outside `synchronized` code.
 ```
+
+On Java 21, use a `ReentrantLock` instead of `synchronized` around slow work. A virtual thread waiting on a `ReentrantLock` parks normally. Java 24 fixed this (JEP 491), so there `synchronized` almost never pins. Rare cases, such as waiting inside a native call, still do.
+
+```java nocompile
+private final ReentrantLock lock = new ReentrantLock();
+
+void payAndRecord(String rider) throws InterruptedException {
+    lock.lock();
+    try {
+        callPaymentService(rider);   // slow: the virtual thread can park here on Java 21
+    } finally {
+        lock.unlock();
+    }
+}
+```
+
+### Limiting concurrency with a Semaphore
+
+Virtual threads remove one limit: the number of threads. The other limits are still there. If 10,000 virtual threads call the payment service at once, the service gets flooded. If each one opens a database connection, the pool of, say, 20 connections runs dry.
+
+```callout jargon
+A **semaphore** is a counter of permits. `acquire()` takes a permit, and waits if none is left. `release()` gives one back.
+```
+
+So you cap how many tasks do the risky part at once. The two key lines are `acquire()` before the call and `release()` in `finally`:
+
+```java run
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class Main {
+    static final Semaphore paymentSlots = new Semaphore(10);   // at most 10 calls at once
+    static final AtomicInteger inFlight = new AtomicInteger();
+    static final AtomicInteger most = new AtomicInteger();
+
+    static void pay(int rider) throws InterruptedException {
+        paymentSlots.acquire();          // wait for a free slot
+        try {
+            int now = inFlight.incrementAndGet();
+            most.accumulateAndGet(now, Math::max);
+            Thread.sleep(5);             // the slow payment service
+            inFlight.decrementAndGet();
+        } finally {
+            paymentSlots.release();      // hand the slot back
+        }
+    }
+
+    public static void main(String[] args) {
+        try (ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (int i = 0; i < 2_000; i++) {
+                int rider = i;
+                pool.submit(() -> { pay(rider); return null; });
+            }
+        }
+        System.out.println("Most payments at once: " + most.get());
+    }
+}
+```
+
+All 2,000 riders get a virtual thread, but only 10 talk to the payment service at any moment. The rest park cheaply while they wait for a permit. The [coordination ticket](/t/module-05-advanced-java/topic-15-coordinating-threads), later in this module, covers semaphores in full.
+
+### ThreadLocal and the road ahead
+
+A `ThreadLocal` gives each thread its own copy of a value. The JVM memory ticket explains it. With a million virtual threads, that is a million copies, so use it sparingly here. Java 21 also previews `ScopedValue` and structured concurrency, which are designed for virtual threads. They are not final in Java 21, so this course does not use them.
 
 ## Worked example
 
@@ -227,7 +296,12 @@ Line by line:
 
 ## Try it
 
-Change the count to 100,000, then swap in `newFixedThreadPool(8)` with the count back at 10,000 (about 12 seconds). The virtual version finishes in about the same time. The fixed pool takes much longer, because only 8 riders wait at once.
+Run the program below. It pays 10,000 riders, each waiting 10 ms, and ends in well under a second. Then:
+
+1. Change `riders` to `100_000` and run it again. It still ends in about a second.
+2. Set `riders` back to `10_000`.
+3. Set `riders` to `2_000`, because the app stops a run after 10 seconds.
+4. Swap `newVirtualThreadPerTaskExecutor()` for `newFixedThreadPool(8)` and run it. Even 2,000 riders take about 2.5 seconds, because only 8 riders can wait at once. With 10,000 riders it would take about 12 seconds.
 
 ```java run
 import java.util.concurrent.ExecutorService;
@@ -261,7 +335,7 @@ public class Main {
 - Start one with `Thread.ofVirtual().start(task)` or `Thread.startVirtualThread(task)`. Check with `isVirtual()`.
 - `Executors.newVirtualThreadPerTaskExecutor()` gives each task a new virtual thread. Use it in try-with-resources so `close()` waits for all tasks.
 - Virtual threads help with waiting (I/O). They do not speed up CPU-heavy work.
-- Keep slow waits out of `synchronized` blocks to avoid pinning.
+- On Java 21, keep slow waits out of `synchronized` blocks (use `ReentrantLock`) to avoid pinning. Cap calls to a shared service with a `Semaphore`.
 
 ## Common mistakes
 

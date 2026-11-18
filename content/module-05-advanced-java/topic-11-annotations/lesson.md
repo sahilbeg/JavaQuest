@@ -19,13 +19,13 @@ public String toString() {
 }
 
 @Deprecated               // the compiler warns anyone who still calls this method
-public double oldFare(int minutes) {
-    return 1.00 + minutes * 0.15;
+public long oldFareCents(int minutes) {
+    return 100 + minutes * 15L;
 }
 
 @FunctionalInterface      // the compiler checks there is exactly one abstract method
 interface Promotion {
-    double apply(String type, double fare);
+    long apply(String type, long fareCents);
 }
 ```
 
@@ -178,7 +178,7 @@ A **processor** is code that reads annotations and does the work they ask for. Y
 
 ### Processors at compile time
 
-Some processors run inside the compiler instead. A **compile-time annotation processor** reads `SOURCE` or `CLASS` annotations while `javac` works. It can report errors or write brand new `.java` files. Lombok works this way: you write `@Getter` on a field and the getter appears without you typing it. You will not write one here. Just know that the labels are the same idea, read at a different time.
+Some processors run inside the compiler instead. A **compile-time annotation processor** reads `SOURCE` or `CLASS` annotations while `javac` works. It can report errors or write brand new `.java` files, but a standard processor cannot change a class that already exists. Lombok goes further: you write `@Getter` on a field and the getter appears without you typing it. To do that, Lombok reaches into `javac`'s private internals and rewrites the class while it compiles. That is why a new JDK sometimes needs a new Lombok version. You will not write one here. Just know that the labels are the same idea, read at a different time.
 
 ## Worked example
 

@@ -128,6 +128,56 @@ public class Main {
 
 This prints `Harbor events: 40000` every time.
 
+### ConcurrentHashMap traps
+
+`ConcurrentHashMap` looks like a `HashMap`, but it has stricter rules.
+
+**No nulls.** A `HashMap` accepts a `null` key or value. `ConcurrentHashMap` throws `NullPointerException` for either. The reason: `get` returns `null` to mean "missing". With many threads, a stored `null` would be impossible to tell apart.
+
+**Keep `compute` and `merge` functions short.** While your function runs, the map holds a lock on that part of itself. Other threads that need it wait. So never call a slow service inside the function.
+
+**Never touch the same map inside the function.** The map is in the middle of an update. Here, the function asks the map for the same key again:
+
+```java run crash
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class Main {
+    public static void main(String[] args) {
+        Map<String, Integer> fares = new ConcurrentHashMap<>();
+        fares.computeIfAbsent("Harbor", k -> fares.computeIfAbsent("Harbor", k2 -> 100));
+        System.out.println(fares);
+    }
+}
+```
+
+```text
+Exception in thread "main" java.lang.IllegalStateException: Recursive update
+```
+
+With a different key, it might work, throw the same error or even hang, depending on where the keys land inside the map. Work out the value first, then call the map once.
+
+### What ConcurrentHashMap does not promise
+
+Each single call is safe. A picture of the whole map is not.
+
+- **Iterators are weakly consistent.** A loop over the map never throws `ConcurrentModificationException`. But it may or may not show changes other threads make while it runs.
+- **`size()` is only a guess while threads write.** By the time you read it, it may already be wrong. Never use it for a decision like "is there room?".
+- **Two keys are two separate updates.** Moving a bike from Harbor to Uptown is two `merge` calls. Between them, a reader sees one bike fewer in total.
+
+```java nocompile
+private final Object moveLock = new Object();
+
+void moveBike(String from, String to) {
+    synchronized (moveLock) {              // both changes, and every reader of the total, take this lock
+        docks.merge(from, -1, Integer::sum);
+        docks.merge(to, 1, Integer::sum);
+    }
+}
+```
+
+When a rule ties two keys together, such as "the total number of bikes never changes", you still need your own lock. Readers of the total must take it too.
+
 ### Syntax: AtomicInteger and AtomicLong
 
 ```java nocompile
@@ -162,6 +212,28 @@ public class Main {
 ```
 
 This prints `11`, `true`, `false`, `10`. The second swap fails, because the value was already 10.
+
+### Inside an atomic: the retry loop
+
+How does `incrementAndGet` add 1 without a lock? It works like this loop, which retries `compareAndSet` until a swap works. The JVM may even use one special add instruction instead. Your own `compareAndSet` updates look exactly like this:
+
+```java nocompile
+int addOne(AtomicInteger counter) {
+    while (true) {
+        int old = counter.get();                    // 1. read
+        if (counter.compareAndSet(old, old + 1)) {  // 2. swap, only if nobody changed it
+            return old + 1;
+        }
+        // 3. another thread won the race: read again and retry
+    }
+}
+```
+
+```callout jargon
+**CAS** (compare-and-set) is a single processor instruction that does step 2 in one go. Many threads can try at once, and exactly one wins each round.
+```
+
+No thread ever waits for a lock. A loser just tries again. Under very heavy traffic, the retries add up, which is why `LongAdder` exists.
 
 ### LongAdder, briefly
 
@@ -284,10 +356,9 @@ public class Main {
 ## Recap
 
 - `HashMap` and `ArrayList` are not thread-safe. Shared use loses updates or throws `ConcurrentModificationException`.
-- `ConcurrentHashMap` is safe for many threads. Use `merge` or `compute` for updates that depend on the old value, and `getOrDefault` for missing keys.
+- `ConcurrentHashMap` is safe for many threads. Use `merge` or `compute` for updates that depend on the old value, and `getOrDefault` for missing keys. It takes no nulls, and its update functions must be short and never touch the map. A rule across two keys still needs your own lock.
 - `AtomicInteger` and `AtomicLong` give safe counters with `incrementAndGet` and `compareAndSet`. `LongAdder` suits very busy counters.
-- `CopyOnWriteArrayList` suits many reads and few writes. `LinkedBlockingQueue` passes items between threads with `put` and `take`.
-- `Collections.synchronizedList` is the older, slower way.
+- `CopyOnWriteArrayList` suits many reads and few writes. `LinkedBlockingQueue` passes items between threads with `put` and `take`. `Collections.synchronizedList` is the older, slower way.
 
 ## Common mistakes
 

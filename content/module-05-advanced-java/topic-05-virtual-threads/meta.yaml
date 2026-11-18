@@ -1,9 +1,9 @@
 id: module-05-advanced-java/topic-05-virtual-threads
 title: "Virtual threads"
 order: 5
-minutes: 9
+minutes: 12
 prerequisites: [module-05-advanced-java/topic-04-completable-future]
-concepts: [platform-vs-virtual, starting-virtual-threads, virtual-executor, when-to-use, pinning]
+concepts: [platform-vs-virtual, starting-virtual-threads, virtual-executor, when-to-use, pinning, limit-concurrency]
 practice:
   kind: code
   runner: plain

@@ -1386,7 +1386,12 @@
           "prerequisites": [
             "module-05-advanced-java/topic-13-pattern-matching"
           ],
-          "status": "planned"
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T11:03:40+05:30"
+          }
         },
         {
           "id": "module-05-advanced-java/topic-15-coordinating-threads",
@@ -1395,7 +1400,12 @@
           "prerequisites": [
             "module-05-advanced-java/topic-14-memory-model"
           ],
-          "status": "planned"
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T11:03:40+05:30"
+          }
         },
         {
           "id": "module-05-advanced-java/boss",

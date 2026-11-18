@@ -29,6 +29,56 @@ public class Main {
 
 `Thread.currentThread()` gives you the thread running that line. `getName()` gives you its name.
 
+### Processes, threads and cores
+
+Three words come up in every talk about threads. Here is how they fit together.
+
+```callout jargon
+A **process** is one running program, such as your Java app or your browser. The operating system gives each process its own private memory. One process cannot read another's memory.
+```
+
+```callout jargon
+A **core** is one part of the processor (CPU) that runs instructions. A core runs one thread at any instant. A laptop usually has 4 to 16 cores.
+```
+
+So a process holds one or more threads, and the threads take turns on the cores. Your Java program is one process. Its threads share that process's memory.
+
+```callout jargon
+**Concurrency** means several jobs are in progress at the same time, even if they take turns on one core. **Parallelism** means several jobs run at the very same instant, on different cores.
+```
+
+When there are more threads than cores, the operating system swaps them. It pauses one thread, saves where it was, and loads another. That swap is a **context switch**.
+
+```callout jargon
+A **context switch** is the operating system pausing one thread on a core and resuming another. It takes a few microseconds. The new thread's data is often not in the core's fast caches yet, so it starts slowly.
+```
+
+One switch is cheap. Thousands of switches every second, between thousands of threads, waste real time. That is why "start more threads" stops helping after a point. The next tickets come back to this.
+
+```animate
+title: Two cores, three threads
+kind: scene
+nodes:
+  - { id: t1, label: dock-a, emoji: "🧵", value: waiting, row: 0, col: 0 }
+  - { id: t2, label: dock-b, emoji: "🧵", value: waiting, row: 0, col: 1 }
+  - { id: t3, label: dock-c, emoji: "🧵", value: waiting, row: 0, col: 2 }
+  - { id: c1, label: Core 1, emoji: "⚙️", value: idle, row: 1, col: 0 }
+  - { id: c2, label: Core 2, emoji: "⚙️", value: idle, row: 1, col: 2 }
+steps:
+  - say: Your program has three threads, but the laptop has only two cores.
+    focus: [t1, t2, t3]
+  - say: The operating system puts dock-a on core 1 and dock-b on core 2. They run in parallel.
+    send: [{ from: t1, to: c1, label: run }, { from: t2, to: c2, label: run }]
+    set: { t1: running, t2: running, c1: dock-a, c2: dock-b }
+  - say: dock-c waits its turn. It is in progress too, so all three are concurrent.
+    focus: [t3]
+  - say: dock-a starts waiting for the network. The operating system saves its place. That is a context switch.
+    set: { t1: waiting, c1: switching }
+  - say: dock-c gets core 1. The core never sat idle while dock-a waited.
+    send: { from: t3, to: c1, label: run }
+    set: { t3: running, c1: dock-c }
+```
+
 ### Syntax: Runnable
 
 A thread needs a job to do. Java describes a job with the interface `Runnable`.
@@ -78,7 +128,7 @@ The second argument is the thread's name. Names help when you read logs. Without
 worker.join();
 ```
 
-`join()` makes the current thread wait until `worker` has finished. It can throw `InterruptedException`, a checked exception. That exception means another thread asked this one to stop waiting. For now, add `throws InterruptedException` to your method.
+`join()` makes the current thread wait until `worker` has finished. It can throw `InterruptedException`, a checked exception. That exception means another thread asked this one to stop waiting. In a small `main`, add `throws InterruptedException` to the method. The card "Interrupting a thread" below shows what to do in real code.
 
 ### Order between threads is not fixed
 
@@ -122,6 +172,60 @@ public class Main {
 ```
 
 This prints `Running on main` and then `Running on sensor-worker`.
+
+### Interrupting a thread
+
+Sometimes you want a thread to stop early. Maybe the kiosk is shutting down, or a check is taking too long. Java has no safe "kill" button. Instead, you ask politely.
+
+```callout jargon
+To **interrupt** a thread is to set a yes/no mark on it, called the **interrupt flag**. It means "please stop what you are doing". The thread decides how to react.
+```
+
+`worker.interrupt()` sets the flag on `worker`. If `worker` is asleep in `Thread.sleep`, or waiting in `join()`, it wakes up at once. The waiting method throws `InterruptedException` and clears the flag.
+
+```java run
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        Thread worker = new Thread(() -> {
+            try {
+                Thread.sleep(10_000);
+                System.out.println("Harbor-3: ok");
+            } catch (InterruptedException e) {
+                System.out.println("Woken early. Flag is now " + Thread.currentThread().isInterrupted());
+                Thread.currentThread().interrupt();
+                System.out.println("Flag restored: " + Thread.currentThread().isInterrupted());
+            }
+        }, "sensor-worker");
+        worker.start();
+        worker.interrupt();
+        worker.join();
+        System.out.println("main is done");
+    }
+}
+```
+
+The worker would sleep for 10 seconds, but `interrupt()` wakes it straight away. `isInterrupted()` reads the flag without changing it. A thread that is busy computing, not waiting, does not wake up. It must check `Thread.currentThread().isInterrupted()` itself, for example once per loop.
+
+### Restoring the interrupt flag
+
+Look at the `catch` block above again. When `InterruptedException` is thrown, the flag is already cleared. The stop request is now known only to your `catch` block.
+
+If you just print the error and carry on, the request is lost. Code higher up in the same thread, such as the loop that called your method, checks the flag to decide whether to stop. It sees `false` and keeps working.
+
+So when you catch `InterruptedException` and cannot throw it on, put the flag back:
+
+```java nocompile
+} catch (InterruptedException e) {
+    Thread.currentThread().interrupt();   // keep the stop request for the code above
+    return;                               // and finish early
+}
+```
+
+You will meet this exact line again in the next tickets. Now you know why it is there.
+
+```callout warning
+Never write an empty `catch (InterruptedException e) {}`. It swallows the stop request, and a shutdown can hang forever waiting for your thread.
+```
 
 ## Worked example
 
@@ -177,11 +281,11 @@ Add `"Harbor-4"` and `"Harbor-5"` to the list in the worked example and run it a
 
 ## Recap
 
-- A thread is one path of work. Threads in one program share memory.
-- Your program starts on the `main` thread.
+- A thread is one path of work inside a process, and threads take turns on the cores. Your program starts on the `main` thread.
 - Write the job as a `Runnable` lambda, wrap it in `new Thread(job, "name")` and call `start()`.
 - `run()` runs the job on the current thread. Only `start()` creates a new one.
 - `join()` waits for a thread to finish. The order of output between threads is not fixed.
+- `interrupt()` asks a thread to stop. When you catch `InterruptedException`, restore the flag with `Thread.currentThread().interrupt()`.
 
 ## Common mistakes
 

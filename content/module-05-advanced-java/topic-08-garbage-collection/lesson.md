@@ -61,7 +61,7 @@ The JVM uses that fact. It splits the heap into two **generations**:
 - The **young generation** is where new objects start.
 - The **old generation** holds objects that survived several collections in the young generation.
 
-A **minor collection** cleans only the young generation. It is small and fast, because most of what it finds is already garbage. A **major collection** also cleans the old generation. G1 does most of that work in small steps while your program runs. If the old generation fills up too fast, G1 falls back to a **full collection**, which stops everything and takes much longer.
+A **minor collection** cleans only the young generation. It is small and fast, because most of what it finds is already garbage. A **major collection** also cleans the old generation. G1 splits that job in two. First it finds the live old objects, called **marking**, while your program keeps running. Then it copies live objects out of a few old regions at a time, in a **mixed collection**. That copying stops every thread, just like a young collection, but only briefly. If the old generation fills up too fast, G1 falls back to a **full collection**, which stops everything and takes much longer.
 
 ### Stop-the-world pauses
 
@@ -79,7 +79,7 @@ The JVM ships several collectors. You pick one with a flag when you start `java`
 
 **G1** (Garbage First) is the default collector in Java 21 on most machines; very small machines get the Serial collector. It cuts the heap into many small regions. It collects the regions with the most garbage first, which is where the name comes from. It aims for short pauses, a goal you can tune, and suits most programs.
 
-**ZGC** is built for very low pauses. It does almost all of its work while your threads keep running, so its pauses stay tiny even on a large heap. It costs a bit more CPU (processor) time. You turn it on with `-XX:+UseZGC`. For a kiosk where a rider is waiting at the screen, ZGC is worth a try.
+**ZGC** is built for very low pauses. It does almost all of its work while your threads keep running, so its pauses stay tiny even on a large heap. It costs a bit more CPU (processor) time. You turn it on with `-XX:+UseZGC`. On Java 21, also add `-XX:+ZGenerational` to get its newer mode with young and old generations. From Java 23 that mode is the default. For a kiosk where a rider is waiting at the screen, ZGC is worth a try.
 
 ### Watching the GC: -Xlog:gc
 
@@ -109,6 +109,46 @@ public class Main {
 ```
 
 Each loop turn makes a list that becomes garbage at the end of the turn. Run this with `-Xlog:gc` on your own machine and you may see several young collections. How many and how long depends on your machine, your JDK and your heap size.
+
+### Reading one GC log line
+
+Here is a real line from that program, run with `java -Xms64m -Xmx64m -Xlog:gc Main.java`:
+
+```text
+[0.205s][info][gc] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 24M->5M(64M) 3.569ms
+```
+
+Read it left to right:
+
+- `[0.205s]`: 0.205 seconds after the JVM started.
+- `GC(0)`: the first collection, numbered from 0.
+- `Pause Young (Normal)`: a stop-the-world pause of the young generation. A mixed collection says `Pause Young (Mixed)`, and the bad one says `Pause Full`.
+- `24M->5M(64M)`: the heap held 24 MB of objects before and 5 MB after. The heap's size is 64 MB.
+- `3.569ms`: your program stood still for 3.569 milliseconds.
+
+If the "after" number keeps climbing from one collection to the next, objects are surviving that should not. That is the shape of a leak.
+
+### Tuning basics
+
+GC tuning trades three things against each other. You can usually have two:
+
+- **Throughput**: how much of the time your program does real work instead of collecting.
+- **Latency**: how long each pause is. A rider at a kiosk cares about this one.
+- **Footprint**: how much memory the heap takes.
+
+A few settings cover most servers:
+
+```text
+-Xms2g -Xmx2g                 # same start and max heap: no slow growing and shrinking
+-XX:MaxGCPauseMillis=100      # G1's pause goal in ms (default 200); a goal, not a promise
+-XX:+UseZGC -XX:+ZGenerational   # Java 21: when even short G1 pauses are too long
+```
+
+Setting `-Xms` equal to `-Xmx` on a server means the JVM takes all its heap at startup. It never pauses to grow the heap later. A lower `MaxGCPauseMillis` makes G1 collect smaller pieces more often, so you trade some throughput for latency.
+
+```callout tip
+Change one setting at a time and compare `-Xlog:gc` lines before and after. Most GC trouble is a leak or too many objects, and no flag fixes that.
+```
 
 ### System.gc() is only a request
 
@@ -216,7 +256,7 @@ Your numbers will be different from anyone else's. With `history = null;` the se
 - Garbage is every object that the GC cannot reach from a GC root, such as live local variables and static fields.
 - The heap has a young and an old generation. Most objects die young, so minor collections are cheap.
 - Stop-the-world pauses halt every thread. Full collections of a crowded heap pause the longest.
-- G1 is the default collector. ZGC keeps pauses very low. `-Xlog:gc` shows each collection.
+- G1 is the default collector: it marks while you run, but copies in short stop-the-world pauses. ZGC keeps pauses very low. `-Xlog:gc` shows each pause and the heap before and after.
 - Leaks are references you forgot to drop: static collections, listeners and caches. `System.gc()` is only a request.
 
 ## Common mistakes
@@ -257,10 +297,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 class FareCache {
-    static final Map<String, Double> FARES = new HashMap<>();
+    static final Map<String, Long> FARES = new HashMap<>();
 
-    static void remember(String rideId, double fare) {
-        FARES.put(rideId, fare);
+    static void remember(String rideId, long fareCents) {
+        FARES.put(rideId, fareCents);
     }
 }
 ```

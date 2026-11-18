@@ -2,7 +2,7 @@ id: module-05-advanced-java/boss
 title: "INC-05: Double unlock at rush hour"
 order: 99
 minutes: 12
-prerequisites: [module-05-advanced-java/topic-13-pattern-matching]
+prerequisites: [module-05-advanced-java/topic-15-coordinating-threads]
 concepts: [race-conditions, concurrent-collections, atomics, deadlock]
 practice:
   kind: code

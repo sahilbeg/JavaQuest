@@ -167,6 +167,156 @@ CompletableFuture.supplyAsync(() -> charge("r1"), pool);
 
 By default, `supplyAsync` uses a shared pool called the **common pool**. It is sized for number crunching. Slow network calls can fill it up. Pass your own `ExecutorService` as a second argument to keep that work separate.
 
+The common pool is `ForkJoinPool.commonPool()`. It has about one thread per core, minus one. Parallel streams, from module 3, use the very same pool. So one slow payment call can stall an unrelated report that uses `parallelStream()`.
+
+### Which thread runs the next step
+
+`thenApply` has no thread of its own. It runs on whichever thread finishes the step before it. If that step is already done when you attach `thenApply`, it runs right away on *your* thread.
+
+`thenApplyAsync` always hands the step to a pool: the common pool, or the executor you pass in.
+
+```java run
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class Main {
+    static void where(String step) {
+        System.out.println(step + " ran on " + Thread.currentThread().getName());
+    }
+
+    public static void main(String[] args) {
+        try (ExecutorService receipts = Executors.newFixedThreadPool(1, Thread.ofPlatform().name("receipts-", 1).factory())) {
+            CompletableFuture<String> paid = CompletableFuture.completedFuture("P-r1");
+            paid.thenApply(id -> { where("thenApply"); return id; }).join();
+            paid.thenApplyAsync(id -> { where("thenApplyAsync"); return id; }, receipts).join();
+        }
+    }
+}
+```
+
+`completedFuture` makes a future that is already done, so `thenApply` ran on `main`. Why care? A slow step inside `thenApply` blocks whatever thread it lands on. Give slow steps the `Async` version and your own executor.
+
+### When one future in allOf fails
+
+`allOf` does not stop early. It waits until every future has finished, and then fails if any of them failed. It cancels nothing.
+
+```java run
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class Main {
+    static void pause(long ms) {
+        try { Thread.sleep(ms); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+    }
+
+    public static void main(String[] args) {
+        try (ExecutorService pool = Executors.newFixedThreadPool(2)) {
+            CompletableFuture<String> payment = CompletableFuture.supplyAsync(() -> {
+                throw new IllegalStateException("card declined");
+            }, pool);
+            CompletableFuture<String> lock = CompletableFuture.supplyAsync(() -> {
+                pause(300);
+                System.out.println("lock step still finished");
+                return "released B-1042";
+            }, pool);
+            try {
+                CompletableFuture.allOf(payment, lock).join();
+            } catch (CompletionException e) {
+                System.out.println("allOf failed: " + e.getCause().getMessage());
+            }
+        }
+    }
+}
+```
+
+Payment failed at once, yet the lock step ran to the end. In real code that matters. The bike was released even though nobody paid. If one failure should undo the others, you must write that undo step yourself.
+
+To keep every result, put `exceptionally` on each future *before* `allOf`. Then no future fails, and each one carries a value or a fallback. Your `unlockAll` does exactly this.
+
+### Syntax: orTimeout and completeOnTimeout
+
+```java nocompile
+future.orTimeout(200, TimeUnit.MILLISECONDS);                        // fail with TimeoutException
+future.completeOnTimeout("lock status unknown", 200, TimeUnit.MILLISECONDS);   // use a fallback value
+```
+
+A remote service can hang forever. Without a time limit, `join()` hangs with it, and so does the rider at the kiosk. **Every remote call needs a timeout.**
+
+```java run
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
+public class Main {
+    static String slowLockService() {
+        try { Thread.sleep(1_000); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+        return "released B-1042";
+    }
+
+    public static void main(String[] args) {
+        String a = CompletableFuture.supplyAsync(Main::slowLockService)
+                .completeOnTimeout("lock status unknown", 200, TimeUnit.MILLISECONDS)
+                .join();
+        System.out.println(a);
+
+        String b = CompletableFuture.supplyAsync(Main::slowLockService)
+                .orTimeout(200, TimeUnit.MILLISECONDS)
+                .exceptionally(ex -> "failed: " + ex.getClass().getSimpleName())
+                .join();
+        System.out.println(b);
+    }
+}
+```
+
+Both lines print after about 200 milliseconds, not a full second. `orTimeout` makes the future fail with a `TimeoutException`. `completeOnTimeout` fills in your fallback instead. Either way, the slow call itself keeps running in the background.
+
+### cancel does not stop the work
+
+On a plain `Future` from a pool, `cancel(true)` interrupts the running task. On a `CompletableFuture`, it does not. It only marks the future as cancelled. The supplier keeps running to the end.
+
+```java run
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        CountDownLatch started = new CountDownLatch(1);
+        CountDownLatch go = new CountDownLatch(1);
+        CountDownLatch finished = new CountDownLatch(1);
+        CompletableFuture<String> payment = CompletableFuture.supplyAsync(() -> {
+            started.countDown();
+            try {
+                go.await();
+            } catch (InterruptedException e) {
+                System.out.println("charge was interrupted");
+            }
+            System.out.println("charge still ran to the end");
+            finished.countDown();
+            return "P-r1";
+        });
+        started.await();
+        payment.cancel(true);
+        System.out.println("cancelled: " + payment.isCancelled());
+        go.countDown();
+        finished.await();
+    }
+}
+```
+
+`CountDownLatch` here just makes the steps happen in a fixed order. The [coordination ticket](/t/module-05-advanced-java/topic-15-coordinating-threads), later in this module, explains it. The point: "charge was interrupted" never prints. If a step must really stop, it has to check a flag of its own.
+
+### Syntax: whenComplete and anyOf
+
+```java nocompile
+payment.whenComplete((id, ex) -> log(id, ex));          // look, but do not change
+CompletableFuture<Object> first = CompletableFuture.anyOf(harbor, uptown);
+```
+
+- `whenComplete` runs on success or failure, like `handle`. But it cannot change the result. A failure stays a failure. Use it for logging.
+- `anyOf` finishes as soon as the *first* future finishes, even if that first one failed. So put `exceptionally` on each future first. Its type is `CompletableFuture<Object>`, so you cast the result. Use it to ask two stations and take the faster answer.
+
 ## Worked example
 
 Three riders unlock at Old Mill at once. Each payment runs on a small pool of your own.
@@ -215,10 +365,9 @@ Start every independent call first, and join at the very end. If you call `join(
 
 - `supplyAsync` starts work on another thread and returns a `CompletableFuture` at once.
 - `thenApply` changes a result. `thenCompose` chains another async step. `thenCombine` joins two futures that run side by side.
-- `allOf` waits for many futures. Then `join()` on each one gives its value.
-- `join()` throws unchecked exceptions. `get()` throws checked ones.
-- `exceptionally` gives a fallback value. `handle` sees both the value and the exception.
-- Pass your own executor to `supplyAsync` for slow network calls.
+- `allOf` waits for many futures, then `join()` on each one gives its value. It waits for all even when one fails, and cancels nothing.
+- `join()` throws unchecked exceptions, `get()` checked ones. `exceptionally` gives a fallback value, and `handle` sees both outcomes.
+- Pass your own executor for slow network calls. Give every remote call a timeout with `orTimeout` or `completeOnTimeout`, because `cancel` does not interrupt a running step.
 
 ## Common mistakes
 

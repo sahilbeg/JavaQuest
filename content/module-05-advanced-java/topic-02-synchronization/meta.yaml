@@ -1,9 +1,9 @@
 id: module-05-advanced-java/topic-02-synchronization
 title: "Race conditions, synchronized, locks"
 order: 2
-minutes: 10
+minutes: 14
 prerequisites: [module-05-advanced-java/topic-01-threads]
-concepts: [race-condition, synchronized, reentrant-lock, check-then-act, deadlock]
+concepts: [race-condition, synchronized, reentrant-lock, check-then-act, deadlock, thread-dump]
 practice:
   kind: code
   runner: plain

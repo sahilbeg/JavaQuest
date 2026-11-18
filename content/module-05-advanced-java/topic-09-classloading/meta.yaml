@@ -1,7 +1,7 @@
 id: module-05-advanced-java/topic-09-classloading
 title: "Class loading"
 order: 9
-minutes: 9
+minutes: 12
 prerequisites: [module-05-advanced-java/topic-08-garbage-collection]
 concepts: [class-lifecycle, static-initializers, class-loaders, parent-delegation, classpath, class-errors]
 practice:

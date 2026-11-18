@@ -1,9 +1,9 @@
 id: module-05-advanced-java/topic-01-threads
 title: "Threads and Runnable"
 order: 1
-minutes: 9
+minutes: 12
 prerequisites: [module-04-dsa/boss]
-concepts: [thread, runnable, start-vs-run, join, thread-names]
+concepts: [thread, runnable, start-vs-run, join, thread-names, interrupt, processes-and-cores]
 practice:
   kind: code
   runner: plain

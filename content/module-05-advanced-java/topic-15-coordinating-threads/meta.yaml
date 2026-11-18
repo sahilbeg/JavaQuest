@@ -1,0 +1,25 @@
+id: module-05-advanced-java/topic-15-coordinating-threads
+title: "Coordinating threads: latches, semaphores and barriers"
+order: 15
+minutes: 15
+prerequisites: [module-05-advanced-java/topic-14-memory-model]
+concepts: [count-down-latch, semaphore, cyclic-barrier, read-write-lock, wait-notify, blocking-queue, timeouts]
+practice:
+  kind: code
+  runner: plain
+  timeoutSeconds: 45
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0515
+  from: maya
+  title: "Rush hour floods the payment provider"
+  body: >
+    At 8 am we fired 200 payment calls at once, and the provider blocked us for ten minutes.
+    Our contract says at most 3 calls at a time. The server also opens for riders before the
+    station checks finish, and the price board stutters when the rush-hour job changes prices.
+    Please put a gate on payments, make startup wait with a time limit, and fix the board.
+hints:
+  - "Each class needs one tool: a Semaphore limits PaymentGate, a CountDownLatch lets StartupCheck wait for every check, and a ReadWriteLock guards PriceBoard."
+  - "Give things back in finally: permits.release(), done.countDown() and unlock(). Every wait has a limit: tryAcquire(timeoutMillis, TimeUnit.MILLISECONDS) and done.await(timeoutMillis, TimeUnit.MILLISECONDS)."
+  - "call: permits.acquire(); try { return work.get(); } finally { permits.release(); }. allPassed: new CountDownLatch(checks.size()), one new Thread per check with countDown() in finally, then return done.await(...) && !failed.get(). PriceBoard: lock.readLock().lock(); try { ... } finally { lock.readLock().unlock(); }, and writeLock() for setRate and raiseAll."
+review: true

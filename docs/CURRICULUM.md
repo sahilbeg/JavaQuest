@@ -129,8 +129,10 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 11 | `module-05-advanced-java/topic-11-annotations` | Annotations and a tiny processor | code | `module-05-advanced-java/topic-10-reflection` |
 | 12 | `module-05-advanced-java/topic-12-sealed-types` | Sealed types | code | `module-05-advanced-java/topic-11-annotations` |
 | 13 | `module-05-advanced-java/topic-13-pattern-matching` | Pattern matching for instanceof, switch and records | code | `module-05-advanced-java/topic-12-sealed-types` |
-| boss | `module-05-advanced-java/boss` | INC-05: Double unlock at rush hour | code | `module-05-advanced-java/topic-13-pattern-matching` |
-| mini-project | `module-05-advanced-java/mini-project` | FEAT-05: Bike telemetry ingester | code | `module-05-advanced-java/topic-13-pattern-matching` |
+| 14 | `module-05-advanced-java/topic-14-memory-model` | The Java Memory Model: visibility and volatile | code | `module-05-advanced-java/topic-13-pattern-matching` |
+| 15 | `module-05-advanced-java/topic-15-coordinating-threads` | Coordinating threads: latches, semaphores and barriers | code | `module-05-advanced-java/topic-14-memory-model` |
+| boss | `module-05-advanced-java/boss` | INC-05: Double unlock at rush hour | code | `module-05-advanced-java/topic-15-coordinating-threads` |
+| mini-project | `module-05-advanced-java/mini-project` | FEAT-05: Bike telemetry ingester | code | `module-05-advanced-java/topic-15-coordinating-threads` |
 
 ## module-06-craft: Engineering craft (project: Paying off debt)
 

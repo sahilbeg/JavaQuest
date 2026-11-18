@@ -98,11 +98,11 @@ questions:
   - id: q07
     type: mcq
     concept: shutdown
-    prompt: "What happens at the closing brace of try (ExecutorService pool = ...) { } in Java 21?"
-    choices: ["close() shuts the pool down and waits for every task to finish", "The pool is thrown away while tasks are still running", "Nothing, you still have to call shutdown()", "The program exits at once"]
-    answer: 0
-    explain: "Since Java 19, so in your Java 21, ExecutorService is AutoCloseable. Its close() calls shutdown and waits for the tasks."
-    reteach: "## Concept"
+    variants:
+      - { prompt: "What happens at the closing brace of try (ExecutorService pool = ...) { } in Java 21?", choices: ["close() shuts the pool down and waits for every task to finish", "The pool is thrown away while tasks are still running", "Nothing, you still have to call shutdown()", "The program exits at once"], answer: 0 }
+      - { prompt: "After pool.shutdown(), pool.awaitTermination(200, TimeUnit.MILLISECONDS) returns false. What is true?", choices: ["Time ran out and some tasks are still running", "Every task finished", "Every task was cancelled", "The pool threw away the queued tasks"], answer: 0 }
+    explain: "Since Java 19, ExecutorService is AutoCloseable: close() calls shutdown and waits for the tasks. awaitTermination returns false when time runs out. It stops nothing, so the next step is shutdownNow()."
+    reteach: "### Shutting down and timeouts"
 
   - id: q08
     type: order
@@ -136,3 +136,21 @@ questions:
     bugLine: 2
     explain: "A Runnable returns nothing, so its lambda cannot hand back a String. Use Callable<String> task = () -> \"Harbor-1: ok\";"
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: production-pools
+    variants:
+      - { prompt: "Why can Executors.newFixedThreadPool(4) run a busy server out of memory?", choices: ["Its waiting queue has no size limit, so tasks pile up faster than 4 threads finish them", "It starts a new thread for every task", "Its threads never stop after shutdown()", "Each of its threads copies the whole heap"], answer: 0 }
+      - { prompt: "A ThreadPoolExecutor has max 2 threads, a queue of 2 and AbortPolicy. Two tasks are running and two are waiting. What happens to a fifth task?", choices: ["execute throws RejectedExecutionException", "It waits until the queue has room", "A third thread starts for it", "It replaces the oldest waiting task"], answer: 0 }
+    explain: "newFixedThreadPool uses an unbounded queue. A production ThreadPoolExecutor uses a bounded queue, and when the queue and every thread are full, the rejection policy decides. AbortPolicy throws RejectedExecutionException."
+    reteach: "### Production thread pools"
+
+  - id: q12
+    type: mcq
+    concept: task-exceptions
+    prompt: "A task passed to pool.submit(...) throws an exception, and nobody ever calls get() on its Future. What do you see?"
+    choices: ["Nothing at all: the exception sits unread inside the Future", "A stack trace printed by the pool thread", "The program crashes at once", "A compile error"]
+    answer: 0
+    explain: "submit stores the exception in the Future. Only get() would throw it. Always call get(), or catch and log inside the task. execute() would print the error instead."
+    reteach: "### submit hides exceptions nobody reads"

@@ -129,3 +129,21 @@ questions:
       - "System.out.println(line);"
     explain: "Start the work, attach the fallback, wait with join(), then print."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: timeouts
+    variants:
+      - { prompt: "The lock service sometimes never answers. What should the unlock code add to its CompletableFuture?", choices: ["orTimeout or completeOnTimeout, so it stops waiting after a set time", "A second join() call", "thenApply instead of thenCompose", "Nothing: join() gives up on its own after a minute"], answer: 0 }
+      - { prompt: "You call cancel(true) on a CompletableFuture whose supplier is still running. What happens to the supplier?", choices: ["It keeps running to the end: the future is only marked cancelled", "Its thread is interrupted at once", "It restarts from the beginning", "The JVM stops it with an error"], answer: 0 }
+    explain: "join() waits forever, so every remote call needs orTimeout or completeOnTimeout. A timeout or cancel only completes the future: the running supplier is not interrupted and keeps going."
+    reteach: "### Syntax: orTimeout and completeOnTimeout"
+
+  - id: q12
+    type: mcq
+    concept: all-of
+    prompt: "allOf(payment, lock) is waiting. payment fails at once, and lock needs 300 ms more. What happens?"
+    choices: ["lock still runs to the end, then allOf completes with payment's exception", "allOf fails at once and cancels lock", "allOf ignores the failure and succeeds", "lock is restarted"]
+    answer: 0
+    explain: "allOf waits for every future and cancels none. When they are all done, it fails if any of them failed."
+    reteach: "### When one future in allOf fails"

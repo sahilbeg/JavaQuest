@@ -1,9 +1,9 @@
 id: module-05-advanced-java/topic-03-executors
 title: "Executors and thread pools"
 order: 3
-minutes: 9
+minutes: 15
 prerequisites: [module-05-advanced-java/topic-02-synchronization]
-concepts: [thread-pool, executor-service, callable-future, invoke-all, shutdown, task-exceptions]
+concepts: [thread-pool, executor-service, callable-future, invoke-all, shutdown, task-exceptions, production-pools]
 practice:
   kind: code
   runner: plain

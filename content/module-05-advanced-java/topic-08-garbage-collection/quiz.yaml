@@ -35,7 +35,9 @@ questions:
     variants:
       - { prompt: "What happens during a stop-the-world pause?", choices: ["Every thread of your program stops until the collector finishes", "Only the main thread stops", "The JVM restarts", "The program keeps running at full speed"], answer: 0 }
       - { prompt: "Which collection usually pauses the longest?", choices: ["A full collection of a crowded heap", "A minor collection of the young generation", "A collection with no garbage", "A call to WeakReference.get()"], answer: 0 }
-    explain: "Stop-the-world pauses halt all threads. A full collection checks the whole heap at once, so it usually takes longest."
+      - { prompt: "Which part of G1's work runs while your program keeps running?", choices: ["Marking the live objects in the old generation", "Copying live objects in a young collection", "Copying live objects in a mixed collection", "A full collection"], answer: 0 }
+      - { prompt: "A GC log line ends with 24M->5M(64M) 3.569ms. How long did your program stand still?", choices: ["3.569 milliseconds", "24 milliseconds", "64 milliseconds", "It did not stop at all"], answer: 0 }
+    explain: "Stop-the-world pauses halt all threads. A full collection checks the whole heap at once, so it usually takes longest. G1 marks while you run, but copies objects (young and mixed collections) in short pauses. The last number of a GC log line is the pause time."
     reteach: "## Concept"
 
   - id: q05

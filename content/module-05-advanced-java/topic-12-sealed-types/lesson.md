@@ -51,13 +51,13 @@ An abstract sealed class works as well. Use it when the parent has shared fields
 
 ```java
 abstract sealed class Bike permits ClassicBike, EBike {
-    abstract double perMinute();
+    abstract long centsPerMinute();
 }
 final class ClassicBike extends Bike {
-    double perMinute() { return 0.15; }
+    long centsPerMinute() { return 15; }
 }
 final class EBike extends Bike {
-    double perMinute() { return 0.30; }
+    long centsPerMinute() { return 30; }
 }
 ```
 

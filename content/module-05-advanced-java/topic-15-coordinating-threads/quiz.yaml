@@ -1,0 +1,131 @@
+topic: module-05-advanced-java/topic-15-coordinating-threads
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: count-down-latch
+    prompt: "The server must not open until 5 station check threads have finished. Which tool fits best?"
+    choices: ["A CountDownLatch with a count of 5", "A Semaphore with 5 permits", "A ReadWriteLock", "A plain ArrayList that every check adds to"]
+    answer: 0
+    explain: "Each check calls countDown() when it finishes. The server calls await, which returns once the count reaches 0."
+    reteach: "### Syntax: CountDownLatch"
+
+  - id: q02
+    type: predict-output
+    concept: count-down-latch
+    code: |
+      import java.util.concurrent.CountDownLatch;
+
+      public class Main {
+          public static void main(String[] args) throws InterruptedException {
+              CountDownLatch latch = new CountDownLatch(3);
+              latch.countDown();
+              latch.countDown();
+              System.out.println(latch.getCount());
+              latch.countDown();
+              latch.countDown();
+              System.out.println(latch.getCount());
+              latch.await();
+              System.out.println("open");
+          }
+      }
+    answer: "1\n0\nopen"
+    explain: "Two countDowns take 3 to 1. The third reaches 0, and the extra one does nothing. The latch is open, so await returns at once."
+    reteach: "### Syntax: CountDownLatch"
+
+  - id: q03
+    type: fill-blank
+    concept: semaphore
+    prompt: "permits.___();   // give the permit back, in finally"
+    answers: ["release"]
+    explain: "acquire() takes a permit and release() gives it back. Put release() in finally so an exception cannot leak the permit."
+    reteach: "### Syntax: Semaphore"
+
+  - id: q04
+    type: order
+    concept: semaphore
+    prompt: "Put the lines in order: try for a permit for 200 ms, call the provider, and give the permit back."
+    items:
+      - "if (permits.tryAcquire(200, TimeUnit.MILLISECONDS)) {"
+      - "try { callPaymentProvider(); }"
+      - "finally { permits.release(); }"
+      - "}"
+    explain: "Release only a permit you got, so the try and finally sit inside the if."
+    reteach: "### Syntax: tryAcquire with a timeout"
+
+  - id: q05
+    type: spot-the-bug
+    concept: semaphore
+    prompt: "charge(rentalId) sometimes throws. Which line must move into a finally block, or the permits leak away?"
+    code: |
+      void pay(String rentalId) throws InterruptedException {
+          permits.acquire();
+          charge(rentalId);
+          permits.release();
+      }
+    bugLine: 4
+    explain: "When charge throws, line 4 never runs and the permit is lost. After enough failures, every call waits. Use try { charge(rentalId); } finally { permits.release(); }."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: mcq
+    concept: cyclic-barrier
+    variants:
+      - { prompt: "What makes a CyclicBarrier different from a CountDownLatch?", choices: ["A barrier waits for a group of threads to arrive, and resets itself for the next round", "A barrier can only be used by one thread", "A barrier limits how many threads run at once", "A barrier counts events and opens once, for good"], answer: 0 }
+      - { prompt: "Two trucks wait at a CyclicBarrier(3), each with a 2-second timeout. The third truck never comes. What happens?", choices: ["One truck gets a TimeoutException, the other a BrokenBarrierException, and later awaits fail at once until reset()", "Both trucks wait forever", "After 2 seconds both trucks go on, as if all three had arrived", "The barrier quietly lowers its count to 2 and opens"], answer: 0 }
+    explain: "A barrier is a meeting point for a group of threads, used round after round. If one waiting thread times out, the barrier breaks for everyone until reset() is called."
+    reteach: "### When a barrier breaks"
+
+  - id: q07
+    type: mcq
+    concept: read-write-lock
+    prompt: "Which job does a ReadWriteLock suit best?"
+    choices: ["A price board read by thousands of riders and changed twice a day", "A counter that every thread adds 1 to all the time", "Passing rides from one producer thread to one consumer thread", "Waiting until five station checks finish"]
+    answer: 0
+    explain: "Many readers can hold the read lock together. It pays off when reads far outnumber writes and each read takes some time."
+    reteach: "### Syntax: ReadWriteLock"
+
+  - id: q08
+    type: mcq
+    concept: read-write-lock
+    prompt: "A thread holds the read lock of a ReentrantReadWriteLock and then calls writeLock().lock(). What happens?"
+    choices: ["It waits forever, because the write lock waits for every reader to leave, including itself", "It upgrades to the write lock straight away", "It throws IllegalMonitorStateException", "Every other reader is thrown out of the read lock"]
+    answer: 0
+    explain: "A read lock cannot be upgraded. Unlock the read lock first, then take the write lock and check the data again."
+    reteach: "### Syntax: ReadWriteLock"
+
+  - id: q09
+    type: mcq
+    concept: wait-notify
+    prompt: "Why must the check around wait() be a while loop, not an if?"
+    choices: ["A thread can wake up while the condition is still not true, so it must check again", "if statements are not allowed inside synchronized blocks", "A while loop makes the thread wait less", "wait() only compiles inside a loop"]
+    answer: 0
+    explain: "Threads can wake up with nothing changed, or another thread can get there first. The while loop checks again before going on."
+    reteach: "### wait and notify: know them when you see them"
+
+  - id: q10
+    type: mcq
+    concept: blocking-queue
+    prompt: "An ArrayBlockingQueue with capacity 2 already holds 2 rides. A thread calls put(\"rental-3\"). What happens?"
+    choices: ["put waits until a consumer takes a ride out", "put throws IllegalStateException", "The oldest ride is thrown away", "The queue grows to hold 3"]
+    answer: 0
+    explain: "A bounded queue makes a fast producer wait while it is full. That limit protects your memory."
+    reteach: "### BlockingQueue: producer and consumer, again"
+
+  - id: q11
+    type: fill-blank
+    concept: timeouts
+    prompt: "String ride = rides.___(500, TimeUnit.MILLISECONDS);   // null if nothing arrives in time"
+    answers: ["poll"]
+    explain: "poll(time, unit) waits at most that long and returns null on a timeout. take() would wait forever."
+    reteach: "### Always use a timeout"
+
+  - id: q12
+    type: mcq
+    concept: timeouts
+    prompt: "A latch's count is still 1 after 2 seconds. What does latch.await(2, TimeUnit.SECONDS) do?"
+    choices: ["It returns false", "It returns true", "It throws TimeoutException", "It keeps waiting until the count is 0"]
+    answer: 0
+    explain: "The timed await returns true when the count reached 0 in time, and false when time ran out. Your code then decides what to do."
+    reteach: "### Syntax: CountDownLatch"

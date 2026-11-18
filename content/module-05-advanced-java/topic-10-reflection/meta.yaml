@@ -1,9 +1,9 @@
 id: module-05-advanced-java/topic-10-reflection
 title: "Reflection"
 order: 10
-minutes: 10
+minutes: 12
 prerequisites: [module-05-advanced-java/topic-09-classloading]
-concepts: [class-objects, reading-fields, invoking-methods, creating-objects, record-components, reflection-costs]
+concepts: [class-objects, reading-fields, invoking-methods, creating-objects, record-components, reflection-costs, dynamic-proxies]
 practice:
   kind: code
   runner: plain

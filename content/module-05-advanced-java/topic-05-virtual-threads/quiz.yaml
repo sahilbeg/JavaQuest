@@ -26,8 +26,8 @@ questions:
     prompt: "On Java 21, which code risks pinning a virtual thread to its carrier?"
     choices: ["A slow network call inside a synchronized block", "A call to Thread.sleep outside any lock", "Calling isVirtual()", "Submitting a task to newVirtualThreadPerTaskExecutor"]
     answer: 0
-    explain: "Waiting inside synchronized code can pin the virtual thread, so its carrier stays blocked."
-    reteach: "## Concept"
+    explain: "On Java 21, waiting inside synchronized code can pin the virtual thread, so its carrier stays blocked. Java 24 fixed this; on 21, use a ReentrantLock around slow work."
+    reteach: "### Pinning, in one line"
 
   - id: q04
     type: fill-blank
@@ -123,3 +123,21 @@ questions:
     answer: 0
     explain: "close() waits for all submitted tasks and then shuts down, so code after the block sees every result."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: limit-concurrency
+    prompt: "10,000 virtual threads each call the payment service, which can handle about 10 calls at once. What is the usual fix?"
+    choices: ["A Semaphore with 10 permits: acquire before the call, release in finally", "Switch to platform threads so fewer start", "Add Thread.sleep before each call", "Wrap the call in synchronized"]
+    answer: 0
+    explain: "Virtual threads are cheap, but the payment service and the database are not. A Semaphore caps how many tasks do the risky part at once, while the rest park cheaply."
+    reteach: "### Limiting concurrency with a Semaphore"
+
+  - id: q12
+    type: mcq
+    concept: pinning
+    prompt: "On Java 21, a virtual thread must hold a lock while it calls a slow service. Which lock lets it park instead of pinning its carrier?"
+    choices: ["A ReentrantLock", "A synchronized block on this", "A synchronized method", "A synchronized block on a private object"]
+    answer: 0
+    explain: "On Java 21, every form of synchronized pins a waiting virtual thread. A virtual thread waiting inside ReentrantLock code parks normally."
+    reteach: "### Pinning, in one line"

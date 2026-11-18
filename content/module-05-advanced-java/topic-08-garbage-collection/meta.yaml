@@ -1,7 +1,7 @@
 id: module-05-advanced-java/topic-08-garbage-collection
 title: "Garbage collection"
 order: 8
-minutes: 9
+minutes: 12
 prerequisites: [module-05-advanced-java/topic-07-jvm-memory]
 concepts: [reachability, generations, gc-pauses, collectors, gc-leaks, weak-references]
 practice:

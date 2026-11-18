@@ -2,7 +2,7 @@
 
 Picture a pizza shop that hires a new cook for every single order. Each cook needs an apron, a locker and a quick training. Then the cook makes one pizza and goes home. On a busy Friday the shop fills with cooks and runs out of lockers.
 
-A smart shop keeps four cooks. Orders wait on a rail, and each free cook grabs the next one. That is exactly what Jiraiya's ticket needs. Your sensor check starts a new thread for every dock, and with 60 docks the kiosk runs out of memory.
+A smart shop keeps four cooks. Orders wait on a rail, and each free cook grabs the next one. That is exactly what Jiraiya's ticket needs. Your sensor check starts a new thread for every dock. With 60 docks, every few seconds, the kiosk slows to a crawl.
 
 ## Concept
 
@@ -155,6 +155,200 @@ public class Main {
 }
 ```
 
+### submit hides exceptions nobody reads
+
+The future keeps the exception until someone calls `get()`. So if nobody ever calls `get()`, nobody ever sees the error. No message, no stack trace, nothing in the logs.
+
+```java run
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class Main {
+    public static void main(String[] args) {
+        Runnable broken = () -> {
+            throw new IllegalStateException("sensor offline");
+        };
+        try (ExecutorService pool = Executors.newFixedThreadPool(2)) {
+            pool.submit(broken);
+        }
+        System.out.println("done, and no error anywhere");
+    }
+}
+```
+
+This is a classic production bug. A nightly job "runs" for weeks, but every task fails in silence. `execute(job)` is the other way to hand a `Runnable` to a pool. It returns nothing, so the exception is not stored. It escapes the pool thread, and Java prints it. Swap `pool.submit(broken)` for `pool.execute(broken)` and you get a real run's output like this:
+
+```text
+Exception in thread "pool-1-thread-1" java.lang.IllegalStateException: sensor offline
+	at Main.lambda$main$0(Main.java:7)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+```
+
+The rule: if you `submit`, always call `get()` on the future, or catch and log inside the task. For fire-and-forget jobs, `execute` at least shows the error.
+
+### Syntax: get with a timeout
+
+```java nocompile
+String line = future.get(200, TimeUnit.MILLISECONDS);
+```
+
+Plain `get()` waits forever. If a sensor never answers, the kiosk hangs with it. `get(time, unit)` waits at most that long, then throws `TimeoutException`. Every call to something slow, like a network, deserves a time limit.
+
+```java run
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
+        try (ExecutorService pool = Executors.newFixedThreadPool(2)) {
+            Future<String> check = pool.submit(() -> {
+                Thread.sleep(5_000);   // the Depot-7 sensor never answers in time
+                return "Depot-7: ok";
+            });
+            try {
+                System.out.println(check.get(200, TimeUnit.MILLISECONDS));
+            } catch (TimeoutException e) {
+                System.out.println("Depot-7: no answer in 200 ms");
+                check.cancel(true);    // true: interrupt the thread running it
+            }
+            System.out.println("cancelled: " + check.isCancelled());
+        }
+    }
+}
+```
+
+A timeout only stops *you* waiting. The task keeps running on its pool thread. `cancel(true)` interrupts that thread, and `Thread.sleep` wakes up with `InterruptedException`. Without the cancel, the pool's `close()` would wait the full 5 seconds.
+
+### Shutting down and timeouts
+
+Try-with-resources waits forever for tasks to finish. A server that is shutting down cannot wait forever. Here is the standard three-step shutdown:
+
+```java run
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        ExecutorService pool = Executors.newFixedThreadPool(1);
+        pool.submit(() -> {
+            try {
+                Thread.sleep(5_000);   // a sensor that hangs
+                System.out.println("slow check finished");
+            } catch (InterruptedException e) {
+                System.out.println("slow check interrupted");
+                Thread.currentThread().interrupt();
+            }
+        });
+        pool.submit(() -> System.out.println("Harbor-2 checked"));
+
+        pool.shutdown();                                            // 1. take no new tasks
+        if (!pool.awaitTermination(200, TimeUnit.MILLISECONDS)) {   // 2. wait a little
+            int neverStarted = pool.shutdownNow().size();           // 3. interrupt the rest
+            pool.awaitTermination(1, TimeUnit.SECONDS);
+            System.out.println("tasks that never started: " + neverStarted);
+        }
+        System.out.println("pool stopped: " + pool.isTerminated());
+    }
+}
+```
+
+1. `shutdown()` refuses new tasks but lets queued ones run.
+2. `awaitTermination` returns a `boolean`. `false` means time ran out. Always check it. Giving up waiting stops nothing: the slow task is still running.
+3. `shutdownNow()` interrupts every running task and hands back the tasks that never started. Here `Harbor-2` never got a turn.
+
+```callout warning
+`shutdownNow()` can only ask. A task that ignores interrupts, such as one with an empty `catch (InterruptedException e) {}`, keeps running anyway.
+```
+
+### Production thread pools
+
+`Executors.newFixedThreadPool(4)` hides a trap. Its waiting line is **unbounded**: it has no size limit. If tasks arrive faster than 4 threads can finish them, the queue just grows. At rush hour it can hold millions of tasks, and the JVM runs out of memory.
+
+Real servers build the pool by hand with `ThreadPoolExecutor`, so every limit is visible:
+
+```java nocompile
+new ThreadPoolExecutor(
+    4, 8,                               // core threads, max threads
+    30, TimeUnit.SECONDS,               // idle time before extra threads stop
+    new ArrayBlockingQueue<>(100),      // a bounded queue: at most 100 tasks wait
+    threadFactory,                      // makes (and names) the threads
+    new ThreadPoolExecutor.CallerRunsPolicy());   // what to do when everything is full
+```
+
+The pool keeps 4 **core** threads. New tasks wait in the queue. Only when the queue is full does it add threads, up to 8. When the queue and all 8 threads are full, the **rejection policy** decides:
+
+- `AbortPolicy` (the default) throws `RejectedExecutionException`.
+- `CallerRunsPolicy` runs the task on the thread that submitted it. That slows the sender down, which is often what you want.
+- `DiscardPolicy` drops the task without a word. Avoid it unless losing work is fine.
+
+```java run
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        ThreadPoolExecutor pool = new ThreadPoolExecutor(
+                2, 2, 30, TimeUnit.SECONDS,
+                new ArrayBlockingQueue<>(2),
+                new ThreadPoolExecutor.AbortPolicy());
+        Runnable slowCheck = () -> {
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        };
+        for (int dock = 1; dock <= 5; dock++) {
+            try {
+                pool.execute(slowCheck);
+                System.out.println("Harbor-" + dock + " accepted");
+            } catch (RejectedExecutionException e) {
+                System.out.println("Harbor-" + dock + " rejected: pool and queue are full");
+            }
+        }
+        pool.shutdown();
+        pool.awaitTermination(5, TimeUnit.SECONDS);
+    }
+}
+```
+
+Two threads take docks 1 and 2. Docks 3 and 4 wait in the queue. Dock 5 has nowhere to go. A clear "no" is better than a server that slowly fills its memory.
+
+### How many threads?
+
+The right pool size depends on what the tasks do.
+
+- **CPU work** (maths, sorting): about one thread per core. More threads only add context switches.
+- **Waiting work** (network, database): threads spend most of their time idle, so you can run more.
+
+A handy rule of thumb:
+
+```text
+threads ≈ cores × (1 + wait time / compute time)
+```
+
+Say a sensor check computes for 10 ms and waits 90 ms for the network, on 8 cores. That gives 8 × (1 + 90 / 10) = 80 threads. Treat the answer as a starting point, then measure under real load. `Runtime.getRuntime().availableProcessors()` tells your program how many cores it has.
+
+### Syntax: naming pool threads
+
+```java nocompile
+ThreadFactory names = Thread.ofPlatform().name("sensor-", 1).factory();
+ExecutorService pool = Executors.newFixedThreadPool(4, names);
+```
+
+```callout jargon
+A **ThreadFactory** is an object the pool asks whenever it needs a new thread. You use it to give the threads clear names.
+```
+
+`name("sensor-", 1)` names the threads `sensor-1`, `sensor-2` and so on. In a thread dump or a log line, `sensor-3` tells you at once which pool is stuck. `pool-7-thread-3` tells you nothing.
+
 ## Worked example
 
 Here is a small version of the sensor check. It uses a pool of 3 threads for 5 Uptown docks and keeps the results in order.
@@ -208,12 +402,10 @@ For CPU work, use about one thread per core. Slow network work can use more, and
 
 ## Recap
 
-- Creating a thread for every task costs memory and time. A pool reuses a few threads.
-- `Executors.newFixedThreadPool(n)` makes an `ExecutorService` with `n` threads.
-- `submit` takes a `Runnable` or a `Callable` and returns a `Future`. `get()` waits for the result.
-- `invokeAll` runs a list of callables and returns their futures in order.
-- Always shut a pool down. Try-with-resources does it for you, and its `close()` waits.
-- An exception inside a task comes out of `get()` as an `ExecutionException`. `getCause()` holds the original.
+- A pool reuses a few threads. `Executors.newFixedThreadPool(n)` makes one, but its queue has no limit. Production pools use `ThreadPoolExecutor` with a bounded queue, a rejection policy and named threads.
+- `submit` takes a `Runnable` or a `Callable` and returns a `Future`. `get()` waits for the result. `invokeAll` runs a list of callables and returns their futures in order.
+- Always shut a pool down: `shutdown`, `awaitTermination` (check the boolean), then `shutdownNow`. Give every `get()` a timeout.
+- An exception inside a task comes out of `get()` as an `ExecutionException`. If nobody calls `get()`, the error vanishes.
 
 ## Common mistakes
 

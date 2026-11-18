@@ -1,0 +1,24 @@
+id: module-05-advanced-java/topic-14-memory-model
+title: "The Java Memory Model: visibility and volatile"
+order: 14
+minutes: 15
+prerequisites: [module-05-advanced-java/topic-13-pattern-matching]
+concepts: [stale-reads, volatile, volatile-not-atomic, happens-before, safe-publication, immutable-objects, lazy-singleton]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0514
+  from: theo
+  title: "The Harbor sensor will not stop"
+  body: >
+    Last night I pressed Stop on the Harbor dock sensor. The dashboard said "stopped", but the sensor
+    thread kept spinning at 100% CPU until I restarted the server. In the middle of rush hour the
+    "peak riders online" number on the dashboard went down. That should never happen. The fare
+    table also seems to get built more than once. Can you make these classes safe to share between threads?
+hints:
+  - "When one thread writes a field and another reads it, Java needs a rule that makes the write visible. For a simple on/off flag, that rule is volatile."
+  - "volatile does not make rides++ or a check-then-write max safe. Immutable means a final class, private final fields, a List.copyOf copy in the constructor, and with-methods that return a new object."
+  - "Write private volatile boolean running = true; and running = false; in stop(). In RideStats use a LongAdder (increment, sum) and an AtomicInteger with accumulateAndGet(ridersOnline, Math::max). In FareTable add private static final class Holder { static final FareTable INSTANCE = new FareTable(); } and return Holder.INSTANCE."
+review: true

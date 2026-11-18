@@ -111,7 +111,7 @@ questions:
   - id: q08
     type: mcq
     concept: deadlock
-    prompt: "Thread A locks Harbor then Uptown. Thread B locks Uptown then Harbor. What can happen?"
+    prompt: "Thread A locks wallet 17 then wallet 42. Thread B locks wallet 42 then wallet 17. What can happen?"
     choices: ["A deadlock: each holds one lock and waits forever for the other", "Both finish faster", "A compile error", "The count goes negative"]
     answer: 0
     explain: "Taking two locks in opposite order can leave each thread waiting for the other forever."
@@ -124,12 +124,30 @@ questions:
     choices: ["Every thread takes the locks in the same fixed order", "Call Thread.sleep before each lock", "Remove all locks", "Start the threads in a different order"]
     answer: 0
     explain: "If every thread takes lock 1 before lock 2, no thread can hold lock 2 while waiting for lock 1."
-    reteach: "## Concept"
+    reteach: "### The four conditions for deadlock"
 
   - id: q10
     type: fill-blank
     concept: check-then-act
     prompt: "synchronized (___) { if (bikes > 0) { bikes--; } }   // lock (the current object)"
     answers: ["this"]
-    explain: "A synchronized block names the object whose lock it takes. Inside an instance method, this is the usual choice."
+    explain: "A synchronized block names the object whose lock it takes, and this is the current object. In real code, a private final lock object is safer, because outside code cannot grab it."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: thread-dump
+    variants:
+      - { prompt: "The kiosk app has frozen but not crashed. Which command shows what every thread is doing?", choices: ["jcmd <pid> Thread.print", "java -version", "javac -verbose", "jcmd <pid> VM.version"], answer: 0 }
+      - { prompt: "A thread dump shows two threads in state BLOCKED, each waiting to lock a monitor held by the other. What is this?", choices: ["A deadlock", "A race condition that lost an update", "A thread waiting in Thread.sleep", "A normal, healthy program"], answer: 0 }
+    explain: "jcmd <pid> Thread.print (or jstack <pid>) prints a thread dump. Two BLOCKED threads, each holding what the other wants, is a deadlock, and the JVM reports it as \"Found one Java-level deadlock\"."
+    reteach: "### Finding a deadlock"
+
+  - id: q12
+    type: mcq
+    concept: deadlock
+    prompt: "Taking locks in a fixed order prevents deadlock. Which of the four deadlock conditions does it break?"
+    choices: ["Circular wait", "Mutual exclusion", "No preemption", "Hold and wait"]
+    answer: 0
+    explain: "With a fixed lock order, a thread never waits for a lock ranked below one it holds, so no circle of waiting threads can form."
+    reteach: "### The four conditions for deadlock"

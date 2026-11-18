@@ -1,9 +1,9 @@
 id: module-05-advanced-java/topic-06-concurrent-collections
 title: "Concurrent collections and atomics"
 order: 6
-minutes: 10
+minutes: 13
 prerequisites: [module-05-advanced-java/topic-05-virtual-threads]
-concepts: [unsafe-collections, concurrent-hash-map, atomics, copy-on-write, blocking-queue]
+concepts: [unsafe-collections, concurrent-hash-map, atomics, copy-on-write, blocking-queue, chm-traps]
 practice:
   kind: code
   runner: plain

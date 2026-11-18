@@ -1,7 +1,7 @@
 id: module-05-advanced-java/topic-07-jvm-memory
 title: "JVM memory: stack, heap, metaspace"
 order: 7
-minutes: 9
+minutes: 14
 prerequisites: [module-05-advanced-java/topic-06-concurrent-collections]
 concepts: [stack, heap, metaspace, references, memory-flags, memory-leak]
 practice:

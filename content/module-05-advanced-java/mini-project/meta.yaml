@@ -2,7 +2,7 @@ id: module-05-advanced-java/mini-project
 title: "FEAT-05: Bike telemetry ingester"
 order: 100
 minutes: 12
-prerequisites: [module-05-advanced-java/topic-13-pattern-matching]
+prerequisites: [module-05-advanced-java/topic-15-coordinating-threads]
 concepts: [sealed-types, pattern-matching, executors, concurrent-collections]
 practice:
   kind: code

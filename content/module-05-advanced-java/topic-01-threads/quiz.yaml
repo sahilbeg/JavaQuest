@@ -111,3 +111,21 @@ questions:
     answer: 0
     explain: "The second argument of the Thread constructor is the thread's name."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: interrupt
+    prompt: "Your task catches InterruptedException and cannot throw it on. What should the catch block do?"
+    choices: ["Call Thread.currentThread().interrupt() so the stop request is not lost", "Nothing: an empty catch block is fine", "Call Thread.sleep again until it works", "Call System.exit(0)"]
+    answer: 0
+    explain: "Throwing InterruptedException clears the interrupt flag. Setting it again keeps the stop request for code higher up in the same thread, such as the loop that called your method."
+    reteach: "### Restoring the interrupt flag"
+
+  - id: q12
+    type: mcq
+    concept: processes-and-cores
+    variants:
+      - { prompt: "A laptop has one core and runs two threads that take turns. What is this?", choices: ["Concurrency without parallelism", "Parallelism without concurrency", "Two processes", "A deadlock"], answer: 0 }
+      - { prompt: "What is a context switch?", choices: ["The operating system pausing one thread on a core and resuming another", "A thread moving to a different program", "Java copying a process's memory", "A thread calling join()"], answer: 0 }
+    explain: "Taking turns on one core is concurrency. Running at the same instant on several cores is parallelism. Swapping threads on a core is a context switch, and it has a small cost."
+    reteach: "### Processes, threads and cores"

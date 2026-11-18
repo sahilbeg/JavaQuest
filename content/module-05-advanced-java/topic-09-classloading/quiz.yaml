@@ -16,7 +16,8 @@ questions:
     variants:
       - { prompt: "When does a class's static { } block run?", choices: ["Once, the first time the class is used", "Every time you create an object", "When javac compiles the class", "Every time the class's static method is called"], answer: 0 }
       - { prompt: "A class is never used by the program. What happens to its static block?", choices: ["It never runs", "It runs when the program starts", "It runs when the program ends", "It runs when javac compiles it"], answer: 0 }
-    explain: "Classes load lazily. The static block runs once, on first use, and never if the class is not used."
+      - { prompt: "Eight threads use a class for the first time at the same moment. How many times does its static block run?", choices: ["Exactly once: the JVM lets one thread run it and the others wait", "Eight times, once per thread", "Between one and eight times, depending on timing", "Never, because of the race"], answer: 0 }
+    explain: "Classes load lazily. The static block runs once, on first use, and never if the class is not used. The JVM runs it under a lock, so even a race of threads runs it exactly once."
     reteach: "## Concept"
 
   - id: q03
@@ -52,7 +53,8 @@ questions:
     variants:
       - { prompt: "Code compiled fine, but at run time a class it uses is missing. What does the JVM throw?", choices: ["NoClassDefFoundError", "ClassNotFoundException", "StackOverflowError", "IllegalArgumentException"], answer: 0 }
       - { prompt: "Class.forName(\"jq.kiosk.Missing\") finds no class. What is thrown?", choices: ["ClassNotFoundException", "NoClassDefFoundError", "NullPointerException", "OutOfMemoryError"], answer: 0 }
-    explain: "Loading by name throws ClassNotFoundException. A direct use from compiled code throws NoClassDefFoundError."
+      - { prompt: "The kiosk was compiled against fares-2.jar but runs with fares-1.jar, which lacks a method the kiosk calls. What does the JVM throw?", choices: ["NoSuchMethodError", "ClassNotFoundException", "A compile error", "StackOverflowError"], answer: 0 }
+    explain: "Loading by name throws ClassNotFoundException. A direct use of a missing class throws NoClassDefFoundError. A class that is there but lacks the method your bytecode needs throws NoSuchMethodError, the sign of a library version conflict."
     reteach: "## Worked example"
 
   - id: q07
