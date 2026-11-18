@@ -39,10 +39,10 @@ questions:
   - id: q05
     type: mcq
     concept: log-levels
-    prompt: "A rider's payment is declined because the amount is too high. The kiosk handles it and shows a message. Which level fits?"
+    prompt: "The payment provider timed out once. The kiosk retried, and the retry worked. Which level fits?"
     choices: ["WARN", "TRACE", "DEBUG", "ERROR"]
     answer: 0
-    explain: "The event is odd but handled, which is WARN. ERROR is for failures that need a human."
+    explain: "The event is odd but handled, which is WARN. ERROR is for failures that need a human. A normal decline by the bank is just INFO."
     reteach: "## Concept"
 
   - id: q06
@@ -70,9 +70,9 @@ questions:
     type: mcq
     concept: parameterized-messages
     prompt: "Why use log.debug(\"ride {}\", ride) instead of log.debug(\"ride \" + ride)?"
-    choices: ["With {}, SLF4J skips building the text when DEBUG is switched off", "The + version does not compile", "The {} version also prints a stack trace", "The + version always logs at ERROR"]
+    choices: ["With {}, SLF4J skips building the text and calling ride.toString() when DEBUG is switched off", "The + version does not compile", "The {} version also prints a stack trace", "The + version always logs at ERROR"]
     answer: 0
-    explain: "Joining with + builds the text every time. Placeholders let SLF4J skip that work for hidden lines and keep one template."
+    explain: "Joining with + builds the text every time. Placeholders let SLF4J skip the formatting for hidden lines and keep one template. The arguments themselves are still evaluated."
     reteach: "## Concept"
 
   - id: q08
@@ -119,3 +119,21 @@ questions:
     answer: 0
     explain: "Only the last 4 digits may appear. Logs are copied and kept for months."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: parameterized-messages
+    prompt: "DEBUG is switched off. The code runs log.debug(\"report {}\", buildReport()). What happens?"
+    choices: ["buildReport() still runs, but no line is written", "Nothing runs: SLF4J skips buildReport() too", "The line is written anyway, because it uses {}", "It throws, because DEBUG is off"]
+    answer: 0
+    explain: "Java evaluates every argument before the call. Guard slow arguments with if (log.isDebugEnabled()) or a supplier: log.atDebug().addArgument(() -> buildReport())."
+    reteach: "### Expensive arguments still run"
+
+  - id: q12
+    type: mcq
+    concept: logging-in-production
+    prompt: "A server thread runs MDC.put(\"ride\", \"rental-17\") but never removes it. The pool reuses that thread for the next request. What goes wrong?"
+    choices: ["The next request's log lines are labelled rental-17 too", "The next request crashes with an exception", "Nothing: the MDC clears itself after each log line", "The label is written to the database"]
+    answer: 0
+    explain: "The MDC belongs to the thread, not the request. Clear it in finally, or use MDC.putCloseable in try-with-resources."
+    reteach: "### Syntax: clearing the MDC"

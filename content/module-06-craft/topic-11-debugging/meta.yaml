@@ -1,9 +1,9 @@
 id: module-06-craft/topic-11-debugging
 title: "Debugging with breakpoints and stack traces"
 order: 11
-minutes: 10
+minutes: 13
 prerequisites: [module-06-craft/topic-10-tdd]
-concepts: [stack-trace, null-pointer, breakpoints, stepping, bug-hunting, reproduce-first]
+concepts: [stack-trace, null-pointer, breakpoints, stepping, bug-hunting, reproduce-first, production-debugging]
 practice:
   kind: code
   runner: plain

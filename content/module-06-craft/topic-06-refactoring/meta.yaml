@@ -1,9 +1,9 @@
 id: module-06-craft/topic-06-refactoring
 title: "Refactoring safely"
 order: 6
-minutes: 10
+minutes: 12
 prerequisites: [module-06-craft/topic-05-behavioral-patterns]
-concepts: [refactoring, characterization-tests, small-steps, refactoring-moves, code-smells]
+concepts: [refactoring, characterization-tests, small-steps, refactoring-moves, code-smells, legacy-code]
 practice:
   kind: code
   runner: plain

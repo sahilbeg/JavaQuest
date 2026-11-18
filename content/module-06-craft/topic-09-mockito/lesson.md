@@ -66,6 +66,38 @@ when(gateway.charge("rider-9", 100)).thenThrow(new PaymentDeclinedException("car
 - `thenReturn(...)` gives the answer for that exact call.
 - `thenThrow(...)` makes that call throw instead. This is how you test a declined card without a real bank.
 
+### Syntax: doThrow for void methods
+
+`when(...)` needs a return value to wrap, so it cannot hold a `void` call like `refund`. For void methods, Mockito flips the order: the answer first, then the mock, then the call.
+
+```java nocompile
+doThrow(new IllegalStateException("bank is down")).when(gateway).refund("pay-3");
+```
+
+```java run
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+
+public class Main {
+    public static void main(String[] args) {
+        PaymentGateway gateway = mock(PaymentGateway.class);
+        doThrow(new IllegalStateException("bank is down")).when(gateway).refund("pay-3");
+
+        gateway.refund("pay-1");
+        System.out.println("pay-1 refunded quietly");
+        try {
+            gateway.refund("pay-3");
+        } catch (IllegalStateException e) {
+            System.out.println("pay-3 failed: " + e.getMessage());
+        }
+    }
+}
+
+interface PaymentGateway { String charge(String riderId, long cents); void refund(String paymentId); }
+```
+
+An unstubbed void method on a mock does nothing, so `pay-1` passes quietly. Only the stubbed call throws. Use this to test what your code does when a refund fails.
+
 ### Syntax: verify, times and never
 
 **Verification** means checking afterwards that a call happened, or did not.
@@ -117,6 +149,30 @@ class UnlockServiceTest {
 - `@ExtendWith(MockitoExtension.class)` plugs Mockito into JUnit.
 - Each `@Mock` field gets a fresh mock before every test.
 
+### Strict stubs: unused stubbing fails the test
+
+`MockitoExtension` is strict. If you stub a call that your test never makes, the test fails, even when every assertion passed.
+
+```java nocompile
+when(gateway.charge("rider-7", 100)).thenReturn("pay-1");
+when(lock.open("B-1042")).thenReturn(true);   // never used below
+
+assertEquals("pay-1", gateway.charge("rider-7", 100));
+```
+
+```
+org.mockito.exceptions.misusing.UnnecessaryStubbingException: 
+Unnecessary stubbings detected.
+Clean & maintainable test code requires zero unnecessary code.
+Following stubbings are unnecessary (click to navigate to relevant line of code):
+  1. -> at StrictTest.chargesTheRider(StrictTest.java:17)
+Please remove unnecessary stubbings or use 'lenient' strictness. More info: javadoc for UnnecessaryStubbingException class.
+```
+
+This is a friend, not an enemy. An unused stub often means the code took a path you did not expect, or the test is copy-pasted clutter. Fix: delete the stub. Use `lenient().when(...)` only for a shared stub that some tests truly skip.
+
+Strict stubs catch one more slip. If the code calls a stubbed method with different arguments, such as `charge("rider-8", 100)` instead of `"rider-7"`, the test fails with `PotentialStubbingProblem`. That usually means a typo in the test or a bug in the code.
+
 ### Mock interfaces you own
 
 Mock the interfaces your own team wrote, such as `PaymentGateway`. Do not mock the bank's library directly. Your interface is small and describes what Spoke needs. The bank's library is large and can change under you.
@@ -128,6 +184,66 @@ A test that mocks everything checks only that your code calls what it calls toda
 ```callout tip
 Gojo says: if a test has more when lines than assert lines, ask whether it still tests behaviour.
 ```
+
+### Choosing a test double
+
+Pick the simplest double that does the job, in this order:
+
+1. **A real object**, when it is fast and has no side effects, like a fare rule.
+2. **A fake**, when the real thing is slow or costly, but you want real behaviour.
+3. **A stub**, when you only need a canned answer.
+4. **A mock**, when the call itself is the result, such as "a refund was sent".
+
+```callout jargon
+**State verification** checks the result afterwards: a return value or a fake's contents. **Interaction verification** checks which calls happened, with `verify`. Prefer state; it breaks less often when the code inside changes.
+```
+
+```java run
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Main {
+    public static void main(String[] args) {
+        // a stub: canned answer, no logic
+        BikeLock alwaysStuck = bikeId -> false;
+        System.out.println("stub says open? " + alwaysStuck.open("B-1042"));
+
+        // a fake: a small working version
+        FakeGateway fake = new FakeGateway();
+        String id = fake.charge("rider-7", 100);
+        fake.refund(id);
+        System.out.println("fake balance for " + id + ": " + fake.charges.get(id));
+
+        // a spy: real code runs, and the calls are recorded
+        FakeGateway spied = spy(new FakeGateway());
+        spied.charge("rider-9", 250);
+        verify(spied).charge("rider-9", 250);
+        System.out.println("spy saw the charge, real code stored " + spied.charges);
+    }
+}
+
+interface BikeLock { boolean open(String bikeId); }
+interface PaymentGateway { String charge(String riderId, long cents); void refund(String paymentId); }
+
+class FakeGateway implements PaymentGateway {
+    final Map<String, Long> charges = new HashMap<>();
+
+    public String charge(String riderId, long cents) {
+        String id = "pay-" + (charges.size() + 1);
+        charges.put(id, cents);
+        return id;
+    }
+
+    public void refund(String paymentId) {
+        charges.put(paymentId, 0L);
+    }
+}
+```
+
+A hand-written stub can be a lambda. The fake keeps charges in a `HashMap`, so a test can check its contents (state). The spy runs the real fake and also records calls (interaction).
 
 ## Worked example
 
@@ -231,10 +347,10 @@ interface Receipts { void send(String riderId, String paymentId); }
 ## Recap
 
 - A test double stands in for a real object. Dummies fill gaps, stubs answer, fakes work simply, mocks record, spies wrap.
-- `when(...).thenReturn(...)` and `thenThrow(...)` script a mock's answers.
+- `when(...).thenReturn(...)` and `thenThrow(...)` script a mock's answers. `doThrow(...).when(mock)` does it for void methods.
 - `verify` with `times` and `never` checks which calls happened. `InOrder` checks their order.
 - Matchers like `any()` and `eq()` go on every argument or none. `ArgumentCaptor` grabs a passed value.
-- Mock the costly edges you own. Keep plain logic real, or the tests only mirror your code.
+- Prefer real objects, then fakes, then stubs, then mocks. Mock only the costly edges you own, or the tests only mirror your code.
 
 ## Common mistakes
 
@@ -262,7 +378,7 @@ when(receipts.send("rider-7", "pay-1")).thenReturn(null);
 error: 'void' type not allowed here
 ```
 
-`send` returns nothing, so there is nothing to stub. Fix: you usually do not stub it at all. Check it afterwards with `verify(receipts).send("rider-7", "pay-1")`.
+`send` returns nothing, so there is nothing to stub. Fix: you usually do not stub it at all. Check it afterwards with `verify(receipts).send("rider-7", "pay-1")`. To make a void method throw, use `doThrow(...).when(receipts).send(...)`.
 
 **3. Putting the call inside verify.**
 

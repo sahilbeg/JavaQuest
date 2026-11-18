@@ -256,6 +256,58 @@ class ChargeFacade {
 | Decorator | your interface | the same interface | add behaviour |
 | Facade | a new simple class | several parts | hide steps |
 
+### Proxy: a stand-in that controls access
+
+```callout jargon
+A **proxy** is a stand-in object. It implements the same interface as the real object and decides when, or whether, the real one gets the call.
+```
+
+A proxy is built like a decorator: same interface outside, real object inside. The difference is the purpose. A decorator adds behaviour. A proxy controls access: it loads the real object late, caches answers, checks permissions, or wraps a call in a transaction (a group of database changes that all succeed or all fail together).
+
+Here the fare table is slow to load, so a proxy waits until someone first asks.
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        FareTable fares = new LazyFareTable();
+        System.out.println("kiosk started");
+        System.out.println("EBIKE: " + fares.perMinuteCents("EBIKE"));
+        System.out.println("CARGO: " + fares.perMinuteCents("CARGO"));
+    }
+}
+
+interface FareTable {
+    long perMinuteCents(String bikeType);
+}
+
+class RealFareTable implements FareTable {
+    RealFareTable() {
+        System.out.println("loading fares from the database...");
+    }
+
+    public long perMinuteCents(String bikeType) {
+        return switch (bikeType) {
+            case "EBIKE" -> 30;
+            case "CARGO" -> 25;
+            default -> 15;
+        };
+    }
+}
+
+class LazyFareTable implements FareTable {
+    private FareTable real;
+
+    public long perMinuteCents(String bikeType) {
+        if (real == null) {
+            real = new RealFareTable();
+        }
+        return real.perMinuteCents(bikeType);
+    }
+}
+```
+
+The kiosk starts before any loading happens, and the table loads only once. You will meet proxies again in module 8: Spring wraps a `@Transactional` bean in a proxy that starts and ends the [transaction](/t/module-08-backend/topic-10-transactions) around each call.
+
 ## Worked example
 
 Here is the full Depot story for chargers: adapter, then decorator, then facade.

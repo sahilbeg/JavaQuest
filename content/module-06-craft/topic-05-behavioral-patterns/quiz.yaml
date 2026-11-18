@@ -140,3 +140,22 @@ questions:
     answer: "Undo: set Harbor to 2\n1"
     explain: "A stack is last in, first out. The newest command comes off first, and one command stays."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: more-patterns
+    variants:
+      - { prompt: "A bike can be AVAILABLE, RENTED or IN_REPAIR, and each status allows different actions. Which pattern lets each status decide what is allowed and what comes next?", choices: ["State", "Observer", "Facade", "Template method"], answer: 0 }
+      - { prompt: "Every Spoke report has the same header and footer, set in a final build() method of a parent class. Each subclass fills in only the middle. Which pattern is this?", choices: ["Template method", "Chain of responsibility", "Observer", "Command"], answer: 0 }
+      - { prompt: "Before an unlock, an account check, a balance check and a bike check run in a line. Each one either refuses or passes the request to the next. Which pattern is this?", choices: ["Chain of responsibility", "Template method", "State", "Strategy"], answer: 0 }
+    explain: "State lets each state object decide the next move. Template method fixes the steps in a final parent method and leaves blanks for subclasses. Chain of responsibility passes a request along a line of handlers."
+    reteach: "## Concept"
+
+  - id: q12
+    type: mcq
+    concept: pattern-choice
+    prompt: "Spoke has one pricing rule today and no plan for another. A teammate wants a PricingStrategy interface, a factory and a registry for it. What is the best advice?"
+    choices: ["Keep one plain method for now, and refactor to a strategy when a second rule really arrives", "Add the interface, factory and registry now, because patterns always make code better", "Use observer instead, because it is more flexible", "Write the rule as a chain of responsibility with one handler"]
+    answer: 0
+    explain: "YAGNI: a pattern with one case adds classes without removing any pain. Add it when the second or third case shows up."
+    reteach: "### When not to use a pattern"

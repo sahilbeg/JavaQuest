@@ -1,9 +1,9 @@
 id: module-06-craft/topic-05-behavioral-patterns
 title: "Behavioral patterns: strategy, observer, command"
 order: 5
-minutes: 10
+minutes: 14
 prerequisites: [module-06-craft/topic-04-structural-patterns]
-concepts: [strategy, observer, unsubscribe, command, undo-history]
+concepts: [strategy, observer, unsubscribe, command, undo-history, more-patterns, pattern-choice]
 practice:
   kind: code
   runner: plain

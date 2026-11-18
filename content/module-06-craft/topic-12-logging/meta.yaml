@@ -1,9 +1,9 @@
 id: module-06-craft/topic-12-logging
 title: "Logging with SLF4J"
 order: 12
-minutes: 10
+minutes: 14
 prerequisites: [module-06-craft/topic-11-debugging]
-concepts: [println-vs-logging, slf4j-logback, log-levels, parameterized-messages, logging-exceptions, masking-secrets]
+concepts: [println-vs-logging, slf4j-logback, log-levels, parameterized-messages, logging-exceptions, masking-secrets, logging-in-production]
 practice:
   kind: code
   runner: plain

@@ -1,0 +1,138 @@
+topic: module-06-craft/topic-13-object-oriented-design
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: requirements
+    prompt: "Jiraiya writes: \"Riders want to hold a bike from the app.\" What should you do first?"
+    choices: ["Ask questions until every rule is testable: how long, how many per rider, what if none is free", "Write a ReservationDesk class and fill in the details later", "Choose the strategy pattern, because pricing will change", "Draw the sequence diagram for picking up a bike"]
+    answer: 0
+    explain: "Design starts with clear requirements and scope. Classes, patterns and diagrams come after the questions."
+    reteach: "### Step 1: Clarify requirements and scope"
+
+  - id: q03
+    type: order
+    concept: requirements
+    prompt: "Put the parts of a 45-minute low-level design interview in order."
+    items:
+      - "Ask questions, list use cases and say what is out of scope"
+      - "Name the classes and sort them into entities, values and services"
+      - "Draw the class diagram"
+      - "Code the core interfaces, records and methods"
+      - "Walk through edge cases, two threads at once and a new requirement"
+    explain: "Clarify, find the classes, draw, code the core, then stress the design."
+    reteach: "### In an interview"
+
+  - id: q04
+    type: mcq
+    concept: nouns-and-verbs
+    variants:
+      - { prompt: "In \"A rider reserves a bike at a station\", which word most likely becomes a method?", choices: ["reserves", "rider", "bike", "station"], answer: 0 }
+      - { prompt: "In \"The reservation expires after ten minutes\", which word is a candidate class?", choices: ["reservation", "expires", "after", "ten"], answer: 0 }
+    explain: "Nouns are candidate classes or fields. Verbs are candidate methods."
+    reteach: "### Step 2: Find the nouns and the verbs"
+
+  - id: q05
+    type: mcq
+    concept: nouns-and-verbs
+    prompt: "Which of these is best modelled as a value object, such as a record?"
+    choices: ["A reservation: rider id, bike, dock id and expiry, never changed after it is made", "Bike B-1042, whose ride count goes up after every ride", "A rider account whose balance changes with each payment", "The desk that runs the reserve process"]
+    answer: 0
+    explain: "A value object is defined only by its values and never changes. The bike and the account are entities. The desk is a service."
+    reteach: "### Entities, value objects and services"
+
+  - id: q06
+    type: fill-blank
+    concept: responsibilities
+    prompt: "Give each job to the object that has the data. This rule is called: tell, don't ___."
+    answers: ["ask"]
+    explain: "Tell the object to do the job with its own data. Do not pull the data out and do the job somewhere else."
+    reteach: "### Step 3: Assign responsibilities"
+
+  - id: q07
+    type: mcq
+    concept: responsibilities
+    prompt: "Where should the rule \"a hold is active while now is before expiresAt\" live?"
+    choices: ["In Reservation, as a method isActiveAt(now)", "In every class that needs to know, each with its own copy", "In the live map, because it shows holds to riders", "In a static Utils class next to other helpers"]
+    answer: 0
+    explain: "The reservation owns expiresAt, so it owns the rule. One place means every caller agrees, even at exactly 09:10."
+    reteach: "### Step 3: Assign responsibilities"
+
+  - id: q08
+    type: mcq
+    concept: pattern-choice
+    variants:
+      - { prompt: "A bike moves AVAILABLE, RESERVED, RENTED, and some moves are not allowed. Which pattern fits?", choices: ["State", "Observer", "Factory", "Strategy"], answer: 0 }
+      - { prompt: "The live map and the truck drivers must both hear when a dock frees up. Which pattern fits?", choices: ["Observer", "State", "Factory", "Strategy"], answer: 0 }
+      - { prompt: "The price depends on the bike type, and more price rules are coming. Which pattern fits?", choices: ["Strategy", "Observer", "State", "Factory"], answer: 0 }
+    explain: "State handles stages with allowed moves. Observer tells many listeners about one event. Strategy swaps one rule for another."
+    reteach: "### Step 5: Pick patterns that earn their place"
+
+  - id: q09
+    type: mcq
+    concept: pattern-choice
+    prompt: "Spoke has exactly one price rule, and nobody plans a second one. What is the best design advice?"
+    choices: ["Use a plain method now, and add a strategy when a second rule arrives", "Add a PricingRule interface, a factory and a registry now, just in case", "Use the state pattern so prices can move through stages", "Put the rule in an observer so others hear about prices"]
+    answer: 0
+    explain: "A pattern must solve a real requirement. Start simple and refactor to the pattern when the second case arrives."
+    reteach: "### Step 5: Pick patterns that earn their place"
+
+  - id: q10
+    type: mcq
+    concept: errors-and-edge-cases
+    prompt: "At rush hour no e-bike is free. How should reserve report that?"
+    choices: ["Return Optional.empty(), because it is a normal outcome the caller must handle", "Throw IllegalStateException, because the rider made a mistake", "Return null, because there is no reservation", "Print \"no bike\" and return a fake reservation"]
+    answer: 0
+    explain: "An expected outcome is a result. Exceptions are for broken rules, such as a second hold for the same rider."
+    reteach: "### Step 6: Edge cases and errors"
+
+  - id: q11
+    type: predict-output
+    concept: errors-and-edge-cases
+    code: |
+      import java.util.Optional;
+
+      public class Main {
+          public static void main(String[] args) {
+              Optional<String> bike = find(false);
+              System.out.println(bike.orElse("no bike"));
+              System.out.println(find(true).map(id -> "walk to " + id).orElse("no bike"));
+          }
+
+          static Optional<String> find(boolean free) {
+              return free ? Optional.of("B-1042") : Optional.empty();
+          }
+      }
+    answer: "no bike\nwalk to B-1042"
+    explain: "The first call gives an empty Optional, so orElse supplies \"no bike\". The second holds B-1042, so map builds the message."
+    reteach: "### Step 6: Edge cases and errors"
+
+  - id: q12
+    type: spot-the-bug
+    concept: concurrency
+    prompt: "Many riders' threads call tryHold on the last bike at once. Which line must change so that only one rider can ever win?"
+    code: |
+      class Dock {
+          private String heldBy;
+
+          boolean tryHold(String riderId) {
+              if (heldBy != null) {
+                  return false;
+              }
+              heldBy = riderId;
+              return true;
+          }
+      }
+    bugLine: 4
+    explain: "Without synchronized, two threads can both pass the check before either sets heldBy. Write synchronized boolean tryHold(String riderId)."
+    reteach: "### Syntax: one synchronized method"
+
+  - id: q13
+    type: mcq
+    concept: extension
+    prompt: "Each BikeType constant carries its own per-minute rate, and the desk only knows the PricingRule interface. Spoke adds a KIDS bike at 10 cents a minute. What has to change?"
+    choices: ["One new line in the enum: KIDS(10)", "Every switch over bike types, in every class", "ReservationDesk and StandardPricing both", "Nothing can change without a rewrite"]
+    answer: 0
+    explain: "Open for extension, closed for modification: the rate lives on the type, so the new type brings its own rate."
+    reteach: "### Step 7: Plan for extension"

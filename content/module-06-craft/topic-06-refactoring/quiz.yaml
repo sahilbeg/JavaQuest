@@ -116,3 +116,21 @@ questions:
     bugLine: 3
     explain: "The padding step was dropped during the refactor, so 5 cents prints as $0.5. That changes the output, so it is no longer a refactoring."
     reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: code-smells
+    prompt: "InvoicePrinter.lineCents(ride) reads ride.minutes(), ride.type() and ride.membership() and does nothing else with InvoicePrinter. Which smell is this, and what is the usual fix?"
+    choices: ["Feature envy: move the method into the ride's class", "God class: delete InvoicePrinter", "Magic number: replace it with a constant", "Shotgun surgery: copy the method into every class"]
+    answer: 0
+    explain: "A method that mostly uses another class's data envies that class. Moving it there puts the logic next to the data it needs."
+    reteach: "### More smells you will meet"
+
+  - id: q12
+    type: mcq
+    concept: legacy-code
+    prompt: "You must add a loyalty discount to a 300-line invoice method that has no tests. What does the sprout method technique say?"
+    choices: ["Write the discount as a new small method with its own tests, and call it from one new line in the old method", "Rewrite the whole old method first, then add the discount", "Paste the discount logic into the middle of the old method and test by hand", "Delete the old method and start again from scratch"]
+    answer: 0
+    explain: "A sprout keeps the old code almost untouched and makes the new code tested from day one."
+    reteach: "### Legacy code: seams and sprout methods"

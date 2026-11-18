@@ -69,6 +69,7 @@ classDiagram
     Ride *-- Receipt : owns
     Bike <|-- EBike
     PaymentMethod <|.. Card
+    FareCalculator ..> Ride : prices
 ```
 
 - **Association** (`-->`, a plain arrow): one class knows about another. A rider has a payment method.
@@ -76,6 +77,7 @@ classDiagram
 - **Composition** (`*--`, a filled diamond): a whole owns parts that die with it. A receipt has no meaning without its ride.
 - **Inheritance** (`<|--`, a solid line with a hollow triangle): a subclass `extends` a parent. `EBike extends Bike`.
 - **Realization** (`<|..`, a dashed line with a hollow triangle): a class `implements` an interface. `Card implements PaymentMethod`.
+- **Dependency** (`..>`, a dashed arrow): one class uses another for a moment, as a parameter or a local variable, but keeps no field. `FareCalculator` prices a `Ride` it is handed.
 
 The diamond and the triangle always sit at the end of the whole or the parent.
 
@@ -122,7 +124,23 @@ classDiagram
 
 Read each end from the other side. One rider takes any number of rides. Each ride uses exactly one bike. A rider has no saved card or one saved card.
 
-In Java, `*` usually becomes a `List`, `1` becomes a plain field, and `0..1` becomes a field that may be empty, often an `Optional`.
+In Java, `*` usually becomes a `List`, and `1` becomes a plain field. `0..1` becomes a plain field that may be `null`. The getter then returns an `Optional`, so callers must handle the missing case.
+
+```java
+import java.util.Optional;
+
+class PaymentMethod { }
+
+class Rider {
+    private PaymentMethod savedCard;   // 0..1: may be null
+
+    Optional<PaymentMethod> savedCard() {
+        return Optional.ofNullable(savedCard);
+    }
+}
+```
+
+`Optional` is made for return values, not fields. It is not `Serializable`, and it adds an extra object to every rider. See [when not to use Optional](/t/module-03-core-java/topic-16-optional).
 
 ### Syntax: a sequence diagram
 

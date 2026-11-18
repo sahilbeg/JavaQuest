@@ -60,8 +60,8 @@ log.error("payment failed for R-17");
 |---|---|---|
 | TRACE | Tiny steps, only while hunting a bug | each loop pass |
 | DEBUG | Details a developer wants | which fare rule ran |
-| INFO | Normal events worth a record | a ride started, a payment went through |
-| WARN | Something odd that the program handled | a payment declined, a station nearly full |
+| INFO | Normal events worth a record | a ride started, a payment went through, the bank declined a card |
+| WARN | Something odd that the program handled | the payment provider timed out and the retry worked, a station nearly full |
 | ERROR | Something failed and needs a human | a payment crashed |
 
 The levels are ordered from TRACE (lowest) to ERROR (highest). When you set a level, you see that level and everything above it. At INFO, the night shift sees INFO, WARN and ERROR. TRACE and DEBUG stay hidden.
@@ -69,6 +69,8 @@ The levels are ordered from TRACE (lowest) to ERROR (highest). When you set a le
 ```callout tip
 Gojo says: ask "would the night shift want to be woken up for this?" If yes, it is ERROR. If it is odd but handled, it is WARN.
 ```
+
+A declined card is a normal business outcome. Banks decline cards many times a day, so most teams log it at INFO. Spoke's kiosk has one house rule on top: a payment over its $500 limit is logged at WARN. A fare that large should never happen, so it may mean a bug or fraud. The practice task follows this house rule. At work, follow your team's.
 
 ### Syntax: parameterized messages
 
@@ -82,8 +84,47 @@ log.info("payment ok for {} card {} amount {}", riderId, masked, cents);
 
 Why not join strings with `+`? Two reasons.
 
-1. `"ride " + ride` builds the text every time, even when that level is switched off. With `{}`, SLF4J skips the work for a hidden line.
+1. `"ride " + ride` builds the text every time, even when that level is switched off. With `{}`, SLF4J skips the formatting for a hidden line, including the call to `ride.toString()`.
 2. With `{}`, the message template stays the same for every rider. Log search tools can then group all "payment ok" lines together.
+
+### Expensive arguments still run
+
+`{}` saves the formatting, not the arguments. Java works out every argument **before** it calls `log.debug`. So `log.debug("report {}", buildReport())` runs `buildReport()` even when DEBUG is off.
+
+When an argument is slow to build, guard it. Either check the level first, or hand SLF4J 2 a **supplier**: a lambda it calls only when the line will really be written.
+
+```java run
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Main {
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
+
+    public static void main(String[] args) {
+        log.trace("report {}", buildReport());
+
+        if (log.isTraceEnabled()) {
+            log.trace("report {}", buildReport());
+        }
+
+        log.atTrace().addArgument(() -> buildReport()).log("report {}");
+
+        System.out.println("done");
+    }
+
+    static String buildReport() {
+        System.out.println("building the report (slow!)");
+        return "Harbor: 12 docks";
+    }
+}
+```
+
+```text
+building the report (slow!)
+done
+```
+
+TRACE is hidden by default, so no log line appears. Yet the report was built once, for the first line, and thrown away. The `isTraceEnabled()` guard and the `atTrace()` supplier both skipped it. For a plain variable like `riderId`, none of this matters: just use `{}`.
 
 ### Syntax: logging an exception
 
@@ -103,11 +144,40 @@ Never log a full card number, a password or a security code. Mask the card first
 
 ### MDC in one paragraph
 
-**MDC** (Mapped Diagnostic Context) lets you attach a label, such as a ride id, to every log line on the current thread. You call `MDC.put("ride", "RD-881")` at the start of a request and `MDC.remove("ride")` at the end. Logback can then print that label on every line in between. You do not need it for this ticket.
+**MDC** (Mapped Diagnostic Context) lets you attach a label, such as a request id or a ride id, to every log line on the current thread. You call `MDC.put("ride", "rental-17")` at the start of a request and `MDC.remove("ride")` at the end, in a `finally` block. Logback can then print that label on every line in between. You do not need it for this ticket.
+
+### Syntax: clearing the MDC
+
+```java nocompile
+try (MDC.MDCCloseable ride = MDC.putCloseable("ride", "rental-17")) {
+    log.info("ride started");
+}   // the label is removed here, even if an exception was thrown
+```
+
+Servers reuse a small **pool** of threads for many requests. If you forget to remove the label, the next request on that thread inherits it. Its log lines then name `rental-17`, a ride it has nothing to do with. `MDC.putCloseable` in a try-with-resources removes the label for you, like `MDC.remove` in a `finally`.
+
+```java run
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+
+public class Main {
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
+
+    public static void main(String[] args) {
+        try (MDC.MDCCloseable ride = MDC.putCloseable("ride", "rental-17")) {
+            log.info("ride {} started", MDC.get("ride"));
+        }
+        System.out.println("after: " + MDC.get("ride"));
+    }
+}
+```
+
+`after: null` shows the label is gone once the block ends.
 
 ### Syntax: a minimal logback.xml
 
-Logback reads its settings from a file called `logback.xml` in the resources folder. This one prints INFO and above to the screen:
+Logback reads its settings from a file called `logback.xml` in `src/main/resources`, the folder for files that ship with your code. Module 7's [Maven](/t/module-07-tooling/topic-01-maven) topic explains this folder layout. This file prints INFO and above to the screen:
 
 ```xml
 <configuration>
@@ -127,6 +197,27 @@ Logback reads its settings from a file called `logback.xml` in the resources fol
 - `root level="INFO"` hides TRACE and DEBUG.
 
 With no `logback.xml` at all, Logback shows DEBUG and above in a default layout.
+
+### Syntax: levels per package
+
+```xml
+<logger name="jq.m06" level="DEBUG" />
+```
+
+A `<logger>` line sets the level for one package and everything inside it. It goes inside `<configuration>`, next to `<root>`. Logger names follow class names, so `jq.m06` covers `jq.m06.logging.Checkout` too.
+
+Production usually runs with `root` at INFO, so the logs stay small and cheap. When you hunt a bug in one area, turn on DEBUG for just that package. The rest of the app stays quiet.
+
+```xml
+<configuration>
+  <!-- appender as above -->
+  <logger name="jq.m06.logging" level="DEBUG" />
+  <logger name="org.springframework" level="WARN" />
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+  </root>
+</configuration>
+```
 
 ## Worked example
 
@@ -182,7 +273,7 @@ java.lang.IllegalArgumentException: card number is missing
 1. The `log` field is made once for the class.
 2. A null card is checked first. The ERROR line attaches a new `IllegalArgumentException`, so the stack trace shows where it happened.
 3. `mask` keeps only the digits, then the last 4. `replaceAll("[^0-9]", "")` removes everything that is not a digit.
-4. A payment over 50,000 cents ($500.00) is declined. That is odd but handled, so it is WARN.
+4. A payment over 50,000 cents ($500.00) is declined. A fare that big should never happen, so Spoke's house rule logs it at WARN.
 5. A normal payment is INFO. All three lines use `{}` placeholders.
 
 ## Try it
@@ -213,8 +304,8 @@ public class Main {
 - `System.out.println` has no levels, no time and no source. Use a logger instead.
 - SLF4J is the facade you call. Logback is the library that writes the lines. Get a logger with `LoggerFactory.getLogger(MyClass.class)`.
 - Pick the level by importance: TRACE, DEBUG, INFO, WARN, ERROR.
-- Use `{}` placeholders, and pass an exception as the last argument to get its stack trace.
-- Never log secrets. Mask card numbers to the last 4 digits.
+- Use `{}` placeholders, and pass an exception as the last argument to get its stack trace. Guard slow arguments with `isDebugEnabled()` or a supplier.
+- Never log secrets. Mask card numbers to the last 4 digits. Log an exception once, and always clear the MDC.
 
 ## Common mistakes
 
@@ -288,3 +379,46 @@ Output:
 ```
 
 The full card number is now in every copy of the log. Mask it before logging, so the line reads `card **** **** **** 4242`.
+
+### 4. Logging the same exception twice
+
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Main {
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
+
+    public static void main(String[] args) {
+        try {
+            unlock("B-1042");
+        } catch (IllegalStateException e) {
+            log.error("unlock request failed", e);
+        }
+    }
+
+    static void unlock(String bikeId) {
+        try {
+            throw new IllegalStateException("dock 7 jammed");
+        } catch (IllegalStateException e) {
+            log.error("unlock failed for {}", bikeId, e);
+            throw e;
+        }
+    }
+}
+```
+
+Output:
+
+```text
+10:35:04.158 [main] ERROR Main -- unlock failed for B-1042
+java.lang.IllegalStateException: dock 7 jammed
+	at Main.unlock(Main.java:17)
+	at Main.main(Main.java:9)
+10:35:04.160 [main] ERROR Main -- unlock request failed
+java.lang.IllegalStateException: dock 7 jammed
+	at Main.unlock(Main.java:17)
+	at Main.main(Main.java:9)
+```
+
+One failure, two ERROR lines and two stack traces. In a real server each method on the way up may do this, so one jam looks like five problems. This is called **log and rethrow**. Fix: either handle the exception and log it, or rethrow it (with context) and do not log. Log it once, at the **boundary**: the top of the request, where it is finally handled.

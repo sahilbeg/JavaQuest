@@ -2,7 +2,7 @@ id: module-06-craft/mini-project
 title: "FEAT-06: Pluggable promo engine"
 order: 100
 minutes: 12
-prerequisites: [module-06-craft/topic-12-logging]
+prerequisites: [module-06-craft/topic-13-object-oriented-design]
 concepts: [strategy, open-closed, logging, unit-testing]
 practice:
   kind: code

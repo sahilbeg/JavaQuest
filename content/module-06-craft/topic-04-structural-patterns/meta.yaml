@@ -3,7 +3,7 @@ title: "Structural patterns: adapter, decorator, facade"
 order: 4
 minutes: 10
 prerequisites: [module-06-craft/topic-03-creational-patterns]
-concepts: [composition, adapter, decorator, facade, delegation]
+concepts: [composition, adapter, decorator, facade, delegation, proxy]
 practice:
   kind: code
   runner: plain

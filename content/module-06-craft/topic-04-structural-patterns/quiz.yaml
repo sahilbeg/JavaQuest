@@ -171,3 +171,12 @@ questions:
       - "}"
     explain: "The field holds the inner lock, the constructor receives it, and open adds its line before it delegates."
     reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: proxy
+    prompt: "LazyFareTable implements FareTable and only creates the real, slow table on the first call. Which pattern is it?"
+    choices: ["Proxy: a stand-in that controls when the real object is used", "Adapter: it translates foreign method names", "Facade: it hides several parts behind one call", "Observer: it tells subscribers about changes"]
+    answer: 0
+    explain: "A proxy has the same interface as the real object and controls access to it: late loading, caching, permissions or transactions."
+    reteach: "### Proxy: a stand-in that controls access"

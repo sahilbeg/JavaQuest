@@ -56,7 +56,7 @@ class ImportJob {
 }
 ```
 
-Run it on JDK 21 and you see this:
+Compile it and run it on JDK 21, the way an IDE or a server does, and you see this:
 
 ```
 Exception in thread "main" java.lang.IllegalStateException: could not import line: B-1042,Harbor,twelve
@@ -68,11 +68,12 @@ Caused by: java.lang.NumberFormatException: For input string: "twelve"
 	at java.base/java.lang.Integer.parseInt(Integer.java:778)
 	at ImportJob.readMinutes(Main.java:20)
 	at ImportJob.importLine(Main.java:11)
-	at Main.main(Main.java:4)
-	...
+	... 1 more
 ```
 
-The top part says the import failed. The real reason is in the **last** `Caused by`. Skip the three `java.base/` lines, and the first line of your own code is `readMinutes(Main.java:20)`. The text "twelve" is not a number. (The lines after `Main.main` come from the launcher that runs `java Main.java`. Ignore them.)
+The top part says the import failed. The real reason is in the **last** `Caused by`. Skip the three `java.base/` lines, and the first line of your own code is `readMinutes(Main.java:20)`. The text "twelve" is not a number.
+
+What is `... 1 more`? The cause's last frames are the same as the frames of the trace above it. Java prints them once and writes "N more" instead of repeating them. Here the hidden frame is `Main.main(Main.java:4)`. In a real server, "... 40 more" is common and safe to skip.
 
 ```callout tip
 The fastest way through any trace: find the last `Caused by`, then its first frame from your own package. Read that line of code before anything else.
@@ -80,7 +81,7 @@ The fastest way through any trace: find the last `Caused by`, then its first fra
 
 ### Syntax: helpful NullPointerException messages
 
-A **NullPointerException** (NPE) happens when you call a method on `null`. Since Java 14, the message names exactly which value was null.
+A **NullPointerException** (NPE) happens when you call a method on `null`. Since Java 15, the message names exactly which value was null. (Java 14 could do it too, but only with the flag `-XX:+ShowCodeDetailsInExceptionMessages`.)
 
 ```java run crash
 import java.util.Map;
@@ -132,6 +133,14 @@ Once paused, you move forward with step buttons.
 
 A **watch** is an expression you pin in the debugger. Type `parts.length` or `minutesLost / totalMinutes` into the Watches panel. The debugger shows its value after every step.
 
+### Exception breakpoints and evaluating expressions
+
+Sometimes you do not know which line to pause on. You only know an exception gets thrown somewhere.
+
+An **exception breakpoint** pauses the program the moment an exception is thrown, before anything catches it. In VS Code, open the **Run and Debug** view. In the **Breakpoints** section, tick **Uncaught Exceptions**, or **Caught Exceptions** to stop on every throw. The program then pauses on the exact line that threw, with every variable still in view.
+
+While paused, you can also run a line of Java against the live values. In VS Code, type it in the **Debug Console**, such as `line.split(",").length`, and press Enter. IntelliJ IDEA calls this **Evaluate Expression**. It answers "what if" questions without editing and restarting.
+
 ### Finding the bug without a debugger
 
 - **Rubber-duck debugging**: explain the code, line by line, out loud to a rubber duck or a patient colleague. Saying "and then this divides 6 by 12, which is..." often reveals the bug before you finish the sentence.
@@ -149,6 +158,25 @@ void parsesLineWithEmptyNote() {
     assertEquals("", ride.note());
 }
 ```
+
+### Debugging in production
+
+**Production** is the live system that real riders use. You cannot pause a live server with a breakpoint: every rider would freeze with it. So the steps change.
+
+1. **Mitigate first.** If the last release broke unlocks, roll it back. Riders come before root causes.
+2. **Find the request in the logs.** Each request carries a **request id**. Search the logs for it to see every line that one request wrote. The MDC card in [Logging](/t/module-06-craft/topic-12-logging) shows how to stamp a label like this on every line.
+3. **Reproduce locally** with a failing test, as in the card before this one. Then debug it on your own machine, breakpoints and all.
+
+Two kinds of trouble leave no stack trace:
+
+- **A hang.** The server is up but answers nothing. Take a **thread dump** with `jcmd <pid> Thread.print` (or the older `jstack <pid>`). It shows what every thread is waiting on. You met it in [synchronization](/t/module-05-advanced-java/topic-02-synchronization).
+- **An `OutOfMemoryError`.** Take a **heap dump**: a file holding every object in memory. A heap tool then shows what fills the heap. See [JVM memory](/t/module-05-advanced-java/topic-07-jvm-memory).
+
+```callout jargon
+A **pid** (process id) is the number the operating system gives a running program. `jcmd` with no arguments lists the Java ones.
+```
+
+In module 9 you add **observability**: logs, metrics and traces that let you see inside production without pausing it.
 
 ## Worked example
 
@@ -192,7 +220,7 @@ Change the line `job.importLine("B-1042,Harbor,twelve");` in the Caused-by progr
 - A helpful NPE message names the null value. `intValue()` in the message means a null `Integer` was unboxed.
 - A breakpoint pauses the program. Step over, into and out move through it, and watches show values as you go.
 - Rubber ducks, binary search and `git bisect` narrow a bug down when there is no trace.
-- Reproduce the bug with a failing test before you fix it.
+- Reproduce the bug with a failing test before you fix it. In production, roll back first, then follow the request id through the logs.
 
 ## Common mistakes
 

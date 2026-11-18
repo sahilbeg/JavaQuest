@@ -1,9 +1,9 @@
 id: module-06-craft/topic-10-tdd
 title: "Test-driven development"
 order: 10
-minutes: 10
+minutes: 12
 prerequisites: [module-06-craft/topic-09-mockito]
-concepts: [red-green-refactor, smallest-failing-test, triangulation, baby-steps, design-pressure, when-tdd-is-awkward]
+concepts: [red-green-refactor, smallest-failing-test, triangulation, baby-steps, design-pressure, when-tdd-is-awkward, testing-randomness]
 practice:
   kind: code
   runner: plain

@@ -137,6 +137,52 @@ The loop trusted the interface and crashed. `TransitRefund` promised to refund, 
 A method that throws `UnsupportedOperationException` from an interface you chose to implement is a red flag. It usually means the class is in the wrong family.
 ```
 
+### Liskov's contract rules
+
+A parent type makes a **contract**: what callers may pass in, and what they get back. A subtype must keep that contract. Three rules spell it out:
+
+1. **Inputs:** a subtype may not demand more. If the parent accepts any number of minutes, the child cannot reject long rides.
+2. **Outputs:** a subtype may not promise less. If the parent always returns a fare of at least 100 cents, so must the child.
+3. **Invariants:** a subtype must keep every rule the parent always keeps.
+
+```callout jargon
+An **invariant** is something that is always true about an object. For a rectangle: changing the width leaves the height alone.
+```
+
+The classic trap is a `Square` that extends `Rectangle`. In maths a square is a rectangle, so it feels right. Watch what happens to code written for rectangles.
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        Rectangle dock = new Square();
+        dock.setWidth(5);
+        dock.setHeight(4);
+        System.out.println("area = " + dock.area());
+    }
+}
+
+class Rectangle {
+    protected int width;
+    protected int height;
+
+    void setWidth(int width) { this.width = width; }
+    void setHeight(int height) { this.height = height; }
+    int area() { return width * height; }
+}
+
+class Square extends Rectangle {
+    @Override
+    void setWidth(int side) { this.width = side; this.height = side; }
+
+    @Override
+    void setHeight(int side) { this.width = side; this.height = side; }
+}
+```
+
+The caller expected 5 × 4 = 20 and got 16. `Square` broke the rectangle's invariant: setting the height also changed the width. Nothing crashed, which makes this bug harder to find.
+
+The fix: do not make `Square` a subclass of `Rectangle`. Make both implement a small `Shape` interface with `area()`, and make them immutable. "Is-a" in everyday words is not enough. Ask "can it keep every promise?"
+
 ### I: Interface segregation
 
 The **interface segregation principle** says no class should be forced to write methods it does not use. Prefer several small interfaces over one big one.
@@ -203,6 +249,8 @@ class WalletPayment implements PaymentMethod {
     public String pay(long cents) { return "wallet: charged " + cents + " cents"; }
 }
 ```
+
+Who owns the interface? The high-level code does. `Checkout` decides what it needs, so `PaymentMethod` lives next to `Checkout`, and payment classes plug into it. That is the "inversion": the details now depend on the high-level code, not the other way round. Module 9's hexagonal architecture builds on this.
 
 ```callout analogy
 A wall socket is dependency inversion. The house does not know about your lamp. It only offers the plug shape, and the lamp is handed in when you plug it.

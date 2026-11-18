@@ -156,3 +156,21 @@ questions:
     answer: 0
     explain: "Depending on the interface, handed in through the constructor, lets any payment method be used."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: liskov-substitution
+    prompt: "Square extends Rectangle. Its setHeight also changes the width, so code written for rectangles gets the wrong area. What is wrong?"
+    choices: ["Square breaks an invariant Rectangle always keeps, so it is not a safe subtype", "Square should throw UnsupportedOperationException from setHeight", "Rectangle should be an interface, then the bug goes away", "Nothing: a square is a rectangle in maths, so the design is right"]
+    answer: 0
+    explain: "A subtype must keep the parent's contract, including its invariants. Changing the height of a rectangle must not change its width."
+    reteach: "### Liskov's contract rules"
+
+  - id: q12
+    type: mcq
+    concept: liskov-substitution
+    prompt: "A parent's fare(minutes) accepts any minutes from 0 up. Which subtype keeps Liskov substitution?"
+    choices: ["One that also accepts 0 and up, and returns a fare like the parent's", "One that throws for rides longer than 60 minutes", "One that returns a negative fare for rides under 1 minute", "One that only accepts even numbers of minutes"]
+    answer: 0
+    explain: "A subtype may not demand more from its inputs or promise less about its outputs. Rejecting long rides or returning a negative fare both break the contract."
+    reteach: "### Liskov's contract rules"

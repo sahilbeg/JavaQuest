@@ -126,3 +126,21 @@ questions:
     answers: ["CsvSource"]
     explain: "@CsvSource gives a parameterized test its rows as comma-separated text."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: test-levels
+    prompt: "Following the test pyramid, how should Spoke's tests be spread?"
+    choices: ["Many fast unit tests, fewer integration tests, and a handful of end-to-end tests", "Mostly end-to-end tests, because they are the most real", "Equal numbers of unit, integration and end-to-end tests", "Only integration tests, because they test the database too"]
+    answer: 0
+    explain: "Higher tests are more real but slower and more fragile. So you want many cheap unit tests at the base and few slow end-to-end tests at the top."
+    reteach: "### Unit, integration and end-to-end tests"
+
+  - id: q12
+    type: mcq
+    concept: coverage
+    prompt: "A test calls calc.fareCents(\"classic\", 10, \"BASIC\") and has no assertion. Coverage shows 100% of fareCents's lines ran. What does that prove?"
+    choices: ["Only that the lines ran; nothing checked that the fare is right", "That fareCents is correct for every input", "That fareCents is correct for a 10 minute classic ride", "That mutation testing would find no surviving mutants"]
+    answer: 0
+    explain: "Coverage measures what ran, not what was checked. Mutation testing, like the broken copies in the practice task, shows whether your assertions catch bugs."
+    reteach: "### What coverage tells you, and what it doesn't"

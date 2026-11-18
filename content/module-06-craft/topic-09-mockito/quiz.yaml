@@ -12,6 +12,9 @@ questions:
       - prompt: "Which test double is passed in only to fill a parameter and is never used?"
         choices: ["A dummy", "A mock", "A spy", "A stub"]
         answer: 0
+      - prompt: "Which test double is a small working version of the real thing, such as a payment gateway that keeps charges in a HashMap?"
+        choices: ["A fake", "A dummy", "A mock", "A spy"]
+        answer: 0
     explain: "A dummy fills a gap. A stub answers. A fake works simply. A mock records calls. A spy wraps a real object."
     reteach: "## Concept"
 
@@ -132,3 +135,20 @@ questions:
     answer: 0
     explain: "A small interface you own changes only when you change it. A large outside library can shift under your tests."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: strict-stubs
+    prompt: "With MockitoExtension, a test stubs lock.open(\"B-1042\") but the code under test never calls it. Every assertion passes. What happens?"
+    choices: ["The test fails with UnnecessaryStubbingException", "The test passes, because the assertions passed", "The test is skipped", "Mockito calls lock.open itself to use the stub"]
+    answer: 0
+    explain: "MockitoExtension is strict. An unused stub fails the test, because it often means the code took a path you did not expect."
+    reteach: "### Strict stubs: unused stubbing fails the test"
+
+  - id: q12
+    type: fill-blank
+    concept: stubbing
+    prompt: "___(new IllegalStateException(\"bank is down\")).when(gateway).refund(\"pay-3\");"
+    answers: ["doThrow", "Mockito.doThrow"]
+    explain: "refund returns void, so when(...) cannot wrap it. doThrow(...).when(mock).method(...) stubs a void method to throw."
+    reteach: "### Syntax: doThrow for void methods"

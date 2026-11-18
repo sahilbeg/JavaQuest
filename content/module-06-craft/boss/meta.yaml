@@ -2,7 +2,7 @@ id: module-06-craft/boss
 title: "INC-06: Refactor the legacy billing module safely"
 order: 99
 minutes: 12
-prerequisites: [module-06-craft/topic-12-logging]
+prerequisites: [module-06-craft/topic-13-object-oriented-design]
 concepts: [refactoring, characterization-tests, floating-point-money, side-effects]
 practice:
   kind: code

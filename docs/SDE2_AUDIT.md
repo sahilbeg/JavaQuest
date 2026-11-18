@@ -109,17 +109,17 @@ New tickets (before the boss):
 
 ## Phase 4: module 06, craft
 
-- [ ] topic-02: Liskov contract rules (Rectangle/Square)
-- [ ] topic-05: State, Template Method, Chain of Responsibility, Proxy; when not to use a pattern
-- [ ] topic-06: more code smells
-- [ ] topic-07: `Optional` is not for fields; `..>` arrow
-- [ ] topic-08: unit, integration and end-to-end tests; coverage and mutation testing; more parameterized sources
-- [ ] topic-09: choosing a test double, a hand-written fake; void methods and strict stubbing
-- [ ] topic-10: testing randomness
-- [ ] topic-11: debugging in production; JDK 15 note; `... N more`
-- [ ] topic-12: `{}` still evaluates arguments; declined payment is INFO; log once at the boundary; per-package levels; clear the MDC
+- [x] topic-02: Liskov contract rules (Rectangle/Square)
+- [x] topic-05: State, Template Method, Chain of Responsibility, Proxy; when not to use a pattern
+- [x] topic-06: more code smells
+- [x] topic-07: `Optional` is not for fields; `..>` arrow
+- [x] topic-08: unit, integration and end-to-end tests; coverage and mutation testing; more parameterized sources
+- [x] topic-09: choosing a test double, a hand-written fake; void methods and strict stubbing
+- [x] topic-10: testing randomness
+- [x] topic-11: debugging in production; JDK 15 note; `... N more`
+- [x] topic-12: `{}` still evaluates arguments; declined payment is INFO; log once at the boundary; per-package levels; clear the MDC
 - New ticket:
-  - [ ] topic-13 Object-oriented design from requirements (placed after topic-07)
+  - [x] topic-13 Object-oriented design from requirements (placed after topic-07)
 
 ## Phase 5: module 07, tooling
 

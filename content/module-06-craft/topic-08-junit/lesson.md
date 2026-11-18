@@ -173,6 +173,72 @@ void fareTable(String type, int minutes, String membership, long expected) {
 
 JUnit converts each column to the parameter type. This one method becomes four tests in the report.
 
+### More parameter sources
+
+`@CsvSource` is the most common source, but not the only one.
+
+- `@MethodSource("name")` takes rows from a static method that returns a `Stream<Arguments>`. Use it when rows hold objects, not just text.
+- `@EnumSource(Membership.class)` runs the test once for every enum constant. Add a new membership, and it is tested for free.
+- `name = "..."` sets the report line for each row. `{0}` is the first argument, `{1}` the second.
+
+```java
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.stream.Stream;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
+
+class FareSourcesTest {
+
+    enum Membership { BASIC, PLUS, PRO }
+
+    static long fareCents(int minutes, Membership membership) {
+        int free = switch (membership) {
+            case BASIC -> 0;
+            case PLUS -> 30;
+            case PRO -> 60;
+        };
+        long unlock = membership == Membership.BASIC ? 100 : 0;
+        return unlock + Math.max(0, minutes - free) * 15L;
+    }
+
+    @ParameterizedTest(name = "{0} rider, 0 minutes, pays {1} cents")
+    @MethodSource("zeroMinuteFares")
+    void zeroMinuteRide(Membership membership, long expected) {
+        assertEquals(expected, fareCents(0, membership));
+    }
+
+    static Stream<Arguments> zeroMinuteFares() {
+        return Stream.of(
+                Arguments.of(Membership.BASIC, 100L),
+                Arguments.of(Membership.PLUS, 0L),
+                Arguments.of(Membership.PRO, 0L));
+    }
+
+    @ParameterizedTest(name = "{0}: a 200 minute ride costs something")
+    @EnumSource(Membership.class)
+    void longRidesAreNeverFree(Membership membership) {
+        assertTrue(fareCents(200, membership) > 0);
+    }
+}
+```
+
+The report then reads like a table:
+
+```
+zeroMinuteRide(Membership, long)
+  BASIC rider, 0 minutes, pays 100 cents
+  PLUS rider, 0 minutes, pays 0 cents
+  PRO rider, 0 minutes, pays 0 cents
+longRidesAreNeverFree(Membership)
+  BASIC: a 200 minute ride costs something
+  PLUS: a 200 minute ride costs something
+  PRO: a 200 minute ride costs something
+```
+
 ### Edge cases
 
 An **edge case** is an input at the very limit of a rule. Bugs love edges. For the fare rule, the edges are:
@@ -184,6 +250,93 @@ An **edge case** is an input at the very limit of a rule. Bugs love edges. For t
 ```callout warning
 A test at minute 40 cannot tell 30 free minutes from 29. The fare is 150 cents with one rule and 165 with the other. Only minute 30 versus 31 pins the boundary exactly.
 ```
+
+### Nice to know: AssertJ and @Nested
+
+Many teams write assertions with **AssertJ**, a library whose checks read like a sentence. `@Nested` groups related tests inside an inner class, so the report shows them as a tree.
+
+```java
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+class PlusFareTest {
+
+    static long plusFare(int minutes) {
+        return Math.max(0, minutes - 30) * 15L;
+    }
+
+    @Nested
+    class AfterFreeMinutes {
+        @Test
+        void minute31Costs15Cents() {
+            assertThat(plusFare(31)).as("PLUS minute 31").isEqualTo(15);
+        }
+
+        @Test
+        void fareGrowsWithMinutes() {
+            assertThat(plusFare(40)).isGreaterThan(plusFare(31)).isLessThan(200);
+        }
+    }
+}
+```
+
+With AssertJ the actual value goes inside `assertThat(...)`, so swapping expected and actual is much harder. If minute 31 wrongly cost 0, the failure would read:
+
+```
+org.opentest4j.AssertionFailedError: [PLUS minute 31] 
+expected: 15L
+ but was: 0L
+```
+
+Both styles are fine; follow your team's.
+
+### Unit, integration and end-to-end tests
+
+Unit tests are only one layer. Real teams test at three levels.
+
+```callout jargon
+An **integration test** checks that several real parts work together, such as your code with a real database. An **end-to-end test** (E2E) drives the whole running system, the way a rider would.
+```
+
+| Level | Speed | How real | What it catches |
+|---|---|---|---|
+| Unit | milliseconds | one class, fakes for the rest | wrong logic, edge cases |
+| Integration | seconds | real Spring, real database | wrong SQL, wrong wiring, bad JSON |
+| End-to-end | minutes | the whole app, as users see it | broken flows across services |
+
+The higher you go, the more real the test, but the slower and more fragile it gets. So teams follow the **test pyramid**: many unit tests at the bottom, fewer integration tests, and a handful of end-to-end tests at the top.
+
+```mermaid
+flowchart TB
+  E2E["End-to-end: a few"] --- Integration["Integration: some"] --- Unit["Unit: many"]
+```
+
+In module 8 you meet the middle layer. [MockMvc](/t/module-08-backend/topic-05-spring-mvc) sends fake HTTP requests to your controllers without opening a port. `@SpringBootTest` starts the whole Spring app inside a test. **Testcontainers** starts a real database in Docker for one test run.
+
+### What coverage tells you, and what it doesn't
+
+```callout jargon
+**Code coverage** is the share of your code that ran during the tests. **Line coverage** counts lines. **Branch coverage** counts both sides of every `if`. **JaCoCo** is the usual Java tool that measures it and draws a report.
+```
+
+Coverage shows what your tests never touch. That is useful: an untested branch is a blind spot. But coverage cannot tell whether anything was checked.
+
+```java nocompile
+@Test
+void fareRuns() {
+    calc.fareCents("classic", 10, "BASIC");   // every line runs, nothing is checked
+}
+```
+
+If `fareCents` had no `if`s, this one test would cover 100% of its lines. It still passes when the fare is wrong, because it has no assertion.
+
+```callout jargon
+**Mutation testing** makes small broken copies of your code, called **mutants**, such as `>` turned into `>=`. Then it runs your tests on each one. A good test suite kills almost every mutant. A few mutants behave exactly like the original, and no test can catch those. **PIT** is the usual Java tool.
+```
+
+You already know this idea. Your practice task grades your checks against five broken copies of the fare code. Each copy is a mutant, and your checks must "kill" every one.
 
 ## Worked example
 
@@ -281,7 +434,7 @@ public class Main {
 - Mark tests with `@Test`. Check facts with `assertEquals`, `assertTrue`, `assertThrows` and `assertAll`.
 - Write each test as arrange, act, assert, with a name or `@DisplayName` that states the behaviour.
 - `@BeforeEach` gives every test a fresh setup. `@ParameterizedTest` with `@CsvSource` runs one test over many rows.
-- Test the edges: zero, both sides of every boundary, and negative input.
+- Test the edges: zero, both sides of every boundary, and negative input. Coverage shows what ran; only assertions prove it is right.
 
 ## Common mistakes
 

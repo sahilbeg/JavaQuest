@@ -116,3 +116,22 @@ questions:
     bugLine: 5
     explain: "The new exception drops e, so the trace loses its Caused by. Pass e as the second argument."
     reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: production-debugging
+    prompt: "Ten minutes after a release, unlocks fail for riders at Harbor. What do you do first?"
+    choices: ["Roll back the release, then find a failing request id in the logs", "Attach a debugger to the live server and set a breakpoint", "Add print lines and deploy again to see what happens", "Wait for the next release to fix it"]
+    answer: 0
+    explain: "Mitigate first so riders can ride. A breakpoint would freeze every rider. Then follow the request id and reproduce with a failing test."
+    reteach: "### Debugging in production"
+
+  - id: q12
+    type: mcq
+    concept: production-debugging
+    prompt: "The Spoke server is running but answers nothing, and no exception is logged. Which tool shows what every thread is stuck on?"
+    choices: ["A thread dump with jcmd <pid> Thread.print", "A heap dump", "git bisect", "A conditional breakpoint"]
+    answer: 0
+    explain: "A thread dump shows each thread's state and the line it waits on. A heap dump is for running out of memory."
+    reteach: "### Debugging in production"
+

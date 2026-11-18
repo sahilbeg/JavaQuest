@@ -148,8 +148,9 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 10 | `module-06-craft/topic-10-tdd` | Test-driven development | code | `module-06-craft/topic-09-mockito` |
 | 11 | `module-06-craft/topic-11-debugging` | Debugging with breakpoints and stack traces | code | `module-06-craft/topic-10-tdd` |
 | 12 | `module-06-craft/topic-12-logging` | Logging with SLF4J | code | `module-06-craft/topic-11-debugging` |
-| boss | `module-06-craft/boss` | INC-06: Refactor the legacy billing module safely | code | `module-06-craft/topic-12-logging` |
-| mini-project | `module-06-craft/mini-project` | FEAT-06: Pluggable promo engine | code | `module-06-craft/topic-12-logging` |
+| 13 | `module-06-craft/topic-13-object-oriented-design` | Object-oriented design from requirements | code | `module-06-craft/topic-12-logging` |
+| boss | `module-06-craft/boss` | INC-06: Refactor the legacy billing module safely | code | `module-06-craft/topic-13-object-oriented-design` |
+| mini-project | `module-06-craft/mini-project` | FEAT-06: Pluggable promo engine | code | `module-06-craft/topic-13-object-oriented-design` |
 
 ## module-07-tooling: Build and tooling (project: Shipping safely)
 

@@ -10,7 +10,7 @@ Jiraiya's ticket has three problems that look different but share one idea. Pric
 A **design pattern** is a named, reusable shape for code that solves a common problem. **Behavioral patterns** are the patterns about how objects share work and talk to each other.
 ```
 
-This topic covers three of them: strategy, observer and command.
+This topic covers three of them in depth: strategy, observer and command. Then you meet three more in one card each, because design interviews often ask about them.
 
 ### Strategy: swap the rule, keep the caller
 
@@ -273,9 +273,166 @@ flowchart LR
   History -->|push| Stack[(Stack)]
 ```
 
+### State: let each state decide what happens next
+
+A bike moves through a lifecycle: AVAILABLE, then RENTED, then back, or off to IN_REPAIR. Not every move is allowed. You cannot rent a bike that is in repair.
+
+```callout jargon
+The **state pattern** gives each state its own object. The object decides which actions are allowed and which state comes next. This replaces a big `if` on a status field in every method.
+```
+
+In Java, an enum with a body per constant is a neat way to write it.
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        BikeState b1042 = BikeState.AVAILABLE;
+        b1042 = b1042.rent();
+        System.out.println("B-1042 is " + b1042);
+        b1042 = b1042.giveBack();
+        b1042 = b1042.reportBroken();
+        System.out.println("B-1042 is " + b1042);
+        try {
+            b1042.rent();
+        } catch (IllegalStateException e) {
+            System.out.println("Refused: " + e.getMessage());
+        }
+    }
+}
+
+enum BikeState {
+    AVAILABLE {
+        BikeState rent() { return RENTED; }
+        BikeState reportBroken() { return IN_REPAIR; }
+    },
+    RENTED {
+        BikeState giveBack() { return AVAILABLE; }
+    },
+    IN_REPAIR {
+        BikeState fixed() { return AVAILABLE; }
+    };
+
+    BikeState rent() { throw refuse("rent"); }
+    BikeState giveBack() { throw refuse("give back"); }
+    BikeState reportBroken() { throw refuse("report broken"); }
+    BikeState fixed() { throw refuse("mark fixed"); }
+
+    IllegalStateException refuse(String action) {
+        return new IllegalStateException("cannot " + action + " a bike that is " + this);
+    }
+}
+```
+
+By default every action refuses. Each state overrides only the moves it allows. A vending machine, a traffic light and an order (placed, paid, shipped) fit the same shape.
+
+### Template Method: a fixed recipe with blanks
+
+```callout jargon
+The **template method pattern** puts the fixed steps of a job in a `final` method of a parent class. The parent leaves some steps blank (abstract), and each subclass fills them in.
+```
+
+Every Spoke report has the same header and footer. Only the middle changes.
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(new RiderReceipt().build(250));
+        System.out.println(new StationReport().build(250));
+    }
+}
+
+abstract class Report {
+    final String build(long cents) {
+        return "== Spoke ==\n" + body(cents) + "\n== end ==";
+    }
+
+    abstract String body(long cents);
+}
+
+class RiderReceipt extends Report {
+    String body(long cents) { return "You paid " + cents + " cents"; }
+}
+
+class StationReport extends Report {
+    String body(long cents) { return "Harbor took " + cents + " cents"; }
+}
+```
+
+`build` is `final`, so no subclass can skip the header. The catch is inheritance: each subclass is glued to `Report` forever. When the blank is just one small rule, a strategy passed in through the constructor is often simpler.
+
+### Chain of Responsibility: pass it along until someone says no
+
+Before a bike unlocks, three checks run: does the rider have an account, at least 100 cents, and a real bike id?
+
+```callout jargon
+The **chain of responsibility pattern** lines up handlers. Each handler either deals with the request (here: refuses it) or passes it to the next one.
+```
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        UnlockCheck chain = new AccountCheck(new BalanceCheck(new BikeCheck(null)));
+        System.out.println(chain.check(new Unlock("ana", 500, "B-1042")));
+        System.out.println(chain.check(new Unlock("ana", 50, "B-1042")));
+        System.out.println(chain.check(new Unlock("", 500, "B-1042")));
+    }
+}
+
+record Unlock(String riderId, long balanceCents, String bikeId) {}
+
+abstract class UnlockCheck {
+    private final UnlockCheck next;
+
+    UnlockCheck(UnlockCheck next) { this.next = next; }
+
+    String check(Unlock request) {
+        String problem = problemWith(request);
+        if (problem != null) {
+            return "refused: " + problem;
+        }
+        return next == null ? "unlocked " + request.bikeId() : next.check(request);
+    }
+
+    abstract String problemWith(Unlock request);
+}
+
+class AccountCheck extends UnlockCheck {
+    AccountCheck(UnlockCheck next) { super(next); }
+    String problemWith(Unlock r) { return r.riderId().isEmpty() ? "no account" : null; }
+}
+
+class BalanceCheck extends UnlockCheck {
+    BalanceCheck(UnlockCheck next) { super(next); }
+    String problemWith(Unlock r) { return r.balanceCents() < 100 ? "balance under 100 cents" : null; }
+}
+
+class BikeCheck extends UnlockCheck {
+    BikeCheck(UnlockCheck next) { super(next); }
+    String problemWith(Unlock r) { return r.bikeId().startsWith("B-") ? null : "unknown bike"; }
+}
+```
+
+The first check that finds a problem stops the chain. Adding a fourth check means one new class and one change where the chain is built. Web servers work this way: a request passes through a chain of filters, and Spring Security's filter chain in module 8 is one.
+
+### When not to use a pattern
+
+Patterns cost something: more classes, more files, and more jumps for the reader. Use one when it removes real pain you have today.
+
+```callout jargon
+**YAGNI** stands for "You Aren't Gonna Need It": do not build for a future that may never come. **Speculative generality** is the code smell of hooks, interfaces and options that nobody uses yet.
+```
+
+Signs a pattern costs more than it saves:
+
+- A strategy interface with exactly one class, and no second one on the way.
+- An observer with one subscriber that will never change. A plain method call is clearer.
+- A chain of one handler, or a state machine with two states. An `if` reads faster.
+
+A good habit: write the simple version first. When the second or third case arrives and the `if` chain starts to hurt, refactor to the pattern. Topic 6 shows how to do that safely.
+
 ## Worked example
 
-Here is the full undo flow for Harbor. Read the comments as you go.
+Back to the command pattern. Here is the full undo flow for Harbor. Read the comments as you go.
 
 ```java run
 import java.util.ArrayDeque;

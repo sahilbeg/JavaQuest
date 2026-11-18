@@ -123,3 +123,12 @@ questions:
     answers: ["assertThrows", "Assertions.assertThrows"]
     explain: "assertThrows passes only when the code inside the lambda throws that exception type."
     reteach: "## Worked example"
+
+  - id: q11
+    type: mcq
+    concept: testing-randomness
+    prompt: "FreeRidePromo picks 1 rider in 10 at random. How do you make it testable?"
+    choices: ["Take a RandomGenerator in the constructor, and pass new Random(42) in the test", "Call new Random() inside wins(), and run the test 100 times", "Use Math.random() and assert the result is between 0 and 1", "Skip testing it, because random code cannot be tested"]
+    answer: 0
+    explain: "Inject randomness like the clock. A seeded Random gives the same sequence on every run and every machine, so the test can assert exact results."
+    reteach: "### Testing randomness"

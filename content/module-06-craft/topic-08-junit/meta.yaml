@@ -1,9 +1,9 @@
 id: module-06-craft/topic-08-junit
 title: "Testing with JUnit"
 order: 8
-minutes: 10
+minutes: 14
 prerequisites: [module-06-craft/topic-07-uml-basics]
-concepts: [unit-test, assertions, arrange-act-assert, test-lifecycle, parameterized-tests, edge-cases]
+concepts: [unit-test, assertions, arrange-act-assert, test-lifecycle, parameterized-tests, edge-cases, test-levels, coverage]
 practice:
   kind: code
   runner: plain

@@ -78,12 +78,67 @@ You must call your code from a test before it exists. So you design it from the 
 - interfaces, such as `GroupDiscount`, that a test can swap for a fake (you did this with Mockito in [Mockito](/t/module-06-craft/topic-09-mockito));
 - no hidden reads from the clock, the screen or a database inside the rule itself.
 
+### Testing randomness
+
+Jiraiya wants a promo: 1 rider in 10 rides free. The rule uses a random number, so each run gives a different answer. How can a test check it?
+
+Treat randomness like the clock. Do not call `new Random()` inside the rule. Hand the rule a **random generator** through its constructor, the way you hand in any other dependency. (Module 7 does the same for the clock.)
+
+```callout jargon
+A **seed** is the starting number for a random generator. `new Random(42)` always produces the same sequence, on every machine, every run. `RandomGenerator` is the Java 17+ interface that `Random` and the other generators implement.
+```
+
+```java run
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.random.RandomGenerator;
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("seed 42: " + draws(new FreeRidePromo(new Random(42))));
+        System.out.println("seed 42: " + draws(new FreeRidePromo(new Random(42))));
+    }
+
+    static List<Boolean> draws(FreeRidePromo promo) {
+        List<Boolean> results = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            results.add(promo.wins());
+        }
+        return results;
+    }
+}
+
+class FreeRidePromo {
+    private final RandomGenerator random;
+
+    FreeRidePromo(RandomGenerator random) {
+        this.random = random;
+    }
+
+    boolean wins() {
+        return random.nextInt(10) == 0;   // 1 rider in 10 rides free
+    }
+}
+```
+
+Both lines match, so a test can assert the exact results. In production, pass `new Random()` or `RandomGenerator.getDefault()`. For full control, a test can pass a small fake generator whose `nextInt` returns the number it needs.
+
 ### When TDD is awkward
 
 TDD fits rules with clear right answers, like fares and discounts. It fits badly in two places.
 
 - **User interfaces.** "Does this screen look right?" has no `assertEquals`. Test the logic behind the screen, and check the look by eye.
 - **Exploration.** When you do not know what you are building yet, write a quick throwaway sketch. Once the idea is clear, delete the sketch and start again test first.
+
+### Outside-in or inside-out
+
+There are two ways to pick your first test.
+
+- **Inside-out** (also called classic or Chicago style): start with the smallest rule, like one fare. Build bigger pieces on top of tested small ones. Mostly real objects, few mocks.
+- **Outside-in** (also called London or mockist style): start with a test for the whole feature, like "unlock a bike". Mock the parts that do not exist yet, then build each one test first.
+
+Inside-out is easier to learn, and this topic uses it. Many teams mix both.
 
 ## Worked example
 

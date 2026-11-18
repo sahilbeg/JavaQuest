@@ -1,0 +1,23 @@
+id: module-06-craft/topic-13-object-oriented-design
+title: "Object-oriented design from requirements"
+order: 13
+minutes: 15
+prerequisites: [module-06-craft/topic-12-logging]
+concepts: [requirements, nouns-and-verbs, responsibilities, pattern-choice, errors-and-edge-cases, concurrency, extension]
+practice:
+  kind: code
+  runner: plain
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0613
+  from: priya
+  title: "Let riders hold a bike before they walk over"
+  body: >
+    Riders walk ten minutes to Old Mill and find the last e-bike gone. They want to tap Reserve in
+    the app and have the bike wait for them: ten minutes, one bike each, and the live map should hear
+    when a dock frees up. Can you design it so we can add new bike types and prices later without a rewrite?
+hints:
+  - "Start with the two small ones. isActiveAt is one line with now.isBefore(expiresAt). StandardPricing is 100 plus the type's perMinuteCents() times minutes."
+  - "Every method that reads reservations first calls dropExpired(clock.instant()). Then reserve checks byRider.containsKey(riderId) before it looks for a bike."
+  - "In reserve, loop over docks.entrySet() (a TreeMap, so ids come in order). Take the first bike that is not null, has the right type and is not isHeld(id), and store new Reservation(riderId, bike, id, now.plus(HOLD)) in byRider. Put synchronized on every public method."
+review: true

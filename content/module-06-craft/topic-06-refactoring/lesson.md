@@ -84,6 +84,22 @@ A **code smell** is a sign in the code that something could be shaped better. It
 | Type switch | The same `if` on a type in many places | Replace conditional with polymorphism |
 | Long parameter list | Four values that always travel together | Introduce parameter object |
 
+### More smells you will meet
+
+These five come up in almost every code review. Each has a usual fix.
+
+| Smell | What you see | Usual fix |
+|---|---|---|
+| Duplicated code | The same lines pasted in two or more places | Extract method, then call it from each place |
+| Feature envy | A method that mostly reads another class's fields | Move method into the class it envies |
+| God class | One huge class that knows and does everything | Extract class: split it by responsibility |
+| Shotgun surgery | One small change forces edits in many classes | Move the scattered pieces into one class |
+| Primitive obsession | Ids as bare `String`s everywhere, money as a bare number | Introduce a small type, such as `record BikeId(String value)` |
+
+```callout tip
+A small type like `BikeId` lets the compiler stop you from passing a rider id where a bike id belongs. A bare `String` cannot. Spoke keeps fares as plain `long` cents to keep lessons short; big codebases often wrap them in a `Money` type.
+```
+
 ### Syntax: rename
 
 Give a thing a name that says what it holds.
@@ -210,6 +226,28 @@ IntelliJ IDEA has the same moves under its own **Refactor** menu.
 ```callout warning
 An automated refactoring is safer than typing, but still run the tests after it. A rename inside a text string, or a method found by reflection, can slip past the IDE.
 ```
+
+### Legacy code: seams and sprout methods
+
+```callout jargon
+**Legacy code** is code you must change but cannot easily test. A **seam** is a place where you can swap behaviour without editing the code around it, such as a constructor parameter or an interface.
+```
+
+Sometimes a giant old method has no tests, and writing them all first would take weeks. You still need to add a feature today.
+
+Use a **sprout method**: write the new logic as a fresh, small method with its own tests. Then add one line in the old method that calls it.
+
+```java nocompile
+// inside the old 300-line invoice method, one new line:
+total = total - loyaltyDiscountCents(total, membership);
+
+// the sprout: new, small, fully tested
+static long loyaltyDiscountCents(long totalCents, String membership) {
+    return membership.equals("PRO") ? totalCents / 10 : 0;
+}
+```
+
+The old code stays untouched apart from one line. The new code is tested from day one. Over time, each change leaves the method a little better.
 
 ## Worked example
 
