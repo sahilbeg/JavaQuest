@@ -5,6 +5,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Comparator;
 import java.util.stream.Stream;
 import org.springframework.test.context.DynamicPropertyRegistry;
 
@@ -26,6 +27,7 @@ public final class TestRepository {
         Path copy = Files.createTempDirectory("javaquest-repo");
         copyTree(repo.resolve("content"), copy.resolve("content"));
         copyTree(repo.resolve("practice"), copy.resolve("practice"));
+        resetSourcesToSkeletons(copy.resolve("practice"));
         Path classpathFile = Files.createTempFile("runner-classpath", ".txt");
         Files.writeString(classpathFile, System.getProperty("junit.console.jar"));
         registry.add("javaquest.root", copy::toString);
@@ -33,6 +35,35 @@ public final class TestRepository {
         registry.add("javaquest.runner.classpath-file", classpathFile::toString);
         registry.add("spring.datasource.url", () -> "jdbc:h2:mem:" + databaseName + ";DB_CLOSE_DELAY=-1");
         return copy;
+    }
+
+    /**
+     * Each ticket's src/ holds the learner's own code, which may already solve it. Tests expect the untouched
+     * starting code, so the copy's src/ is replaced by its skeleton/ wherever a unit has one.
+     */
+    private static void resetSourcesToSkeletons(Path practice) throws IOException {
+        try (Stream<Path> modules = Files.list(practice)) {
+            for (Path module : modules.filter(Files::isDirectory).toList()) {
+                try (Stream<Path> units = Files.list(module)) {
+                    for (Path unit : units.filter(u -> Files.isDirectory(u.resolve("skeleton"))).toList()) {
+                        Path src = unit.resolve("src");
+                        deleteTree(src);
+                        copyTree(unit.resolve("skeleton"), src);
+                    }
+                }
+            }
+        }
+    }
+
+    private static void deleteTree(Path root) throws IOException {
+        if (!Files.exists(root)) {
+            return;
+        }
+        try (Stream<Path> paths = Files.walk(root)) {
+            for (Path p : paths.sorted(Comparator.reverseOrder()).toList()) {
+                Files.delete(p);
+            }
+        }
     }
 
     private static void copyTree(Path from, Path to) throws IOException {
