@@ -10,4 +10,4 @@ Do not call `Arrays.sort` or any other library sort. You build the sorting by ha
 4. **TODO 10:** `quickSort(a)` sorts the whole array in place. It calls `quickSort(a, 0, a.length - 1)`.
 5. **TODO 11:** `quickSort(a, low, high)` sorts only `a[low]` to `a[high]`, both ends included. Stop when `low >= high`. Otherwise partition, then quicksort the part left of the pivot and the part right of it. Items outside `low..high` do not move.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

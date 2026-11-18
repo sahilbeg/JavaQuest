@@ -12,4 +12,4 @@ Jiraiya wants the app to tell a rider the route with the fewest stops between tw
 
 Build the search yourself. Do not use a graph library.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

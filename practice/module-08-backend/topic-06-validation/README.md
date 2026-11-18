@@ -36,4 +36,4 @@ Open `RentalErrorsTest.java`. It uses `@WebMvcTest`, so only the web layer start
 
 A message like "POST /rentals crashed with BikeNotFoundException and nothing turned it into an answer" means no handler caught that exception yet. The surprise-bug checks print an ERROR log line with a stack trace. That is your catch-all doing its job, and one check makes sure it happens.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own. A Spring test takes a few seconds, because Spring starts first.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own. A Spring test takes a few seconds, because Spring starts first.

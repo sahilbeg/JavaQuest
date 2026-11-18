@@ -61,4 +61,4 @@ Dependencies point down only. `RentalResponse` is the service's result record: t
 
 Three checks already pass on the god controller. They make sure your refactor keeps what already worked.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The checks run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The checks run on their own.

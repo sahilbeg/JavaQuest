@@ -88,4 +88,4 @@ Each check opens fresh in-memory H2 databases with the tables above. Your code g
 
 A fake broker stands in for the real one. It can fail on a chosen message, or keep a message and still throw, as if its "got it" answer was lost. One check makes the outbox insert fail by reusing an event id. Another hides the `rider_bill` table to make the bill update fail.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

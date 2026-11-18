@@ -11,4 +11,4 @@ Tsunade's planning desk has six questions, and every one is a dynamic programmin
 7. **TODO 7:** `bestTruckLoad(int[] weights, int[] values, int capacity)` returns the highest total value of crates that fit on the truck. Crate `i` weighs `weights[i]` kilograms (at least 1) and is worth `values[i]`. Each crate goes on the truck at most once, and the total weight must be at most `capacity`. Capacity 0, no crates, or crates that are all too heavy give 0.
 8. **TODO 8:** `editDistance(String a, String b)` returns the fewest single-letter edits that turn `a` into `b`. An edit inserts one letter, deletes one letter, or replaces one letter with another. Letters are case-sensitive. `editDistance("Harbour", "Harbor")` is 1, and from `""` to `"Depot"` is 5.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

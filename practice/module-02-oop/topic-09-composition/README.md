@@ -15,4 +15,4 @@ Someone made `Station` extend `Dock`, so the code says every station "is a dock"
 
 Let each `Dock` do its own work. `Station` asks its docks with `isFree()`, `park`, `getBike()` and `release()`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

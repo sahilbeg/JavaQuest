@@ -35,7 +35,7 @@ String d = String.format("%s has %d docks", "Uptown", 12); // Uptown has 12 dock
 `%.2f` rounds the number. `2.4999999` becomes `2.50`.
 
 ```callout warning
-`%.2f` follows your computer's language setting. On a German laptop, `2.5` prints as `2,50`. JavaQuest's checks always use a decimal point. "Syntax: String.format with Locale.ROOT" shows the fix for real code.
+`%.2f` follows your computer's language setting. On a German laptop, `2.5` prints as `2,50`. Cadence's checks always use a decimal point. "Syntax: String.format with Locale.ROOT" shows the fix for real code.
 ```
 
 ```callout warning
@@ -67,7 +67,7 @@ System.out.println(String.format(java.util.Locale.GERMANY, "%.2f", 2.5));   // 2
 System.out.println(String.format(java.util.Locale.ROOT, "%.2f", 2.5));      // 2.50
 ```
 
-Pass `Locale.ROOT` first when the text is for another program, such as a file, a log or a web response. Then it looks the same on every server. Add `import java.util.Locale;` at the top of the file. JavaQuest runs your ticket's checks with English settings, so the plain `String.format` in your ticket is fine.
+Pass `Locale.ROOT` first when the text is for another program, such as a file, a log or a web response. Then it looks the same on every server. Add `import java.util.Locale;` at the top of the file. Cadence runs your ticket's checks with English settings, so the plain `String.format` in your ticket is fine.
 
 ### Money: count cents, not dollars
 

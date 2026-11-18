@@ -4,7 +4,7 @@ server:
 
 spring:
   application:
-    name: javaquest
+    name: cadence
   main:
     banner-mode: off
   # App files change with every build: browsers always check for a newer copy (a cheap 304 when unchanged),
@@ -15,13 +15,13 @@ spring:
         cachecontrol:
           no-cache: true
   datasource:
-    url: jdbc:h2:file:${javaquest.data-dir}/progress
+    url: jdbc:h2:file:${cadence.data-dir}/progress
     username: sa
     password: ""
 
-javaquest:
+cadence:
   root: .
-  data-dir: ${user.home}/.javaquest
+  data-dir: ${user.home}/.cadence
   unlock-all: false
   runner:
     timeout: 10s

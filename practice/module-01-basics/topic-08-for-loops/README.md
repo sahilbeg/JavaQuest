@@ -7,4 +7,4 @@ The kiosk screen needs a list of its docks, and Tsunade says: "I also want a far
 3. **TODO 3:** `totalClassicFare(rides, minutesEach)` adds one classic fare per ride: `1.00 + minutesEach * 0.15`. `totalClassicFare(3, 10)` is `7.5`.
 4. **TODO 4 and 5:** `firstFreeDock(docks, takenUpTo)` returns the first dock number greater than `takenUpTo`. Use `break` to stop the loop when you find it. Return `-1` if every dock is taken.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

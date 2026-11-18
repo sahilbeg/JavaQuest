@@ -12,4 +12,4 @@ This parseMinutes is different from the lesson's: it catches the problem itself 
 
 `Ride` and `ImportResult` are already written for you.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

@@ -159,7 +159,7 @@ The **Maven Wrapper** is a small script, `mvnw` (and `mvnw.cmd` on Windows), tha
 
 `-v` prints which Maven and which Java the wrapper uses. Teams commit `mvnw` and the `.mvn` folder to Git. A new teammate clones the project and runs `./mvnw package`. They need Java, but they never install Maven themselves, and they get the same Maven version as everyone else.
 
-Look at the JavaQuest folder. It has `mvnw`, `mvnw.cmd` and `.mvn/wrapper/maven-wrapper.properties`. That file pins Maven 3.9.11.
+Look at the Cadence folder. It has `mvnw`, `mvnw.cmd` and `.mvn/wrapper/maven-wrapper.properties`. That file pins Maven 3.9.11.
 
 ```callout tip
 `-q` (quiet) hides the progress lines and shows only warnings and errors. `./mvnw -q test` prints almost nothing when every test passes.
@@ -198,7 +198,7 @@ To see every jar and where it came from, ask for the dependency tree:
 Here is the top of your practice folder's real tree. A `...` marks lines left out.
 
 ```text
-[INFO] dev.javaquest:practice:jar:1.0
+[INFO] dev.cadence:practice:jar:1.0
 [INFO] +- org.junit.platform:junit-platform-console-standalone:jar:6.1.3:compile
 [INFO] +- org.mockito:mockito-junit-jupiter:jar:5.24.0:test
 [INFO] |  \- org.mockito:mockito-core:jar:5.24.0:test
@@ -231,7 +231,7 @@ Add `-Dverbose` to see the losers too. `-Dincludes` keeps only the library you a
 ```
 
 ```text
-[INFO] dev.javaquest:practice:jar:1.0
+[INFO] dev.cadence:practice:jar:1.0
 [INFO] +- ch.qos.logback:logback-classic:jar:1.6.6:compile
 [INFO] |  \- org.slf4j:slf4j-api:jar:2.0.19:compile
 [INFO] +- org.springframework.boot:spring-boot-starter-webmvc:jar:4.1.2:compile
@@ -538,7 +538,7 @@ Other ways to get there:
 
 ### Many modules, one build
 
-Big projects split into several Maven projects, called **modules**, that build together. JavaQuest itself does this. Its top `pom.xml` lists them:
+Big projects split into several Maven projects, called **modules**, that build together. Cadence itself does this. Its top `pom.xml` lists them:
 
 ```xml
 <modules>
@@ -712,7 +712,7 @@ The jar holds what is in `classes/`, plus a few lines about the build. The test 
 
 ## Try it
 
-Your practice folder is a Maven project. Open a terminal in the JavaQuest folder. `-f` tells Maven which POM to use.
+Your practice folder is a Maven project. Open a terminal in the Cadence folder. `-f` tells Maven which POM to use.
 
 1. See every jar your practice code uses:
 

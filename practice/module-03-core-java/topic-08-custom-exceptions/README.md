@@ -9,4 +9,4 @@ Make a full station impossible to ignore. Replace error codes with exceptions.
 5. **TODO 7:** make `KioskSession.close()` remember that the session is closed, so `isClosed()` returns `true`.
 6. **TODO 8 and 9:** in `KioskSession.run(s, bikeId)`, open a `KioskSession` in try-with-resources and return `"Docked at "` plus the dock number. Catch `DockFullException` and return its message, such as `Station full: Harbor`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

@@ -12,4 +12,4 @@ Sort the ride report so support can find rides, and drop the rides that are over
 
 The three sort methods return a new list and leave the original alone.
 
-Press **Submit** in JavaQuest, or just save the files in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the files in your IDE. The tests run on their own.

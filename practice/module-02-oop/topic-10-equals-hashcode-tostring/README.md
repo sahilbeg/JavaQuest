@@ -8,4 +8,4 @@ The lost-bike report lists the same bike twice, and the log prints `Bike@1b6d358
 4. **TODO 4:** in `LostReport`, make `countDistinct(bikes)` count how many different bike ids the array holds. Use nested loops and `equals`.
 5. **TODO 5:** make `contains(bikes, target)` return `true` when a bike in the array equals `target`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

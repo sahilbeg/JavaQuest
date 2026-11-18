@@ -15,4 +15,4 @@ When you are done, this stack should work:
 Lock lock = new RecordingLock(new RetryingLock(new OldLockAdapter(new OldLock())));
 ```
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

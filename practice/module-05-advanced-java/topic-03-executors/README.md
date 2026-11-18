@@ -6,4 +6,4 @@ Make the dock sensor check in `SensorPool.java` reuse a small pool of threads. `
 2. **TODO 4 to 6:** write `maxThreadsSeen(dockIds, poolSize)`. Make a plain `HashSet`. Each task adds `Thread.currentThread().getName()` inside `synchronized (names) { names.add(...); }`. Add a one-line comment saying why the lock is needed. Wait for every task, then return the size of the set. It must never be more than `poolSize`.
 3. **TODO 7:** write `checkAllSafely(dockIds, poolSize)`. It works like `checkAll`, but a broken sensor gives the line `Harbor-X: failed (sensor offline)`. Catch `ExecutionException` and use `e.getCause().getMessage()`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

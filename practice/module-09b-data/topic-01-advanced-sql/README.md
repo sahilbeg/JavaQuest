@@ -97,4 +97,4 @@ When a check fails, it shows the rows it expected and the rows your query return
 
 Each query may run for at most 3 seconds. A recursive query with no stop condition is cancelled with `Statement was canceled or the session timed out`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

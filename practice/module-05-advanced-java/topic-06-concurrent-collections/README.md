@@ -6,4 +6,4 @@ Make the live station map safe when many dock sensor threads update it at once.
 2. **TODO 4 and 5:** in `RideCounter`, `record()` adds 1 to the `AtomicInteger` and `total()` returns its value.
 3. **TODO 6 and 7:** in `TelemetryPipe`, `send(item)` puts the item on the `LinkedBlockingQueue`. `drain(pipe, expected)` takes exactly `expected` items and returns them in the order they arrived.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

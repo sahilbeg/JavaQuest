@@ -34,4 +34,4 @@ Then the tests run your checks against five broken copies of the fare code. Each
 
 At least one of your checks must fail on each broken copy. A broken copy counts as caught only when one of your assertions fails. Any other exception does not count. Test the edges: zero, both sides of each boundary, and negative minutes.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

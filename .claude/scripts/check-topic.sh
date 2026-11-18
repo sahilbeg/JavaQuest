@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Checks one practice unit quickly, the way JavaQuest's runner does.
+# Checks one practice unit quickly, the way Cadence's runner does.
 # Usage: .claude/scripts/check-topic.sh <practice unit dir> [solution|skeleton|src]   (default: both solution and skeleton)
 # Compiles <dir>/<variant> and <dir>/test against practice/target/runner-classpath.txt with -parameters,
 # runs JUnit with the runner's JVM flags, and prints each test with its result.

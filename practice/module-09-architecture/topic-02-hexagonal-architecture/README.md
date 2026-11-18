@@ -55,4 +55,4 @@ Spoke is moving to a new payment provider, PayRiver. The old ride code turned Pa
 - `PayRiverPaymentAdapterTest` runs the adapter alone, against a fake PayRiver that records each request. One test switches the computer's language to German for a moment.
 - `HexagonRulesTest` checks the dependency rule: arrows point into the core, never out of it.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The checks run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The checks run on their own.

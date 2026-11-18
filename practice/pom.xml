@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   Opens the practice folders as one project in your IDE, with JUnit available.
-  The JavaQuest app also uses it to download the JUnit jars that it runs tests with.
+  The Cadence app also uses it to download the JUnit jars that it runs tests with.
   Each topic adds its src and test folders to the lists below. Solution folders are left out on purpose.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>dev.javaquest</groupId>
+  <groupId>dev.cadence</groupId>
   <artifactId>practice</artifactId>
   <version>1.0</version>
 
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
-    <!-- Keeps parameter names for Spring, as JavaQuest's runner does. -->
+    <!-- Keeps parameter names for Spring, as Cadence's runner does. -->
     <maven.compiler.parameters>true</maven.compiler.parameters>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>6.1.3</junit.version>
@@ -131,7 +131,7 @@
   <build>
     <plugins>
       <plugin>
-        <!-- IDEs reuse this argLine, so money like %.2f prints with a point on every Mac, as in JavaQuest's checks. -->
+        <!-- IDEs reuse this argLine, so money like %.2f prints with a point on every Mac, as in Cadence's checks. -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.5.6</version>

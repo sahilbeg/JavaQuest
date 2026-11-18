@@ -53,7 +53,7 @@ sequenceDiagram
 
 In a normal Spring Boot project you add `spring-boot-starter-security`. A **starter** is a dependency that also switches features on by default. With this one, Boot locks every URL. It creates one user called `user` and prints a random password in the log at start-up. It also turns on a login form, and the header-based login you meet below.
 
-That is a safe default, but it hides what is going on. JavaQuest leaves the starter out. Spring Security is on the classpath, yet it does nothing until your own code switches it on. So in this topic you write every rule yourself, the explicit way.
+That is a safe default, but it hides what is going on. Cadence leaves the starter out. Spring Security is on the classpath, yet it does nothing until your own code switches it on. So in this topic you write every rule yourself, the explicit way.
 
 ### Syntax: @EnableWebSecurity and a SecurityFilterChain bean
 
@@ -363,7 +363,7 @@ class RentalSecurityTest {
 
 - `httpBasic("ada", "ride-on")` adds a real Basic header. The full chain runs, password check included.
 - `@WithMockUser` pretends someone already logged in, with the roles you choose. It tests your rules without needing real users.
-- `testSecurityContext()` carries that pretend user into the MockMvc request. With Boot's security starter, Boot adds this for you. JavaQuest has no starter, so you add it yourself.
+- `testSecurityContext()` carries that pretend user into the MockMvc request. With Boot's security starter, Boot adds this for you. Cadence has no starter, so you add it yourself.
 
 ### Next steps: OAuth2 and JWT
 
@@ -705,7 +705,7 @@ public class SecurityConfig {
 No qualifying bean of type 'org.springframework.security.config.annotation.web.builders.HttpSecurity' available
 ```
 
-Fix: add `@EnableWebSecurity` above the class. It is what creates the `HttpSecurity` builder. In JavaQuest there is no starter to do it for you.
+Fix: add `@EnableWebSecurity` above the class. It is what creates the `HttpSecurity` builder. In Cadence there is no starter to do it for you.
 
 **2. Writing the ROLE_ prefix yourself.**
 

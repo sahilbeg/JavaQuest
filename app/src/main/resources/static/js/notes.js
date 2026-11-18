@@ -134,7 +134,7 @@ export async function renderNotes(view, catalog, id) {
       next && h("a", { class: "button", href: `/notes/${next.id}` }, next.title, icon("arrow-right"))));
 
   view.replaceChildren(page);
-  document.title = `${summary.title} · Notes · JavaQuest`;
+  document.title = `${summary.title} · Notes · Cadence`;
   const dispose = enhanceContent(body);
   scrollTo({ top: 0 });
   return dispose;

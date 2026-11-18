@@ -30,4 +30,4 @@ Out of scope: cancelling, docking the same bike twice, broken bikes, and returni
 - **TODO 2:** `StandardPricing.fareCents`.
 - **TODO 3 to 13:** `ReservationDesk`. The private helpers `isHeld` and `checkDockExists` are written for you. Fill in `activeReservation` and `dropExpired` too, then use them from the public methods.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

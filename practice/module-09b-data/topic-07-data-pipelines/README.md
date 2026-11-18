@@ -60,4 +60,4 @@ Call `runOne` for every task in `dag.order()`. Return `true` when every task end
 - Call `runOne`, in `dag.order()`, only for tasks whose state is `FAILED` or `UPSTREAM_FAILED`. Leave `SUCCESS` tasks alone: never call them again.
 - Return `succeeded(date)`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The checks run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The checks run on their own.

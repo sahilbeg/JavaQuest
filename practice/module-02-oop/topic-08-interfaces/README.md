@@ -10,4 +10,4 @@ Itachi says the charging dock only knows about `EBike`. The new electric scooter
 
 A small private helper method that keeps a number between 0 and 100 saves you from writing the same `if` checks twice.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

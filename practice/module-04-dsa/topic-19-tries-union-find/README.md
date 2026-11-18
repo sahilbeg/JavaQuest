@@ -29,4 +29,4 @@ Stations are numbered `0` to `stations - 1`. The tests use 0 Riverside, 1 Old Mi
 
 A test joins 100,000 stations to station 0, once as `connect(0, i)` and once as `connect(i, 0)`. Each run must finish within 2 seconds. Without at least one of union by size or path compression, one of the two orders builds a long chain and runs too long. Use both.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

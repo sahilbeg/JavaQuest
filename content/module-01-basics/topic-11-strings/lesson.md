@@ -82,7 +82,7 @@ System.out.println("title".toUpperCase(java.util.Locale.forLanguageTag("tr"))); 
 System.out.println("title".toUpperCase(java.util.Locale.ROOT));                   // TITLE
 ```
 
-On a server set to Turkish, `"title".toUpperCase()` would not equal `"TITLE"`, and a code check fails for no clear reason. For codes, ids and keys, pass `Locale.ROOT`, which means "no particular language". Add `import java.util.Locale;` at the top of the file. JavaQuest runs your ticket's checks with English settings, so plain `toUpperCase()` is fine there.
+On a server set to Turkish, `"title".toUpperCase()` would not equal `"TITLE"`, and a code check fails for no clear reason. For codes, ids and keys, pass `Locale.ROOT`, which means "no particular language". Add `import java.util.Locale;` at the top of the file. Cadence runs your ticket's checks with English settings, so plain `toUpperCase()` is fine there.
 
 ### Syntax: trim and strip
 

@@ -8,4 +8,4 @@ Teach the Riverside kiosk to read its dock sensors in `DockMap.java`. In a `bool
 4. **TODO 4:** make `longestRide(rides)` return the biggest number in `rides`. Return `0` when the array is empty.
 5. **TODO 5:** make `bikesPerStation(stations)` return an `int[]` with one bike count for each row of the 2D array.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

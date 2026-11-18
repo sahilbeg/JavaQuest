@@ -86,7 +86,7 @@ function backupBlock() {
   const download = async () => {
     const data = await api.exportProgress();
     const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
-    const link = h("a", { href: url, download: `javaquest-progress-${new Date().toISOString().slice(0, 10)}.json` });
+    const link = h("a", { href: url, download: `cadence-progress-${new Date().toISOString().slice(0, 10)}.json` });
     document.body.append(link);
     link.click();
     link.remove();

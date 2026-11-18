@@ -41,4 +41,4 @@ Each test gets a fresh in-memory H2 database. The repository receives a `DataSou
 
 Other checks save rides and read them back, and try the injection text on `findByRider` and `totalFareCents`. The last check hands the repository a database that is switched off, and expects your `RideRepositoryException`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

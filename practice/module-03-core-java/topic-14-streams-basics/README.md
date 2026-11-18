@@ -8,4 +8,4 @@ The report code is full of loops, and each loop has its own off-by-one bug. Rewr
 4. **TODO 4:** make `topThreeLongest` return the bike ids of the three longest rides, longest first.
 5. **TODO 5:** make `averageMinutes` return the average ride length, or `0.0` when there are no rides.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

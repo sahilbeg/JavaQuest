@@ -55,4 +55,4 @@ until (old, new) is (0, replicas):
 
 With 3 replicas, maxSurge `"1"` and maxUnavailable `"0"`, the plan is (3,0), (3,1), (2,1), (2,2), (1,2), (1,3), (0,3).
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The checks run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The checks run on their own.

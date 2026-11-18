@@ -58,4 +58,4 @@ Time: O(1) map work per ask, plus one pricing call per quote. Space: one entry p
 
 The checks use a fake clock, a fake profile store that counts `load` calls, and a fake pricing service that counts calls. In the single-flight checks, eight threads ask for one quote while the fake pricing service holds the first call at a gate. The gate opens only once every thread has asked. Then the checks count the calls. A check gives up after a few seconds if a thread never wakes up.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

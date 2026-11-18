@@ -53,4 +53,4 @@ A model of Docker's build cache for one stage. A step runs again unless **every*
 
 `rebuilds` is O(s × r × c) time for s steps, r reads per step and c changed files, and O(s) extra space for the answer.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The checks run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The checks run on their own.

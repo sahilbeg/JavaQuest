@@ -7,4 +7,4 @@ Give Jiraiya his station numbers in `StationStats.java`. Every method walks the 
 3. **TODO 3:** `busiestStation` returns the station with the most minutes. On a tie, the station that comes first alphabetically wins. With no rides, return `null`.
 4. **TODO 4:** `report` returns one line per station in alphabetical order, like `Harbor: 45 min`, joined with `"\n"`. No extra newline at the end.
 
-Press **Run** to see the report for a few sample rides. Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Run** to see the report for a few sample rides. Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

@@ -22,4 +22,4 @@ This exercise has two parts, and you write both.
 
 The hidden tests run your checks against a correct discount, against your `Groups`, and against four buggy discounts. Your checks must pass on the correct ones and catch every buggy one. A buggy discount counts as caught only when one of your assertions fails. Any other exception does not count. A separate test checks `Groups` directly.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

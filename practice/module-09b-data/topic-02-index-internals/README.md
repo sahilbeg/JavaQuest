@@ -57,4 +57,4 @@ Column names are compared **ignoring case**: `BIKE_ID` and `bike_id` are the sam
 
 The tree checks build small trees by hand, then put 3,000 random keys with a fixed seed and compare every answer with a `java.util.TreeMap`. They read `pageReads()` after `resetPageReads()` to check what each `get` and `range` cost. A check gives up after 5 seconds if a loop never ends.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

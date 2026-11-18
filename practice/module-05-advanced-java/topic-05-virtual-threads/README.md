@@ -7,4 +7,4 @@ Make `MarathonPayments.java` pay every marathon rider at once, each on their own
 3. **TODO 6 and 7:** in `payNamed(List<String> riderIds)`, submit one task per id that calls `pay(0)` and returns `"paid " + id`. Keep the futures in a list and read them in order, so the lines match the input order.
 4. **TODO 8 and 9:** in `countTaps(int taps)`, submit `taps` virtual-thread tasks. Each task adds 1 to an `AtomicInteger` and does nothing else. Return the count after the block.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

@@ -522,7 +522,7 @@ class StationReportPostgresTest {
 }
 ```
 
-It needs Docker on the machine, and the first run downloads the database image. Many teams keep fast H2 tests for quick checks, and run Testcontainers tests in CI (module 7) before every merge. JavaQuest's practice tests use H2, because they must run on any machine without Docker.
+It needs Docker on the machine, and the first run downloads the database image. Many teams keep fast H2 tests for quick checks, and run Testcontainers tests in CI (module 7) before every merge. Cadence's practice tests use H2, because they must run on any machine without Docker.
 
 ## Worked example
 

@@ -9,4 +9,4 @@
 
 Do not copy `fare` into the subclasses. `Bike.fare` calls `pricePerMinute()`, so your overrides change the fare on their own.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

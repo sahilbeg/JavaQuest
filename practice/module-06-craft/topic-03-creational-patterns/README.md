@@ -19,4 +19,4 @@ This should work when you are done:
 RideTicket t = RideTicket.builder().bike("B-1042").from("Harbor").to("Uptown").minutes(25).rider("r1").build();
 ```
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

@@ -7,4 +7,4 @@ Split the fare rules in `FareRules.java` into small methods that each do one job
 3. **TODO 3:** make `fare(type, minutes, member)` call `pricePerMinute` and `unlockFee`. A non-member pays the unlock fee plus every minute. A member rides the first 30 minutes free, then pays per minute, with no unlock fee.
 4. **TODO 4:** make the overloaded `fare(minutes)` return the fare for a classic bike and a non-member. Call the other `fare` method to do it.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

@@ -22,4 +22,4 @@ Open `StationReportTest.java`. It uses `@DataJpaTest`, which starts only the JPA
 - Each test calls one `StationReport` method and checks the answer.
 - The last test reads the `bike` table with plain SQL, to check that `type` and `status` hold words.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own. A Spring test takes a few seconds to start.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own. A Spring test takes a few seconds to start.

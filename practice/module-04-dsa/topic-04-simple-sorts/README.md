@@ -10,4 +10,4 @@ Do not call `Arrays.sort` or any other library sort. The tests only check result
 4. **TODO 4:** `insertion(a)` takes each `key = a[i]` and shifts bigger values one place right until the key fits.
 5. **TODO 5:** `swap(a, i, j)` swaps two items with a `temp` variable. All the sorts can use it.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

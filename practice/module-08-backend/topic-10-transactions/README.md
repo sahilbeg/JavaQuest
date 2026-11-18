@@ -18,4 +18,4 @@ Open `GiftServiceTest.java`. It uses `@SpringBootTest` with no web server. Befor
 - A gift to `r-99` fails after the withdrawal. Ada must still have 2000 cents.
 - `giftToEach` must undo every earlier gift when a later one fails, both for an unknown friend and for `InsufficientCreditException`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own. A Spring test takes a few seconds to start.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own. A Spring test takes a few seconds to start.

@@ -13,4 +13,4 @@ Every method is `static`. Some tests use 200,000 values and a 2-second limit, so
 7. **TODO 7:** otherwise `rangeTotal` returns the total of the original values from index `from` to index `to`, **both included**, with one subtraction: `prefix[to + 1] - prefix[from]`.
 8. **TODO 8:** `countStretchesSummingTo(values, k)` returns how many runs of values in a row add up to exactly `k`, as a `long`. Values can be negative (bikes arriving minus bikes leaving), so a sliding window does not work. Keep a `Map<Long, Integer>` of running totals seen so far, seeded with `0L -> 1`, so runs that start at index 0 are counted. An empty array gives 0.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

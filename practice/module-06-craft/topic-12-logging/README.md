@@ -12,4 +12,4 @@ The kiosk's `Checkout` prints everything with `System.out.println`, including fu
 
 Use `{}` placeholders for every value. The tests read the log lines and check the level, the text, the attached exception, and that no line holds a full card number.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

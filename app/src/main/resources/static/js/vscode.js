@@ -69,7 +69,7 @@ function setupStep() {
         ". It's also the icon with four small squares on the bar at the far left."],
       ["In its search box, type ", h("strong", {}, "Extension Pack for Java"),
         ". Pick the one made by Microsoft, then click ", h("strong", {}, "Install"), "."],
-      "Wait until the install finishes. It uses the Java (the JDK) you already have, the same one that runs JavaQuest.",
+      "Wait until the install finishes. It uses the Java (the JDK) you already have, the same one that runs Cadence.",
     ),
     h("label", { class: "vg-check" }, check, "I've set up VS Code"));
   return step(1, "Set up VS Code (first time only)", box);
@@ -151,7 +151,7 @@ function submitStep() {
     ol(
       ["Save: press ", keys("Cmd S", "Ctrl S"), ". Changed more than one file? Save each one, or press ",
         keys("Cmd Option S", "Ctrl K, then S"), " to save them all."],
-      [h("strong", {}, "That's it: saving is how you submit."), " JavaQuest notices the save and runs the checks within a second or two."],
+      [h("strong", {}, "That's it: saving is how you submit."), " Cadence notices the save and runs the checks within a second or two."],
       ["Come back to this page. The ", h("strong", {}, "Checks"), " list below shows each check, green or red, marked “from your IDE save”."],
       "A red check says what it expected. Fix that part in VS Code, save again, and look again. Repeat until every check is green.",
       ["Stuck? Press ", h("strong", {}, "Hints"), " on this page. ", h("strong", {}, "Show solution"), " is below the editor, as a last resort."],
@@ -180,7 +180,7 @@ export function vscodeGuide(topic) {
         avatar("theo", "avatar-lg"),
         h("div", { class: "bubble" },
           h("p", { class: "who" }, h("strong", {}, kakashi.name), ` · ${kakashi.role}`),
-          h("p", {}, "Yo. You'll write this ticket's code in VS Code, and JavaQuest checks it the moment you save."),
+          h("p", {}, "Yo. You'll write this ticket's code in VS Code, and Cadence checks it the moment you save."),
           h("p", {}, "Follow the steps in order. Each one is small. I'll be right here."))),
       h("div", { class: "vg-steps" },
         setupStep(), openFolderStep(guide), readTaskStep(guide, folders), filesStep(guide), writeStep(topic), submitStep()),

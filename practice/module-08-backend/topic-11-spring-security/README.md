@@ -35,4 +35,4 @@ Open `SecurityConfigTest.java`. It starts the whole app with `@SpringBootTest` a
 
 The tests check that stations stay public, that rentals need a login and that a wrong password gets 401. A rider gets 403 on the admin move, while Kakashi gets 200. No session may be created, and Ada's password must be stored as a BCrypt hash.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

@@ -8,4 +8,4 @@
 4. **TODO 4:** store the `List<PaymentMethod>` that the constructor receives.
 5. **TODO 5:** in `pay`, remove the switch. Find the method whose `name()` matches and call its `pay`. If none matches, throw `IllegalArgumentException("unknown payment method: " + method)`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

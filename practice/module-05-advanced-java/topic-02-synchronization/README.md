@@ -14,4 +14,4 @@ At rush hour, many riders tap the Harbor kiosk at once. Make the unlock counter 
 5. **TODO 5:** make `bikesLeft()` return the bikes left, safely.
 6. **TODO 6:** make `unlockMany(dock, riders)` start one thread per rider. Each thread calls `tryUnlock()` once. Join them all and return how many unlocks succeeded.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

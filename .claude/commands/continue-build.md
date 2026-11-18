@@ -1,9 +1,9 @@
 ---
-description: Report where the JavaQuest build stopped, then continue with the next milestone
+description: Report where the Cadence build stopped, then continue with the next milestone
 argument-hint: "[optional: a milestone or task to start from, e.g. C09]"
 ---
 
-Continue building JavaQuest from where it stopped.
+Continue building Cadence from where it stopped.
 
 1. Read `CLAUDE.md`, then `build_state.json`: `milestone`, `nextTask`, `resumeHere`, `blockers`, `openDecisions`. Check `git status` and `git log --oneline -5` for uncommitted or half-finished work.
 2. Print a short status for the user:

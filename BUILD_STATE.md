@@ -2,7 +2,7 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-18T18:23:38+05:30
+- **Last updated:** 2026-11-18T19:12:42+05:30
 - **Phase:** PHASE 1: build
 - **Milestone:** C09B
 - **Resume here:** Modules 09a (Platform and DevOps) and 09b (Data in depth) are committed at ui_wired, between modules 09 and 10; module 10 now unlocks after 09b. Every milestone is built. What is left needs a person: the browser read-through of modules 0 to 10 and a real VoiceOver pass. Windows support stays deferred.
@@ -62,6 +62,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - M5: capstone rubric (lesson card and README), /offer completion screen (Tsunade's offer letter, printable), launch dialog on closing the capstone, Full-time offer kudos, kudos earnedOn dates; kudos toasts name the teammate; tested in a throwaway author app
 - M6: fresh-clone test on macOS (one command builds and starts; grading verified end to end in the clone); run.sh checks Java 21+, reports a busy port, and switches on the commit guard in a clone; README with quick start, Java install, how you learn, progress and backups, commands, troubleshooting and limits
 - C09A/C09B: module 09a Platform and DevOps (Dockerfiles, Compose, GitHub Actions, Kubernetes manifests, Helm/Kustomize, Terraform/GitOps, config and secrets, Prometheus; INC-11 the deploy that took Spoke down, FEAT-11 one-click deploys) and module 09b Data in depth (advanced SQL, B+ tree index internals, MVCC/WAL, NoSQL modelling, Redis patterns, replication and sharding, data pipelines with Airflow concepts and a Java DAG scheduler, Postgres in production; INC-12 month-end reports, FEAT-12 rider statements data mart); content model allows module-NNa ids; 4 independent reviews (about 45 findings, one image-tag format module-wide) fixed; all checks green
+- Rename to Cadence across code, build, UI, scripts, docs and content; legacy progress folder and flag names kept working; all checks green
 
 ## Decisions
 
@@ -82,6 +83,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - Animations: every topic has at least one ```animate block; modules 0 to 2 done in the UX round, modules 3 to 8 to follow, new modules include them from C09
 - Tickets added after a module was built get the next free SPK key; the order a ticket appears in comes from meta.yaml order, not the key or folder number
 - Two modules inserted before module 10 (user request): module-09a-platform (Docker, Compose, GitHub Actions, Kubernetes manifests, Helm/Kustomize, Terraform/GitOps, config and secrets, Prometheus) and module-09b-data (advanced SQL, index internals, MVCC, NoSQL modelling, Redis patterns, replication/sharding, data pipelines with Airflow concepts in Java, Postgres in production). Ids carry a letter (module-09a-*) so no existing id changes; ticket keys SPK-11TT/SPK-12TT, INC-11/12, FEAT-11/12; packages jq.m11/jq.m12. Airflow is taught as concepts plus a Java DAG scheduler, not as a Python tool.
+- Project renamed from JavaQuest to Cadence (user request: a course to become a software engineer, not a Java quest). Java packages dev.cadence, Maven groupId dev.cadence, config prefix cadence.*, jar cadence.jar, header X-Cadence. Progress folders: run.sh uses ~/.cadence, but keeps using an existing ~/.javaquest (and ~/.javaquest-author) untouched; --javaquest.* flags still work. Practice packages (jq.*), ticket ids and the GitHub repository name are unchanged.
 
 ## Open decisions
 

@@ -34,4 +34,4 @@ When a check fails, it shows what it expected and what your query returned. Each
 
 You can try a query first in the lesson's runnable examples, then paste it into the constant.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

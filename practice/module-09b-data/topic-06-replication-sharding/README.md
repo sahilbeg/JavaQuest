@@ -50,4 +50,4 @@ N replicas hold each value; a read waits for answers from R of them. Each answer
 
 Time: the ring's `nodeFor` is O(log(N × V)); adding a node is O(V log(N × V)). The log is O(1) per append, the router O(F) per read for F followers, the quorum read O(R). Space: O(N × V) points, O(entries + sessions).
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The checks run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The checks run on their own.

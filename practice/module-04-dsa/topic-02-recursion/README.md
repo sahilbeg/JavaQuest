@@ -10,4 +10,4 @@ Jiraiya wants the total free docks along the overflow chain: Riverside, then Old
 4. **TODO 6:** `reverse(s)` returns the text back to front. `reverse("B-1042")` is `"2401-B"`. The empty string reverses to itself.
 5. **TODO 7:** `power(base, exp)` returns `base` multiplied by itself `exp` times. `power(2, 10)` is `1024` and `power(12, 0)` is `1`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

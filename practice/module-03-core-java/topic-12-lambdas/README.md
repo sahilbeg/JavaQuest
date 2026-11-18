@@ -7,4 +7,4 @@ Kakashi's sorter has nine Comparator classes. Replace them with short lambdas in
 3. **TODO 3:** make `removeShort(rides, under)` remove every ride with fewer minutes than `under` from the list itself. Use `removeIf` with a lambda.
 4. **TODO 4:** make `upperIds(rides)` return the bike ids in upper case, in list order. Use a loop or `forEach`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

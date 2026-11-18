@@ -12,4 +12,4 @@ Kakashi found a plain `Vehicle` in the kiosk with no price. Its rides cost only 
 
 Keep the word `abstract` on `Vehicle`. One test checks it.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

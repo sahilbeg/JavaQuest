@@ -7,4 +7,4 @@ Fix the "bikes used today" count in `BikeUsage.java`. Each method gets a list of
 3. **TODO 3:** `usedAtBoth` returns the ids that appear in both station lists, sorted alphabetically.
 4. **TODO 4:** `firstDuplicate` returns the first id that shows up for a second time, or `null` if no id repeats.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

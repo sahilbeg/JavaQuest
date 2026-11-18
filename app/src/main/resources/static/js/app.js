@@ -58,7 +58,7 @@ async function route({ keepFocus = false } = {}) {
   try {
     const [catalog] = await Promise.all([api.catalog(), picturesReady]);
     document.getElementById("author-banner").hidden = !catalog.authorMode;
-    document.title = { journey: "Your journey · JavaQuest", career: "Career · JavaQuest", review: "Review · JavaQuest", notes: "Notes · JavaQuest", offer: "Your offer · JavaQuest" }[current.name] ?? "JavaQuest";
+    document.title = { journey: "Your journey · Cadence", career: "Career · Cadence", review: "Review · Cadence", notes: "Notes · Cadence", offer: "Your offer · Cadence" }[current.name] ?? "Cadence";
     setPageTour(current.name === "ticket" ? "lesson" : current.name);
     cleanup = current.name === "ticket" ? await renderLesson(view, catalog, current.id, current.params)
       : current.name === "review" ? await renderReview(view, catalog, current.id)
@@ -75,7 +75,7 @@ async function route({ keepFocus = false } = {}) {
       byte("encouraging", "", { size: "md" }),
       h("h1", {}, "Something went wrong"),
       h("p", {}, error.message),
-      h("p", {}, "Check that JavaQuest is still running in your terminal, then reload the page.")));
+      h("p", {}, "Check that Cadence is still running in your terminal, then reload the page.")));
   }
 }
 

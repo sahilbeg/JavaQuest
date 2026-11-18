@@ -10,4 +10,4 @@ Replace the long `Ride` class with a short record, then add up a list of rides.
 4. **TODO 4:** make `totalFare` add up the fare of every ride.
 5. **TODO 5:** make `longest` return the ride with the most minutes. Return `null` when the array is empty.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

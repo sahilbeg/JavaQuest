@@ -1,4 +1,4 @@
-const WRITE_HEADERS = { "X-JavaQuest": "1", "Content-Type": "application/json" };
+const WRITE_HEADERS = { "X-Cadence": "1", "Content-Type": "application/json" };
 
 async function parse(response) {
   if (response.ok) {

@@ -154,7 +154,7 @@ export async function renderJourney(view, catalog) {
   view.replaceChildren(h("div", { class: "journey" },
     h("header", { class: "page-head" },
       h("p", { class: "eyebrow" }, greeting()),
-      h("h1", {}, "Your Java course"),
+      h("h1", {}, "Your software engineering course"),
       h("p", { class: "muted" }, `${doneAll} of ${topics.length} tickets complete · ${modules.length} modules, from your first program to a full-time offer.`)),
     upNext,
     reviewStrip,

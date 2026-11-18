@@ -22,4 +22,4 @@ A bike's features are one `int`, one bit per feature. The constants are already 
 
 Tests that could loop forever stop after 2 seconds.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

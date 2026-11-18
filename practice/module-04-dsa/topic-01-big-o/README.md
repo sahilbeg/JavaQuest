@@ -21,4 +21,4 @@ Open `BikeCheck.java`.
 5. **TODO 5:** `containsSlow(ids, id)` loops over the list and returns `true` when an id `equals` the one you want. Do not call `ids.contains`: the point is to write the O(n) loop yourself.
 6. **TODO 6:** `containsFast(ids, id)` returns `ids.contains(id)` on the set. Do not loop over the set.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

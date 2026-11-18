@@ -1,15 +1,15 @@
-# JavaQuest: build guide for Claude
+# Cadence: build guide for Claude
 
-JavaQuest teaches Java from zero to professional through a story: the learner is an intern at Spoke, a bike-sharing startup. A Spring Boot app (`app/`) renders lessons and quizzes from `content/` and grades code in `practice/` with real JUnit tests.
+Cadence teaches software engineering, in Java, from zero to professional (SDE 2) through a story: the learner is an intern at Spoke, a bike-sharing startup. A Spring Boot app (`app/`) renders lessons and quizzes from `content/` and grades code in `practice/` with real JUnit tests.
 
 The app is being built milestone by milestone. To continue the build, run `/continue-build`, or follow "Resuming the build" below.
 
 ## The user is also learning with this app
 
-The user learns Java with JavaQuest while the build goes on. Their learning must never be disturbed:
+The user learns Java with Cadence while the build goes on. Their learning must never be disturbed:
 
-- **Their progress** lives in `~/.javaquest/progress.mv.db` (H2, outside the repo; daily copies in `~/.javaquest/backups/`). Never delete, reset, import into or write to it. Never take checks, submit code or open lessons against it for testing.
-- **Preview and test with `./run.sh --author`.** It opens every ticket on http://localhost:2027 with its own database in `~/.javaquest-author`. The learner's app on 2026 can keep running at the same time. For a throwaway run, add `--javaquest.data-dir=<scratch folder>`. Do not use `./run.sh --unlock-all`: it opens everything against the learner's real progress.
+- **Their progress** lives in `~/.javaquest/progress.mv.db` (H2, outside the repo; daily copies in `~/.javaquest/backups/`). That is the folder from before the project was renamed to Cadence; `run.sh` keeps using it because it exists, and a new learner gets `~/.cadence`. Never delete, reset, import into or write to it. Never take checks, submit code or open lessons against it for testing.
+- **Preview and test with `./run.sh --author`.** It opens every ticket on http://localhost:2027 with its own database in `~/.javaquest-author` here (`~/.cadence-author` on a new laptop). The learner's app on 2026 can keep running at the same time. For a throwaway run, add `--cadence.data-dir=<scratch folder>`. Do not use `./run.sh --unlock-all`: it opens everything against the learner's real progress.
 - **Their code** lives in `practice/<module>/<topic>/src/`: that is where they write each fix, in the app or their IDE. Never edit, overwrite, reset, `git checkout`, `git restore` or `git stash` an existing ticket's `src/`. Fixes to an existing topic go in its `skeleton/` and `solution/` only; `src/` is created only for a new topic, as a copy of its skeleton. A pre-commit hook (`.githooks/pre-commit`) refuses commits that change an existing `src/`. Never bypass it with `--no-verify` or `ALLOW_SRC_CHANGES=1`.
 - **Stage files by explicit path** (`git add content/module-09-architecture practice/module-09-architecture ...`), never `git add -A` or `git add .`. The learner's edits show up as modified `src/` files in `git status`; leave them alone.
 - **Team pictures** in `avatars/` are the user's own (git ignores them). Never add, replace, delete or commit pictures there, and never download character art.
@@ -67,7 +67,7 @@ Large modules can be written in parallel by subagents, one or two topics each. G
 ## Commands
 
 ```bash
-./run.sh                                                             # the learner's app: http://localhost:2026, progress in ~/.javaquest
+./run.sh                                                             # the learner's app: http://localhost:2026, progress in ~/.javaquest here (~/.cadence on a new laptop)
 ./run.sh --author                                                    # for building: every ticket open, http://localhost:2027, separate database
 ./mvnw -q install                                                    # build and run all platform tests
 ./mvnw -q -pl tools dependency:properties exec:java@check-content    # check every lesson and quiz (about 2 min)
@@ -76,7 +76,7 @@ Large modules can be written in parallel by subagents, one or two topics each. G
 .claude/scripts/check-topic.sh <practice unit dir> [solution|skeleton|src]   # one unit, fast, same JVM flags as the runner
 ```
 
-`./mvnw install` rewrites `app/target/javaquest.jar`. That is safe while the app runs, because `run.sh` starts a copy (`app/target/javaquest-running-<port>.jar`). A server started any other way, straight from `javaquest.jar`, hangs when the jar is replaced. `run.sh` rebuilds the jar when `app/`, `runner/`, `content-model/` or the poms changed; restart `./run.sh --author` to see the new build. The learner sees it the next time they start `./run.sh`.
+`./mvnw install` rewrites `app/target/cadence.jar`. That is safe while the app runs, because `run.sh` starts a copy (`app/target/cadence-running-<port>.jar`). A server started any other way, straight from `cadence.jar`, hangs when the jar is replaced. `run.sh` rebuilds the jar when `app/`, `runner/`, `content-model/` or the poms changed; restart `./run.sh --author` to see the new build. The learner sees it the next time they start `./run.sh`.
 
 In a fresh clone, `./run.sh` enables the hook on its first run (`git config core.hooksPath .githooks`); run that yourself if you only build.
 

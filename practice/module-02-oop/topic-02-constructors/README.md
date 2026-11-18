@@ -13,4 +13,4 @@ In `Station.java`:
 4. **TODO 4:** make `Station(String name, int docks)` set both fields.
 5. **TODO 5:** make `freeDocks(int bikesDocked)` return how many docks are still empty.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

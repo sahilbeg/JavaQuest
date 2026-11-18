@@ -12,7 +12,7 @@ One learner: a new CS student who has never written software. They study alone a
 
 ## Product Purpose
 
-JavaQuest teaches Java from first principles to professional backend and architecture skills. It renders pre-written lessons, quizzes and coding exercises stored in the repo, grades the learner's code with real JUnit tests, and tracks mastery. Success means the learner masters each topic (quiz at 80% or more plus passing tests) and keeps coming back.
+Cadence teaches software engineering from first principles to professional level, in Java: backend, architecture, DevOps, data and interviews. It renders pre-written lessons, quizzes and coding exercises stored in the repo, grades the learner's code with real JUnit tests, and tracks mastery. Success means the learner masters each topic (quiz at 80% or more plus passing tests) and keeps coming back.
 
 ## Positioning
 
@@ -42,7 +42,7 @@ The practice code lives in the learner's own repo and IDE. Saving a file in the 
 
 ## Brand Commitments
 
-- Name: JavaQuest. The fictional company inside it is Spoke, in the city of Riverton.
+- Name: Cadence. The fictional company inside it is Spoke, in the city of Riverton.
 - Helper: Satoru Gojo (from Jujutsu Kaisen, joining the Naruto cast for fun), the team's chat helper. Gojo is relaxed and confident, encourages and never blames.
 - Learning happens through real-world cases: every concept is taught as the way to solve a concrete Spoke problem.
 - Voice: explain like the reader is 15 and has never coded. Short sentences, analogies, no unexplained jargon.

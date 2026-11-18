@@ -16,4 +16,4 @@ Make four small Spoke classes safe to share between threads. The checks look at 
    - 6 threads calling `rideStarted` 5,000 times each must give exactly 30,000 rides and the right peak.
 4. **TODO 12 and 13:** `FareTable.get()` must return the same table to every thread, and the constructor must run only once. Use the holder-class idiom: a `private static final class Holder` with `static final FareTable INSTANCE = new FareTable();`, and return `Holder.INSTANCE`. (Double-checked locking with a `volatile` field also passes.) `timesCreated()` and `fareCents` are already written.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

@@ -112,4 +112,4 @@ Otherwise return normally. Spoke names every production host with `prod` in it, 
 
 The checks build `ConfigSources` by hand, so nothing reads your real environment. Twenty-one checks in three classes: `ConfigResolverTest`, `RedactorTest` and `SafetyCheckTest`. The cycle checks give up after 2 seconds, in case a cycle loops forever.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

@@ -13,4 +13,4 @@ Teach the kiosk to read and write its own ride log. The log is a CSV file: one r
 
 The tests make their own files in a temporary folder, so your real files stay safe.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

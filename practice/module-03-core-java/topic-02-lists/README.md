@@ -10,4 +10,4 @@ Kakashi tidies the Harbor evening ride list every night. His old code removed sh
 4. **TODO 4:** `ridesFrom(String station)` returns a **new** list with the rides from that station, in their original order. The queue itself does not change.
 5. **TODO 5:** `longest()` returns the ride with the most minutes. If two rides tie, return the one nearer the front. Return `null` when the queue is empty.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

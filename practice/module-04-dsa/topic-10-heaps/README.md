@@ -15,4 +15,4 @@ Itachi needs the repair crew to always fix the most urgent bike next. Build a mi
 6. **TODO 6:** build a `Comparator<Repair>` that compares urgency first, then bike id.
 7. **TODO 7:** add every repair to a `java.util.PriorityQueue` with that comparator. Poll until it is empty and return the bike ids in that order.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

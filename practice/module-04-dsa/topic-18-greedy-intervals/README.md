@@ -14,4 +14,4 @@ The methods in `DockScheduler` must never change the list they are given. It may
 5. **TODO 5:** `docksNeeded(bookings)` returns the most bookings happening at the same moment, which is the number of docks needed. A booking that starts at the minute another ends can reuse its dock. Sort all starts and all ends, then sweep through them.
 6. **TODO 6:** `insertMaintenanceWindow(booked, window)` gets `booked` already sorted by start with no overlaps. It returns a new list with the window added, sorted by start. Every booking that overlaps the window merges with it into one window, from the earliest start to the latest end. Windows that only touch the new one stay separate.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

@@ -1,6 +1,6 @@
 # Story
 
-JavaQuest is told as one story. You join **Spoke**, a bike-sharing startup in the city of Riverton, as a software intern. Every topic is a real problem the company has. You learn the concept, then fix the problem. By the end you are the engineer who launches Spoke in a second city.
+Cadence is told as one story. You join **Spoke**, a bike-sharing startup in the city of Riverton, as a software intern. Every topic is a real problem the company has. You learn the concept, then fix the problem. By the end you are the engineer who launches Spoke in a second city.
 
 ## The company
 

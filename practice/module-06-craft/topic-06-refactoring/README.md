@@ -13,4 +13,4 @@ The other three tests check the new shape, and they fail until you build it.
 
 The tests check the extracted `lines()` and `format()` and the unchanged output. They cannot see whether `generate` uses `lines` and `format`, or whether the magic numbers are gone. Check those two things in your own review.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

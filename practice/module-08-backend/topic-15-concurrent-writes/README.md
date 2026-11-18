@@ -44,4 +44,4 @@ Each check opens one fresh in-memory H2 database with two connections, "server A
 
 Two checks wrap your connection so the other server acts **just before your first `INSERT` or `UPDATE`**. That is exactly the gap a check-then-act bug falls into. If your code waits for a row lock that the other server holds, the wait gives up after 0.2 seconds.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

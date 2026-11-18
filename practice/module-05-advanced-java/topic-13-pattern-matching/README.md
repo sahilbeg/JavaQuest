@@ -17,4 +17,4 @@ Swap the long `instanceof` chain for switch expressions that the compiler checks
    - a `DockEvent` gives the same text as `describe(...)`
    - anything else gives `unknown: ` plus the class's simple name, for example `unknown: Integer`
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

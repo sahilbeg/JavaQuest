@@ -44,4 +44,4 @@ refund: 0 cents
 
 Money in this topic is in whole cents, stored as `long`.
 
-Press **Submit** in JavaQuest, or just save the files in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the files in your IDE. The tests run on their own.

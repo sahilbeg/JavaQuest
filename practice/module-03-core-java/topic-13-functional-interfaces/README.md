@@ -10,4 +10,4 @@ Marketing changes promotions every week. Make each promotion a small object you 
 6. **TODO 6:** make `filter` loop over the rides and keep the ones where `test.test(ride)` is true.
 7. **TODO 7:** make `label()` return a `Function<Ride, String>` that gives text like `B-1042 at Harbor`.
 
-Press **Submit** in JavaQuest, or just save the files in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the files in your IDE. The tests run on their own.

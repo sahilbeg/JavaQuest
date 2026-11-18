@@ -152,7 +152,7 @@ steps:
 A **repository** is a project folder whose history of changes is saved by Git. You meet Git two tickets from now. A **library** is code someone else wrote that you reuse, such as JUnit for checks. A **build tool** compiles a whole project, fetches its libraries and runs its checks in one go. **Maven** is a popular build tool for Java.
 ```
 
-JavaQuest keeps your exercises in the `practice/` folder of this repository. Each exercise lives in `practice/<module>/<topic>/src`. When you save a file there, JavaQuest notices and runs the checks for you.
+Cadence keeps your exercises in the `practice/` folder of this repository. Each exercise lives in `practice/<module>/<topic>/src`. When you save a file there, Cadence notices and runs the checks for you.
 
 The file `practice/pom.xml` describes all the exercises as one project. Maven is a build tool, and `pom.xml` is its settings file. When VS Code opens the `practice` folder, the Java extension reads `pom.xml` and finds JUnit, the testing library the checks use.
 
@@ -214,7 +214,7 @@ Gojo says: open a fresh Terminal window after installing. An old window may not 
 - You install the JDK, version **21**, because it's an LTS version.
 - `java -version` and `javac -version` both should show 21. If not, check PATH and JAVA_HOME.
 - An **IDE** such as VS Code, with the Extension Pack for Java, helps you write and run code.
-- Open the `practice` folder in VS Code. Saving a file in `src` makes JavaQuest run the checks.
+- Open the `practice` folder in VS Code. Saving a file in `src` makes Cadence run the checks.
 
 ## Common mistakes
 

@@ -10,4 +10,4 @@ The fare rule: an unlock fee of 100 cents, plus each paid minute at the bike's p
 4. **TODO 4:** in `fareCents`, throw `IllegalArgumentException` for negative minutes. Put the bad value in the message.
 5. **TODO 5:** finish `fareCents` with guard clauses, a named constant for the unlock fee, and small helper methods.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

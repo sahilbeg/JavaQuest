@@ -10,4 +10,4 @@ Give every new bike its own id automatically, count the bikes, and keep the pric
 
 `resetCounter()` is already done. The tests call it before each test, so every test starts from `B-1001`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

@@ -13,4 +13,4 @@ Do not use `ArrayList`, `LinkedList` or any other `java.util` list inside `Rider
 7. **TODO 7:** `reverse()` flips the order of the nodes in place.
 8. **TODO 8:** `toString()` returns the items like `[a, b, c]`, and `[]` when empty.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

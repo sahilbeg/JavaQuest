@@ -30,4 +30,4 @@ Open `RentalApiTest.java`. It starts the app with `@SpringBootTest` and sends re
 
 The tests check both JSON shapes and the deprecation headers, which only v1 sends. They also check every problem field: `type`, `title`, `status`, `detail`, `instance` and `rentalId`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

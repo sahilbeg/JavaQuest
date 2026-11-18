@@ -51,4 +51,4 @@ A sorted set holds members, each with a `double` score.
 
 Time: every string command is O(1). `highestFirst` sorts, so `zrevrange` and `zrevrank` are O(N log N) here; real Redis keeps a skip list and does them in O(log N + M) and O(log N). Space: O(keys + members).
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The checks run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The checks run on their own.

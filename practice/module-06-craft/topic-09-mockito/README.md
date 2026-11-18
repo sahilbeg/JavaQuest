@@ -19,4 +19,4 @@ Open `UnlockServiceTest.java`. Each test has three parts:
 
 The tests check that you charge before you open the lock, never open the lock after a decline, refund on a stuck lock, never send a receipt after a failure, and put the right payment id on the receipt.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

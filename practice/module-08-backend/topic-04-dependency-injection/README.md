@@ -28,4 +28,4 @@ Open `FareServiceTest.java`. `@SpringBootTest` starts your app inside the test, 
 - Some tests ask the `ApplicationContext` which beans exist, for example how many `PriceList` beans there are and which one is primary.
 - One test asks for `FareService` twice and checks it is the same object, because beans are singletons.
 
-Press **Submit** in JavaQuest, or just save a file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save a file in your IDE. The tests run on their own.

@@ -11,4 +11,4 @@ Protect the battery in `EBike.java` so it can never leave the range 0 to 100.
 
 The fields are already `private`, and `id` has no setter, so nobody outside can change it.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

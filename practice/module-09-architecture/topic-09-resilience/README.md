@@ -51,4 +51,4 @@ States: `CLOSED`, `OPEN` and `HALF_OPEN`. A new breaker is `CLOSED`.
   - A retryable failure on the last attempt is thrown unchanged.
   - Otherwise call `sleeper.sleep(backoff.delayMillis(attempt))`, where `attempt` is the number of the try that just failed (1 for the first), then try again. Never sleep after the last try.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The checks run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The checks run on their own.

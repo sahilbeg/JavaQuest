@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
-# Starts JavaQuest: checks this laptop, builds when the sources are newer than the app jar, then starts the app
+# Starts Cadence: checks this laptop, builds when the sources are newer than the app jar, then starts the app
 # and opens it in your browser.
 #
-#   ./run.sh               learn: http://localhost:2026, your progress in ~/.javaquest (backed up daily)
+#   ./run.sh               learn: http://localhost:2026, your progress in ~/.cadence (backed up daily);
+#                          an existing ~/.javaquest from before the rename is used as it is
 #   ./run.sh --check       only check this laptop (Java, port, disk, internet) and say what to fix
 #   ./run.sh --no-browser  start without opening the browser
 #   ./run.sh --author      build and review content: every ticket open, http://localhost:2027,
-#                          a separate progress database in ~/.javaquest-author, so your learning is untouched
+#                          a separate progress database in ~/.cadence-author (or an existing ~/.javaquest-author),
+#                          so your learning is untouched
 #   ./run.sh --unlock-all  every ticket open, but with YOUR progress database (author mode on 2026)
 #
-# Any other arguments go to Spring, for example --server.port=2030.
+# Any other arguments go to Spring, for example --server.port=2030. The old --javaquest.* names still work.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-JAR="$ROOT/app/target/javaquest.jar"
+JAR="$ROOT/app/target/cadence.jar"
 CLASSPATH_FILE="$ROOT/practice/target/runner-classpath.txt"
 
 # ---------- Output ----------
@@ -28,26 +30,30 @@ interactive() { [[ -t 0 && -t 1 ]]; }
 # ---------- Arguments ----------
 MODE="learn"
 PORT="2026"
-DATA_DIR="$HOME/.javaquest"
+# The project was called JavaQuest before. Progress saved under the old folder name keeps working, untouched:
+# use the new folder when it exists, else the old one when it exists, else start the new one.
+progress_dir() { if [[ -d "$HOME/$1" ]]; then echo "$HOME/$1"; elif [[ -d "$HOME/$2" ]]; then echo "$HOME/$2"; else echo "$HOME/$1"; fi; }
+DATA_DIR="$(progress_dir .cadence .javaquest)"
 CHECK_ONLY=false
 OPEN_BROWSER=true
 ARGS=()
 for arg in "$@"; do
+  arg="${arg/#--javaquest./--cadence.}"
   case "$arg" in
     --author)
       MODE="author"
       PORT="2027"
-      DATA_DIR="$HOME/.javaquest-author"
-      ARGS+=("--javaquest.unlock-all=true")
+      DATA_DIR="$(progress_dir .cadence-author .javaquest-author)"
+      ARGS+=("--cadence.unlock-all=true")
       ;;
     --unlock-all)
       MODE="unlock-all"
-      ARGS+=("--javaquest.unlock-all=true")
+      ARGS+=("--cadence.unlock-all=true")
       ;;
     --check) CHECK_ONLY=true ;;
     --no-browser) OPEN_BROWSER=false ;;
     --server.port=*) PORT="${arg#--server.port=}" ;;
-    --javaquest.data-dir=*) DATA_DIR="${arg#--javaquest.data-dir=}" ;;
+    --cadence.data-dir=*) DATA_DIR="${arg#--cadence.data-dir=}" ;;
     *) ARGS+=("$arg") ;;
   esac
 done
@@ -63,13 +69,13 @@ open_when_ready() {
     done ) >/dev/null 2>&1 &
 }
 
-echo "${BOLD}JavaQuest${RESET}: checking this laptop"
+echo "${BOLD}Cadence${RESET}: checking this laptop"
 
 # ---------- 1. Operating system ----------
 case "$(uname -s)" in
   Darwin) ok "macOS $(sw_vers -productVersion 2>/dev/null || true)" ;;
-  Linux)  warn "Linux works in principle but is untested. JavaQuest is made for macOS." ;;
-  *)      fail "This looks like Windows ($(uname -s)). JavaQuest doesn't support Windows yet." \
+  Linux)  warn "Linux works in principle but is untested. Cadence is made for macOS." ;;
+  *)      fail "This looks like Windows ($(uname -s)). Cadence doesn't support Windows yet." \
                "Use a Mac, or try Linux inside WSL (untested)." ;;
 esac
 
@@ -81,13 +87,13 @@ JAVA_BIN=""
 if command -v java >/dev/null 2>&1 && java_ok "$(command -v java)"; then
   JAVA_BIN="$(command -v java)"
 elif [[ -x /usr/libexec/java_home ]] && FOUND="$(/usr/libexec/java_home -v 21+ 2>/dev/null)" && java_ok "$FOUND/bin/java"; then
-  # A JDK 21+ is installed, just not the default: use it for JavaQuest.
+  # A JDK 21+ is installed, just not the default: use it for Cadence.
   JAVA_BIN="$FOUND/bin/java"
-  warn "Your default 'java' is older than 21, so JavaQuest uses the JDK 21+ it found at $FOUND." \
+  warn "Your default 'java' is older than 21, so Cadence uses the JDK 21+ it found at $FOUND." \
        "To make it your default too, add this line to ~/.zshrc:  export JAVA_HOME=\"\$(/usr/libexec/java_home -v 21)\""
 fi
 if [[ -z "$JAVA_BIN" ]] && command -v brew >/dev/null 2>&1 && interactive && [[ "$CHECK_ONLY" == false ]]; then
-  echo "  JavaQuest needs Java 21 or newer, and this laptop doesn't have it."
+  echo "  Cadence needs Java 21 or newer, and this laptop doesn't have it."
   read -r -p "  Install it now with Homebrew (brew install --cask temurin@21)? [Y/n] " answer || answer="n"
   if [[ -z "$answer" || "$answer" =~ ^[Yy] ]]; then
     brew install --cask temurin@21 || fail "Homebrew couldn't install Java." "Install Temurin 21 from https://adoptium.net, then run ./run.sh again."
@@ -96,7 +102,7 @@ if [[ -z "$JAVA_BIN" ]] && command -v brew >/dev/null 2>&1 && interactive && [[ 
 fi
 if [[ -z "$JAVA_BIN" ]]; then
   if command -v java >/dev/null 2>&1; then FOUND_TEXT="'java' here is: $(java -version 2>&1 | head -n 1)"; else FOUND_TEXT="no Java was found"; fi
-  fail "JavaQuest needs Java 21 or newer, but $FOUND_TEXT." \
+  fail "Cadence needs Java 21 or newer, but $FOUND_TEXT." \
        "Install it with Homebrew:  brew install --cask temurin@21" \
        "or download Temurin 21 from https://adoptium.net. Then run ./run.sh again."
 fi
@@ -109,14 +115,14 @@ ok "Java $("$JAVA_BIN" -version 2>&1 | head -n 1 | sed -E 's/[^"]*"([^"]+)".*/\1
 # ---------- 3. The port ----------
 if command -v lsof >/dev/null 2>&1 && lsof -tiTCP:"$PORT" -sTCP:LISTEN >/dev/null 2>&1; then
   if curl -fs -o /dev/null "$URL/api/catalog" 2>/dev/null; then
-    ok "JavaQuest is already running at $URL"
+    ok "Cadence is already running at $URL"
     if [[ "$CHECK_ONLY" == false ]]; then
       [[ "$OPEN_BROWSER" == true ]] && open "$URL"
       echo "Nothing to start: open $URL. To run a second copy, use another port, for example: ./run.sh --server.port=$((PORT + 4))"
       exit 0
     fi
   else
-    fail "Port $PORT is used by another program." "Start JavaQuest on another port, for example: ./run.sh --server.port=$((PORT + 4))"
+    fail "Port $PORT is used by another program." "Start Cadence on another port, for example: ./run.sh --server.port=$((PORT + 4))"
   fi
 else
   ok "Port $PORT is free"
@@ -147,13 +153,13 @@ if [[ -d "$ROOT/.git" ]] && command -v git >/dev/null 2>&1 && ! git -C "$ROOT" c
 fi
 
 if [[ "$CHECK_ONLY" == true ]]; then
-  echo "${GREEN}Everything looks ready.${RESET} Start JavaQuest with: ./run.sh"
+  echo "${GREEN}Everything looks ready.${RESET} Start Cadence with: ./run.sh"
   exit 0
 fi
 
 # ---------- Build ----------
 if [[ ! -f "$JAR" ]] || [[ -n "$(find "$ROOT/app/src" "$ROOT/runner/src" "$ROOT/content-model/src" "$ROOT/pom.xml" "$ROOT/content-model/pom.xml" "$ROOT/app/pom.xml" "$ROOT/runner/pom.xml" -newer "$JAR" -print -quit)" ]]; then
-  if [[ -f "$JAR" ]]; then echo "Building JavaQuest..."; else echo "Building JavaQuest for the first time. This takes a few minutes..."; fi
+  if [[ -f "$JAR" ]]; then echo "Building Cadence..."; else echo "Building Cadence for the first time. This takes a few minutes..."; fi
   "$ROOT/mvnw" -q -f "$ROOT/pom.xml" -DskipTests install \
     || fail "The build failed. The messages above say why." \
             "Most often: no internet on the first start, or a company proxy. See README.md, Troubleshooting."
@@ -179,9 +185,9 @@ if [[ "$MODE" != "author" && -f "$DATA_DIR/progress.mv.db" ]]; then
   fi
 fi
 
-# Run a copy of the jar, so a rebuild (./mvnw install) can replace app/target/javaquest.jar
+# Run a copy of the jar, so a rebuild (./mvnw install) can replace app/target/cadence.jar
 # while this server keeps running. Replacing the jar under a running server makes it hang.
-RUN_JAR="$ROOT/app/target/javaquest-running-$PORT.jar"
+RUN_JAR="$ROOT/app/target/cadence-running-$PORT.jar"
 cp "$JAR" "$RUN_JAR"
 
 case "$MODE" in
@@ -189,6 +195,6 @@ case "$MODE" in
   unlock-all) echo "Every ticket is open, using your own progress database. Use --author to keep your learning untouched." ;;
 esac
 if [[ "$OPEN_BROWSER" == true ]]; then WHEN=" It opens in your browser when it's ready."; else WHEN=""; fi
-echo "JavaQuest is starting at ${BOLD}$URL${RESET}.$WHEN Press Ctrl+C to stop."
+echo "Cadence is starting at ${BOLD}$URL${RESET}.$WHEN Press Ctrl+C to stop."
 open_when_ready
-exec "$JAVA_BIN" -jar "$RUN_JAR" --javaquest.root="$ROOT" --server.port="$PORT" --javaquest.data-dir="$DATA_DIR" ${ARGS[@]+"${ARGS[@]}"}
+exec "$JAVA_BIN" -jar "$RUN_JAR" --cadence.root="$ROOT" --server.port="$PORT" --cadence.data-dir="$DATA_DIR" ${ARGS[@]+"${ARGS[@]}"}

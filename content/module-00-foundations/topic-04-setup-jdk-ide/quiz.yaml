@@ -91,10 +91,10 @@ questions:
   - id: q10
     type: mcq
     concept: ide-project
-    prompt: "Where do you edit an exercise so JavaQuest runs the checks?"
+    prompt: "Where do you edit an exercise so Cadence runs the checks?"
     choices: ["practice/<module>/<topic>/src", "practice/<module>/<topic>/solution", "The Downloads folder", "Inside the JDK folder"]
     answer: 0
-    explain: "Saving a file in the topic's src folder makes JavaQuest run the checks."
+    explain: "Saving a file in the topic's src folder makes Cadence run the checks."
     reteach: "## Concept"
 
   - id: q11

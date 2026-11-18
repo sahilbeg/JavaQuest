@@ -14,4 +14,4 @@ Ride 10 min    $1.50
 TOTAL          $2.50
 ```
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

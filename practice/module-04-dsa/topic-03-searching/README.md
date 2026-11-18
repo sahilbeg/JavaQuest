@@ -12,4 +12,4 @@ Do not call `Arrays.binarySearch` or `Collections.binarySearch`. The point is to
 6. **TODO 6:** `firstAtLeast(sortedMinutes, minutes)` returns the index of the first value that is `>= minutes`. If no value is big enough, return the array length. Use a binary search, so it stays O(log n).
 7. **TODO 7:** `firstAtLeast` also counts its loop passes in `steps`, like `binary`. Set `steps` to 0 at the start and add 1 on every pass. Searching 1,024 items must take at most 11 steps.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

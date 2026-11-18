@@ -9,4 +9,4 @@ The kiosk used to count time as minutes since midnight. That broke on rides afte
 
 The tests pass fixed dates in. Your code never needs to read the clock.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

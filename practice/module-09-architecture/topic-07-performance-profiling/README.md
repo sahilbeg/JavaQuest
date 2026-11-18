@@ -45,4 +45,4 @@ The checks build a report of 150,000 rides and 50,000 riders, and allow 3 second
 
 Plain Java, no network, no clock. If your code runs past a time limit, the check stops it.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

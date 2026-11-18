@@ -217,7 +217,7 @@ export async function renderLesson(view, catalog, id, params) {
       h("span", { class: "nav-hint" }, "← → to move"), nextButton));
 
   view.replaceChildren(player, helper.fab, helper.drawer);
-  document.title = `${summary.ticket.key} ${summary.ticket.title} · JavaQuest`;
+  document.title = `${summary.ticket.key} ${summary.ticket.title} · Cadence`;
 
   async function refreshState() {
     const fresh = await api.progress(id);
@@ -462,7 +462,7 @@ function renderResting(view, catalog, summary) {
     h("div", { class: "button-row", style: "justify-content:center" },
       h("a", { class: "button button-primary", href: "/" }, icon("map"), "Your journey"),
       h("button", { type: "button", class: "button", onclick: () => focusDailyLimit() }, icon("settings"), "Change daily limit"))));
-  document.title = "Opens tomorrow · JavaQuest";
+  document.title = "Opens tomorrow · Cadence";
   return () => {};
 }
 
@@ -477,6 +477,6 @@ function renderLocked(view, catalog, summary) {
     h("div", { class: "button-row", style: "justify-content:center" },
       h("a", { class: "button", href: "/" }, icon("map"), "Your journey"),
       frontier && h("a", { class: "button button-primary", href: `/t/${frontier.id}` }, "Go to my ticket", icon("arrow-right")))));
-  document.title = "Locked ticket · JavaQuest";
+  document.title = "Locked ticket · Cadence";
   return () => {};
 }

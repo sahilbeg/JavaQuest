@@ -7,4 +7,4 @@ Give the kiosk some memory. Open `RideRecord.java` and fill in each method with 
 3. **TODO 3:** in `rideMinutes()`, make an `int` variable holding `20` and return it.
 4. **TODO 4:** in `minutesAfterExtension()`, make an `int` variable holding `20`. Reassign it to `35`, then return it.
 
-Use camelCase names. Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Use camelCase names. Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

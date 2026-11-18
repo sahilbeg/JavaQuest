@@ -18,4 +18,4 @@ Fix the kiosk's undo and the repair line. Build three small classes in `jq.m04.s
 
 7. **TODO 7:** `Brackets.balanced(text)` returns `true` when every `(`, `[` and `{` is closed by its partner in the right order. Use an `ArrayDeque<Character>` as a stack. Skip every other character.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

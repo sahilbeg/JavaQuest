@@ -9,4 +9,4 @@ Tsunade's pass pricing tool uses plain recursion, and it freezes on a 30-day mon
 
 Each test has a time limit, so a plain recursive solution fails instead of hanging; use memoization or a table.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

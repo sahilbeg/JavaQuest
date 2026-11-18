@@ -68,4 +68,4 @@ A job's `needs:` is missing (no needs), one job name, or a list of names.
 
 Compare values with `Objects.equals` on the loaded values: `21` (a number) and `'21'` (text) are different.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The checks run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The checks run on their own.

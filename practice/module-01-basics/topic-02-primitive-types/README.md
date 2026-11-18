@@ -7,4 +7,4 @@ Fix the numbers on the receipt. Open `RideStats.java` and pick the right type fo
 3. **TODO 3:** in `roundedDownKm(double km)`, cast `km` to an `int` and return it. `2.5` should give `2`.
 4. **TODO 4:** in `averageMinutes(int totalMinutes, int rides)`, cast `totalMinutes` to a `double` before you divide by `rides`. `45` minutes over `2` rides should give `22.5`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

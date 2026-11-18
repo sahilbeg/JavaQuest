@@ -25,4 +25,4 @@ The class already has two records: `Lane(to, minutes)` for one lane out of a sta
 
 Build the search yourself. Do not use a graph library.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

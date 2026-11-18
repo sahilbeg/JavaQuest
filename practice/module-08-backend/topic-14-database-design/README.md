@@ -50,4 +50,4 @@ Rules the checks test:
 
 Every check gets its own fresh in-memory H2 database. Nothing touches the network or your disk.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

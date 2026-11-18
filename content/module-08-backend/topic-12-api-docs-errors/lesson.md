@@ -301,7 +301,7 @@ components:
         instance: { type: string }
 ```
 
-You rarely write this file by hand. Tools such as **springdoc-openapi** read your Spring controllers and generate it. **Swagger UI** turns it into a web page where partners can read the docs and try requests. Generators can even write client code for Riverton in their own language. None of these tools are in JavaQuest's setup, so this topic only reads the file.
+You rarely write this file by hand. Tools such as **springdoc-openapi** read your Spring controllers and generate it. **Swagger UI** turns it into a web page where partners can read the docs and try requests. Generators can even write client code for Riverton in their own language. None of these tools are in Cadence's setup, so this topic only reads the file.
 
 ```callout tip
 Gojo says: put the OpenAPI file under version control. A pull request that changes it shows everyone, in one diff, exactly how the contract moved.

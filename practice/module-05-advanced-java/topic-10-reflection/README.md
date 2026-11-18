@@ -9,4 +9,4 @@ Build a debug printer that works on any Spoke object. `Bike` and `Station` are s
 
 `getDeclaredFields()` gives fields in declaration order on the standard JVM. The Java rules do not promise it, so the sample classes stay simple.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

@@ -9,4 +9,4 @@ Replace the hand-written kiosk checks with two annotations and one `Validator` t
 
 Keep the messages in the order the fields are declared. A valid object gives an empty list.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

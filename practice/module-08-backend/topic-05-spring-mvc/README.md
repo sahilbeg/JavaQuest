@@ -30,4 +30,4 @@ Open `RentalControllerTest.java`. It uses `@WebMvcTest`, so only the web layer s
 
 Each check sends a pretend request with MockMvc, then reads the status, the headers and the JSON body. A message like "no method in RentalController answered GET /rentals" means a mapping annotation is missing or has the wrong path.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own. A Spring test takes a few seconds, because Spring starts first.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own. A Spring test takes a few seconds, because Spring starts first.

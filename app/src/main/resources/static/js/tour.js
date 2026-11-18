@@ -6,7 +6,7 @@ import { byte } from "./byte.js";
 
 const TOURS = {
   journey: [
-    { title: "Welcome to JavaQuest", text: "You're the new engineering intern at Spoke, a bike-sharing startup. Every lesson is a real ticket from the team. Here's a quick tour." },
+    { title: "Welcome to Cadence", text: "You're the new engineering intern at Spoke, a bike-sharing startup. Every lesson is a real ticket from the team. Here's a quick tour." },
     { target: "#up-next", title: "Up next", text: "The one ticket to work on now. Tickets open one at a time, so each builds on the last." },
     { target: "#current-stop", title: "Course outline", text: "Your current module, with its tickets in order. Finish them all to unlock the next module." },
     { target: "#career-chip", title: "Level and streak", text: "Tickets earn XP and move you up the career ladder. A little every day keeps your streak going." },

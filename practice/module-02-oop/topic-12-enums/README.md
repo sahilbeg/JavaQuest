@@ -9,4 +9,4 @@ Replace the plain Strings for bike types and membership levels with enums, so a 
 5. **TODO 5:** in `FareCalculator.fare`, a level that pays the unlock fee pays $1.00 plus every minute at the bike's price.
 6. **TODO 6:** other levels pay no unlock fee. Take off their free minutes first, never going below 0, then charge the rest per minute.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

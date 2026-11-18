@@ -18,4 +18,4 @@ Open `RideLog.java`. It holds a `List<String>` of bike ids, like `"B-1042"`.
 
 For any other job text, return `""`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

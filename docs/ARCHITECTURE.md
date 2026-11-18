@@ -1,6 +1,6 @@
 # Architecture
 
-JavaQuest is a local, single-user learning app. One command starts it. It serves at http://localhost:2026, renders stored content, runs your practice code in a separate JVM, and saves your progress on disk.
+Cadence is a local, single-user learning app. One command starts it. It serves at http://localhost:2026, renders stored content, runs your practice code in a separate JVM, and saves your progress on disk.
 
 ## Technology decisions
 
@@ -14,7 +14,7 @@ JavaQuest is a local, single-user learning app. One command starts it. It serves
 | Markdown | flexmark-java on the server, with a fenced-block extension for `java run`, `mermaid` and `callout` blocks | Rendering is deterministic. No client-side Markdown parser. |
 | Diagrams | Mermaid, vendored | Diagrams live as text in lessons. |
 | Content data | YAML read by Jackson 3 into Java records that check their own fields. Unknown and missing fields are rejected. | Readable to author, strict to load, with one definition of each format in code. |
-| Database | H2 in file mode at `~/.javaquest/progress` | Pure Java, no native driver. Survives restarts. SQLite needs a native library; H2 does not. |
+| Database | H2 in file mode at `~/.cadence/progress` | Pure Java, no native driver. Survives restarts. SQLite needs a native library; H2 does not. |
 | Migrations | Flyway | Progress data survives app upgrades. |
 | Live updates | Server-Sent Events (SSE) | One-way server to browser push is all the file watcher needs. Simpler than WebSockets. |
 | Tests in practice | JUnit 6 (the Jupiter API, same as JUnit 5 for learners) run through the console launcher's standalone jar, with Mockito 5 and SLF4J with Logback for module 6 | Structured results with no Maven start-up cost per run. `practice/pom.xml` lists every library, so the runner and the IDE share one classpath. |
@@ -23,14 +23,14 @@ JavaQuest is a local, single-user learning app. One command starts it. It serves
 ## Repository layout
 
 ```
-javaquest/
+cadence/
   pom.xml                     # parent POM: Java 21, dependency versions
   mvnw, mvnw.cmd, .mvn/       # Maven Wrapper
   run.sh                      # build if needed, then start the app (run.bat deferred)
   runner/                     # compiles and tests practice code in a child JVM; shared by app and tools
   content-model/              # content formats, catalog, quiz draw and grading; shared by app and tools
   app/                        # Spring Boot application
-    src/main/java/dev/javaquest/
+    src/main/java/dev/cadence/
       lesson/                 # Markdown to HTML for KB pages
       practice/               # practice service and file watcher
       progress/               # XP, mastery, streaks, badges, spaced repetition
@@ -135,7 +135,7 @@ Two rules keep the shared classpath safe:
 
 ## Persistence
 
-H2 file database at `~/.javaquest/progress.mv.db` (set `--javaquest.data-dir` to move it). Flyway creates the tables from `app/src/main/resources/db/migration/`. It lives outside the repo, so a `git pull` never touches your progress. Tables:
+H2 file database at `~/.cadence/progress.mv.db` (set `--cadence.data-dir` to move it). Flyway creates the tables from `app/src/main/resources/db/migration/`. It lives outside the repo, so a `git pull` never touches your progress. Tables:
 
 - `topic_progress(topic_id, quiz_best, quiz_attempts, tests_passed, failed_runs, hints_used, failed_runs_at_last_hint, solution_viewed, mastered_at, last_seen)`
 - `quiz_attempt(id, topic_id, seed, score, passed, weak_concepts, created_at)`
@@ -157,7 +157,7 @@ Export and import as JSON from the career page give you a backup. Dates export a
 
 ## Testing the app
 
-- Spring tests run against a temporary copy of `content/` and `practice/` (`TestRepository`). They must never write into the real repository, because a running JavaQuest records those saves as the learner's.
+- Spring tests run against a temporary copy of `content/` and `practice/` (`TestRepository`). They must never write into the real repository, because a running Cadence records those saves as the learner's.
 
 - Unit tests for grading, mastery, XP and spaced repetition rules.
 - An integration test that runs the practice runner on a passing and a failing fixture.

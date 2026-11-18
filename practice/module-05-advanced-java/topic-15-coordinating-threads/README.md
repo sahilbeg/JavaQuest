@@ -20,4 +20,4 @@ Build three rush-hour tools. Every wait in this ticket has a time limit, so noth
    - `setRate(type, cents)` and `raiseAll(extraCents)` change the rates under the write lock. `raiseAll` adds `extraCents` to every rate in one go, so no reader ever sees half a raise.
    - Unlock in `finally` every time.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

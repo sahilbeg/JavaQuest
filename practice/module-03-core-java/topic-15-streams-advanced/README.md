@@ -8,4 +8,4 @@ Build the numbers behind the board's monthly dashboard in `Dashboard.java`. Each
 4. **TODO 4:** `allBikes` gets one list per station. Flatten them with `flatMap`, keep the bike ids, remove repeats, and sort them.
 5. **TODO 5:** `summary` returns each station once, in alphabetical order, joined like `Harbor, Old Mill, Riverside`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

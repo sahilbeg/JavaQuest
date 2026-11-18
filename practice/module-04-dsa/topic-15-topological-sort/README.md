@@ -33,4 +33,4 @@ Row 0 is the top row and column 0 is the left column. A rider moves one block up
 
 Build the searches yourself. Do not use a graph library.
 
-Press **Submit** in JavaQuest, or just save the files in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the files in your IDE. The tests run on their own.

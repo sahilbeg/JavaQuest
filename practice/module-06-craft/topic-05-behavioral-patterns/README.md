@@ -11,4 +11,4 @@ Give Spoke swappable prices, ride-ended notifications and an undo button for adm
 5. **TODO 7 and 8:** `SetDocks.execute` remembers the old docks value and sets the new one. `undo` puts the old value back.
 6. **TODO 9 to 12:** `CommandHistory.run` executes a command and remembers it. `undo` reverses the newest one and returns `true`, or returns `false` when there is nothing to undo. `size` says how many commands can still be undone.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

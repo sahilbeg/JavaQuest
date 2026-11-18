@@ -6,4 +6,4 @@ The card reader at the kiosk sometimes misses the first tap. Make `CardReader.ja
 2. **TODO 4 and 5:** `minutesUntilFull(freeDocks, bikesArrivingPerMinute)` counts the whole minutes until free docks reach 0 or below. `minutesUntilFull(12, 5)` is `3`. If no bikes arrive (0 or less per minute), return `-1` so the loop never runs forever.
 3. **TODO 6:** `countdown(from)` builds text like `3 2 1 go` with a loop and `+`. `countdown(0)` is just `go`.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

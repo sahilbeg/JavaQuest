@@ -23,4 +23,4 @@ Open `StationControllerTest.java`. `@SpringBootTest` starts your whole app insid
 
 This topic has no Run button, because running the app would start a real server that waits for requests forever. The tests are the way to check your work. If you want to see the real server, run `SpokeApiApplication` from your IDE and open http://localhost:8080/stations, then stop it.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

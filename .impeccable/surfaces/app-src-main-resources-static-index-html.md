@@ -7,7 +7,7 @@ related_targets: []
 
 ## Scope
 
-Whole JavaQuest web app: ticket board (home), ticket page (KB lesson, onboarding check, the fix editor, Byte chat), incidents later. Mode: Operate, with the KB page in Read mode.
+Whole Cadence web app: ticket board (home), ticket page (KB lesson, onboarding check, the fix editor, Byte chat), incidents later. Mode: Operate, with the KB page in Read mode.
 
 ## Audience and job
 
@@ -19,7 +19,7 @@ Offline, vendored libraries, plain ES modules, WCAG 2.2 AA in light and dark, ke
 
 ## Direction contract
 
-THESIS: JavaQuest is Spoke's own internal tooling, used on your first job. It refuses the course-catalog grid and the cartoon learning path; the unit of progress is a ticket you close.
+THESIS: Cadence is Spoke's own internal tooling, used on your first job. It refuses the course-catalog grid and the cartoon learning path; the unit of progress is a ticket you close.
 
 OWN-WORLD: Neutral aluminium greys of a bike frame, one Spoke cobalt for action and focus, and status colours reserved for checks only: green pass, red fail, amber running. Ticket keys and code in monospace. Teammates are initial avatars, each with its own tint. Byte is a small flat owl drawn in SVG. Project progress is a docking station: one dock slot per ticket, and a closed ticket docks a bike.
 

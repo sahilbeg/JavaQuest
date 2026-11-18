@@ -1,6 +1,6 @@
 # Design
 
-JavaQuest looks like a modern developer tool for adults. The direction was set in November 2026 from user feedback ("modern and adult, not old or childish") and references: Linear, Vercel's Geist, Raycast, Brilliant and master.dev. Tokens live in `app/src/main/resources/static/css/app.css`.
+Cadence looks like a modern developer tool for adults. The direction was set in November 2026 from user feedback ("modern and adult, not old or childish") and references: Linear, Vercel's Geist, Raycast, Brilliant and master.dev. Tokens live in `app/src/main/resources/static/css/app.css`.
 
 ## Principles
 

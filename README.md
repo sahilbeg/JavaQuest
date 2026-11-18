@@ -1,6 +1,6 @@
-# JavaQuest
+# Cadence
 
-Learn Java from zero to a professional, job-ready engineer, through a story. You join **Spoke**, a bike-sharing startup, as an intern. Every lesson is a ticket from a teammate, and every fix is checked by real JUnit tests. By the end you launch Spoke in a second city and get a full-time offer.
+Become a software engineer, from zero to job-ready, through a story. The language is Java, and the course covers the whole job: code, algorithms, backend, architecture, DevOps, data and interviews. You join **Spoke**, a bike-sharing startup, as an intern. Every lesson is a ticket from a teammate, and every fix is checked by real JUnit tests. By the end you launch Spoke in a second city and get a full-time offer.
 
 - **13 modules, 175 units:** from "what is a program" to data structures and algorithms, concurrency, Spring Boot, system design, hands-on DevOps (Docker, GitHub Actions, Kubernetes, Terraform, Prometheus), databases in depth (SQL, indexes, transactions, NoSQL, Redis, sharding, data pipelines) and the interview loop.
 - **Lessons** play as short cards with animations. **Onboarding checks** (quizzes) need 80% to pass.
@@ -15,10 +15,10 @@ Everything runs on your own laptop. There is no account and nothing is sent anyw
 You need a **Mac** and an internet connection for the first start. Paste this into Terminal:
 
 ```bash
-git clone https://github.com/sahilbeg/JavaQuest.git ~/JavaQuest && ~/JavaQuest/run.sh
+git clone https://github.com/sahilbeg/JavaQuest.git ~/Cadence && ~/Cadence/run.sh
 ```
 
-That one command downloads JavaQuest into `~/JavaQuest`, checks your laptop, builds the app, starts it, and opens **http://localhost:2026** in your browser.
+That one command downloads Cadence into `~/Cadence`, checks your laptop, builds the app, starts it, and opens **http://localhost:2026** in your browser.
 
 While the repository is private, GitHub asks you to sign in. Ask its owner for access first. Once the repository is public, this also works, and on later runs it updates your copy before starting:
 
@@ -26,7 +26,7 @@ While the repository is private, GitHub asks you to sign in. Ask its owner for a
 bash <(curl -fsSL https://raw.githubusercontent.com/sahilbeg/JavaQuest/main/install.sh)
 ```
 
-The first start downloads about 300 MB of tools and libraries and builds the app, so it can take a few minutes. Later starts take seconds: just run `~/JavaQuest/run.sh`. Leave the terminal open while you learn, and press `Ctrl+C` to stop.
+The first start downloads about 300 MB of tools and libraries and builds the app, so it can take a few minutes. Later starts take seconds: just run `~/Cadence/run.sh`. Leave the terminal open while you learn, and press `Ctrl+C` to stop.
 
 ### What `run.sh` checks for you
 
@@ -36,7 +36,7 @@ Before it starts anything, `run.sh` checks your laptop and says exactly what to 
 |---|---|
 | macOS | On Windows it stops. Linux gets a warning, because it is untested. |
 | Java 21 or newer | If your default Java is older but a JDK 21+ is installed, it uses that one and tells you how to make it the default. With no JDK 21 at all, it offers to install Temurin 21 with Homebrew, or tells you how. |
-| The port (2026) | If JavaQuest is already running there, it just opens it. If another program uses the port, it suggests another one. |
+| The port (2026) | If Cadence is already running there, it just opens it. If another program uses the port, it suggests another one. |
 | Disk space and internet | Checked on the first start only, because that's when it downloads. |
 
 To see the checks without starting anything:
@@ -79,14 +79,14 @@ The **Career** page shows your level, streak, kudos, reviews due and weak spots.
 
 ### Working in your own IDE
 
-Your code lives in `practice/<module>/<ticket>/src/`. Open the `practice` folder in VS Code or IntelliJ IDEA as a Maven project (`practice/pom.xml`). When you save a file, JavaQuest notices and runs that ticket's checks, the same as the **Run checks** button. Each code ticket's page also shows how to open its files in VS Code.
+Your code lives in `practice/<module>/<ticket>/src/`. Open the `practice` folder in VS Code or IntelliJ IDEA as a Maven project (`practice/pom.xml`). When you save a file, Cadence notices and runs that ticket's checks, the same as the **Run checks** button. Each code ticket's page also shows how to open its files in VS Code.
 
 `Reset` on a ticket's page puts its starting code back. It replaces your `src/` files for that ticket, so use it with care.
 
 ## Your progress
 
-- Progress is stored in `~/.javaquest/progress.mv.db` (an H2 database).
-- Once a day, when you start it, JavaQuest copies that file to `~/.javaquest/backups/`, keeping the last 7 days.
+- Progress is stored in `~/.cadence/progress.mv.db` (an H2 database). If you started before the project was renamed from JavaQuest, your progress stays in `~/.javaquest`, and `run.sh` keeps using it.
+- Once a day, when you start it, Cadence copies that file to `~/.cadence/backups/`, keeping the last 7 days.
 - **Career → Download backup** saves a JSON file. **Restore from backup** replaces your progress with one. Use them to move to a new laptop.
 - Your code is in the repository's `practice/` folders. Commit or copy it if you want to keep it.
 
@@ -94,24 +94,24 @@ Your code lives in `practice/<module>/<ticket>/src/`. Open the `practice` folder
 
 | Command | What it does |
 |---|---|
-| `./run.sh` | Check the laptop, build if needed, start, and open http://localhost:2026. Your progress is in `~/.javaquest`. |
+| `./run.sh` | Check the laptop, build if needed, start, and open http://localhost:2026. Your progress is in `~/.cadence`. |
 | `./run.sh --check` | Only check the laptop, and say what to fix. |
 | `./run.sh --no-browser` | Start without opening the browser. |
 | `./run.sh --server.port=2030` | The same, on another port. |
-| `./run.sh --author` | Every ticket open, on http://localhost:2027, with a separate database in `~/.javaquest-author`. For writing and reviewing content. Your learning is untouched. |
-| `./run.sh --javaquest.data-dir=<folder>` | Keep progress in another folder, for example a throwaway one. |
+| `./run.sh --author` | Every ticket open, on http://localhost:2027, with a separate database in `~/.cadence-author`. For writing and reviewing content. Your learning is untouched. |
+| `./run.sh --cadence.data-dir=<folder>` | Keep progress in another folder, for example a throwaway one. |
 
 `./run.sh --unlock-all` also opens every ticket, but against **your own** progress. Avoid it unless you mean to skip ahead.
 
 ## Troubleshooting
 
-**"JavaQuest needs Java 21 or newer".** Let `run.sh` install it with Homebrew when it asks, or install JDK 21 yourself, as shown in [Installing Java yourself](#installing-java-yourself). Then run `./run.sh` again.
+**"Cadence needs Java 21 or newer".** Let `run.sh` install it with Homebrew when it asks, or install JDK 21 yourself, as shown in [Installing Java yourself](#installing-java-yourself). Then run `./run.sh` again.
 
-**"Port 2026 is used by another program".** Something else is using JavaQuest's port. Start on another one, for example `./run.sh --server.port=2030`. (If JavaQuest itself is already running there, `run.sh` just opens it.)
+**"Port 2026 is used by another program".** Something else is using Cadence's port. Start on another one, for example `./run.sh --server.port=2030`. (If Cadence itself is already running there, `run.sh` just opens it.)
 
 **"The build failed" on the first start.** The first build needs the internet to fetch Maven and the libraries. Check your connection (and any company proxy), then run `./run.sh` again. It carries on where it stopped.
 
-**The page says "Lost the connection to JavaQuest" or "Something went wrong".** The app stopped. Look at the terminal for the error, then start it again with `./run.sh`.
+**The page says "Lost the connection to Cadence" or "Something went wrong".** The app stopped. Look at the terminal for the error, then start it again with `./run.sh`.
 
 **Checks time out.** Spring tickets start a whole application, so their first run is slower. Most plain tickets stop a run after 10 seconds, so a timeout there usually means an endless loop. Look for a `while` loop that never ends.
 
@@ -121,7 +121,7 @@ Your code lives in `practice/<module>/<ticket>/src/`. Open the `practice` folder
 
 **A commit is refused with "Unstage those files".** The repository has a guard that stops commits from changing a ticket's `src/` folder (your own code), so the course stays clean for other learners. Commit your code somewhere else, or keep it locally.
 
-**You want an earlier day's progress back.** Stop JavaQuest. Copy a file from `~/.javaquest/backups/` over `~/.javaquest/progress.mv.db`, then start it again.
+**You want an earlier day's progress back.** Stop Cadence. Copy a file from `~/.cadence/backups/` over `~/.cadence/progress.mv.db`, then start it again.
 
 ## Limits
 

@@ -13,4 +13,4 @@ The class already has a private `Entry` class (a key, a value and a `next` link)
 
 The tests use `"Aa"` and `"BB"`, two keys with the same `hashCode`, to check that your chains work.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

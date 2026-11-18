@@ -11,4 +11,4 @@ Build it by hand from the `Node` class that is already there. Do not use `TreeMa
 5. **TODO 5:** `min()` returns the smallest bike. It throws `NoSuchElementException` when the registry is empty.
 6. **TODO 6:** `max()` returns the largest bike. It throws `NoSuchElementException` when the registry is empty.
 
-Press **Submit** in JavaQuest, or just save the file in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the file in your IDE. The tests run on their own.

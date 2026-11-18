@@ -12,4 +12,4 @@ Replace the three copy-pasted shelf classes with one generic `Shelf<T>`, plus tw
 8. **TODO 8:** make `maxOf` return the biggest item using `compareTo`, or `null` for an empty list.
 9. **TODO 9:** make `sum` add up `doubleValue()` of every number.
 
-Press **Submit** in JavaQuest, or just save the files in your IDE. The tests run on their own.
+Press **Submit** in Cadence, or just save the files in your IDE. The tests run on their own.
