@@ -92,8 +92,16 @@ Badges appear as kudos from teammates.
 | Incident resolved | Pass the bronze checks of any incident |
 | Gold standard | Pass the gold checks of any incident |
 | Java Pro | Master `module-10-professional/mini-project` (the capstone, CAPSTONE: Launch Spoke in Bramford) |
+| Full-time offer | Master every unit of every module, the capstone included |
 
 The rules live in `Kudos.java`. A project only counts as shipped once its incident exists in the content.
+
+## The finish: the offer letter
+
+- Closing the capstone (CAPSTONE: Launch Spoke in Bramford) earns the Java Pro kudos and opens a launch dialog: "Spoke is live in Bramford!", with a button to the offer letter. Skipped animation under reduced motion.
+- The offer letter lives at `/offer`. Tsunade offers a full-time role as Software Engineer II, dated the day Java Pro was earned (`earnedOn` in the career summary). It shows tickets closed, incidents resolved, features shipped, XP and job title, longest streak, kudos, and every project shipped. It prints cleanly (print styles hide the app's chrome).
+- Before the capstone, `/offer` says what is left. After it, the career page shows a banner to the letter, and the course page's "Course complete" card links to it once every ticket is closed.
+- The capstone itself is graded by six staged check classes, then a self-review rubric in its brief (correctness, design, errors, data, limits, readability, tests).
 
 ## Gojo, chat and feedback
 

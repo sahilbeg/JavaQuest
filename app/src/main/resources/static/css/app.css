@@ -961,3 +961,42 @@ a.topic-row:hover { background: var(--hover); text-decoration: none; color: var(
   .notes-body { display: block; column-count: 2; column-gap: var(--space-4); }
   .notes-body > .notes-section { break-inside: avoid; margin-bottom: var(--space-4); }
 }
+
+/* ---------- The offer letter (/offer): the course's completion screen ---------- */
+.offer { max-width: 760px; margin: 0 auto; }
+.offer-letter { padding: var(--space-6); margin-bottom: var(--space-5); border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-lg); }
+.offer-head .eyebrow { display: flex; align-items: center; gap: var(--space-2); }
+.offer-head .eyebrow .icon { vertical-align: -2px; }
+.offer-head h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin: var(--space-2) 0 var(--space-4); }
+.offer-from { display: flex; align-items: center; gap: var(--space-2); color: var(--ink-soft); font-size: 0.9rem; }
+.offer-body { margin: var(--space-5) 0; line-height: 1.65; }
+.offer-body p { margin: 0 0 var(--space-3); }
+.offer-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-3); margin: var(--space-5) 0; }
+.offer-stat { padding: var(--space-3) var(--space-4); border-radius: var(--r-md); background: var(--surface-2); border: 1px solid var(--line); }
+.offer-stat-value { margin: 0; font: 600 1.35rem/1.2 var(--font); color: var(--ink); overflow-wrap: anywhere; }
+.offer-stat-label { margin: 4px 0 0; font-size: 0.8rem; color: var(--ink-soft); }
+.offer-shipped h2 { font-size: 0.95rem; margin-bottom: var(--space-3); }
+.offer-projects { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 6px var(--space-4); }
+.offer-projects li { display: flex; align-items: center; gap: var(--space-2); font-size: 0.88rem; color: var(--ink-faint); }
+.offer-projects li.is-done { color: var(--ink); }
+.offer-projects li.is-done .icon { color: var(--accent); }
+.offer-note { margin: var(--space-5) 0 0; padding: var(--space-3) var(--space-4); border-radius: var(--r-md); background: var(--accent-wash); color: var(--ink); font-size: 0.9rem; }
+.offer-note .icon { color: var(--accent); vertical-align: -2px; }
+.offer-sign { margin-top: var(--space-6); }
+.offer-sign p { margin: 0; }
+.offer-signature { font: italic 600 1.4rem var(--font); color: var(--accent-strong); }
+.offer-waiting .offer-stats { margin: var(--space-5) 0 var(--space-6); }
+.offer-banner { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-4) var(--space-5); margin-bottom: var(--space-4); border-radius: var(--r-lg); background: var(--accent-wash); color: var(--ink); border: 1px solid color-mix(in oklch, var(--accent) 40%, var(--line)); }
+.offer-banner:hover { text-decoration: none; color: var(--ink); border-color: var(--accent); }
+.offer-banner > span { flex: 1; }
+.offer-banner .icon { color: var(--accent); flex: none; }
+.launch-actions { justify-content: center; margin-top: var(--space-4); }
+@media (max-width: 600px) {
+  .offer-letter { padding: var(--space-5) var(--space-4); }
+}
+@media print {
+  .topbar, .author-banner, .connection-banner, .toast-region, .skip-link, .helper-fab, .offer-actions, .tour { display: none !important; }
+  body { background: #fff !important; color: #000; }
+  .offer-letter { box-shadow: none; border: none; padding: 0; }
+  .offer-stat, .offer-note { background: none; border: 1px solid #ccc; }
+}

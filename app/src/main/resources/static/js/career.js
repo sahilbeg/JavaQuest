@@ -103,7 +103,11 @@ function backupBlock() {
 export async function renderCareer(view) {
   const { startTourOnce } = await import("./tour.js");
   const summary = await refreshRewards() ?? await api.career();
+  const offerReady = summary.kudos.some((k) => k.id === "java-pro" && k.earned);
   view.replaceChildren(h("div", { class: "career" },
+    offerReady && h("a", { class: "offer-banner", href: "/offer" }, icon("star"),
+      h("span", {}, h("strong", {}, "Your offer letter is ready."), " Spoke launched in Bramford, and Tsunade wrote you something."),
+      icon("arrow-right")),
     levelBlock(summary),
     h("div", { class: "career-columns" }, reviewsBlock(summary.reviewsDue), weakBlock(summary.weak)),
     kudosBlock(summary.kudos),

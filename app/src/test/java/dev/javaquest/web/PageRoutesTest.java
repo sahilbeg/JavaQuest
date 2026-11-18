@@ -33,7 +33,7 @@ class PageRoutesTest {
     void pagePathsServeTheApp() throws Exception {
         for (String path : List.of("/t/module-01-basics/topic-01-variables", "/t/module-00-foundations/boss",
                 "/review/module-01-basics/topic-01-variables", "/notes", "/notes/module-01-basics/topic-01-variables",
-                "/career")) {
+                "/career", "/offer")) {
             mvc.perform(get(path)).andExpect(status().isOk()).andExpect(forwardedUrl("/index.html"));
         }
     }

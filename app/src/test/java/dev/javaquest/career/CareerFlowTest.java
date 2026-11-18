@@ -83,6 +83,8 @@ class CareerFlowTest {
                 .andExpect(jsonPath("$.kudos[?(@.id == 'hello-world')].earned").value(Matchers.contains(true)))
                 .andExpect(jsonPath("$.kudos[?(@.id == 'first-green')].earned").value(Matchers.contains(true)))
                 .andExpect(jsonPath("$.kudos[?(@.id == 'shipped-module-00-foundations')].earned").value(Matchers.contains(false)))
+                .andExpect(jsonPath("$.kudos[?(@.id == 'hello-world')].earnedOn").value(Matchers.contains(java.time.LocalDate.now().toString())))
+                .andExpect(jsonPath("$.kudos[?(@.id == 'java-pro')].earnedOn").value(Matchers.contains(Matchers.nullValue())))
                 .andExpect(jsonPath("$.topics[?(@.id == '" + TOPIC_ID + "')].masteryPercent").value(Matchers.contains(100)))
                 .andExpect(jsonPath("$.reviewsDue.length()").value(0));
 

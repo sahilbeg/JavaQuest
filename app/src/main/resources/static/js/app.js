@@ -2,6 +2,7 @@ import { api } from "./api.js";
 import { renderJourney } from "./journey.js";
 import { renderLesson } from "./lesson.js";
 import { renderCareer } from "./career.js";
+import { renderOffer } from "./offer.js";
 import { renderReview } from "./review.js";
 import { renderNotes, renderNotesIndex } from "./notes.js";
 import { refreshRewards } from "./rewards.js";
@@ -27,6 +28,7 @@ function parseRoute() {
   if (notes) return { name: "notes", id: notes[1] };
   if (path === "/notes") return { name: "notes" };
   if (path === "/career") return { name: "career" };
+  if (path === "/offer") return { name: "offer" };
   return { name: "journey" };
 }
 
@@ -56,11 +58,12 @@ async function route({ keepFocus = false } = {}) {
   try {
     const [catalog] = await Promise.all([api.catalog(), picturesReady]);
     document.getElementById("author-banner").hidden = !catalog.authorMode;
-    document.title = { journey: "Your journey · JavaQuest", career: "Career · JavaQuest", review: "Review · JavaQuest", notes: "Notes · JavaQuest" }[current.name] ?? "JavaQuest";
+    document.title = { journey: "Your journey · JavaQuest", career: "Career · JavaQuest", review: "Review · JavaQuest", notes: "Notes · JavaQuest", offer: "Your offer · JavaQuest" }[current.name] ?? "JavaQuest";
     setPageTour(current.name === "ticket" ? "lesson" : current.name);
     cleanup = current.name === "ticket" ? await renderLesson(view, catalog, current.id, current.params)
       : current.name === "review" ? await renderReview(view, catalog, current.id)
       : current.name === "career" ? await renderCareer(view)
+      : current.name === "offer" ? await renderOffer(view, catalog)
       : current.name === "notes" ? await (current.id ? renderNotes(view, catalog, current.id) : renderNotesIndex(view, catalog))
       : await renderJourney(view, catalog);
     refreshResume();

@@ -52,4 +52,22 @@ class KudosTest {
         var withGold = new Kudos.Stats(Set.of(), false, 0, 0, 0, 0, 0, 0, Map.of(), 1, 1);
         assertEquals(Set.of("boss-slayer", "gold-standard"), Kudos.earned(withGold));
     }
+
+    @Test
+    void fullTimeOfferNeedsEveryUnitIncludingTheCapstone() {
+        var units = Map.of(
+                "module-00-foundations", List.of(Kudos.HELLO_WORLD_TOPIC),
+                "module-10-professional", List.of("module-10-professional/boss", Kudos.CAPSTONE_TOPIC));
+        var all = Set.of(Kudos.HELLO_WORLD_TOPIC, "module-10-professional/boss", Kudos.CAPSTONE_TOPIC);
+        var done = new Kudos.Stats(all, false, 0, 0, 0, 0, 0, 0, units, 0, 0);
+        assertTrue(Kudos.earned(done).containsAll(Set.of("java-pro", "full-time")));
+
+        var capstoneOnly = new Kudos.Stats(Set.of(Kudos.CAPSTONE_TOPIC), false, 0, 0, 0, 0, 0, 0, units, 0, 0);
+        assertTrue(Kudos.earned(capstoneOnly).contains("java-pro"));
+        assertTrue(!Kudos.earned(capstoneOnly).contains("full-time"), "one open ticket keeps the full-time kudos back");
+
+        var noCapstoneModule = new Kudos.Stats(Set.of(Kudos.HELLO_WORLD_TOPIC), false, 0, 0, 0, 0, 0, 0,
+                Map.of("module-00-foundations", List.of(Kudos.HELLO_WORLD_TOPIC)), 0, 0);
+        assertTrue(!Kudos.earned(noCapstoneModule).contains("full-time"), "a course without the capstone is never finished");
+    }
 }

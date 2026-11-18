@@ -112,9 +112,13 @@ export async function renderJourney(view, catalog) {
 
   const upNext = restCard || current && h("section", { class: "up-next", id: "up-next", "aria-labelledby": "up-next-title" },
     allDone
-      ? [h("p", { class: "eyebrow" }, "All caught up"),
-         h("h2", { id: "up-next-title" }, "Every available ticket is done."),
-         h("p", { class: "muted" }, "New modules appear here as they're released. Revisit any ticket below to practise.")]
+      ? [h("div", { class: "up-next-main" },
+           h("p", { class: "eyebrow" }, "Course complete"),
+           h("h2", { id: "up-next-title" }, "Every ticket is closed. You did it."),
+           h("p", { class: "up-next-body" }, "From your first Hello World to the Bramford launch. Your offer letter is waiting, ",
+             "and your reviews keep it all fresh. Revisit any ticket below to practise.")),
+         h("div", { class: "up-next-side" },
+           h("a", { class: "button button-primary button-big", href: "/offer" }, "Open your offer letter", icon("arrow-right")))]
       : [h("div", { class: "up-next-main" },
           h("p", { class: "eyebrow" }, `Up next · Module ${pad(moduleIndex)} · ${currentModule.title}`),
           h("h2", { id: "up-next-title" }, current.ticket.title),

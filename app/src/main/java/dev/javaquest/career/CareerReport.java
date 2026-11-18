@@ -17,7 +17,9 @@ public class CareerReport {
 
     public record StreakView(int current, int longest, int freezes, boolean activeToday, int xpToday, int dailyGoal) {}
 
-    public record KudosView(String id, String title, String from, String message, String howToEarn, boolean earned) {}
+    /** {@code earnedOn} is the local date the kudos was earned, or null while it is not. */
+    public record KudosView(String id, String title, String from, String message, String howToEarn, boolean earned,
+                            LocalDate earnedOn) {}
 
     public record TopicView(String id, String key, String title, int masteryPercent, boolean mastered) {}
 
@@ -54,16 +56,20 @@ public class CareerReport {
         var streakView = new StreakView(GameRules.currentStreak(streak, today), streak.longest(), streak.freezes(),
                 today.equals(streak.lastActive()), store.xpOn(today), GameRules.DAILY_XP_FOR_STREAK);
 
-        var earned = store.kudos();
+        var earnedAt = store.kudosEarnedAt();
+        var earned = earnedAt.keySet();
+        java.util.function.Function<String, LocalDate> earnedOn =
+                id -> earnedAt.containsKey(id) ? LocalDate.ofInstant(earnedAt.get(id), clock.getZone()) : null;
         var kudos = new ArrayList<KudosView>();
         for (var k : Kudos.ALL) {
-            kudos.add(new KudosView(k.id(), k.title(), k.from(), k.message(), k.howToEarn(), earned.contains(k.id())));
+            kudos.add(new KudosView(k.id(), k.title(), k.from(), k.message(), k.howToEarn(), earned.contains(k.id()),
+                    earnedOn.apply(k.id())));
         }
         for (var module : catalog.modules()) {
             String id = Kudos.projectShippedId(module.id());
             kudos.add(new KudosView(id, "Shipped: " + module.project(), "priya",
                     "Every ticket in " + module.project() + " is done. That project shipped!",
-                    "Close every ticket in " + module.project(), earned.contains(id)));
+                    "Close every ticket in " + module.project(), earned.contains(id), earnedOn.apply(id)));
         }
 
         var topics = new ArrayList<TopicView>();

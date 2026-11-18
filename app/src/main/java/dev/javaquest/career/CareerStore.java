@@ -74,6 +74,15 @@ public class CareerStore {
         return new TreeSet<>(jdbc.sql("SELECT id FROM kudos").query(String.class).list());
     }
 
+    /** When each earned kudos was earned. */
+    public Map<String, Instant> kudosEarnedAt() {
+        var earned = new java.util.TreeMap<String, Instant>();
+        jdbc.sql("SELECT id, earned_at FROM kudos")
+                .query((rs, row) -> earned.put(rs.getString(1), rs.getObject(2, java.time.OffsetDateTime.class).toInstant()))
+                .list();
+        return earned;
+    }
+
     public void addKudos(String id, Instant now) {
         jdbc.sql("MERGE INTO kudos (id, earned_at) KEY (id) VALUES (?, ?)").params(id, now.atOffset(ZoneOffset.UTC)).update();
     }

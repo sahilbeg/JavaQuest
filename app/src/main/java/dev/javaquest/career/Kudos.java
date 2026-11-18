@@ -29,12 +29,21 @@ public final class Kudos {
             new Definition("memory-palace", "Memory palace", "maya", "Fifty good reviews. It's sticking.", "Get 50 good reviews"),
             new Definition("boss-slayer", "Incident resolved", "theo", "You fixed a production incident. Riders never noticed.", "Pass the bronze checks of any incident"),
             new Definition("gold-standard", "Gold standard", "theo", "Every incident check green, even the hard ones.", "Pass the gold checks of any incident"),
-            new Definition("java-pro", "Java Pro", "maya", "You launched Spoke in Bramford. You're a professional Java engineer.", "Finish the capstone"));
+            new Definition("java-pro", "Java Pro", "maya", "You launched Spoke in Bramford. You're a professional Java engineer.", "Finish the capstone"),
+            new Definition("full-time", "Full-time offer", "maya",
+                    "Every ticket closed, from your first Hello World to the Bramford launch. Welcome to Spoke, full time.",
+                    "Close every ticket in the course, capstone included"));
 
     private Kudos() {}
 
     public static String projectShippedId(String moduleId) {
         return "shipped-" + moduleId;
+    }
+
+    /** Every unit of every complete module is mastered, and the capstone is one of them. */
+    static boolean finishedCourse(Stats stats) {
+        var units = stats.unitsByModule().values().stream().flatMap(List::stream).toList();
+        return units.contains(CAPSTONE_TOPIC) && stats.masteredTopics().containsAll(units);
     }
 
     public static Set<String> earned(Stats stats) {
@@ -51,6 +60,7 @@ public final class Kudos {
         if (stats.bossesBeaten() >= 1) earned.add("boss-slayer");
         if (stats.goldBosses() >= 1) earned.add("gold-standard");
         if (stats.masteredTopics().contains(CAPSTONE_TOPIC)) earned.add("java-pro");
+        if (finishedCourse(stats)) earned.add("full-time");
         stats.unitsByModule().forEach((module, units) -> {
             if (!units.isEmpty() && stats.masteredTopics().containsAll(units)) {
                 earned.add(projectShippedId(module));

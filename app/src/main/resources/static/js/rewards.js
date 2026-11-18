@@ -1,5 +1,5 @@
 import { api } from "./api.js";
-import { h, icon, toast, reducedMotion } from "./dom.js";
+import { h, icon, toast, reducedMotion, TEAM } from "./dom.js";
 import { byte } from "./byte.js";
 import { bus } from "./events.js";
 import { glow, xpFloat } from "./celebrate.js";
@@ -50,9 +50,29 @@ function celebrate(before, after) {
     toast(`Day ${after.streak.current} of your streak. Nice!`);
   }
   const had = new Set(before.kudos.filter((k) => k.earned).map((k) => k.id));
-  for (const kudos of after.kudos.filter((k) => k.earned && !had.has(k.id))) {
-    toast(`Kudos from ${kudos.from[0].toUpperCase()}${kudos.from.slice(1)}: ${kudos.title}. ${kudos.message}`);
+  const fresh = after.kudos.filter((k) => k.earned && !had.has(k.id));
+  if (fresh.some((k) => k.id === "java-pro")) launched();
+  for (const kudos of fresh) {
+    toast(`Kudos from ${TEAM[kudos.from]?.name.split(" ")[0] ?? kudos.from}: ${kudos.title}. ${kudos.message}`);
   }
+}
+
+/** The capstone is done: Spoke launched in Bramford, and the offer letter is ready. */
+function launched() {
+  const dialog = h("dialog", { class: "promotion launch", "aria-labelledby": "launch-title" },
+    byte("cheering", "", { size: "lg" }),
+    h("p", { class: "eyebrow" }, "CAPSTONE closed"),
+    h("h2", { id: "launch-title" }, "Spoke is live in Bramford!"),
+    h("p", {}, `Tsunade: "You built it from the design doc to the last green check. I have something for you."`),
+    h("div", { class: "button-row launch-actions" },
+      h("a", { class: "button button-primary button-big", href: "/offer", onclick: () => dialog.close() }, "Open your offer letter", icon("arrow-right")),
+      h("form", { method: "dialog" }, h("button", { class: "button button-quiet" }, "Later"))));
+  if (!reducedMotion()) dialog.classList.add("promotion-animate");
+  document.body.append(dialog);
+  dialog.addEventListener("close", () => dialog.remove());
+  dialog.showModal();
+  dialog.querySelector("a")?.focus();
+  glow();
 }
 
 function promotion(level) {
