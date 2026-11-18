@@ -1,0 +1,133 @@
+topic: module-10-professional/topic-06-capstone
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: order
+    concept: service-checklist
+    prompt: "Put these steps for building Bramford's service in the order a professional takes them."
+    items:
+      - "Write the requirements and non-goals"
+      - "Write a one-page design doc and get it reviewed"
+      - "Agree the API contract"
+      - "Design the tables and the first migration"
+      - "Build the core and its ports, with unit tests"
+      - "Launch behind a city switch, with a canary"
+    explain: "Cheap decisions come first. Words in a doc cost minutes to change, a contract and tables cost more, and code and a launch cost the most."
+    reteach: "### From an empty folder to a launched service"
+
+  - id: q02
+    type: mcq
+    concept: service-checklist
+    variants:
+      - { prompt: "Which of these is a non-goal for Bramford's launch?", choices: ["No memberships at launch", "Fares of 120 cents to unlock", "Every request under 200 ms at p99", "Rentals survive a crash"], answer: 0 }
+      - { prompt: "Why write the non-goals down and get the product manager to agree?", choices: ["So nobody expects them, and \"small\" extras cannot quietly push back the launch date", "So the compiler can skip that code", "Because the tests read them", "To make the design doc look longer"], answer: 0 }
+      - { prompt: "\"Every request under 200 ms at the 99th percentile\" is which kind of requirement?", choices: ["Non-functional", "Functional", "A non-goal", "A migration"], answer: 0 }
+    explain: "Functional requirements say what the service does. Non-functional ones say how well: speed, safety, durability. Non-goals say what it deliberately will not do, so the plan stays honest."
+    reteach: "### Step 1: Requirements and non-goals"
+
+  - id: q03
+    type: mcq
+    concept: contract-and-data-first
+    variants:
+      - { prompt: "Why agree the API contract before building the server?", choices: ["The app team can build against it at the same time, and a change is cheap while it is only text", "Spring cannot start without an OpenAPI file", "The contract makes the server faster", "So the tests can be skipped"], answer: 0 }
+      - { prompt: "Bramford's contract lists every endpoint's happy answer, but no errors. What is missing?", choices: ["The error answers: statuses and problem types the app must handle", "Nothing, errors are an implementation detail", "The database password", "The Docker image name"], answer: 0 }
+    explain: "A written contract lets two teams work in parallel against the same promise. It must include the error answers too, because clients code against them."
+    reteach: "### Step 4: The API contract first"
+
+  - id: q04
+    type: mcq
+    concept: contract-and-data-first
+    variants:
+      - { prompt: "In the rentals table on H2, why does active_bike_id become NULL when a ride ends?", choices: ["In H2, a UNIQUE column allows many NULLs, so ended rentals never block the bike's next rental", "NULL saves disk space", "So the bike is deleted from the fleet", "Because ended rentals are copied to another table"], answer: 0 }
+      - { prompt: "Two Spoke servers insert an active rental of BR-2001 at the same moment. What stops the second one?", choices: ["The UNIQUE constraint on active_bike_id: the database rejects the second insert", "A synchronized method in RentalService", "The Idempotency-Key header", "Nothing: both rentals are saved"], answer: 0 }
+      - { prompt: "Why is fare_cents a BIGINT and not a DECIMAL of dollars?", choices: ["Spoke keeps money as whole cents everywhere, so it is exact and the same type in Java and SQL", "BIGINT columns are always faster", "DECIMAL cannot hold money", "H2 has no DECIMAL type"], answer: 0 }
+    explain: "In H2 (and PostgreSQL), a UNIQUE column allows many NULLs, so active_bike_id guards only the active rental. A Java lock cannot see another server; the database sees every insert. Money stays in whole cents end to end."
+    reteach: "### Step 5: Data model and migrations"
+
+  - id: q05
+    type: spot-the-bug
+    concept: hexagonal-core
+    prompt: "This is meant to be Bramford's framework-free core. Which line breaks the hexagon?"
+    code: |
+      public class RentalService implements RentalUseCases {
+          private final CityConfig city;
+          private final JdbcTemplate jdbc;
+          private final BikeInventory bikes;
+          private final Clock clock;
+      }
+    bugLine: 3
+    explain: "JdbcTemplate is Spring's database helper, so the core now depends on Spring and SQL. The core should depend on its own RentalRepository port, and a JDBC adapter outside should implement it."
+    reteach: "### Step 6: The core, with ports and adapters"
+
+  - id: q06
+    type: mcq
+    concept: per-city-config
+    variants:
+      - { prompt: "Spoke adds a third city with its own prices and stations. With a CityConfig design, what changes?", choices: ["A new CityConfig value; the rental code stays as it is", "A new if-branch in every rule", "A copy of RentalService for the new city", "A new BikeType for each city"], answer: 0 }
+      - { prompt: "What goes wrong with if (cityId.equals(\"bramford\")) ladders as Spoke grows to ten cities?", choices: ["Every rule grows a ladder of ifs, and each new city means editing, re-testing and redeploying the rules", "Java allows only two else-if branches", "The code runs out of memory", "Nothing, it is the cleanest design"], answer: 0 }
+    explain: "Put everything that differs between cities into data. One RentalService serves one city with that city's config, so a new city is a new value, not new code."
+    reteach: "### Many cities: configuration, not if-statements"
+
+  - id: q07
+    type: fill-blank
+    concept: per-city-config
+    prompt: "public boolean offers(BikeType type) { return perMinuteCents.___(type); }"
+    answers: ["containsKey"]
+    explain: "A city offers a type when that type has a price. Bramford's map has no CARGO key, so containsKey(CARGO) is false."
+    reteach: "### Syntax: a city as a record"
+
+  - id: q08
+    type: predict-output
+    concept: money-and-time-zones
+    prompt: "A Bramford EBIKE ride of 12 min 59 s. What does it print?"
+    code: |
+      java.time.Duration ride = java.time.Duration.ofMinutes(12).plusSeconds(59);
+      long cents = 120 + 35 * ride.toMinutes();
+      System.out.println(cents);
+    answer: "540"
+    explain: "toMinutes() keeps whole minutes and drops the rest, so 12 min 59 s is 12 minutes: 120 + 35 × 12 = 540 cents."
+    reteach: "### Money stays in whole cents"
+
+  - id: q09
+    type: predict-output
+    concept: money-and-time-zones
+    prompt: "A Riverton ride starts at 04:30 UTC. What is its service date?"
+    code: |
+      java.time.Instant start = java.time.Instant.parse("2026-11-18T04:30:00Z");
+      java.time.ZoneId riverton = java.time.ZoneId.of("America/New_York");
+      System.out.println(start.atZone(riverton).toLocalDate());
+    answer: "2026-11-17"
+    explain: "In November, New York is 5 hours behind UTC, so 04:30 UTC on the 18th is 23:30 on the 17th. The service date is the local day the ride started."
+    reteach: "### Syntax: an Instant on a city's calendar"
+
+  - id: q10
+    type: mcq
+    concept: production-readiness
+    variants:
+      - { prompt: "A Bramford rider tries to rent the CARGO bike. Which status does the error table give?", choices: ["422", "409", "404", "400"], answer: 0 }
+      - { prompt: "A rider asks for a bike that another rider took a second ago. Which status does the error table give?", choices: ["409", "422", "404", "500"], answer: 0 }
+      - { prompt: "POST /rentals arrives with a blank bikeId. Which status does the error table give?", choices: ["400", "404", "409", "422"], answer: 0 }
+      - { prompt: "Bramford's service gets a request for station harbor, a Riverton station. Which status does the error table give?", choices: ["404", "400", "409", "500"], answer: 0 }
+    explain: "400: the request's shape is wrong. 404: it does not exist in this city. 409: it clashes with the current state and may work later. 422: well formed, but it can never be done here."
+    reteach: "### Step 7: Validation and the error model"
+
+  - id: q11
+    type: mcq
+    concept: production-readiness
+    variants:
+      - { prompt: "rider-7's app retries POST /rentals with the same Idempotency-Key, bike and station. What happens?", choices: ["The first rental comes back, and nothing new is created", "A second rental starts", "409 bike-unavailable", "400 Bad Request"], answer: 0 }
+      - { prompt: "rider-7 sends a key it already used, but for a different bike. What should happen?", choices: ["It is refused as IdempotencyKeyReused: an app bug, not a retry", "The first rental comes back", "A second rental starts", "The old rental switches to the new bike"], answer: 0 }
+      - { prompt: "Why is an idempotency key stored together with the rider id?", choices: ["Two riders may pick the same key text, and one must never get the other's rental", "The rider id makes the key shorter", "Keys are only allowed once per day", "So the key can be shown in the receipt"], answer: 0 }
+    explain: "Same rider, same key, same body: a retry, so return the first rental. Same key, different body: refuse it. Keys belong to one rider, with a unique constraint on (rider_id, idempotency_key)."
+    reteach: "### Step 8: Idempotency keys on POST /rentals"
+
+  - id: q12
+    type: mcq
+    concept: launch-and-operate
+    variants:
+      - { prompt: "Bramford is live, and 5% of rentals start failing. What is the first step of the rollback plan?", choices: ["Flip the Bramford city switch off", "Revert every commit and rebuild the image", "Drop the rentals table", "Restart all of Riverton's pods"], answer: 0 }
+      - { prompt: "What does a canary launch of Bramford do?", choices: ["Turns Bramford on for a small group first, and widens it only while the numbers stay healthy", "Launches every city at once", "Tests the service on a staging copy only", "Sends all traffic to the old version"], answer: 0 }
+      - { prompt: "What is a runbook for?", choices: ["Written steps for a known production problem, so whoever is on call need not invent them at 3 a.m.", "A list of the service's endpoints", "The design doc's alternatives section", "A script that runs the unit tests"], answer: 0 }
+    explain: "Ship the code early, switched off, and launch by flipping a city switch. Widen it step by step with a canary. If it goes wrong, switch off first and redeploy second, following the runbook."
+    reteach: "### Step 14: The launch checklist"

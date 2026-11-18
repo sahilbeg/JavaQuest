@@ -1,0 +1,23 @@
+id: module-10-professional/topic-01-code-reviews
+title: "Giving and receiving code reviews"
+order: 1
+minutes: 15
+prerequisites: [module-09-architecture/boss]
+concepts: [why-review, pull-request-flow, what-to-look-for, writing-comments, review-decisions, receiving-feedback]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-1001
+  from: maya
+  title: "You're on the review rota now"
+  body: >
+    Good news: from this week you are on the review rota, so teammates will ask you to review their pull requests.
+    The first one, a ride history endpoint, is waiting for you.
+    Also, your own PR came back with 23 comments. Don't panic, that is normal.
+    Review theirs properly, answer yours properly, and tell me how both went.
+hints:
+  - "Review in priority order: is it correct, is it in the right place, do the tests prove it, is it safe? Naming and style come last."
+  - "A good comment points at a line, says what is wrong and why, and offers a fix. Label it, so the author knows what blocks the merge: issue (blocking), suggestion, nitpick (non-blocking), question."
+  - "When you receive comments, assume good intent and reply to every one: fixed, or a reason why not. If a thread passes three rounds, talk it through on a call and write the outcome in the PR."
+review: true

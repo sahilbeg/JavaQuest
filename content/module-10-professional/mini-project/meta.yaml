@@ -1,0 +1,23 @@
+id: module-10-professional/mini-project
+title: "CAPSTONE: Launch Spoke in Bramford"
+order: 100
+minutes: 15
+prerequisites: [module-10-professional/topic-06-capstone]
+concepts: [web-adapter, problem-details, idempotency-keys, jdbc-adapter, readiness-probe, rate-limiting]
+practice:
+  kind: code
+  runner: spring
+ticket:
+  key: CAPSTONE
+  from: priya
+  title: "Bramford goes live"
+  body: >
+    The core is done. Launch day, 1 February, is close.
+    Now riders need the real thing: rentals over HTTP, saved in a database, with clear errors and no double rentals when phones retry.
+    Kakashi also wants a readiness check for the cluster and a limit on riders who hammer the unlock button.
+    This is the launch. Make it boring.
+hints:
+  - "Go stage by stage, and run the checks after each one. Stage 1 is only the controller: each method is one call on rentals, the RentalUseCases port, then ResponseEntity.created(URI.create(\"/rentals/\" + rental.id())).body(RentalResponse.from(rental)) or ResponseEntity.ok(...)."
+  - "Stage 3: in LaunchProblems, add one case per RentalException kind, like the RentalNotFound example, then delete the default line. For validation, put each FieldError's getField() and getDefaultMessage() into a TreeMap with putIfAbsent, and setProperty(\"errors\", errors). Stage 4 is one @RequestHeader parameter."
+  - "Stage 5: activeBikeId = r.isActive() ? r.bikeId() : null; run the UPDATE, and when jdbc.update returns 0, INSERT all 12 columns. Stage 6: drop times that are not after now.minus(WINDOW); with LIMIT times left, long wait = Duration.between(now, oldest.plus(WINDOW)).toMillis(); seconds = Math.max(1, (wait + 999) / 1000)."
+review: false

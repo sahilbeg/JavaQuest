@@ -1,0 +1,23 @@
+id: module-10-professional/topic-04-estimation
+title: "Estimation and planning"
+order: 4
+minutes: 15
+prerequisites: [module-10-professional/topic-03-documentation]
+concepts: [uncertainty, work-breakdown, estimating, relative-sizing, critical-path, risk-and-scope, communicating-estimates]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-1004
+  from: priya
+  title: "When can Spoke ride in Bramford?"
+  body: >
+    Big news: Bramford's city council wants Spoke bikes on their streets!
+    They meet next week, and the first thing they will ask me is "when?".
+    I need a date I can stand behind, not a guess that slips three times.
+    How long until a rider in Bramford can unlock a bike, and what could make it longer?
+hints:
+  - "Break the launch into tasks of two days or less, and include the work people forget: tests, reviews, docs, migrations, rollout and launch checks."
+  - "Estimate each task with three numbers: optimistic, most likely and pessimistic. PERT's expected value is (O + 4M + P) / 6. Then find the longest chain of tasks that depend on each other: that critical path sets the date."
+  - "Turn focused days into calendar time (an engineer gets about 4 to 5 focused hours a day), spike the scariest risk first, and give Jiraiya a range with a confidence level, plus what would change it."
+review: true

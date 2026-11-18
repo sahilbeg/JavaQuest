@@ -1,0 +1,129 @@
+topic: module-10-professional/topic-02-reading-codebases
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: order
+    concept: outside-in
+    prompt: "Put the plan for learning a new codebase in order."
+    items:
+      - "Read the README, the build file and the folder layout"
+      - "Run the service locally, then run its tests"
+      - "Find the entry points"
+      - "Trace one request from the door to the database"
+      - "Write a map of what you learned"
+    explain: "Outside in, then one path deep. The README, build file and running it give you the main roads. Entry points and one traced request give you a route in detail. The map means you never learn it twice."
+    reteach: "### A plan: outside in, then one path deep"
+
+  - id: q02
+    type: mcq
+    concept: outside-in
+    variants:
+      - { prompt: "Comments and tests disagree about what a method does. Which should you trust?", choices: ["The tests, because they run on every build and must match the code", "The comments, because a person wrote them on purpose", "Neither: only the README is reliable", "Whichever is longer"], answer: 0 }
+      - { prompt: "The only test for toPayRiverAmount checks that 700 cents becomes \"7.00\". What does that tell a careful reader?", choices: ["Amounts with a cents part, like 460, are not tested at all", "Every possible amount is covered", "The method only accepts whole dollars", "The test must be deleted"], answer: 0 }
+      - { prompt: "What is the quickest way to learn the rules a class is meant to follow?", choices: ["Read its test names and assertions", "Read every file in its package alphabetically", "Read the git log of the whole repository", "Guess from the class name"], answer: 0 }
+    explain: "Tests are the most honest documentation: they run on every build, so they must match the code. Their names list the rules, and their gaps show what nobody checked."
+    reteach: "### Read the tests as documentation"
+
+  - id: q03
+    type: mcq
+    concept: entry-points
+    variants:
+      - { prompt: "Which of these is an entry point into a Spring service?", choices: ["A method with @Scheduled that runs every night", "A private helper method that formats a date", "A record that holds a ride", "A constant in an enum"], answer: 0 }
+      - { prompt: "You want a quick list of every write a Spring service accepts over HTTP. What do you search for?", choices: ["@PostMapping, @PutMapping and @DeleteMapping", "private static final", "@Override", "import java.util"], answer: 0 }
+      - { prompt: "A service reacts to messages from a queue. Which annotation marks where that work comes in?", choices: ["@KafkaListener", "@Transactional", "@DisplayName", "@Override"], answer: 0 }
+    explain: "An entry point is where work enters from outside: main, controller methods, @Scheduled timers, message listeners and @EventListener methods. Find the doors and you can follow any path inward."
+    reteach: "### Find the entry points"
+
+  - id: q04
+    type: mcq
+    concept: code-navigation
+    variants:
+      - { prompt: "The controller calls endRide.endRide(id), and endRide is the interface EndRideUseCase. Go to declaration lands on the interface. What next?", choices: ["Go to implementation, to find EndRideService", "Give up: interfaces have no code", "Search the whole disk for 'endRide'", "Read the interface's Javadoc only"], answer: 0 }
+      - { prompt: "You want every caller of PayRiverPaymentAdapter.charge, up to the entry points. Which IDE feature fits best?", choices: ["Call hierarchy", "Type hierarchy", "Reformat code", "Optimize imports"], answer: 0 }
+      - { prompt: "You want to see every class that extends an abstract class FareRule. Which IDE feature fits best?", choices: ["Type hierarchy", "Call hierarchy", "Search for the text 'FareRule' in the README", "Optimize imports"], answer: 0 }
+    explain: "Go to implementation jumps from an interface to the classes that implement it. Call hierarchy shows the tree of callers. Type hierarchy shows the parents and children of a class."
+    reteach: "### IDE navigation"
+
+  - id: q05
+    type: mcq
+    concept: git-history
+    variants:
+      - { prompt: "What does git log -S \"cents / 100\" list?", choices: ["Commits that changed how many times that text appears, such as the one that added it", "Every commit that touched any Java file", "Commits whose message contains 'cents / 100'", "Every line that contains 'cents / 100' today"], answer: 0 }
+      - { prompt: "git log -G 'valueOf\\(cents' also listed a commit that only added an ADR. Why?", choices: ["-G lists every commit whose diff adds or removes a line matching the pattern, in any file", "-G only searches Java files, so it made a mistake", "-G searches commit messages", "-G lists every commit in the repository"], answer: 0 }
+    explain: "-S, the pickaxe, lists commits that change how many times a piece of text appears. -G takes a regular expression and lists commits whose diff adds or removes a matching line, so it is wider."
+    reteach: "### Syntax: git log -S and -G"
+
+  - id: q06
+    type: fill-blank
+    concept: git-history
+    prompt: "git ___ -L 33,35 src/main/java/spoke/payments/adapter/PayRiverPaymentAdapter.java"
+    answers: ["blame"]
+    explain: "git blame -L 33,35 shows, for each of those lines, the last commit that changed it, with the author and date. git show then explains why."
+    reteach: "### Syntax: git blame and git show"
+
+  - id: q07
+    type: mcq
+    concept: tracing-a-request
+    variants:
+      - { prompt: "The rental row says fare_cents = 460 and PayRiver received 4.00. Where is the bug most likely?", choices: ["After the fare is worked out, on the way to PayRiver: in the payment adapter", "In the fare calculation", "In the rider app", "In the database schema"], answer: 0 }
+      - { prompt: "A value is right at one hop of a request and wrong at the next. What have you learned?", choices: ["The bug is somewhere between those two hops", "The bug is in the first hop", "The database is broken", "Nothing useful"], answer: 0 }
+    explain: "Check the data at two points on the path. Right at one and wrong at the next means the bug sits between them, so each check cuts the search in half."
+    reteach: "### Follow the data"
+
+  - id: q08
+    type: predict-output
+    concept: tracing-a-request
+    prompt: "This is the buggy conversion from the worked example. What does it print?"
+    code: |
+      import java.math.BigDecimal;
+
+      public class Main {
+          static String toPayRiverAmount(long cents) {
+              return BigDecimal.valueOf(cents / 100).setScale(2).toPlainString();
+          }
+
+          public static void main(String[] args) {
+              System.out.println(toPayRiverAmount(1250));
+          }
+      }
+    answer: "12.00"
+    explain: "1250 / 100 is integer division, so it gives 12 and throws away 50 cents. setScale(2) then adds .00. BigDecimal.valueOf(1250, 2) would give 12.50."
+    reteach: "### Following the call"
+
+  - id: q09
+    type: mcq
+    concept: legacy-changes
+    variants:
+      - { prompt: "You must change an old, untested pricing method you do not fully understand. What do you do first?", choices: ["Write characterization tests that pin what it does today", "Rewrite it from scratch the way you would write it", "Change it and let QA find any problems", "Delete it and see what breaks"], answer: 0 }
+      - { prompt: "What does the Boy Scout rule ask of you?", choices: ["Leave the code a little cleaner than you found it, in small steps", "Rewrite every file you open", "Never touch code you did not write", "Add a comment to every line"], answer: 0 }
+      - { prompt: "You fixed a bug and also renamed three confusing variables nearby. How should you send the renames?", choices: ["In their own small commit or PR, apart from the fix", "Mixed into the fix, so there is only one PR", "Not at all: renames are never allowed", "As a comment asking someone else to do them"], answer: 0 }
+    explain: "Pin current behaviour with tests before changing legacy code, then change it in small, safe steps. Leave it a little cleaner, but keep tidy-ups separate so reviewers can tell them apart from the real change."
+    reteach: "### Legacy code: pin it, then change it"
+
+  - id: q10
+    type: mcq
+    concept: asking-for-help
+    variants:
+      - { prompt: "Which question is the best one to post in the team channel?", choices: ["\"For SPK-1002, toPayRiverAmount(460) returns 4.00 at a breakpoint, but ADR 0007 says 4.60. Is this the only place we format amounts?\"", "\"How does payments work?\"", "\"It's broken, help.\"", "\"Who wrote this terrible code?\""], answer: 0 }
+      - { prompt: "You have been stuck for 30 minutes and are no closer. What should you do?", choices: ["Ask, with what you tried, what you expected and one specific question", "Keep going alone for the rest of the week", "Ask someone to do the whole ticket for you", "Pick a different ticket and say nothing"], answer: 0 }
+    explain: "Try for about 30 minutes first, then ask. A good question says what you are doing, what you tried, what you expected, and asks one specific thing."
+    reteach: "### Asking good questions"
+
+  - id: q11
+    type: mcq
+    concept: git-history
+    variants:
+      - { prompt: "Code converts cents with BigDecimal.valueOf(cents, 2), which looks fussy. Where should you look before 'simplifying' it?", choices: ["The team's architecture decision records, such as docs/adr", "Nowhere: simpler is always better", "The IDE's settings", "The CI pipeline file"], answer: 0 }
+      - { prompt: "What does an architecture decision record hold?", choices: ["The context, the decision and its consequences for one important choice", "Every line of code in the service", "The list of open bugs", "The team's holiday calendar"], answer: 0 }
+    explain: "An ADR records one decision: the situation, what was decided, and what follows. Code shows what the system does; ADRs show why. Check them before you 'fix' odd-looking code."
+    reteach: "### Architecture decision records"
+
+  - id: q12
+    type: mcq
+    concept: tracing-a-request
+    variants:
+      - { prompt: "A stack trace shows EndRideService$$SpringCGLIB$$0. What is it?", choices: ["A proxy Spring made around EndRideService, for example to run @Transactional", "A second copy of the class written by a teammate", "A compile error", "A test class"], answer: 0 }
+      - { prompt: "You see an interface PaymentPort in core and a class PayRiverPaymentAdapter in adapter. Which pattern is this?", choices: ["Ports and adapters", "Singleton", "Observer", "Builder"], answer: 0 }
+    explain: "Big codebases reuse a few shapes. An interface in core with an implementation in adapter is ports and adapters. @Transactional makes Spring wrap a bean in a proxy, which shows up in stack traces."
+    reteach: "### Patterns you already know"

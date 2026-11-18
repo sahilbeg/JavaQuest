@@ -1,0 +1,138 @@
+topic: module-10-professional/topic-04-estimation
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: uncertainty
+    variants:
+      - { prompt: "At the idea stage, a job's real length can be from about a quarter of the estimate up to how much?", choices: ["Four times the estimate", "Twice the estimate", "One and a half times the estimate", "Exactly the estimate"], answer: 0 }
+      - { prompt: "What makes the cone of uncertainty narrow?", choices: ["Work that removes unknowns: agreed requirements, a reviewed design, spikes, real progress", "Time passing on its own", "Adding more engineers", "Giving a single number early"], answer: 0 }
+      - { prompt: "Why should you avoid giving a single number at the idea stage?", choices: ["The real length could be anywhere from a quarter to four times that number", "Single numbers are always too long", "Ranges are always shorter than single numbers", "Nobody needs an estimate that early"], answer: 0 }
+    explain: "Early on, an honest range runs from about 0.25 to 4 times the estimate. Requirements, design, spikes and real progress narrow it, so re-estimate at each step and give ranges until then."
+    reteach: "### The cone of uncertainty"
+
+  - id: q02
+    type: mcq
+    concept: work-breakdown
+    variants:
+      - { prompt: "How small should you split tasks before estimating them?", choices: ["About two focused days or less", "About two weeks each", "Exactly two hours each", "One task per engineer"], answer: 0 }
+      - { prompt: "Which task is easiest to estimate and to track?", choices: ["A rental at castle-hill is priced with Bramford fares, with tests, merged", "Work on fares", "Make Bramford happen", "Improve the rental API"], answer: 0 }
+      - { prompt: "Why do small tasks give better estimates?", choices: ["People guess one day fairly well and five weeks badly, and splitting reveals hidden work", "Small tasks need no tests", "Small tasks never depend on other tasks", "Small tasks are always on the critical path"], answer: 0 }
+    explain: "Split work until each task is two focused days or less, with a clear \"done\". Small tasks are easier to guess, show progress daily, and expose work nobody mentioned."
+    reteach: "### Breaking work down"
+
+  - id: q03
+    type: mcq
+    concept: work-breakdown
+    variants:
+      - { prompt: "\"Fares per city: 2 days\" counts only the coding. What most often makes the real total longer?", choices: ["Tests, review, docs, migrations and rollout that were never listed", "A slow compiler", "Typing speed", "Long class names"], answer: 0 }
+      - { prompt: "Which of these belongs in a plan's task list, even though it is not coding?", choices: ["Launch checks: load test, alerts and a runbook dry run", "Choosing the IDE's colour theme", "Reading the ticket's title", "Opening the laptop"], answer: 0 }
+    explain: "Code is often less than half the job. Tests, review, docs, migrations, rollout, launch checks and first-week fixes are real work, and leaving them out is the most common reason plans slip."
+    reteach: "### The forgotten work"
+
+  - id: q04
+    type: fill-blank
+    concept: estimating
+    prompt: "double expected = (o + 4 * m + p) / ___;"
+    answers: ["6", "6.0"]
+    explain: "PERT weights the most likely value four times, plus the optimistic and pessimistic once each: six parts in all, so divide by 6."
+    reteach: "### Three-point estimates and PERT"
+
+  - id: q05
+    type: predict-output
+    concept: estimating
+    prompt: "Two tasks run one after another. What is the PERT total, in focused days?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              long o1 = 1, m1 = 2, p1 = 9;
+              long o2 = 2, m2 = 4, p2 = 12;
+              long total = (o1 + 4 * m1 + p1) / 6 + (o2 + 4 * m2 + p2) / 6;
+              System.out.println(total);
+          }
+      }
+    answer: "8"
+    explain: "Task 1: (1 + 8 + 9) / 6 = 3. Task 2: (2 + 16 + 12) / 6 = 5. Together 8, more than the most likely 2 + 4 = 6, because both pessimistic values are far out."
+    reteach: "### Three-point estimates and PERT"
+
+  - id: q06
+    type: mcq
+    concept: estimating
+    variants:
+      - { prompt: "A task needs 6 focused days, and about 60% of a working day is focused work. About how many working days will it take?", choices: ["10", "6", "8", "4"], answer: 0 }
+      - { prompt: "About how many focused hours does a typical engineer get in an 8-hour working day?", choices: ["4 to 5", "8", "7", "Less than 1"], answer: 0 }
+      - { prompt: "Which week should hold almost no project work in your plan?", choices: ["Your on-call week", "A week with a daily stand-up", "The week after sprint planning", "A week with no holidays"], answer: 0 }
+    explain: "Meetings, reviews, chat, interruptions and on-call leave about 4 to 5 focused hours a day. Divide focused days by the focus share (6 / 0.6 = 10), then check the calendar for holidays and on-call weeks."
+    reteach: "### Focus time and calendar time"
+
+  - id: q07
+    type: mcq
+    concept: relative-sizing
+    variants:
+      - { prompt: "In planning poker, why does everyone show their card at the same moment?", choices: ["To avoid anchoring on the first number spoken", "To finish faster", "So the manager can choose", "Because the cards must be shuffled"], answer: 0 }
+      - { prompt: "Planning poker cards show 3, 3, 5 and 13. What happens next?", choices: ["The 3s and the 13 explain their thinking, then the team votes again", "The team takes the average, 6", "The team takes the most common card, 3", "The 13 is ignored as an outlier"], answer: 0 }
+      - { prompt: "Why do story point scales like 1, 2, 3, 5, 8, 13 have growing gaps?", choices: ["Bigger work is less certain, and nobody can tell a 13 from a 14", "Small tasks are not worth sizing", "It makes velocity look higher", "Those numbers are quicker to add"], answer: 0 }
+    explain: "Story points compare tasks with each other. Showing cards together avoids anchoring, and a big gap between cards means someone knows something the others do not, so they talk and vote again."
+    reteach: "### Relative sizing and planning poker"
+
+  - id: q08
+    type: mcq
+    concept: relative-sizing
+    variants:
+      - { prompt: "The last three sprints finished 18, 22 and 20 points. 60 points are left. About how many sprints remain?", choices: ["3", "2", "4", "6"], answer: 0 }
+      - { prompt: "A manager ranks engineers by story points finished. What happens?", choices: ["Sizes inflate, so the number rises while nothing faster gets built", "The team gets faster", "Velocity becomes more accurate", "Story points turn into hours"], answer: 0 }
+      - { prompt: "Team A's velocity is 40 and team B's is 20. What can you conclude?", choices: ["Nothing about who is faster: each team's points are its own scale", "Team A is twice as productive", "Team B should copy team A's process", "Team A's tasks are smaller"], answer: 0 }
+    explain: "Velocity is the average points a team finishes per sprint: (18 + 22 + 20) / 3 = 20, so 60 points is about 3 sprints. Use it to forecast your own team, never to compare teams or judge people (Goodhart's law)."
+    reteach: "### Velocity, and why points are not productivity"
+
+  - id: q09
+    type: predict-output
+    concept: critical-path
+    prompt: "Each number is a task's earliest finish day. When is the launch ready?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int design = 2;
+              int api = design + 4;
+              int app = design + 3;
+              int tests = Math.max(api, app) + 2;
+              int docs = api + 1;
+              int launch = Math.max(tests, docs) + 1;
+              System.out.println(launch);
+          }
+      }
+    answer: "9"
+    explain: "api ends on day 6 and app on day 5, so tests start on day 6 and end on day 8. docs end on day 7. Launch waits for the later of 8 and 7, then takes 1 day: day 9. The critical path is design, api, tests, launch."
+    reteach: "### Dependencies and the critical path"
+
+  - id: q10
+    type: mcq
+    concept: risk-and-scope
+    variants:
+      - { prompt: "Which task should come first in the Bramford plan?", choices: ["A timeboxed spike on the scariest unknown: can billing price by city?", "The easiest task, to build momentum", "The rider app's new colours", "The launch checks"], answer: 0 }
+      - { prompt: "What does a timeboxed spike produce?", choices: ["An answer to one question within a fixed time, even if the answer is no", "Production code ready to ship", "A finished feature", "A new estimate for the whole company"], answer: 0 }
+      - { prompt: "Which line is a risk register entry?", choices: ["Billing may assume one fare table: medium likelihood, high impact, spike first, owner you", "Fares per city: 3 focused days", "Sprint 4 starts on Monday", "Velocity: 20 points"], answer: 0 }
+    explain: "List risks with likelihood, impact, what you do and an owner. Tackle the scariest unknown first with a short, timeboxed spike: finding a problem in week one leaves time to react."
+    reteach: "### Risks and spikes"
+
+  - id: q11
+    type: mcq
+    concept: risk-and-scope
+    variants:
+      - { prompt: "The plan slips, and the launch date is already promised. What should you cut?", choices: ["Scope, such as Bramford promo codes", "Tests", "Code reviews", "Launch checks"], answer: 0 }
+      - { prompt: "Which is a good milestone?", choices: ["A staff rider can rent BR-2001 at castle-hill in staging", "Fares are 80% done", "Lots of progress on the API", "The end of week 3"], answer: 0 }
+      - { prompt: "In MoSCoW, what does the W stand for?", choices: ["Won't have this time", "Wish list", "Weekly", "Worth doing"], answer: 0 }
+    explain: "Milestones are things you can show working. The MVP is what must exist on launch day; MoSCoW sorts the rest. When time runs short, cut scope, never quality: skipped tests and checks come back as incidents."
+    reteach: "### Milestones, the MVP and cutting scope"
+
+  - id: q12
+    type: mcq
+    concept: communicating-estimates
+    variants:
+      - { prompt: "Which is the best way to give Jiraiya an estimate?", choices: ["6 to 8 weeks, about 85% sure, with three engineers; Friday's spike may change it", "Three weeks", "It's done when it's done", "Whatever date the council wants"], answer: 0 }
+      - { prompt: "In week 2, a spike finds a problem that may add two weeks. When do you tell Jiraiya?", choices: ["That day, with options", "At the end of the project", "Only if the launch really slips", "After you have fixed it"], answer: 0 }
+      - { prompt: "What goes wrong when you pad every estimate in secret?", choices: ["The padding gets spent, and people learn to cut your numbers", "Nothing, it is good practice", "Tasks finish earlier", "The critical path disappears"], answer: 0 }
+      - { prompt: "Asked for a single date, which date should you give?", choices: ["The date you are confident in, not the 50-50 one", "The 50-50 date", "The optimistic date", "The date the business wants"], answer: 0 }
+    explain: "Give a range with a confidence and assumptions, say what would change it, show any buffer openly, and update the moment the critical path slips. A single date should be one you are confident in."
+    reteach: "### Communicating an estimate"

@@ -219,7 +219,7 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 5 | `module-10-professional/topic-05-interview-prep` | Interview prep: coding, design and behavioural | code | `module-10-professional/topic-04-estimation` |
 | 6 | `module-10-professional/topic-06-capstone` | Capstone: full-stack Java service | code | `module-10-professional/topic-05-interview-prep` |
 | boss | `module-10-professional/boss` | INC-10: The mock interview loop | code | `module-10-professional/topic-06-capstone` |
-| mini-project | `module-10-professional/mini-project` | CAPSTONE: Capstone: launch Spoke in Bramford | code | `module-10-professional/topic-06-capstone` |
+| mini-project | `module-10-professional/mini-project` | CAPSTONE: Launch Spoke in Bramford | code | `module-10-professional/topic-06-capstone` |
 
 ## Totals
 

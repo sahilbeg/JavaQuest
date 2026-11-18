@@ -1,0 +1,25 @@
+id: module-10-professional/topic-06-capstone
+title: "Capstone: full-stack Java service"
+order: 6
+minutes: 15
+prerequisites: [module-10-professional/topic-05-interview-prep]
+concepts: [service-checklist, contract-and-data-first, hexagonal-core, per-city-config, money-and-time-zones, production-readiness, launch-and-operate]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m10.capstone.CapstoneDemo
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-1006
+  from: priya
+  title: "Bramford said yes"
+  body: >
+    Bramford's council approved the launch: five stations, 10 docks each, opening on 1 February.
+    Their prices differ from ours, they want no cargo bikes, and their reports must use Bramford's own clock.
+    Before anyone writes a controller or a table, I want a rentals core that knows every city's stations and fares.
+    Can you build it so the next city is a config change, not a rewrite?
+hints:
+  - "Start with CityConfig.bramford(): copy riverton() and change the values. A bike type missing from perMinuteCents is a type the city does not offer, so leave CARGO out. In FareCalculator, ride.toMinutes() already rounds down."
+  - "startRental runs its checks in a fixed order: the idempotency key first, then the station, the bike and its cityId, the bike's type, bike.isAvailableAt(stationId), and the rider's active rental. Only when all pass: nextId, save, markRented."
+  - "endRental: Rental rental = findRental(rentalId); if (!rental.isActive()) throw new RentalException.RentalAlreadyEnded(rentalId); then fare = fares.fareCents(rental.bikeType(), Duration.between(rental.startedAt(), now)), save rental.end(...), bikes.dock(...), and publish new RideEnded(\"ride-ended:\" + rental.id(), ..., rental.startedAt().atZone(city.zone()).toLocalDate())."
+review: true

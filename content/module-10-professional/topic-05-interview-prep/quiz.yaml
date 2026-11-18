@@ -1,0 +1,144 @@
+topic: module-10-professional/topic-05-interview-prep
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: interview-loop
+    variants:
+      - { prompt: "Which stage is usually a timed coding test that a computer grades with hidden tests?", choices: ["The online assessment", "The recruiter screen", "The behavioural round", "The debrief"], answer: 0 }
+      - { prompt: "Which set of onsite rounds is usual for an SDE 2 loop?", choices: ["Two coding, one low-level design, one system design, one behavioural", "Five coding rounds", "One coding round and four behavioural rounds", "Only a system design round"], answer: 0 }
+      - { prompt: "Where is the hire or no-hire decision usually made?", choices: ["In the debrief, where the interviewers compare their notes", "By the recruiter during the first call", "By the online assessment's score alone", "By the last interviewer of the day, alone"], answer: 0 }
+    explain: "A loop runs recruiter screen, online assessment (graded by hidden tests), phone screen, then an onsite of about five rounds: for SDE 2, two coding, one low-level design, one system design and one behavioural. The interviewers then decide together in the debrief."
+    reteach: "### How a big-tech loop works"
+
+  - id: q02
+    type: mcq
+    concept: interview-loop
+    variants:
+      - { prompt: "What is most expected of an SDE 2 but not of an SDE 1?", choices: ["Owning a whole feature end to end, including its design and its life in production", "Writing code with no bugs at all", "Knowing every Java library by heart", "Working without ever asking questions"], answer: 0 }
+      - { prompt: "In an SDE 2 loop, how should you act in the design rounds?", choices: ["Drive them yourself: raise requirements, extension and concurrency before you are asked", "Wait for the interviewer to tell you each next step", "Start coding classes in the first minute", "Talk only about tools you have used"], answer: 0 }
+      - { prompt: "Which behavioural story best fits an SDE 2 loop?", choices: ["Turning a vague request into a feature you designed, shipped and supported in production", "Fixing a typo someone pointed out to you", "Finishing a small ticket exactly as written", "Attending a team meeting"], answer: 0 }
+    explain: "The coding bar barely changes. Scope does: an SDE 2 owns whole features, writes the design, handles vague requests, supports the feature in production and helps others. So you lead the design rounds and tell feature-sized stories."
+    reteach: "### SDE 1 and SDE 2"
+
+  - id: q03
+    type: order
+    concept: coding-method
+    prompt: "Put the coding-round steps in order."
+    items:
+      - "Clarify inputs, sizes and edge cases"
+      - "Agree two or three examples"
+      - "Say a brute force and its cost"
+      - "Find the pattern and agree a faster plan"
+      - "Code it, explaining as you go"
+      - "Test by hand and state time and space"
+    explain: "Questions first, because they change the problem. Examples pin down the answers. The brute force proves you can solve it and shows its waste. The pattern removes the waste. Only then code, and finally prove it works and give its cost."
+    reteach: "### The coding round in eight steps"
+
+  - id: q04
+    type: mcq
+    concept: patterns-and-complexity
+    variants:
+      - { prompt: "\"Return the k rides with the most minutes.\" Which pattern fits best?", choices: ["A heap", "Topological sort", "Union-find", "Backtracking"], answer: 0 }
+      - { prompt: "\"Fewest stops between two stations on a map with no travel times.\" Which pattern fits best?", choices: ["BFS", "A heap", "Prefix sums", "Bit tricks"], answer: 0 }
+      - { prompt: "\"Repair jobs where some jobs must finish before others.\" Which pattern fits best?", choices: ["Topological sort", "Two pointers", "Binary search", "A trie"], answer: 0 }
+      - { prompt: "\"The longest run of rides whose total minutes stay at most 60.\" Which pattern fits best?", choices: ["A sliding window", "Dijkstra", "A trie", "Topological sort"], answer: 0 }
+    explain: "The wording gives the pattern away. Top k means a heap. Fewest stops with no weights means BFS. Must-finish-first rules mean topological sort. The longest run under a limit means a sliding window."
+    reteach: "### Step 4: find the pattern"
+
+  - id: q05
+    type: mcq
+    concept: coding-method
+    variants:
+      - { prompt: "The interviewer says n can be up to 1,000,000. What should your answer's time be?", choices: ["O(n log n) or O(n)", "O(n²) is fine", "O(2ⁿ) is fine", "It does not matter"], answer: 0 }
+      - { prompt: "The interviewer says n is at most 20. Which answer is fast enough?", choices: ["Even O(2ⁿ), trying every subset", "Only O(1)", "Only O(log n)", "None: 20 is too many"], answer: 0 }
+      - { prompt: "Fares are in cents and there can be a million rides. Which edge case must you ask about?", choices: ["Whether the total can overflow an int", "Whether the fares are written in red", "Whether Java has a for loop", "Whether the interviewer likes HashMaps"], answer: 0 }
+    explain: "A computer does about 100 million simple steps a second. A million items rules out O(n²), which is a trillion steps, but O(n log n) is fine. Twenty items allow 2²⁰, about a million. Big totals in cents can pass an int's limit, so ask and use long."
+    reteach: "### Steps 1 and 2: clarify, then examples"
+
+  - id: q06
+    type: predict-output
+    concept: patterns-and-complexity
+    prompt: "A brute force checks every pair of 5 rides. What does this print?"
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int n = 5;
+              int pairs = 0;
+              for (int i = 0; i < n; i++) {
+                  for (int j = i + 1; j < n; j++) {
+                      pairs++;
+                  }
+              }
+              System.out.println(pairs);
+          }
+      }
+    answer: "10"
+    explain: "There are n × (n − 1) ÷ 2 pairs: 5 × 4 ÷ 2 = 10. That grows like n², so checking every pair is O(n²). For a million rides it is about 500 billion pairs."
+    reteach: "### Step 3: brute force first, with its cost"
+
+  - id: q07
+    type: spot-the-bug
+    concept: testing-and-stuck
+    prompt: "This should add up five ride lengths. Which line has the bug a hand test would catch?"
+    code: |
+      int[] minutes = {12, 7, 30, 18, 25};
+      int total = 0;
+      for (int i = 0; i <= minutes.length; i++) {
+          total += minutes[i];
+      }
+      System.out.println(total);
+    bugLine: 3
+    explain: "i runs from 0 to 5, but the last index is 4, so minutes[5] throws ArrayIndexOutOfBoundsException. Use i < minutes.length. Walking a small example by hand, out loud, finds off-by-ones like this before the interviewer does."
+    reteach: "### Steps 7 and 8: test by hand, then state the cost"
+
+  - id: q08
+    type: mcq
+    concept: testing-and-stuck
+    variants:
+      - { prompt: "You have been stuck for a minute. What is the best next move?", choices: ["Say what you are stuck on, then solve a tiny example by hand", "Stay silent until you have the full answer", "Start typing the brute force with no plan", "Say you have seen this problem and give up"], answer: 0 }
+      - { prompt: "Which hint request is best?", choices: ["\"Would sorting help here?\"", "\"I don't know, can you tell me?\"", "\"Is this even possible?\"", "\"Can we skip this problem?\""], answer: 0 }
+      - { prompt: "The problem feels too hard. Which trick helps most?", choices: ["Solve an easier version first, such as sorted input, then remove that limit", "Make the input bigger", "Rename every variable", "Ask for a different problem"], answer: 0 }
+    explain: "Say where you are stuck, so the interviewer can help. Go small: a tiny example by hand often shows the algorithm. Simplify, then remove the limit. Ask a focused hint, then use it. Silence is the one thing that always costs you."
+    reteach: "### When you are stuck"
+
+  - id: q09
+    type: fill-blank
+    concept: design-rounds
+    prompt: "if (!sent.___(alert.alertId())) {"
+    answers: ["add"]
+    explain: "On a concurrent set, add checks and claims in one atomic step: it returns true for the first caller and false for every repeat. A contains check followed by a later add would let two threads both send the alert."
+    reteach: "### An LLD walk-through: rider alerts"
+
+  - id: q10
+    type: mcq
+    concept: design-rounds
+    variants:
+      - { prompt: "Which line sounds most like a senior system design answer?", choices: ["\"Ride starts peak at 15 a second, so one Postgres leader is plenty for rentals.\"", "\"We should use a big database.\"", "\"Let's add Kafka, Redis and Cassandra.\"", "\"It will scale because it is in the cloud.\""], answer: 0 }
+      - { prompt: "In a 45-minute system design round, what comes right after the requirements?", choices: ["Rough numbers: requests a second at peak and data a year", "Deep dives into the database", "The final bottleneck list", "Your questions for the interviewer"], answer: 0 }
+      - { prompt: "You add a 5-second cache in front of the map. What must you also say?", choices: ["The trade-off: a rider may see a dock count up to 5 seconds old", "Nothing: caches have no downside", "Which company makes the cache", "How many lines of code it needs"], answer: 0 }
+    explain: "Senior answers put numbers behind each choice, say the trade-off out loud, and plan for failure. The clock runs requirements, numbers, API and data, high level, deep dives, then bottlenecks and failures."
+    reteach: "### The system design round"
+
+  - id: q11
+    type: order
+    concept: behavioural-star
+    prompt: "Put the parts of a STAR answer in order."
+    items:
+      - "Situation: where and when it happened"
+      - "Task: what you had to do"
+      - "Action: what you did, step by step"
+      - "Result: what happened, with a number"
+    explain: "STAR stands for Situation, Task, Action, Result. Spend most of the time, about 60%, on your actions, and end with a measurable result and what you learned."
+    reteach: "### The behavioural round: STAR"
+
+  - id: q12
+    type: mcq
+    concept: behavioural-star
+    variants:
+      - { prompt: "Which result line is strongest in a STAR answer?", choices: ["\"Failed taps fell from 1 in 8 to 1 in 200.\"", "\"It went well.\"", "\"Everyone was happy.\"", "\"We fixed it eventually.\""], answer: 0 }
+      - { prompt: "Which sentence fits the Action part of a STAR answer best?", choices: ["\"I measured the failed taps and shared the numbers in the review.\"", "\"We talked about it as a team.\"", "\"Things were busy that month.\"", "\"The project was for the live map.\""], answer: 0 }
+      - { prompt: "How should the time in a two-minute STAR answer be split?", choices: ["Most of it, about 60%, on your actions", "Most of it on the situation", "Most of it on the result", "Equal time on all four parts"], answer: 0 }
+    explain: "The interviewer is hiring you, so say \"I\" and describe what you did. Spend about 60% on actions, and end with a measurable result, such as failed taps falling from 1 in 8 to 1 in 200."
+    reteach: "### The behavioural round: STAR"

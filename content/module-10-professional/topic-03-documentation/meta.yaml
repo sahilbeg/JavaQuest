@@ -1,0 +1,23 @@
+id: module-10-professional/topic-03-documentation
+title: "Writing documentation"
+order: 3
+minutes: 15
+prerequisites: [module-10-professional/topic-02-reading-codebases]
+concepts: [docs-purpose, readme, code-comments, javadoc, design-docs, runbooks, docs-as-code]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-1003
+  from: theo
+  title: "Nobody wrote down how to restart the billing relay"
+  body: >
+    At 3 a.m. the billing relay got stuck and riders stopped being charged.
+    The on-call engineer knew something was wrong but not how to restart it safely, so we waited two hours for the one person who did.
+    Last month a new hire took a week just to run the rider API on their laptop.
+    Can you help us write things down, so the next 3 a.m. and the next first week go better?
+hints:
+  - "Start from the reader. Who opens this page, and what are they trying to do right now? A new hire wants to run the code; the on-call engineer wants the next safe step."
+  - "Comments explain why, not what. Javadoc states a public method's contract: what it takes, what it returns, what it throws, and whether it is safe across threads."
+  - "A design doc says context, goals and non-goals, the proposal, alternatives, risks, rollout and open questions. An ADR records one decision. A runbook lists symptoms, checks, safe actions and who to call. Keep all of it in the repo, reviewed with the code."
+review: true

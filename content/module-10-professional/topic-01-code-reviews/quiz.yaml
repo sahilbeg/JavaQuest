@@ -1,0 +1,137 @@
+topic: module-10-professional/topic-01-code-reviews
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: why-review
+    variants:
+      - { prompt: "Which of these is a real reason teams review every change?", choices: ["At least two people understand each line, so knowledge is not stuck in one head", "It proves the reviewer knows more than the author", "It replaces the need for automated tests", "It lets the reviewer rewrite the code in their own style"], answer: 0 }
+      - { prompt: "Why is a bug found in code review cheaper than the same bug found in production?", choices: ["In review it costs a comment; in production it costs riders, refunds and an incident", "Bugs found in review never need a test", "Production bugs are fixed by the operations team, not developers", "It is not cheaper; the cost is the same"], answer: 0 }
+      - { prompt: "A senior engineer reviews a junior's PR. Who can learn something?", choices: ["Both: the junior from the comments, the senior from new ideas in the code", "Only the junior", "Only the senior", "Neither: reviews are only for finding bugs"], answer: 0 }
+    explain: "Reviews catch bugs while they are cheap, spread knowledge so no code is a mystery, keep the codebase consistent, and teach in both directions. They do not replace tests, and they are not a contest."
+    reteach: "### Why teams review code"
+
+  - id: q02
+    type: mcq
+    concept: why-review
+    variants:
+      - { prompt: "A reviewer leaves 40 comments on a working PR, most of them 'I would have written it differently'. What has gone wrong?", choices: ["The review became a gate kept shut: different is not wrong", "Nothing: more comments always mean a better review", "The author should have written a longer description", "The reviewer should have approved without reading"], answer: 0 }
+      - { prompt: "When is a change ready to approve, by the rule from Google's public review guide?", choices: ["When it makes the code healthier overall, even if it is not perfect", "When it is written exactly the way the reviewer would write it", "When it has no comments at all", "When the reviewer has found at least one problem"], answer: 0 }
+    explain: "A review is not a stage to show off, a gate kept shut until the code matches your taste, or a verdict on the person. Approve once the change improves the code overall."
+    reteach: "### What a review is not"
+
+  - id: q03
+    type: order
+    concept: pull-request-flow
+    prompt: "Put a healthy pull request's journey in order."
+    items:
+      - "Push the branch and open a draft PR"
+      - "Review your own diff and get CI green"
+      - "Mark it ready and request a reviewer"
+      - "Reply to every comment and push fixes"
+      - "The reviewer approves the fixes"
+      - "Merge and delete the branch"
+    explain: "Self-review and green CI come before you ask anyone, so the reviewer's time goes on hard problems. Fixes and replies come before approval, and merging needs both green checks and an approval."
+    reteach: "### The life of a pull request"
+
+  - id: q04
+    type: mcq
+    concept: pull-request-flow
+    variants:
+      - { prompt: "Which PR is easiest to review well?", choices: ["A 150-line bug fix with a test and a description of what, why and how it was tested", "A 2,500-line PR that renames a class and adds a feature", "A 40-line PR with the description 'fixes'", "A 300-line PR with red CI, marked ready for review"], answer: 0 }
+      - { prompt: "You must rename a class used in 60 files, then change how fares are rounded. What is the best plan?", choices: ["Send the rename as its own PR first, then the fare change as a small second PR", "Put both in one PR so the reviewer sees everything together", "Do the rename without review because it is only a rename", "Send the fare change first and hide the rename inside it"], answer: 0 }
+      - { prompt: "When should you request a reviewer on your PR?", choices: ["Once CI is green, so nobody spends time on code that does not build", "As soon as you push the first commit, even if CI is red", "Only after the PR has been merged", "Never: CI is the only review needed"], answer: 0 }
+    explain: "Small, single-purpose PRs with green CI get careful reviews. Mixing a big rename with a behaviour change hides the lines that matter, and red CI wastes the reviewer's time."
+    reteach: "### Writing a reviewable PR"
+
+  - id: q05
+    type: mcq
+    concept: what-to-look-for
+    variants:
+      - { prompt: "You have 20 minutes to review a PR. What should you check first?", choices: ["Whether it is correct for every input, including the edge cases", "Whether the variable names are perfect", "Whether the braces follow the team style", "Whether the import order is alphabetical"], answer: 0 }
+      - { prompt: "Why does the review priority list put correctness before naming?", choices: ["A wrong result costs riders real money; a clumsy name costs a moment of confusion", "Names never matter", "Correctness is quicker to check than naming", "Linters check correctness automatically"], answer: 0 }
+      - { prompt: "Which pair follows the review priority order?", choices: ["Correctness before naming", "Naming before security", "Readability before correctness", "Performance before correctness"], answer: 0 }
+    explain: "Spend review time where mistakes cost most: correctness, design, tests, security, concurrency, performance, errors and compatibility, then readability and naming last."
+    reteach: "### What to look for, in priority order"
+
+  - id: q06
+    type: spot-the-bug
+    concept: what-to-look-for
+    prompt: "This diff is part of a PR. Which line lets a crafted URL change the database query?"
+    code: |
+      +@GetMapping("/stations/{stationId}/rentals")
+      +public List<Rental> recent(@PathVariable String stationId) {
+      +    String sql = "select * from rental where station_id = '" + stationId + "'";
+      +    return jdbc.sql(sql).query(Rental.class).list();
+      +}
+    bugLine: 3
+    explain: "stationId comes from the URL and is glued into the SQL text, so a crafted id can change the query: SQL injection. Pass it as a parameter, such as where station_id = :stationId with .param(...)."
+    reteach: "### Security: injection, secrets and access"
+
+  - id: q07
+    type: predict-output
+    concept: what-to-look-for
+    prompt: "A PR computes the fare like this. What does it print for a 10-minute CARGO ride?"
+    code: |
+      public class Main {
+          enum BikeType { CLASSIC, EBIKE, CARGO }
+
+          static long fare(BikeType type, long minutes) {
+              return 100 + minutes * (type == BikeType.EBIKE ? 30 : 15);
+          }
+
+          public static void main(String[] args) {
+              System.out.println(fare(BikeType.CARGO, 10));
+          }
+      }
+    answer: "250"
+    explain: "The ternary only knows EBIKE, so CARGO falls into the 15-cent branch: 100 + 10 × 15 = 250. The real CARGO price is 100 + 10 × 25 = 350. Asking 'what about every case of the enum?' finds this bug."
+    reteach: "### Correctness and edge cases"
+
+  - id: q08
+    type: mcq
+    concept: what-to-look-for
+    variants:
+      - { prompt: "A PR fixes a wrong CARGO fare. Its only test checks that the endpoint returns 200. What should you ask for?", choices: ["A test that asserts the CARGO fare value and fails on the old code", "Nothing: the test is green", "A test that the endpoint returns 404", "Delete the test, because it adds nothing"], answer: 0 }
+      - { prompt: "What is the key question when you review a test?", choices: ["Would this test fail if the change were wrong?", "Is the test longer than the code it tests?", "Does the test name start with 'test'?", "Does the test run in under one millisecond?"], answer: 0 }
+    explain: "A test that cannot fail proves nothing. Undo the fix in your head: if no test turns red, ask for one that asserts the real values, plus the edge cases."
+    reteach: "### Reviewing the tests"
+
+  - id: q09
+    type: mcq
+    concept: writing-comments
+    variants:
+      - { prompt: "Which review comment is the most helpful?", choices: ["\"CARGO is charged 15 a minute here, but the price is 25. Could we use FareCalculator instead?\"", "\"This is wrong.\"", "\"Why would you do this??\"", "\"You always forget the edge cases.\""], answer: 0 }
+      - { prompt: "You are not sure whether a method can be called from two threads. What is the best comment?", choices: ["\"question: can this run on two threads at once? If so, the check-then-act could rent one bike twice.\"", "\"This has a race condition.\"", "\"Did you even think about threads?\"", "Say nothing, because you are not sure"], answer: 0 }
+      - { prompt: "Which comment talks about the code rather than the person?", choices: ["\"This method returns null for a rider with no rides. Could it return an empty list?\"", "\"You wrote this method badly.\"", "\"You never handle nulls.\"", "\"Are you sure you are a Java developer?\""], answer: 0 }
+    explain: "Good comments are specific, kind and about the code. They explain why, offer an alternative, and ask a question when you are unsure."
+    reteach: "### How to write a review comment"
+
+  - id: q10
+    type: fill-blank
+    concept: writing-comments
+    prompt: "issue (___): riderId is glued into the SQL, so anyone can inject. Please use a parameter."
+    answers: ["blocking"]
+    explain: "In Conventional Comments, a label like issue or nitpick can carry a decoration in brackets. A security hole must be fixed before merging, so this one is blocking."
+    reteach: "### Label the severity: Conventional Comments"
+
+  - id: q11
+    type: mcq
+    concept: review-decisions
+    variants:
+      - { prompt: "Your only comments on a PR are two nitpicks about names. Which button fits?", choices: ["Approve, and say the nits are optional", "Request changes", "Comment, and never come back", "Close the pull request"], answer: 0 }
+      - { prompt: "You find that a PR charges CARGO rides the wrong fare. Which button fits?", choices: ["Request changes", "Approve", "Comment with 'LGTM'", "Merge it yourself and fix it later"], answer: 0 }
+      - { prompt: "A teammate shares a draft PR and asks for an early look at the design. Which button fits?", choices: ["Comment", "Request changes", "Approve", "None: drafts must never be read"], answer: 0 }
+    explain: "Approve when nothing blocking is left, even with optional nits. Request changes for real problems such as a bug or security hole. Comment gives feedback without a verdict, for questions and early drafts."
+    reteach: "### Approve, comment or request changes"
+
+  - id: q12
+    type: mcq
+    concept: receiving-feedback
+    variants:
+      - { prompt: "Your PR gets 23 comments. You disagree with one of them. What should you do?", choices: ["Reply with your reasons and facts, and fix or answer all the others", "Ignore that comment and merge when you can", "Close the PR and open a new one", "Fix it silently even though you think it is wrong"], answer: 0 }
+      - { prompt: "A review thread has gone back and forth five times without agreement. What now?", choices: ["Have a short call, then write the outcome in the PR", "Keep replying until the other person gives up", "Approve your own PR", "Delete the thread"], answer: 0 }
+      - { prompt: "A reviewer's comment reads as blunt: 'This won't work for CARGO.' How should you read it?", choices: ["Assume good intent: they are probably busy, and the point is about the code", "As a personal attack that needs a sharp answer", "As a sign the reviewer wants your job", "As something to ignore"], answer: 0 }
+    explain: "Assume good intent, reply to every comment, push back with reasons, and move long debates to a call. Write the outcome in the PR so everyone sees it."
+    reteach: "### Receiving feedback"

@@ -273,6 +273,10 @@
                 <source>module-09-architecture/topic-09-resilience/src</source>
                 <source>module-09-architecture/boss/src</source>
                 <source>module-09-architecture/mini-project/src</source>
+                <source>module-10-professional/topic-05-interview-prep/src</source>
+                <source>module-10-professional/topic-06-capstone/src</source>
+                <source>module-10-professional/boss/src</source>
+                <source>module-10-professional/mini-project/src</source>
               </sources>
             </configuration>
           </execution>
@@ -405,6 +409,10 @@
                 <source>module-09-architecture/topic-09-resilience/test</source>
                 <source>module-09-architecture/boss/test</source>
                 <source>module-09-architecture/mini-project/test</source>
+                <source>module-10-professional/topic-05-interview-prep/test</source>
+                <source>module-10-professional/topic-06-capstone/test</source>
+                <source>module-10-professional/boss/test</source>
+                <source>module-10-professional/mini-project/test</source>
               </sources>
             </configuration>
           </execution>

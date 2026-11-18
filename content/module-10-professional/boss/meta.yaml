@@ -1,0 +1,24 @@
+id: module-10-professional/boss
+title: "INC-10: The mock interview loop"
+order: 99
+minutes: 15
+prerequisites: [module-10-professional/topic-06-capstone]
+concepts: [edge-cases, integer-overflow, linear-time, open-closed-rules, atomic-claim]
+practice:
+  kind: code
+  runner: plain
+  timeoutSeconds: 30
+ticket:
+  key: INC-10
+  from: theo
+  title: "The mock interview loop"
+  body: >
+    I'm running your mock loop today, and I'm going to play the interviewer.
+    Here are the answers a previous candidate gave in three rounds. Every one passed its own example and failed the interview.
+    The coding answer breaks on edge cases, the follow-up times out on a big input, and the design breaks both of the interviewer's requirements.
+    Fix them the way I'd want to see in a real loop. Edge cases first.
+hints:
+  - "Bronze: test bestRun by hand on {}, {700}, {-300, -50, -200}, {-100, 200, 300} and two days of 2,000,000,000. Throw IllegalArgumentException for no days, start best at the first day (not 0), let both loops reach the last day, and add up in long."
+  - "Silver: carry one number from day to day, the best total of a run that ends today. Each day either joins yesterday's run or starts a new one: endingHere = Math.max(day, endingHere + day). Keep the largest endingHere you see. One pass, O(n)."
+  - "Gold: move the cargo check into CargoOnlyAtDepot and loop over rules in reserve, returning the first reason you get. Make holds a ConcurrentHashMap and claim with putIfAbsent(dockId, riderId): only a null answer means this rider won; otherwise refuse with dock-taken."
+review: false

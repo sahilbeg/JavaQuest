@@ -2,11 +2,11 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-18T15:19:47+05:30
+- **Last updated:** 2026-11-18T16:28:42+05:30
 - **Phase:** PHASE 1: build
-- **Milestone:** C10
-- **Resume here:** C09 is committed at status ui_wired. Next: C10 (Professional), the last content module; its interview-prep topic must include a low-level design round (building on SPK-0613) and a system design round (building on SPK-0906). Modules 0 to 9 still need your read-through to reach done.
-- **Next task:** C10-01: module 10 topic 01 giving and receiving code reviews
+- **Milestone:** M5
+- **Resume here:** C10 is committed at status ui_wired; every content module (0 to 10) is written. The CAPSTONE feature already has its brief and staged tests (Stage1..Stage6), and the Java Pro kudos now fires on it. Next: M5 (a capstone rubric, the final badge and a completion screen in the app), then M6 release hardening. Modules 0 to 10 still need your read-through to reach done.
+- **Next task:** M5: capstone rubric, final badge and completion screen
 
 ## Completed tasks
 
@@ -58,6 +58,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - UX overhaul (user feedback): playful redesign, journey map, mastery gating with author mode, lesson player with short cards, animation engine (code and scene, checked by check-content), first-visit walkthroughs; 56 animations added to modules 0 to 2 and reviewed
 - SDE2 audit (docs/SDE2_AUDIT.md): modules 0 to 8 deepened to SDE 2 level; 17 new tickets (M04 13-20, M05 14-15, M06 13, M07 06-08, M08 13-15); module 9 gains resilience and Kubernetes topics; every module independently reviewed; all checks green
 - C09: module 9 Architecture (4 quiz topics, 6 code topics: layered (Spring), hexagonal, messaging + transactional outbox (H2), caching, performance, resilience), INC-09 (live map cache: key, stampede, stale-if-error) and FEAT-09 (event-driven billing on a partitioned log); 3 independent reviews (about 40 findings) fixed; all checks green
+- C10: module 10 Professional skills (4 quiz topics: code reviews, reading codebases, documentation, estimation; interview prep and the city-aware capstone core as code), INC-10 (mock interview loop: edge cases, O(n) follow-up, concurrent-safe extensible design) and CAPSTONE (Spring Boot Bramford launch in six staged test classes); Java Pro kudos moved to the capstone; 2 independent reviews (about 30 findings) fixed; all checks green
 
 ## Decisions
 
@@ -81,7 +82,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 ## Open decisions
 
 - A real VoiceOver pass needs a person
-- Modules 0 to 9 read-through by you before marking them done
+- Modules 0 to 10 read-through by you before marking them done
 
 ## Blockers
 
@@ -101,13 +102,13 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | C07 | ui_wired |
 | C08 | ui_wired |
 | C09 | ui_wired |
-| C10 | in_progress |
+| C10 | ui_wired |
 | M0 | done |
 | M1 | done |
 | M2 | done |
 | M3 | done |
 | M4 | done |
-| M5 | planned |
+| M5 | in_progress |
 | M6 | planned |
 
 ## Modules
@@ -124,7 +125,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-07-tooling | Shipping safely | 10 | ui_wired |
 | module-08-backend | The Spoke API | 17 | ui_wired |
 | module-09-architecture | Growing up | 12 | ui_wired |
-| module-10-professional | Full-time offer | 8 | planned |
+| module-10-professional | Full-time offer | 8 | ui_wired |
 
 ## Topics past `planned`
 
@@ -277,6 +278,14 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-09-architecture/topic-10-kubernetes | ui_wired | None | None |
 | module-09-architecture/boss | ui_wired | True | True |
 | module-09-architecture/mini-project | ui_wired | True | True |
+| module-10-professional/topic-01-code-reviews | ui_wired | None | None |
+| module-10-professional/topic-02-reading-codebases | ui_wired | None | None |
+| module-10-professional/topic-03-documentation | ui_wired | None | None |
+| module-10-professional/topic-04-estimation | ui_wired | None | None |
+| module-10-professional/topic-05-interview-prep | ui_wired | True | True |
+| module-10-professional/topic-06-capstone | ui_wired | True | True |
+| module-10-professional/boss | ui_wired | True | True |
+| module-10-professional/mini-project | ui_wired | True | True |
 
 ## Commands
 

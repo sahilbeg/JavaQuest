@@ -1,0 +1,25 @@
+id: module-10-professional/topic-05-interview-prep
+title: "Interview prep: coding, design and behavioural"
+order: 5
+minutes: 15
+prerequisites: [module-10-professional/topic-04-estimation]
+concepts: [interview-loop, coding-method, patterns-and-complexity, testing-and-stuck, design-rounds, behavioural-star]
+practice:
+  kind: code
+  runner: plain
+  timeoutSeconds: 30
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-1005
+  from: maya
+  title: "Your full-time loop is next week"
+  body: >
+    Good news: Spoke wants to turn your internship into a full-time SDE 2 offer.
+    You still go through the full interview loop, like any outside candidate: two coding rounds, a design round for classes, a system design round and a behavioural round.
+    It is next week. I booked you a mock coding round with three problems, so you can practise thinking out loud against a clock.
+    Treat it like the real thing.
+hints:
+  - "Before you code, say the brute force and its cost. Then ask what is already sorted, what repeats, and what only moves forward in time."
+  - "RideTimeline: each bike's list is sorted by time, so binary search for the last sighting at or before the second. RentalCounter: bucket second % 300 holds one second; reset it when it holds an older second, and count a bucket only while second - bucketSecond < 300."
+  - "GroupBooking: keep a stack of hour indexes with rising free bikes. When hour i has no more bikes than the top, pop the top. Its block runs from just after the new top (or -1) to just before i, worth (long) bikes * (i - left - 1)."
+review: true

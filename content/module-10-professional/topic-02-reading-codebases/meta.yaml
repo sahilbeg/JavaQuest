@@ -1,0 +1,23 @@
+id: module-10-professional/topic-02-reading-codebases
+title: "Reading large codebases"
+order: 2
+minutes: 15
+prerequisites: [module-10-professional/topic-01-code-reviews]
+concepts: [outside-in, entry-points, tracing-a-request, code-navigation, git-history, legacy-changes, asking-for-help]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: SPK-1002
+  from: maya
+  title: "Welcome to payments: 400,000 lines and one bug"
+  body: >
+    You are joining the payments team this week.
+    Their service has about 400,000 lines of Java, and nobody expects you to read them all.
+    Your first bug is already waiting: rider-7's receipt says 460 cents, but PayRiver charged 4.00 USD.
+    Find where those two numbers part ways, and tell me how you found it.
+hints:
+  - "Start from the outside: README, build file, folders, then run it and its tests. Then find the door the request comes in by, here POST /rentals/{id}/end."
+  - "Follow one request end to end: controller, service, store, adapter. Check the data at each hop. The database says 460, PayRiver says 4.00, so the bug sits between them."
+  - "Once you have the suspicious line, ask git: git log -S finds the commit that added a piece of text, git blame shows the last commit to touch each line, and git show explains why."
+review: true

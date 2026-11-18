@@ -1,0 +1,146 @@
+topic: module-10-professional/topic-03-documentation
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: docs-purpose
+    variants:
+      - { prompt: "Only one engineer knows how to restart the billing relay. What is its bus factor?", choices: ["1", "0", "2", "It depends on how many servers run the relay"], answer: 0 }
+      - { prompt: "Which cost does a missing runbook cause most directly?", choices: ["The on-call engineer cannot act at 3 a.m. without waking the one person who knows", "The code runs more slowly", "The jar file gets bigger", "The unit tests start to fail"], answer: 0 }
+      - { prompt: "A year later, nobody remembers why fares live in code, and someone moves them to the database and breaks billing. Which cost of missing docs is this?", choices: ["A forgotten decision", "Slow onboarding", "A missing runbook", "A low test coverage"], answer: 0 }
+    explain: "The bus factor counts how many people must leave before a project stalls; one person holding the knowledge means a bus factor of 1. Missing docs cost onboarding time, on-call time, forgotten decisions and slower reviews."
+    reteach: "### Why documentation matters"
+
+  - id: q02
+    type: mcq
+    concept: docs-purpose
+    variants:
+      - { prompt: "\"How to restart the billing relay\" is which kind of document?", choices: ["How-to guide", "Tutorial", "Reference", "Explanation"], answer: 0 }
+      - { prompt: "\"Your first day: run the rider API and rent a test bike, step by step\" is which kind of document?", choices: ["Tutorial", "How-to guide", "Reference", "Explanation"], answer: 0 }
+      - { prompt: "The generated Javadoc pages of FareCalculator are which kind of document?", choices: ["Reference", "Tutorial", "How-to guide", "Explanation"], answer: 0 }
+      - { prompt: "\"Why billing reads ride events instead of calling rentals\" is which kind of document?", choices: ["Explanation", "Tutorial", "How-to guide", "Reference"], answer: 0 }
+    explain: "Diátaxis sorts docs by what the reader needs: a tutorial teaches by doing, a how-to guide finishes one real task, reference holds exact facts to look up, and explanation says why things are the way they are."
+    reteach: "### Who reads it, and why: the four kinds"
+
+  - id: q03
+    type: mcq
+    concept: readme
+    variants:
+      - { prompt: "Which of these belongs in a service's README?", choices: ["The exact commands to run and test it from a fresh clone", "The notes from every design meeting", "Javadoc for every private method", "The full source of the main class"], answer: 0 }
+      - { prompt: "What is the best test of a README?", choices: ["A new hire runs the service on day one without asking anybody", "It is longer than ten pages", "It mentions every class in the project", "It was written by the team lead"], answer: 0 }
+      - { prompt: "Why does a good README name the owning team and a chat channel?", choices: ["So questions about the service go to the right people", "So the build knows who to email", "Because Markdown needs a name at the top", "So the code compiles faster"], answer: 0 }
+    explain: "A README is the front door: what this is, how to run, test and deploy it, and who owns it. It links out for anything long. If a new hire can run the service on day one alone, it works."
+    reteach: "### The README: the front door"
+
+  - id: q04
+    type: mcq
+    concept: code-comments
+    variants:
+      - { prompt: "Which comment is worth keeping above `return (seconds + 59) / 60;`?", choices: ["// Riders pay for every started minute, so round up", "// add 59, then divide by 60", "// return a long", "// this is a return statement"], answer: 0 }
+      - { prompt: "Why are comments that repeat the code harmful?", choices: ["They add reading time, and turn into lies when the code changes without them", "The compiler rejects them", "They make the program run more slowly", "Java does not allow comments inside methods"], answer: 0 }
+      - { prompt: "Which of these is a good reason to write a comment?", choices: ["To warn that a method runs inside the payment transaction, so it must stay fast", "To say that i++ adds one to i", "To repeat the method's name in words", "To keep an old version of the code, commented out"], answer: 0 }
+    explain: "The code already says what happens. A comment earns its place by saying why: a business rule, a trap, a warning, or a link to the ticket. Comments that repeat the code drift and then mislead."
+    reteach: "### Comments explain why, not what"
+
+  - id: q05
+    type: predict-output
+    concept: code-comments
+    prompt: "This CI check counts TODOs that have no ticket. What does it print?"
+    code: |
+      import java.util.List;
+      import java.util.regex.Pattern;
+
+      public class Main {
+          public static void main(String[] args) {
+              Pattern withTicket = Pattern.compile("TODO\\(SPK-\\d+\\)");
+              List<String> lines = List.of(
+                      "// TODO(SPK-2041): reject CARGO in Bramford",
+                      "// TODO tidy this",
+                      "// TODO(SPK-): add refunds",
+                      "// todo: rename");
+              int missing = 0;
+              for (String line : lines) {
+                  if (line.contains("TODO") && !withTicket.matcher(line).find()) {
+                      missing++;
+                  }
+              }
+              System.out.println(missing);
+          }
+      }
+    answer: "2"
+    explain: "Line 1 names a ticket. \"TODO tidy this\" has none. \"TODO(SPK-)\" has no number, so the pattern does not match. The lowercase \"todo\" does not contain \"TODO\", so this check never sees it. That makes 2."
+    reteach: "### TODO hygiene"
+
+  - id: q06
+    type: fill-blank
+    concept: javadoc
+    prompt: " * ___ the fare in cents, never negative"
+    answers: ["@return"]
+    explain: "@return describes what the method gives back, including special cases. @param describes one parameter, and @throws names an exception and when it happens."
+    reteach: "### Syntax: a Javadoc comment"
+
+  - id: q07
+    type: mcq
+    concept: javadoc
+    variants:
+      - { prompt: "Which of these does NOT belong in a public method's Javadoc?", choices: ["The name of a local variable inside the loop", "The units and allowed range of each parameter", "Which exceptions it throws, and when", "Whether many threads may call it at once"], answer: 0 }
+      - { prompt: "In Javadoc terms, what is a precondition?", choices: ["What must be true before a call, such as \"minutes is 0 or more\"", "What is true after the call returns", "The exception the method throws", "The first sentence of the comment"], answer: 0 }
+      - { prompt: "Which methods need Javadoc the most?", choices: ["Public methods that other teams call", "Private helper methods", "Obvious getters", "Test methods"], answer: 0 }
+    explain: "Javadoc states the contract, so a caller can use the method without reading its body: what it does, each parameter, the return value, the exceptions, and thread safety. Internal details such as local variables are not part of the contract."
+    reteach: "### Javadoc: the contract of a public method"
+
+  - id: q08
+    type: mcq
+    concept: docs-purpose
+    variants:
+      - { prompt: "Which opening line of a design doc leads with the point?", choices: ["Bramford needs its own fares before launch; this doc proposes a fare table per city.", "This document discusses various considerations regarding fares.", "Fares have a long history at Spoke, starting in Riverton.", "Please read every section before you comment."], answer: 0 }
+      - { prompt: "Why write diagrams as text, such as Mermaid?", choices: ["They live in the repo and change in pull requests, like the code", "They can never be out of date", "The Java compiler checks them", "They are required by Markdown"], answer: 0 }
+      - { prompt: "Which sentence is written most clearly?", choices: ["The relay publishes each event, then marks it sent.", "Events are, after a process of publication has been undertaken, marked as sent.", "It is the case that publishing and marking happen in some order.", "Various steps occur regarding events."], answer: 0 }
+    explain: "Write for the skimmer: bottom line up front, short active sentences, concrete examples, headings and lists. Text diagrams live next to the code and are reviewed with it."
+    reteach: "### Writing clearly"
+
+  - id: q09
+    type: order
+    concept: design-docs
+    prompt: "Put the sections of a design doc in the usual order."
+    items:
+      - "Context"
+      - "Goals and non-goals"
+      - "The proposal"
+      - "Alternatives considered"
+      - "Risks"
+      - "Rollout"
+      - "Open questions"
+    explain: "Readers first learn the problem, then what success means and what is out of scope, then the design, why other designs lost, what could go wrong, how it ships safely, and what is still undecided."
+    reteach: "### Design docs and RFCs"
+
+  - id: q10
+    type: mcq
+    concept: design-docs
+    variants:
+      - { prompt: "An accepted ADR's decision changes. What do you do?", choices: ["Write a new ADR, and mark the old one superseded by it", "Edit the old ADR so it matches the new decision", "Delete the old ADR", "Add a TODO to the old ADR"], answer: 0 }
+      - { prompt: "Which four parts does an ADR have?", choices: ["Status, context, decision, consequences", "Symptoms, checks, safe actions, escalation", "Added, changed, fixed, removed", "Tutorial, how-to, reference, explanation"], answer: 0 }
+      - { prompt: "What is an ADR for?", choices: ["Recording one important decision and why it was made, so it is not forgotten", "Listing what changed in each release", "Telling the on-call engineer what to do", "Generating web pages from code comments"], answer: 0 }
+    explain: "An architecture decision record keeps one decision with its status, context, decision and consequences. Accepted ADRs are never rewritten; a new one supersedes them, so the history of why stays intact."
+    reteach: "### Architecture decision records"
+
+  - id: q11
+    type: mcq
+    concept: runbooks
+    variants:
+      - { prompt: "Which four parts does every runbook have?", choices: ["Symptoms, checks, safe actions, escalation", "Status, context, decision, consequences", "Goals, non-goals, risks, rollout", "Added, changed, fixed, removed"], answer: 0 }
+      - { prompt: "Which line belongs in a runbook's escalation part?", choices: ["Page the Billing on-call if the count is not falling 15 minutes after the restart", "kubectl rollout restart deployment/billing-relay -n billing", "The relay publishes outbox rows to the event log", "SELECT COUNT(*) FROM outbox WHERE sent = FALSE;"], answer: 0 }
+      - { prompt: "Why does the billing relay runbook say never to mark outbox rows sent by hand?", choices: ["Those rides would never be charged", "It would make the database slower", "SQL cannot update rows by hand", "The alert would fire twice"], answer: 0 }
+    explain: "A runbook says what the alert means (symptoms), how to confirm the cause (checks), steps that cannot make things worse (safe actions), and when to stop and who to call (escalation)."
+    reteach: "### Runbooks for 3 a.m."
+
+  - id: q12
+    type: mcq
+    concept: docs-as-code
+    variants:
+      - { prompt: "You add Bramford's fares. When should the README and changelog change?", choices: ["In the same pull request as the code", "At the end of the quarter", "After the next incident", "Only if a reviewer asks"], answer: 0 }
+      - { prompt: "What does \"docs as code\" mean?", choices: ["Docs live in the repo as plain text, are reviewed in pull requests and checked by CI", "Docs are written in Java", "Docs come only from code comments", "Docs live in a wiki that one writer edits"], answer: 0 }
+      - { prompt: "Which of these can CI check in documentation?", choices: ["That code samples compile and links are not broken", "That the chosen design is the best one", "That the reviewers agree with the proposal", "That readers enjoyed the page"], answer: 0 }
+    explain: "Docs as code keeps docs next to the code: one PR changes both, reviewers read both diffs, git keeps the history, and CI checks samples, links and Javadoc."
+    reteach: "### Docs as code"
