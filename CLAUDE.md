@@ -78,7 +78,7 @@ Large modules can be written in parallel by subagents, one or two topics each. G
 
 `./mvnw install` rewrites `app/target/javaquest.jar`. That is safe while the app runs, because `run.sh` starts a copy (`app/target/javaquest-running-<port>.jar`). A server started any other way, straight from `javaquest.jar`, hangs when the jar is replaced. `run.sh` rebuilds the jar when `app/`, `runner/`, `content-model/` or the poms changed; restart `./run.sh --author` to see the new build. The learner sees it the next time they start `./run.sh`.
 
-In a fresh clone, enable the hook once: `git config core.hooksPath .githooks`.
+In a fresh clone, `./run.sh` enables the hook on its first run (`git config core.hooksPath .githooks`); run that yourself if you only build.
 
 After a change to `practice/pom.xml`, refresh the runner classpath:
 

@@ -14,7 +14,14 @@ JAR="$ROOT/app/target/javaquest.jar"
 CLASSPATH_FILE="$ROOT/practice/target/runner-classpath.txt"
 
 if ! command -v java >/dev/null 2>&1; then
-  echo "Java was not found. Install JDK 21 and try again." >&2
+  echo "Java was not found. Install JDK 21 or newer (for example Temurin 21 from https://adoptium.net) and try again." >&2
+  exit 1
+fi
+# "21.0.5", "25", or "1.8.0_402" for old Java 8: the first number is the major version (1 means 8 or older).
+JAVA_MAJOR="$(java -version 2>&1 | head -n 1 | sed -E 's/[^"]*"([0-9]+).*/\1/')"
+if [[ ! "$JAVA_MAJOR" =~ ^[0-9]+$ ]] || (( JAVA_MAJOR < 21 )); then
+  echo "JavaQuest needs Java 21 or newer, but 'java' here is: $(java -version 2>&1 | head -n 1)" >&2
+  echo "Install JDK 21 (for example Temurin 21 from https://adoptium.net), make it your default, and try again." >&2
   exit 1
 fi
 
@@ -39,6 +46,18 @@ for arg in "$@"; do
     *) ARGS+=("$arg") ;;
   esac
 done
+
+# Someone is already on that port: most often JavaQuest itself, started in another terminal.
+if command -v lsof >/dev/null 2>&1 && lsof -tiTCP:"$PORT" -sTCP:LISTEN >/dev/null 2>&1; then
+  echo "Port $PORT is already in use. Is JavaQuest already running? Open http://localhost:$PORT" >&2
+  echo "To start a second copy, pick another port, for example: ./run.sh --server.port=$((PORT + 4))" >&2
+  exit 1
+fi
+
+# In a git clone, switch on the guard that stops commits from changing a ticket's src/ (the learner's own code).
+if [[ -d "$ROOT/.git" ]] && ! git -C "$ROOT" config --get core.hooksPath >/dev/null 2>&1; then
+  git -C "$ROOT" config core.hooksPath .githooks 2>/dev/null || true
+fi
 
 if [[ ! -f "$JAR" ]] || [[ -n "$(find "$ROOT/app/src" "$ROOT/runner/src" "$ROOT/content-model/src" "$ROOT/pom.xml" "$ROOT/content-model/pom.xml" "$ROOT/app/pom.xml" "$ROOT/runner/pom.xml" -newer "$JAR" -print -quit)" ]]; then
   echo "Building JavaQuest..."

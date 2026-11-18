@@ -2,11 +2,11 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-18T16:48:03+05:30
+- **Last updated:** 2026-11-18T17:11:11+05:30
 - **Phase:** PHASE 1: build
 - **Milestone:** M6
-- **Resume here:** M5 is committed: the capstone has a brief, six staged check classes and a self-review rubric; the app has the /offer completion screen, a launch dialog and the Full-time offer kudos. Next: M6 release hardening (fresh-clone test on macOS, README; Windows deferred). Modules 0 to 10 still need your read-through to reach done.
-- **Next task:** M6: fresh-clone test on macOS (one command start) and a README with setup, troubleshooting and limits
+- **Resume here:** Every milestone is built: M0 to M6 and C00 to C10. M6 added README.md and run.sh checks (Java 21+, port in use, commit guard switched on in a clone), tested on a fresh clone on macOS. What is left needs a person: the browser read-through of modules 0 to 10 (./run.sh --author) and a real VoiceOver pass. Windows support (run.bat) is deferred until requested.
+- **Next task:** Your browser read-through of modules 0 to 10 (moves them from ui_wired to done); then a real VoiceOver pass
 
 ## Completed tasks
 
@@ -60,6 +60,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - C09: module 9 Architecture (4 quiz topics, 6 code topics: layered (Spring), hexagonal, messaging + transactional outbox (H2), caching, performance, resilience), INC-09 (live map cache: key, stampede, stale-if-error) and FEAT-09 (event-driven billing on a partitioned log); 3 independent reviews (about 40 findings) fixed; all checks green
 - C10: module 10 Professional skills (4 quiz topics: code reviews, reading codebases, documentation, estimation; interview prep and the city-aware capstone core as code), INC-10 (mock interview loop: edge cases, O(n) follow-up, concurrent-safe extensible design) and CAPSTONE (Spring Boot Bramford launch in six staged test classes); Java Pro kudos moved to the capstone; 2 independent reviews (about 30 findings) fixed; all checks green
 - M5: capstone rubric (lesson card and README), /offer completion screen (Tsunade's offer letter, printable), launch dialog on closing the capstone, Full-time offer kudos, kudos earnedOn dates; kudos toasts name the teammate; tested in a throwaway author app
+- M6: fresh-clone test on macOS (one command builds and starts; grading verified end to end in the clone); run.sh checks Java 21+, reports a busy port, and switches on the commit guard in a clone; README with quick start, Java install, how you learn, progress and backups, commands, troubleshooting and limits
 
 ## Decisions
 
@@ -110,7 +111,7 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | M3 | done |
 | M4 | done |
 | M5 | done |
-| M6 | in_progress |
+| M6 | done |
 
 ## Modules
 

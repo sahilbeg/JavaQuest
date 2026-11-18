@@ -74,6 +74,6 @@ Large modules (12 or more topics) may split into two commits, one per half. The 
 
 ## M6: Release hardening
 
-- [ ] Fresh-clone test on macOS: one command start
+- [x] Fresh-clone test on macOS: one command start
 - [ ] Windows support (`run.bat`) is deferred until requested
-- [ ] README with setup, troubleshooting and limits
+- [x] README with setup, troubleshooting and limits
