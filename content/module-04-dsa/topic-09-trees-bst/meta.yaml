@@ -1,9 +1,9 @@
 id: module-04-dsa/topic-09-trees-bst
 title: "Binary trees and BSTs"
 order: 9
-minutes: 10
+minutes: 14
 prerequisites: [module-04-dsa/topic-08-hash-tables]
-concepts: [tree-terms, bst-rule, bst-insert-search, traversals, tree-height, treemap]
+concepts: [tree-terms, bst-rule, bst-insert-search, traversals, tree-height, treemap, level-order, treemap-navigation]
 practice:
   kind: code
   runner: plain

@@ -1,0 +1,206 @@
+topic: module-04-dsa/topic-19-tries-union-find
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: trie
+    variants:
+      - { prompt: "A trie stores \"bell\" and \"belt\". Why does contains(\"bel\") return false?", choices: ["The node for bel has no end-of-word flag", "bel has only three letters", "The trie only stores words of four letters", "bel is not in alphabetical order"], answer: 0 }
+      - { prompt: "In a trie, what does the end-of-word flag on a node mean?", choices: ["A stored word ends exactly at this node", "This node has no children", "This node is the root", "The word is the last one inserted"], answer: 0 }
+    explain: "A path can exist only because longer words pass through it. The flag marks where a stored word really ends."
+    reteach: "### A trie: a tree of letters"
+
+  - id: q02
+    type: predict-output
+    concept: trie
+    code: |
+      import java.util.Map;
+      import java.util.TreeMap;
+
+      public class Main {
+          static class Node {
+              Map<Character, Node> children = new TreeMap<>();
+              boolean endsWord;
+          }
+
+          static Node root = new Node();
+
+          static void insert(String word) {
+              Node node = root;
+              for (char c : word.toCharArray()) {
+                  node = node.children.computeIfAbsent(c, key -> new Node());
+              }
+              node.endsWord = true;
+          }
+
+          static Node walk(String text) {
+              Node node = root;
+              for (char c : text.toCharArray()) {
+                  node = node.children.get(c);
+                  if (node == null) {
+                      return null;
+                  }
+              }
+              return node;
+          }
+
+          public static void main(String[] args) {
+              insert("dock");
+              insert("docks");
+              Node a = walk("doc");
+              Node b = walk("docks");
+              Node c = walk("dot");
+              System.out.println((a != null) + " " + (a != null && a.endsWord));
+              System.out.println((b != null) + " " + (b != null && b.endsWord));
+              System.out.println(c != null);
+          }
+      }
+    answer: "true false\ntrue true\nfalse"
+    explain: "doc is a path but not a stored word. docks is stored, so its flag is set. No word has the letters dot, so walk returns null."
+    reteach: "### Insert, contains and startsWith"
+
+  - id: q03
+    type: fill-blank
+    concept: trie
+    prompt: "node = node.children.___(c, key -> new Node());"
+    answers: ["computeIfAbsent"]
+    explain: "computeIfAbsent returns the child for c, making and storing a new Node first if there is none."
+    reteach: "### Syntax: a trie node with a Map"
+
+  - id: q04
+    type: mcq
+    concept: autocomplete
+    prompt: "Why does autocomplete on a trie give the words in A to Z order without any sort?"
+    choices: ["It adds a node's own word before its children, and visits the children in letter order", "Words are inserted in A to Z order", "The root sorts the words when they are added", "A trie stores its words in a sorted list"]
+    answer: 0
+    explain: "A shorter word comes before the longer words below it, and children go from a to z. Together they give sorted order."
+    reteach: "### Syntax: collecting the words below a node"
+
+  - id: q05
+    type: spot-the-bug
+    concept: autocomplete
+    prompt: "complete(\"Riv\") finds the right names, but in a jumbled order instead of A to Z. Which line is wrong?"
+    code: |
+      class Node {
+          final Map<Character, Node> children = new HashMap<>();
+          String name;
+      }
+
+      void collect(Node node, List<String> out) {
+          if (node.name != null) {
+              out.add(node.name);
+          }
+          for (Node child : node.children.values()) {
+              collect(child, out);
+          }
+      }
+    bugLine: 2
+    explain: "A HashMap keeps no order, so the children come out jumbled. A TreeMap keeps its keys sorted, so the walk meets the letters in order."
+    reteach: "### Syntax: a trie node with a Map"
+
+  - id: q06
+    type: mcq
+    concept: trie-costs
+    prompt: "A trie holds 1,000,000 station names. About how many steps does contains(\"Riverside\") take?"
+    choices: ["About 9, one per letter", "About 1,000,000, one per name", "About 20, like binary search", "About 26, one per letter of the alphabet"]
+    answer: 0
+    explain: "A trie walks one link per letter, so the cost is O(L) for a word of L letters. The number of names does not matter."
+    reteach: "### How fast is a trie?"
+
+  - id: q07
+    type: mcq
+    concept: trie-costs
+    prompt: "You only ever ask \"is this exact name stored?\" about a few hundred names. Why is a HashSet usually the better choice than a trie?"
+    choices: ["It uses far less memory, and you never need prefix questions", "A HashSet can answer prefix questions faster", "A trie cannot store names with spaces", "A trie needs the names sorted first"]
+    answer: 0
+    explain: "A trie can make one node per letter, each with its own links. Its strength is prefix questions, which this job never asks."
+    reteach: "### How fast is a trie?"
+
+  - id: q08
+    type: spot-the-bug
+    concept: union-find
+    prompt: "After connect(0, 1) and connect(0, 2), stations 1 and 2 are not connected. Which line is wrong?"
+    code: |
+      static int find(int s) {
+          while (parent[s] != s) {
+              s = parent[s];
+          }
+          return s;
+      }
+
+      static void connect(int a, int b) {
+          parent[a] = b;
+      }
+    bugLine: 9
+    explain: "connect must link the two roots: parent[find(b)] = find(a). Linking the stations overwrites a's old link and splits its group."
+    reteach: "### Syntax: connect with union by size"
+
+  - id: q09
+    type: predict-output
+    concept: union-find
+    code: |
+      public class Main {
+          static int[] parent = {0, 1, 2, 3, 4, 5};
+          static int groups = 6;
+
+          static int find(int s) {
+              while (parent[s] != s) {
+                  s = parent[s];
+              }
+              return s;
+          }
+
+          static boolean connect(int a, int b) {
+              int ra = find(a);
+              int rb = find(b);
+              if (ra == rb) {
+                  return false;
+              }
+              parent[rb] = ra;
+              groups--;
+              return true;
+          }
+
+          public static void main(String[] args) {
+              System.out.print(connect(0, 1) + " ");
+              System.out.print(connect(2, 3) + " ");
+              System.out.print(connect(1, 3) + " ");
+              System.out.println(connect(0, 2));
+              System.out.println(groups);
+          }
+      }
+    answer: "true true true false\n3"
+    explain: "Three lanes merge groups, so 6 becomes 3. By then 0 and 2 share a root, so the last connect returns false."
+    reteach: "### Union-find: groups that only merge"
+
+  - id: q10
+    type: mcq
+    concept: path-compression-union-by-size
+    variants:
+      - { prompt: "What does path compression do during find?", choices: ["Points every station it passed straight at the root", "Deletes stations that are not roots", "Sorts the parent array", "Merges the two largest groups"], answer: 0 }
+      - { prompt: "With both path compression and union by size, how fast is each find, on average over many calls?", choices: ["Almost O(1)", "O(n)", "O(n log n)", "O(n²)"], answer: 0 }
+      - { prompt: "In union by size, which root moves when two groups merge?", choices: ["The root of the smaller group goes under the root of the larger group", "The root of the larger group goes under the smaller one", "Both roots point at station 0", "The root with the larger number"], answer: 0 }
+    explain: "Union by size keeps trees short, and path compression flattens them further. Together each operation costs about O(1) amortised."
+    reteach: "### How fast is union-find?"
+
+  - id: q11
+    type: order
+    concept: cycle-detection-kruskal
+    prompt: "Put the steps of Kruskal's algorithm in order."
+    items:
+      - "Sort the lanes by cost, cheapest first, and make every station its own group"
+      - "Take the next lane and check whether its stations already share a root"
+      - "If they do not, connect them and add the lane's cost"
+      - "When the lanes run out, check that one group is left"
+    explain: "Kruskal is greedy: it takes the cheapest lane that does not close a loop, and union-find spots the loops."
+    reteach: "### Kruskal: the cheapest lane network"
+
+  - id: q12
+    type: mcq
+    concept: cycle-detection-kruskal
+    variants:
+      - { prompt: "connect(Harbor, Uptown) returns false. What does that tell you about the new lane?", choices: ["It closes a loop: the stations could already reach each other", "One of the stations does not exist", "The lane is the cheapest one", "The two groups were the same size"], answer: 0 }
+      - { prompt: "A problem says: \"Roads are added one at a time. After each road, print how many separate towns are left.\" Which tool fits best?", choices: ["Union-find", "A trie", "Binary search", "A stack"], answer: 0 }
+    explain: "connect returns false when both roots are already the same, which means the lane adds a loop. Union-find is built for links that keep arriving."
+    reteach: "### Spotting a redundant lane"

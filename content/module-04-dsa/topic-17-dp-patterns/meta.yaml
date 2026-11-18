@@ -1,0 +1,25 @@
+id: module-04-dsa/topic-17-dp-patterns
+title: "Dynamic programming patterns"
+order: 17
+minutes: 15
+prerequisites: [module-04-dsa/topic-16-dijkstra]
+concepts: [dp-recipe, take-or-skip, coin-change, grid-paths, knapsack, two-string-dp, rolling-array]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m04.dppatterns.PlanningDesk
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0417
+  from: maya
+  title: "Six planning questions, one way to answer them"
+  body: >
+    The planning desk keeps asking me things like which stations the promo team should visit,
+    how few coins the kiosk can give back, and which crates fit on the truck. Every answer is
+    worked out by hand, and some are wrong. They all look like dynamic programming to me.
+    Can you build one PlanningDesk that answers all six?
+hints:
+  - "For each method, say the recipe first: what one cell means, how it is built from earlier cells, the base cases, the answer cell and the fill order."
+  - "fewestCoins starts every cell at amount + 1 (impossible) except fewest[0] = 0. waysToPay starts with ways[0] = 1 and puts the coins in the outer loop. bestTruckLoad loops w from capacity down to the crate's weight."
+  - "routesThroughGrid can keep one long[] row: routes[0] = 1, then for each square, routes[c] = 0 if it is blocked, else routes[c] += routes[c - 1] when c > 0. editDistance sets dist[i][0] = i and dist[0][j] = j, then copies the diagonal on a match or takes 1 + the smallest of the diagonal, the cell above and the cell to the left."
+review: true

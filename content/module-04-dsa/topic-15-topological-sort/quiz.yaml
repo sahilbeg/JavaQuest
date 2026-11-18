@@ -1,0 +1,132 @@
+topic: module-04-dsa/topic-15-topological-sort
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: directed-graphs
+    prompt: "Rules: build base before install docks, install docks before test docks, connect power before test docks. What is the in-degree of test docks?"
+    choices: ["2", "1", "0", "3"]
+    answer: 0
+    explain: "Two arrows point into test docks: one from install docks and one from connect power."
+    reteach: "### Edges with a direction"
+
+  - id: q02
+    type: mcq
+    concept: directed-graphs
+    prompt: "In a directed adjacency list, how many add calls does one rule \"A before B\" need?"
+    choices: ["One: add B to A's list", "Two: add B to A's list and A to B's list", "One: add A to B's list", "None: rules are not stored"]
+    answer: 0
+    explain: "An arrow goes one way only. Adding it in both directions would make B wait for A and A wait for B, which is a cycle."
+    reteach: "### Syntax: a directed adjacency list"
+
+  - id: q03
+    type: mcq
+    concept: topological-order
+    prompt: "When does a directed graph have a topological order?"
+    choices: ["Exactly when it has no cycle", "Only when every node has in-degree 0", "Only when it has one node with in-degree 0", "Always"]
+    answer: 0
+    explain: "A topological order exists exactly when the graph is a DAG, a directed graph with no cycles."
+    reteach: "### When no order exists"
+
+  - id: q04
+    type: mcq
+    concept: topological-order
+    prompt: "Rules: wash before dry, dry before dock. Which list is a topological order?"
+    choices: ["wash, dry, dock", "dry, wash, dock", "dock, dry, wash", "wash, dock, dry"]
+    answer: 0
+    explain: "Every arrow must point forward in the list. Only wash, dry, dock keeps both rules."
+    reteach: "### Topological order"
+
+  - id: q05
+    type: order
+    concept: kahns-algorithm
+    prompt: "Put the steps of Kahn's algorithm in order."
+    items:
+      - "Count the in-degree of every job"
+      - "Put every job with in-degree 0 in the ready queue"
+      - "Take a job from the queue and add it to the order"
+      - "Lower the in-degree of each job it points to, and queue any that reach 0"
+      - "When the queue is empty, compare the order's length with the number of jobs"
+    explain: "Count, seed the queue, then take and release jobs. The final length check spots a cycle."
+    reteach: "### Kahn's algorithm"
+
+  - id: q06
+    type: predict-output
+    concept: kahns-algorithm
+    code: |
+      import java.util.PriorityQueue;
+
+      public class Main {
+          public static void main(String[] args) {
+              PriorityQueue<String> ready = new PriorityQueue<>();
+              ready.offer("wash frame");
+              ready.offer("check lights");
+              ready.offer("oil chain");
+              System.out.println(ready.poll());
+              System.out.println(ready.poll());
+          }
+      }
+    answer: "check lights\noil chain"
+    explain: "A PriorityQueue<String> always gives back the smallest string, A to Z, whatever order they went in."
+    reteach: "### Syntax: a fixed order for ties"
+
+  - id: q07
+    type: mcq
+    concept: cycle-detection
+    prompt: "Kahn's algorithm finishes with 3 jobs in the order, but the plan has 5 jobs. What does that tell you?"
+    choices: ["The rules contain a cycle", "The order is correct, just short", "Two jobs had no rules", "The queue was a PriorityQueue"]
+    answer: 0
+    explain: "Jobs in a cycle never reach in-degree 0, so they never join the order. A short result means a cycle."
+    reteach: "### Spotting a cycle with Kahn"
+
+  - id: q08
+    type: mcq
+    concept: cycle-detection
+    prompt: "In three-colour DFS, which discovery means you found a cycle?"
+    choices: ["Reaching a grey node", "Reaching a black node", "Reaching a white node", "Reaching a node with no arrows"]
+    answer: 0
+    explain: "Grey means DFS is still inside that node. Walking back into it means the arrows loop. Black nodes are finished and safe."
+    reteach: "### Cycle check with DFS and three colours"
+
+  - id: q09
+    type: spot-the-bug
+    concept: grid-graphs
+    code: |
+      static boolean isLane(int r, int c) {
+          if (grid[r][c] != '#') {
+              return false;
+          }
+          return r >= 0 && r < rows && c >= 0 && c < cols;
+      }
+    prompt: "This crashes on cells at the edge of the grid. Which line is wrong?"
+    bugLine: 2
+    explain: "Line 2 reads grid[r][c] before the bounds are checked. For row -1 it throws ArrayIndexOutOfBoundsException. Check the bounds first."
+    reteach: "### Syntax: neighbours and bounds checks"
+
+  - id: q10
+    type: mcq
+    concept: grid-graphs
+    prompt: "A city grid has 200 rows and 300 columns. What does counting lane zones with BFS cost?"
+    choices: ["O(rows × cols) time and O(rows × cols) space", "O(rows + cols) time and O(1) space", "O((rows × cols)²) time", "O(log(rows × cols)) time"]
+    answer: 0
+    explain: "Every cell is visited once and checks 4 neighbours. The visited array and the queue can each hold every cell."
+    reteach: "### Counting zones: connected components"
+
+  - id: q11
+    type: mcq
+    concept: grid-graphs
+    prompt: "Why does a recursive flood fill crash on a 3000 x 3000 grid of lanes?"
+    choices: ["The chain of waiting calls gets too deep and the call stack runs out", "The visited array is too big for the heap", "Recursion cannot read two-dimensional arrays", "The grid has too many zones"]
+    answer: 0
+    explain: "Each waiting call holds stack memory. Millions of them overflow the stack. An ArrayDeque keeps the to-do list on the heap instead."
+    reteach: "### Big grids and the call stack"
+
+  - id: q12
+    type: mcq
+    concept: multi-source-bfs
+    prompt: "You need every lane block's distance to the nearest of 40 docks. What does multi-source BFS do?"
+    choices: ["Puts all 40 docks in the queue at distance 0, then runs one BFS", "Runs 40 BFS searches and keeps the smallest answer", "Runs DFS from the first dock only", "Sorts the docks A to Z and searches from the first"]
+    answer: 0
+    explain: "All starts go in at distance 0, so the waves spread together. The first wave to reach a cell comes from its nearest dock."
+    reteach: "### Multi-source BFS"

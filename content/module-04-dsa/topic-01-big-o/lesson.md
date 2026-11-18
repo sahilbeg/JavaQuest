@@ -32,7 +32,7 @@ Double `n` and the steps double too. That pattern of growth is what matters.
 ### Syntax: Big-O notation
 
 ```java nocompile
-O(1)   O(log n)   O(n)   O(n log n)   O(n^2)
+O(1)   O(log n)   O(n)   O(n log n)   O(n^2)   O(2^n)   O(n!)
 ```
 
 **Big-O** is a short label for how the number of steps grows as `n` grows. Read `O(n)` as "order n". It describes the shape of the growth, without exact numbers.
@@ -44,6 +44,8 @@ O(1)   O(log n)   O(n)   O(n log n)   O(n^2)
 | O(n) | linear | doubling the data doubles the time | look at every ride once |
 | O(n log n) | n log n | a bit worse than linear | good sorting (later in this module) |
 | O(n^2) | quadratic | doubling the data makes it four times slower | compare every ride with every ride |
+| O(2^n) | exponential | one more item doubles the work | try every subset of the rides |
+| O(n!) | factorial | one more item multiplies the work by n | try every order to visit n stations |
 
 ```callout jargon
 **log n** (log base 2) is how many times you can halve `n` before you reach 1. For 8 that is 3, because 8, 4, 2, 1 takes three halvings.
@@ -53,13 +55,15 @@ O(1)   O(log n)   O(n)   O(n log n)   O(n^2)
 
 Numbers make the difference real. The values below are approximate step counts.
 
-| n | O(1) | O(log n) | O(n) | O(n log n) | O(n^2) |
-|---|---|---|---|---|---|
-| 10 | 1 | 3 | 10 | 33 | 100 |
-| 100 | 1 | 7 | 100 | 664 | 10,000 |
-| 1000 | 1 | 10 | 1000 | 9,966 | 1,000,000 |
+| n | O(1) | O(log n) | O(n) | O(n log n) | O(n^2) | O(2^n) | O(n!) |
+|---|---|---|---|---|---|---|---|
+| 10 | 1 | 3 | 10 | 33 | 100 | 1,024 | 3,628,800 |
+| 100 | 1 | 7 | 100 | 664 | 10,000 | a 31-digit number | a 158-digit number |
+| 1000 | 1 | 10 | 1000 | 9,966 | 1,000,000 | a 302-digit number | a 2,568-digit number |
 
 At 1000 rides, an O(n^2) method does one million steps. An O(log n) method does ten.
+
+O(2^n) and O(n!) are in another league. Code with these shapes only finishes for tiny inputs: around 30 items for O(2^n), and around 12 for O(n!).
 
 ### Syntax: a loop inside a loop
 
@@ -106,7 +110,15 @@ Gojo says: ask "what happens when the data doubles?" The answer tells you the Bi
 
 Searching a list for B-1042 can be lucky. If B-1042 is first, the search takes one step. That is the **best case**.
 
-If B-1042 is last, or missing, the search reads every item. That is the **worst case**. Big-O usually describes the worst case, because that is when riders wait.
+If B-1042 is last, or missing, the search reads every item. That is the **worst case**. The **average case** is the typical cost over many searches. Here that is about half the list.
+
+A case and a bound are two different ideas. The case says which input you mean. The bound says how fast the steps can grow for that input. So both of these are true: linear search is O(1) in the best case and O(n) in the worst case.
+
+```callout jargon
+A **bound** is a limit on growth. **Big-O** (O) is an upper bound: the steps grow no faster than this shape. **Big-Omega** (Ω) is a lower bound: they grow at least this fast. **Big-Theta** (Θ) means both at once, so the growth is exactly this shape.
+```
+
+When someone says "this method is O(n)" and names no case, they mean the worst case. That is when riders wait. People also often say O when they really mean Θ, the exact shape.
 
 ### Space complexity
 
@@ -114,6 +126,7 @@ Time is one cost. Memory is another. **Space complexity** is how much extra memo
 
 - A method that keeps one counter uses O(1) space.
 - A method that copies the list into a new list uses O(n) space.
+- A method that calls itself also uses space. Each unfinished call keeps a note on the call stack. Calls nested `n` deep use O(n) space, even with no arrays. The next ticket shows this.
 
 ### What common collections cost
 
@@ -122,12 +135,86 @@ You already use these collections. Now you can see their price tags.
 | Operation | Big-O | Why |
 |---|---|---|
 | `list.get(i)` on an `ArrayList` | O(1) | jumps straight to slot `i` |
-| `list.add(x)` at the end of an `ArrayList` | O(1) usually | puts it in the next free slot |
+| `list.add(x)` at the end of an `ArrayList` | O(1) amortised (explained next) | puts it in the next free slot; now and then it copies everything into a bigger array |
+| `list.remove(0)` on an `ArrayList` | O(n) | shifts every other item one slot left |
 | `list.contains(x)` on an `ArrayList` | O(n) | checks items one by one |
 | `set.contains(x)` on a `HashSet` | O(1) on average | uses the hash code to jump to the right spot |
 | `map.get(key)` on a `HashMap` | O(1) on average | same trick as `HashSet` |
 
 You will see how a hash table pulls off that O(1) jump later in this module.
+
+### Amortised cost
+
+An `ArrayList` keeps its items in a plain array inside. That array has a fixed size, called its **capacity**. When it is full, the next `add` makes a bigger array and copies every item across. That one `add` costs O(n).
+
+So why does the table say O(1)? Because the big copies are rare. This program fakes a list whose array doubles when full, and counts every copy.
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        int capacity = 1;
+        int size = 0;
+        long copies = 0;
+        int n = 1000;
+        for (int i = 0; i < n; i++) {
+            if (size == capacity) {
+                copies += size;        // copy every item into a bigger array
+                capacity = capacity * 2;
+            }
+            size++;
+        }
+        System.out.println("adds: " + n);
+        System.out.println("copies: " + copies);
+        System.out.println("capacity: " + capacity);
+    }
+}
+```
+
+It prints `adds: 1000`, `copies: 1023` and `capacity: 1024`. That is about one extra copy per add. Spread over the whole run, each add costs O(1).
+
+```callout jargon
+**Capacity** is how many items the inner array can hold before it must grow. **Amortised** cost is the average cost per operation over a long run, counting the rare slow ones too. It promises nothing about one single call.
+```
+
+The real `ArrayList` grows by half its size each time, not double. Any fixed growth factor gives the same O(1) amortised cost. If one slow `add` would hurt, set the size up front: `new ArrayList<>(50_000)`.
+
+### Two inputs and hidden loops
+
+Some methods take two inputs of different sizes, say `n` rides and `m` stations. Keep both letters, because neither one is "the" size.
+
+- A loop over the rides, then a separate loop over the stations: `n + m` steps, so O(n + m).
+- A loop over the stations inside a loop over the rides: `n * m` steps, so O(n·m).
+
+Some single lines hide a whole loop. Put one inside a loop of `n`, and an innocent O(n) loop becomes O(n^2).
+
+| Line | Hidden cost | Why |
+|---|---|---|
+| `s += "x"` on a `String` | O(length of `s`) | a `String` cannot change, so Java copies every character into a new one |
+| `s.substring(a, b)` | O(b - a) | it copies those characters into a new `String` |
+| `list.remove(0)` on an `ArrayList` | O(n) | every other item shifts one slot left |
+| `list.contains(x)` on a `List` | O(n) | it checks the items one by one |
+
+```java run
+public class Main {
+    public static void main(String[] args) {
+        String receipt = "";
+        long copied = 0;
+        for (int i = 0; i < 1000; i++) {
+            receipt += "x";              // builds a brand-new String each time
+            copied += receipt.length();  // every character so far is copied again
+        }
+        System.out.println("chars copied with +=: " + copied);
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 1000; i++) {
+            sb.append("x");              // adds to the same buffer
+        }
+        System.out.println("length with StringBuilder: " + sb.length());
+    }
+}
+```
+
+A thousand one-letter adds copied 500,500 characters. A `StringBuilder` grows one buffer, like `ArrayList`, so each `append` is O(1) amortised.
 
 ## Worked example
 
@@ -218,10 +305,10 @@ For 100 it prints 6. A million needs only 19 halvings.
 ## Recap
 
 - Count steps as `n` grows instead of timing with a clock.
-- O(1) stays flat, O(log n) barely grows, O(n) doubles with the data and O(n^2) grows four times when the data doubles.
+- O(1) stays flat, O(log n) barely grows, O(n) doubles with the data and O(n^2) grows four times when the data doubles. O(2^n) and O(n!) explode even for small inputs.
 - Drop constants and smaller terms: `3n + 5` is O(n), and `n^2 + n` is O(n^2).
-- Big-O usually means the worst case. Space complexity counts extra memory the same way.
-- `ArrayList.contains` is O(n). `HashSet.contains` is O(1) on average.
+- Big-O is an upper bound. Best, worst and average are cases. With no case named, people mean the worst case.
+- `ArrayList.add` is O(1) amortised and `HashSet.contains` is O(1) on average. Hidden loops like `list.contains`, `remove(0)` and `String +=` cost O(n) each.
 
 ## Common mistakes
 

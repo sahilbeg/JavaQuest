@@ -73,12 +73,13 @@ questions:
     reteach: "## Concept"
 
   - id: q07
-    type: fill-blank
-    concept: hashing
-    prompt: "int index = Math.___(key.hashCode(), buckets.length);"
-    answers: ["floorMod"]
-    explain: "Math.floorMod turns any hash code into an index from 0 to buckets.length - 1."
-    reteach: "## Concept"
+    type: mcq
+    concept: hash-patterns
+    variants:
+      - { prompt: "In two-sum, the loop checks seen.containsKey(need) before it calls seen.put(fares[i], i). Why that order?", choices: ["So a fare is never paired with itself", "put throws an exception if the key already exists", "containsKey only works on an empty map", "It keeps the map sorted"], answer: 0 }
+      - { prompt: "You group anagrams in a HashMap. Which key should each word get?", choices: ["Its letters, sorted", "Its length", "Its first letter", "Its position in the list"], answer: 0 }
+    explain: "Both patterns pick what to store and look up. Two-sum looks for the partner among earlier fares only, so a fare of 725 cannot pair with itself for 1450. Anagrams share their sorted letters, so that makes the group key."
+    reteach: "### Hash patterns"
 
   - id: q08
     type: order
@@ -126,3 +127,34 @@ questions:
     bugLine: 4
     explain: "== checks for the same object. Compare keys with e.key.equals(key)."
     reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: hashmap-internals
+    variants:
+      - { prompt: "Since Java 8, what does HashMap do when one bucket's chain grows past 8 entries in a table of 64 or more buckets?", choices: ["It turns that chain into a red-black tree, so lookups there take O(log n) for Comparable keys", "It throws an exception", "It deletes the oldest entry in the chain", "It switches to a slower O(n²) search"], answer: 0 }
+      - { prompt: "Java's HashMap always has a power-of-two number of buckets, such as 16. How does it turn a hash into an index?", choices: ["hash & (n - 1), which gives the same result as floorMod for a power of two", "hash % n, which can be negative", "It sorts the keys first", "Math.abs(hash) / n"], answer: 0 }
+    explain: "HashMap mixes the hash, then masks it with & (n - 1). A chain longer than 8 in a big enough table becomes a red-black tree, a balanced search tree."
+    reteach: "### How Java's HashMap really works"
+
+  - id: q12
+    type: predict-output
+    concept: mutable-keys
+    code: |
+      import java.util.ArrayList;
+      import java.util.HashSet;
+      import java.util.List;
+      import java.util.Set;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<String> route = new ArrayList<>(List.of("Harbor"));
+              Set<List<String>> planned = new HashSet<>();
+              planned.add(route);
+              route.add("Depot");
+              System.out.println(planned.contains(route));
+          }
+      }
+    answer: "false"
+    explain: "The route was stored in the bucket for its old hash code. Changing it changed its hash, so contains looks in a different bucket. Never change a key after storing it."
+    reteach: "### Never change a key"

@@ -32,10 +32,10 @@ questions:
   - id: q04
     type: mcq
     concept: best-worst-case
-    prompt: "You search a list of 500 bike ids for B-1042, and it is the first item. Which case is this?"
-    choices: ["The best case", "The worst case", "The average case", "Space complexity"]
-    answer: 0
-    explain: "Finding it on the first check is the luckiest outcome, so it is the best case. The worst case reads all 500."
+    variants:
+      - { prompt: "You search a list of 500 bike ids for B-1042, and it is the first item. Which case is this?", choices: ["The best case", "The worst case", "The average case", "Space complexity"], answer: 0 }
+      - { prompt: "Which statement about linear search is true?", choices: ["It is O(1) in the best case and O(n) in the worst case", "Big-O can only describe the worst case", "Its best case takes n steps", "Big-O means the average case, so it is O(n / 2)"], answer: 0 }
+    explain: "A case says which input you mean. Finding the id on the first check is the best case: one step, O(1). The worst case reads all n items: O(n). Big-O is a bound you can state for any case."
     reteach: "## Concept"
 
   - id: q05
@@ -117,3 +117,21 @@ questions:
     answer: 0
     explain: "The copy holds n items, so the extra space grows with n. That is O(n) space."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: amortised-cost
+    prompt: "ArrayList.add at the end is O(1) amortised. What does that mean?"
+    choices: ["Now and then an add copies everything, but averaged over many adds each one costs a constant amount", "Every single add takes exactly one step", "add is O(1) only for lists under 1,000 items", "add never copies the inner array"]
+    answer: 0
+    explain: "When the inner array is full, one add copies every item into a bigger array. Those copies are rare, so over a long run they add up to about one extra step per add."
+    reteach: "### Amortised cost"
+
+  - id: q12
+    type: mcq
+    concept: hidden-costs
+    variants:
+      - { prompt: "An ArrayList holds n rides. A loop empties it by calling list.remove(0) n times. What is the total Big-O?", choices: ["O(n^2)", "O(n)", "O(1)", "O(log n)"], answer: 0 }
+      - { prompt: "A loop runs n times and does receipt += \"x\" on a String each time. What is the total Big-O?", choices: ["O(n^2)", "O(n)", "O(1)", "O(log n)"], answer: 0 }
+    explain: "That one line hides a loop: remove(0) shifts every other item, and += copies the whole String. An O(n) line inside a loop of n gives O(n^2)."
+    reteach: "### Two inputs and hidden loops"

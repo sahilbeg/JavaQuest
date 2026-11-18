@@ -1049,11 +1049,123 @@
           }
         },
         {
+          "id": "module-04-dsa/topic-13-two-pointers",
+          "title": "Two pointers, sliding windows and prefix sums",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-12-dynamic-programming"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T10:40:19+05:30"
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-14-backtracking",
+          "title": "Backtracking: trying every choice",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-13-two-pointers"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T10:40:19+05:30"
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-15-topological-sort",
+          "title": "Directed graphs: order, cycles and grids",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-14-backtracking"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T10:40:19+05:30"
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-16-dijkstra",
+          "title": "Weighted shortest paths: Dijkstra",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-15-topological-sort"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T10:40:19+05:30"
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-17-dp-patterns",
+          "title": "Dynamic programming patterns",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-16-dijkstra"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T10:40:19+05:30"
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-18-greedy-intervals",
+          "title": "Greedy choices and intervals",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-17-dp-patterns"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T10:40:19+05:30"
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-19-tries-union-find",
+          "title": "Tries and union-find",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-18-greedy-intervals"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T10:40:19+05:30"
+          }
+        },
+        {
+          "id": "module-04-dsa/topic-20-bit-manipulation",
+          "title": "Bit manipulation",
+          "practice": "code",
+          "prerequisites": [
+            "module-04-dsa/topic-19-tries-union-find"
+          ],
+          "status": "ui_wired",
+          "verification": {
+            "solutionPasses": true,
+            "skeletonFails": true,
+            "verifiedAt": "2026-11-18T10:40:19+05:30"
+          }
+        },
+        {
           "id": "module-04-dsa/boss",
           "title": "INC-04: The route planner sends riders to full stations",
           "practice": "code",
           "prerequisites": [
-            "module-04-dsa/topic-12-dynamic-programming"
+            "module-04-dsa/topic-20-bit-manipulation"
           ],
           "status": "ui_wired",
           "verification": {
@@ -1067,7 +1179,7 @@
           "title": "FEAT-04: Rebalancing-truck planner",
           "practice": "code",
           "prerequisites": [
-            "module-04-dsa/topic-12-dynamic-programming"
+            "module-04-dsa/topic-20-bit-manipulation"
           ],
           "status": "ui_wired",
           "verification": {
@@ -1268,11 +1380,29 @@
           }
         },
         {
+          "id": "module-05-advanced-java/topic-14-memory-model",
+          "title": "The Java Memory Model: visibility and volatile",
+          "practice": "code",
+          "prerequisites": [
+            "module-05-advanced-java/topic-13-pattern-matching"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "module-05-advanced-java/topic-15-coordinating-threads",
+          "title": "Coordinating threads: latches, semaphores and barriers",
+          "practice": "code",
+          "prerequisites": [
+            "module-05-advanced-java/topic-14-memory-model"
+          ],
+          "status": "planned"
+        },
+        {
           "id": "module-05-advanced-java/boss",
           "title": "INC-05: Double unlock at rush hour",
           "practice": "code",
           "prerequisites": [
-            "module-05-advanced-java/topic-13-pattern-matching"
+            "module-05-advanced-java/topic-15-coordinating-threads"
           ],
           "status": "ui_wired",
           "verification": {
@@ -1286,7 +1416,7 @@
           "title": "FEAT-05: Bike telemetry ingester",
           "practice": "code",
           "prerequisites": [
-            "module-05-advanced-java/topic-13-pattern-matching"
+            "module-05-advanced-java/topic-15-coordinating-threads"
           ],
           "status": "ui_wired",
           "verification": {
@@ -1473,11 +1603,20 @@
           }
         },
         {
+          "id": "module-06-craft/topic-13-object-oriented-design",
+          "title": "Object-oriented design from requirements",
+          "practice": "code",
+          "prerequisites": [
+            "module-06-craft/topic-12-logging"
+          ],
+          "status": "planned"
+        },
+        {
           "id": "module-06-craft/boss",
           "title": "INC-06: Refactor the legacy billing module safely",
           "practice": "code",
           "prerequisites": [
-            "module-06-craft/topic-12-logging"
+            "module-06-craft/topic-13-object-oriented-design"
           ],
           "status": "ui_wired",
           "verification": {
@@ -1491,7 +1630,7 @@
           "title": "FEAT-06: Pluggable promo engine",
           "practice": "code",
           "prerequisites": [
-            "module-06-craft/topic-12-logging"
+            "module-06-craft/topic-13-object-oriented-design"
           ],
           "status": "ui_wired",
           "verification": {
@@ -1579,11 +1718,38 @@
           }
         },
         {
+          "id": "module-07-tooling/topic-06-git-undo",
+          "title": "Undo and recover with Git",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-07-tooling/topic-05-docker-basics"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "module-07-tooling/topic-07-shipping-to-production",
+          "title": "Shipping to production: deploys, rollbacks and flags",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-07-tooling/topic-06-git-undo"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "module-07-tooling/topic-08-shell-on-call",
+          "title": "The shell on call: logs, processes and servers",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-07-tooling/topic-07-shipping-to-production"
+          ],
+          "status": "planned"
+        },
+        {
           "id": "module-07-tooling/boss",
           "title": "INC-07: The release pipeline is red",
           "practice": "code",
           "prerequisites": [
-            "module-07-tooling/topic-05-docker-basics"
+            "module-07-tooling/topic-08-shell-on-call"
           ],
           "status": "ui_wired",
           "verification": {
@@ -1597,7 +1763,7 @@
           "title": "FEAT-07: Package the kiosk as a runnable jar",
           "practice": "code",
           "prerequisites": [
-            "module-07-tooling/topic-05-docker-basics"
+            "module-07-tooling/topic-08-shell-on-call"
           ],
           "status": "ui_wired",
           "verification": {
@@ -1615,11 +1781,20 @@
       "status": "ui_wired",
       "topics": [
         {
+          "id": "module-08-backend/topic-13-networking",
+          "title": "Networking under HTTP: IP, DNS, TCP and TLS",
+          "practice": "quiz",
+          "prerequisites": [
+            "module-07-tooling/boss"
+          ],
+          "status": "planned"
+        },
+        {
           "id": "module-08-backend/topic-01-http",
           "title": "How HTTP works",
           "practice": "quiz",
           "prerequisites": [
-            "module-07-tooling/boss"
+            "module-08-backend/topic-13-networking"
           ],
           "status": "ui_wired",
           "verification": {
@@ -1714,11 +1889,20 @@
           }
         },
         {
+          "id": "module-08-backend/topic-14-database-design",
+          "title": "Database design and performance: indexes and migrations",
+          "practice": "code",
+          "prerequisites": [
+            "module-08-backend/topic-07-sql-basics"
+          ],
+          "status": "planned"
+        },
+        {
           "id": "module-08-backend/topic-08-jdbc",
           "title": "JDBC",
           "practice": "code",
           "prerequisites": [
-            "module-08-backend/topic-07-sql-basics"
+            "module-08-backend/topic-14-database-design"
           ],
           "status": "ui_wired",
           "verification": {
@@ -1757,11 +1941,20 @@
           }
         },
         {
+          "id": "module-08-backend/topic-15-concurrent-writes",
+          "title": "Concurrent writes: lost updates and locking",
+          "practice": "code",
+          "prerequisites": [
+            "module-08-backend/topic-10-transactions"
+          ],
+          "status": "planned"
+        },
+        {
           "id": "module-08-backend/topic-11-spring-security",
           "title": "Security basics with Spring Security",
           "practice": "code",
           "prerequisites": [
-            "module-08-backend/topic-10-transactions"
+            "module-08-backend/topic-15-concurrent-writes"
           ],
           "status": "ui_wired",
           "verification": {

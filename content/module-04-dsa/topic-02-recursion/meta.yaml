@@ -1,7 +1,7 @@
 id: module-04-dsa/topic-02-recursion
 title: "Recursion"
 order: 2
-minutes: 10
+minutes: 12
 prerequisites: [module-04-dsa/topic-01-big-o]
 concepts: [base-case, recursive-case, call-stack, stack-overflow, recursion-on-arrays, repeated-work]
 practice:

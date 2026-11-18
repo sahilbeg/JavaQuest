@@ -161,3 +161,21 @@ questions:
     answer: 0
     explain: "Taking the left item on a tie keeps equal items in their original order. That is what stable means."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: quicksort
+    prompt: "Quicksort uses the last item as its pivot. On 100,000 already sorted items, why can it crash with StackOverflowError?"
+    choices: ["Each call peels off one item, so the calls nest about n deep", "The array is too big for the heap", "partition swaps items past the end of the array", "Sorted arrays cannot be partitioned"]
+    answer: 0
+    explain: "On sorted input every split is n - 1 and 0 items, so the calls go n deep. A random pivot and recursing on the smaller side keep the depth near log n."
+    reteach: "### Quicksort's call stack"
+
+  - id: q12
+    type: mcq
+    concept: sort-costs
+    prompt: "Which sort does Java use when you sort a List of Ride objects, and why?"
+    choices: ["TimSort, a stable merge sort, because equal rides must keep their order", "Dual-Pivot Quicksort, because it needs no extra memory", "Insertion sort, because lists are small", "Counting sort, because rides have whole-number minutes"]
+    answer: 0
+    explain: "Objects are sorted with TimSort, which is stable. Primitives use Dual-Pivot Quicksort, because two equal ints look the same."
+    reteach: "### The costs side by side"

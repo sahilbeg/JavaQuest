@@ -141,3 +141,39 @@ questions:
     bugLine: 7
     explain: "offer adds at the back, but pop takes from the front, so this prints log in. Use push for every stack item."
     reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: deque-interface
+    prompt: "The Deque bikes is empty. Which call returns null instead of throwing an exception?"
+    choices: ["bikes.pollLast()", "bikes.removeLast()", "bikes.getLast()", "bikes.pop()"]
+    answer: 0
+    explain: "The poll and peek methods return null on an empty deque. remove, get and pop throw NoSuchElementException."
+    reteach: "### The Deque interface"
+
+  - id: q12
+    type: predict-output
+    concept: monotonic-stack
+    code: |
+      import java.util.ArrayDeque;
+      import java.util.Arrays;
+      import java.util.Deque;
+
+      public class Main {
+          public static void main(String[] args) {
+              int[] rides = {20, 25, 22, 30};
+              int[] wait = new int[rides.length];
+              Deque<Integer> stack = new ArrayDeque<>();
+              for (int day = 0; day < rides.length; day++) {
+                  while (!stack.isEmpty() && rides[day] > rides[stack.peek()]) {
+                      int earlier = stack.pop();
+                      wait[earlier] = day - earlier;
+                  }
+                  stack.push(day);
+              }
+              System.out.println(Arrays.toString(wait));
+          }
+      }
+    answer: "[1, 2, 1, 0]"
+    explain: "Day 1 (25) pops day 0. Day 3 (30) pops day 2 and then day 1. Day 3 never meets a busier day, so it keeps 0."
+    reteach: "### Monotonic stack"

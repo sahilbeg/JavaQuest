@@ -16,6 +16,8 @@ A **graph** is a set of **nodes** (the dots) joined by **edges** (the lines). He
 - An edge in an **undirected** graph works both ways. A lane from Riverside to Harbor also runs from Harbor to Riverside.
 - A **path** (or route) is a list of nodes where each one is a neighbour of the next.
 
+Two other kinds of graph come later. In a **directed** graph an edge works one way only, like a one-way street. In a **weighted** graph each edge carries a number, such as minutes of riding. SPK-0415 covers directed graphs and SPK-0416 weighted ones. This ticket uses undirected lanes that all count the same.
+
 Here are the five stations and their lanes:
 
 ```mermaid
@@ -108,6 +110,16 @@ while (!queue.isEmpty()) {
 
 Mark a station as visited when it joins the queue. Then it can never join twice.
 
+### Program to the interface
+
+Look at one line of the BFS loop: `Queue<String> queue = new ArrayDeque<>();`. The left side names an interface, `Queue`. It says what the variable can do. The right side picks the class that does the work, `ArrayDeque`.
+
+```callout jargon
+**Programming to an interface** means you declare a variable with the interface type, not the class. You met interfaces in [SPK-0208](/t/module-02-oop/topic-08-interfaces).
+```
+
+The rest of the code can only call `Queue` methods, such as `offer` and `poll`. So you could swap in another queue class later, and no other line would change. `Map<String, List<String>> lanes = new LinkedHashMap<>()` and `Set<String> visited = new HashSet<>()` follow the same habit.
+
 ```java run
 import java.util.ArrayDeque;
 import java.util.HashSet;
@@ -179,6 +191,48 @@ static void dfs(String station, Set<String> visited) {
 
 DFS answers the question "which stations can I reach at all?" just as well as BFS. It does not find the fewest stops.
 
+### DFS without recursion
+
+Recursive DFS keeps one note per station on the call stack. On a map grid of 1000 by 1000 squares, a path can run a million squares deep. That overflows the call stack, as SPK-0402 showed. For big inputs, keep your own `Deque` as the stack.
+
+```java run
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public class Main {
+    public static void main(String[] args) {
+        Map<String, List<String>> lanes = Map.of(
+                "Riverside", List.of("Old Mill", "Harbor"),
+                "Old Mill", List.of("Riverside", "Uptown"),
+                "Harbor", List.of("Riverside", "Uptown"),
+                "Uptown", List.of("Old Mill", "Harbor", "Depot"),
+                "Depot", List.of("Uptown"));
+
+        Set<String> visited = new HashSet<>();
+        Deque<String> stack = new ArrayDeque<>();
+        stack.push("Riverside");
+        while (!stack.isEmpty()) {
+            String station = stack.pop();
+            if (!visited.add(station)) {
+                continue;                     // seen it already
+            }
+            System.out.println("Visit " + station);
+            for (String next : lanes.get(station)) {
+                if (!visited.contains(next)) {
+                    stack.push(next);
+                }
+            }
+        }
+    }
+}
+```
+
+`visited.add` returns `false` when the station was already in the set, so the loop skips it. The visit order differs from the recursive version, because the last neighbour pushed comes off first. It still reaches the same stations. SPK-0415 shows how a map grid becomes a graph, with islands and flood fill.
+
 ```callout tip
 Need the fewest stops? Use BFS. Only need to know what is reachable? DFS or BFS both work.
 ```
@@ -192,6 +246,18 @@ Need the fewest stops? Use BFS. Only need to know what is reachable? DFS or BFS 
 | BFS | O(V + E) | Double the stations and lanes, double the time |
 | DFS | O(V + E) | Double the stations and lanes, double the time |
 | Look up a station's neighbours | O(1) | Same tiny cost at any size |
+
+### Adjacency matrix or list?
+
+An **adjacency matrix** is the other common way to store a graph. It is a V by V grid of `boolean`s, where `matrix[a][b]` is `true` when a lane joins `a` and `b`.
+
+| | Adjacency list | Adjacency matrix |
+|---|---|---|
+| Memory | O(V + E) | O(V^2) |
+| Is there a lane from a to b? | O(neighbours of a) | O(1) |
+| List a node's neighbours | O(neighbours) | O(V) |
+
+City maps are **sparse**: each station has only a few lanes. A list wastes nothing there, so it is the usual choice. A matrix suits small, crowded graphs where almost everything is joined.
 
 ## Worked example
 

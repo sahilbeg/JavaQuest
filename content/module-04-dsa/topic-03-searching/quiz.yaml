@@ -134,7 +134,7 @@ questions:
     prompt: "Arrays.binarySearch(ids, 77) returns -4. What does that tell you?"
     choices: ["77 is not in the array", "77 is at index 4", "77 is at index -4 counted from the end", "The array is empty"]
     answer: 0
-    explain: "The library returns a negative number for a missing value. It is not always -1, so check with < 0."
+    explain: "A missing value gives -(insertionPoint) - 1. Here -4 means 77 is missing and would go at index 3. Check for a miss with < 0, not == -1."
     reteach: "## Concept"
 
   - id: q10
@@ -145,3 +145,36 @@ questions:
     answer: 0
     explain: "Sorting takes time. Binary search pays off when you sort once and search many times."
     reteach: "## Concept"
+
+  - id: q11
+    type: predict-output
+    concept: lower-bound
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int[] a = {10, 20, 20, 20, 30};
+              int low = 0;
+              int high = a.length;
+              while (low < high) {
+                  int mid = low + (high - low) / 2;
+                  if (a[mid] >= 20) {
+                      high = mid;
+                  } else {
+                      low = mid + 1;
+                  }
+              }
+              System.out.println(low);
+          }
+      }
+    answer: "1"
+    explain: "This is a lower bound search. It finds the first index whose value is >= 20. That is the first copy of 20, at index 1."
+    reteach: "### Lower and upper bound"
+
+  - id: q12
+    type: mcq
+    concept: search-on-answer
+    prompt: "You binary search for the smallest truck size that moves all the bikes in 3 trips. What makes binary search work here?"
+    choices: ["The yes-or-no test flips once: every size below the answer fails, and every size from it upward works", "The piles of bikes must be sorted first", "The answer must be a power of two", "The piles must hold no duplicate numbers"]
+    answer: 0
+    explain: "Binary search needs a yes-or-no test that flips only once, like no, no, yes, yes. The piles themselves can be in any order."
+    reteach: "### Binary search on the answer"

@@ -146,3 +146,24 @@ questions:
     answer: 0
     explain: "== compares references. Use equals to compare the values inside the objects."
     reteach: "## Common mistakes"
+
+  - id: q11
+    type: order
+    concept: reversal
+    prompt: "Put the lines inside the reverse loop in order. (head = previous; comes after the loop)"
+    items:
+      - "Node<T> next = current.next;"
+      - "current.next = previous;"
+      - "previous = current;"
+      - "current = next;"
+    explain: "Save the rest of the list first, then flip the arrow, then move both previous and current one step on."
+    reteach: "### Reversing a list"
+
+  - id: q12
+    type: mcq
+    concept: fast-slow-pointers
+    prompt: "slow moves one node at a time and fast moves two. When fast reaches the end of a list with no cycle, where is slow?"
+    choices: ["At the middle node", "At the head", "At the last node", "At null"]
+    answer: 0
+    explain: "fast covers twice the distance, so when it finishes, slow has gone half way: the middle node."
+    reteach: "### Fast and slow pointers"

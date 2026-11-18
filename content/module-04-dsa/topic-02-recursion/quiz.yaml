@@ -26,7 +26,7 @@ questions:
     prompt: "Why is the naive recursive fib(n) slow?"
     choices: ["It works out the same smaller Fibonacci numbers again and again", "It has no base case", "Recursion is always slower than O(n^2)", "It stores every answer in a list"]
     answer: 0
-    explain: "fib(5) calls fib(3) twice and fib(2) three times. The repeats make it O(2^n)."
+    explain: "fib(5) calls fib(3) twice and fib(2) three times. The repeats make it exponential: about 1.6 times more work per step, loosely written as O(2^n)."
     reteach: "## Concept"
 
   - id: q04
@@ -115,3 +115,30 @@ questions:
     answer: 0
     explain: "factorial(4), factorial(3) and factorial(2) are all waiting for an answer. That is 3 calls."
     reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: stack-overflow
+    prompt: "A recursive sum over 100,000 stations crashes with StackOverflowError, but a for loop over the same array works. Why?"
+    choices: ["Each unfinished call keeps a note on a small call stack, and Java never reuses those notes", "Java forbids recursion on arrays longer than 10,000", "The int total overflows at 100,000", "Recursion is only allowed inside a loop"]
+    answer: 0
+    explain: "Java has no tail-call optimisation, so 100,000 nested calls need 100,000 notes. The call stack only fits tens of thousands. A loop, or your own Deque stack, uses ordinary memory instead."
+    reteach: "### How deep can Java recurse?"
+
+  - id: q11
+    type: mcq
+    concept: repeated-work
+    prompt: "Naive fib(20) makes 21,891 calls and fib(21) makes 35,421. About how fast does the work grow each time n goes up by one?"
+    choices: ["About 1.6 times", "Exactly 2 times", "By one extra call", "It does not grow"]
+    answer: 0
+    explain: "35,421 / 21,891 is about 1.6. O(2^n) is a safe upper bound, but the real growth is about 1.6^n."
+    reteach: "### Naive Fibonacci repeats work"
+
+  - id: q12
+    type: mcq
+    concept: recursion-on-arrays
+    prompt: "reverse(s) returns reverse(s.substring(1)) + s.charAt(0). What is its time for a String of n letters?"
+    choices: ["O(n^2), because each call copies the rest of the text", "O(n), because there is one call per letter", "O(log n), because the text gets shorter", "O(1), because Strings are fast"]
+    answer: 0
+    explain: "There are n calls, but each substring and each + copies up to n characters. n calls times n copies gives O(n^2). StringBuilder.reverse is O(n)."
+    reteach: "### Recursion on text"

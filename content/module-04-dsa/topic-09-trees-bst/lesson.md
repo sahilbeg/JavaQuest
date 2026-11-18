@@ -117,6 +117,45 @@ static Node insert(Node node, int bike) {
 
 When `bike` equals `node.bike`, neither branch runs. The duplicate is ignored. You call it as `root = insert(root, 1042);` so that the first insert sets the root.
 
+### Deleting from a BST
+
+Bike B-1042 is sold, so it leaves the registry. Find its node the same way search does. Then there are three cases.
+
+1. **No children (a leaf).** Just cut it off: the parent's link becomes `null`.
+2. **One child.** Let the child take the node's place. The parent now links to the child.
+3. **Two children.** Copy in the in-order successor. Then delete that successor from the right subtree. It never has a left child, so that delete is case 1 or 2.
+
+```callout jargon
+A node's **in-order successor** is the next value in sorted order: the smallest value in its right subtree. Keep going left from the right child to find it.
+```
+
+```java nocompile
+static Node delete(Node node, int bike) {
+    if (node == null) {
+        return null;
+    }
+    if (bike < node.bike) {
+        node.left = delete(node.left, bike);
+    } else if (bike > node.bike) {
+        node.right = delete(node.right, bike);
+    } else if (node.left == null) {
+        return node.right;
+    } else if (node.right == null) {
+        return node.left;
+    } else {
+        Node next = node.right;
+        while (next.left != null) {
+            next = next.left;
+        }
+        node.bike = next.bike;
+        node.right = delete(node.right, next.bike);
+    }
+    return node;
+}
+```
+
+The first two cases share one trick: returning the other child covers both "no children" and "one child". Delete 1042 from the picture above, and 1061 moves up to the root. Every value left of it is still smaller, and every value right of it is still larger.
+
 ### Traversals
 
 A **traversal** visits every node once. There are three common orders. Each one is three lines; only their order changes.
@@ -142,6 +181,57 @@ static void inOrder(Node node, List<Integer> out) {
 
 Why is it sorted? Everything on the left is smaller, so it is added first. Then the node. Then everything larger. For the picture above, in-order gives `[1003, 1017, 1025, 1042, 1061, 1088, 1099]`. Pre-order gives `[1042, 1017, 1003, 1025, 1088, 1061, 1099]`. Post-order gives `[1003, 1025, 1017, 1061, 1099, 1088, 1042]`.
 
+### Level-order traversal
+
+The three orders above all dive deep first. Level-order reads the tree the way you read a page.
+
+```callout jargon
+A **level-order traversal** visits the root, then every node one level down from left to right, and so on. It is also called **breadth-first search** (BFS) on a tree.
+```
+
+The tool is a queue. Put the root in. Then, until the queue is empty: take a node out, record it, and put its children in at the back. Children always wait behind the nodes above them, so levels come out in order.
+
+```java nocompile
+Queue<Node> queue = new ArrayDeque<>();
+queue.add(root);
+while (!queue.isEmpty()) {
+    int levelSize = queue.size();
+    List<Integer> level = new ArrayList<>();
+    for (int i = 0; i < levelSize; i++) {
+        Node node = queue.poll();
+        level.add(node.bike);
+        if (node.left != null) {
+            queue.add(node.left);
+        }
+        if (node.right != null) {
+            queue.add(node.right);
+        }
+    }
+    System.out.println(level);
+}
+```
+
+Reading `queue.size()` at the start of each round tells you how many nodes belong to this level. For the picture above, it prints `[1042]`, then `[1017, 1088]`, then `[1003, 1025, 1061, 1099]`. Use it for "the nearest leaf" or "print the tree by rows".
+
+```animate
+title: Level order with a queue
+kind: scene
+nodes:
+  - { id: queue, label: Queue, emoji: "🚏", value: "[1042]" }
+  - { id: out, label: Levels printed, emoji: "📋", value: none yet }
+steps:
+  - say: Start with only the root, 1042, in the queue.
+    focus: [queue]
+  - say: Level 1 has one node. Take out 1042 and add its children, 1017 and 1088, at the back.
+    set: { queue: "[1017, 1088]", out: "[1042]" }
+  - say: Level 2 has two nodes. Take out 1017, add 1003 and 1025. Take out 1088, add 1061 and 1099.
+    set: { queue: "[1003, 1025, 1061, 1099]", out: "[1042] [1017, 1088]" }
+  - say: Level 3 has four leaves. They have no children, so nothing new joins the queue.
+    set: { queue: "[]", out: "[1042] [1017, 1088] [1003, 1025, 1061, 1099]" }
+  - say: The queue is empty, so the walk is over. Every node came out one row at a time.
+    focus: [out]
+```
+
 ### Height
 
 The **height** of a tree is the number of nodes on the longest path from the root down to a leaf. In this course an empty tree has height 0 and a tree with one node has height 1. The picture above has height 3.
@@ -158,6 +248,77 @@ static int height(Node node) {
 ```callout jargon
 Gojo says: some books count edges instead of nodes, so a single node has height 0 there. Both are fine. Just pick one and write it down.
 ```
+
+### Pass values up
+
+`height` shows a pattern that solves many tree problems. Each call works out a small answer about its own subtree and **returns it up** to its parent. The parent combines the answers from its two children.
+
+A tree is **height-balanced** when, at every node, the left and right heights differ by at most 1. You can check this in one pass. Return the height, or `-1` as a signal that something below is already unbalanced.
+
+```java nocompile
+static int checkedHeight(Node node) {
+    if (node == null) {
+        return 0;
+    }
+    int left = checkedHeight(node.left);
+    int right = checkedHeight(node.right);
+    if (left == -1 || right == -1 || Math.abs(left - right) > 1) {
+        return -1;
+    }
+    return 1 + Math.max(left, right);
+}
+```
+
+The tree is balanced when `checkedHeight(root) != -1`. Each node is visited once, so it is O(n). Calling `height` again at every node would be O(n²).
+
+The same pattern finds the **diameter**, the longest path between any two nodes. At each node, the longest path through it, counted in edges, is `left height + right height`. Keep the best one you see while the heights travel up.
+
+### Validating a BST
+
+Is a tree really a BST? Checking each node against its two children is not enough. Look at this tree: 1042 has left child 1017, and 1017 has right child 1050. Each parent and child pair looks fine. But 1050 sits in the left subtree of 1042, and 1050 is larger than 1042. The rule is broken.
+
+The fix: pass **bounds** down. Every node must sit strictly between a lower and an upper limit. Going left, the node's value becomes the new upper limit. Going right, it becomes the new lower limit.
+
+```java nocompile
+static boolean isBst(Node node, long low, long high) {
+    if (node == null) {
+        return true;
+    }
+    if (node.bike <= low || node.bike >= high) {
+        return false;
+    }
+    return isBst(node.left, low, node.bike) && isBst(node.right, node.bike, high);
+}
+```
+
+Start with `isBst(root, Long.MIN_VALUE, Long.MAX_VALUE)`. The limits are `long`, so even a node holding `Integer.MAX_VALUE` fits inside them. For the broken tree, 1050 must be below 1042, so the check returns `false`.
+
+### Lowest common ancestor
+
+```callout jargon
+The **lowest common ancestor** (LCA) of two nodes is the deepest node that has both of them in its subtree. A node counts as part of its own subtree.
+```
+
+In the picture, the LCA of 1003 and 1025 is 1017. The LCA of 1025 and 1061 is the root, 1042.
+
+In a BST you can find it by walking down from the root. If both values are smaller than the node, go left. If both are larger, go right. Otherwise they split here, or one of them is this node, so this node is the answer.
+
+```java nocompile
+static Node lca(Node node, int a, int b) {
+    while (node != null) {
+        if (a < node.bike && b < node.bike) {
+            node = node.left;
+        } else if (a > node.bike && b > node.bike) {
+            node = node.right;
+        } else {
+            return node;
+        }
+    }
+    return null;
+}
+```
+
+It walks one path, so it costs the height of the tree. A plain binary tree has no order rule, so you must search both sides. Return the node if it matches, and recurse left and right. The node where both sides found something is the LCA.
 
 ### Balanced and degenerate trees
 
@@ -192,6 +353,42 @@ System.out.println(bikes.firstKey());
 ```
 
 `TreeMap` gives O(log n) for `put`, `get` and `containsKey`. `firstKey()` and `lastKey()` give the smallest and largest key. You need `import java.util.TreeMap;`.
+
+### TreeMap navigation
+
+A `HashMap` can only answer "is this exact key here?". A `TreeMap` keeps its keys sorted, so it also answers "what is nearest?". Each of these costs O(log n).
+
+| Method | Returns |
+|---|---|
+| `floorKey(k)` | the largest key less than or equal to `k`, or `null` |
+| `ceilingKey(k)` | the smallest key greater than or equal to `k`, or `null` |
+| `headMap(k)` | a view of every entry with a key less than `k` |
+| `subMap(from, to)` | a view of the keys from `from` (included) up to `to` (left out) |
+| `pollFirstEntry()` | removes and returns the entry with the smallest key |
+
+```java run
+import java.util.TreeMap;
+
+public class Main {
+    public static void main(String[] args) {
+        TreeMap<Integer, String> bikes = new TreeMap<>();
+        bikes.put(1003, "Uptown");
+        bikes.put(1017, "Old Mill");
+        bikes.put(1042, "Harbor");
+        bikes.put(1088, "Riverside");
+        bikes.put(1099, "Depot");
+        System.out.println(bikes.floorKey(1050));
+        System.out.println(bikes.ceilingKey(1050));
+        System.out.println(bikes.ceilingKey(2000));
+        System.out.println(bikes.headMap(1042));
+        System.out.println(bikes.subMap(1017, 1090));
+        System.out.println(bikes.pollFirstEntry());
+        System.out.println(bikes.firstKey());
+    }
+}
+```
+
+It prints `1042`, `1088`, `null`, then `{1003=Uptown, 1017=Old Mill}` and `{1017=Old Mill, 1042=Harbor, 1088=Riverside}`. Finally `pollFirstEntry` removes `1003=Uptown`, so the first key becomes `1017`. `TreeSet` has the same methods without values: `floor`, `ceiling`, `headSet`, `subSet` and `pollFirst`.
 
 ## Worked example
 

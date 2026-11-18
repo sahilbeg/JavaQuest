@@ -1,9 +1,9 @@
 id: module-04-dsa/topic-03-searching
 title: "Linear and binary search"
 order: 3
-minutes: 9
+minutes: 13
 prerequisites: [module-04-dsa/topic-02-recursion]
-concepts: [linear-search, binary-search, safe-midpoint, recursive-search, search-costs, library-search]
+concepts: [linear-search, binary-search, safe-midpoint, recursive-search, search-costs, library-search, lower-bound, search-on-answer]
 practice:
   kind: code
   runner: plain

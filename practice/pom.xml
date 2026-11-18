@@ -213,6 +213,14 @@
                 <source>module-04-dsa/topic-10-heaps/src</source>
                 <source>module-04-dsa/topic-11-graphs/src</source>
                 <source>module-04-dsa/topic-12-dynamic-programming/src</source>
+                <source>module-04-dsa/topic-13-two-pointers/src</source>
+                <source>module-04-dsa/topic-14-backtracking/src</source>
+                <source>module-04-dsa/topic-15-topological-sort/src</source>
+                <source>module-04-dsa/topic-16-dijkstra/src</source>
+                <source>module-04-dsa/topic-17-dp-patterns/src</source>
+                <source>module-04-dsa/topic-18-greedy-intervals/src</source>
+                <source>module-04-dsa/topic-19-tries-union-find/src</source>
+                <source>module-04-dsa/topic-20-bit-manipulation/src</source>
                 <source>module-05-advanced-java/boss/src</source>
                 <source>module-05-advanced-java/mini-project/src</source>
                 <source>module-05-advanced-java/topic-01-threads/src</source>
@@ -225,6 +233,8 @@
                 <source>module-05-advanced-java/topic-11-annotations/src</source>
                 <source>module-05-advanced-java/topic-12-sealed-types/src</source>
                 <source>module-05-advanced-java/topic-13-pattern-matching/src</source>
+                <source>module-05-advanced-java/topic-14-memory-model/src</source>
+                <source>module-05-advanced-java/topic-15-coordinating-threads/src</source>
                 <source>module-06-craft/boss/src</source>
                 <source>module-06-craft/mini-project/src</source>
                 <source>module-06-craft/topic-01-clean-code/src</source>
@@ -238,6 +248,7 @@
                 <source>module-06-craft/topic-10-tdd/src</source>
                 <source>module-06-craft/topic-11-debugging/src</source>
                 <source>module-06-craft/topic-12-logging/src</source>
+                <source>module-06-craft/topic-13-object-oriented-design/src</source>
                 <source>module-07-tooling/boss/src</source>
                 <source>module-07-tooling/mini-project/src</source>
                 <source>module-08-backend/boss/src</source>
@@ -324,6 +335,14 @@
                 <source>module-04-dsa/topic-10-heaps/test</source>
                 <source>module-04-dsa/topic-11-graphs/test</source>
                 <source>module-04-dsa/topic-12-dynamic-programming/test</source>
+                <source>module-04-dsa/topic-13-two-pointers/test</source>
+                <source>module-04-dsa/topic-14-backtracking/test</source>
+                <source>module-04-dsa/topic-15-topological-sort/test</source>
+                <source>module-04-dsa/topic-16-dijkstra/test</source>
+                <source>module-04-dsa/topic-17-dp-patterns/test</source>
+                <source>module-04-dsa/topic-18-greedy-intervals/test</source>
+                <source>module-04-dsa/topic-19-tries-union-find/test</source>
+                <source>module-04-dsa/topic-20-bit-manipulation/test</source>
                 <source>module-05-advanced-java/boss/test</source>
                 <source>module-05-advanced-java/mini-project/test</source>
                 <source>module-05-advanced-java/topic-01-threads/test</source>
@@ -336,6 +355,8 @@
                 <source>module-05-advanced-java/topic-11-annotations/test</source>
                 <source>module-05-advanced-java/topic-12-sealed-types/test</source>
                 <source>module-05-advanced-java/topic-13-pattern-matching/test</source>
+                <source>module-05-advanced-java/topic-14-memory-model/test</source>
+                <source>module-05-advanced-java/topic-15-coordinating-threads/test</source>
                 <source>module-06-craft/boss/test</source>
                 <source>module-06-craft/mini-project/test</source>
                 <source>module-06-craft/topic-01-clean-code/test</source>
@@ -349,6 +370,7 @@
                 <source>module-06-craft/topic-10-tdd/test</source>
                 <source>module-06-craft/topic-11-debugging/test</source>
                 <source>module-06-craft/topic-12-logging/test</source>
+                <source>module-06-craft/topic-13-object-oriented-design/test</source>
                 <source>module-07-tooling/boss/test</source>
                 <source>module-07-tooling/mini-project/test</source>
                 <source>module-08-backend/boss/test</source>

@@ -1,0 +1,25 @@
+id: module-04-dsa/topic-13-two-pointers
+title: "Two pointers, sliding windows and prefix sums"
+order: 13
+minutes: 14
+prerequisites: [module-04-dsa/topic-12-dynamic-programming]
+concepts: [opposite-pointers, fast-slow-pointers, fixed-window, variable-window, prefix-sums, prefix-sum-hashmap, frequency-counting]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m04.twopointers.Stretches
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0413
+  from: maya
+  title: "The ops dashboard takes ages on a day of ride data"
+  body: >
+    Kakashi's dashboard answers questions like "what was the busiest hour?" and "how many
+    stretches of hours left Harbor with exactly 2 extra bikes?". Every answer tries every start
+    and every end, so a day of minute-by-minute data takes ages to load. Can you make each
+    answer come from one pass over the data?
+hints:
+  - "Every method walks the array once. Keep one or two int indexes, or a running total, instead of a second loop that starts over."
+  - "pairWithTotal moves left up when the sum is too small and right down when it is too big. bestWindow adds values[i] and subtracts values[i - k]. longestStretchWithin shrinks with a while loop while total > limit."
+  - "prefixSums: long[] prefix = new long[values.length + 1]; then prefix[i + 1] = prefix[i] + values[i]. countStretchesSummingTo: seed seen.put(0L, 1), then for each value add seen.getOrDefault(running - k, 0) to count before seen.merge(running, 1, Integer::sum)."
+review: true

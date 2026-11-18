@@ -1,0 +1,25 @@
+id: module-04-dsa/topic-15-topological-sort
+title: "Directed graphs: order, cycles and grids"
+order: 15
+minutes: 14
+prerequisites: [module-04-dsa/topic-14-backtracking]
+concepts: [directed-graphs, topological-order, kahns-algorithm, cycle-detection, grid-graphs, multi-source-bfs]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m04.topologicalsort.MaintenancePlan
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0415
+  from: priya
+  title: "Put the repair jobs in a safe order, and map the lane zones"
+  body: >
+    The crew keeps doing a road test before the brakes are fixed, because nobody knows which job
+    has to wait for which. I'd like a tool that turns our "this before that" rules into a safe order,
+    and shouts if the rules can never work. The planners also sent the city as a grid of blocks. Can
+    it tell us how many separate lane zones we have, and how far each block is from a dock?
+hints:
+  - "A rule is a one-way arrow, so mustComeBefore adds then to first's set only. A job's in-degree is how many sets contain it."
+  - "Kahn's algorithm: count in-degrees, put every job at 0 into a PriorityQueue<String>, then poll, add to the result, and lower the in-degree of each job after it. If the result is shorter than the number of jobs, throw new IllegalStateException(\"cycle\")."
+  - "For the grid, loop d from 0 to 3 over ROW_STEP and COL_STEP, and check bounds inside isLane. laneZones: for each unvisited lane cell, count++ and empty an ArrayDeque of int[] {row, col}. distanceToDock: fill each row with -1, offer every 'D' at 0 before the loop, and give each new lane neighbour distance + 1."
+review: true

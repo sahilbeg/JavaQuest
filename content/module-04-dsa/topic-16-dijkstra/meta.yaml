@@ -1,0 +1,24 @@
+id: module-04-dsa/topic-16-dijkstra
+title: "Weighted shortest paths: Dijkstra"
+order: 16
+minutes: 14
+prerequisites: [module-04-dsa/topic-15-topological-sort]
+concepts: [weighted-graphs, dijkstra, lazy-deletion, path-reconstruction, dijkstra-complexity, negative-weights]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m04.dijkstra.RideTimes
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0416
+  from: theo
+  title: "The \"fastest route\" is not the fastest"
+  body: >
+    A rider at Riverside followed the app's route to Depot and took 14 minutes. Their friend went
+    a different way, with one more stop, and arrived 2 minutes sooner. The route finder counts stops,
+    but riders care about minutes. Can you make it use the riding time on each lane?
+hints:
+  - "addLane: throw IllegalArgumentException when minutes < 0, then add new Lane(b, minutes) to a's list and new Lane(a, minutes) to b's list."
+  - "In search, make new PriorityQueue<>(Comparator.comparingInt(Visit::minutes).thenComparing(Visit::station)). Put from at 0 in best and in the queue. Skip a polled Visit when its minutes are more than best.get(its station)."
+  - "Relax each lane: int minutes = visit.minutes() + lane.minutes(); Integer known = best.get(lane.to()); if (known == null || minutes < known) update best, parent and offer a new Visit. fastestMinutes returns best.getOrDefault(to, -1). fastestRoute returns an empty list if best has no to, else walks parent from to until null and reverses."
+review: true

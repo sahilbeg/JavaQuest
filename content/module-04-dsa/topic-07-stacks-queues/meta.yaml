@@ -1,9 +1,9 @@
 id: module-04-dsa/topic-07-stacks-queues
 title: "Stacks and queues"
 order: 7
-minutes: 9
+minutes: 13
 prerequisites: [module-04-dsa/topic-06-linked-lists]
-concepts: [stack-lifo, queue-fifo, growing-array, array-deque, balanced-brackets]
+concepts: [stack-lifo, queue-fifo, growing-array, array-deque, balanced-brackets, deque-interface, monotonic-stack]
 practice:
   kind: code
   runner: plain

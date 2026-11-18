@@ -143,6 +143,53 @@ static int partition(int[] a, int low, int high) {
 - `j` scans every item except the pivot.
 - At the end, the pivot swaps into index `i`. The method returns that index.
 
+```animate
+title: Partition around the pivot 12
+kind: code
+code: |
+  int[] a = {30, 8, 50, 12};
+  int pivot = a[3];
+  int i = 0;
+  for (int j = 0; j < 3; j++) {
+      if (a[j] <= pivot) {
+          int t = a[i]; a[i] = a[j]; a[j] = t;
+          i++;
+      }
+  }
+  int t = a[i]; a[i] = a[3]; a[3] = t;
+  System.out.println(java.util.Arrays.toString(a) + " pivot at " + i);
+steps:
+  - line: 1
+    objects: { a1: { type: "int[]", fields: { 0: 30, 1: 8, 2: 50, 3: 12 } } }
+    vars: { a: "@a1" }
+    say: Four ride times. Lomuto picks the last one, 12, as the pivot.
+  - line: 3
+    vars: { pivot: 12, i: 0 }
+    say: i marks the slot where the next small item will go. It starts at the front.
+  - line: 5
+    vars: { j: 0 }
+    say: j looks at 30. It is bigger than 12, so nothing moves.
+  - line: 5
+    vars: { j: 1 }
+    say: j looks at 8. That is small, so it belongs on the left.
+  - line: 6
+    objects: { a1: { type: "int[]", fields: { 0: 8, 1: 30, 2: 50, 3: 12 } } }
+    say: 8 swaps into slot i, which is slot 0. The 30 moves out to where 8 was.
+  - line: 7
+    vars: { i: 1 }
+    say: i steps on. The next small item would go into slot 1.
+  - line: 5
+    vars: { j: 2 }
+    say: j looks at 50. Bigger than 12, so it stays on the right.
+  - line: 10
+    vars: { j: ~ }
+    objects: { a1: { type: "int[]", fields: { 0: 8, 1: 12, 2: 50, 3: 30 } } }
+    say: The scan is done. The pivot swaps into slot i. Small items sit left of it, big items right.
+  - line: 11
+    out: "[8, 12, 50, 30] pivot at 1"
+    say: 12 is now in its final sorted place. Quicksort only has to sort the two sides.
+```
+
 ### Syntax: quicksort with a helper
 
 ```java nocompile
@@ -164,9 +211,41 @@ Partition is like a teacher saying "everyone shorter than Itachi, stand to the l
 
 ### Quicksort's bad case
 
-On average each pivot lands near the middle. The array halves each time, so quicksort is O(n log n). It needs no extra arrays, and in practice it is very fast.
+On average each pivot lands near the middle. The array halves each time, so quicksort is O(n log n). It needs no extra arrays, and in practice it is very fast. It still uses some memory for its calls, as the next card shows.
 
 Now give it an array that is already sorted. The last item is the biggest, so every item goes left. The split is `n - 1` items and 0 items. That happens at every level, so quicksort does O(n^2) steps. Smarter pivot choices, such as a middle item, make this rare.
+
+### Quicksort's call stack
+
+Every recursive call waits on Java's call stack until it finishes. So quicksort's memory is the depth of its calls, not zero.
+
+When pivots land near the middle, the calls go about `log n` deep. That is O(log n) memory on average. On sorted input each call peels off one item, so the calls go `n` deep. That is O(n) memory in the worst case.
+
+```callout warning
+Java's call stack holds only tens of thousands of calls. In a real run, this page's quicksort on 100,000 already sorted ride times crashed with `java.lang.StackOverflowError`.
+```
+
+Two textbook fixes keep the calls shallow:
+
+- **A random pivot.** Swap a random item into `a[high]` before you partition. No fixed input is bad every time, so the O(n^2) case becomes very unlikely.
+- **Recurse on the smaller side first.** Make the recursive call for the smaller part, and loop for the bigger part. The smaller part is at most half, so the calls go at most `log n` deep.
+
+```java nocompile
+static void quickSort(int[] a, int low, int high) {
+    while (low < high) {
+        int p = partition(a, low, high);
+        if (p - low < high - p) {
+            quickSort(a, low, p - 1);   // smaller side: a recursive call
+            low = p + 1;                // bigger side: go round the loop again
+        } else {
+            quickSort(a, p + 1, high);
+            high = p - 1;
+        }
+    }
+}
+```
+
+With both fixes, the same 100,000 sorted ride times sort in well under a second. Java's own `Arrays.sort` takes another route, shown below: it caps how deep its calls go and switches to heapsort past that.
 
 ### The costs side by side
 
@@ -174,13 +253,98 @@ Now give it an array that is already sorted. The last item is the biggest, so ev
 |---|---|---|---|---|
 | Insertion sort | O(n^2) | O(n^2) | O(1) | yes |
 | Merge sort | O(n log n) | O(n log n) | O(n) | yes |
-| Quicksort | O(n log n) | O(n^2) | O(log n) for the calls | no |
+| Quicksort | O(n log n) | O(n^2) | O(log n) for the calls on average, O(n) at worst | no |
 
 In plain words, O(n log n) means doubling the data makes the time a bit more than double. For a million rides, that is about 20 million steps. O(n^2) would be a million million.
 
 ```callout tip
-Java's own sorts use these ideas. `Arrays.sort` on an `int[]` uses a tuned quicksort. Sorting objects, as `Collections.sort` does, uses a stable merge sort variant. You build them by hand here so you know what they cost.
+Java's own sorts use these ideas. `Arrays.sort` on an `int[]` or `double[]` uses **Dual-Pivot Quicksort**: it splits around two pivots into three parts. Sorting objects, with `Arrays.sort` on objects, `List.sort` or `Collections.sort`, uses **TimSort**, a merge sort that spots runs already in order.
 ```
+
+Why two different sorts? Stability only matters for objects. Two equal `int` values look exactly the same, so nobody can tell if they swapped. Two `Ride` objects with equal minutes are different rides, so their order matters. For primitives Java picks the quicksort, which is fast and needs no extra array.
+
+TimSort is stable and O(n log n) even in its worst case. On input that is already sorted it is only O(n), because it sees one long run and stops. The Dual-Pivot Quicksort in Java 14 and later also falls back to heapsort if its calls get too deep, so it never hits O(n^2) either. You build the sorts by hand here so you know what they cost.
+
+### Quickselect: the k-th smallest
+
+Sometimes you do not need the whole array sorted. Jiraiya might only want the median ride time: the middle value once sorted.
+
+**Quickselect** reuses `partition`. After one partition, the pivot sits at its final index `p`. If `p` is the index you want, you are done. If not, only one side can hold the answer, so you keep going on that side alone.
+
+```java
+public class Main {
+    static int partition(int[] a, int low, int high) {
+        int pivot = a[high];
+        int i = low;
+        for (int j = low; j < high; j++) {
+            if (a[j] <= pivot) {
+                int temp = a[i];
+                a[i] = a[j];
+                a[j] = temp;
+                i++;
+            }
+        }
+        int temp = a[i];
+        a[i] = a[high];
+        a[high] = temp;
+        return i;
+    }
+
+    // k counts from 0: k = 0 is the smallest item
+    static int kthSmallest(int[] a, int k) {
+        int low = 0;
+        int high = a.length - 1;
+        while (true) {
+            int p = partition(a, low, high);
+            if (p == k) {
+                return a[p];
+            } else if (p < k) {
+                low = p + 1;
+            } else {
+                high = p - 1;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] minutes = {25, 12, 40, 5, 18, 33, 9};
+        System.out.println("median: " + kthSmallest(minutes, minutes.length / 2));
+    }
+}
+```
+
+This prints `median: 18`. Quicksort works on both sides, but quickselect throws one side away each time. The work goes about `n + n/2 + n/4 + ...`, which adds up to under `2n`. So quickselect is O(n) on average. A bad pivot can still make it O(n^2), and a random pivot fixes that again.
+
+### Can any sort beat n log n?
+
+A sort that only compares two items at a time cannot. With `n` items there are a huge number of possible orders. Each comparison answers only yes or no, so it can rule out at most half of them. Narrowing all those orders down to one takes about `n log n` comparisons. So merge sort is as good as comparison sorts get.
+
+You can only go faster by not comparing. **Counting sort** works when the values are small whole numbers, such as ride minutes from 0 to 4. It counts how often each value appears, then writes the values back in order.
+
+```java
+import java.util.Arrays;
+
+public class Main {
+    public static void main(String[] args) {
+        int[] minutes = {4, 1, 3, 1, 0, 4, 2};
+        int[] count = new int[5];           // ride minutes here are 0 to 4
+        for (int m : minutes) {
+            count[m]++;
+        }
+        int k = 0;
+        for (int value = 0; value < count.length; value++) {
+            for (int c = 0; c < count[value]; c++) {
+                minutes[k] = value;
+                k++;
+            }
+        }
+        System.out.println(Arrays.toString(count));
+        System.out.println(Arrays.toString(minutes));
+    }
+}
+```
+
+It prints `[1, 2, 1, 1, 2]` for the counts, then `[0, 1, 1, 2, 3, 4, 4]`. With `k` possible values, counting sort is O(n + k). It only pays off when `k` is small, and it cannot sort by a rule like "busiest station first".
 
 ## Worked example
 
@@ -289,13 +453,15 @@ public class Main {
 
 With the sorted array, every pivot is the biggest item left. Each partition peels off just one item.
 
+The calls nest one inside another, one level per item. With 5 items that is fine. With 100,000 sorted items the same code crashes with `java.lang.StackOverflowError`, because Java runs out of room for calls.
+
 ## Recap
 
 - Divide and conquer splits a problem into smaller copies, solves them, then combines the answers.
 - Merge sort splits in half, sorts each half, then merges. It is always O(n log n), stable, and needs O(n) extra memory.
-- Quicksort partitions around a pivot, then sorts each side. It is O(n log n) on average and needs no extra arrays.
-- With the last item as pivot, quicksort is O(n^2) on an already sorted array.
-- Java's `Arrays.sort` and `Collections.sort` are built on these same ideas.
+- Quicksort partitions around a pivot, then sorts each side. It is O(n log n) on average and needs no extra arrays, but its calls take O(log n) memory on average and O(n) at worst.
+- With the last item as pivot, quicksort is O(n^2) on an already sorted array. A random pivot and recursing on the smaller side fix it.
+- Java sorts primitives with Dual-Pivot Quicksort and objects with TimSort, a stable merge sort.
 
 ## Common mistakes
 

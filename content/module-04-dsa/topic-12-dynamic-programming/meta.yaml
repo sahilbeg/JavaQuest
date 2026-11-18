@@ -1,9 +1,9 @@
 id: module-04-dsa/topic-12-dynamic-programming
 title: "Dynamic programming basics"
 order: 12
-minutes: 9
+minutes: 11
 prerequisites: [module-04-dsa/topic-11-graphs]
-concepts: [overlapping-subproblems, memoization, tabulation, dp-complexity, min-cost-cover]
+concepts: [overlapping-subproblems, memoization, tabulation, dp-complexity, min-cost-cover, counting-ways]
 practice:
   kind: code
   runner: plain

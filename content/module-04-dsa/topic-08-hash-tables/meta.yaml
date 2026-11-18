@@ -1,9 +1,9 @@
 id: module-04-dsa/topic-08-hash-tables
 title: "Build a hash table"
 order: 8
-minutes: 10
+minutes: 13
 prerequisites: [module-04-dsa/topic-07-stacks-queues, module-02-oop/topic-10-equals-hashcode-tostring]
-concepts: [hashing, buckets-chaining, load-factor-resize, equals-hashcode-contract, hash-costs]
+concepts: [hashing, buckets-chaining, load-factor-resize, equals-hashcode-contract, hash-costs, hashmap-internals, hash-patterns, mutable-keys]
 practice:
   kind: code
   runner: plain

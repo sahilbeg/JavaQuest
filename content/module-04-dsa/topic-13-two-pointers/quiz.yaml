@@ -1,0 +1,170 @@
+topic: module-04-dsa/topic-13-two-pointers
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: opposite-pointers
+    variants:
+      - { prompt: "Fares are sorted from cheap to expensive. fares[left] + fares[right] is smaller than the target. What should you do?", choices: ["Move left up by one", "Move right down by one", "Move both pointers", "Start again from the beginning"], answer: 0 }
+      - { prompt: "Fares are sorted from cheap to expensive. fares[left] + fares[right] is bigger than the target. What should you do?", choices: ["Move right down by one", "Move left up by one", "Move both pointers", "Sort the fares again"], answer: 0 }
+    explain: "A sum that is too small needs a bigger left fare, so left moves up. A sum that is too big needs a smaller right fare, so right moves down. Each move rules out one fare for good."
+    reteach: "### Opposite ends: a pair with a target total"
+
+  - id: q02
+    type: predict-output
+    concept: opposite-pointers
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int[] fares = {100, 300, 450, 600, 800};
+              int target = 1050;
+              int left = 0;
+              int right = fares.length - 1;
+              while (left < right) {
+                  int sum = fares[left] + fares[right];
+                  if (sum == target) {
+                      System.out.println(left + " " + right);
+                      return;
+                  } else if (sum < target) {
+                      left++;
+                  } else {
+                      right--;
+                  }
+              }
+              System.out.println("none");
+          }
+      }
+    answer: "2 3"
+    explain: "100 + 800 is too small, so left moves to 300. 300 + 800 is too big, so right moves to 600. 300 + 600 is too small, so left moves to 450. 450 + 600 is 1050."
+    reteach: "### Opposite ends: a pair with a target total"
+
+  - id: q03
+    type: predict-output
+    concept: fast-slow-pointers
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int[] ids = {3, 3, 3, 5, 5, 8};
+              int slow = 0;
+              for (int fast = 1; fast < ids.length; fast++) {
+                  if (ids[fast] != ids[slow]) {
+                      slow++;
+                      ids[slow] = ids[fast];
+                  }
+              }
+              System.out.println(slow + 1);
+              System.out.println(ids[1]);
+          }
+      }
+    answer: "3\n5"
+    explain: "There are 3 different values, 3, 5 and 8. They are copied to the front, so ids[1] now holds 5."
+    reteach: "### Same direction: fast and slow pointers"
+
+  - id: q04
+    type: fill-blank
+    concept: fixed-window
+    prompt: "window += values[i] - values[___];"
+    answers: ["i - k", "i-k"]
+    explain: "The value leaving the window is exactly k places behind the one coming in."
+    reteach: "### Syntax: fixed window"
+
+  - id: q05
+    type: mcq
+    concept: fixed-window
+    prompt: "Finding the busiest k minutes by re-adding k values for every window costs O(n × k). What does sliding the window cost?"
+    choices: ["O(n)", "O(n × k)", "O(k)", "O(n²)"]
+    answer: 0
+    explain: "Each slide adds one value and subtracts one value, which is O(1). There are about n slides, so O(n) in total."
+    reteach: "### Fixed-size sliding window"
+
+  - id: q06
+    type: mcq
+    concept: variable-window
+    prompt: "Why does a shrinking window only work when no value is negative?"
+    choices: ["With negatives, a total that is too big now might drop later, so shrinking can throw away good stretches", "Java arrays cannot hold negative numbers", "Negative values make the loop run forever", "Math.max does not work with negative numbers"]
+    answer: 0
+    explain: "With values of 0 or more, adding can only raise the total and removing can only lower it. Negatives break that, so shrinking is no longer safe."
+    reteach: "### Variable-size window"
+
+  - id: q07
+    type: mcq
+    concept: variable-window
+    prompt: "A variable window has a while loop inside a for loop. Why is it still O(n)?"
+    choices: ["left only moves forward, so it moves at most n times in the whole run", "The while loop runs at most once per step", "Java optimises nested loops away", "The array is always sorted"]
+    answer: 0
+    explain: "right moves n times and left moves at most n times in total. That is at most 2n moves, so O(n)."
+    reteach: "### Variable-size window"
+
+  - id: q08
+    type: predict-output
+    concept: prefix-sums
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int[] rides = {3, 1, 4, 1, 5};
+              long[] prefix = new long[rides.length + 1];
+              for (int i = 0; i < rides.length; i++) {
+                  prefix[i + 1] = prefix[i] + rides[i];
+              }
+              System.out.println(prefix[4] - prefix[1]);
+          }
+      }
+    answer: "6"
+    explain: "prefix[4] - prefix[1] is the total of indexes 1 to 3: 1 + 4 + 1 = 6."
+    reteach: "### Prefix sums"
+
+  - id: q09
+    type: spot-the-bug
+    concept: prefix-sums
+    code: |
+      static long[] prefixSums(int[] values) {
+          long[] prefix = new long[values.length];
+          for (int i = 0; i < values.length; i++) {
+              prefix[i + 1] = prefix[i] + values[i];
+          }
+          return prefix;
+      }
+    prompt: "prefixSums crashes with ArrayIndexOutOfBoundsException. Which line is wrong?"
+    bugLine: 2
+    explain: "The prefix array needs one more cell than the data, for the 0 at the front. Use new long[values.length + 1]."
+    reteach: "### Syntax: prefix sums"
+
+  - id: q10
+    type: order
+    concept: prefix-sum-hashmap
+    prompt: "Put the steps for counting stretches that add up to k in order."
+    items:
+      - "Seed the map with seen.put(0L, 1)"
+      - "Add the next value to running"
+      - "Add seen.getOrDefault(running - k, 0) to count"
+      - "Record running with seen.merge(running, 1, Integer::sum)"
+    explain: "Seed first, so stretches from index 0 count. In each step, update the total, look up before you store, then record the new total."
+    reteach: "### Prefix sums and a HashMap"
+
+  - id: q11
+    type: mcq
+    concept: prefix-sum-hashmap
+    prompt: "Why do you put 0 -> 1 in the map before the loop?"
+    choices: ["It stands for the empty start, so stretches that begin at index 0 are counted", "HashMap cannot be empty when you call getOrDefault", "It stops k from being 0", "It makes the map sorted"]
+    answer: 0
+    explain: "A stretch from index 0 to j needs an earlier running total of 0. The seed is that total, before anything was added."
+    reteach: "### Prefix sums and a HashMap"
+
+  - id: q12
+    type: predict-output
+    concept: frequency-counting
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int[] counts = new int[26];
+              for (char c : "harbor".toCharArray()) {
+                  counts[c - 'a']++;
+              }
+              System.out.println(counts['r' - 'a']);
+              System.out.println(counts['z' - 'a']);
+          }
+      }
+    answer: "2\n0"
+    explain: "harbor has two r letters, so slot 'r' - 'a' holds 2. There is no z, so its slot stays 0."
+    reteach: "### Frequency counting"

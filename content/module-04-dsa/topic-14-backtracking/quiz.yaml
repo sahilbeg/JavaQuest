@@ -1,0 +1,163 @@
+topic: module-04-dsa/topic-14-backtracking
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: order
+    concept: choose-explore-unchoose
+    prompt: "Put the three steps inside a backtracking loop in order."
+    items:
+      - "current.add(items.get(i));"
+      - "explore(i + 1, current, result);"
+      - "current.remove(current.size() - 1);"
+    explain: "Choose an item, explore the choices that follow it, then un-choose it so the loop can try the next item."
+    reteach: "### Syntax: choose, explore, un-choose"
+
+  - id: q02
+    type: mcq
+    concept: choose-explore-unchoose
+    prompt: "Why does backtracking remove the item after the recursive call returns?"
+    choices: ["So the path is back to what it was, ready for the next choice in the loop", "To free memory before Java runs out", "To stop the recursion from running forever", "Because List cannot hold more than one item"]
+    answer: 0
+    explain: "Un-choosing walks back to the fork. The next loop step must start from the same path the last one started from."
+    reteach: "### What backtracking is"
+
+  - id: q03
+    type: predict-output
+    concept: copy-the-path
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          static List<List<String>> result = new ArrayList<>();
+
+          static void explore(List<String> stations, int start, List<String> current) {
+              result.add(current);
+              for (int i = start; i < stations.size(); i++) {
+                  current.add(stations.get(i));
+                  explore(stations, i + 1, current);
+                  current.remove(current.size() - 1);
+              }
+          }
+
+          public static void main(String[] args) {
+              explore(List.of("Harbor", "Depot"), 0, new ArrayList<>());
+              System.out.println(result);
+          }
+      }
+    answer: "[[], [], [], []]"
+    explain: "result holds four arrows to the same list, current. When the search ends, current is empty, so all four look empty."
+    reteach: "### Record a copy, never the path itself"
+
+  - id: q04
+    type: fill-blank
+    concept: copy-the-path
+    prompt: "result.add(new ArrayList<>(___));"
+    answers: ["current"]
+    explain: "new ArrayList<>(current) copies the path as it is right now, so later changes cannot touch the recorded answer."
+    reteach: "### Record a copy, never the path itself"
+
+  - id: q05
+    type: predict-output
+    concept: subsets
+    code: |
+      import java.util.ArrayList;
+      import java.util.List;
+
+      public class Main {
+          static void explore(List<String> stations, int start, List<String> current) {
+              System.out.println(current);
+              for (int i = start; i < stations.size(); i++) {
+                  current.add(stations.get(i));
+                  explore(stations, i + 1, current);
+                  current.remove(current.size() - 1);
+              }
+          }
+
+          public static void main(String[] args) {
+              explore(List.of("Harbor", "Depot"), 0, new ArrayList<>());
+          }
+      }
+    answer: "[]\n[Harbor]\n[Harbor, Depot]\n[Depot]"
+    explain: "Every call prints its path first. The search goes deep with Harbor, then backs up and tries Depot alone."
+    reteach: "### Subsets: every set of promos"
+
+  - id: q06
+    type: mcq
+    concept: subsets
+    variants:
+      - { prompt: "How many subsets does a list of 5 promos have, counting the empty set?", choices: ["32", "25", "10", "120"], answer: 0 }
+      - { prompt: "How many subsets does a list of 4 promos have, counting the empty set?", choices: ["16", "8", "24", "4"], answer: 0 }
+    explain: "Each item is either in or out, so n items give 2^n subsets: 2^5 = 32 and 2^4 = 16."
+    reteach: "### Subsets: every set of promos"
+
+  - id: q07
+    type: mcq
+    concept: permutations
+    variants:
+      - { prompt: "In how many different orders can a truck visit 4 stations?", choices: ["24", "16", "12", "4"], answer: 0 }
+      - { prompt: "In how many different orders can a truck visit 5 stations?", choices: ["120", "32", "25", "60"], answer: 0 }
+    explain: "n items have n! orders: 4 × 3 × 2 × 1 = 24 and 5 × 4 × 3 × 2 × 1 = 120."
+    reteach: "### Permutations: every order to visit stations"
+
+  - id: q08
+    type: spot-the-bug
+    concept: permutations
+    code: |
+      static void explore(List<String> stations, boolean[] used, List<String> current) {
+          if (current.size() == stations.size()) {
+              result.add(new ArrayList<>(current));
+              return;
+          }
+          for (int i = 0; i < stations.size(); i++) {
+              if (used[i]) {
+                  continue;
+              }
+              used[i] = true;
+              current.add(stations.get(i));
+              explore(stations, used, current);
+              current.remove(current.size() - 1);
+              used[i] = true;
+          }
+      }
+    prompt: "This finds only one order for three stations. Which line is wrong?"
+    bugLine: 14
+    explain: "Un-choosing must undo both changes. Line 14 should set used[i] = false, or the station stays blocked for every later branch."
+    reteach: "### Permutations: every order to visit stations"
+
+  - id: q09
+    type: mcq
+    concept: combination-sum
+    prompt: "In a combination sum where each crate size may be used again and again, what start do you pass to the next call?"
+    choices: ["i, so the next level may pick the same size again", "i + 1, so each size is used once", "0, so every size can be picked in any order", "start + 1, whatever i is"]
+    answer: 0
+    explain: "Passing i allows the same item again but never an earlier one. Passing 0 would list the same answer in many orders."
+    reteach: "### Combination sum: reuse or no reuse"
+
+  - id: q10
+    type: mcq
+    concept: skip-duplicates
+    prompt: "After sorting, why is the skip rule i > start && sorted[i] == sorted[i - 1], and not i > 0?"
+    choices: ["A repeated value may still be the first choice at a deeper level, as in [2, 2, 3]", "i > 0 does not compile inside a loop", "i > start makes the loop run faster", "Sorting puts duplicates far apart"]
+    answer: 0
+    explain: "Only a second equal value in the same loop repeats a branch. With i > 0, loads like [2, 2, 3] are lost."
+    reteach: "### Skipping duplicates after sorting"
+
+  - id: q11
+    type: mcq
+    concept: pruning-and-cost
+    prompt: "The values are sorted and sorted[i] > remaining. Why can you break instead of continue?"
+    choices: ["Every later value is at least as big, so none of them can fit either", "break is faster to type than continue", "The path is already full", "remaining can never go down again"]
+    answer: 0
+    explain: "Sorting means the rest of the loop only holds bigger values. Pruning cuts all of those branches at once."
+    reteach: "### Pruning: stop early"
+
+  - id: q12
+    type: mcq
+    concept: pruning-and-cost
+    prompt: "What is the time cost of listing every subset of n items?"
+    choices: ["O(n × 2^n)", "O(n²)", "O(n log n)", "O(n)"]
+    answer: 0
+    explain: "There are 2^n subsets and copying each one costs up to n steps. No method can beat the size of its output."
+    reteach: "### How much does it cost?"

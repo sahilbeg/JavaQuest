@@ -1,0 +1,24 @@
+id: module-04-dsa/topic-14-backtracking
+title: "Backtracking: trying every choice"
+order: 14
+minutes: 14
+prerequisites: [module-04-dsa/topic-13-two-pointers]
+concepts: [choose-explore-unchoose, copy-the-path, subsets, permutations, combination-sum, skip-duplicates, pruning-and-cost]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m04.backtracking.LoadPlanner
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0414
+  from: sam
+  title: "Riders say the app hides some of their options"
+  body: >
+    A rider at Uptown asked which promos she could combine, and the app showed her three sets
+    when there are clearly more. A truck driver at Depot says the load planner only ever
+    suggests one way to fill his truck. Can we list every option, with no repeats and none missing?
+hints:
+  - "Each helper follows the same three steps inside a loop: add an item to current, call the helper again, then remove the last item of current. Record new ArrayList<>(current), never current itself."
+  - "subsets records at the start of every call and passes i + 1. orders records only when current.size() == stations.size(), loops from 0 and uses the used array. loads and plans record when remaining == 0."
+  - "In loads, skip with: if (i > start && sorted[i] == sorted[i - 1]) continue; and prune with: if (sorted[i] > remaining) break;. Then explore with loads(sorted, i + 1, remaining - sorted[i], current, result). plans is the same without the skip, and explores with i."
+review: true

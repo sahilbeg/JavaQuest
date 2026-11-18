@@ -1,7 +1,7 @@
 id: module-04-dsa/topic-05-merge-quick-sort
 title: "Merge sort and quicksort"
 order: 5
-minutes: 10
+minutes: 13
 prerequisites: [module-04-dsa/topic-04-simple-sorts]
 concepts: [divide-and-conquer, merging, merge-sort, partition, quicksort, sort-costs]
 practice:

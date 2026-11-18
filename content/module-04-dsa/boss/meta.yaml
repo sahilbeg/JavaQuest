@@ -2,7 +2,7 @@ id: module-04-dsa/boss
 title: "INC-04: The route planner sends riders to full stations"
 order: 99
 minutes: 10
-prerequisites: [module-04-dsa/topic-12-dynamic-programming]
+prerequisites: [module-04-dsa/topic-20-bit-manipulation]
 concepts: [graphs, breadth-first-search, maps]
 practice:
   kind: code

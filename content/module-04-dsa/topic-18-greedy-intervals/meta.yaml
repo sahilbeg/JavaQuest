@@ -1,0 +1,25 @@
+id: module-04-dsa/topic-18-greedy-intervals
+title: "Greedy choices and intervals"
+order: 18
+minutes: 14
+prerequisites: [module-04-dsa/topic-17-dp-patterns]
+concepts: [greedy-choice, exchange-argument, half-open-intervals, merge-intervals, interval-scheduling, docks-sweep]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m04.greedyintervals.DockScheduler
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0418
+  from: priya
+  title: "Harbor's dock booking screen can't plan a day"
+  body: >
+    Riders at Harbor now book docks ahead, and the crew books maintenance on the same screen.
+    The screen can't tell me when the station is busy, how many bookings fit on one dock,
+    or how many docks we need at rush hour. A booking that ends at 10:00 and one that starts at 10:00
+    should share a dock. Can you give the screen a planner?
+hints:
+  - "Start every method by sorting a copy: new ArrayList<>(list), then sort(Comparator.comparingInt(Interval::start)) or Interval::end. Windows are half-open, so overlaps uses < on both sides."
+  - "Merge: if a booking starts before the last merged window ends, replace that window with one ending at Math.max of the two ends. Most bookings: sort by end and take a request when its start is >= the end of the last one taken."
+  - "Docks: copy starts and ends into two int[] arrays and sort both. For each start, while ends[e] <= starts[s], do inUse-- and e++. Then inUse++ and keep the max. Insert: copy windows with end <= window.start(), merge the ones that overlap into one window, add it, then copy the rest."
+review: true

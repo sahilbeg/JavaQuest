@@ -136,6 +136,49 @@ The last `poll` prints `null`. On an empty queue, `poll` and `peek` return `null
 
 Java also has a class called `Stack`. It is very old. It extends `Vector`, so it has a `get(index)` method that reaches into the middle. That breaks the stack rule. Every method also pays for locking, which is safety for many threads that you do not need here. The Java docs themselves say to use `ArrayDeque` instead.
 
+### The Deque interface
+
+`ArrayDeque` is one class that follows the `Deque` interface. `Deque` lists every method a double-ended queue must have. Declare your variable with the interface type, and create it with the class:
+
+```java run
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+public class Main {
+    public static void main(String[] args) {
+        Deque<String> bikes = new ArrayDeque<>();
+        bikes.offerLast("B-2210");
+        bikes.offerFirst("B-1042");
+        bikes.offerLast("B-3307");
+        System.out.println(bikes);
+        System.out.println(bikes.pollLast());
+        System.out.println(bikes.pollFirst());
+        System.out.println(bikes.pollFirst());
+        System.out.println(bikes.pollFirst());
+        System.out.println(bikes.peekLast());
+    }
+}
+```
+
+It prints `[B-1042, B-2210, B-3307]`, then `B-3307`, `B-1042`, `B-2210`, and `null` twice. The `First` and `Last` methods name the end they work on. Typing `Deque` means the rest of your code only uses deque methods, so you could swap in another class later.
+
+For each job there is a pair of methods. One throws an exception on an empty deque, the other returns `null`:
+
+| Job | Throws `NoSuchElementException` when empty | Returns `null` when empty |
+|---|---|---|
+| Take from the front | `removeFirst()`, `pop()`, `remove()` | `pollFirst()`, `poll()` |
+| Take from the back | `removeLast()` | `pollLast()` |
+| Look at the front | `getFirst()`, `element()` | `peekFirst()`, `peek()` |
+| Look at the back | `getLast()` | `peekLast()` |
+
+Use the throwing kind when empty would be a bug. Use the `null` kind when empty is normal, like a repair line with no bikes.
+
+```callout warning
+`ArrayDeque` refuses `null` items. `bikes.offer(null)` throws `java.lang.NullPointerException`. That is on purpose: `poll` returns `null` to mean "empty", so a stored `null` would be impossible to tell apart.
+```
+
+The old `Stack` class from the card before is legacy. The Java docs say to use a `Deque` for a stack instead.
+
 ### How fast is it?
 
 | Operation | Cost | In plain words |
@@ -197,6 +240,59 @@ Line by line:
 
 Other characters, such as letters, are skipped. They never touch the stack.
 
+### Monotonic stack
+
+Jiraiya has the ride count for each day at Uptown. For each day, he wants to know how many days pass until a busier day. Checking every later day for every day is O(n^2).
+
+A **monotonic stack** does it in one pass. The stack holds the days still waiting for a busier day. Their ride counts only go down from bottom to top, which is what "monotonic" means here.
+
+```java
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
+
+public class Main {
+    public static void main(String[] args) {
+        int[] rides = {30, 38, 34, 32, 41, 36};
+        int[] wait = new int[rides.length];
+        Deque<Integer> stack = new ArrayDeque<>();   // days still waiting for a busier day
+        for (int day = 0; day < rides.length; day++) {
+            while (!stack.isEmpty() && rides[day] > rides[stack.peek()]) {
+                int earlier = stack.pop();
+                wait[earlier] = day - earlier;
+            }
+            stack.push(day);
+        }
+        System.out.println(Arrays.toString(wait));
+    }
+}
+```
+
+This prints `[1, 3, 2, 1, 0, 0]`. On day 4, 41 rides beats days 3, 2 and 1, so all three pop off and get their answer. Days 4 and 5 never meet a busier day, so they keep 0.
+
+Each day is pushed once and popped at most once. So the whole thing is O(n), even with a loop inside a loop. The same pattern answers "next greater item" and "next smaller item" questions.
+
+```callout jargon
+**Monotonic** means always moving one way: only going up, or only going down. A monotonic stack keeps its items in that order by popping anything that would break it.
+```
+
+### Monotonic deque: the biggest in each window
+
+A close cousin answers "what is the busiest day in each run of 3 days?". Keep day numbers in a deque, with the busiest day at the front:
+
+```java nocompile
+if (!window.isEmpty() && window.peekFirst() <= day - k) {
+    window.pollFirst();               // that day has left the window
+}
+while (!window.isEmpty() && rides[window.peekLast()] <= rides[day]) {
+    window.pollLast();                // can never be the biggest again
+}
+window.offerLast(day);
+// once day >= k - 1, rides[window.peekFirst()] is the window's biggest
+```
+
+For the rides above with `k = 3`, the answers are `[38, 38, 41, 41]`. Each day enters and leaves the deque once, so this is O(n) too. SPK-0413 teaches sliding windows in full.
+
 ## Try it
 
 This tiny stack is built on an array that starts with room for 2. Run it, then push a fourth action and watch it grow again.
@@ -243,7 +339,7 @@ public class Main {
 - A queue is first in, first out. Use it for lines, such as the repair queue.
 - A stack on an array keeps a `size` counter and doubles the array when it is full.
 - `ArrayDeque` does both jobs: `push`, `pop`, `peek` for a stack, and `offer`, `poll`, `peek` for a queue.
-- Avoid the old `Stack` class. It lets code reach into the middle and pays for locking.
+- Declare `Deque<T>` and avoid the old `Stack` class. `poll` and `peek` return `null` when empty, `pop` and `remove` throw. A monotonic stack finds the next bigger item in O(n).
 
 ## Common mistakes
 

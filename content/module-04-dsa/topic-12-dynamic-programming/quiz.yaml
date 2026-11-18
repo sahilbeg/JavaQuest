@@ -138,3 +138,21 @@ questions:
     answer: 0
     explain: "Each value from 0 to n is worked out once, so the work grows in step with n."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: counting-ways
+    prompt: "Slots hold 1 or 2 bikes. Why is ways(n) = ways(n - 1) + ways(n - 2)?"
+    choices: ["The last slot holds either 1 bike or 2 bikes, and those two cases never overlap", "Every DP problem uses the Fibonacci rule", "Each bike needs exactly two slots", "The table is filled from the end backwards"]
+    answer: 0
+    explain: "If the last slot holds 1 bike, the rest can be docked ways(n - 1) ways. If it holds 2, the rest can be docked ways(n - 2) ways. Add the two separate groups."
+    reteach: "### Counting ways to dock"
+
+  - id: q12
+    type: mcq
+    concept: min-cost-cover
+    prompt: "On ride day d, the week-pass choice is cost[d - 7] + weekPrice. Why d - 7?"
+    choices: ["The pass covers days d - 6 to d, and cost[d - 7] is the cheapest way to pay for every ride day before that", "cost[d - 7] is the price of a week pass", "A week pass must start on day 7", "Subtracting 7 stops the index going below 0"]
+    answer: 0
+    explain: "A week pass ending on day d covers 7 days: d - 6 to d. What is left to pay is every ride day up to d - 7, and its cheapest cover is already in the table."
+    reteach: "## Worked example"

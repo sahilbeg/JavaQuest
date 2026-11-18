@@ -1,0 +1,24 @@
+id: module-04-dsa/topic-19-tries-union-find
+title: "Tries and union-find"
+order: 19
+minutes: 15
+prerequisites: [module-04-dsa/topic-18-greedy-intervals]
+concepts: [trie, autocomplete, trie-costs, union-find, path-compression-union-by-size, cycle-detection-kruskal]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m04.triesunionfind.StationTrie
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0419
+  from: sam
+  title: "Station search lags, and riders ask which stations the lanes join"
+  body: >
+    A rider typed "Riv" into the station search and waited ages for a suggestion. Another rider
+    asked if bike lanes alone can take her from Harbor to Depot, and nobody could tell her. The city
+    keeps adding lanes, so the answer changes every week. Can the app answer both, instantly?
+hints:
+  - "Both classes walk a path. StationTrie walks down one lowercased letter at a time. LaneNetwork walks up parent links until a station is its own parent."
+  - "In StationTrie, use node.children.computeIfAbsent(c, key -> new Node()) to insert, and node.children.get(c) to look up. For complete, write a private recursive helper: add node.name if it is not null, then call the helper on each child in children.values()."
+  - "In connect, write int rootA = find(a), rootB = find(b). If they are equal, return false. Otherwise swap them if size[rootA] < size[rootB], then parent[rootB] = rootA, size[rootA] += size[rootB], groups--. For Kruskal, sort lanes.clone() with Arrays.sort(copy, Comparator.comparingInt(lane -> lane[2]))."
+review: true

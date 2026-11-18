@@ -157,3 +157,21 @@ questions:
     answer: 0
     explain: "O(V + E) grows in step with the number of stations plus lanes."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: program-to-interface
+    prompt: "Why write Queue<String> queue = new ArrayDeque<>(); instead of ArrayDeque<String> queue = new ArrayDeque<>();?"
+    choices: ["The code then relies only on Queue methods, so you can swap the class later without changing other lines", "ArrayDeque cannot be used as a variable type", "It makes poll run in O(1) instead of O(n)", "Queue stores the stations in sorted order"]
+    answer: 0
+    explain: "Declaring the interface type limits the code to Queue methods like offer and poll. Any class that implements Queue can then replace ArrayDeque."
+    reteach: "### Program to the interface"
+
+  - id: q12
+    type: mcq
+    concept: dfs
+    prompt: "A DFS must explore a map grid of 1000 by 1000 squares. Why use a Deque as a stack instead of recursion?"
+    choices: ["A path can run a million squares deep, which overflows Java's call stack", "Recursion cannot use a visited set", "A Deque finds the fewest stops, but recursion does not", "Recursive DFS is O(V^2) and a Deque makes it O(V + E)"]
+    answer: 0
+    explain: "Both versions run in O(V + E). But recursion keeps one note per level on a small call stack. Your own Deque lives in ordinary memory, which is far bigger."
+    reteach: "### DFS without recursion"

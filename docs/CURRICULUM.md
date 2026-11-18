@@ -101,8 +101,16 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 | 10 | `module-04-dsa/topic-10-heaps` | Heaps and priority queues | code | `module-04-dsa/topic-09-trees-bst` |
 | 11 | `module-04-dsa/topic-11-graphs` | Graphs: BFS and DFS | code | `module-04-dsa/topic-10-heaps` |
 | 12 | `module-04-dsa/topic-12-dynamic-programming` | Dynamic programming basics | code | `module-04-dsa/topic-11-graphs` |
-| boss | `module-04-dsa/boss` | INC-04: The route planner sends riders to full stations | code | `module-04-dsa/topic-12-dynamic-programming` |
-| mini-project | `module-04-dsa/mini-project` | FEAT-04: Rebalancing-truck planner | code | `module-04-dsa/topic-12-dynamic-programming` |
+| 13 | `module-04-dsa/topic-13-two-pointers` | Two pointers, sliding windows and prefix sums | code | `module-04-dsa/topic-12-dynamic-programming` |
+| 14 | `module-04-dsa/topic-14-backtracking` | Backtracking: trying every choice | code | `module-04-dsa/topic-13-two-pointers` |
+| 15 | `module-04-dsa/topic-15-topological-sort` | Directed graphs: order, cycles and grids | code | `module-04-dsa/topic-14-backtracking` |
+| 16 | `module-04-dsa/topic-16-dijkstra` | Weighted shortest paths: Dijkstra | code | `module-04-dsa/topic-15-topological-sort` |
+| 17 | `module-04-dsa/topic-17-dp-patterns` | Dynamic programming patterns | code | `module-04-dsa/topic-16-dijkstra` |
+| 18 | `module-04-dsa/topic-18-greedy-intervals` | Greedy choices and intervals | code | `module-04-dsa/topic-17-dp-patterns` |
+| 19 | `module-04-dsa/topic-19-tries-union-find` | Tries and union-find | code | `module-04-dsa/topic-18-greedy-intervals` |
+| 20 | `module-04-dsa/topic-20-bit-manipulation` | Bit manipulation | code | `module-04-dsa/topic-19-tries-union-find` |
+| boss | `module-04-dsa/boss` | INC-04: The route planner sends riders to full stations | code | `module-04-dsa/topic-20-bit-manipulation` |
+| mini-project | `module-04-dsa/mini-project` | FEAT-04: Rebalancing-truck planner | code | `module-04-dsa/topic-20-bit-manipulation` |
 
 ## module-05-advanced-java: Advanced Java (project: Rush hour)
 

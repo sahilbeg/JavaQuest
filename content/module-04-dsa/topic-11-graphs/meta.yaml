@@ -1,9 +1,9 @@
 id: module-04-dsa/topic-11-graphs
 title: "Graphs: BFS and DFS"
 order: 11
-minutes: 10
+minutes: 12
 prerequisites: [module-04-dsa/topic-10-heaps]
-concepts: [graph-basics, adjacency-list, bfs, shortest-path, dfs, graph-complexity]
+concepts: [graph-basics, adjacency-list, bfs, shortest-path, dfs, graph-complexity, program-to-interface]
 practice:
   kind: code
   runner: plain

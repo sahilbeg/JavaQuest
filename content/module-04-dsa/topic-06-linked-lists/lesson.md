@@ -6,6 +6,8 @@ Riders join and leave the front of this line all day. With an `ArrayList`, remov
 
 A linked list avoids the shuffle. Each rider only remembers who stands behind them. This page shows you how Java's `LinkedList` works inside, and you build one yourself.
 
+One honest note first. In real Java code, a line like this would use `ArrayDeque`, which you meet in the next ticket. Building a linked list is still the best way to learn how references work.
+
 ## Concept
 
 ### Nodes and references
@@ -142,6 +144,14 @@ In plain words: a linked list is fast at its front, and slow to reach the middle
 An `ArrayList` is a row of numbered lockers: you walk straight to locker 7. A linked list is a treasure hunt: each clue tells you where the next one is.
 ```
 
+```callout jargon
+The **cache** is a small, very fast memory inside the processor. It loads data in chunks, so items stored side by side, like an array's, come almost for free.
+```
+
+```callout warning
+Java's `LinkedList` rarely wins in practice. Every node is a separate object with extra memory for its links. The nodes are also scattered in memory, so the processor's cache helps less. For a line served from the front, `ArrayDeque` is faster. For a list, `ArrayList` usually is.
+```
+
 ### A generic version
 
 Riders' names are `String`, but bike ids or ride minutes could use the same list. Make the list generic with a type parameter `T`, as you did with generics in module 3.
@@ -167,6 +177,155 @@ class RiderList<T> {
 - `private static class Node<T>` lives inside the list. Code outside the list never sees nodes.
 - `static` means a node does not need a list object to exist. It only holds an item and a link.
 - `RiderList<String>` holds names. `RiderList<Integer>` holds ride minutes.
+
+### Reversing a list
+
+To reverse a linked list, you do not move any items. You flip every `next` arrow so it points the other way. Then the old last node becomes the head.
+
+You walk the list with three references:
+
+- `previous`: the part already reversed. It starts as `null`.
+- `current`: the node you are flipping now. It starts at `head`.
+- `next`: a saved copy of `current.next`. Once you flip the arrow, this is the only way to reach the rest of the list.
+
+```animate
+title: Flipping the arrows one node at a time
+kind: code
+code: |
+  public class Main {
+      public static void main(String[] args) {
+          Node head = new Node("Ana", new Node("Ben", new Node("Cleo", null)));
+          Node previous = null;
+          Node current = head;
+          while (current != null) {
+              Node next = current.next;
+              current.next = previous;
+              previous = current;
+              current = next;
+          }
+          head = previous;
+          System.out.println(head.item + " " + head.next.item + " " + head.next.next.item);
+      }
+  }
+  class Node {
+      String item;
+      Node next;
+      Node(String item, Node next) {
+          this.item = item;
+          this.next = next;
+      }
+  }
+steps:
+  - line: 3
+    objects:
+      n3: { type: Node, fields: { item: '"Cleo"', next: "null" } }
+      n2: { type: Node, fields: { item: '"Ben"', next: "@n3" } }
+      n1: { type: Node, fields: { item: '"Ana"', next: "@n2" } }
+    vars: { head: "@n1" }
+    say: The waiting list is Ana, Ben, Cleo. head points at Ana.
+  - line: 5
+    vars: { previous: "null", current: "@n1" }
+    say: previous starts as null, because nothing is reversed yet. current starts at the head.
+  - line: 7
+    vars: { next: "@n2" }
+    say: Save current.next first. Once Ana's arrow flips, this saved copy is the only way to reach Ben.
+  - line: 8
+    objects: { n1: { type: Node, fields: { item: '"Ana"', next: "null" } } }
+    say: Flip. Ana now points back at previous, which is null. Ana will be the new last node.
+  - line: 9
+    vars: { previous: "@n1" }
+    say: previous moves up to Ana. The reversed part is now just Ana.
+  - line: 10
+    vars: { current: "@n2" }
+    say: current moves on to Ben, using the saved next.
+  - line: 8
+    vars: { next: "@n3" }
+    objects: { n2: { type: Node, fields: { item: '"Ben"', next: "@n1" } } }
+    say: Same again for Ben. Save his next, which is Cleo, then flip his arrow back to Ana.
+  - line: 10
+    vars: { previous: "@n2", current: "@n3" }
+    say: previous moves to Ben, and current moves to Cleo.
+  - line: 8
+    vars: { next: "null" }
+    objects: { n3: { type: Node, fields: { item: '"Cleo"', next: "@n2" } } }
+    say: Cleo saves her next, which is null, then flips her arrow back to Ben.
+  - line: 10
+    vars: { previous: "@n3", current: "null" }
+    say: previous moves to Cleo. current becomes null, so the loop stops.
+  - line: 12
+    vars: { head: "@n3", next: ~ }
+    say: head moves to previous, which is Cleo. Every arrow now points the other way.
+  - line: 13
+    out: "Cleo Ben Ana"
+    say: Walking from the new head prints the list backwards. No item moved, only arrows.
+```
+
+Each node is visited once, so reversing is O(n). It needs only three extra references, so the extra memory is O(1).
+
+### Syntax: reversing in place
+
+```java nocompile
+Node<T> previous = null;
+Node<T> current = head;
+while (current != null) {
+    Node<T> next = current.next;   // 1. save the rest of the list
+    current.next = previous;       // 2. flip this node's arrow
+    previous = current;            // 3. the reversed part grows by one
+    current = next;                // 4. move on
+}
+head = previous;
+```
+
+The order of the four lines matters. Flip before you save, and you lose the rest of the list. At the end `current` is `null`, so the new head is `previous`.
+
+### Fast and slow pointers
+
+Two walkers can start at `head` and move at different speeds. `slow` takes one step each time. `fast` takes two.
+
+```java nocompile
+Node slow = head;
+Node fast = head;
+while (fast != null && fast.next != null) {
+    slow = slow.next;
+    fast = fast.next.next;
+}
+// slow is now the middle node
+```
+
+When `fast` reaches the end, `slow` has gone half as far. So `slow` sits on the middle node, after one walk. With an even count, such as 4 nodes, it stops on the second of the two middle nodes.
+
+The same trick spots a **cycle**. That is a broken list where some node's `next` points back to an earlier node, so a walk never reaches `null`. Inside the loop, after the two moves, add `if (slow == fast) { return true; }`. Checking before the moves would always say yes, because both start at `head`. On a cycle, `fast` laps `slow` and they meet, like two runners on a track. Without a cycle, `fast` reaches `null` and you return `false`.
+
+```callout tip
+`slow == fast` is right here, not `equals`. You are asking whether both walkers stand on the same node object.
+```
+
+### A dummy head: merging two sorted lists
+
+Many list methods need a special case for the head, because the head has no node before it. A **dummy head** removes that case. It is a spare node at the front that holds no real item. You build the answer after it, then return `dummy.next`.
+
+Merging two sorted lists of ride minutes shows it well. It is the same idea as merge in merge sort, but you relink nodes instead of copying into an array.
+
+```java nocompile
+static Node merge(Node a, Node b) {
+    Node dummy = new Node(0);
+    Node tail = dummy;
+    while (a != null && b != null) {
+        if (a.minutes <= b.minutes) {
+            tail.next = a;
+            a = a.next;
+        } else {
+            tail.next = b;
+            b = b.next;
+        }
+        tail = tail.next;
+    }
+    tail.next = (a != null) ? a : b;
+    return dummy.next;
+}
+```
+
+Merging `3, 9, 20` with `5, 9, 12` gives `3, 5, 9, 9, 12, 20`. `tail` always points at the last node of the result, so linking the next one is O(1). The leftovers are already sorted, so one link attaches them all.
 
 ## Worked example
 
@@ -267,11 +426,11 @@ With index 3, `current` walks off the end and becomes `null`. Reading `current.i
 
 ## Recap
 
-- A linked list is a chain of nodes. Each node holds an item and a reference to the next node.
-- The list keeps a reference to the first node, the head. The last node's `next` is `null`.
+- A linked list is a chain of nodes, each with an item and a `next` reference. The list keeps the first node, the head, and the last `next` is `null`.
 - Adding or removing at the front is O(1). Reaching index i or the end means walking, which is O(n).
 - A `size` field, updated in every add and remove, makes `size()` O(1).
 - A private static generic `Node<T>` class keeps the nodes hidden inside the list.
+- Reverse a list by flipping each `next` arrow with `previous`, `current` and a saved `next`. Fast and slow pointers find the middle or a cycle.
 
 ## Common mistakes
 

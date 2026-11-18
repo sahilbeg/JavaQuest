@@ -1,9 +1,9 @@
 id: module-04-dsa/topic-01-big-o
 title: "Complexity and Big-O"
 order: 1
-minutes: 9
+minutes: 12
 prerequisites: [module-03-core-java/boss]
-concepts: [counting-steps, growth-rates, dropping-constants, best-worst-case, space-complexity, collection-costs]
+concepts: [counting-steps, growth-rates, dropping-constants, best-worst-case, space-complexity, collection-costs, amortised-cost, hidden-costs]
 practice:
   kind: code
   runner: plain

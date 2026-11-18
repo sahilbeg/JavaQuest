@@ -14,10 +14,10 @@ questions:
   - id: q02
     type: mcq
     concept: bst-rule
-    prompt: "A BST has root 1042. Where does bike 1017 go when it is inserted?"
-    choices: ["Somewhere in the left subtree of 1042", "Somewhere in the right subtree of 1042", "It replaces the root", "At the end of a list under the root"]
-    answer: 0
-    explain: "1017 is smaller than 1042, and smaller values always go left."
+    variants:
+      - { prompt: "A BST has root 1042. Where does bike 1017 go when it is inserted?", choices: ["Somewhere in the left subtree of 1042", "Somewhere in the right subtree of 1042", "It replaces the root", "At the end of a list under the root"], answer: 0 }
+      - { prompt: "Root 1042 has left child 1017, and 1017 has right child 1050. Is this a BST?", choices: ["No: 1050 is in the left subtree of 1042, but it is larger than 1042", "Yes: every parent and child pair is in the right order", "Yes: 1050 is larger than its parent 1017, so it belongs on the right", "No: a node may not have only a right child"], answer: 0 }
+    explain: "The BST rule covers whole subtrees: everything left of a node is smaller, everything right of it is larger. 1017 belongs left of 1042, but 1050 does not, even though it is fine next to 1017."
     reteach: "## Concept"
 
   - id: q03
@@ -191,3 +191,33 @@ questions:
     answer: 0
     explain: "Pre means before: the node comes before both subtrees."
     reteach: "## Concept"
+
+  - id: q11
+    type: mcq
+    concept: level-order
+    variants:
+      - { prompt: "Root 1042 has children 1017 and 1088. 1017 has children 1003 and 1025. 1088 has children 1061 and 1099. What does a level-order traversal give?", choices: ["[1042, 1017, 1088, 1003, 1025, 1061, 1099]", "[1003, 1017, 1025, 1042, 1061, 1088, 1099]", "[1042, 1017, 1003, 1025, 1088, 1061, 1099]", "[1003, 1025, 1017, 1061, 1099, 1088, 1042]"], answer: 0 }
+      - { prompt: "Which structure does a level-order traversal use to remember the nodes it still has to visit?", choices: ["A queue: children join at the back and wait behind the nodes above them", "A stack: the last child added is visited first", "A HashMap from node to level", "A sorted array of node values"], answer: 0 }
+    explain: "Level-order visits the tree row by row, top to bottom and left to right. A queue makes children wait until every node above them is done."
+    reteach: "### Level-order traversal"
+
+  - id: q12
+    type: predict-output
+    concept: treemap-navigation
+    code: |
+      import java.util.TreeMap;
+
+      public class Main {
+          public static void main(String[] args) {
+              TreeMap<Integer, String> bikes = new TreeMap<>();
+              bikes.put(1003, "Uptown");
+              bikes.put(1042, "Harbor");
+              bikes.put(1088, "Depot");
+              System.out.println(bikes.floorKey(1050));
+              System.out.println(bikes.ceilingKey(1050));
+              System.out.println(bikes.floorKey(1000));
+          }
+      }
+    answer: "1042\n1088\nnull"
+    explain: "floorKey gives the largest key at or below 1050, which is 1042. ceilingKey gives the smallest key at or above 1050, which is 1088. No key is at or below 1000, so floorKey returns null."
+    reteach: "### TreeMap navigation"

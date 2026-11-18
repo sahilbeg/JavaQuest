@@ -119,6 +119,26 @@ A complete tree of n values has about log n levels. Sift up and sift down each w
 Gojo says: a heap is like a hospital waiting room. Nobody lines everyone up in exact order. The nurse just makes sure the most urgent patient is always next.
 ```
 
+### Building a heap in O(n)
+
+Say you already have all n repair reports in an array. Adding them one by one costs O(n log n). There is a faster way, called **heapify**.
+
+```callout jargon
+To **heapify** an array is to turn it into a heap in place. Sift down every parent, starting from the last parent and moving back to the root.
+```
+
+```java nocompile
+for (int i = items.length / 2 - 1; i >= 0; i--) {
+    siftDown(items, items.length, i);
+}
+```
+
+The last parent sits at index `n / 2 - 1`. Everything after it is a leaf, and a leaf is already a tiny heap. For `[5, 3, 4, 1, 2, 0]`, heapify gives `[0, 1, 4, 3, 2, 5]`.
+
+Why is it only O(n)? Half the nodes are leaves and do no work. A quarter sift down at most one level, an eighth at most two, and so on. All together, that is at most about n swaps. `new PriorityQueue<>(collection)` uses this trick.
+
+**Heapsort** builds on it: heapify into a max-heap, then poll n times, putting each value into the slot freed at the end. It sorts in place in O(n log n), but it is not stable.
+
 ### Syntax: PriorityQueue
 
 Java's `PriorityQueue` is a min-heap stored in an array, just like yours. `offer` or `add` puts a value in. `poll` removes the smallest. `peek` looks at it. `poll` and `peek` return `null` when the queue is empty.
@@ -139,6 +159,138 @@ PriorityQueue<Repair> queue = new PriorityQueue<>(byUrgency);
 ```
 
 You need `import java.util.PriorityQueue;` and `import java.util.Comparator;`.
+
+### Syntax: a max-heap
+
+```java nocompile
+PriorityQueue<Integer> longestFirst = new PriorityQueue<>(Comparator.reverseOrder());
+```
+
+`PriorityQueue` is always a min-heap of whatever its comparator calls "smallest". `Comparator.reverseOrder()` flips the order, so the largest value comes out first. For your own objects, add `.reversed()` to a comparator, as in `Comparator.comparingInt(Repair::urgency).reversed()`.
+
+```java run
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
+public class Main {
+    public static void main(String[] args) {
+        PriorityQueue<Integer> longestFirst = new PriorityQueue<>(Comparator.reverseOrder());
+        longestFirst.add(12);
+        longestFirst.add(45);
+        longestFirst.add(7);
+        System.out.println(longestFirst.poll());
+        System.out.println(longestFirst.poll());
+    }
+}
+```
+
+It prints `45` and then `12`.
+
+### Top-k with a size-k heap
+
+Jiraiya wants the 3 longest rides out of a million. Sorting all of them costs O(n log n). You only need 3, so keep only 3.
+
+Use a **min-heap of size k**. Add each ride. When the heap holds more than k, poll the smallest. The heap always holds the k longest rides seen so far, and its top is the weakest of them, the first to be kicked out.
+
+```java run
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
+
+public class Main {
+    public static void main(String[] args) {
+        int[] minutes = {12, 45, 7, 33, 58, 21, 40, 9};
+        int k = 3;
+        PriorityQueue<Integer> top = new PriorityQueue<>();
+        for (int m : minutes) {
+            top.add(m);
+            if (top.size() > k) {
+                top.poll();
+            }
+        }
+        List<Integer> longest = new ArrayList<>();
+        while (!top.isEmpty()) {
+            longest.add(top.poll());
+        }
+        System.out.println(longest);
+    }
+}
+```
+
+It prints `[40, 45, 58]`. The heap never holds more than k + 1 values, so each step is O(log k). The whole job is **O(n log k)**, and it uses only O(k) memory. For the k *smallest*, flip it: keep a max-heap of size k.
+
+```animate
+title: Keeping the 3 longest rides
+kind: scene
+nodes:
+  - { id: ride, label: Next ride, emoji: "🚲", value: none }
+  - { id: heap, label: Min-heap of 3, emoji: "⛰️", value: empty }
+  - { id: out, label: Kicked out, emoji: "🗑️", value: none }
+steps:
+  - say: Rides of 12, 45 and 7 minutes arrive. The heap has room for 3, so all stay. The smallest, 7, sits on top.
+    set: { ride: "12, 45, 7", heap: "7 | 12, 45" }
+  - say: 33 arrives. Now there are 4, one too many, so poll the top. 7 is out.
+    set: { ride: "33", heap: "12 | 33, 45", out: "7" }
+    send: { from: heap, to: out, label: "7" }
+  - say: 58 arrives. Poll again. 12 is out.
+    set: { ride: "58", heap: "33 | 45, 58", out: "7, 12" }
+    send: { from: heap, to: out, label: "12" }
+  - say: 21 arrives. It is now the smallest, so it is polled right back out.
+    set: { ride: "21", out: "7, 12, 21" }
+    send: { from: heap, to: out, label: "21" }
+  - say: 40 pushes out 33, and 9 is polled straight away. The heap holds the 3 longest rides.
+    set: { ride: "40, 9", heap: "40 | 45, 58", out: "7, 12, 21, 33, 9" }
+    focus: [heap]
+```
+
+### Merging k sorted lists
+
+Each of 3 stations sends its dock times, already sorted. You want one sorted list. Put the **first** time from each list into a min-heap. Poll the smallest, add it to the result, then push the **next** time from the same list.
+
+```java run
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
+
+public class Main {
+    public static void main(String[] args) {
+        List<List<Integer>> stations = List.of(
+                List.of(905, 930, 1010),
+                List.of(900, 1000),
+                List.of(915, 920, 1005));
+        // Each heap entry: {time, which list, index in that list}
+        PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> Integer.compare(a[0], b[0]));
+        for (int s = 0; s < stations.size(); s++) {
+            heap.add(new int[] {stations.get(s).get(0), s, 0});
+        }
+        List<Integer> merged = new ArrayList<>();
+        while (!heap.isEmpty()) {
+            int[] top = heap.poll();
+            merged.add(top[0]);
+            int s = top[1];
+            int next = top[2] + 1;
+            if (next < stations.get(s).size()) {
+                heap.add(new int[] {stations.get(s).get(next), s, next});
+            }
+        }
+        System.out.println(merged);
+    }
+}
+```
+
+It prints `[900, 905, 915, 920, 930, 1000, 1005, 1010]`. The heap never holds more than k entries, one per list. With n times in total, the merge is O(n log k).
+
+### Two heaps for a running median
+
+Riders keep finishing rides, and the dashboard wants the median ride length after each one.
+
+```callout jargon
+The **median** is the middle value once the values are sorted. For an even count, it is the average of the two middle values.
+```
+
+Keep two heaps. A max-heap holds the smaller half, and a min-heap holds the larger half. A new value goes into the max-heap if it is no bigger than that heap's top, and into the min-heap otherwise. Then, if one heap has two more values than the other, move its top across. The median is the top of the bigger heap, or the average of both tops when they are the same size.
+
+Each new ride costs O(log n), and reading the median costs O(1). Re-sorting after every ride would cost O(n log n) each time.
 
 ## Worked example
 
@@ -252,7 +404,7 @@ Gojo says: printing a PriorityQueue with System.out.println(queue) shows the raw
 - A heap lives in an array. For index i, the parent is (i - 1) / 2 and the children are 2i + 1 and 2i + 2.
 - Add puts the value at the end and sifts up. Poll moves the last value to the top and sifts down.
 - Peek is O(1). Add and poll are O(log n).
-- `PriorityQueue` is the library min-heap. Pass a `Comparator` to order your own objects.
+- `PriorityQueue` is the library min-heap. Pass a `Comparator` to order your own objects, or `Comparator.reverseOrder()` for a max-heap. A size-k heap finds the top k in O(n log k).
 
 ## Common mistakes
 
@@ -298,3 +450,37 @@ public class Main {
 ```
 
 This prints `[0, 2, 1, 5, 4, 3]`. That is the heap's array order, which only promises the smallest value first. Fix: call `poll()` in a loop to get `0 1 2 3 4 5`.
+
+**4. Writing a comparator as a - b.**
+
+```java
+import java.util.Comparator;
+
+public class Main {
+    public static void main(String[] args) {
+        Comparator<Integer> broken = (a, b) -> a - b;
+        System.out.println(broken.compare(-2_000_000_000, 1_000_000_000));
+        System.out.println(Integer.compare(-2_000_000_000, 1_000_000_000));
+    }
+}
+```
+
+This prints `1294967296` and then `-1`. The first value is smaller, so the answer should be negative. But `-2_000_000_000 - 1_000_000_000` is too big for an `int`, so it overflows and wraps around to a positive number. A heap built on it puts values in the wrong order. Fix: use `Integer.compare(a, b)`, `Comparator.naturalOrder()` or `Comparator.comparingInt(...)`.
+
+**5. Comparing Integer objects with ==.**
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        Integer a = 127;
+        Integer b = 127;
+        Integer c = 128;
+        Integer d = 128;
+        System.out.println(a == b);
+        System.out.println(c == d);
+        System.out.println(c.equals(d));
+    }
+}
+```
+
+This prints `true`, `false`, `true`. Java reuses one `Integer` object for each small value from -128 to 127, so `==` happens to work there. From 128 up, each boxed value is a new object, and `==` compares objects, not numbers. A comparator or tie check that uses `==` on `Integer` breaks as soon as the numbers grow. Fix: use `equals`, or compare `int` values.

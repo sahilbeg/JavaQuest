@@ -1,0 +1,149 @@
+topic: module-04-dsa/topic-20-bit-manipulation
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: twos-complement
+    variants:
+      - { prompt: "In Java, what does -1 look like as a 32-bit int?", choices: ["Thirty-two 1 bits", "Thirty-one 0 bits and a 1 at the right", "A 1 at the left and thirty-one 0 bits", "Thirty-two 0 bits"], answer: 0 }
+      - { prompt: "For any int x, which value equals ~x?", choices: ["-x - 1", "-x", "-x + 1", "x - 1"], answer: 0 }
+    explain: "Two's complement makes -x by flipping every bit and adding 1. So flipping alone, ~x, gives -x - 1, and -1 is all ones."
+    reteach: "### Two's complement: how negatives look"
+
+  - id: q02
+    type: predict-output
+    concept: twos-complement
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println(~5);
+              System.out.println(~-1);
+              System.out.println(Integer.toBinaryString(6));
+          }
+      }
+    answer: "-6\n0\n110"
+    explain: "~x is -x - 1, so ~5 is -6 and ~-1 is 0. 6 is 4 + 2, which is 110 in binary."
+    reteach: "### Two's complement: how negatives look"
+
+  - id: q03
+    type: predict-output
+    concept: bitwise-operators
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println((12 & 10) + " " + (12 | 10) + " " + (12 ^ 10));
+          }
+      }
+    answer: "8 14 6"
+    explain: "12 is 1100 and 10 is 1010. AND keeps 1000 (8), OR gives 1110 (14), XOR gives 0110 (6)."
+    reteach: "### The bitwise operators"
+
+  - id: q04
+    type: spot-the-bug
+    concept: bitwise-operators
+    prompt: "This code does not compile. Which line is wrong?"
+    code: |
+      static final int GPS = 8;
+
+      static void report(int features) {
+          if (features & GPS != 0) {
+              System.out.println("has GPS");
+          }
+      }
+    bugLine: 4
+    explain: "!= runs before &, so Java tries int & boolean. Add brackets: (features & GPS) != 0."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: predict-output
+    concept: shifts
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              System.out.println((-16 >> 2) + " " + (1 << 32) + " " + (1L << 32));
+          }
+      }
+    answer: "-4 1 4294967296"
+    explain: ">> keeps the sign, so -16 >> 2 is -4. An int shift uses only 5 bits of the distance, so 1 << 32 is 1 << 0. A long shift reaches bit 32."
+    reteach: "### Bigger than 32 bits: long and the shift trap"
+
+  - id: q06
+    type: fill-blank
+    concept: single-bit-ops
+    prompt: "bike = bike & ___GPS;"
+    answers: ["~"]
+    explain: "~GPS has every bit set except the GPS bit. AND with it clears GPS and keeps everything else."
+    reteach: "### Syntax: test, set, clear and toggle bit i"
+
+  - id: q07
+    type: mcq
+    concept: single-bit-ops
+    variants:
+      - { prompt: "Which expression turns bit i of value on?", choices: ["value | (1 << i)", "value & (1 << i)", "value ^ (1 << i)", "value & ~(1 << i)"], answer: 0 }
+      - { prompt: "Which expression flips bit i of value, whatever it was?", choices: ["value ^ (1 << i)", "value | (1 << i)", "value & (1 << i)", "value & ~(1 << i)"], answer: 0 }
+      - { prompt: "Which condition is true when bit i of value is set?", choices: ["(value & (1 << i)) != 0", "(value | (1 << i)) != 0", "(value ^ (1 << i)) == 0", "value >> i == 1"], answer: 0 }
+    explain: "| sets, & ~ clears, ^ flips, and & tests. 1 << i is the mask with only bit i set."
+    reteach: "### Syntax: test, set, clear and toggle bit i"
+
+  - id: q08
+    type: mcq
+    concept: bitmask-sets
+    prompt: "Which expression is true only when features holds BOTH LIGHTS and GPS?"
+    choices: ["(features & (LIGHTS | GPS)) == (LIGHTS | GPS)", "(features & (LIGHTS | GPS)) != 0", "(features | (LIGHTS | GPS)) != 0", "(features ^ (LIGHTS | GPS)) != 0"]
+    answer: 0
+    explain: "Only the == check needs every bit of the flag. The & != 0 check is already true for a bike with lights only."
+    reteach: "### Bitmasks as small sets"
+
+  - id: q09
+    type: predict-output
+    concept: bitmask-sets
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int count = 0;
+              for (int mask = 0; mask < (1 << 4); mask++) {
+                  if (Integer.bitCount(mask) == 2) {
+                      count++;
+                  }
+              }
+              System.out.println(count);
+          }
+      }
+    answer: "6"
+    explain: "The loop visits all 16 subsets of 4 items. Six of them pick exactly 2 items."
+    reteach: "### Syntax: the subset loop"
+
+  - id: q10
+    type: order
+    concept: bitmask-sets
+    prompt: "Put the steps of listing every subset of n add-ons in order."
+    items:
+      - "Start with mask = 0, the empty subset"
+      - "Stop once mask reaches 1 << n"
+      - "For each i from 0 to n - 1, pick add-on i when bit i of mask is set"
+      - "Use the subset you picked, for example add up its prices"
+      - "Add 1 to mask and go back to the stop check"
+    explain: "The numbers 0 to (1 << n) - 1 are every pattern of n bits, so each mask is one subset."
+    reteach: "### Every subset with a mask loop"
+
+  - id: q11
+    type: mcq
+    concept: bit-tricks
+    variants:
+      - { prompt: "What is 4 ^ 9 ^ 4 ^ 2 ^ 9?", choices: ["2", "0", "28", "9"], answer: 0 }
+      - { prompt: "Every dock id appears twice except one. Which approach finds it in O(n) time and O(1) extra space?", choices: ["XOR all the ids together", "Sort the ids and print the first", "Store counts in a HashMap", "Add up all the ids"], answer: 0 }
+    explain: "a ^ a is 0, a ^ 0 is a, and order does not matter, so pairs cancel and the lonely value is left."
+    reteach: "### XOR tricks"
+
+  - id: q12
+    type: spot-the-bug
+    concept: bit-tricks
+    prompt: "isPowerOfTwo(0) returns true. Which line is wrong?"
+    code: |
+      static boolean isPowerOfTwo(int n) {
+          return (n & (n - 1)) == 0;
+      }
+    bugLine: 2
+    explain: "0 & -1 is 0, and so is Integer.MIN_VALUE & Integer.MAX_VALUE. Add n > 0 &&, because powers of two are positive."
+    reteach: "### n & (n - 1): drop the lowest 1"

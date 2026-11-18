@@ -156,6 +156,10 @@ static String reverse(String s) {
 
 `reverse("abc")` is `reverse("bc") + 'a'`, which becomes `"cb" + 'a'`, which is `"cba"`.
 
+This version is easy to read, but it is slow. Each `substring(1)` copies the rest of the text, and each `+` builds a new `String`. For `n` letters that is about `n * n / 2` copied characters, so O(n^2) time. Every waiting call also holds its own copy, so it uses O(n^2) memory too.
+
+That is fine for practice. Real code uses `new StringBuilder(s).reverse().toString()`, which is O(n).
+
 ### Recursion or a loop?
 
 Any recursion can be written as a loop, and the other way round.
@@ -164,6 +168,42 @@ Any recursion can be written as a loop, and the other way round.
 - Recursion is often shorter and clearer when the data has a nested or chained shape. Chains, trees and "divide in half" problems later in this module fit it well.
 
 Both `factorial` and `sumFrom` take O(n) time. They also use O(n) space, because the stack holds one note per call.
+
+### How deep can Java recurse?
+
+Each note on the call stack takes memory, and the stack is small. With default settings, Java manages somewhere around 10,000 to 50,000 nested calls. The exact number depends on the machine and on how big each note is. On one laptop, a simple sum handled 20,000 levels but crashed at 100,000.
+
+```callout jargon
+A **tail call** is a recursive call that is the very last thing a method does. **Tail-call optimisation** reuses the caller's note for it, so the stack never grows. Some languages do this. Java does not.
+```
+
+So in Java, every call needs its own note, however you write it. For deep inputs, such as 100,000 stations or a big map grid, keep your own stack instead. A `Deque` used as a stack lives in ordinary memory, which is far bigger than the call stack.
+
+```java run
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+public class Main {
+    public static void main(String[] args) {
+        int n = 100_000;
+        Deque<Integer> stack = new ArrayDeque<>();
+        for (int i = n; i >= 1; i--) {     // going down: one note per "call"
+            stack.push(i);
+        }
+        long total = 0;
+        while (!stack.isEmpty()) {         // coming back up: use each note once
+            total += stack.pop();
+        }
+        System.out.println("Sum of 1 to " + n + ": " + total);
+    }
+}
+```
+
+It prints `Sum of 1 to 100000: 5000050000` with no crash. For a simple chain, a plain loop would do. Your own stack really pays off for trees and graphs, where one call makes several more, as in the graph search of SPK-0411.
+
+```callout tip
+Gojo says: `java -Xss8m` gives the call stack 8 MB instead of the default. That only moves the wall. If the input can grow without limit, use a loop or your own stack.
+```
 
 ### Naive Fibonacci repeats work
 
@@ -178,13 +218,15 @@ static int fib(int n) {
 }
 ```
 
-It is correct but wasteful. `fib(5)` calls `fib(3)` twice and `fib(2)` three times. The repeats pile up, so the work roughly doubles each time `n` grows by one. That is called O(2^n), and it is far worse than O(n^2).
+It is correct but wasteful. `fib(5)` calls `fib(3)` twice and `fib(2)` three times. The repeats pile up. `fib(20)` makes 21,891 calls, and `fib(21)` makes 35,421. Each step up in `n` multiplies the work by about 1.6.
+
+Each call makes at most two more, so people often write this as O(2^n). That is a safe upper bound, but loose. The real growth is about 1.6^n. Either way it is **exponential**, and far worse than O(n^2).
 
 | Method | Time | Space |
 |---|---|---|
 | `factorial(n)` | O(n): one call per number | O(n) stack |
 | `sum` with an index | O(n): one call per slot | O(n) stack |
-| naive `fib(n)` | O(2^n): each call makes two more | O(n) stack |
+| naive `fib(n)` | O(2^n) as an upper bound; really about 1.6^n | O(n) stack |
 
 The fix is to remember answers you already worked out. You will learn that in the dynamic programming topic at the end of this module.
 
@@ -246,9 +288,9 @@ It prints `3 2 1 go`. Without the `if` block, it crashes with a `StackOverflowEr
 
 - A recursive method calls itself on a smaller version of the problem.
 - The base case stops the recursion. The recursive case must move toward it.
-- The call stack holds one note per unfinished call. Too many notes cause a `StackOverflowError`.
+- The call stack holds one note per unfinished call. Too many notes cause a `StackOverflowError`. Java manages only tens of thousands, so very deep work needs a loop or your own stack.
 - Recurse on an array by passing an index to a private helper.
-- Naive recursive Fibonacci repeats work and takes O(2^n) time.
+- Naive recursive Fibonacci repeats work. Its time grows about 1.6 times per step, loosely written as O(2^n).
 
 ## Common mistakes
 

@@ -132,3 +132,39 @@ questions:
     answer: 0
     explain: "PriorityQueue polls the smallest first. Comparing urgency first, then bike id, gives the lowest urgency and then the smaller id."
     reteach: "## Try it"
+
+  - id: q10
+    type: mcq
+    concept: top-k
+    variants:
+      - { prompt: "You want the 10 longest rides out of n rides. You keep a min-heap and poll whenever it holds more than 10. How long does that take?", choices: ["O(n log k), with k = 10", "O(n log n)", "O(n²)", "O(k log n)"], answer: 0 }
+      - { prompt: "Which line makes a PriorityQueue<Integer> poll the largest value first?", choices: ["new PriorityQueue<>(Comparator.reverseOrder())", "new PriorityQueue<>()", "new PriorityQueue<>(Comparator.naturalOrder())", "new PriorityQueue<>(10)"], answer: 0 }
+    explain: "A heap that never holds more than k + 1 values costs O(log k) per ride, so O(n log k) in total. Comparator.reverseOrder() flips a min-heap into a max-heap."
+    reteach: "### Top-k with a size-k heap"
+
+  - id: q11
+    type: mcq
+    concept: heapify
+    prompt: "You turn an array of n values into a heap by sifting down every parent, from the last parent back to the root. How long does that take?"
+    choices: ["O(n), because most nodes are near the bottom and barely move", "O(n log n), because every node sifts down log n levels", "O(log n), because the tree has log n levels", "O(n²), because every node is compared with every other"]
+    answer: 0
+    explain: "Half the nodes are leaves and do nothing, a quarter move at most one level, and so on. The total work is about n, so heapify is O(n)."
+    reteach: "### Building a heap in O(n)"
+
+  - id: q12
+    type: predict-output
+    concept: comparator-pitfalls
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              Integer a = 100;
+              Integer b = 100;
+              Integer c = 1000;
+              Integer d = 1000;
+              System.out.println(a == b);
+              System.out.println(c == d);
+          }
+      }
+    answer: "true\nfalse"
+    explain: "Java reuses Integer objects from -128 to 127, so a and b are the same object. 1000 is boxed into two different objects, and == compares objects. Use equals or Integer.compare."
+    reteach: "## Common mistakes"

@@ -1,0 +1,24 @@
+id: module-04-dsa/topic-20-bit-manipulation
+title: "Bit manipulation"
+order: 20
+minutes: 15
+prerequisites: [module-04-dsa/topic-19-tries-union-find]
+concepts: [twos-complement, bitwise-operators, shifts, single-bit-ops, bitmask-sets, bit-tricks]
+practice:
+  kind: code
+  runner: plain
+  mainClass: jq.m04.bitmanipulation.BitTricks
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: SPK-0420
+  from: theo
+  title: "Dock sensor numbers read wrong, and the GPS filter lies"
+  body: >
+    The Harbor sensor sends one number for its docks, like 2563, and our bike count hangs whenever
+    a reading comes in negative. The "has GPS" filter also lists bikes that only have lights, and
+    docks above 31 at the new Depot never show up. The bit helpers need fixing before rush hour.
+hints:
+  - "Each feature or dock is one bit. 1 << i is a number with only bit i set. Combine it with & to test, | to set, & ~ to clear and ^ to flip."
+  - "has needs (features & flag) == flag, not != 0. For countSetBits, loop while value != 0 and do value &= value - 1, which removes one 1 bit each time and also works for negatives. isPowerOfTwo needs value > 0 as well."
+  - "unpairedDock: start with 0 and do result ^= id for every id. occupiedMask: mask |= 1L << dock, with 1L so the shift happens on a long. addOnCombos: for (int mask = 0; mask < (1 << n); mask++), then for each i add pricesCents[i] when (mask & (1 << i)) != 0."
+review: true

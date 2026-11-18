@@ -1,0 +1,155 @@
+topic: module-04-dsa/topic-18-greedy-intervals
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: greedy-choice
+    prompt: "What does a greedy algorithm do?"
+    choices: ["Makes the best-looking choice at each step and never goes back to change it", "Tries every mix of choices and keeps the best one", "Fills a table from the smallest case upward", "Sorts the input and then binary searches it"]
+    answer: 0
+    explain: "Greedy commits to the local best choice. Trying every mix and keeping the best is what DP does."
+    reteach: "### What greedy means"
+
+  - id: q02
+    type: mcq
+    concept: greedy-choice
+    prompt: "The kiosk has coins of 1, 3 and 4 cents. Why does 'biggest coin first' fail for 6 cents?"
+    choices: ["Taking the 4 leaves 2 cents, which needs two 1s, but 3 + 3 uses only 2 coins", "It cannot pay 6 cents at all", "It uses 2 coins, but the best uses 3", "It only fails when the amount is odd"]
+    answer: 0
+    explain: "Greedy pays 4 + 1 + 1, three coins. The local best choice, the 4, ruined a later step. 3 + 3 is two coins."
+    reteach: "### When greedy fails"
+
+  - id: q03
+    type: mcq
+    concept: exchange-argument
+    prompt: "Why is it safe to take the booking that ends first?"
+    choices: ["Swapping it into any best plan keeps the plan valid and the same size, because it ends no later", "It is always the shortest booking", "It always starts first", "It never overlaps any other booking"]
+    answer: 0
+    explain: "That is the exchange argument. The earliest-ending booking ends no later than the best plan's first booking, so nothing after it can clash."
+    reteach: "### Arguing greedy is right: the exchange argument"
+
+  - id: q04
+    type: mcq
+    concept: half-open-intervals
+    variants:
+      - { prompt: "Spoke's windows are half-open. Do bookings 600-660 and 660-720 overlap?", choices: ["No, they only touch at minute 660", "Yes, both use minute 660", "Yes, because 660 equals 660", "Only if they are at the same station"], answer: 0 }
+      - { prompt: "Spoke's windows are half-open. A booking ends at 10:00 and another starts at 10:00 at the same dock. How many docks do they need?", choices: ["1, because the windows only touch", "2, because both use 10:00", "0, because they cancel out", "It depends on the bike type"], answer: 0 }
+    explain: "A half-open window includes its start but not its end. 600-660 uses minutes 600 to 659, so a booking starting at 660 can use the same dock."
+    reteach: "### Half-open windows"
+
+  - id: q05
+    type: fill-blank
+    concept: half-open-intervals
+    prompt: "return start < other.end && other.start < ___;"
+    answers: ["end", "this.end"]
+    explain: "Two half-open windows overlap when each starts before the other ends. Both checks use <."
+    reteach: "### Syntax: a window record"
+
+  - id: q06
+    type: predict-output
+    concept: merge-intervals
+    code: |
+      import java.util.ArrayList;
+      import java.util.Comparator;
+      import java.util.List;
+
+      public class Main {
+          public static void main(String[] args) {
+              List<Interval> sorted = new ArrayList<>(List.of(
+                      new Interval(700, 730), new Interval(600, 660),
+                      new Interval(650, 720), new Interval(800, 820)));
+              sorted.sort(Comparator.comparingInt(Interval::start));
+              List<Interval> merged = new ArrayList<>();
+              for (Interval booking : sorted) {
+                  if (!merged.isEmpty() && booking.start() < merged.get(merged.size() - 1).end()) {
+                      Interval last = merged.remove(merged.size() - 1);
+                      merged.add(new Interval(last.start(), Math.max(last.end(), booking.end())));
+                  } else {
+                      merged.add(booking);
+                  }
+              }
+              for (Interval m : merged) {
+                  System.out.println(m.start() + "-" + m.end());
+              }
+          }
+      }
+
+      record Interval(int start, int end) {
+      }
+    answer: "600-730\n800-820"
+    explain: "Sorted: 600-660, 650-720, 700-730, 800-820. The first three chain into 600-730. 800-820 starts after 730, so it stays alone."
+    reteach: "### Merging busy periods"
+
+  - id: q07
+    type: spot-the-bug
+    concept: merge-intervals
+    code: |
+      for (Interval booking : sorted) {
+          if (!merged.isEmpty() && booking.start() < merged.get(merged.size() - 1).end()) {
+              Interval last = merged.remove(merged.size() - 1);
+              merged.add(new Interval(last.start(), booking.end()));
+          } else {
+              merged.add(booking);
+          }
+      }
+    prompt: "Merging 600-720 with 630-650 gives 600-650. Which line is wrong?"
+    bugLine: 4
+    explain: "A short booking can sit inside a long one. The merged window must end at Math.max(last.end(), booking.end())."
+    reteach: "### Merging busy periods"
+
+  - id: q08
+    type: mcq
+    concept: interval-scheduling
+    prompt: "To fit the most bookings on one dock, how should you sort the requests before the greedy pass?"
+    choices: ["By end time", "By start time", "By length, shortest first", "By length, longest first"]
+    answer: 0
+    explain: "Earliest end leaves the most room for later bookings. Earliest start and shortest first both have counterexamples."
+    reteach: "### The most bookings on one dock"
+
+  - id: q09
+    type: mcq
+    concept: interval-scheduling
+    prompt: "Why does mostBookings cost O(n log n) time?"
+    choices: ["The sort costs O(n log n), and the greedy pass is only O(n)", "Every request is compared with every other request", "It uses a table with n times n cells", "It binary searches for each request"]
+    answer: 0
+    explain: "Sorting dominates. After the sort, one pass looks at each request once."
+    reteach: "### How fast is each?"
+
+  - id: q10
+    type: predict-output
+    concept: docks-sweep
+    code: |
+      public class Main {
+          public static void main(String[] args) {
+              int[] starts = {600, 610, 660, 700};
+              int[] ends = {650, 660, 720, 760};
+              int inUse = 0;
+              int most = 0;
+              int e = 0;
+              for (int s = 0; s < starts.length; s++) {
+                  while (ends[e] <= starts[s]) {
+                      inUse--;
+                      e++;
+                  }
+                  inUse++;
+                  most = Math.max(most, inUse);
+              }
+              System.out.println(most);
+          }
+      }
+    answer: "2"
+    explain: "Two bookings are active at 610. At 660 both of them have ended, so the count drops to 1. At 700 it rises to 2 again. The most is 2."
+    reteach: "### How many docks at once"
+
+  - id: q11
+    type: order
+    concept: docks-sweep
+    prompt: "Put the steps for counting docks with a min-heap in order."
+    items:
+      - "Sort a copy of the bookings by start time"
+      - "For the next booking, poll every end time in the heap that is at or before its start"
+      - "Add the booking's end time to the heap"
+      - "Keep the biggest heap size seen so far"
+    explain: "Sort first. For each booking, free the docks of bookings already over, take a dock, then record how many are in use."
+    reteach: "## Worked example"

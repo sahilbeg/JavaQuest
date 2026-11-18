@@ -69,27 +69,27 @@ This file is the tracker for the fixes. Tick a line when it is done and checked.
 ## Phase 2: module 04, data structures and algorithms
 
 Fixes in existing topics:
-- [ ] topic-01: amortised cost; two inputs and hidden loops; bound vs case; O(2^n), O(n!)
-- [ ] topic-02: how deep Java can recurse, explicit stack; fib growth ~1.6^n consistent with topic-12
-- [ ] topic-03: lower and upper bound; binary search on the answer; rotated array; duplicates and insertion point
-- [ ] topic-05: quicksort stack O(n) worst case; Dual-Pivot Quicksort vs TimSort; quickselect
-- [ ] topic-06: reversing a list (trace); fast and slow pointers, dummy head, merge two lists; ArrayDeque beats LinkedList
-- [ ] topic-07: the `Deque` interface; monotonic stack and deque
-- [ ] topic-08: how Java's HashMap really works (treeified buckets, power-of-two tables); hash patterns; LRU cache
-- [ ] topic-09: level-order traversal, pass values up, validate a BST, lowest common ancestor, delete, `TreeMap` navigation
-- [ ] topic-10: top-k with a size-k heap, k-way merge, two heaps for the median; heapify in O(n); comparator overflow
-- [ ] topic-11: program to the interface
-- [ ] topic-12: explain the `waysToDock` and week-pass recurrences
+- [x] topic-01: amortised cost; two inputs and hidden loops; bound vs case; O(2^n), O(n!)
+- [x] topic-02: how deep Java can recurse, explicit stack; fib growth ~1.6^n consistent with topic-12
+- [x] topic-03: lower and upper bound; binary search on the answer; rotated array; duplicates and insertion point
+- [x] topic-05: quicksort stack O(n) worst case; Dual-Pivot Quicksort vs TimSort; quickselect
+- [x] topic-06: reversing a list (trace); fast and slow pointers, dummy head, merge two lists; ArrayDeque beats LinkedList
+- [x] topic-07: the `Deque` interface; monotonic stack and deque
+- [x] topic-08: how Java's HashMap really works (treeified buckets, power-of-two tables); hash patterns; LRU cache
+- [x] topic-09: level-order traversal, pass values up, validate a BST, lowest common ancestor, delete, `TreeMap` navigation
+- [x] topic-10: top-k with a size-k heap, k-way merge, two heaps for the median; heapify in O(n); comparator overflow
+- [x] topic-11: program to the interface
+- [x] topic-12: explain the `waysToDock` and week-pass recurrences
 
 New tickets (before the boss):
-- [ ] topic-13 Two pointers, sliding window and prefix sums
-- [ ] topic-14 Backtracking
-- [ ] topic-15 Directed graphs: topological sort, cycles and grids
-- [ ] topic-16 Weighted shortest paths: Dijkstra
-- [ ] topic-17 Dynamic programming patterns
-- [ ] topic-18 Greedy algorithms and intervals
-- [ ] topic-19 Tries and union-find
-- [ ] topic-20 Bit manipulation
+- [x] topic-13 Two pointers, sliding window and prefix sums
+- [x] topic-14 Backtracking
+- [x] topic-15 Directed graphs: topological sort, cycles and grids
+- [x] topic-16 Weighted shortest paths: Dijkstra
+- [x] topic-17 Dynamic programming patterns
+- [x] topic-18 Greedy algorithms and intervals
+- [x] topic-19 Tries and union-find
+- [x] topic-20 Bit manipulation
 
 ## Phase 3: module 05, advanced Java
 

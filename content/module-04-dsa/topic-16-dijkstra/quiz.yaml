@@ -1,0 +1,127 @@
+topic: module-04-dsa/topic-16-dijkstra
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: weighted-graphs
+    prompt: "Lanes: Riverside to Harbor 2 minutes, Harbor to Old Mill 3, Riverside to Old Mill 7. How long is the fastest ride from Riverside to Old Mill?"
+    choices: ["5 minutes", "7 minutes", "2 minutes", "12 minutes"]
+    answer: 0
+    explain: "In a weighted graph a route's length is the sum of its weights. Via Harbor is 2 + 3 = 5, which beats the direct 7."
+    reteach: "### Weighted edges"
+
+  - id: q02
+    type: mcq
+    concept: weighted-graphs
+    prompt: "Why does BFS not find the fastest route when lanes take different times?"
+    choices: ["It counts every lane as 1, so it finds the fewest lanes, not the fewest minutes", "It cannot read records", "It only works on directed graphs", "It visits every station twice"]
+    answer: 0
+    explain: "BFS spreads one lane at a time. A route with more, quicker lanes can be faster, and BFS never notices."
+    reteach: "### Why BFS is not enough"
+
+  - id: q03
+    type: mcq
+    concept: dijkstra
+    prompt: "Which station does Dijkstra's algorithm settle next?"
+    choices: ["The unsettled station with the smallest total time so far", "The station added to the map first", "The station with the most lanes", "The station that comes first A to Z"]
+    answer: 0
+    explain: "Dijkstra is greedy: it always settles the closest unsettled station. With no negative weights, nothing can beat that time later."
+    reteach: "### Dijkstra's idea"
+
+  - id: q04
+    type: order
+    concept: dijkstra
+    prompt: "Put the steps of Dijkstra's loop in order."
+    items:
+      - "Put the start in best at 0 and offer it to the queue"
+      - "Poll the visit with the fewest minutes"
+      - "Skip it if its minutes are more than the station's best"
+      - "For each lane, add the lane's minutes to the visit's minutes"
+      - "If that total is strictly smaller, update best and parent and offer a new visit"
+    explain: "Seed the start, poll the smallest, skip stale entries, then relax every lane out of the station."
+    reteach: "### Syntax: the Dijkstra loop"
+
+  - id: q05
+    type: predict-output
+    concept: dijkstra
+    code: |
+      import java.util.Comparator;
+      import java.util.PriorityQueue;
+
+      public class Main {
+          record Visit(String station, int minutes) {
+          }
+
+          public static void main(String[] args) {
+              PriorityQueue<Visit> queue = new PriorityQueue<>(
+                      Comparator.comparingInt(Visit::minutes).thenComparing(Visit::station));
+              queue.offer(new Visit("Uptown", 9));
+              queue.offer(new Visit("Old Mill", 5));
+              queue.offer(new Visit("Harbor", 9));
+              while (!queue.isEmpty()) {
+                  System.out.println(queue.poll().station());
+              }
+          }
+      }
+    answer: "Old Mill\nHarbor\nUptown"
+    explain: "The fewest minutes come out first. Harbor and Uptown tie at 9, so thenComparing puts Harbor first, A to Z."
+    reteach: "### Syntax: records in a PriorityQueue"
+
+  - id: q06
+    type: mcq
+    concept: lazy-deletion
+    prompt: "A polled Visit says Old Mill 7, but best.get(\"Old Mill\") is 5. What should the loop do?"
+    choices: ["Skip it: it is a stale entry", "Set Old Mill's best back to 7", "Throw an exception", "Stop the whole search"]
+    answer: 0
+    explain: "A faster visit for Old Mill already came out. The old entry stayed in the queue because Java's PriorityQueue has no decrease-key."
+    reteach: "### Stale entries and lazy deletion"
+
+  - id: q07
+    type: mcq
+    concept: lazy-deletion
+    prompt: "Why do Java Dijkstra solutions leave old entries in the queue instead of removing them?"
+    choices: ["PriorityQueue has no decrease-key, and remove(object) is O(n)", "Removing entries is not allowed in a PriorityQueue", "Old entries are needed to rebuild the route", "It makes the answer more accurate"]
+    answer: 0
+    explain: "Removing one entry means searching the whole array. Adding a new entry and skipping stale ones keeps each step O(log n)."
+    reteach: "### Stale entries and lazy deletion"
+
+  - id: q08
+    type: spot-the-bug
+    concept: path-reconstruction
+    code: |
+      List<String> route = new ArrayList<>();
+      for (String step = goal; step != null; step = parent.get(step)) {
+          route.add(step);
+      }
+      return route;
+    prompt: "This returns [Depot, Uptown, Old Mill, Harbor, Riverside] for a ride from Riverside to Depot. Which line is wrong?"
+    bugLine: 5
+    explain: "Walking the parents gives the route backwards. Call Collections.reverse(route) before returning it."
+    reteach: "### Rebuilding the route"
+
+  - id: q09
+    type: fill-blank
+    concept: path-reconstruction
+    prompt: "if (known == null || minutes ___ known) {"
+    answers: ["<"]
+    explain: "Update only when the new time is strictly smaller. With <=, equal times keep replacing each other, and a 0-minute lane loops forever."
+    reteach: "### Unreachable stations and ties"
+
+  - id: q10
+    type: mcq
+    concept: dijkstra-complexity
+    prompt: "What does Dijkstra with a PriorityQueue cost on a map with V stations and E lanes?"
+    choices: ["O((V + E) log V) time and O(V + E) space", "O(V + E) time and O(1) space", "O(V × E) time and O(V) space", "O(V²) time and O(V²) space"]
+    answer: 0
+    explain: "Each station settles once and each lane is relaxed once. Every queue step costs O(log V). The lists, maps and queue take O(V + E) space."
+    reteach: "### How fast is it?"
+
+  - id: q11
+    type: mcq
+    concept: negative-weights
+    prompt: "Why does Dijkstra fail when some lanes have negative minutes?"
+    choices: ["A settled station could still get a faster time later, so 'settled' stops meaning final", "PriorityQueue cannot store negative numbers", "Negative numbers overflow an int", "Negative lanes cannot be added to a List"]
+    answer: 0
+    explain: "Dijkstra trusts that adding a lane never makes a route shorter. A negative lane breaks that. Bellman-Ford handles negative weights, at O(V × E)."
+    reteach: "### Negative minutes break it"
