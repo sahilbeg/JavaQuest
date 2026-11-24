@@ -44,7 +44,12 @@ public class CareerStore {
 
     /** XP in the active course: its level and ladder. */
     public int totalXp() {
-        return jdbc.sql("SELECT COALESCE(SUM(amount), 0) FROM xp_event WHERE course_id = ?").param(courses.activeId())
+        return totalXp(courses.activeId());
+    }
+
+    /** XP earned in one course, active or not: for the course picker. */
+    public int totalXp(String courseId) {
+        return jdbc.sql("SELECT COALESCE(SUM(amount), 0) FROM xp_event WHERE course_id = ?").param(courseId)
                 .query(Integer.class).single();
     }
 

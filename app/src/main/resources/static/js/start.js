@@ -1,6 +1,7 @@
 import { h, icon } from "./dom.js";
 import { api } from "./api.js";
 import { refreshRewards } from "./rewards.js";
+import { showCourse } from "./ladder.js";
 
 // The course picker at /start: choose a goal, then a stack, see the whole path and the ladder, then start.
 // A new learner lands here first; anyone can come back from "Switch course".
@@ -24,6 +25,8 @@ export async function renderStart(view, catalog, navigate) {
   function draw() {
     const forGoal = courses.filter((c) => c.objective === state.goal);
     const course = courses.find((c) => c.id === state.course);
+    // The ladder appears only once a course is chosen, and shows that course's ladder.
+    showCourse(course ?? null);
     view.replaceChildren(h("div", { class: "start" },
       h("header", { class: "page-head" },
         h("p", { class: "eyebrow" }, chosen ? "Switch course" : "Welcome to Cadence"),

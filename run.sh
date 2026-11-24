@@ -10,6 +10,8 @@
 #                          a separate progress database in ~/.cadence-author (or an existing ~/.javaquest-author),
 #                          so your learning is untouched
 #   ./run.sh --unlock-all  every ticket open, but with YOUR progress database (author mode on 2026)
+#   ./run.sh --tester      a tester: every ticket of every course open, http://localhost:3004, its own progress in
+#                          ~/.cadence-tester, so test runs never touch a learner's progress
 #
 # Any other arguments go to Spring, for example --server.port=2030. The old --javaquest.* names still work.
 set -euo pipefail
@@ -44,6 +46,12 @@ for arg in "$@"; do
       MODE="author"
       PORT="2027"
       DATA_DIR="$(progress_dir .cadence-author .javaquest-author)"
+      ARGS+=("--cadence.unlock-all=true")
+      ;;
+    --tester)
+      MODE="tester"
+      PORT="3004"
+      DATA_DIR="$HOME/.cadence-tester"
       ARGS+=("--cadence.unlock-all=true")
       ;;
     --unlock-all)
@@ -198,7 +206,7 @@ fi
 # ---------- Start ----------
 # Back up the learning progress once a day before starting, keeping the last 7 days.
 # The app is not running yet, so the database file is complete.
-if [[ "$MODE" != "author" && -f "$DATA_DIR/progress.mv.db" ]]; then
+if [[ "$MODE" != "author" && "$MODE" != "tester" && -f "$DATA_DIR/progress.mv.db" ]]; then
   BACKUPS="$DATA_DIR/backups"
   TODAY="$BACKUPS/progress-$(date +%Y-%m-%d).mv.db"
   if [[ ! -f "$TODAY" ]]; then
@@ -215,6 +223,7 @@ cp "$JAR" "$RUN_JAR"
 
 case "$MODE" in
   author) echo "Author mode: every ticket is open, with a separate progress database ($DATA_DIR)." ;;
+  tester) echo "Tester mode: every ticket of every course is open, with the tester's own progress database ($DATA_DIR)." ;;
   unlock-all) echo "Every ticket is open, using your own progress database. Use --author to keep your learning untouched." ;;
 esac
 if [[ "$OPEN_BROWSER" == true ]]; then WHEN=" It opens in your browser when it's ready."; else WHEN=""; fi

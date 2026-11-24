@@ -30,19 +30,20 @@ class CourseFlowTest {
     }
 
     @Test
-    @DisplayName("A new learner picks a course, and only a ready course can be started")
+    @DisplayName("A new learner picks a course, and a course that isn't written yet can't be started")
     void aNewLearnerPicksAReadyCourse() throws Exception {
         mvc.perform(get("/api/catalog"))
                 .andExpect(jsonPath("$.course.chosen").value(false));
         mvc.perform(get("/api/courses"))
                 .andExpect(jsonPath("$.chosen").value(false))
                 .andExpect(jsonPath("$.objectives.length()").value(4))
-                .andExpect(jsonPath("$.courses[?(@.id == 'frontend-react')].status").value(Matchers.contains("building")))
+                .andExpect(jsonPath("$.courses[?(@.id == 'frontend-react')].status").value(Matchers.contains("ready")))
+                .andExpect(jsonPath("$.courses[?(@.id == 'frontend-vanilla')].status").value(Matchers.contains("soon")))
                 .andExpect(jsonPath("$.courses[?(@.id == 'frontend-react')].path.length()").value(Matchers.contains(11)))
                 .andExpect(jsonPath("$.courses[?(@.id == 'java-swe')].canStart").value(Matchers.contains(true)));
 
         mvc.perform(put("/api/courses/active").header(LocalOnlyFilter.WRITE_HEADER, "1")
-                        .contentType(MediaType.APPLICATION_JSON).content("{\"courseId\": \"frontend-react\"}"))
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"courseId\": \"frontend-vanilla\"}"))
                 .andExpect(status().isBadRequest());
 
         mvc.perform(put("/api/courses/active").header(LocalOnlyFilter.WRITE_HEADER, "1")

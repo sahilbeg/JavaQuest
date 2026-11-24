@@ -5,6 +5,16 @@
 
 export const HELPER = { name: "Gojo", fullName: "Satoru Gojo" };
 
+/**
+ * The helper follows the course: Gojo for the Java course, Golu (Dhaaga's crocheted elephant, docs/STORY.md) for the
+ * web courses. It changes in place, so every import sees the new name.
+ */
+export function setHelper(courseId) {
+  Object.assign(HELPER, courseId === "java-swe"
+    ? { name: "Gojo", fullName: "Satoru Gojo" }
+    : { name: "Golu", fullName: "Golu the elephant" });
+}
+
 /** Picture file names the helper answers to, without the extension. */
 export const HELPER_PICTURES = ["gojo", "satoru-gojo", "satoru", "byte"];
 

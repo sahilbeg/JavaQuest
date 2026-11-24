@@ -8,11 +8,11 @@ import { renderNotes, renderNotesIndex } from "./notes.js";
 import { renderStart } from "./start.js";
 import { refreshRewards } from "./rewards.js";
 import { h, setTeamPictures, pictureFor, setCast } from "./dom.js";
-import { byte, setHelperPicture, HELPER_PICTURES } from "./byte.js";
+import { byte, setHelperPicture, setHelper, HELPER_PICTURES } from "./byte.js";
 import { bus } from "./events.js";
 import { replayPageTour, setPageTour } from "./tour.js";
 import { mountDailyLimit } from "./daily.js";
-import { mountLadder } from "./ladder.js";
+import { mountLadder, setPicking } from "./ladder.js";
 import { stopAll } from "./speech.js";
 
 const view = document.getElementById("view");
@@ -62,6 +62,8 @@ async function route({ keepFocus = false } = {}) {
     const [catalog] = await Promise.all([api.catalog(), picturesReady]);
     document.getElementById("author-banner").hidden = !catalog.authorMode;
     setCast(catalog.course.id);
+    setPicking(current.name === "start");
+    setHelper(catalog.course.id);
     // A new learner picks a course first; every other page waits until they have.
     if (!catalog.course.chosen && current.name !== "start") {
       history.replaceState(null, "", "/start");

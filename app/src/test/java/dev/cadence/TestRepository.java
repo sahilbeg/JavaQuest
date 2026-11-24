@@ -29,6 +29,11 @@ public final class TestRepository {
         copyTree(repo.resolve("practice"), copy.resolve("practice"));
         resetSourcesToSkeletons(copy.resolve("practice"));
         Files.copy(repo.resolve("courses.yaml"), copy.resolve("courses.yaml"));
+        // The web courses' content and practice; their installed tools (node_modules) stay out.
+        if (Files.isDirectory(repo.resolve("tracks/web/content"))) {
+            copyTree(repo.resolve("tracks/web/content"), copy.resolve("tracks/web/content"));
+            copyTree(repo.resolve("tracks/web/practice"), copy.resolve("tracks/web/practice"));
+        }
         Path classpathFile = Files.createTempFile("runner-classpath", ".txt");
         Files.writeString(classpathFile, System.getProperty("junit.console.jar"));
         registry.add("cadence.root", copy::toString);
@@ -69,7 +74,8 @@ public final class TestRepository {
 
     private static void copyTree(Path from, Path to) throws IOException {
         try (Stream<Path> paths = Files.walk(from)) {
-            paths.filter(p -> !p.toString().contains("/target/")).forEach(source -> {
+            paths.filter(p -> !p.toString().contains("/target/") && !p.toString().contains("/node_modules")
+                    && !p.toString().contains("/.runs")).forEach(source -> {
                 try {
                     Path target = to.resolve(from.relativize(source).toString());
                     if (Files.isDirectory(source)) {

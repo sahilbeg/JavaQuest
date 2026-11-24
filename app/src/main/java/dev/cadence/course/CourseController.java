@@ -20,8 +20,10 @@ public class CourseController {
     /** A module on a course's path. {@code tickets} is 0 while the module is still being written. */
     public record PathModule(String id, String title, String project, int tickets, int mastered) {}
 
+    /** {@code xp} and {@code level} are the learner's in this course, so the picker can show their place on its ladder. */
     public record CourseView(String id, String objective, String title, String summary, List<String> stack, String status,
-                             boolean canStart, int tickets, int mastered, int minutes, List<PathModule> path, List<String> ladder) {}
+                             boolean canStart, int tickets, int mastered, int minutes, List<PathModule> path, List<String> ladder,
+                             int xp, int level, int levelStartXp, int nextLevelXp) {}
 
     public record Picker(List<Objective> objectives, List<CourseView> courses, String active, boolean chosen) {}
 
@@ -29,10 +31,12 @@ public class CourseController {
 
     private final Courses courses;
     private final ProgressService progress;
+    private final dev.cadence.career.CareerStore career;
 
-    public CourseController(Courses courses, ProgressService progress) {
+    public CourseController(Courses courses, ProgressService progress, dev.cadence.career.CareerStore career) {
         this.courses = courses;
         this.progress = progress;
+        this.career = career;
     }
 
     @GetMapping
@@ -53,8 +57,11 @@ public class CourseController {
         int tickets = catalog.topics().size();
         int mastered = (int) catalog.topics().stream().filter(t -> progress.progress(t).mastered()).count();
         int minutes = catalog.topics().stream().mapToInt(t -> t.meta().minutes()).sum();
+        int xp = career.totalXp(course.id());
+        int level = dev.cadence.career.GameRules.level(xp);
         return new CourseView(course.id(), course.objective(), course.title(), course.summary(), course.stack(),
-                course.status().name().toLowerCase(), courses.canStart(course), tickets, mastered, minutes, path, course.ladder());
+                course.status().name().toLowerCase(), courses.canStart(course), tickets, mastered, minutes, path, course.ladder(),
+                xp, level, dev.cadence.career.GameRules.xpForLevel(level), dev.cadence.career.GameRules.xpForLevel(level + 1));
     }
 
     private PathModule pathModule(PlannedModule planned, dev.cadence.content.ContentCatalog catalog) {

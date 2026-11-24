@@ -8,10 +8,53 @@ import { bus } from "./events.js";
 const n = (value) => value.toLocaleString();
 const pct = (fraction) => `${Math.round(fraction * 100)}%`;
 
+let railEl = null;
+let real = null;
+let picking = false;
+
 /** Draws the ladder into the rail, keeps it current, and explains each part on hover. */
 export function mountLadder(rail) {
-  bus.addEventListener("career", (event) => render(rail, event.detail.level));
+  railEl = rail;
+  bus.addEventListener("career", (event) => {
+    real = event.detail.level;
+    if (!picking) render(rail, real);
+  });
   mountTips(rail);
+}
+
+/**
+ * The course picker has no ladder of its own: none until the learner picks a course, then that course's ladder
+ * with their place on it. Leaving the picker brings back the active course's ladder.
+ */
+export function setPicking(on) {
+  picking = on;
+  if (!railEl) return;
+  if (on) {
+    showCourse(null);
+  } else {
+    document.body.classList.remove("ladder-off");
+    if (real) render(railEl, real);
+  }
+}
+
+/** On the picker: the chosen course's ladder, or no ladder (and no space for it) when nothing is chosen. */
+export function showCourse(course) {
+  if (!railEl || !picking) return;
+  if (!course) {
+    railEl.hidden = true;
+    document.body.classList.add("ladder-off");
+    return;
+  }
+  document.body.classList.remove("ladder-off");
+  render(railEl, levelFor(course));
+}
+
+/** The same shape as the career summary's level, built from a course in the picker. Level n starts at 100·(n−1)·n/2 XP. */
+function levelFor(course) {
+  const xpFor = (lv) => (100 * (lv - 1) * lv) / 2;
+  const ladder = course.ladder.map((title, i) => ({ title, firstLevel: i * 5 + 1, xpToReach: xpFor(i * 5 + 1) }));
+  return { xp: course.xp, level: course.level, levelStartXp: course.levelStartXp, nextLevelXp: course.nextLevelXp,
+    ladder, courseId: course.id, courseTitle: course.title };
 }
 
 function render(rail, level) {

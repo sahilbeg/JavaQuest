@@ -1010,6 +1010,8 @@ a.topic-row:hover { background: var(--hover); text-decoration: none; color: var(
    opens over the page on hover or keyboard focus. Below 720px it hides; the level chip in the top bar stays. */
 
 :root { --rail: 0px; --rail-slim: 64px; --rail-full: 224px; }
+/* On the course picker before a course is chosen: no ladder, and no space kept for it. */
+body.ladder-off { --rail: 0px; }
 .ladder { display: none; }
 
 @media (min-width: 720px) {

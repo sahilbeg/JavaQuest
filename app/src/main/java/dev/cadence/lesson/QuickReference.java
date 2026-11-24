@@ -36,6 +36,9 @@ public class QuickReference {
     /** @param code the wrong code, or empty; @param fixHtml what the learner sees and how to fix it */
     public record Mistake(String titleHtml, String code, String fixHtml) {}
 
+    /** The code blocks a Syntax box or a mistake can show: Java, and the web courses' JavaScript, JSX, HTML and CSS. */
+    private static final java.util.Set<String> CODE_LANGUAGES = java.util.Set.of("java", "js", "jsx", "html", "css");
+
     private final Parser parser;
     private final HtmlRenderer renderer;
 
@@ -85,7 +88,7 @@ public class QuickReference {
                 String code = block.getContentChars().normalizeEOL().stripTrailing();
                 if (info[0].equals("callout") && info.length > 1 && info[1].equals("jargon")) {
                     words.add(html(parser.parse(code)));
-                } else if (info[0].equals("java")) {
+                } else if (CODE_LANGUAGES.contains(info[0])) {
                     if (syntaxTitle != null && syntaxCode == null) {
                         syntaxCode = code;
                     } else if (mistakeTitle != null && mistakeCode.isEmpty()) {

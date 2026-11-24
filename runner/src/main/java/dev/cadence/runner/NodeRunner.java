@@ -84,7 +84,6 @@ public final class NodeRunner implements CodeRunner {
                         testTimeout: %d,
                         watch: false,
                       },
-                      esbuild: { jsx: "automatic" },
                     };
                     """.formatted(limits.timeout().toMillis()));
             Finished run = spawn(List.of(node.toString(), workspace.resolve("node_modules/vitest/vitest.mjs").toString(), "run",
