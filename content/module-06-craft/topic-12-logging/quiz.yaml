@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: slf4j-logback
+    goal: "Make a logger named after the Checkout class."
     prompt: "private static final Logger log = LoggerFactory.___(Checkout.class);"
     answers: ["getLogger"]
     explain: "LoggerFactory.getLogger(Checkout.class) makes a logger named after the class."

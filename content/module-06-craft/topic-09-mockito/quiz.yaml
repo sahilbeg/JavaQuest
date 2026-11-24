@@ -42,6 +42,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: stubbing
+    goal: "Make the stubbed charge call throw this declined-card error instead of returning."
     prompt: "when(gateway.charge(\"rider-9\", 100)).___(new PaymentDeclinedException(\"declined\"));"
     answers: ["thenThrow"]
     explain: "thenThrow makes the stubbed call throw, which is how you test a declined card."
@@ -50,6 +51,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: verification
+    goal: "Check that open was not called on the lock even once."
     prompt: "verify(lock, ___).open(anyString());"
     answers: ["never()", "times(0)"]
     explain: "never() checks that the call did not happen at all. times(0) means the same."
@@ -148,6 +150,7 @@ questions:
   - id: q12
     type: fill-blank
     concept: stubbing
+    goal: "Make the void refund call throw this error when the code under test calls it."
     prompt: "___(new IllegalStateException(\"bank is down\")).when(gateway).refund(\"pay-3\");"
     answers: ["doThrow", "Mockito.doThrow"]
     explain: "refund returns void, so when(...) cannot wrap it. doThrow(...).when(mock).method(...) stubs a void method to throw."

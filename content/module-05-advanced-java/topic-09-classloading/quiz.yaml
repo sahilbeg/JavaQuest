@@ -69,6 +69,7 @@ questions:
   - id: q08
     type: fill-blank
     concept: class-errors
+    goal: "Load a class from its full name written as text, and receive its Class object."
     prompt: "Class<?> type = Class.___(\"java.util.ArrayList\");"
     answers: ["forName"]
     explain: "Class.forName loads a class by its full name."
@@ -77,6 +78,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: classpath
+    goal: "Tell Java to look for compiled classes in the build/classes folder."
     prompt: "java ___ build/classes jq.kiosk.Kiosk"
     answers: ["-cp", "-classpath", "--class-path"]
     explain: "-cp sets the classpath the application loader searches."

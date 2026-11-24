@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: static-factory
+    goal: "Stop code outside the class from calling this constructor, so it must use the static factory methods."
     prompt: "___ Ride(String bikeId, String type) { this.bikeId = bikeId; this.type = type; }"
     answers: ["private"]
     explain: "A private constructor forces outside code to use the static factory methods."
@@ -113,6 +114,7 @@ questions:
   - id: q08
     type: fill-blank
     concept: singleton
+    goal: "Give the enum its one and only constant, using the conventional name the lesson used for a singleton."
     prompt: "enum PriceTable { ___; int centsPerMinute(String type) { return 15; } }"
     answers: ["INSTANCE"]
     explain: "An enum singleton has exactly one constant. By convention it is called INSTANCE."

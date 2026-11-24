@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: adjacency-list
+    goal: "Map each station's name to a List of the station names its lanes lead to."
     prompt: "Map<String, ___> lanes = new LinkedHashMap<>();"
     answers: ["List<String>", "ArrayList<String>"]
     explain: "An adjacency list maps each station to a list of its neighbours."
@@ -126,6 +127,7 @@ questions:
   - id: q08
     type: fill-blank
     concept: shortest-path
+    goal: "Remember, for the newly reached station, which station the search came from."
     prompt: "parent.___(next, current);"
     answers: ["put"]
     explain: "The parent map stores, for each new station, the station you came from."

@@ -37,6 +37,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: semaphore
+    goal: "Hand the permit back, so another waiting thread can take its turn."
     prompt: "permits.___();   // give the permit back, in finally"
     answers: ["release"]
     explain: "acquire() takes a permit and release() gives it back. Put release() in finally so an exception cannot leak the permit."
@@ -116,6 +117,7 @@ questions:
   - id: q11
     type: fill-blank
     concept: timeouts
+    goal: "Wait at most half a second for the next ride, and give up with null if none arrives."
     prompt: "String ride = rides.___(500, TimeUnit.MILLISECONDS);   // null if nothing arrives in time"
     answers: ["poll"]
     explain: "poll(time, unit) waits at most that long and returns null on a timeout. take() would wait forever."

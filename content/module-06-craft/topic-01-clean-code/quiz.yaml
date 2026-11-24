@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: named-constants
+    goal: "Make the fee a constant: once it is set to 100, nothing can ever change it."
     prompt: "static ___ long UNLOCK_FEE_CENTS = 100;"
     answers: ["final"]
     explain: "final stops the value from ever changing, which makes it a constant."

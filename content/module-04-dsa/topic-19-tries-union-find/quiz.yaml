@@ -63,6 +63,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: trie
+    goal: "Step to the child node for letter c, making and storing a new node first if there is none yet."
     prompt: "node = node.children.___(c, key -> new Node());"
     answers: ["computeIfAbsent"]
     explain: "computeIfAbsent returns the child for c, making and storing a new Node first if there is none."

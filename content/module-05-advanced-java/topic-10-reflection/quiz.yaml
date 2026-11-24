@@ -55,6 +55,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: reading-fields
+    goal: "Switch off Java's private check, so reflection can read this private field."
     prompt: "field.___(true);"
     answers: ["setAccessible"]
     explain: "setAccessible(true) switches off the private check so get can read the field."
@@ -97,6 +98,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: creating-objects
+    goal: "Find the constructor that takes no arguments, even if it is not public, so newInstance can call it."
     prompt: "Object station = type.___().newInstance();"
     answers: ["getDeclaredConstructor"]
     explain: "getDeclaredConstructor() with no arguments finds the no-arg constructor, even when it is not public. newInstance() then calls it."

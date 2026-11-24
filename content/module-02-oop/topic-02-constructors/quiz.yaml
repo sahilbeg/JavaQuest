@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: this-keyword
+    goal: "Copy the id parameter into the object's own id field."
     prompt: "___.id = id;"
     answers: ["this"]
     explain: "this.id is the field. Plain id is the parameter."
@@ -83,6 +84,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: this-chaining
+    goal: "Pass the id and the type classic on to the other constructor in the same Bike class."
     prompt: "Bike(String id) { ___(id, \"classic\"); }"
     answers: ["this"]
     explain: "this(...) calls another constructor of the same class."

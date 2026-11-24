@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: start-vs-run
+    goal: "Make the worker's job run on a brand-new thread, side by side with this one."
     prompt: "worker.___();   // begin a new thread"
     answers: ["start"]
     explain: "start() asks Java to begin a new thread that calls the job's run()."
@@ -31,6 +32,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: runnable
+    goal: "Store a job that takes nothing and gives nothing back, so a thread can run it later."
     prompt: "___ job = () -> System.out.println(\"check\");"
     answers: ["Runnable", "java.lang.Runnable"]
     explain: "Runnable is the functional interface for a job that takes nothing and returns nothing."

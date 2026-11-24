@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: sealed-permits
+    goal: "Close the DockEvent family, so only the three types listed after permits may join it."
     prompt: "public ___ interface DockEvent permits BikeDocked, BikeUndocked, Fault { }"
     answers: ["sealed"]
     explain: "The word sealed closes the interface. The permits clause then lists the family."

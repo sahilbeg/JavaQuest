@@ -41,6 +41,7 @@ questions:
   - id: q05
     type: fill-blank
     concept: half-open-intervals
+    goal: "Say whether this window and the other overlap: each one starts before the other one finishes."
     prompt: "return start < other.end && other.start < ___;"
     answers: ["end", "this.end"]
     explain: "Two half-open windows overlap when each starts before the other ends. Both checks use <."

@@ -221,6 +221,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: naming
+    goal: "Store the rider's name, which is text."   # required: what the finished line does
     prompt: "Complete: ___ name = \"Ada\";"
     answers: ["String"]            # accepted answers, trimmed and case-sensitive
     explain: "Text values use the String type."
@@ -260,7 +261,7 @@ questions:
     explain: "Java variables use camelCase and cannot start with a digit."
 ```
 
-The content checker (`exec:java@check-content`) runs every `predict-output` snippet and checks the stated answer against real output. A fill-blank prompt should be the code line only, because the page shows it in the code font.
+The content checker (`exec:java@check-content`) runs every `predict-output` snippet and checks the stated answer against real output. A fill-blank prompt should be the code line only, because the page shows it in the code font. Every fill-blank also needs a `goal`: one plain sentence, 25 words or fewer, saying what the finished line does. The page shows it as the question, so it must make exactly one accepted answer the thing to type. It must not contain the answer: a one-word answer is matched as a whole word, ignoring case. The quiz loader refuses a fill-blank that breaks these rules.
 
 ## Practice files
 

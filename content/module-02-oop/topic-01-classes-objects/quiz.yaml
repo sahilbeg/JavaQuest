@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: new-keyword
+    goal: "Build a fresh Bike object and store it in the variable bike."
     prompt: "Bike bike = ___ Bike();"
     answers: ["new"]
     explain: "The new keyword builds a fresh object from the class."
@@ -77,6 +78,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: dot-operator
+    goal: "Set the type field inside this one bike to cargo."
     prompt: "bike___type = \"cargo\";"
     answers: ["."]
     explain: "The dot operator reaches inside one object to its field."

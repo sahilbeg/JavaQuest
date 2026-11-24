@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: abstract-class
+    goal: "Mark Vehicle as a base class that nobody can build objects from directly."
     prompt: "___ class Vehicle {"
     answers: ["abstract", "public abstract", "abstract public"]
     explain: "The word abstract before class makes the class abstract."
@@ -31,6 +32,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: abstract-method
+    goal: "End the method line with no body, so each subclass must write its own."
     prompt: "abstract double pricePerMinute()___"
     answers: [";"]
     explain: "An abstract method has no body. It ends with a semicolon."

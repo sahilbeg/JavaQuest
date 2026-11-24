@@ -94,6 +94,7 @@ questions:
   - id: q08
     type: fill-blank
     concept: write-skew
+    goal: "Run the transaction at PostgreSQL's strictest level, which catches write skew and fails one dispatcher."
     prompt: "BEGIN ISOLATION LEVEL ___;   -- PostgreSQL tracks read-write dependencies and fails one dispatcher with 40001"
     answers: ["SERIALIZABLE"]
     explain: "PostgreSQL's SERIALIZABLE uses serializable snapshot isolation (SSI). It catches write skew by failing one transaction with 40001, so every caller needs a retry loop."

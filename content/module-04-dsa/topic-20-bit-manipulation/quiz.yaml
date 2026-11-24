@@ -71,6 +71,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: single-bit-ops
+    goal: "Turn off the GPS bit and leave every other bit of the bike's flags as it was."
     prompt: "bike = bike & ___GPS;"
     answers: ["~"]
     explain: "~GPS has every bit set except the GPS bit. AND with it clears GPS and keeps everything else."

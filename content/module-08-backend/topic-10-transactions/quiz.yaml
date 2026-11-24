@@ -59,6 +59,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: transactional
+    goal: "Tell Spring this method only looks data up and never changes it, so Hibernate can skip change checks."
     prompt: "@Transactional(___ = true)   // this method only looks things up"
     answers: ["readOnly"]
     explain: "readOnly = true tells Hibernate and the database that the method only reads, so Hibernate can skip change checks."
@@ -84,6 +85,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: rollback-rules
+    goal: "Make this checked exception undo all the method's database work too, as unchecked ones already do."
     prompt: "@Transactional(___ = InsufficientCreditException.class)   // a checked exception that must undo the work"
     answers: ["rollbackFor"]
     explain: "rollbackFor adds exceptions that should also roll back, such as your own checked ones."

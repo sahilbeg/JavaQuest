@@ -44,6 +44,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: kustomize-overlays
+    goal: "In this overlay, change only the image's tag to the release 2.6.1-8e41d07c5a92."
     prompt: "    ___: 2.6.1-8e41d07c5a92          # under images:, the tag to use for ghcr.io/spoke/spoke-api"
     answers: ["newTag"]
     explain: "An images: entry names the image as it appears in the base, then newTag sets the tag. newName changes the repository, and digest pins an exact build."

@@ -32,6 +32,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: check-version
+    goal: "Ask Java which release is installed on this laptop."
     prompt: "java ___"
     answers: ["-version", "--version"]
     explain: "java -version prints the version of the JVM on your laptop."

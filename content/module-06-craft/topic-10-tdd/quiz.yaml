@@ -119,6 +119,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: red-green-refactor
+    goal: "Pass only if this call throws an IllegalArgumentException."
     prompt: "___(IllegalArgumentException.class, () -> groups.discountedCents(1000, 0));"
     answers: ["assertThrows", "Assertions.assertThrows"]
     explain: "assertThrows passes only when the code inside the lambda throws that exception type."

@@ -98,6 +98,7 @@ questions:
   - id: q08
     type: fill-blank
     concept: window-functions
+    goal: "For each ride, show the minutes of the same rider's ride just before it."
     prompt: "SELECT id, ___(minutes) OVER (PARTITION BY rider_id ORDER BY started_at) AS prev_minutes FROM ride;"
     answers: ["LAG"]
     explain: "LAG reads a column from the row before, inside the same partition. LEAD reads the row after. The first ride of each rider has no row before, so it gets NULL."

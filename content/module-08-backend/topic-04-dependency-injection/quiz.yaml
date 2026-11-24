@@ -102,6 +102,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: component-scanning
+    goal: "Make Spring build this class, using the special label meant for classes that hold business rules, like fare rules."
     prompt: "@___ class FareService { }  // the component annotation meant for business-rule classes"
     answers: ["Service"]
     explain: "@Service is a @Component for classes that hold business rules. @Repository is for database code."
@@ -147,6 +148,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: bean-methods
+    goal: "Hand Spring the Clock this method returns, so other classes can ask for it in their constructors."
     prompt: "@___ Clock clock() { return Clock.systemUTC(); }  // inside a @Configuration class"
     answers: ["Bean"]
     explain: "A @Bean method inside a @Configuration class hands Spring the object it returns, as a bean named after the method."
@@ -189,6 +191,7 @@ questions:
   - id: q12
     type: fill-blank
     concept: choosing-beans
+    goal: "Ask Spring for the PriceList labelled \"sunday\" here, not the standard one."
     prompt: "FareService(PriceList standard, @___(\"sunday\") PriceList sunday, Clock clock) {"
     answers: ["Qualifier"]
     explain: "@Qualifier(\"sunday\") on the parameter asks for the bean with the same label, SundayPriceList."

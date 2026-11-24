@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: generic-class
+    goal: "Make a shelf of text items with room for 12, with the item type written out again or copied from the left side."
     prompt: "Shelf<String> shelf = new Shelf___(12);"
     answers: ["<>", "<String>"]
     explain: "The diamond <> copies the type from the left side. Writing <String> again also works."
@@ -54,6 +55,7 @@ questions:
   - id: q05
     type: fill-blank
     concept: generic-method
+    goal: "Declare the type parameter this method needs, so it works on a list of any item type."
     prompt: "static ___ T lastOf(List<T> items) {"
     answers: ["<T>"]
     explain: "A generic method declares <T> before its return type."

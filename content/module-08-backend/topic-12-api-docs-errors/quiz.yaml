@@ -85,6 +85,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: versioning
+    goal: "Serve the second version of the rentals API, where fare is an object, beside the old one."
     prompt: "@RequestMapping(\"/api/___/rentals\")   // the new version, where fare is an object"
     answers: ["v2"]
     explain: "v1 keeps the old flat fareCents. The new shape lives under /api/v2, so both run side by side."
@@ -149,6 +150,7 @@ questions:
   - id: q11
     type: fill-blank
     concept: problem-types
+    goal: "Add an extra rentalId field to the problem response, next to title, status and detail."
     prompt: "problem.___(\"rentalId\", ex.rentalId());   // add an extension field to the ProblemDetail"
     answers: ["setProperty"]
     explain: "setProperty adds an extension field next to type, title, status, detail and instance."

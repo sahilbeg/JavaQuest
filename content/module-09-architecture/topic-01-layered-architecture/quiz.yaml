@@ -117,6 +117,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: error-mapping
+    goal: "Build an error reply with status 409, for a request that clashes with the bike's current state."
     prompt: "ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.___, ex.getMessage());   // a 409"
     answers: ["CONFLICT"]
     explain: "HttpStatus.CONFLICT is 409: the request clashes with the current state, such as a bike that is already out."

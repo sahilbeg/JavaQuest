@@ -22,7 +22,13 @@ import java.util.stream.IntStream;
  */
 public final class QuizSession {
 
-    public record Presented(String id, String type, String prompt, String code, List<String> choices, List<String> items) {}
+    /** A question as the page sees it. {@code goal} is set for fill-blank questions only. */
+    public record Presented(String id, String type, String prompt, String code, List<String> choices, List<String> items,
+                            String goal) {
+        public Presented(String id, String type, String prompt, String code, List<String> choices, List<String> items) {
+            this(id, type, prompt, code, choices, items, null);
+        }
+    }
 
     public record Graded(String id, String type, boolean correct, String concept, String expected, String explain, String reteach) {}
 
@@ -69,7 +75,7 @@ public final class QuizSession {
                 yield new Presented(mcq.id(), "mcq", variant.prompt(), null,
                         order.stream().map(variant.choices()::get).toList(), null);
             }
-            case FillBlank fill -> new Presented(fill.id(), "fill-blank", fill.prompt(), null, null, null);
+            case FillBlank fill -> new Presented(fill.id(), "fill-blank", fill.prompt(), null, null, null, fill.goal());
             case PredictOutput predict -> new Presented(predict.id(), "predict-output",
                     predict.prompt() == null ? "What does this program print?" : predict.prompt(), predict.code(), null, null);
             case Order order -> new Presented(order.id(), "order", order.prompt(), null, null,

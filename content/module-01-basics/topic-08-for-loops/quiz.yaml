@@ -84,6 +84,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: for-loop
+    goal: "Move i up by one after every turn, so it counts from 1 to 12."
     prompt: "for (int i = 1; i <= 12; ___) {"
     answers: ["i++", "++i", "i += 1", "i+=1", "i = i + 1", "i=i+1"]
     explain: "The change part adds 1 to i after every turn."
@@ -118,6 +119,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: continue
+    goal: "Skip the rest of this turn when the dock is 4, then go on with the next dock."
     prompt: "if (dock == 4) { ___; }"
     answers: ["continue", "continue;"]
     explain: "continue skips the rest of this turn, so dock 4 is left out and the loop goes on."

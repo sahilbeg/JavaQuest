@@ -50,6 +50,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: commit
+    goal: "Save the staged changes as a snapshot in the history, with a short message."
     prompt: "git ___ -m \"Fix greeting\""
     answers: ["commit"]
     explain: "git commit saves the staged changes, and -m adds the message."

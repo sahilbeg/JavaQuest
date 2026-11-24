@@ -107,6 +107,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: token-permissions-and-secrets
+    goal: "Grant this job permission to ask GitHub for a short-lived OIDC token."
     prompt: "  ___: write     # lets this job ask GitHub for an OIDC token"
     answers: ["id-token"]
     explain: "id-token: write lets the job ask GitHub for a signed, short-lived OIDC token, which the cloud trades for temporary credentials. No cloud key is stored."

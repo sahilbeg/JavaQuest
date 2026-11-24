@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: boolean-and-char
+    goal: "Set isMember to the yes value, because this rider is a member."
     prompt: "boolean isMember = ___;   // this rider IS a member"
     answers: ["true"]
     explain: "A boolean holds true or false, written without quotes. A member gets true."
@@ -31,6 +32,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: casting
+    goal: "Cast 2.5 to the same type as roundedKm, which drops the .5 and keeps 2."
     prompt: "int roundedKm = (___) 2.5;"
     answers: ["int"]
     explain: "A cast puts the target type in brackets before the value: (int) 2.5 gives 2."

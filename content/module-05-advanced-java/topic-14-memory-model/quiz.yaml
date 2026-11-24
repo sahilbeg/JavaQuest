@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: volatile
+    goal: "Make every change to this stop flag show up at once in every thread that reads it."
     prompt: "private ___ boolean running = true;"
     answers: ["volatile"]
     explain: "volatile makes every write to running visible to every thread that reads it, so a stop flag works."

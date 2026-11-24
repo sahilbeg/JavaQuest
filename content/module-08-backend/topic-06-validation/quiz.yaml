@@ -46,6 +46,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: bean-validation
+    goal: "Reject any bike id that does not look like B, a dash and four digits, with a clear message."
     prompt: '@___(regexp = "B-\\d{4}", message = "must look like B-1042") String bikeId,'
     answers: ["Pattern"]
     explain: "@Pattern checks text against a regular expression. message replaces the default message."
@@ -71,6 +72,7 @@ questions:
   - id: q05
     type: fill-blank
     concept: valid-trigger
+    goal: "Check the request body against its rules before the method runs, so a bad body gets a 400 answer."
     prompt: "public ResponseEntity<Rental> start(___ @RequestBody StartRentalRequest request) {"
     answers: ["@Valid", "@Validated"]
     explain: "@Valid in front of @RequestBody runs the rules before your method is called. Spring also accepts @Validated in that spot."

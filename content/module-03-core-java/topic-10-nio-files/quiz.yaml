@@ -32,6 +32,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: create-and-check
+    goal: "If nothing is at the log's path yet, return an empty list instead of trying to read it."
     prompt: "if (!Files.___(log)) { return new ArrayList<>(); }"
     answers: ["exists"]
     explain: "Files.exists returns true when the file is there."
@@ -40,6 +41,7 @@ questions:
   - id: q05
     type: fill-blank
     concept: charset
+    goal: "Save the text to the log file using the UTF-8 encoding."
     prompt: "Files.writeString(log, text, StandardCharsets.___);"
     answers: ["UTF_8"]
     explain: "StandardCharsets.UTF_8 names the UTF-8 charset."

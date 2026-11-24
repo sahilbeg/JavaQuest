@@ -112,6 +112,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: pinning-and-scanning
+    goal: "Pin the base image to one exact build by its content fingerprint, so it can never change under you."
     prompt: "FROM eclipse-temurin:21.0.8_9-jre@___:<the 64 hex digits of the exact image>"
     answers: ["sha256"]
     explain: "A digest names one exact image by its sha256 fingerprint and never moves, unlike a tag. With both, Docker uses the digest and the tag is for humans."

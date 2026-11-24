@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: trim-and-case
+    goal: "Remove the spaces at the start and end of raw, then make it capital letters."
     prompt: "String clean = raw.___().toUpperCase();"
     answers: ["trim", "strip"]
     explain: "trim() and strip() both remove spaces at the start and the end."
@@ -109,6 +110,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: searching-strings
+    goal: "Check that code begins with B-, not just that it has B- somewhere."
     prompt: "boolean ok = code.___(\"B-\");   // true when the code begins with B-"
     answers: ["startsWith"]
     explain: "startsWith checks only the beginning of the text. contains would also be true for \"B-\" in the middle, so it is the wrong check here."

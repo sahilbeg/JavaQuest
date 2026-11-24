@@ -80,6 +80,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: collection-costs
+    goal: "Copy the rides into a set whose contains check is O(1) on average, so the unlock check gets fast."
     prompt: "Set<String> out = new ___<>(rides);"
     answers: ["HashSet", "LinkedHashSet"]
     explain: "A HashSet gives O(1) average contains, which fixes the slow unlock check."

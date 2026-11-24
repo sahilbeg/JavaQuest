@@ -101,7 +101,7 @@ export function questionFieldset(q, i, readers) {
   const { node, read } = QUESTION[q.type](q, i);
   readers.set(q.id, read);
   return h("fieldset", { class: "question", "data-qid": q.id },
-    h("legend", {}, `${i + 1}. ${q.type === "fill-blank" ? "Fill in the missing part of this line." : q.prompt} `,
+    h("legend", {}, `${i + 1}. ${q.type === "fill-blank" ? (q.goal ?? "Fill in the missing part of this line.") : q.prompt} `,
       h("span", { class: "question-type" }, TYPE_LABELS[q.type])), node);
 }
 

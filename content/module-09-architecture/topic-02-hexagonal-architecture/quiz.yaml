@@ -97,6 +97,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: framework-free-core
+    goal: "In the composition root, build the core class that ends a ride, handing it the adapters."
     prompt: "EndRideUseCase endRide = new ___(store, payments, notifier, Clock.systemUTC());   // in the composition root"
     answers: ["EndRideService"]
     explain: "The composition root builds the adapters and passes them into the core class that implements the driving port. It is the only code that knows both sides."

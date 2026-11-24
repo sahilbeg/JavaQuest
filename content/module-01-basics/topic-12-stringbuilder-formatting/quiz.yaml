@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: string-format
+    goal: "Show whatever number is passed in as a price with exactly two digits after the dot."
     prompt: "String price = String.format(\"$___\", 1.5);"
     answers: ["%.2f"]
     explain: "%.2f shows a decimal with 2 digits, so 1.5 becomes 1.50."

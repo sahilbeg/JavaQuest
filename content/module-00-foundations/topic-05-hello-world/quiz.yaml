@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: println
+    goal: "Show Hi on the screen, then move to the next line."
     prompt: "System.out.___(\"Hi\");"
     answers: ["println"]
     explain: "println prints the text and then moves to a new line."

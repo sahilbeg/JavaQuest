@@ -70,14 +70,16 @@ questions:
   - id: q08
     type: fill-blank
     concept: collectors
+    goal: "Make the JVM print one short line, with the pause time, every time the garbage collector runs."
     prompt: "java ___ Main.java    // print a line for each collection"
-    answers: ["-Xlog:gc"]
+    answers: ["-Xlog:gc", "-verbose:gc"]
     explain: "-Xlog:gc logs every garbage collection with its pause time."
     reteach: "## Concept"
 
   - id: q09
     type: fill-blank
     concept: weak-references
+    goal: "Give the variable the same type as the object it holds: one that points at the ride without keeping it alive."
     prompt: "___<Ride> weak = new WeakReference<>(ride);"
     answers: ["WeakReference"]
     explain: "A WeakReference refers to an object without keeping it alive."

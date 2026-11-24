@@ -41,6 +41,7 @@ questions:
   - id: q05
     type: fill-blank
     concept: navigation
+    goal: "Make logs the folder the terminal is working in."
     prompt: "___ logs   # move into the logs folder"
     answers: ["cd"]
     explain: "cd moves you into the folder you name."
@@ -49,6 +50,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: file-commands
+    goal: "Print everything inside the file 2026-11-11.txt to the screen."
     prompt: "___ 2026-11-11.txt   # print what the file says"
     answers: ["cat"]
     explain: "cat prints the contents of a file to the screen."

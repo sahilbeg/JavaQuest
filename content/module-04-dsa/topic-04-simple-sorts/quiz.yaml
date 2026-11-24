@@ -50,6 +50,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: insertion-sort
+    goal: "Keep shifting values right only while they are strictly bigger than the key, so equal items keep their order."
     prompt: "Stable version, keeps equal items in order: while (j >= 0 && a[j] ___ key) {"
     answers: [">"]
     explain: "Shift only values strictly bigger than the key. With >=, an equal value also shifts right, so the key lands in front of it. That swaps equal items and breaks stability."

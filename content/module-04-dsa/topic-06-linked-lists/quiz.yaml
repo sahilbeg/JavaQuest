@@ -98,6 +98,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: traversal
+    goal: "Move the walker one node further along the list."
     prompt: "current = current.___;"
     answers: ["next"]
     explain: "Following the next reference moves the walker one node along."

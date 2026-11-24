@@ -32,6 +32,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: built-in-interfaces
+    goal: "Ask the isLong check whether a 45-minute ride counts as long."
     prompt: "boolean longRide = isLong.___(45);"
     answers: ["test"]
     explain: "A Predicate's one method is called test."
@@ -90,6 +91,7 @@ questions:
   - id: q08
     type: fill-blank
     concept: built-in-interfaces
+    goal: "Declare fare as a built-in function that takes two inputs, the minutes and the cents per minute, and gives back one result."
     prompt: "___<Integer, Long, Long> fare = (minutes, centsPerMinute) -> 100 + minutes * centsPerMinute;"
     answers: ["BiFunction"]
     explain: "BiFunction takes two inputs and gives back one result."

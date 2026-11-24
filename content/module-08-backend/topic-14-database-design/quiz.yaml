@@ -109,6 +109,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: explain-plans
+    goal: "Show how the database plans to find the rows, without running the query."
     prompt: "___ SELECT id FROM rental WHERE rider_id = 'r-17';   -- show the plan only, without running the query"
     answers: ["EXPLAIN"]
     explain: "EXPLAIN shows how the database plans to find the rows. EXPLAIN ANALYZE also runs the query and counts the rows it read."

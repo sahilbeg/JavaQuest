@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: arrays-of-objects
+    goal: "Fill this slot of the array with its own fresh, empty Dock."
     prompt: "docks[i] = ___;"
     answers: ["new Dock()"]
     explain: "Each slot needs its own Dock object, made with new Dock()."
@@ -31,6 +32,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: object-fields
+    goal: "Answer true when the dock holds no bike at all."
     prompt: "return bike == ___;"
     answers: ["null"]
     explain: "An empty dock has no Bike in its field, so the field is null."

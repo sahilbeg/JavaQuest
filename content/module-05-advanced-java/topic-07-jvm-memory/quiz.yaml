@@ -70,6 +70,7 @@ questions:
   - id: q08
     type: fill-blank
     concept: heap
+    goal: "Find the largest heap size, in bytes, that this JVM will ever try to use."
     prompt: "long max = Runtime.getRuntime().___();"
     answers: ["maxMemory"]
     explain: "maxMemory() returns the largest heap the JVM will try to use, in bytes."
@@ -78,6 +79,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: memory-flags
+    goal: "Start the program with its heap capped at 512 megabytes, using the short memory flag."
     prompt: "java ___ Main.java    // allow at most 512 MB of heap"
     answers: ["-Xmx512m", "-Xmx512M"]
     explain: "-Xmx512m sets the maximum heap to 512 megabytes."

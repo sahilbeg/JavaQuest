@@ -110,6 +110,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: modules-and-environments
+    goal: "Make Terraform refuse any plan that would delete or replace the rides database."
     prompt: "lifecycle { ___ = true }   # any plan that would delete the rides database fails"
     answers: ["prevent_destroy"]
     explain: "prevent_destroy makes Terraform stop with an error instead of destroying or replacing the resource. Pair it with deletion_protection on the database itself."

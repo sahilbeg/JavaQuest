@@ -15,8 +15,9 @@ questions:
   - id: q02
     type: fill-blank
     concept: feature-flags
+    goal: "Treat a flag that nobody has set as off."
     prompt: "return values.getOrDefault(name, ___);   // a flag nobody has set is off"
-    answers: ["false"]
+    answers: ["false", "Boolean.FALSE"]
     explain: "An unknown flag should be off. That way, new code stays hidden until someone turns it on on purpose."
     reteach: "### Feature flags"
 

@@ -106,6 +106,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: design-rounds
+    goal: "Check and claim this alert id in one atomic step, so a repeat or a second thread sends nothing."
     prompt: "if (!sent.___(alert.alertId())) {"
     answers: ["add"]
     explain: "On a concurrent set, add checks and claims in one atomic step: it returns true for the first caller and false for every repeat. A contains check followed by a later add would let two threads both send the alert."

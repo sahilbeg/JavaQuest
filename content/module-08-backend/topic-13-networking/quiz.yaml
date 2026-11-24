@@ -54,6 +54,7 @@ questions:
   - id: q05
     type: fill-blank
     concept: dns
+    goal: "Map the name api.spoke.example to its IPv4 address for 300 seconds."
     prompt: "api.spoke.example.   300   IN   ___   203.0.113.10"
     answers: ["A"]
     explain: "203.0.113.10 is an IPv4 address, and an A record holds an IPv4 address. AAAA would hold an IPv6 one."

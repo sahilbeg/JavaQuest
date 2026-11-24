@@ -73,6 +73,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: recursion-on-arrays
+    goal: "Add this dock's count to the sum of all the docks after it, starting one slot further along."
     prompt: "return docks[index] + sumFrom(docks, ___);"
     answers: ["index + 1", "index+1", "1 + index", "1+index"]
     explain: "Each call handles one slot and moves the index one step toward the end."

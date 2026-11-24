@@ -31,6 +31,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: request-mapping
+    goal: "Make this method handle requests that remove one rental, found by the id in its address."
     prompt: "@___(\"/{id}\")   // answers DELETE /rentals/rental-1"
     answers: ["DeleteMapping"]
     explain: "Each HTTP method has its own mapping annotation. DELETE uses @DeleteMapping."
@@ -90,6 +91,7 @@ questions:
   - id: q08
     type: fill-blank
     concept: request-params
+    goal: "Let callers leave the rider id out of the address. Then riderId is null and every rental is listed."
     prompt: "public List<Rental> list(@RequestParam(___) String riderId) {   // riderId is null when left out"
     answers: ["required = false", "required=false"]
     explain: "required = false lets the parameter be missing. Then riderId is null and you list every rental."

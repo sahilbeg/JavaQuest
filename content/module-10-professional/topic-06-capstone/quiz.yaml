@@ -72,6 +72,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: per-city-config
+    goal: "A city offers a bike type only when its price table has an entry for that type."
     prompt: "public boolean offers(BikeType type) { return perMinuteCents.___(type); }"
     answers: ["containsKey"]
     explain: "A city offers a type when that type has a price. Bramford's map has no CARGO key, so containsKey(CARGO) is false."

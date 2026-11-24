@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: grouping-by
+    goal: "Group the rides by station and store how many rides each station had."
     prompt: "Map<String, Long> m = rides.stream().collect(Collectors.groupingBy(Ride::station, Collectors.___()));"
     answers: ["counting"]
     explain: "counting() is the downstream collector that counts each pile. It gives a Long."
@@ -78,6 +79,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: flat-map
+    goal: "Join every station's list of rides into one single stream of rides."
     prompt: "List<Ride> all = stationLogs.stream().___(List::stream).toList();"
     answers: ["flatMap"]
     explain: "flatMap turns each inner list into a stream and joins them into one stream."

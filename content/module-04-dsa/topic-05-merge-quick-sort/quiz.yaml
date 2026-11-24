@@ -119,6 +119,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: partition
+    goal: "Pick the last item of the range being sorted as the pivot, the way Lomuto partition does."
     prompt: "int pivot = a[___];"
     answers: ["high"]
     explain: "Lomuto partition uses the last item of the range, a[high], as the pivot."

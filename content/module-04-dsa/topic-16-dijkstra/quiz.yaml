@@ -103,6 +103,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: path-reconstruction
+    goal: "Store the new time only when it is strictly faster than the best time known so far."
     prompt: "if (known == null || minutes ___ known) {"
     answers: ["<"]
     explain: "Update only when the new time is strictly smaller. With <=, equal times keep replacing each other, and a 0-minute lane loops forever."

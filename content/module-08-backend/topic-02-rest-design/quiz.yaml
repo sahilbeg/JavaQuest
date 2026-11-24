@@ -34,6 +34,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: method-mapping
+    goal: "Ask the server to make a brand-new rental in the rentals collection, and let the server pick its id."
     prompt: "___ /rentals HTTP/1.1   # create a new rental for r-17"
     answers: ["POST"]
     explain: "Starting a rental creates a new resource in the /rentals collection, so it is a POST."
@@ -63,6 +64,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: status-choices
+    goal: "Name the response header that tells the app the address where the new rental now lives."
     prompt: "___: /rentals/rental-17   # the 201 header that points to the new rental"
     answers: ["Location", "location"]
     explain: "Location tells the client where the new resource lives. Header names ignore case."

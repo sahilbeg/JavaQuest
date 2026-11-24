@@ -36,6 +36,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: dockerfile
+    goal: "Build this image on top of a base image that already has a Java 21 runtime installed."
     prompt: "___ eclipse-temurin:21-jre"
     answers: ["FROM"]
     explain: "FROM picks the base image. This one already has a Java 21 runtime installed."
@@ -68,6 +69,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: ports
+    goal: "Connect port 8080 on your laptop to port 8080 inside the container."
     prompt: "docker run --rm ___ 8080:8080 spoke/kiosk:1.10.0"
     answers: ["-p", "--publish"]
     explain: "-p host:container connects your computer's port to the container's port."

@@ -75,6 +75,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: javadoc
+    goal: "In the method's Javadoc, describe what the method gives back to the caller."
     prompt: " * ___ the fare in cents, never negative"
     answers: ["@return"]
     explain: "@return describes what the method gives back, including special cases. @param describes one parameter, and @throws names an exception and when it happens."

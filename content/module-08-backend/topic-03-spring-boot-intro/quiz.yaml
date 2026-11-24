@@ -39,6 +39,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: starters
+    goal: "Add the one Spring Boot 4 starter that brings Spring MVC, the Tomcat web server and Jackson for JSON."
     prompt: "<artifactId>___</artifactId>  <!-- the Spring Boot 4 starter for a web API -->"
     answers: ["spring-boot-starter-webmvc"]
     explain: "spring-boot-starter-webmvc brings Spring MVC, embedded Tomcat and Jackson. Older guides call it spring-boot-starter-web."
@@ -91,6 +92,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: application-class
+    goal: "Start Spring from main, which starts the web server and waits for requests."
     prompt: "SpringApplication.___(SpokeApiApplication.class, args);"
     answers: ["run"]
     explain: "SpringApplication.run starts Spring, which starts the web server and waits for requests."
@@ -166,6 +168,7 @@ questions:
   - id: q12
     type: fill-blank
     concept: mockmvc-tests
+    goal: "Read the HTTP status code the response came back with, such as 200 or 404."
     prompt: "assertEquals(200, result.getResponse().___(), \"GET /stations should answer 200 OK\");"
     answers: ["getStatus"]
     explain: "getResponse().getStatus() gives the HTTP status code, such as 200 or 404."

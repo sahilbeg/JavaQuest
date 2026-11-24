@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: build-script
+    goal: "Make Gradle's checking task find and run the JUnit Jupiter checks."
     prompt: "tasks.test { ___() }  // run the JUnit Jupiter tests"
     answers: ["useJUnitPlatform"]
     explain: "useJUnitPlatform() makes the test task find and run JUnit Jupiter tests."
@@ -65,6 +66,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: configurations
+    goal: "Add JUnit for the checking code only: it compiles and runs with it, but the main code never sees it."
     prompt: "___(\"org.junit.jupiter:junit-jupiter:5.11.4\")  // the tests compile and run with it, main code never sees it"
     answers: ["testImplementation"]
     explain: "JUnit is only needed by the tests, so it goes in testImplementation, like Maven's test scope."

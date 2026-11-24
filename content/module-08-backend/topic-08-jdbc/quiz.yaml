@@ -46,6 +46,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: prepared-statements
+    goal: "Fill the first question mark in the SQL with riderId, using the setter that matches its text type."
     prompt: "statement.___(1, riderId); // riderId is a String"
     answers: ["setString"]
     explain: "setString fills a ? with text. The 1 means the first ?, because JDBC counts from 1."
@@ -129,6 +130,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: generated-keys
+    goal: "Ask the driver to keep the id the database picks for the new row, so you can read it back."
     prompt: "PreparedStatement statement = connection.prepareStatement(sql, Statement.___);"
     answers: ["RETURN_GENERATED_KEYS"]
     explain: "RETURN_GENERATED_KEYS asks the driver to keep the id the database picked, so getGeneratedKeys() can hand it back."

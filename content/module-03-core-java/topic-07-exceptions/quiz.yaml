@@ -81,6 +81,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: try-catch
+    goal: "Handle the error Integer.parseInt raises when the text is not a number."
     prompt: "} catch (___ e) {   // handles Integer.parseInt(\"abc\")"
     answers: ["NumberFormatException", "java.lang.NumberFormatException", "IllegalArgumentException", "java.lang.IllegalArgumentException", "RuntimeException", "Exception", "Throwable"]
     explain: "parseInt throws a NumberFormatException. A catch for that type, or for a more general type above it, handles it."
@@ -89,6 +90,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: throw
+    goal: "Stop the method at once and hand this error to the caller, because minutes cannot be negative."
     prompt: "___ new IllegalArgumentException(\"Minutes cannot be negative\");"
     answers: ["throw"]
     explain: "The keyword throw sends an exception up to the caller."

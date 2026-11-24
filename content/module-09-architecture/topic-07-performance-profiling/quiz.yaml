@@ -55,6 +55,7 @@ questions:
   - id: q05
     type: fill-blank
     concept: capacity-math
+    goal: "Work out how many requests are in the system at once, on average."
     prompt: "L = 40 requests/s × 0.18 s = ___ requests in flight"
     answers: ["7.2"]
     explain: "Little's law: L = λ × W. 40 requests a second, each in the system for 0.18 s, means 7.2 in flight on average. On 8 threads that is 90% busy."

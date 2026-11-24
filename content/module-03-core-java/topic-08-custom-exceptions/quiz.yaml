@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: throws-clause
+    goal: "Warn every caller, in the method's first line, that docking can fail with a DockFullException they must handle."
     prompt: "int dock(String bikeId) ___ DockFullException {"
     answers: ["throws"]
     explain: "throws, with an s, goes in the method signature and lists what the method can throw."
@@ -31,8 +32,9 @@ questions:
   - id: q04
     type: fill-blank
     concept: custom-exception
+    goal: "Make this an unchecked error by extending the class that every unchecked error comes from."
     prompt: "class UnknownBikeTypeException extends ___ {   // the parent of every unchecked exception"
-    answers: ["RuntimeException"]
+    answers: ["RuntimeException", "java.lang.RuntimeException"]
     explain: "An unchecked exception extends RuntimeException or one of its children."
     reteach: "## Concept"
 

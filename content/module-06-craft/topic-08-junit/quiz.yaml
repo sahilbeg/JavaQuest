@@ -18,6 +18,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: unit-test
+    goal: "Mark this method so JUnit finds it and runs it as one check."
     prompt: "@___ void plusRiderPaysFromMinute31() {"
     answers: ["Test"]
     explain: "The @Test annotation tells JUnit to run the method as a test."
@@ -122,6 +123,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: parameterized-tests
+    goal: "Feed the parameterized test its rows, each row written as comma-separated values in one string."
     prompt: "@___({ \"classic, 10, BASIC, 250\", \"ebike, 10, BASIC, 400\" })"
     answers: ["CsvSource"]
     explain: "@CsvSource gives a parameterized test its rows as comma-separated text."

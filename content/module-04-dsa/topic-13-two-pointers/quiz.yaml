@@ -64,6 +64,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: fixed-window
+    goal: "Slide the window of size k one step: add the value coming in and take away the one leaving, k places back."
     prompt: "window += values[i] - values[___];"
     answers: ["i - k", "i-k"]
     explain: "The value leaving the window is exactly k places behind the one coming in."

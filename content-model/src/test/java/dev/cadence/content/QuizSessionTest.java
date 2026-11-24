@@ -25,7 +25,7 @@ class QuizSessionTest {
     private static final Mcq MCQ = new Mcq("mcq", "types", null, null, null, List.of(
             new McqVariant("Whole number type?", List.of("int", "String", "boolean"), 0),
             new McqVariant("Text type?", List.of("int", "String", "boolean"), 1)), "explained", "## Concept");
-    private static final FillBlank FILL = new FillBlank("fill", "printing", "System.out.___(\"Hi\");",
+    private static final FillBlank FILL = new FillBlank("fill", "printing", "Show Hi on the screen, then end the line.", "System.out.___(\"Hi\");",
             List.of("println", "print"), "explained", null);
     private static final PredictOutput PREDICT = new PredictOutput("predict", "printing", null,
             "System.out.println(1);\nSystem.out.println(2);", "1\n2", "explained", null);

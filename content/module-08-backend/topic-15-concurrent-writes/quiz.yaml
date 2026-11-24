@@ -86,6 +86,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: optimistic-locking
+    goal: "Save only if nobody changed the row since the editor read it, by checking the counter that goes up on each save."
     prompt: "UPDATE fare SET cents_per_minute = ?, version = version + 1 WHERE bike_type = ? AND ___ = ?"
     answers: ["version"]
     explain: "The save only changes the row if it is still at the version the editor read. Any other save in between moved the version on, so this one changes 0 rows."

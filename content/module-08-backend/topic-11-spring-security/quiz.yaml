@@ -63,6 +63,7 @@ questions:
   - id: q05
     type: fill-blank
     concept: filter-chain
+    goal: "Switch Spring Security on for the app, so an HttpSecurity is ready for your filter chain method."
     prompt: "@___   // on SecurityConfig: switches Spring Security on and provides HttpSecurity"
     answers: ["EnableWebSecurity"]
     explain: "@EnableWebSecurity switches Spring Security on. Without it, there is no HttpSecurity bean for your filter chain method."
@@ -133,6 +134,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: password-hashing
+    goal: "Turn the plain password into a BCrypt hash before it is stored."
     prompt: "User.withUsername(\"ada\").password(encoder.___(\"ride-on\")).roles(\"RIDER\").build();"
     answers: ["encode"]
     explain: "encoder.encode turns the plain password into a BCrypt hash before it is stored."

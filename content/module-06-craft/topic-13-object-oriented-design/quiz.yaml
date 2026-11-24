@@ -45,6 +45,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: responsibilities
+    goal: "Complete the name of the rule about telling objects to do jobs with their own data."
     prompt: "Give each job to the object that has the data. This rule is called: tell, don't ___."
     answers: ["ask"]
     explain: "Tell the object to do the job with its own data. Do not pull the data out and do the job somewhere else."

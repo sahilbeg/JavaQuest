@@ -28,6 +28,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: project-layout
+    goal: "Put this class in the folder Maven keeps for code that checks the main code and never ships."
     prompt: "src/___/java/dev/spoke/kiosk/FareCalculatorTest.java"
     answers: ["test"]
     explain: "Tests live under src/test/java, in the same package as the class they test."
@@ -84,6 +85,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: dependencies
+    goal: "Print every jar the project uses, and which jar pulled each one in."
     prompt: "./mvnw dependency:___   # print every jar and which jar brought it in"
     answers: ["tree"]
     explain: "dependency:tree prints every jar and which dependency brought it in."

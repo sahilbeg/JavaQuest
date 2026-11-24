@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: profiles-and-overrides
+    goal: "Start the usual services and also switch on the optional tools group, which adds adminer."
     prompt: "docker compose ___ tools up -d   # start the usual services, plus adminer"
     answers: ["--profile"]
     explain: "adminer has profiles: [tools], so a plain up skips it. --profile tools switches that profile on, and setting COMPOSE_PROFILES=tools does the same. Services without profiles always start."

@@ -42,6 +42,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: counting-pattern
+    goal: "Read the current count for this bike type, using 0 when the type has no count yet."
     prompt: "counts.put(type, counts.___(type, 0) + 1);"
     answers: ["getOrDefault"]
     explain: "getOrDefault gives 0 the first time a type appears, so the count starts at 1."
@@ -78,6 +79,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: map-iteration
+    goal: "Print each station next to its total, like Harbor=12, by reading the number stored in each entry."
     prompt: "for (Map.Entry<String, Integer> e : totals.entrySet()) { System.out.println(e.getKey() + \"=\" + e.___()); }"
     answers: ["getValue"]
     explain: "A Map.Entry has getKey() for the key and getValue() for the value."

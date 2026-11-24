@@ -63,6 +63,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: wide-column-stores
+    goal: "Store each rider's rides newest first, so the latest ones are read with no sorting."
     prompt: ") WITH CLUSTERING ORDER BY (started_at ___, rental_id ASC);   -- a rider's newest ride first"
     answers: ["DESC"]
     explain: "Clustering columns sort rows inside a partition on disk. DESC on started_at stores the newest ride first, so LIMIT 50 reads the latest 50 with no sort at query time."

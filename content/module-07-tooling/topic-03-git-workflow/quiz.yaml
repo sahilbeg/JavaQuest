@@ -15,6 +15,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: branches
+    goal: "Create the branch fix/harbor-fare-rounding and move onto it, in one step."
     prompt: "git ___ -c fix/harbor-fare-rounding"
     answers: ["switch"]
     explain: "git switch -c creates a new branch and moves you onto it in one step."
@@ -107,6 +108,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: history-safety
+    goal: "Overwrite your own rebased branch on the server, but only if nobody else has added work there since you last fetched."
     prompt: "git push ___   # overwrite your own rebased branch safely"
     answers: ["--force-with-lease"]
     explain: "--force-with-lease overwrites your branch on the server only if nobody else pushed to it since your last fetch."

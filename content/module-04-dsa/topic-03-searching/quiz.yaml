@@ -32,6 +32,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: safe-midpoint
+    goal: "Find the middle of the range safely: add half the size of the range to low, so nothing overflows."
     prompt: "int mid = low + (___) / 2;"
     answers: ["high - low", "high-low"]
     explain: "high - low is the size of the range, so it never overflows. Half of it added to low lands in the middle."

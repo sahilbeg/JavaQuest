@@ -47,6 +47,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: estimation
+    goal: "Divide by the number of seconds in one day, written as a single number, to get events per second."
     prompt: "long averagePerSecond = eventsPerDay / ___;"
     answers: ["86400", "86_400"]
     explain: "A day has 24 × 60 × 60 = 86,400 seconds, about 10^5. So a million events a day is about 10 a second on average. The peak is usually several times higher."

@@ -118,6 +118,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: sharding
+    goal: "Spread the rides table across shards by the column that keeps each rider's rides together on one shard."
     prompt: "SELECT create_distributed_table('rides', '___');   -- the column Spoke's busiest ride queries name"
     answers: ["rider_id"]
     explain: "Spoke's busiest queries are a rider's active rental and ride history, which both name one rider. Sharding by rider_id keeps each rider's rides on one shard, and it has many evenly used values, unlike city_id."

@@ -34,6 +34,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: estimating
+    goal: "Finish the PERT expected time: the likely value counts four times, the other two once each."
     prompt: "double expected = (o + 4 * m + p) / ___;"
     answers: ["6", "6.0"]
     explain: "PERT weights the most likely value four times, plus the optimistic and pessimistic once each: six parts in all, so divide by 6."

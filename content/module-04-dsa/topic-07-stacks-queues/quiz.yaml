@@ -74,6 +74,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: array-deque
+    goal: "Put bike B-1042 at the back of the repair queue."
     prompt: "repairs.___(\"B-1042\"); // add the bike at the back of the queue"
     answers: ["offer", "add", "addLast", "offerLast"]
     explain: "offer adds an item at the back of the queue."
@@ -82,8 +83,9 @@ questions:
   - id: q07
     type: fill-blank
     concept: growing-array
+    goal: "The array is full, so make a new one that is twice as long as the old one."
     prompt: "String[] bigger = new String[items.length ___];"
-    answers: ["* 2", "*2"]
+    answers: ["* 2", "*2", "+ items.length", "+items.length"]
     explain: "When the array is full, make a new one twice as long."
     reteach: "## Concept"
 

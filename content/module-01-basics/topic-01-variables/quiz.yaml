@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: int-and-string
+    goal: "Give station the type for text, so it can hold a station name."
     prompt: "___ station = \"Riverside\";"
     answers: ["String"]
     explain: "Text in double quotes goes in a String variable, with a capital S."
@@ -22,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: int-and-string
+    goal: "Give minutes the type this lesson uses for whole numbers, so it can hold 20."
     prompt: "___ minutes = 20;   // a whole number"
     answers: ["int"]
     explain: "20 is a whole number, and int is the type for whole numbers taught here."

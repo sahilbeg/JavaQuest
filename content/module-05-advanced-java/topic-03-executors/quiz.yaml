@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: executor-service
+    goal: "Make a fixed-size pool of exactly 4 threads that share the jobs you hand it."
     prompt: "ExecutorService pool = Executors.___(4);"
     answers: ["newFixedThreadPool"]
     explain: "Executors.newFixedThreadPool(4) makes a pool with exactly 4 threads."
@@ -119,6 +120,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: invoke-all
+    goal: "Hand the pool every task in the list, wait until all are done, and collect their futures in order."
     prompt: "List<Future<String>> futures = pool.___(tasks);"
     answers: ["invokeAll"]
     explain: "invokeAll submits a list of callables, waits for all of them, and returns the futures in the same order."

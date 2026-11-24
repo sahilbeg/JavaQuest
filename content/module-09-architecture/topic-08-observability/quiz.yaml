@@ -123,6 +123,7 @@ questions:
   - id: q11
     type: fill-blank
     concept: slos-and-alerting
+    goal: "Work out the error budget: how many minutes of outage a 99.9% SLO allows in a 30-day month."
     prompt: "0.1% of 43,200 minutes = ___ minutes"
     answers: ["43.2"]
     explain: "30 days is 43,200 minutes. A 99.9% SLO allows 0.1% of them: 43.2 minutes of full outage a month. Last night's 40 minutes used about 93% of it."

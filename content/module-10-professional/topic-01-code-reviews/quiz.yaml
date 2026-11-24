@@ -111,6 +111,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: writing-comments
+    goal: "Mark this comment so the author knows the change cannot merge until the security hole is fixed."
     prompt: "issue (___): riderId is glued into the SQL, so anyone can inject. Please use a parameter."
     answers: ["blocking"]
     explain: "In Conventional Comments, a label like issue or nitpick can carry a decoration in brackets. A security hole must be fixed before merging, so this one is blocking."

@@ -108,6 +108,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: airflow-concepts
+    goal: "Let a failed task try again so it gets four attempts in total, counting the first."
     prompt: "\"retries\": ___,   # 4 attempts in all"
     answers: ["3"]
     explain: "retries counts the extra attempts after the first one. 1 first try + 3 retries = 4 attempts."

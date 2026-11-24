@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: creating-optionals
+    goal: "Wrap the dock lookup in an Optional that is simply empty when the map has no entry and gives null."
     prompt: "Optional<String> s = Optional.___(docks.get(bikeId));"
     answers: ["ofNullable"]
     explain: "Map.get can return null. ofNullable turns null into an empty box. Optional.of would throw."
@@ -105,6 +106,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: unwrapping
+    goal: "Get the station's name, or the text unknown when no station was found."
     prompt: "String name = findStation(\"B-0007\").___(\"unknown\");"
     answers: ["orElse"]
     explain: "orElse opens the box and gives the default when it is empty."

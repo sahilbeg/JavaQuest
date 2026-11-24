@@ -87,6 +87,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: online-migrations
+    goal: "Build the index on bike_id while rentals keep being written, without blocking them."
     prompt: "CREATE INDEX ___ rental_bike_id_idx ON rental (bike_id);   -- without blocking writes"
     answers: ["CONCURRENTLY"]
     explain: "CREATE INDEX CONCURRENTLY builds the index while rentals keep being written. It takes longer, cannot run inside a transaction, and leaves an INVALID index to drop if it fails."

@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: deployment-anatomy
+    goal: "Point the Pod at one exact build of the image by its content fingerprint, not a movable tag."
     prompt: "image: ghcr.io/spoke/spoke-api@___:3f9c2e1a7b8d4c6e5f0a1b2c3d4e5f60718293a4b5c6d7e8f9a0b1c2d3e4f5a6"
     answers: ["sha256"]
     explain: "A digest is written sha256: followed by 64 hex characters. It is a hash of the image's contents, so unlike a tag it can never point at a different build."

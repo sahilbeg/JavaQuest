@@ -32,6 +32,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: virtual-executor
+    goal: "Make a pool that starts a fresh virtual thread for every task you submit."
     prompt: "try (ExecutorService pool = Executors.___()) {"
     answers: ["newVirtualThreadPerTaskExecutor"]
     explain: "newVirtualThreadPerTaskExecutor starts one new virtual thread for each submitted task."
@@ -40,6 +41,7 @@ questions:
   - id: q05
     type: fill-blank
     concept: starting-virtual-threads
+    goal: "Build and launch a lightweight virtual thread that pays for ride 7."
     prompt: "Thread t = Thread.___().start(() -> pay(7));"
     answers: ["ofVirtual"]
     explain: "Thread.ofVirtual() returns a builder, and start(...) creates and starts the virtual thread."

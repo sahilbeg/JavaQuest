@@ -96,6 +96,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: while-loop
+    goal: "Keep repeating the block as long as the tap count is 3 or less."
     prompt: "___ (tap <= 3) {"
     answers: ["while"]
     explain: "A while loop starts with the word while and a condition in brackets."
@@ -104,6 +105,7 @@ questions:
   - id: q08
     type: fill-blank
     concept: break
+    goal: "Leave the loop at once when the rider taps the right card."
     prompt: "if (tap == goodTap) { ___; }"
     answers: ["break", "break;"]
     explain: "break leaves the loop at once."

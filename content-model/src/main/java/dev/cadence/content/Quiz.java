@@ -46,13 +46,43 @@ public record Quiz(String topic, int drawCount, int passPercent, List<Question> 
         }
     }
 
-    public record FillBlank(String id, String concept, String prompt, List<String> answers,
+    /**
+     * A line of code with a {@code ___} blank. The {@code goal} says in plain words what the finished line does,
+     * so the learner knows what to type. The page shows the goal in place of a generic instruction.
+     */
+    public record FillBlank(String id, String concept, String goal, String prompt, List<String> answers,
                             String explain, String reteach) implements Question {
+        static final int MAX_GOAL_WORDS = 25;
+
         public FillBlank {
             requireCommon(id, concept, explain);
             require(prompt != null && prompt.contains("___"), "fill-blank " + id + " prompt needs a ___ blank");
             require(answers != null && !answers.isEmpty(), "fill-blank " + id + " needs answers");
             answers = List.copyOf(answers);
+            require(goal != null, "fill-blank " + id + " needs a goal: one sentence saying what the finished line does");
+            requireGoal(id, goal, answers);
+        }
+
+        /** The goal without its closing full stop, so a full stop ending the sentence never counts as the answer ".". */
+        private static String sentence(String goal) {
+            String g = goal.strip();
+            return g.endsWith(".") ? g.substring(0, g.length() - 1) : g;
+        }
+
+        private static void requireGoal(String id, String goal, List<String> answers) {
+            require(!goal.isBlank(), "fill-blank " + id + " goal is empty");
+            require(!goal.contains("___"), "fill-blank " + id + " goal must not have a blank; the prompt has it");
+            long words = goal.strip().split("\\s+").length;
+            require(words <= MAX_GOAL_WORDS, "fill-blank " + id + " goal has " + words + " words; keep it to " + MAX_GOAL_WORDS);
+            for (String answer : answers) {
+                String a = answer.strip();
+                boolean word = a.matches("\\w+");
+                boolean given = word
+                        ? java.util.regex.Pattern.compile("(?<![\\w.])" + java.util.regex.Pattern.quote(a) + "(?!\\w)",
+                                java.util.regex.Pattern.CASE_INSENSITIVE).matcher(goal).find()
+                        : sentence(goal).contains(a);
+                require(!given, "fill-blank " + id + " goal gives away the answer \"" + a + "\"");
+            }
         }
     }
 

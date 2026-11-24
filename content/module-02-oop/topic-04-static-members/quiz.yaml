@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: constants
+    goal: "Make the unlock fee a constant that can never change once it is set."
     prompt: "public static ___ double UNLOCK_FEE = 1.00;"
     answers: ["final"]
     explain: "static final makes a constant: one shared value that never changes."
@@ -80,6 +81,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: class-name-access
+    goal: "From code outside the class, call its static fare method through the class's name."
     prompt: "double price = ___.fare(Prices.CLASSIC, 10);"
     answers: ["Prices"]
     explain: "Outside the class, call a static method with the class name and a dot."

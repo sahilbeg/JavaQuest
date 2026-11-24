@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: accessors
+    goal: "Read how long the ride lasted, in minutes, from the record."
     prompt: "int m = ride.___;"
     answers: ["minutes()"]
     explain: "A record accessor has the same name as the component, with brackets: minutes()."

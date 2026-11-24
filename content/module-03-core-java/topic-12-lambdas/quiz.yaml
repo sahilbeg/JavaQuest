@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: method-reference
+    goal: "Sort the rides by minutes, pointing straight at the minutes method of Ride instead of writing a lambda."
     prompt: "rides.sort(Comparator.comparing(Ride___minutes));"
     answers: ["::"]
     explain: "A method reference puts two colons between the class and the method name."
@@ -118,6 +119,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: foreach-removeif
+    goal: "Delete every ride shorter than 2 minutes from the list in one call."
     prompt: "rides.___(r -> r.minutes() < 2);"
     answers: ["removeIf"]
     explain: "removeIf deletes every item for which the lambda returns true."

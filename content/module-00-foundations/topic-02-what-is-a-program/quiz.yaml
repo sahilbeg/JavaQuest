@@ -41,6 +41,7 @@ questions:
   - id: q05
     type: fill-blank
     concept: compiler
+    goal: "Compile Hello.java into bytecode, without running it."
     prompt: "___ Hello.java"
     answers: ["javac"]
     explain: "javac is the command that compiles a .java file."
@@ -49,6 +50,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: bytecode
+    goal: "Finish the name of the file the compiler writes, the one that holds the bytecode."
     prompt: "javac Hello.java makes Hello.___"
     answers: ["class"]
     explain: "The compiler writes bytecode into a .class file."

@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: create-and-parse
+    goal: "Turn the ISO text 2026-11-14 into a LocalDate for that day."
     prompt: "LocalDate day = LocalDate.___(\"2026-11-14\");"
     answers: ["parse"]
     explain: "parse reads ISO text such as 2026-11-14 and builds a LocalDate."
@@ -113,6 +114,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: local-date-time
+    goal: "Set weekend to true when the day is one of the two weekend days."
     prompt: "boolean weekend = day.getDayOfWeek() == DayOfWeek.___;"
     answers: ["SATURDAY", "SUNDAY"]
     explain: "DayOfWeek is an enum with values MONDAY to SUNDAY. Saturday and Sunday are the weekend."

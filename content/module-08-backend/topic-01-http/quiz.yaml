@@ -36,6 +36,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: urls
+    goal: "Pull just the computer's name out of the address, leaving off the port and the path."
     prompt: "String host = uri.___();   // \"api.spoke.example\" from https://api.spoke.example:8443/stations"
     answers: ["getHost"]
     explain: "getHost() returns only the computer's name. getPort() gives 8443 and getPath() gives /stations."
@@ -92,6 +93,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: status-codes
+    goal: "Tell the app its request clashes with how things stand now, like renting a bike that is already out."
     prompt: "HTTP/1.1 ___ Conflict"
     answers: ["409"]
     explain: "409 Conflict means the request clashes with the server's current state, like renting a bike that is already rented."

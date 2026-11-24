@@ -32,6 +32,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: defining-methods
+    goal: "Say what kind of value the method hands back: a decimal number like 1.00."
     prompt: "public static ___ unlockFee() { return 1.00; }"
     answers: ["double"]
     explain: "1.00 is a decimal number, so the return type is double."
@@ -40,6 +41,7 @@ questions:
   - id: q05
     type: fill-blank
     concept: return-values
+    goal: "Hand n times two back to the code that called the method."
     prompt: "public static int twice(int n) { ___ n * 2; }"
     answers: ["return"]
     explain: "return hands the value back to the caller."

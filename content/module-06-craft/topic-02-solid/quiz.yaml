@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: open-closed
+    goal: "Make TransitPassPayment one more way to pay, by promising every method the PaymentMethod interface lists."
     prompt: "class TransitPassPayment ___ PaymentMethod {"
     answers: ["implements"]
     explain: "A class joins an interface's family with implements."

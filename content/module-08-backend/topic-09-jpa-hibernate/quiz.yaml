@@ -72,6 +72,7 @@ questions:
   - id: q05
     type: fill-blank
     concept: entities
+    goal: "Save the enum as its name, such as RENTED, in the column instead of as a number."
     prompt: "@Enumerated(EnumType.___)   // store the word, such as RENTED"
     answers: ["STRING"]
     explain: "EnumType.STRING stores the enum's name, so the column holds RENTED instead of a number."
@@ -137,6 +138,7 @@ questions:
   - id: q09
     type: fill-blank
     concept: derived-queries
+    goal: "Name a query method that counts the bikes with the given status, built from the field name alone."
     prompt: "long ___(BikeStatus status);   // a derived query: how many bikes have this status"
     answers: ["countByStatus"]
     explain: "countBy returns how many rows match, and Status names the field to compare."

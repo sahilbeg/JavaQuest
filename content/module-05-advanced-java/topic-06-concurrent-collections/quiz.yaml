@@ -32,6 +32,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: concurrent-hash-map
+    goal: "Add 1 to Harbor's count in one safe step, or store 1 if Harbor is not in the map yet."
     prompt: "docks.___(\"Harbor\", 1, Integer::sum);"
     answers: ["merge"]
     explain: "merge stores the value if the key is missing, or combines it with the old value in one atomic step."
@@ -40,6 +41,7 @@ questions:
   - id: q05
     type: fill-blank
     concept: atomics
+    goal: "Read the counter's current number safely, without changing it."
     prompt: "int now = rides.___();   // read the value without changing it"
     answers: ["get", "intValue"]
     explain: "AtomicInteger reads with get() and changes safely with methods such as incrementAndGet()."

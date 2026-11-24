@@ -90,6 +90,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: ttl-and-eviction
+    goal: "Order the keys by last use instead of by insertion, so the map works as an LRU cache."
     prompt: "Map<String, String> lru = new LinkedHashMap<>(16, 0.75f, ___);"
     answers: ["true"]
     explain: "The third argument turns on access order: every get or put moves the key to the end, so the first key is always the least recently used. With false, the map keeps insertion order, which makes a FIFO cache."

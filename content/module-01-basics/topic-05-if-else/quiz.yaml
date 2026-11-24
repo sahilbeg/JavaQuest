@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: comparison-operators
+    goal: "Print the message whenever minutes is anything other than exactly 0."
     prompt: "if (minutes ___ 0) { System.out.println(\"Ride in progress\"); }   // true for any minutes except exactly 0"
     answers: ["!="]
     explain: "`!=` means not equal to. It is true for every value except 0. `==` would do the opposite, and `>` would miss negative numbers."

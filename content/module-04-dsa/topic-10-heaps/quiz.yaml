@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: heap-array-indexes
+    goal: "Work out the index of the parent of the item at index i, with the root at index 0."
     prompt: "int parent = ___;"
     answers: ["(i - 1) / 2", "(i-1)/2", "(i - 1)/2", "(i-1) / 2"]
     explain: "With the root at index 0, the parent of index i is (i - 1) / 2. Integer division drops the remainder."

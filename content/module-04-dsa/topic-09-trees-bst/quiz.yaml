@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: bst-insert-search
+    goal: "Place the bike in the left subtree by calling this same method again, and keep the subtree it hands back."
     prompt: "node.left = ___(node.left, bike);"
     answers: ["insert"]
     explain: "The recursive insert returns the subtree with the new node in it, and the parent stores that link."

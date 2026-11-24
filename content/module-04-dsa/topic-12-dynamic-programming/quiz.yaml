@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: memoization
+    goal: "Save the answer for n in the memo, so a later call with the same n can reuse it."
     prompt: "memo.___(n, answer);"
     answers: ["put"]
     explain: "put saves the new answer so the next call with the same n can reuse it."
@@ -40,6 +41,7 @@ questions:
   - id: q05
     type: fill-blank
     concept: tabulation
+    goal: "Make each Fibonacci cell the sum of the two cells just before it."
     prompt: "table[i] = table[i - 1] + ___;"
     answers: ["table[i - 2]", "table[i-2]"]
     explain: "Each Fibonacci cell is the sum of the two cells before it."

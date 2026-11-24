@@ -23,8 +23,9 @@ questions:
   - id: q03
     type: fill-blank
     concept: super-constructor
+    goal: "First run the parent Bike constructor with the id, so the id gets stored."
     prompt: "public EBike(String id, int battery) { ___; this.battery = battery; }"
-    answers: ["super(id)"]
+    answers: ["super(id)", "super(id);"]
     explain: "super(id) runs the Bike constructor first so the id is stored."
     reteach: "## Concept"
 
@@ -144,6 +145,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: super-method
+    goal: "Start with the parent class's version of describe, then add the cargo tag."
     prompt: "return ___.describe() + \" [cargo]\";"
     answers: ["super"]
     explain: "super.describe() calls the parent's version of describe()."

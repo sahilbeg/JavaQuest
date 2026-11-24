@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: private-fields
+    goal: "Hide the battery field so only code inside the class can read or change it."
     prompt: "___ int battery;"
     answers: ["private"]
     explain: "private hides the field, so every change must go through a method."
@@ -31,6 +32,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: setters
+    goal: "Store the battery parameter in the object's own battery field."
     prompt: "___.battery = battery;"
     answers: ["this"]
     explain: "this.battery is the field. Plain battery is the parameter."

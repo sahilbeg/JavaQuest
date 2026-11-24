@@ -94,6 +94,7 @@ questions:
   - id: q08
     type: fill-blank
     concept: leaderboards
+    goal: "Get the week's top ten riders, highest first, with each rider's score in the reply too."
     prompt: "ZREVRANGE leaderboard:2026-W47 0 9 ___"
     answers: ["WITHSCORES"]
     explain: "ZREVRANGE gives places 0 to 9, the top ten, highest score first. WITHSCORES adds each member's score to the reply."

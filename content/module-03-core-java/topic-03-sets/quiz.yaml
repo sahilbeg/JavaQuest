@@ -66,6 +66,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: set-methods
+    goal: "Print the message only if bike B-1042 is already in the set."
     prompt: "if (bikes.___(\"B-1042\")) { System.out.println(\"Seen it\"); }"
     answers: ["contains"]
     explain: "contains returns true when the value is inside the set."
@@ -74,6 +75,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: set-operations
+    goal: "Change the set in place so it keeps only the bikes Uptown has too, dropping all the others."
     prompt: "both.___(uptown); // keep only bikes that Uptown also has"
     answers: ["retainAll"]
     explain: "retainAll keeps only the values that are also in the other collection."

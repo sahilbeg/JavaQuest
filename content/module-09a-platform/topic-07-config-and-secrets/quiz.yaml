@@ -25,8 +25,9 @@ questions:
   - id: q03
     type: fill-blank
     concept: relaxed-binding
+    goal: "Set the database pool size to 25 with an environment variable, spelled the way Spring's documented rule gives it."
     prompt: "___=25     # the environment variable that sets spoke.db.pool-size"
-    answers: ["SPOKE_DB_POOLSIZE"]
+    answers: ["SPOKE_DB_POOLSIZE", "SPOKE_DB_POOL_SIZE"]
     explain: "The documented rule: dots become underscores, dashes are removed, and everything is in capitals. spoke.db.pool-size becomes SPOKE_DB_POOLSIZE."
     reteach: "### Relaxed binding: SPOKE_DB_URL is spoke.db.url"
 

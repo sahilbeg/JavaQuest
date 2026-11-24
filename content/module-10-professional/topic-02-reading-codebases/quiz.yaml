@@ -57,6 +57,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: git-history
+    goal: "Show, for lines 33 to 35 of this file, the last commit that changed each line, with its author and date."
     prompt: "git ___ -L 33,35 src/main/java/spoke/payments/adapter/PayRiverPaymentAdapter.java"
     answers: ["blame"]
     explain: "git blame -L 33,35 shows, for each of those lines, the last commit that changed it, with the author and date. git show then explains why."

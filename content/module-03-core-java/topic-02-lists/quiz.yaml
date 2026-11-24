@@ -54,6 +54,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: list-methods
+    goal: "Print the message only when the list has no rides in it at all."
     prompt: "if (rides.___()) { System.out.println(\"No rides yet\"); }"
     answers: ["isEmpty"]
     explain: "isEmpty() is true when the list has no items."
@@ -123,6 +124,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: looping-lists
+    goal: "Visit every ride in the list, one at a time, and add up their minutes."
     prompt: "for (Ride ride ___ rides) { total = total + ride.minutes(); }"
     answers: [":"]
     explain: "A for-each loop uses a colon: for (Type name : list)."

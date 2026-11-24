@@ -15,6 +15,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: ports-and-curl
+    goal: "Show which process is using network port 8080 on this machine."
     prompt: "lsof ___ :8080   # show which process owns port 8080"
     answers: ["-i"]
     explain: "lsof -i :8080 lists the process listening at port 8080. Add -t to print only its PID."

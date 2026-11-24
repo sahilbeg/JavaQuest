@@ -32,6 +32,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: compound-assignment
+    goal: "Add 0.15 to total and store the result back in total, in one short step."
     prompt: "total ___ 0.15;   // same as total = total + 0.15;"
     answers: ["+="]
     explain: "+= adds the right side to the variable and stores the result back."
@@ -113,6 +114,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: increment
+    goal: "Add one to ridesToday with the shortest operator Java has for that."
     prompt: "ridesToday___;   // adds one to ridesToday"
     answers: ["++"]
     explain: "++ adds one to a variable. It is the same as ridesToday += 1."

@@ -35,6 +35,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: select-where
+    goal: "Keep only the bikes whose status is AVAILABLE."
     prompt: "SELECT id FROM bike ___ status = 'AVAILABLE';"
     answers: ["WHERE", "where"]
     explain: "WHERE keeps only the rows where the test is true."
@@ -69,6 +70,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: order-and-limit
+    goal: "Sort the rides from longest to shortest, so LIMIT 3 keeps the three longest."
     prompt: "SELECT id, minutes FROM ride ORDER BY minutes ___ LIMIT 3; -- the three longest rides"
     answers: ["DESC", "desc"]
     explain: "ORDER BY sorts smallest first by default. DESC flips it, so the longest rides come first and LIMIT 3 keeps them."
@@ -172,6 +174,7 @@ questions:
   - id: q12
     type: fill-blank
     concept: changing-data
+    goal: "Remove ride 7 from the ride table."
     prompt: "___ FROM ride WHERE id = 7; -- remove ride 7"
     answers: ["DELETE", "delete"]
     explain: "DELETE FROM removes the rows that match the WHERE. Here that is ride 7 only."

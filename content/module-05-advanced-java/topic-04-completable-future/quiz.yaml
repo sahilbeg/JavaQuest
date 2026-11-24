@@ -5,6 +5,7 @@ questions:
   - id: q01
     type: fill-blank
     concept: supply-async
+    goal: "Start the charge on another thread and hand back its result later, without waiting now."
     prompt: "CompletableFuture<String> payment = CompletableFuture.___(() -> charge(\"r1\"));"
     answers: ["supplyAsync"]
     explain: "supplyAsync runs a Supplier on another thread and returns a CompletableFuture straight away."

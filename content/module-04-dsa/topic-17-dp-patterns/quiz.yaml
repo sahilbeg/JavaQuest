@@ -53,6 +53,7 @@ questions:
   - id: q05
     type: fill-blank
     concept: coin-change
+    goal: "Count the ways to pay 0 cents. The only way is to use no coins at all."
     prompt: "ways[0] = ___;"
     answers: ["1"]
     explain: "There is exactly one way to pay 0 cents: use no coins. Every other count is built on it."
@@ -151,6 +152,7 @@ questions:
   - id: q11
     type: fill-blank
     concept: two-string-dp
+    goal: "Fill the first column: turning the first few letters into empty text takes one delete per letter."
     prompt: "dist[i][0] = ___;"
     answers: ["i"]
     explain: "Turning the first i letters into empty text takes i deletes. That is the base column of edit distance."

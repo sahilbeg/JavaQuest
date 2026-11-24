@@ -83,6 +83,7 @@ questions:
   - id: q08
     type: fill-blank
     concept: null-pointer
+    goal: "Look up the station's free docks, and give back 0 when the station is not in the map."
     prompt: "return freeDocks.___(station, 0);"
     answers: ["getOrDefault"]
     explain: "getOrDefault returns 0 when the station is missing, so nothing null gets unboxed."

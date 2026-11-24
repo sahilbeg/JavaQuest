@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: scanner
+    goal: "Import just the one class that reads what the rider types at the keyboard."
     prompt: "import java.util.___;"
     answers: ["Scanner"]
     explain: "Scanner lives in the java.util package, so you import java.util.Scanner."
@@ -31,6 +32,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: reading-numbers
+    goal: "Read the next whole number the rider types."
     prompt: "int minutes = in.___();"
     answers: ["nextInt"]
     explain: "nextInt reads the next whole number."

@@ -53,6 +53,7 @@ questions:
   - id: q06
     type: fill-blank
     concept: refactoring-moves
+    goal: "Turn the magic number into a constant whose value can never change after it is set."
     prompt: "private static ___ long UNLOCK_FEE_CENTS = 100;"
     answers: ["final"]
     explain: "A constant is static final, so it belongs to the class and never changes."
@@ -61,6 +62,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: refactoring-moves
+    goal: "Declare InvoiceLine as a parameter object that just carries these four values. Java writes its fields, constructor and accessors."
     prompt: "___ InvoiceLine(String bikeId, String type, int minutes, long cents) { }"
     answers: ["record", "public record"]
     explain: "A parameter object that only carries values is a record. Java writes the fields, constructor and accessors."

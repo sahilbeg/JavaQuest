@@ -36,6 +36,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: break-fall-through
+    goal: "Jump out of the switch and carry on after it, so the next case does not run."
     prompt: "case \"classic\": price = 0.15; ___;"
     answers: ["break"]
     explain: "break jumps out of the switch so the next case does not run."

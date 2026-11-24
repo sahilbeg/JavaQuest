@@ -15,6 +15,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: cherry-pick
+    goal: "Copy commit 018fb06 onto this branch, adding a line to its message that says which commit it was copied from."
     prompt: "git cherry-pick ___ 018fb06   # add a line saying where the copy came from"
     answers: ["-x"]
     explain: "-x adds \"(cherry picked from commit ...)\" to the message, so the fix on the release branch can be traced back to main."
@@ -76,6 +77,7 @@ questions:
   - id: q08
     type: fill-blank
     concept: reflog
+    goal: "List every place HEAD has been on your laptop, even commits that no branch points to any more."
     prompt: "git ___   # list every place HEAD has been"
     answers: ["reflog", "reflog show"]
     explain: "git reflog is Git's diary of every commit, switch, reset and rebase on your laptop."

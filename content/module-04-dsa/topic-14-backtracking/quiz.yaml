@@ -53,6 +53,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: copy-the-path
+    goal: "Record a copy of the path being built right now, so later changes to the path cannot touch the saved answer."
     prompt: "result.add(new ArrayList<>(___));"
     answers: ["current"]
     explain: "new ArrayList<>(current) copies the path as it is right now, so later changes cannot touch the recorded answer."

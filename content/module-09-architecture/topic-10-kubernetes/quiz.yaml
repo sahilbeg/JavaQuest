@@ -28,6 +28,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: pods-and-deployments
+    goal: "Name the kind of object that keeps 30 copies of spoke-api running and rolls out each new version."
     prompt: "kind: ___     # keeps 30 copies of spoke-api running, and rolls out new versions"
     answers: ["Deployment"]
     explain: "A Deployment holds the Pod template and the number of copies, and handles updates by creating a new ReplicaSet for each version. You rarely create ReplicaSets or Pods yourself."
@@ -124,6 +125,7 @@ questions:
   - id: q11
     type: fill-blank
     concept: rollouts-and-shutdown
+    goal: "Put spoke-api back on the version that ran before the broken 2.5.1."
     prompt: "kubectl rollout ___ deployment/spoke-api     # 2.5.1 is broken: go back to the previous version"
     answers: ["undo"]
     explain: "rollout undo scales the previous ReplicaSet back up, so it takes seconds. Then fix git, so the next apply does not bring the bad version back."

@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: values-valueof
+    goal: "Get an array holding every bike type constant, in the order they were declared."
     prompt: "BikeType[] all = BikeType.___;"
     answers: ["values()"]
     explain: "values() returns an array with every constant, in the order you declared them."
@@ -134,6 +135,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: enum-comparison
+    goal: "Set pays to true only when the rider's membership level is exactly BASIC."
     prompt: "boolean pays = level ___ Membership.BASIC;"
     answers: ["=="]
     explain: "Compare enum constants with ==."

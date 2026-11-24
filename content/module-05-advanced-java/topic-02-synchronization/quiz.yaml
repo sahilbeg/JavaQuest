@@ -23,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: synchronized
+    goal: "Let only one thread at a time run this method, so no count++ gets lost."
     prompt: "___ void increment() { count++; }"
     answers: ["synchronized", "public synchronized", "synchronized public"]
     explain: "The synchronized keyword makes the method take the object's lock."
@@ -129,6 +130,7 @@ questions:
   - id: q10
     type: fill-blank
     concept: check-then-act
+    goal: "Guard the bike count with the lock that belongs to the current object."
     prompt: "synchronized (___) { if (bikes > 0) { bikes--; } }   // lock (the current object)"
     answers: ["this"]
     explain: "A synchronized block names the object whose lock it takes, and this is the current object. In real code, a private final lock object is safer, because outside code cannot grab it."

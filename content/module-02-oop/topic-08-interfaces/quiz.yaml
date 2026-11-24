@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: implements
+    goal: "Make Scooter keep every promise the Chargeable interface makes."
     prompt: "class Scooter ___ Chargeable {"
     answers: ["implements"]
     explain: "A class keeps an interface's promise with the word implements."
@@ -22,6 +23,7 @@ questions:
   - id: q03
     type: fill-blank
     concept: default-method
+    goal: "Give this interface method a ready-made body that every class gets unless it overrides it."
     prompt: "___ boolean needsCharge() { return batteryLevel() < 20; }"
     answers: ["default", "public default", "default public"]
     explain: "A method with a body inside an interface starts with the word default."
@@ -165,6 +167,7 @@ questions:
   - id: q11
     type: fill-blank
     concept: default-conflict
+    goal: "Call the status method that Chargeable supplies, then add the one from Lockable."
     prompt: "return Chargeable.___.status() + \", \" + Lockable.super.status();"
     answers: ["super"]
     explain: "When two interfaces give a default with the same name, the class overrides it. InterfaceName.super.method() calls one interface's default."

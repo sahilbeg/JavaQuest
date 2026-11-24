@@ -14,6 +14,7 @@ questions:
   - id: q02
     type: fill-blank
     concept: comparable
+    goal: "Return a negative, zero or positive number, so a ride with fewer minutes sorts before a longer one."
     prompt: "return Integer.___(this.minutes, other.minutes);"
     answers: ["compare"]
     explain: "Integer.compare(a, b) returns a negative, zero or positive int."
@@ -99,6 +100,7 @@ questions:
   - id: q07
     type: fill-blank
     concept: comparator
+    goal: "Sort the rides longest first, the opposite of the order ByMinutes gives."
     prompt: "rides.sort(new ByMinutes().___());"
     answers: ["reversed"]
     explain: "reversed() returns a comparator with the opposite order."

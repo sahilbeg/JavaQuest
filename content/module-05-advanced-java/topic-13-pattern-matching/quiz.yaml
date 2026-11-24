@@ -32,6 +32,7 @@ questions:
   - id: q04
     type: fill-blank
     concept: record-patterns
+    goal: "Pull the bike id out of the BikeDocked record into its own variable."
     prompt: "case BikeDocked(var station, ___ bikeId) -> bikeId + \" docked at \" + station;"
     answers: ["var", "String"]
     explain: "Each record component gets a variable. Write its type, String, or let Java infer it with var."
