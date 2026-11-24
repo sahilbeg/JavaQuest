@@ -22,12 +22,24 @@ export function loadMonaco() {
   return loading;
 }
 
+/** The editor language for a file: Java, JavaScript (also JSX), CSS or HTML. */
+export function languageFor(path = "") {
+  const ext = path.split(".").pop().toLowerCase();
+  return { java: "java", js: "javascript", jsx: "javascript", mjs: "javascript", css: "css", html: "html" }[ext] ?? "plaintext";
+}
+
 /** Colours Java source as HTML. Waits for Monaco to load the Java tokenizer, which happens lazily. */
 export async function colorizeJava(monaco, source) {
+  return colorize(monaco, source, "java");
+}
+
+/** Colours source in any editor language as HTML. */
+export async function colorize(monaco, source, language) {
   monaco.editor.setTheme(editorTheme());
-  monaco.editor.createModel("", "java").dispose();
+  monaco.editor.createModel("", language).dispose();
+  const tabSize = language === "java" ? 4 : 2;
   for (let attempt = 0; attempt < 20; attempt++) {
-    const html = await monaco.editor.colorize(source, "java", { tabSize: 4 });
+    const html = await monaco.editor.colorize(source, language, { tabSize });
     if (/class="mtk(?!1")/.test(html)) return html.replace(/(<br\/>)+$/, "");
     await new Promise((resolve) => setTimeout(resolve, 100));
   }

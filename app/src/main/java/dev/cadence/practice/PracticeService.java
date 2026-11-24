@@ -34,7 +34,7 @@ public class PracticeService {
     private static final Duration BROWSER_WRITE_ECHO = Duration.ofSeconds(3);
     private static final Pattern TODO_NUMBER = Pattern.compile("TODO\\s+(\\d+)");
 
-    private final PracticeRunner runner;
+    private final Runners runners;
     private final EventHub events;
     private final Clock clock;
     private final ProgressService progress;
@@ -42,8 +42,8 @@ public class PracticeService {
     private final Map<String, ReentrantLock> topicLocks = new ConcurrentHashMap<>();
     private final Map<String, Instant> browserWrites = new ConcurrentHashMap<>();
 
-    public PracticeService(PracticeRunner runner, EventHub events, Clock clock, ProgressService progress) {
-        this.runner = runner;
+    public PracticeService(Runners runners, EventHub events, Clock clock, ProgressService progress) {
+        this.runners = runners;
         this.events = events;
         this.clock = clock;
         this.progress = progress;
@@ -67,13 +67,13 @@ public class PracticeService {
     }
 
     private TestRunResult runTests(Topic topic) throws IOException, InterruptedException {
-        return runner.run(topic.practiceSources(), topic.practiceTests(), limitsFor(topic));
+        return runners.forTopic(topic).run(topic.practiceSources(), topic.practiceTests(), limitsFor(topic));
     }
 
     /** The runner's limits, with the topic's own timeout and the extra time and heap a Spring topic needs. */
     private RunLimits limitsFor(Topic topic) {
         var practice = topic.meta().practice();
-        RunLimits base = runner.limits();
+        RunLimits base = runners.forTopic(topic).limits();
         return base.withTimeout(practice.timeout(base.timeout()))
                 .withHeapMegabytes(practice.heapMegabytes(base.heapMegabytes()));
     }
@@ -86,16 +86,21 @@ public class PracticeService {
     public ProgramRun runMain(Topic topic, String mainClass, String input) throws IOException, InterruptedException {
         parallelRuns.acquire();
         try {
-            return new ProgramRun(runner.runMain(topic.practiceSources(), mainClass, limitsFor(topic), input));
+            return new ProgramRun(runners.forTopic(topic).runMain(topic.practiceSources(), mainClass, limitsFor(topic), input));
         } finally {
             parallelRuns.release();
         }
     }
 
     public ProgramRun runSnippet(String code) throws IOException, InterruptedException {
+        return runSnippet(code, "java");
+    }
+
+    /** Runs a lesson snippet in its language: {@code js} with Node, otherwise Java. */
+    public ProgramRun runSnippet(String code, String language) throws IOException, InterruptedException {
         parallelRuns.acquire();
         try {
-            return new ProgramRun(runner.runSnippet(code));
+            return new ProgramRun(runners.forLanguage(language).runSnippet(code, ""));
         } finally {
             parallelRuns.release();
         }
@@ -111,7 +116,7 @@ public class PracticeService {
         Path skeleton = topic.practiceSkeleton();
         browserWrites.put(topic.id(), clock.instant());
         try (Stream<Path> old = Files.walk(src)) {
-            for (Path file : old.filter(p -> p.toString().endsWith(".java")).toList()) {
+            for (Path file : old.filter(dev.cadence.content.PracticeFiles::isSource).toList()) {
                 Files.delete(file);
             }
         }
@@ -130,7 +135,7 @@ public class PracticeService {
             return List.of();
         }
         try (Stream<Path> files = Files.walk(root)) {
-            return files.filter(p -> p.toString().endsWith(".java"))
+            return files.filter(dev.cadence.content.PracticeFiles::isSource)
                     .map(p -> root.relativize(p).toString().replace('\\', '/'))
                     .sorted()
                     .toList();
@@ -194,7 +199,7 @@ public class PracticeService {
     private static Path existingSource(Topic topic, String relativePath) {
         Path root = topic.practiceSources().toAbsolutePath().normalize();
         Path file = root.resolve(relativePath).normalize();
-        if (!file.startsWith(root) || !file.toString().endsWith(".java") || !Files.isRegularFile(file)) {
+        if (!file.startsWith(root) || !dev.cadence.content.PracticeFiles.isSource(file) || !Files.isRegularFile(file)) {
             throw new IllegalArgumentException("Not a practice source file: " + relativePath);
         }
         return file;

@@ -1,19 +1,32 @@
 import { h, icon } from "./dom.js";
 import { api } from "./api.js";
 import { bus } from "./events.js";
-import { loadMonaco, editorTheme, colorizeJava, EDITOR_OPTIONS } from "./monaco.js";
+import { loadMonaco, editorTheme, colorize, languageFor, EDITOR_OPTIONS } from "./monaco.js";
 import { describeProgram } from "./kb.js";
 import { vscodeGuide } from "./vscode.js";
 
 export async function renderFix(container, topic, chat, onResult) {
   const id = topic.summary.id;
-  const path = topic.sourceFiles[0];
+  let path = topic.sourceFiles[0];
   if (!path) {
     container.replaceChildren(h("p", { class: "empty" }, "This ticket has no code to fix. Pass the onboarding check to close it."));
     return () => {};
   }
 
   const fileLabel = h("span", { class: "editor-file" }, path);
+  // Web tickets have several files (HTML, CSS, JavaScript): one tab each. A Java ticket keeps its single file label.
+  const tabs = topic.sourceFiles.length > 1 && h("div", { class: "editor-tabs", role: "tablist", "aria-label": "Files" },
+    topic.sourceFiles.map((file) => h("button", { type: "button", role: "tab", class: "editor-tab", "data-file": file,
+      "aria-selected": String(file === path), onclick: () => openFile(file) }, file.split("/").pop())));
+  const previewFrame = topic.preview && h("iframe", { class: "preview-frame", title: "Preview of your page",
+    sandbox: "allow-scripts allow-forms allow-modals" });
+  const previewPanel = topic.preview && h("section", { class: "preview-panel", "aria-labelledby": "preview-title" },
+    h("div", { class: "preview-bar" },
+      h("h2", { id: "preview-title", class: "console-label" }, "Preview"),
+      h("span", { class: "spacer" }),
+      h("a", { class: "button button-quiet", href: `/preview/${id}/`, target: "_blank", rel: "noopener" }, icon("external-link"), "Open in a new tab"),
+      h("button", { type: "button", class: "button button-quiet", onclick: () => refreshPreview() }, icon("rotate-ccw"), "Refresh")),
+    previewFrame);
   const host = h("div", { class: "editor-host" });
   const notice = h("div", { class: "notice", hidden: true, role: "status" });
   const checks = h("section", { class: "checks", "aria-labelledby": "checks-title" });
@@ -42,8 +55,9 @@ export async function renderFix(container, topic, chat, onResult) {
             ", so VS Code is the easier place for it."]
         : "Press Run checks when you're done. Saving in VS Code runs the same checks."),
     h("div", { class: "editor-frame" },
-      h("div", { class: "editor-bar" }, fileLabel, h("span", { class: "spacer" }), saveButton, runButton, submitButton),
+      h("div", { class: "editor-bar" }, tabs || fileLabel, h("span", { class: "spacer" }), saveButton, runButton, submitButton),
       notice, host),
+    previewPanel,
     h("div", { class: "editor-foot" },
       h("p", { class: "editor-keys" }, "Keyboard: Tab indents code inside the editor. Press ",
         h("kbd", {}, navigator.platform.startsWith("Mac") ? "Ctrl Shift M" : "Ctrl M"),
@@ -57,12 +71,13 @@ export async function renderFix(container, topic, chat, onResult) {
 
   const monaco = await loadMonaco();
   const { content } = await api.readSource(id, path);
-  const editor = monaco.editor.create(host, { ...EDITOR_OPTIONS, value: content, theme: editorTheme() });
+  const language = languageFor(path);
+  const editor = monaco.editor.create(host, { ...EDITOR_OPTIONS, language, tabSize: language === "java" ? 4 : 2, value: content, theme: editorTheme() });
   let savedValue = content;
   const markDirty = () => { fileLabel.dataset.dirty = String(editor.getValue() !== savedValue); };
   // Show the input box only for programs that read the keyboard, and never hide what the learner typed.
   const showInput = () => {
-    if (inputPanel) inputPanel.hidden = !(/System\.in\b/.test(editor.getValue()) || inputBox.value);
+    if (inputPanel) inputPanel.hidden = !(/System\.in\b|readFileSync\(0|process\.stdin/.test(editor.getValue()) || inputBox.value);
   };
   showInput();
   editor.onDidChangeModelContent(() => { markDirty(); showInput(); });
@@ -73,7 +88,29 @@ export async function renderFix(container, topic, chat, onResult) {
     await api.writeSource(id, path, editor.getValue());
     savedValue = editor.getValue();
     markDirty();
+    refreshPreview();
   }
+
+  /** Switches the editor to another file of this ticket, saving the current one first. */
+  async function openFile(file) {
+    if (file === path) return;
+    await save();
+    const fresh = await api.readSource(id, file);
+    path = file;
+    fileLabel.textContent = file;
+    savedValue = fresh.content;
+    monaco.editor.setModelLanguage(editor.getModel(), languageFor(file));
+    editor.updateOptions({ tabSize: languageFor(file) === "java" ? 4 : 2 });
+    editor.setValue(fresh.content);
+    markDirty();
+    for (const tab of tabs ? tabs.querySelectorAll(".editor-tab") : []) tab.setAttribute("aria-selected", String(tab.dataset.file === file));
+    editor.focus();
+  }
+
+  function refreshPreview() {
+    if (previewFrame) previewFrame.src = `/preview/${id}/?t=${Date.now()}`;
+  }
+  refreshPreview();
 
   async function busy(button, task) {
     button.setAttribute("aria-busy", "true");
@@ -112,11 +149,11 @@ export async function renderFix(container, topic, chat, onResult) {
       const { files, progress } = await api.solution(id);
       solutionPanel.replaceChildren(
         h("h2", { id: "solution-title", class: "console-label" }, "Tsunade's solution"),
-        ...files.map((f) => h("div", {}, h("p", { class: "editor-file" }, f.path), h("pre", { class: "console-out solution-code" }, h("code", {}, f.content)))));
+        ...files.map((f) => h("div", {}, h("p", { class: "editor-file" }, f.path), h("pre", { class: "console-out solution-code" }, h("code", { "data-path": f.path }, f.content)))));
       solutionPanel.hidden = false;
       solutionPanel.scrollIntoView({ behavior: "smooth", block: "start" });
       for (const code of solutionPanel.querySelectorAll("code")) {
-        const html = await colorizeJava(monaco, code.textContent);
+        const html = await colorize(monaco, code.textContent, languageFor(code.dataset.path));
         if (html) code.innerHTML = html;
       }
       chat.say(progress.testsPassed
@@ -206,7 +243,7 @@ function renderChecks(container, practice) {
     ? r.compileErrors.map((e, i) => h("li", { class: "check check-fail" }, icon("circle-x", "Error"),
         h("span", { class: "check-name" }, `${e.file}, line ${e.line}`),
         practice.explanations[i] && h("span", { class: "check-plain" }, practice.explanations[i]),
-        h("span", { class: "check-raw" }, `Java says: ${e.message.split("\n")[0]}`)))
+        h("span", { class: "check-raw" }, `${/\.java$/.test(e.file ?? "") ? "Java" : "JavaScript"} says: ${e.message.split("\n")[0]}`)))
     : r.tests.map((t) => h("li", { class: `check ${t.passed ? "check-pass" : "check-fail"}` },
         icon(t.passed ? "circle-check" : "circle-x", t.passed ? "Passed" : "Failed"),
         h("span", { class: "check-name" }, t.name),
@@ -229,9 +266,12 @@ function renderChecks(container, practice) {
 
 const TIERS = ["Bronze", "Silver", "Gold"];
 
+/** Java: KioskBronzeTest. Web: test/CartBronze.test.jsx. */
+const ownsTier = (className, tier) => className.endsWith(`${tier}Test`) || new RegExp(`${tier}\\.test\\.jsx?$`).test(className);
+
 function tierRow(tests) {
   const tiers = TIERS.map((tier) => {
-    const own = tests.filter((t) => t.className.endsWith(`${tier}Test`));
+    const own = tests.filter((t) => ownsTier(t.className, tier));
     return { tier, own, passed: own.length > 0 && own.every((t) => t.passed) };
   }).filter((t) => t.own.length > 0);
   if (!tiers.length) return null;
@@ -246,8 +286,8 @@ function narrate(chat, practice) {
   if (r.outcome === "PASSED") {
     chat.say(`${where}All checks pass!`, { mood: "cheering" });
   } else if (r.outcome === "COMPILE_ERROR") {
-    chat.say(`${where}Java can't compile this yet. Start with the first error, line ${r.compileErrors[0]?.line}.`, { mood: "encouraging" });
-  } else if (r.outcome === "FAILED" && r.tests.some((t) => t.className.endsWith("BronzeTest"))) {
+    chat.say(`${where}This code can't run yet. Start with the first error, line ${r.compileErrors[0]?.line}.`, { mood: "encouraging" });
+  } else if (r.outcome === "FAILED" && r.tests.some((t) => ownsTier(t.className, "Bronze"))) {
     const open = TIERS.filter((tier) => r.tests.some((t) => t.className.endsWith(`${tier}Test`) && !t.passed));
     chat.say(open.includes("Bronze")
       ? `${where}The bronze checks still fail, so the incident is still open. Start with those.`

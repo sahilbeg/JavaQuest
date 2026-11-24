@@ -1,6 +1,6 @@
 import { h, icon } from "./dom.js";
 import { api } from "./api.js";
-import { loadMonaco, editorTheme, isDark, colorizeJava, EDITOR_OPTIONS } from "./monaco.js";
+import { loadMonaco, editorTheme, isDark, colorize, EDITOR_OPTIONS } from "./monaco.js";
 import { bus } from "./events.js";
 import { enhanceAnimations } from "./animate.js";
 
@@ -22,9 +22,10 @@ export function enhanceContent(container, chat) {
   });
   const disposers = [enhanceAnimations(container)];
   loadMonaco().then(async (monaco) => {
-    for (const code of container.querySelectorAll("pre > code.language-java")) {
+    const LANGS = { java: "java", js: "javascript", jsx: "javascript", javascript: "javascript", html: "html", css: "css" };
+    for (const code of container.querySelectorAll(Object.keys(LANGS).map((l) => `pre > code.language-${l}`).join(", "))) {
       code.dataset.source ??= code.textContent;
-      const html = await colorizeJava(monaco, code.dataset.source);
+      const html = await colorize(monaco, code.dataset.source, LANGS[code.dataset.lang] ?? "java");
       if (html && !code.closest(".snippet")?.dataset.open) code.innerHTML = html;
     }
   }).catch(() => {});
@@ -82,6 +83,7 @@ function renderDiagrams(container) {
 function enhanceSnippet(snippet, chat) {
   const code = snippet.querySelector("code");
   const original = code.textContent;
+  const lang = code.dataset.lang === "js" ? "js" : "java";
   const output = h("pre", { class: "snippet-output", hidden: true, "aria-live": "polite" });
   let editor;
 
@@ -94,7 +96,8 @@ function enhanceSnippet(snippet, chat) {
     snippet.dataset.open = "true";
     const host = h("div", { class: "snippet-editor" });
     snippet.querySelector("pre").replaceWith(host);
-    editor = monaco.editor.create(host, { ...EDITOR_OPTIONS, value: original, theme: editorTheme() });
+    editor = monaco.editor.create(host, { ...EDITOR_OPTIONS, language: lang === "js" ? "javascript" : "java",
+      tabSize: lang === "js" ? 2 : 4, value: original, theme: editorTheme() });
     tryButton.hidden = true;
     resetButton.hidden = false;
     editor.focus();
@@ -110,7 +113,7 @@ function enhanceSnippet(snippet, chat) {
     output.hidden = false;
     output.textContent = "Running…";
     try {
-      const { result, explanations } = await api.runSnippet(editor ? editor.getValue() : original);
+      const { result, explanations } = await api.runSnippet(editor ? editor.getValue() : original, lang);
       output.textContent = describeProgram(result, explanations);
       if (result.status === "COMPILE_ERROR") {
         chat.say(["That snippet didn't compile.", explanations.find(Boolean) ?? result.compileErrors[0]?.message],
@@ -135,7 +138,7 @@ export function describeProgram(result, explanations = [], input = { box: false,
   switch (result.status) {
     case "COMPILE_ERROR":
       return result.compileErrors.map((e, i) =>
-        `Line ${e.line}: ${explanations[i] || e.message}\n   Java says: ${e.message.split("\n")[0]}`).join("\n\n");
+        `Line ${e.line}: ${explanations[i] || e.message}\n   ${/\.java$/.test(e.file ?? "") ? "Java" : "JavaScript"} says: ${e.message.split("\n")[0]}`).join("\n\n");
     case "TIMED_OUT":
       return `${result.output}\n\nStopped: the program ran for too long. Is there a loop that never ends?`.trim();
     case "EXCEPTION":

@@ -105,7 +105,7 @@ public class LessonRenderer {
                     html.closeTag("aside");
                 }
                 default -> {
-                    boolean runnable = language.equals("java") && modifier.equals("run");
+                    boolean runnable = (language.equals("java") || language.equals("js")) && modifier.equals("run");
                     if (runnable) {
                         html.attr("class", "snippet").attr("data-runnable", "").withAttr().tag("div");
                     }

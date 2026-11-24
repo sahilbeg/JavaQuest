@@ -85,12 +85,15 @@ public final class CourseLibrary {
                     Status.READY, "java", null, List.of("Intern", "Junior Developer", "Developer", "Software Engineer",
                     "Senior Engineer", "Staff Engineer", "Architect", "Principal Engineer"))));
 
+    private final List<Pool> pools;
     private final List<Objective> objectives;
     private final List<Course> courses;
     private final ContentCatalog library;
     private final Map<String, ContentCatalog> catalogs;
 
-    private CourseLibrary(List<Objective> objectives, List<Course> courses, ContentCatalog library, Map<String, ContentCatalog> catalogs) {
+    private CourseLibrary(List<Pool> pools, List<Objective> objectives, List<Course> courses, ContentCatalog library,
+                          Map<String, ContentCatalog> catalogs) {
+        this.pools = List.copyOf(pools);
         this.objectives = List.copyOf(objectives);
         this.courses = List.copyOf(courses);
         this.library = library;
@@ -141,7 +144,12 @@ public final class CourseLibrary {
             }
             catalogs.put(course.id(), catalog);
         }
-        return new CourseLibrary(spec.objectives(), spec.courses(), library, catalogs);
+        return new CourseLibrary(spec.pools(), spec.objectives(), spec.courses(), library, catalogs);
+    }
+
+    /** The content pools, for the folders a learner's code lives in. */
+    public List<Pool> pools() {
+        return pools;
     }
 
     public List<Objective> objectives() {

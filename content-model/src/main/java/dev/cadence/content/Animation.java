@@ -26,7 +26,10 @@ import tools.jackson.dataformat.yaml.YAMLMapper;
  * The format is described in docs/CONTENT_SPEC.md. Everything is checked when the block is parsed, and the
  * content checker also runs a code animation's program and compares its output with the steps' {@code out}.
  */
-public record Animation(String title, Kind kind, String code, List<Node> nodes, List<Link> links, List<Step> steps) {
+/**
+ * @param language for a code animation: {@code java} (the default) or {@code js}, which decides how the checker runs it
+ */
+public record Animation(String title, Kind kind, String code, List<Node> nodes, List<Link> links, List<Step> steps, String language) {
 
     public enum Kind {
         @JsonProperty("code") CODE,
@@ -69,6 +72,8 @@ public record Animation(String title, Kind kind, String code, List<Node> nodes, 
     public Animation {
         require(title != null && !title.isBlank(), "title is required");
         require(kind != null, "kind is required: code or scene");
+        language = language == null ? "java" : language;
+        require(language.equals("java") || language.equals("js"), "language must be java or js, got: " + language);
         require(steps != null && steps.size() >= 2 && steps.size() <= MAX_STEPS,
                 "steps needs 2 to " + MAX_STEPS + " entries");
         steps = List.copyOf(steps);

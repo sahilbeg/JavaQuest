@@ -25,10 +25,24 @@ public record TopicMeta(
     public enum RunnerKind {
         @JsonProperty("plain") PLAIN,
         @JsonProperty("mockito") MOCKITO,
-        @JsonProperty("spring") SPRING
+        @JsonProperty("spring") SPRING,
+        /** JavaScript and React, checked by Vitest in jsdom (tracks/web/practice). */
+        @JsonProperty("vitest") VITEST;
+
+        public boolean isJavaScript() {
+            return this == VITEST;
+        }
     }
 
-    public record Practice(PracticeKind kind, RunnerKind runner, String mainClass, Integer timeoutSeconds) {
+    /**
+     * @param mainClass for Java, the class the Run button starts; for JavaScript, the file it starts (main.js)
+     * @param preview   for web pages: the editor shows a live preview of src/ (index.html, or main.js/main.jsx)
+     */
+    public record Practice(PracticeKind kind, RunnerKind runner, String mainClass, Integer timeoutSeconds, Boolean preview) {
+
+        public Practice(PracticeKind kind, RunnerKind runner, String mainClass, Integer timeoutSeconds) {
+            this(kind, runner, mainClass, timeoutSeconds, false);
+        }
 
         /** A Spring topic starts a whole application context, so it gets at least this long, unless timeoutSeconds says otherwise. */
         public static final Duration SPRING_TIMEOUT = Duration.ofSeconds(60);
@@ -39,6 +53,7 @@ public record TopicMeta(
             require(kind != null, "practice.kind is required");
             require(timeoutSeconds == null || timeoutSeconds > 0, "practice.timeoutSeconds must be positive, got: " + timeoutSeconds);
             runner = runner == null ? RunnerKind.PLAIN : runner;
+            preview = preview != null && preview;
         }
 
         /** How long a run may take: timeoutSeconds when set, otherwise the default, raised to SPRING_TIMEOUT for Spring. */

@@ -75,7 +75,10 @@ Large modules can be written in parallel by subagents, one or two topics each. G
 ./mvnw -q -pl tools dependency:properties exec:java@check-content -Djq.only=module-01-basics/topic-03   # only topics whose id starts with this
 ./mvnw -q -pl tools dependency:properties exec:java@verify-practice  # solution passes, skeleton fails, for every unit (about 3 min); writes build_state.json
 .claude/scripts/check-topic.sh <practice unit dir> [solution|skeleton|src]   # one unit, fast, same JVM flags as the runner
+(cd tracks/web/practice && npm ci)                                   # the web courses' test tools (run.sh does this on start)
 ```
+
+The check and verify tools cover every content pool in `courses.yaml`: Java in `content/` and `practice/`, the web courses in `tracks/web/`. Web practice runs with Node and Vitest (`docs/CONTENT_SPEC.md`, "Web courses"). Web modules are listed in `build_state.json` under `tracks.web.modules`, in the same shape as the Java `modules`.
 
 `./mvnw install` rewrites `app/target/cadence.jar`. That is safe while the app runs, because `run.sh` starts a copy (`app/target/cadence-running-<port>.jar`). A server started any other way, straight from `cadence.jar`, hangs when the jar is replaced. `run.sh` rebuilds the jar when `app/`, `runner/`, `content-model/` or the poms changed; restart `./run.sh --author` to see the new build. The learner sees it the next time they start `./run.sh`.
 

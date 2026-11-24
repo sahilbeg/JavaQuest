@@ -27,7 +27,7 @@ import javax.tools.ToolProvider;
  * and output limits. This protects against accidents such as infinite loops. It does not stop code that
  * reads files or opens network connections on purpose.
  */
-public final class PracticeRunner {
+public final class PracticeRunner implements CodeRunner {
 
     private static final String REPORT_FILE = "TEST-junit-jupiter.xml";
 

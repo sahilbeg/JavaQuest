@@ -53,7 +53,7 @@ public class TopicController {
 
     public record TopicDetail(TopicSummary summary, int minutes, String mainClass, String lessonHtml,
                               int hintCount, String previousId, String nextId, List<String> sourceFiles,
-                              boolean hasQuiz, String kind, CodeGuide codeGuide) {}
+                              boolean hasQuiz, String kind, CodeGuide codeGuide, boolean preview, String language) {}
 
     public record QuizAttempt(long seed, int passPercent, List<QuizSession.Presented> questions) {}
 
@@ -69,7 +69,8 @@ public class TopicController {
 
     public record SourceFile(String path, String content) {}
 
-    public record Snippet(String code) {}
+    /** A lesson snippet to run. {@code language} is java (the default) or js. */
+    public record Snippet(String code, String language) {}
 
     /** What the learner typed in the Program input box. It reaches the program as standard input. */
     public record RunRequest(String input) {}
@@ -128,7 +129,8 @@ public class TopicController {
                 index < all.size() - 1 ? all.get(index + 1).id() : null,
                 practice.sourceFiles(found), found.hasQuiz(),
                 found.meta().isBoss() ? "incident" : found.meta().isFeature() ? "feature" : "ticket",
-                practice.codeGuide(found).orElse(null));
+                practice.codeGuide(found).orElse(null), found.meta().practice().preview(),
+                found.meta().practice().runner().isJavaScript() ? "javascript" : "java");
     }
 
     /** Where the learner is inside this ticket, or nothing when they have not opened it in the player yet. */
@@ -252,7 +254,7 @@ public class TopicController {
 
     @PostMapping("/snippets/run")
     public ProgramRun runSnippet(@RequestBody Snippet snippet) throws IOException, InterruptedException {
-        return practice.runSnippet(snippet.code());
+        return practice.runSnippet(snippet.code(), snippet.language() == null ? "java" : snippet.language());
     }
 
     @GetMapping(path = "/events", produces = "text/event-stream")

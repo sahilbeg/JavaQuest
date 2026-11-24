@@ -53,6 +53,9 @@ function note(kind, ...text) {
   return h("p", { class: `vg-note vg-note-${kind}` }, icon(kind === "warning" ? "triangle-alert" : "lightbulb"), h("span", {}, ...text));
 }
 
+// Web tickets (JavaScript, React) need no extension and have package.json where Java has pom.xml.
+let web = false;
+
 function setupStep() {
   const done = stored(SETUP_KEY) === "1";
   const box = h("details", { class: "vg-setup", open: !done });
@@ -67,9 +70,13 @@ function setupStep() {
         ", install it, and open it."],
       ["Open the Extensions panel: press ", keys("Cmd Shift X", "Ctrl Shift X"),
         ". It's also the icon with four small squares on the bar at the far left."],
-      ["In its search box, type ", h("strong", {}, "Extension Pack for Java"),
-        ". Pick the one made by Microsoft, then click ", h("strong", {}, "Install"), "."],
-      "Wait until the install finishes. It uses the Java (the JDK) you already have, the same one that runs Cadence.",
+      web
+        ? ["In its search box, type ", h("strong", {}, "ESLint"), ". Pick the one made by Microsoft, then click ",
+            h("strong", {}, "Install"), ". It underlines JavaScript mistakes as you type."]
+        : ["In its search box, type ", h("strong", {}, "Extension Pack for Java"),
+            ". Pick the one made by Microsoft, then click ", h("strong", {}, "Install"), "."],
+      web ? "VS Code already understands HTML, CSS, JavaScript and React. Nothing else to install."
+        : "Wait until the install finishes. It uses the Java (the JDK) you already have, the same one that runs Cadence.",
     ),
     h("label", { class: "vg-check" }, check, "I've set up VS Code"));
   return step(1, "Set up VS Code (first time only)", box);
@@ -89,9 +96,10 @@ function openFolderStep(guide) {
           : [" Paste the path into the address bar at the top of the window, press Enter, then click ", h("strong", {}, "Select Folder"), "."]],
       ["If VS Code asks “Do you trust the authors of the files in this folder?”, click ",
         h("strong", {}, "Yes, I trust the authors"), ". It's your own folder."],
-      "The first time, give it about a minute. VS Code reads pom.xml to find JUnit and Spring. A small spinner turns in the bottom bar while it works.",
+      web ? "VS Code reads package.json to find React and the test tools. Cadence installed them when it started."
+        : "The first time, give it about a minute. VS Code reads pom.xml to find JUnit and Spring. A small spinner turns in the bottom bar while it works.",
     ),
-    note("tip", "Why the whole practice folder? Its ", h("code", {}, "pom.xml"),
+    note("tip", "Why the whole practice folder? Its ", h("code", {}, web ? "package.json" : "pom.xml"),
       " tells VS Code where the libraries are. Open one file on its own and every import turns red."));
 }
 
@@ -137,10 +145,13 @@ function writeStep(topic) {
       ["Press ", keys("Cmd F", "Ctrl F"), " and type ", h("code", {}, "TODO"),
         ". VS Code jumps to the first task. Press Return to jump to the next one."],
       "Read the TODO comment. It says what to write. Write your code on the lines just under it.",
-      "A red wavy line means Java can't understand that line yet. Rest the mouse on it to read why.",
+      `A red wavy line means ${web ? "JavaScript" : "Java"} can't understand that line yet. Rest the mouse on it to read why.`,
       "Every import you need is already at the top of the file. You don't have to add any.",
       "Finished a TODO? Delete the comment or keep it. The checks don't read comments.",
-      topic.mainClass && ["Want to see what your program prints? Click ", h("strong", {}, "Run"),
+      topic.mainClass && web && ["Want to see what your program prints? Press ", h("strong", {}, "Run"),
+        " in Cadence's editor, or type ", h("code", {}, `node src/${topic.mainClass}`), " in VS Code's terminal."],
+      web && topic.preview && "Want to see your page? Cadence's editor shows a live preview under the code. It updates each time you save.",
+      topic.mainClass && !web && ["Want to see what your program prints? Click ", h("strong", {}, "Run"),
         ", the small word just above ", h("code", {}, "public static void main"),
         ". The output shows in the Terminal panel at the bottom. If the program waits for typing, click in the Terminal and type there."],
     ));
@@ -162,6 +173,7 @@ function submitStep() {
 
 /** The walkthrough card above the code editor, or null for a ticket without code. */
 export function vscodeGuide(topic) {
+  web = topic.language === "javascript";
   const guide = topic.codeGuide;
   if (!guide || !guide.files.length) return null;
   const folders = topic.summary.id.split("/");

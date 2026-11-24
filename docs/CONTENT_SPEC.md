@@ -303,3 +303,22 @@ Same layout as a topic, with these differences:
 - Their `lesson.md` is a brief, not a full lesson. An incident uses `## What happened`, `## What you need`, `## The tiers`, `## Recap`, `## Common mistakes`. A feature uses `## The design`, `## What you build`, `## Recap`, `## Common mistakes`. Any new syntax gets a `### Syntax:` box.
 
 Boss tiers come from test class names. Put the bronze checks in a class whose name ends in `BronzeTest`, silver in `SilverTest`, gold in `GoldTest`, for example `KioskBronzeTest`. A tier passes when it has at least one check and all of its checks pass. Passing bronze resolves the incident. Silver and gold earn bonus XP. The solution must pass all three tiers, and the skeleton must fail.
+
+## Web courses (JavaScript, HTML, CSS, React)
+
+Web modules live in the web pool: `tracks/web/content/<module>/<topic>/` and `tracks/web/practice/<module>/<topic>/`. Module ids carry the pool's prefix (`web-03-javascript-basics`, `react-08-react-fundamentals`) so they never clash with Java ids. Which modules make a course is set in `courses.yaml`. Ticket keys are `WEB-MMTT`; incidents and features keep `INC-MM` and `FEAT-MM`. The world is Dhaaga & Co. (`docs/STORY.md`), and Sana (`sana`) is the designer who sends UI tickets.
+
+A web code topic's `meta.yaml`:
+
+```yaml
+practice:
+  kind: code
+  runner: vitest      # Node + Vitest in jsdom, with React Testing Library
+  mainClass: main.js  # optional: the file the Run button starts with Node (programs that print)
+  preview: true       # optional: pages; the editor shows a live preview of src/
+```
+
+- **Practice files:** `src/`, `skeleton/` and `solution/` hold `.html`, `.css`, `.js` and `.jsx` files. A page's entry is `main.js` or `main.jsx`, bundled with any CSS it imports; without `index.html`, the preview writes a page with `<div id="root">`. Tests are `test/*.test.js` or `test/*.test.jsx` and import from `../src/...`. Every `expect` has a beginner-readable message as its second argument, and each test's name reads as a sentence.
+- **Tools:** `tracks/web/practice/package.json` pins Vitest, jsdom, React, React Testing Library and esbuild. `run.sh` installs them with `npm ci`. `tools/check.mjs` checks syntax (like javac), and `tools/preview.mjs` builds the preview.
+- **Incidents:** tiers come from test file names ending `Bronze.test.jsx`, `Silver.test.jsx` and `Gold.test.jsx`.
+- **Lesson code:** ```` ```js ```` blocks must parse, ```` ```js run ```` blocks run with Node and must finish, and ```` ```js run crash ```` blocks must end in an error. ```` ```html ```` and ```` ```css ```` blocks are shown, not run. A code animation in JavaScript sets `language: js`. Predict-the-output questions in web topics run with Node.

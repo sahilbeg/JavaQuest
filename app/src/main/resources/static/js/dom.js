@@ -26,14 +26,33 @@ export function icon(name, label) {
   return svg;
 }
 
-export const TEAM = {
-  // The keys are the ids in meta.yaml (ticket.from) and kudos; only the names shown change.
-  // The cast is Konoha while Tsunade is the Fifth Hokage. See docs/STORY.md.
-  maya: { name: "Tsunade", role: "Fifth Hokage", initials: "TS" },
-  theo: { name: "Kakashi Hatake", role: "Jōnin, Team 7 leader", initials: "KH" },
-  priya: { name: "Jiraiya", role: "Legendary Sannin, the Toad Sage", initials: "JI" },
-  sam: { name: "Itachi Uchiha", role: "Akatsuki, former ANBU captain", initials: "IU" },
+// The keys are the ids in meta.yaml (ticket.from) and kudos; only the names shown change. See docs/STORY.md.
+const CASTS = {
+  // The Java course's Spoke tickets: the Konoha cast while Tsunade is the Fifth Hokage.
+  spoke: {
+    maya: { name: "Tsunade", role: "Fifth Hokage", initials: "TS" },
+    theo: { name: "Kakashi Hatake", role: "Jōnin, Team 7 leader", initials: "KH" },
+    priya: { name: "Jiraiya", role: "Legendary Sannin, the Toad Sage", initials: "JI" },
+    sam: { name: "Itachi Uchiha", role: "Akatsuki, former ANBU captain", initials: "IU" },
+    sana: { name: "Sana Shaikh", role: "Designer", initials: "SS" },
+  },
+  // Dhaaga & Co., the crochet business in Pune: every web course, and the Java course from module 02 once re-themed.
+  dhaaga: {
+    maya: { name: "Kavya Iyer", role: "Lead engineer", initials: "KI" },
+    theo: { name: "Arjun Mehta", role: "Operations", initials: "AM" },
+    priya: { name: "Meera Kulkarni", role: "Founder", initials: "MK" },
+    sam: { name: "Raju Pawar", role: "Counter and customer support", initials: "RP" },
+    sana: { name: "Sana Shaikh", role: "Designer", initials: "SS" },
+  },
 };
+
+/** The team the learner sees. It follows the course: setCast switches it in place, so every import sees the change. */
+export const TEAM = { ...CASTS.spoke };
+
+export function setCast(courseId) {
+  const cast = courseId === "java-swe" ? CASTS.spoke : CASTS.dhaaga;
+  Object.assign(TEAM, cast);
+}
 
 let pictures = {};
 

@@ -32,6 +32,17 @@ public class PracticeConfiguration {
         return Clock.systemDefaultZone();
     }
 
+    /** Java tickets run with javac and JUnit; web tickets with Node and Vitest in the web pool's practice folder. */
+    @Bean
+    Runners runners(PracticeRunner java, CadenceProperties properties, dev.cadence.content.CourseLibrary library) {
+        var runner = properties.runner();
+        var limits = new RunLimits(runner.timeout(), runner.heapMegabytes(), runner.maxOutputBytes());
+        java.nio.file.Path workspace = library.pools().stream().filter(p -> p.id().equals("web")).findFirst()
+                .map(p -> properties.root().resolve(p.practice()))
+                .orElse(properties.root().resolve("tracks/web/practice"));
+        return new Runners(java, new dev.cadence.runner.NodeRunner(dev.cadence.runner.NodeRunner.nodeOnPath(), workspace, limits));
+    }
+
     @Bean
     PracticeRunner practiceRunner(CadenceProperties properties) throws IOException {
         var runner = properties.runner();

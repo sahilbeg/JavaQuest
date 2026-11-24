@@ -4,7 +4,7 @@
 #
 #   ./run.sh               learn: http://localhost:2026, your progress in ~/.cadence (backed up daily);
 #                          an existing ~/.javaquest from before the rename is used as it is
-#   ./run.sh --check       only check this laptop (Java, port, disk, internet) and say what to fix
+#   ./run.sh --check       only check this laptop (Java, Node, port, disk, internet) and say what to fix
 #   ./run.sh --no-browser  start without opening the browser
 #   ./run.sh --author      build and review content: every ticket open, http://localhost:2027,
 #                          a separate progress database in ~/.cadence-author (or an existing ~/.javaquest-author),
@@ -146,7 +146,21 @@ if [[ "$NEEDS_DOWNLOADS" == true ]]; then
   fi
 fi
 
-# ---------- 5. The commit guard ----------
+# ---------- 5. Node, for the web courses ----------
+# The web courses (HTML, CSS, JavaScript, React) check practice code with Node. The Java course doesn't need it,
+# so a missing or old Node is a warning, not a stop.
+WEB_PRACTICE="$ROOT/tracks/web/practice"
+node_major() { node --version 2>/dev/null | sed -E 's/^v([0-9]+).*/\1/'; }
+NODE_READY=false
+if command -v node >/dev/null 2>&1 && [[ "$(node_major)" =~ ^[0-9]+$ ]] && (( $(node_major) >= 20 )); then
+  NODE_READY=true
+  ok "Node $(node --version) for the web courses"
+else
+  warn "Node 20 or newer isn't installed, so the web courses (Frontend, Full stack) can't check your code yet." \
+       "The Java course works without it. To add it: brew install node, then start Cadence again."
+fi
+
+# ---------- 6. The commit guard ----------
 # In a git clone, switch on the guard that stops commits from changing a ticket's src/ (the learner's own code).
 if [[ -d "$ROOT/.git" ]] && command -v git >/dev/null 2>&1 && ! git -C "$ROOT" config --get core.hooksPath >/dev/null 2>&1; then
   git -C "$ROOT" config core.hooksPath .githooks 2>/dev/null || true
@@ -170,6 +184,15 @@ if [[ ! -f "$CLASSPATH_FILE" ]] || [[ "$ROOT/practice/pom.xml" -nt "$CLASSPATH_F
   "$ROOT/mvnw" -q -f "$ROOT/practice/pom.xml" dependency:build-classpath -Dmdep.outputFile="$CLASSPATH_FILE" \
     || fail "Preparing the test libraries failed. The messages above say why." \
             "Most often: no internet on the first start. See README.md, Troubleshooting."
+fi
+
+# The web courses' test tools (Vitest, React Testing Library, esbuild), pinned in package-lock.json.
+if [[ "$NODE_READY" == true && -f "$WEB_PRACTICE/package-lock.json" ]] \
+   && { [[ ! -d "$WEB_PRACTICE/node_modules" ]] || [[ "$WEB_PRACTICE/package-lock.json" -nt "$WEB_PRACTICE/node_modules/.package-lock.json" ]]; }; then
+  echo "Preparing the web course tools..."
+  (cd "$WEB_PRACTICE" && npm ci --no-audit --no-fund --loglevel=error) \
+    || warn "Installing the web course tools failed. The web courses can't check code until it works." \
+            "Most often: no internet on the first start. Start Cadence again to retry."
 fi
 
 # ---------- Start ----------

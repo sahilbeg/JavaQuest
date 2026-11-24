@@ -57,6 +57,6 @@ export const api = {
   exportProgress: () => fetch("/api/progress/export").then(parse),
   importProgress: (data) =>
     fetch("/api/progress/import", { method: "POST", headers: WRITE_HEADERS, body: JSON.stringify(data) }).then(parse),
-  runSnippet: (code) =>
-    fetch("/api/snippets/run", { method: "POST", headers: WRITE_HEADERS, body: JSON.stringify({ code }) }).then(parse),
+  runSnippet: (code, language = "java") =>
+    fetch("/api/snippets/run", { method: "POST", headers: WRITE_HEADERS, body: JSON.stringify({ code, language }) }).then(parse),
 };

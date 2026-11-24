@@ -8,3 +8,7 @@ target/
 # Team pictures are the learner's own and stay on this laptop.
 /avatars/*
 !/avatars/README.md
+
+# Web practice tools (installed by run.sh) and runner scratch folders
+tracks/*/practice/node_modules/
+tracks/*/practice/.runs/

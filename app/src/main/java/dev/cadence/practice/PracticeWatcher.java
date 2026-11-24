@@ -10,6 +10,7 @@ import io.methvin.watcher.DirectoryWatcher;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -35,16 +36,41 @@ public class PracticeWatcher implements SmartLifecycle {
     private final PracticeService practice;
     private final Gate gate;
     private final Path practiceRoot;
+    /** Every pool's practice folder: practice/ for Java, tracks/web/practice for the web courses. */
+    private final List<Path> poolRoots;
     private final Map<String, ScheduledFuture<?>> pending = new ConcurrentHashMap<>();
     private ScheduledExecutorService scheduler;
     private DirectoryWatcher watcher;
     private volatile boolean running;
 
-    public PracticeWatcher(ContentCatalog catalog, PracticeService practice, Gate gate, CadenceProperties properties) {
+    public PracticeWatcher(ContentCatalog catalog, PracticeService practice, Gate gate, CadenceProperties properties,
+                           dev.cadence.content.CourseLibrary library) {
         this.catalog = catalog;
         this.practice = practice;
         this.gate = gate;
         this.practiceRoot = properties.practiceDir().toAbsolutePath().normalize();
+        this.poolRoots = library.pools().stream().map(p -> properties.root().resolve(p.practice()).toAbsolutePath().normalize())
+                .filter(java.nio.file.Files::isDirectory).distinct().toList();
+    }
+
+    /**
+     * The folders to watch: Java's practice/ whole, and each web module folder on its own, so the thousands of folders in
+     * node_modules are never watched.
+     */
+    private List<Path> watchedFolders() throws IOException {
+        var folders = new java.util.ArrayList<Path>();
+        for (Path root : poolRoots) {
+            if (!java.nio.file.Files.isDirectory(root.resolve("node_modules"))) {
+                folders.add(root);
+                continue;
+            }
+            try (var children = java.nio.file.Files.list(root)) {
+                children.filter(java.nio.file.Files::isDirectory)
+                        .filter(dir -> dir.getFileName().toString().matches(dev.cadence.content.ModuleInfo.ID_PATTERN))
+                        .forEach(folders::add);
+            }
+        }
+        return folders.isEmpty() ? List.of(practiceRoot) : folders;
     }
 
     @Override
@@ -52,7 +78,7 @@ public class PracticeWatcher implements SmartLifecycle {
         scheduler = Executors.newSingleThreadScheduledExecutor(Thread.ofVirtual().factory());
         try {
             watcher = DirectoryWatcher.builder()
-                    .path(practiceRoot)
+                    .paths(watchedFolders())
                     .fileHashing(false)
                     .listener(this::onEvent)
                     .build();
@@ -67,7 +93,8 @@ public class PracticeWatcher implements SmartLifecycle {
         if (event.eventType() == DirectoryChangeEvent.EventType.DELETE || event.isDirectory()) {
             return;
         }
-        PracticePaths.topicIdForSourceFile(practiceRoot, event.path())
+        poolRoots.stream().filter(root -> event.path().toAbsolutePath().normalize().startsWith(root)).findFirst()
+                .flatMap(root -> PracticePaths.topicIdForSourceFile(root, event.path()))
                 .filter(topicId -> !practice.isEchoOfBrowserWrite(topicId))
                 .flatMap(catalog::topic)
                 .filter(topic -> !gate.access(topic).locked())

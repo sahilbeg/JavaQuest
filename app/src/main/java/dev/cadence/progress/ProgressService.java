@@ -174,7 +174,7 @@ public class ProgressService {
 
     private static List<SourceFile> javaFiles(Path root) throws IOException {
         try (Stream<Path> files = Files.walk(root)) {
-            var list = files.filter(p -> p.toString().endsWith(".java")).sorted().toList();
+            var list = files.filter(dev.cadence.content.PracticeFiles::isSource).sorted().toList();
             var out = new java.util.ArrayList<SourceFile>();
             for (Path file : list) {
                 out.add(new SourceFile(root.relativize(file).toString().replace('\\', '/'), Files.readString(file)));

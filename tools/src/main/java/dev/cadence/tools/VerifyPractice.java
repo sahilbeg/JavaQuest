@@ -46,16 +46,30 @@ public final class VerifyPractice {
         }
         Path root = Path.of(args[0]).toAbsolutePath().normalize();
         var runner = new PracticeRunner(PracticeRunner.currentJavaExecutable(), RunnerClasspath.read(root), LIMITS);
-        var catalog = ContentCatalog.load(root.resolve("content"), root.resolve("practice"));
+        var library = dev.cadence.content.CourseLibrary.load(root);
+        var catalog = library.library();
+        var webPool = library.pools().stream().filter(p -> p.id().equals("web")).findFirst();
+        var node = new dev.cadence.runner.NodeRunner(dev.cadence.runner.NodeRunner.nodeOnPath(),
+                webPool.map(p -> root.resolve(p.practice())).orElse(root.resolve("tracks/web/practice")), LIMITS);
         Path stateFile = root.resolve("build_state.json");
         ObjectNode state = (ObjectNode) JSON.readTree(stateFile.toFile());
         boolean allVerified = true;
 
-        for (Path topicDir : practiceTopics(root.resolve("practice"))) {
-            String topicId = root.resolve("practice").relativize(topicDir).toString().replace('\\', '/');
+        var topicDirs = new java.util.LinkedHashMap<Path, Path>();
+        for (var pool : library.pools()) {
+            Path practiceRoot = root.resolve(pool.practice());
+            if (Files.isDirectory(practiceRoot)) {
+                practiceTopics(practiceRoot).forEach(dir -> topicDirs.put(dir, practiceRoot));
+            }
+        }
+        for (var entry : topicDirs.entrySet()) {
+            Path topicDir = entry.getKey();
+            String topicId = entry.getValue().relativize(topicDir).toString().replace('\\', '/');
             RunLimits limits = limitsFor(catalog, topicId);
-            TestRunResult solution = runner.run(topicDir.resolve("solution"), topicDir.resolve("test"), limits);
-            TestRunResult skeleton = runner.run(topicDir.resolve("skeleton"), topicDir.resolve("test"), limits);
+            boolean js = catalog.topic(topicId).map(t -> t.meta().practice().runner().isJavaScript()).orElse(false);
+            dev.cadence.runner.CodeRunner codeRunner = js ? node : runner;
+            TestRunResult solution = codeRunner.run(topicDir.resolve("solution"), topicDir.resolve("test"), limits);
+            TestRunResult skeleton = codeRunner.run(topicDir.resolve("skeleton"), topicDir.resolve("test"), limits);
             boolean solutionPasses = solution.outcome() == Outcome.PASSED;
             boolean skeletonFails = skeleton.outcome() == Outcome.FAILED;
             System.out.printf("%s: solution %s (%d ms), skeleton %s (%d ms)%n", topicId,
@@ -88,6 +102,7 @@ public final class VerifyPractice {
     private static List<Path> practiceTopics(Path practiceRoot) throws IOException {
         try (Stream<Path> dirs = Files.walk(practiceRoot, 2)) {
             return dirs.filter(dir -> practiceRoot.relativize(dir).getNameCount() == 2)
+                    .filter(dir -> practiceRoot.relativize(dir).getName(0).toString().matches(dev.cadence.content.ModuleInfo.ID_PATTERN))
                     .filter(dir -> Files.isDirectory(dir.resolve("solution")) && Files.isDirectory(dir.resolve("test")))
                     .sorted()
                     .toList();
@@ -95,7 +110,14 @@ public final class VerifyPractice {
     }
 
     private static void record(ObjectNode state, String topicId, boolean solutionPasses, boolean skeletonFails) {
-        for (JsonNode module : state.get("modules")) {
+        var lists = new java.util.ArrayList<JsonNode>();
+        lists.add(state.get("modules"));
+        if (state.has("tracks")) {
+            for (JsonNode track : state.get("tracks")) {
+                lists.add(track.get("modules"));
+            }
+        }
+        for (JsonNode modules : lists) for (JsonNode module : modules) {
             for (JsonNode node : module.get("topics")) {
                 if (node.get("id").asString().equals(topicId)) {
                     ObjectNode topic = (ObjectNode) node;
