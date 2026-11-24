@@ -11,6 +11,7 @@ import { byte, setHelperPicture, HELPER_PICTURES } from "./byte.js";
 import { bus } from "./events.js";
 import { replayPageTour, setPageTour } from "./tour.js";
 import { mountDailyLimit } from "./daily.js";
+import { mountLadder } from "./ladder.js";
 import { stopAll } from "./speech.js";
 
 const view = document.getElementById("view");
@@ -115,6 +116,7 @@ function setupEvents() {
 document.getElementById("wordmark-byte").replaceWith(byte("idle", "", { size: "sm" }));
 document.getElementById("tour-button").addEventListener("click", () => replayPageTour());
 mountDailyLimit(document.getElementById("daily-limit-slot"));
+mountLadder(document.getElementById("ladder"));
 
 /**
  * The Continue tab: back to the last screen of an unfinished ticket, from any page. Hidden when there is none, or

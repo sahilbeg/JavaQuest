@@ -1004,3 +1004,78 @@ a.topic-row:hover { background: var(--hover); text-decoration: none; color: var(
   .offer-letter { box-shadow: none; border: none; padding: 0; }
   .offer-stat, .offer-note { background: none; border: 1px solid #ccc; }
 }
+
+/* ---------- Career ladder (js/ladder.js) ----------
+   A rail down the left edge of every page. 1360px and up: full, with titles. 720–1359px: a slim rail of dots that
+   opens over the page on hover or keyboard focus. Below 720px it hides; the level chip in the top bar stays. */
+
+:root { --rail: 0px; --rail-slim: 64px; --rail-full: 224px; }
+.ladder { display: none; }
+
+@media (min-width: 720px) {
+  :root { --rail: var(--rail-slim); }
+  main, .author-banner, .connection-banner { margin-left: var(--rail); }
+  .ladder:not([hidden]) {
+    position: fixed; top: var(--topbar); left: 0; bottom: 0; z-index: 35;
+    display: flex; flex-direction: column; gap: var(--space-3);
+    width: var(--rail); padding: var(--space-4) 0 var(--space-3);
+    background: var(--bg); border-right: 1px solid var(--line);
+    overflow: hidden; outline: none;
+    transition: width 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  }
+  .ladder-text { opacity: 0; transition: opacity 0.15s var(--ease); white-space: nowrap; min-width: 0; }
+  /* The slim rail opens over the page so the lesson never moves. */
+  .ladder:hover, .ladder:focus-within { width: var(--rail-full); box-shadow: var(--shadow-lg); border-right-color: var(--line-strong); }
+  .ladder:hover .ladder-text, .ladder:focus-within .ladder-text { opacity: 1; }
+  .ladder:focus-visible { box-shadow: inset 0 0 0 2px var(--accent), var(--shadow-lg); }
+}
+
+@media (min-width: 1360px) {
+  :root { --rail: var(--rail-full); }
+  .ladder-text { opacity: 1; }
+  .ladder:hover, .ladder:focus-within { box-shadow: none; border-right-color: var(--line); }
+}
+
+.ladder-head { display: grid; grid-template-columns: var(--rail-slim) minmax(0, 1fr); align-items: center; }
+.ladder-head-mark { justify-self: center; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--amber-wash, var(--surface-2)); color: var(--amber); }
+.ladder-head .eyebrow { margin: 0; }
+.ladder-now { margin: 2px 0 0; font-size: 0.85rem; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); }
+
+.ladder-body { position: relative; flex: 1; min-height: 0; }
+/* Rungs share the height equally, so each dot sits at the middle of its share and the track joins the dots. */
+.ladder-list { list-style: none; margin: 0; padding: 0; height: 100%; display: flex; flex-direction: column-reverse; }
+.ladder-track { position: absolute; left: calc(var(--rail-slim) / 2 - 1px); width: 2px; top: calc(100% / var(--rungs) / 2); bottom: calc(100% / var(--rungs) / 2); background: var(--line-strong); border-radius: 2px; }
+.ladder-fill { position: absolute; left: 0; right: 0; bottom: 0; background: var(--accent); border-radius: 2px; transition: height 0.8s var(--ease); }
+
+.rung { flex: 1 1 0; min-height: 30px; display: grid; grid-template-columns: var(--rail-slim) minmax(0, 1fr); align-items: center; }
+.rung-dot { position: relative; justify-self: center; display: grid; place-items: center; width: 12px; height: 12px; border-radius: 999px; border: 2px solid var(--line-strong); background: var(--bg); color: var(--bg); font-family: var(--mono); }
+.rung-done .rung-dot { width: 18px; height: 18px; border-color: var(--accent); background: var(--accent); }
+.rung-done .rung-dot .icon { width: 11px; height: 11px; stroke-width: 3; }
+.rung-current .rung-dot { width: 28px; height: 28px; border-color: var(--accent); background: var(--accent-wash); color: var(--accent-strong); font-size: 0.72rem; font-weight: 600; box-shadow: 0 0 0 5px color-mix(in oklch, var(--accent) 18%, transparent); }
+
+.rung-text { display: grid; gap: 1px; padding-right: var(--space-4); }
+.rung-title { overflow: hidden; text-overflow: ellipsis; font-size: 0.84rem; color: var(--ink-faint); }
+.rung-meta { overflow: hidden; text-overflow: ellipsis; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.02em; color: var(--ink-faint); }
+.rung-done .rung-title { color: var(--ink-soft); }
+.rung-current .rung-title { color: var(--ink); font-weight: 600; font-size: 0.92rem; letter-spacing: -0.01em; }
+.rung-current .rung-meta { color: var(--accent-strong); }
+.rung-bar { display: block; height: 4px; margin-top: 5px; border-radius: 999px; background: var(--line-strong); overflow: hidden; }
+.rung-bar-fill { display: block; height: 100%; background: var(--accent); transition: width 0.8s var(--ease); }
+
+/* A wider, invisible hover area around the 2px line, so its note is easy to reach. */
+.ladder-track::before { content: ""; position: absolute; top: 0; bottom: 0; left: -9px; right: -9px; }
+.ladder-tip {
+  position: fixed; z-index: 95; max-width: 280px; padding: 8px 12px; pointer-events: none;
+  font-size: 0.8rem; line-height: 1.45; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line-strong); border-radius: 8px; box-shadow: var(--shadow-lg);
+  animation: fade 0.12s var(--ease);
+}
+.ladder-tip[hidden] { display: none; }
+
+.ladder-foot { display: flex; align-items: center; gap: var(--space-2); margin-left: var(--rail-slim); font-size: 0.8rem; color: var(--ink-soft); }
+.ladder-foot:hover { color: var(--accent-strong); }
+
+@media print {
+  .ladder { display: none !important; }
+  main, .author-banner, .connection-banner { margin-left: 0 !important; }
+}

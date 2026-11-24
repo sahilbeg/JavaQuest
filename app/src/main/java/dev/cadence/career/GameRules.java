@@ -30,6 +30,19 @@ public final class GameRules {
         return level;
     }
 
+    /** One job title on the career ladder: the first level that carries it and the total XP needed to reach it. */
+    public record Rung(String title, int firstLevel, int xpToReach) {}
+
+    /** Every job title in order, from Intern up. The last title has no top level. */
+    public static List<Rung> ladder() {
+        var rungs = new java.util.ArrayList<Rung>();
+        for (int i = 0; i < JOB_TITLES.size(); i++) {
+            int first = i * LEVELS_PER_TITLE + 1;
+            rungs.add(new Rung(JOB_TITLES.get(i), first, xpForLevel(first)));
+        }
+        return List.copyOf(rungs);
+    }
+
     public static String jobTitle(int level) {
         return JOB_TITLES.get(Math.min((level - 1) / LEVELS_PER_TITLE, JOB_TITLES.size() - 1));
     }

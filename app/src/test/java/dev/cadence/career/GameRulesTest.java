@@ -106,4 +106,16 @@ class GameRulesTest {
         }
         assertEquals(1.3, card.ease(), 1e-9);
     }
+
+    @org.junit.jupiter.api.Test
+    void theLadderListsEveryTitleWithItsFirstLevelAndXp() {
+        var ladder = GameRules.ladder();
+        org.junit.jupiter.api.Assertions.assertEquals(GameRules.JOB_TITLES.size(), ladder.size());
+        org.junit.jupiter.api.Assertions.assertEquals(new GameRules.Rung("Intern", 1, 0), ladder.getFirst());
+        org.junit.jupiter.api.Assertions.assertEquals(new GameRules.Rung("Principal Engineer", 36, 63000), ladder.getLast());
+        for (var rung : ladder) {
+            org.junit.jupiter.api.Assertions.assertEquals(rung.title(), GameRules.jobTitle(rung.firstLevel()));
+            org.junit.jupiter.api.Assertions.assertEquals(rung.firstLevel(), GameRules.level(rung.xpToReach()));
+        }
+    }
 }

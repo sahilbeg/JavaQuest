@@ -13,7 +13,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class CareerReport {
 
-    public record LevelView(int xp, int level, String title, int levelStartXp, int nextLevelXp, String nextTitle, int nextTitleLevel) {}
+    /** {@code ladder} is every job title from Intern up, so the page can draw the whole career ladder. */
+    public record LevelView(int xp, int level, String title, int levelStartXp, int nextLevelXp, String nextTitle, int nextTitleLevel,
+                            List<GameRules.Rung> ladder) {}
 
     public record StreakView(int current, int longest, int freezes, boolean activeToday, int xpToday, int dailyGoal) {}
 
@@ -50,7 +52,7 @@ public class CareerReport {
         int level = GameRules.level(xp);
         int nextTitleLevel = ((level - 1) / GameRules.LEVELS_PER_TITLE + 1) * GameRules.LEVELS_PER_TITLE + 1;
         var levelView = new LevelView(xp, level, GameRules.jobTitle(level), GameRules.xpForLevel(level),
-                GameRules.xpForLevel(level + 1), GameRules.jobTitle(nextTitleLevel), nextTitleLevel);
+                GameRules.xpForLevel(level + 1), GameRules.jobTitle(nextTitleLevel), nextTitleLevel, GameRules.ladder());
 
         var streak = store.streak();
         var streakView = new StreakView(GameRules.currentStreak(streak, today), streak.longest(), streak.freezes(),
