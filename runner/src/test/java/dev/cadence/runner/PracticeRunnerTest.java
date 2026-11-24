@@ -131,6 +131,40 @@ class PracticeRunnerTest {
     }
 
     @Test
+    void inputIsFedToTheProgramAsIfTyped() throws Exception {
+        ProgramResult result = runner.runSnippet("""
+                import java.util.Scanner;
+                public class Main {
+                    public static void main(String[] args) {
+                        Scanner in = new Scanner(System.in);
+                        int minutes = in.nextInt();
+                        in.nextLine();
+                        String station = in.nextLine();
+                        System.out.println(minutes * 2 + " at " + station);
+                    }
+                }
+                """, "12\nOld Mill\n");
+
+        assertEquals(ProgramResult.Status.COMPLETED, result.status(), result::output);
+        assertEquals("24 at Old Mill", result.output().strip());
+    }
+
+    @Test
+    void readingWithNoInputEndsInAnException() throws Exception {
+        ProgramResult result = runner.runSnippet("""
+                import java.util.Scanner;
+                public class Main {
+                    public static void main(String[] args) {
+                        System.out.println(new Scanner(System.in).nextInt());
+                    }
+                }
+                """);
+
+        assertEquals(ProgramResult.Status.EXCEPTION, result.status());
+        assertTrue(result.output().contains("NoSuchElementException"), result::output);
+    }
+
+    @Test
     void snippetCanUseTheLibrariesOnTheRunnerClasspath() throws Exception {
         ProgramResult result = runner.runSnippet("""
                 public class Main {

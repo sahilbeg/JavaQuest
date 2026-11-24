@@ -128,6 +128,24 @@ class TopicControllerTest {
     }
 
     @Test
+    void runAcceptsProgramInput() throws Exception {
+        mvc.perform(post(TOPIC + "/run").header(LocalOnlyFilter.WRITE_HEADER, "1")
+                        .contentType("application/json")
+                        .content("{\"input\": \"12\\nOld Mill\\n\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.status").value("COMPLETED"));
+    }
+
+    @Test
+    void runRefusesInputThatIsTooLong() throws Exception {
+        String input = "1".repeat(TopicController.MAX_INPUT_CHARS + 1);
+        mvc.perform(post(TOPIC + "/run").header(LocalOnlyFilter.WRITE_HEADER, "1")
+                        .contentType("application/json")
+                        .content("{\"input\": \"" + input + "\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void snippetCompileErrorComesWithAPlainExplanation() throws Exception {
         mvc.perform(post("/api/snippets/run").header(LocalOnlyFilter.WRITE_HEADER, "1")
                         .contentType("application/json")

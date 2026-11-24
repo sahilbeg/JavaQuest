@@ -127,6 +127,15 @@ public final class PracticeRunner {
 
     /** Runs a main method with these limits instead of the runner's own. */
     public ProgramResult runMain(Path sources, String mainClass, RunLimits limits) throws IOException, InterruptedException {
+        return runMain(sources, mainClass, limits, "");
+    }
+
+    /**
+     * Runs a main method and feeds {@code input} to its standard input, as if the learner typed it.
+     * With no input the program sees the end of input at once, so a Scanner read throws NoSuchElementException.
+     */
+    public ProgramResult runMain(Path sources, String mainClass, RunLimits limits, String input)
+            throws IOException, InterruptedException {
         sources = sources.toAbsolutePath().normalize();
         long started = System.nanoTime();
         Path workDir = Files.createTempDirectory("cadence-main-");
@@ -138,7 +147,7 @@ public final class PracticeRunner {
             }
             var classpath = new ArrayList<>(testRuntimeClasspath);
             classpath.add(classes);
-            Finished run = spawn(jvmCommand(workDir, classpath, List.of(mainClass), limits), workDir, limits);
+            Finished run = spawn(jvmCommand(workDir, classpath, List.of(mainClass), limits), workDir, limits, input);
             ProgramResult.Status status = !run.inTime() ? ProgramResult.Status.TIMED_OUT
                     : run.exitCode() == 0 ? ProgramResult.Status.COMPLETED : ProgramResult.Status.EXCEPTION;
             return new ProgramResult(status, List.of(), run.output(), elapsedSince(started));
@@ -149,11 +158,16 @@ public final class PracticeRunner {
 
     /** Runs a single-file program such as a lesson snippet. The file is named after its first top-level class. */
     public ProgramResult runSnippet(String code) throws IOException, InterruptedException {
+        return runSnippet(code, "");
+    }
+
+    /** Runs a single-file program and feeds {@code input} to its standard input. */
+    public ProgramResult runSnippet(String code, String input) throws IOException, InterruptedException {
         String className = Snippets.mainClassName(code);
         Path dir = Files.createTempDirectory("cadence-snippet-");
         try {
             Files.writeString(dir.resolve(className + ".java"), code);
-            return runMain(dir, className);
+            return runMain(dir, className, limits, input);
         } finally {
             deleteRecursively(dir);
         }
@@ -217,13 +231,26 @@ public final class PracticeRunner {
     private record Finished(boolean inTime, int exitCode, String output) {}
 
     private Finished spawn(List<String> command, Path workDir, RunLimits limits) throws IOException, InterruptedException {
+        return spawn(command, workDir, limits, "");
+    }
+
+    private Finished spawn(List<String> command, Path workDir, RunLimits limits, String input)
+            throws IOException, InterruptedException {
         Process process = new ProcessBuilder(command)
                 .directory(workDir.toFile())
                 .redirectErrorStream(true)
                 .start();
-        process.getOutputStream().close();
         var output = new CappedOutput(process.getInputStream(), limits.maxOutputBytes());
         Thread reader = Thread.ofVirtual().start(output::drain);
+        byte[] stdin = input == null ? new byte[0] : input.getBytes(StandardCharsets.UTF_8);
+        // Written on its own thread so a program that never reads its input cannot block the runner.
+        Thread.ofVirtual().start(() -> {
+            try (var in = process.getOutputStream()) {
+                in.write(stdin);
+            } catch (IOException ignored) {
+                // The program ended before reading everything; that is its choice, not an error.
+            }
+        });
         boolean finished = process.waitFor(limits.timeout().toMillis(), TimeUnit.MILLISECONDS);
         if (!finished) {
             process.descendants().forEach(ProcessHandle::destroyForcibly);

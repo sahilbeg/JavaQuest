@@ -23,6 +23,13 @@ export async function renderFix(container, topic, chat, onResult) {
   const solutionButton = h("button", { type: "button", class: "button button-quiet", onclick: showSolution }, icon("lightbulb"), "Show solution");
   const resetButton = h("button", { type: "button", class: "button button-quiet", onclick: confirmReset }, icon("rotate-ccw"), "Reset");
   const solutionPanel = h("section", { class: "solution", hidden: true, "aria-labelledby": "solution-title" });
+  const inputBox = h("textarea", { id: "program-input", class: "program-input", rows: 3, spellcheck: "false",
+    placeholder: "12\nOld Mill", "aria-describedby": "program-input-help" });
+  const inputPanel = runButton && h("div", { class: "program-input-panel", hidden: true },
+    h("label", { for: "program-input", class: "console-label" }, "Program input"),
+    h("p", { id: "program-input-help", class: "program-input-help" },
+      "Your program reads from the keyboard. Type what the rider would type, one answer per line. Run sends it to the program."),
+    inputBox);
 
   const toChange = (topic.codeGuide?.files ?? []).filter((f) => f.toChange);
   const name = path.split("/").pop();
@@ -42,6 +49,7 @@ export async function renderFix(container, topic, chat, onResult) {
         h("kbd", {}, navigator.platform.startsWith("Mac") ? "Ctrl Shift M" : "Ctrl M"),
         " to make Tab move focus out of the editor instead."),
       h("span", { class: "spacer" }), solutionButton, resetButton),
+    inputPanel,
     checks,
     solutionPanel].filter(Boolean));
 
@@ -52,7 +60,12 @@ export async function renderFix(container, topic, chat, onResult) {
   const editor = monaco.editor.create(host, { ...EDITOR_OPTIONS, value: content, theme: editorTheme() });
   let savedValue = content;
   const markDirty = () => { fileLabel.dataset.dirty = String(editor.getValue() !== savedValue); };
-  editor.onDidChangeModelContent(markDirty);
+  // Show the input box only for programs that read the keyboard, and never hide what the learner typed.
+  const showInput = () => {
+    if (inputPanel) inputPanel.hidden = !(/System\.in\b/.test(editor.getValue()) || inputBox.value);
+  };
+  showInput();
+  editor.onDidChangeModelContent(() => { markDirty(); showInput(); });
   editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => save());
 
   async function save() {
@@ -78,9 +91,12 @@ export async function renderFix(container, topic, chat, onResult) {
   async function run() {
     await busy(runButton, async () => {
       await save();
-      const { result, explanations } = await api.runMain(id);
+      const input = inputPanel && !inputPanel.hidden ? inputBox.value : "";
+      const typed = input && !input.endsWith("\n") ? input + "\n" : input;
+      const { result, explanations } = await api.runMain(id, typed);
       checks.replaceChildren(h("h2", { id: "checks-title", class: "console-label" }, "Program output"),
-        h("pre", { class: "console-out" }, describeProgram(result, explanations)));
+        h("pre", { class: "console-out" },
+          describeProgram(result, explanations, { box: Boolean(inputPanel && !inputPanel.hidden), given: Boolean(input.trim()) })));
     });
   }
 

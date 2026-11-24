@@ -79,9 +79,14 @@ public class PracticeService {
     }
 
     public ProgramRun runMain(Topic topic, String mainClass) throws IOException, InterruptedException {
+        return runMain(topic, mainClass, "");
+    }
+
+    /** Runs the topic's program, feeding {@code input} to it as if the learner typed it. */
+    public ProgramRun runMain(Topic topic, String mainClass, String input) throws IOException, InterruptedException {
         parallelRuns.acquire();
         try {
-            return new ProgramRun(runner.runMain(topic.practiceSources(), mainClass, limitsFor(topic)));
+            return new ProgramRun(runner.runMain(topic.practiceSources(), mainClass, limitsFor(topic), input));
         } finally {
             parallelRuns.release();
         }

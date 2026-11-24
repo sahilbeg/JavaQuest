@@ -68,6 +68,12 @@ public class TopicController {
 
     public record Snippet(String code) {}
 
+    /** What the learner typed in the Program input box. It reaches the program as standard input. */
+    public record RunRequest(String input) {}
+
+    /** Enough for any practice program; keeps a pasted novel out of the runner. */
+    static final int MAX_INPUT_CHARS = 10_000;
+
     /** The screen to come back to: an unfinished ticket's card, with what the Continue tab needs to show. */
     public record Resume(String topicId, String key, String ticketTitle, int step, int total, String label) {}
 
@@ -223,13 +229,18 @@ public class TopicController {
     }
 
     @PostMapping("/topics/{module}/{topic}/run")
-    public ProgramRun run(@PathVariable String module, @PathVariable String topic) throws IOException, InterruptedException {
+    public ProgramRun run(@PathVariable String module, @PathVariable String topic,
+            @RequestBody(required = false) RunRequest request) throws IOException, InterruptedException {
         Topic found = open(module, topic);
         String mainClass = found.meta().practice().mainClass();
         if (mainClass == null) {
             throw new IllegalArgumentException("This ticket has no program to run. Use Submit to run the checks.");
         }
-        return practice.runMain(found, mainClass);
+        String input = request == null || request.input() == null ? "" : request.input();
+        if (input.length() > MAX_INPUT_CHARS) {
+            throw new IllegalArgumentException("The program input is too long. Keep it under " + MAX_INPUT_CHARS + " characters.");
+        }
+        return practice.runMain(found, mainClass, input);
     }
 
     @PostMapping("/snippets/run")

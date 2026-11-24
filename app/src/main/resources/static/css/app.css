@@ -635,6 +635,10 @@ a.topic-row:hover { background: var(--hover); text-decoration: none; color: var(
 .editor-host { height: 440px; }
 .editor-foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin: var(--space-3) 0; }
 .editor-keys { margin: 0; font-size: 0.8rem; color: var(--ink-faint); }
+.program-input-panel { margin-top: var(--space-4); }
+.program-input-panel .console-label { display: block; margin-top: 0; }
+.program-input-help { margin: 0 0 var(--space-2); font-size: 0.85rem; color: var(--ink-soft); }
+.program-input { display: block; width: 100%; box-sizing: border-box; min-height: 4.5em; resize: vertical; padding: var(--space-2) var(--space-3); font-family: var(--mono); font-size: 0.82rem; line-height: 1.6; color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--r-md); }
 .notice { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); padding: 10px var(--space-4); background: var(--amber-wash); border-bottom: 1px solid var(--line); font-size: 0.88rem; }
 .checks { margin-top: var(--space-4); padding: var(--space-4) var(--space-5); border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface-2); }
 .checks-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3); }

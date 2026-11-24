@@ -127,7 +127,11 @@ function enhanceSnippet(snippet, chat) {
   snippet.append(h("div", { class: "snippet-bar" }, runButton, tryButton, h("span", { class: "spacer" }), resetButton), output);
 }
 
-export function describeProgram(result, explanations = []) {
+/**
+ * Turns a run result into console text.
+ * `input` says whether the page has a Program input box (`box`) and whether the learner typed anything in it (`given`).
+ */
+export function describeProgram(result, explanations = [], input = { box: false, given: false }) {
   switch (result.status) {
     case "COMPILE_ERROR":
       return result.compileErrors.map((e, i) =>
@@ -135,8 +139,23 @@ export function describeProgram(result, explanations = []) {
     case "TIMED_OUT":
       return `${result.output}\n\nStopped: the program ran for too long. Is there a loop that never ends?`.trim();
     case "EXCEPTION":
-      return `${result.output}\n\nThe program crashed. Read the first line above: it names the problem.`.trim();
+      return `${result.output}\n\n${inputHint(result.output, input) ?? "The program crashed. Read the first line above: it names the problem."}`.trim();
     default:
       return result.output.length ? result.output : "(The program finished without printing anything.)";
   }
+}
+
+/** A plain explanation when a crash came from reading input, or null for any other crash. */
+function inputHint(output, input) {
+  if (output.includes("java.util.InputMismatchException")) {
+    return "The program read something it didn't expect, like a word where it wanted a number. "
+      + (input.box ? "Check each line in the Program input box, then press Run again." : "Check what it was given to read.");
+  }
+  if (!output.includes("java.util.NoSuchElementException") || !output.includes("java.util.Scanner")) return null;
+  if (!input.box) {
+    return "The program asked for input, but there was none to read. Code here runs without a keyboard, so give it fixed values instead.";
+  }
+  return input.given
+    ? "The program asked for more input than you gave it. Add another line to the Program input box, then press Run again."
+    : "Your code may be fine: the program asked for input, but none was given. Type what the rider would type in the Program input box, one answer per line, then press Run again.";
 }
