@@ -21,12 +21,12 @@ questions:
     reteach: "## Concept"
 
   - id: q03
-    type: fill-blank
+    type: mcq
     concept: synchronized
-    goal: "Let only one thread at a time run this method, so no count++ gets lost."
-    prompt: "___ void increment() { count++; }"
-    answers: ["synchronized", "public synchronized", "synchronized public"]
-    explain: "The synchronized keyword makes the method take the object's lock."
+    prompt: "Which word fills the blank, so only one thread at a time can run increment()? ___ void increment() { count++; }"
+    choices: ["synchronized", "volatile", "final", "public"]
+    answer: 0
+    explain: "The synchronized keyword makes the method take the object's lock. final and public do nothing for threads, and volatile is not allowed on a method."
     reteach: "## Concept"
 
   - id: q04

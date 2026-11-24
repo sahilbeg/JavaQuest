@@ -77,12 +77,12 @@ questions:
     reteach: "## Worked example"
 
   - id: q09
-    type: fill-blank
+    type: mcq
     concept: memory-flags
-    goal: "Start the program with its heap capped at 512 megabytes, using the short memory flag."
-    prompt: "java ___ Main.java    // allow at most 512 MB of heap"
-    answers: ["-Xmx512m", "-Xmx512M"]
-    explain: "-Xmx512m sets the maximum heap to 512 megabytes."
+    prompt: "Which flag fills the blank, so the heap can never grow past 512 megabytes? java ___ Main.java"
+    choices: ["-Xmx512m", "-Xms512m", "-Xss512m", "-Xmx512g"]
+    answer: 0
+    explain: "-Xmx512m sets the maximum heap to 512 megabytes. -Xms sets the starting heap, -Xss sets each thread's stack, and g means gigabytes."
     reteach: "## Concept"
 
   - id: q10

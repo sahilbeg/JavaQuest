@@ -39,12 +39,12 @@ questions:
     reteach: "## Concept"
 
   - id: q05
-    type: fill-blank
+    type: mcq
     concept: atomics
-    goal: "Read the counter's current number safely, without changing it."
-    prompt: "int now = rides.___();   // read the value without changing it"
-    answers: ["get", "intValue"]
-    explain: "AtomicInteger reads with get() and changes safely with methods such as incrementAndGet()."
+    prompt: "rides is an AtomicInteger. Which method reads its current number without changing it? int now = rides.___();"
+    choices: ["get", "incrementAndGet", "getAndIncrement", "addAndGet"]
+    answer: 0
+    explain: "AtomicInteger reads with get(). incrementAndGet() and getAndIncrement() both add 1, and addAndGet needs a number to add."
     reteach: "## Concept"
 
   - id: q06

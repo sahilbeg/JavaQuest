@@ -49,12 +49,12 @@ questions:
     reteach: "## Concept"
 
   - id: q04
-    type: fill-blank
+    type: mcq
     concept: verification
-    goal: "Check that open was not called on the lock even once."
-    prompt: "verify(lock, ___).open(anyString());"
-    answers: ["never()", "times(0)"]
-    explain: "never() checks that the call did not happen at all. times(0) means the same."
+    prompt: "Which fills the blank, so the test checks that open was not called on the lock even once? verify(lock, ___).open(anyString());"
+    choices: ["never()", "times(1)", "atLeastOnce()", "only()"]
+    answer: 0
+    explain: "never() checks that the call did not happen at all. times(1), atLeastOnce() and only() all fail when open was never called."
     reteach: "## Concept"
 
   - id: q05

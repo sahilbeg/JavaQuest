@@ -117,11 +117,11 @@ questions:
     reteach: "## Worked example"
 
   - id: q10
-    type: fill-blank
+    type: mcq
     concept: red-green-refactor
-    goal: "Pass only if this call throws an IllegalArgumentException."
-    prompt: "___(IllegalArgumentException.class, () -> groups.discountedCents(1000, 0));"
-    answers: ["assertThrows", "Assertions.assertThrows"]
+    prompt: "Which assertion fills the blank, so the test passes only if the call throws an IllegalArgumentException? ___(IllegalArgumentException.class, () -> groups.discountedCents(1000, 0));"
+    choices: ["assertThrows", "assertDoesNotThrow", "assertEquals", "assertTrue"]
+    answer: 0
     explain: "assertThrows passes only when the code inside the lambda throws that exception type."
     reteach: "## Worked example"
 

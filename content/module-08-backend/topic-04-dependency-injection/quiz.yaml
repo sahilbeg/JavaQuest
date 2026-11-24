@@ -100,12 +100,12 @@ questions:
     reteach: "## Concept"
 
   - id: q06
-    type: fill-blank
+    type: mcq
     concept: component-scanning
-    goal: "Make Spring build this class, using the special label meant for classes that hold business rules, like fare rules."
-    prompt: "@___ class FareService { }  // the component annotation meant for business-rule classes"
-    answers: ["Service"]
-    explain: "@Service is a @Component for classes that hold business rules. @Repository is for database code."
+    prompt: "FareService holds Spoke's fare rules. Which annotation on the class makes Spring build it as a bean? @___ class FareService { }"
+    choices: ["@Service", "@Bean", "@Autowired", "@Primary"]
+    answer: 0
+    explain: "@Service is a @Component for classes that hold business rules. @Bean and @Autowired cannot go on a class, so it does not compile. @Primary alone makes no bean."
     reteach: "## Concept"
 
   - id: q07

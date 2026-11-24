@@ -44,12 +44,12 @@ questions:
     reteach: "## Common mistakes"
 
   - id: q03
-    type: fill-blank
+    type: mcq
     concept: prepared-statements
-    goal: "Fill the first question mark in the SQL with riderId, using the setter that matches its text type."
-    prompt: "statement.___(1, riderId); // riderId is a String"
-    answers: ["setString"]
-    explain: "setString fills a ? with text. The 1 means the first ?, because JDBC counts from 1."
+    prompt: "riderId is a String, like \"r-17\". Which method fills the first ? in the SQL with it? statement.___(1, riderId);"
+    choices: ["setString", "setInt", "setLong", "getString"]
+    answer: 0
+    explain: "setString fills a ? with text. The 1 means the first ?, because JDBC counts from 1. setInt and setLong need a number, and a statement has no getString."
     reteach: "## Concept"
 
   - id: q04

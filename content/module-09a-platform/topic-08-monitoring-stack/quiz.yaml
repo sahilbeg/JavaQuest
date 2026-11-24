@@ -65,12 +65,12 @@ questions:
     reteach: "### rate, irate and increase"
 
   - id: q06
-    type: fill-blank
+    type: mcq
     concept: promql-aggregation
-    goal: "Add the buckets from all Pods together while keeping each bucket's upper edge apart, so one fleet-wide p99 comes out."
-    prompt: "histogram_quantile(0.99, sum by (___) (rate(http_server_requests_seconds_bucket{job=\"spoke-api\"}[5m])))"
-    answers: ["le"]
-    explain: "The buckets from all 30 Pods are added up bucket by bucket, so le must survive the sum. Then histogram_quantile estimates the fleet's p99 once."
+    prompt: "Which query gives one p99 response time for spoke-api, across all 30 Pods together?"
+    choices: ["histogram_quantile(0.99, sum by (le) (rate(http_server_requests_seconds_bucket{job=\"spoke-api\"}[5m])))", "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{job=\"spoke-api\"}[5m])))", "histogram_quantile(0.99, sum by (le, pod) (rate(http_server_requests_seconds_bucket{job=\"spoke-api\"}[5m])))", "avg(histogram_quantile(0.99, rate(http_server_requests_seconds_bucket{job=\"spoke-api\"}[5m])))"]
+    answer: 0
+    explain: "The buckets from all 30 Pods are added up bucket by bucket, so le must survive the sum. Then histogram_quantile estimates the fleet's p99 once. Without le there are no buckets. Keeping pod gives 30 answers. Averaging p99s hides the slow Pods."
     reteach: "### Percentiles from histograms"
 
   - id: q07

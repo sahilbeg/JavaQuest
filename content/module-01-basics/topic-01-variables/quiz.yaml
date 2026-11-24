@@ -21,11 +21,11 @@ questions:
     reteach: "## Concept"
 
   - id: q03
-    type: fill-blank
+    type: mcq
     concept: int-and-string
-    goal: "Give minutes the type this lesson uses for whole numbers, so it can hold 20."
-    prompt: "___ minutes = 20;   // a whole number"
-    answers: ["int"]
+    prompt: "Which type fills the blank, so minutes can hold the whole number 20?   ___ minutes = 20;"
+    choices: ["int", "String", "boolean", "Int"]
+    answer: 0
     explain: "20 is a whole number, and int is the type for whole numbers taught here."
     reteach: "## Concept"
 

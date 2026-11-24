@@ -21,11 +21,11 @@ questions:
     reteach: "## Concept"
 
   - id: q03
-    type: fill-blank
+    type: mcq
     concept: adjacency-list
-    goal: "Map each station's name to a List of the station names its lanes lead to."
-    prompt: "Map<String, ___> lanes = new LinkedHashMap<>();"
-    answers: ["List<String>", "ArrayList<String>"]
+    prompt: "Each station's name should map to a List of the station names its lanes lead to. What fills the blank?   Map<String, ___> lanes = new LinkedHashMap<>();"
+    choices: ["List<String>", "String", "List<Integer>", "List<int>"]
+    answer: 0
     explain: "An adjacency list maps each station to a list of its neighbours."
     reteach: "## Concept"
 
@@ -125,11 +125,11 @@ questions:
     reteach: "## Worked example"
 
   - id: q08
-    type: fill-blank
+    type: mcq
     concept: shortest-path
-    goal: "Remember, for the newly reached station, which station the search came from."
-    prompt: "parent.___(next, current);"
-    answers: ["put"]
+    prompt: "parent is a Map<String, String>. Which method saves, for the newly reached station, the station the search came from?   parent.___(next, current);"
+    choices: ["put", "get", "add", "offer"]
+    answer: 0
     explain: "The parent map stores, for each new station, the station you came from."
     reteach: "## Concept"
 

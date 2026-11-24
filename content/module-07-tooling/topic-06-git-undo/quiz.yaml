@@ -75,11 +75,11 @@ questions:
     reteach: "### Syntax: git reflog finds \"lost\" commits"
 
   - id: q08
-    type: fill-blank
+    type: mcq
     concept: reflog
-    goal: "List every place HEAD has been on your laptop, even commits that no branch points to any more."
-    prompt: "git ___   # list every place HEAD has been"
-    answers: ["reflog", "reflog show"]
+    prompt: "Which command lists every place HEAD has been on your laptop, even commits that no branch points to any more?"
+    choices: ["git reflog", "git log --oneline", "git status", "git stash list"]
+    answer: 0
     explain: "git reflog is Git's diary of every commit, switch, reset and rebase on your laptop."
     reteach: "### Syntax: git reflog finds \"lost\" commits"
 

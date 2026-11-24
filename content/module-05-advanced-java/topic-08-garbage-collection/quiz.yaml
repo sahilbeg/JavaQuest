@@ -77,12 +77,12 @@ questions:
     reteach: "## Concept"
 
   - id: q09
-    type: fill-blank
+    type: mcq
     concept: weak-references
-    goal: "Give the variable the same type as the object it holds: one that points at the ride without keeping it alive."
-    prompt: "___<Ride> weak = new WeakReference<>(ride);"
-    answers: ["WeakReference"]
-    explain: "A WeakReference refers to an object without keeping it alive."
+    prompt: "Which type fills the blank, so the variable points at the ride without keeping it alive? ___<Ride> weak = new WeakReference<>(ride);"
+    choices: ["WeakReference", "SoftReference", "WeakHashMap", "Ride"]
+    answer: 0
+    explain: "A WeakReference refers to an object without keeping it alive. The variable needs a type that can hold a WeakReference<Ride>, so the other choices do not compile."
     reteach: "## Worked example"
 
   - id: q10

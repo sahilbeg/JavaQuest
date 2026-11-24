@@ -21,11 +21,11 @@ questions:
     reteach: "## Concept"
 
   - id: q03
-    type: fill-blank
+    type: mcq
     concept: memoization
-    goal: "Save the answer for n in the memo, so a later call with the same n can reuse it."
-    prompt: "memo.___(n, answer);"
-    answers: ["put"]
+    prompt: "memo is a Map<Integer, Long>. Which method saves the answer for n, so a later call with the same n can reuse it?   memo.___(n, answer);"
+    choices: ["put", "get", "containsKey", "add"]
+    answer: 0
     explain: "put saves the new answer so the next call with the same n can reuse it."
     reteach: "## Concept"
 

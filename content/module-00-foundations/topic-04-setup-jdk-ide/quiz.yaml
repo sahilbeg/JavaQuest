@@ -30,11 +30,11 @@ questions:
     reteach: "## Concept"
 
   - id: q04
-    type: fill-blank
+    type: mcq
     concept: check-version
-    goal: "Ask Java which release is installed on this laptop."
-    prompt: "java ___"
-    answers: ["-version", "--version"]
+    prompt: "Which command asks Java which release is installed on this laptop?"
+    choices: ["java -version", "java version", "java -v", "java -help"]
+    answer: 0
     explain: "java -version prints the version of the JVM on your laptop."
     reteach: "## Concept"
 
