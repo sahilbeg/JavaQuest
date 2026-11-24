@@ -136,11 +136,11 @@ questions:
     reteach: "## Concept"
 
   - id: q09
-    type: fill-blank
+    type: mcq
     concept: derived-queries
-    goal: "Name a query method that counts the bikes with the given status, built from the field name alone."
-    prompt: "long ___(BikeStatus status);   // a derived query: how many bikes have this status"
-    answers: ["countByStatus"]
+    prompt: "Which method in BikeRepository makes Spring Data count how many bikes have a given status?"
+    choices: ["long countByStatus(BikeStatus status);", "List<Bike> findByStatus(BikeStatus status);", "boolean existsByStatus(BikeStatus status);", "long statusCount(BikeStatus status);"]
+    answer: 0
     explain: "countBy returns how many rows match, and Status names the field to compare."
     reteach: "## Concept"
 

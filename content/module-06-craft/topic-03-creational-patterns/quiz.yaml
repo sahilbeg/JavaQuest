@@ -112,11 +112,11 @@ questions:
     reteach: "## Common mistakes"
 
   - id: q08
-    type: fill-blank
+    type: mcq
     concept: singleton
-    goal: "Give the enum its one and only constant, using the conventional name the lesson used for a singleton."
-    prompt: "enum PriceTable { ___; int centsPerMinute(String type) { return 15; } }"
-    answers: ["INSTANCE"]
+    prompt: "Spoke wants exactly one PriceTable in the whole app. What goes in the blank of enum PriceTable { ___; int centsPerMinute(String type) { return 15; } }?"
+    choices: ["INSTANCE", "INSTANCE, BACKUP", "new PriceTable()", "static PriceTable instance"]
+    answer: 0
     explain: "An enum singleton has exactly one constant. By convention it is called INSTANCE."
     reteach: "## Concept"
 

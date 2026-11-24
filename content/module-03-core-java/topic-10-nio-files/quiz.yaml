@@ -30,11 +30,11 @@ questions:
     reteach: "## Concept"
 
   - id: q04
-    type: fill-blank
+    type: mcq
     concept: create-and-check
-    goal: "If nothing is at the log's path yet, return an empty list instead of trying to read it."
-    prompt: "if (!Files.___(log)) { return new ArrayList<>(); }"
-    answers: ["exists"]
+    prompt: "The code should return an empty list when nothing is at the log's path yet. Which call fills the blank in if (!___) { return new ArrayList<>(); }?"
+    choices: ["Files.exists(log)", "Files.notExists(log)", "Files.isDirectory(log)", "Files.size(log)"]
+    answer: 0
     explain: "Files.exists returns true when the file is there."
     reteach: "## Concept"
 
