@@ -73,7 +73,9 @@ A topic is weak when either is true:
 
 Weak topics list their missed concepts and link straight to the reteach sections.
 
-## Kudos (badges)
+## Shabaash (badges)
+
+Shown in the app as "Shabaash" since the Dhaaga story (24 November 2026). Code, ids and tables still say kudos, so earned badges carry over. XP, levels and badges are counted per course (`xp_event.course_id`, `kudos.course_id`); the daily streak is shared across courses.
 
 Badges appear as kudos from teammates.
 

@@ -20,33 +20,42 @@ public class CareerStore {
     public record DueCard(String topicId, Card card, String lastResult) {}
 
     private final JdbcClient jdbc;
+    private final dev.cadence.course.Courses courses;
 
-    public CareerStore(JdbcClient jdbc) {
+    public CareerStore(JdbcClient jdbc, dev.cadence.course.Courses courses) {
         this.jdbc = jdbc;
+        this.courses = courses;
     }
 
-    /** Records XP once per dedupe key. Returns false when the key was already used. */
+    /**
+     * Records XP once per dedupe key, for the active course. A key is used once across all courses, so a ticket shared by
+     * two courses pays out once. Returns false when the key was already used.
+     */
     public boolean addXp(String kind, int amount, String topicId, String dedupeKey, LocalDate day, Instant now) {
         int existing = jdbc.sql("SELECT COUNT(*) FROM xp_event WHERE dedupe_key = ?").param(dedupeKey).query(Integer.class).single();
         if (existing > 0) {
             return false;
         }
-        jdbc.sql("INSERT INTO xp_event (kind, amount, topic_id, dedupe_key, earned_on, created_at) VALUES (?, ?, ?, ?, ?, ?)")
-                .params(kind, amount, topicId, dedupeKey, Date.valueOf(day), now.atOffset(ZoneOffset.UTC))
+        jdbc.sql("INSERT INTO xp_event (kind, amount, topic_id, dedupe_key, earned_on, created_at, course_id) VALUES (?, ?, ?, ?, ?, ?, ?)")
+                .params(kind, amount, topicId, dedupeKey, Date.valueOf(day), now.atOffset(ZoneOffset.UTC), courses.activeId())
                 .update();
         return true;
     }
 
+    /** XP in the active course: its level and ladder. */
     public int totalXp() {
-        return jdbc.sql("SELECT COALESCE(SUM(amount), 0) FROM xp_event").query(Integer.class).single();
+        return jdbc.sql("SELECT COALESCE(SUM(amount), 0) FROM xp_event WHERE course_id = ?").param(courses.activeId())
+                .query(Integer.class).single();
     }
 
+    /** XP earned on a day in any course: the daily streak is one habit, whatever the learner studies. */
     public int xpOn(LocalDate day) {
         return jdbc.sql("SELECT COALESCE(SUM(amount), 0) FROM xp_event WHERE earned_on = ?").param(Date.valueOf(day)).query(Integer.class).single();
     }
 
     public int countXp(String kind) {
-        return jdbc.sql("SELECT COUNT(*) FROM xp_event WHERE kind = ?").param(kind).query(Integer.class).single();
+        return jdbc.sql("SELECT COUNT(*) FROM xp_event WHERE kind = ? AND course_id = ?").params(kind, courses.activeId())
+                .query(Integer.class).single();
     }
 
     public Streak streak() {
@@ -71,20 +80,22 @@ public class CareerStore {
     }
 
     public Set<String> kudos() {
-        return new TreeSet<>(jdbc.sql("SELECT id FROM kudos").query(String.class).list());
+        return new TreeSet<>(jdbc.sql("SELECT id FROM kudos WHERE course_id = ?").param(courses.activeId()).query(String.class).list());
     }
 
     /** When each earned kudos was earned. */
     public Map<String, Instant> kudosEarnedAt() {
         var earned = new java.util.TreeMap<String, Instant>();
-        jdbc.sql("SELECT id, earned_at FROM kudos")
+        jdbc.sql("SELECT id, earned_at FROM kudos WHERE course_id = ?")
+                .param(courses.activeId())
                 .query((rs, row) -> earned.put(rs.getString(1), rs.getObject(2, java.time.OffsetDateTime.class).toInstant()))
                 .list();
         return earned;
     }
 
     public void addKudos(String id, Instant now) {
-        jdbc.sql("MERGE INTO kudos (id, earned_at) KEY (id) VALUES (?, ?)").params(id, now.atOffset(ZoneOffset.UTC)).update();
+        jdbc.sql("MERGE INTO kudos (course_id, id, earned_at) KEY (course_id, id) VALUES (?, ?, ?)")
+                .params(courses.activeId(), id, now.atOffset(ZoneOffset.UTC)).update();
     }
 
     public Set<String> masteredTopics() {

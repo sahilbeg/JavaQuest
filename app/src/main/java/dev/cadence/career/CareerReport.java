@@ -15,7 +15,7 @@ public class CareerReport {
 
     /** {@code ladder} is every job title from Intern up, so the page can draw the whole career ladder. */
     public record LevelView(int xp, int level, String title, int levelStartXp, int nextLevelXp, String nextTitle, int nextTitleLevel,
-                            List<GameRules.Rung> ladder) {}
+                            List<GameRules.Rung> ladder, String courseId, String courseTitle) {}
 
     public record StreakView(int current, int longest, int freezes, boolean activeToday, int xpToday, int dailyGoal) {}
 
@@ -35,24 +35,28 @@ public class CareerReport {
     private final CareerStore store;
     private final CareerService career;
     private final ProgressService progress;
-    private final ContentCatalog catalog;
+    private final dev.cadence.course.Courses courses;
     private final Clock clock;
 
-    public CareerReport(CareerStore store, CareerService career, ProgressService progress, ContentCatalog catalog, Clock clock) {
+    public CareerReport(CareerStore store, CareerService career, ProgressService progress, dev.cadence.course.Courses courses, Clock clock) {
         this.store = store;
         this.career = career;
         this.progress = progress;
-        this.catalog = catalog;
+        this.courses = courses;
         this.clock = clock;
     }
 
     public Summary summary() {
         LocalDate today = LocalDate.now(clock);
+        ContentCatalog catalog = courses.catalog();
+        var course = courses.active();
+        var titles = course.ladder();
         int xp = store.totalXp();
         int level = GameRules.level(xp);
         int nextTitleLevel = ((level - 1) / GameRules.LEVELS_PER_TITLE + 1) * GameRules.LEVELS_PER_TITLE + 1;
-        var levelView = new LevelView(xp, level, GameRules.jobTitle(level), GameRules.xpForLevel(level),
-                GameRules.xpForLevel(level + 1), GameRules.jobTitle(nextTitleLevel), nextTitleLevel, GameRules.ladder());
+        var levelView = new LevelView(xp, level, GameRules.jobTitle(level, titles), GameRules.xpForLevel(level),
+                GameRules.xpForLevel(level + 1), GameRules.jobTitle(nextTitleLevel, titles), nextTitleLevel, GameRules.ladder(titles),
+                course.id(), course.title());
 
         var streak = store.streak();
         var streakView = new StreakView(GameRules.currentStreak(streak, today), streak.longest(), streak.freezes(),

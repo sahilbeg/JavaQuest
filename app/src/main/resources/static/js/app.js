@@ -5,6 +5,7 @@ import { renderCareer } from "./career.js";
 import { renderOffer } from "./offer.js";
 import { renderReview } from "./review.js";
 import { renderNotes, renderNotesIndex } from "./notes.js";
+import { renderStart } from "./start.js";
 import { refreshRewards } from "./rewards.js";
 import { h, setTeamPictures, pictureFor } from "./dom.js";
 import { byte, setHelperPicture, HELPER_PICTURES } from "./byte.js";
@@ -21,15 +22,16 @@ let cleanup = () => {};
 function parseRoute() {
   const path = location.pathname.replace(/\/+$/, "") || "/";
   const params = new URLSearchParams(location.search);
-  const ticket = path.match(/^\/t\/(module-[^/]+\/[^/]+)$/);
+  const ticket = path.match(/^\/t\/([a-z]+-\d{2}[a-z]?-[^/]+\/[^/]+)$/);
   if (ticket) return { name: "ticket", id: ticket[1], params };
-  const review = path.match(/^\/review\/(module-[^/]+\/[^/]+)$/);
+  const review = path.match(/^\/review\/([a-z]+-\d{2}[a-z]?-[^/]+\/[^/]+)$/);
   if (review) return { name: "review", id: review[1] };
-  const notes = path.match(/^\/notes\/(module-[^/]+\/[^/]+)$/);
+  const notes = path.match(/^\/notes\/([a-z]+-\d{2}[a-z]?-[^/]+\/[^/]+)$/);
   if (notes) return { name: "notes", id: notes[1] };
   if (path === "/notes") return { name: "notes" };
   if (path === "/career") return { name: "career" };
   if (path === "/offer") return { name: "offer" };
+  if (path === "/start") return { name: "start" };
   return { name: "journey" };
 }
 
@@ -59,9 +61,16 @@ async function route({ keepFocus = false } = {}) {
   try {
     const [catalog] = await Promise.all([api.catalog(), picturesReady]);
     document.getElementById("author-banner").hidden = !catalog.authorMode;
-    document.title = { journey: "Your journey · Cadence", career: "Career · Cadence", review: "Review · Cadence", notes: "Notes · Cadence", offer: "Your offer · Cadence" }[current.name] ?? "Cadence";
+    // A new learner picks a course first; every other page waits until they have.
+    if (!catalog.course.chosen && current.name !== "start") {
+      history.replaceState(null, "", "/start");
+      lastRoute = "";
+      return route();
+    }
+    document.title = { start: "Choose your path · Cadence", journey: "Your journey · Cadence", career: "Career · Cadence", review: "Review · Cadence", notes: "Notes · Cadence", offer: "Your offer · Cadence" }[current.name] ?? "Cadence";
     setPageTour(current.name === "ticket" ? "lesson" : current.name);
-    cleanup = current.name === "ticket" ? await renderLesson(view, catalog, current.id, current.params)
+    cleanup = current.name === "start" ? await renderStart(view, catalog, navigate)
+      : current.name === "ticket" ? await renderLesson(view, catalog, current.id, current.params)
       : current.name === "review" ? await renderReview(view, catalog, current.id)
       : current.name === "career" ? await renderCareer(view)
       : current.name === "offer" ? await renderOffer(view, catalog)

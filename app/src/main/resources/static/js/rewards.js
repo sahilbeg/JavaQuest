@@ -53,7 +53,7 @@ function celebrate(before, after) {
   const fresh = after.kudos.filter((k) => k.earned && !had.has(k.id));
   if (fresh.some((k) => k.id === "java-pro")) launched();
   for (const kudos of fresh) {
-    toast(`Kudos from ${TEAM[kudos.from]?.name.split(" ")[0] ?? kudos.from}: ${kudos.title}. ${kudos.message}`);
+    toast(`Shabaash from ${TEAM[kudos.from]?.name.split(" ")[0] ?? kudos.from}: ${kudos.title}. ${kudos.message}`);
   }
 }
 

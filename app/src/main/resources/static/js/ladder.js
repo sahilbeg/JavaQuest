@@ -39,7 +39,7 @@ function render(rail, level) {
       ? `The line shows your progress through ${rung.title}, ${rangeOf(current)}. You're ${levelsDone.toFixed(1)} of ${levelsInTitle} levels in (${pct(intoTitle)}), so it's ${pct(intoTitle)} of the way to ${next.title}.`
       : `${rung.title} is the top title, so the line is full.`,
     bar: `The bar shows level ${level.level} only: ${n(intoLevelXp)} of ${n(span)} XP (${pct(intoLevel)}). ${n(toNextLevel)} XP more reaches level ${level.level + 1}.`,
-    head: `Your level and all the XP you've earned. Tickets, quizzes and daily streaks add XP.`,
+    head: `${level.courseTitle ?? "Your course"}: your level and the XP you've earned in it. Each course has its own ladder.`,
   };
   const rungTip = (r, i, state) => {
     if (state === "done") return `${r.title}: ${rangeOf(i)}. Done.`;
@@ -79,7 +79,9 @@ function render(rail, level) {
             // Screen readers get the same explanations the tooltips give.
             h("span", { class: "visually-hidden" }, state === "current" ? `. ${tips.bar} ${tips.line}` : `. ${rungTip(r, i, state)}`)));
       }))),
-    h("a", { class: "ladder-foot ladder-text", href: "/career" }, "Career page", icon("arrow-right")));
+    h("div", { class: "ladder-foot ladder-text" },
+      h("a", { href: "/career" }, "Career page", icon("arrow-right")),
+      h("a", { href: "/start" }, "Switch course")));
   rail.setAttribute("aria-label", `Career ladder: ${rung.title}, level ${level.level}`);
 }
 

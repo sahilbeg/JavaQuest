@@ -88,7 +88,7 @@ function letter(view, catalog, summary, counts) {
             !done && h("span", { class: "visually-hidden" }, ", tickets still open"));
         }))),
       fullTime?.earned
-        ? h("p", { class: "offer-note" }, icon("star"), " Every ticket closed. You earned the ", h("strong", {}, "Full-time offer"), " kudos too.")
+        ? h("p", { class: "offer-note" }, icon("star"), " Every ticket closed. You earned the ", h("strong", {}, "Full-time offer"), " Shabaash too.")
         : h("p", { class: "offer-note" }, `${left} ${left === 1 ? "ticket is" : "tickets are"} still open. Close them all for the `,
             h("strong", {}, "Full-time offer"), " kudos."),
       h("footer", { class: "offer-sign" }, h("p", { class: "offer-signature" }, from.name), h("p", { class: "muted" }, "Lead engineer, Spoke"))),

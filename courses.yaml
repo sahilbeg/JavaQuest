@@ -1,0 +1,119 @@
+# Every course a learner can pick. See content-model/.../CourseLibrary.java.
+# A pool is a content folder. A course is either a whole pool (the Java course) or a list of modules from pools.
+# Planned modules are listed before they are written, so the learner sees the whole path.
+
+pools:
+  - id: java
+    content: content
+    practice: practice
+  - id: web
+    content: tracks/web/content
+    practice: tracks/web/practice
+
+objectives:
+  - id: software-engineering
+    title: "Software engineer"
+    summary: "Programming from zero to a professional engineer, with one language all the way through."
+  - id: frontend
+    title: "Frontend developer"
+    summary: "Build what people see and use in the browser, from the first web page to a full online store."
+  - id: backend
+    title: "Backend developer"
+    summary: "Build the servers, APIs and databases behind apps."
+  - id: fullstack
+    title: "Full-stack developer"
+    summary: "Build both sides of a web app, the browser and the server."
+
+courses:
+  - id: java-swe
+    objective: software-engineering
+    title: "Software engineering in Java"
+    summary: "Java from your first program to Spring Boot, architecture, DevOps and data."
+    stack: [Java, Spring Boot, SQL, Docker]
+    status: ready
+    pool: java
+    ladder: [Intern, Junior Developer, Developer, Software Engineer, Senior Engineer, Staff Engineer, Architect, Principal Engineer]
+
+  - id: frontend-react
+    objective: frontend
+    title: "Frontend with JavaScript and React"
+    summary: "HTML, CSS and JavaScript, then React, until you launch Dhaaga's online store."
+    stack: [HTML, CSS, JavaScript, React]
+    status: building
+    modules:
+      - { id: web-00-how-the-web-works, title: How the web works }
+      - { id: web-01-html, title: HTML }
+      - { id: web-02-css, title: CSS }
+      - { id: web-03-javascript-basics, title: JavaScript basics }
+      - { id: web-04-javascript-in-depth, title: JavaScript in depth }
+      - { id: web-05-dom-and-events, title: The DOM and events }
+      - { id: web-06-async-javascript, title: Async JavaScript }
+      - { id: web-07-tooling, title: Tooling }
+      - { id: react-08-react-fundamentals, title: React fundamentals }
+      - { id: react-09-react-in-depth, title: React in depth }
+      - { id: react-10-professional-frontend, title: Professional frontend }
+    ladder: [Frontend Intern, Junior Frontend Developer, Frontend Developer, Frontend Engineer, Senior Frontend Engineer, Staff Frontend Engineer, Frontend Architect, Principal Frontend Engineer]
+
+  - id: frontend-vanilla
+    objective: frontend
+    title: "Frontend with plain JavaScript"
+    summary: "HTML, CSS and JavaScript with no framework, all the way to a fast, accessible store."
+    stack: [HTML, CSS, JavaScript]
+    status: soon
+    ladder: [Frontend Intern, Junior Frontend Developer, Frontend Developer, Frontend Engineer, Senior Frontend Engineer, Staff Frontend Engineer, Frontend Architect, Principal Frontend Engineer]
+
+  - id: frontend-react-ts
+    objective: frontend
+    title: "Frontend with TypeScript and React"
+    summary: "The React course with TypeScript's types from the start."
+    stack: [HTML, CSS, TypeScript, React]
+    status: soon
+    ladder: [Frontend Intern, Junior Frontend Developer, Frontend Developer, Frontend Engineer, Senior Frontend Engineer, Staff Frontend Engineer, Frontend Architect, Principal Frontend Engineer]
+
+  - id: frontend-next
+    objective: frontend
+    title: "Frontend with Next.js"
+    summary: "React with Next.js routing, server rendering and deployment."
+    stack: [HTML, CSS, JavaScript, React, Next.js]
+    status: soon
+    ladder: [Frontend Intern, Junior Frontend Developer, Frontend Developer, Frontend Engineer, Senior Frontend Engineer, Staff Frontend Engineer, Frontend Architect, Principal Frontend Engineer]
+
+  - id: backend-node
+    objective: backend
+    title: "Backend with Node.js and Express"
+    summary: "JavaScript on the server: APIs, databases, login and deployment."
+    stack: [JavaScript, Node.js, Express, PostgreSQL]
+    status: soon
+    ladder: [Backend Intern, Junior Backend Developer, Backend Developer, Backend Engineer, Senior Backend Engineer, Staff Backend Engineer, Backend Architect, Principal Backend Engineer]
+
+  - id: backend-python
+    objective: backend
+    title: "Backend with Python and FastAPI"
+    summary: "Python from the start, then APIs, databases, login and deployment."
+    stack: [Python, FastAPI, PostgreSQL]
+    status: soon
+    ladder: [Backend Intern, Junior Backend Developer, Backend Developer, Backend Engineer, Senior Backend Engineer, Staff Backend Engineer, Backend Architect, Principal Backend Engineer]
+
+  - id: fullstack-mern
+    objective: fullstack
+    title: "Full stack with MERN"
+    summary: "MongoDB, Express, React and Node.js, building the whole Dhaaga store."
+    stack: [JavaScript, React, Node.js, Express, MongoDB]
+    status: soon
+    ladder: [Full-Stack Intern, Junior Full-Stack Developer, Full-Stack Developer, Full-Stack Engineer, Senior Full-Stack Engineer, Staff Full-Stack Engineer, Full-Stack Architect, Principal Full-Stack Engineer]
+
+  - id: fullstack-next
+    objective: fullstack
+    title: "Full stack with Next.js"
+    summary: "One Next.js app for both the pages and the server, with a database."
+    stack: [JavaScript, React, Next.js, PostgreSQL]
+    status: soon
+    ladder: [Full-Stack Intern, Junior Full-Stack Developer, Full-Stack Developer, Full-Stack Engineer, Senior Full-Stack Engineer, Staff Full-Stack Engineer, Full-Stack Architect, Principal Full-Stack Engineer]
+
+  - id: fullstack-react-python
+    objective: fullstack
+    title: "Full stack with React and Python"
+    summary: "A React front end with a Python and FastAPI back end."
+    stack: [JavaScript, React, Python, FastAPI, PostgreSQL]
+    status: soon
+    ladder: [Full-Stack Intern, Junior Full-Stack Developer, Full-Stack Developer, Full-Stack Engineer, Senior Full-Stack Engineer, Staff Full-Stack Engineer, Full-Stack Architect, Principal Full-Stack Engineer]

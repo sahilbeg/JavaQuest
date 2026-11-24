@@ -79,3 +79,7 @@ At 1200px and wider (a laptop), the app uses the width to cut scrolling:
 - **The ticket card** puts the ticket on the left and "In this ticket you'll learn" on the right.
 - **Long lists run down two columns**: a module's tickets on the course page and each module's notes, in course order top to bottom.
 - **A notes page** balances its sections over two columns. At 900px and below, cards stack and module rows drop their bars. At 640px and below, the top bar shows icons only and rows hide their keys.
+
+## Courses and the course picker
+
+Cadence holds several courses (`courses.yaml`): a goal (Software engineer, Frontend, Backend, Full stack), then a stack. Each course has its own path of modules, its own XP, level, job-title ladder and Shabaash badges; the daily streak and the daily limit are shared. The picker (`/start`, `js/start.js`) has three steps on one page: choose your goal (cards), choose your stack (cards with stack chips and a Ready / Being written / Coming soon chip), then your path (every module with its ticket count or "Being written", and the ladder from the first title at the bottom to the top). A new learner lands there first; anyone can come back from "Switch course" on the course page or the ladder. Courses still being written can't be started, except in author mode once they have a module.

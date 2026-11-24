@@ -40,7 +40,7 @@ const TOURS = {
   career: [
     { target: ".career-hero", title: "Your career", text: "Your job title, level and XP. Promotions come every five levels." },
     { target: ".streak-card", title: "Your streak", text: "Earn a little XP every day to keep it going. Freezes protect a missed day." },
-    { target: ".kudos-grid", title: "Kudos", text: "Teammates send kudos for great work. Locked ones say how to earn them.", mood: "cheering" },
+    { target: ".kudos-grid", title: "Shabaash", text: "Teammates send a Shabaash for great work. Locked ones say how to earn them. Each course has its own.", mood: "cheering" },
   ],
 };
 

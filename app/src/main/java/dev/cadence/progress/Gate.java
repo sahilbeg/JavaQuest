@@ -25,12 +25,12 @@ public class Gate {
     /** Today's pace: whether the daily limit is on, the limit, tickets completed today, and whether it is reached. */
     public record Today(boolean limitOn, int limit, int doneToday, boolean reached) {}
 
-    private final ContentCatalog catalog;
+    private final dev.cadence.course.Courses courses;
     private final ProgressService progress;
     private final boolean unlockAll;
 
-    public Gate(ContentCatalog catalog, ProgressService progress, CadenceProperties properties) {
-        this.catalog = catalog;
+    public Gate(dev.cadence.course.Courses courses, ProgressService progress, CadenceProperties properties) {
+        this.courses = courses;
         this.progress = progress;
         this.unlockAll = properties.unlockAll();
     }
@@ -46,13 +46,13 @@ public class Gate {
         return new Today(settings.dailyLimitOn(), settings.dailyLimit(), done, reached);
     }
 
-    /** Access for every ticket, keyed by id, in curriculum order. */
+    /** Access for every ticket of the active course, keyed by id, in course order. */
     public Map<String, Access> accessAll() {
         return accessAll(today());
     }
 
     public Map<String, Access> accessAll(Today today) {
-        List<Topic> topics = catalog.topics();
+        List<Topic> topics = courses.catalog().topics();
         var mastered = new boolean[topics.size()];
         int frontier = topics.size();
         for (int i = 0; i < topics.size(); i++) {
@@ -71,21 +71,29 @@ public class Gate {
         return access;
     }
 
+    /** A ticket from another course is open in author mode, and otherwise locked until the learner switches course. */
     public Access access(Topic topic) {
-        return accessAll().get(topic.id());
+        return accessAll().getOrDefault(topic.id(), outsideCourse());
+    }
+
+    private Access outsideCourse() {
+        return new Access(!unlockAll, null, false);
     }
 
     /** Throws LockedException, which the API answers with 403, when the learner has not reached this ticket yet. */
     public Topic requireOpen(Topic topic) {
         Today today = today();
-        Access access = accessAll(today).get(topic.id());
+        Access access = accessAll(today).getOrDefault(topic.id(), outsideCourse());
+        if (access.locked() && courses.catalog().topic(topic.id()).isEmpty()) {
+            throw new LockedException("This ticket belongs to another course. Switch course on your career page to open it.");
+        }
         if (access.resting()) {
             throw new LockedException("This ticket opens tomorrow. You've completed " + today.doneToday()
                     + " tickets today, your daily limit. You can still revisit any ticket you've finished,"
                     + " or turn off the daily limit in Settings.");
         }
         if (access.locked()) {
-            String frontier = catalog.topic(access.frontierId())
+            String frontier = courses.catalog().topic(access.frontierId())
                     .map(t -> t.meta().ticket().key() + " \"" + t.meta().ticket().title() + "\"")
                     .orElse("the ticket before it");
             throw new LockedException("This ticket is still locked. Finish " + frontier

@@ -46,7 +46,10 @@ public class TopicController {
      * daily limit is on and reached; when it is, the frontier is locked until tomorrow.
      */
     public record Catalog(List<ModuleInfo> modules, List<TopicSummary> topics, String frontierId, boolean authorMode,
-                          Gate.Today today) {}
+                          Gate.Today today, CourseRef course) {}
+
+    /** The active course, so pages can name it. {@code chosen} is false until the learner picks one. */
+    public record CourseRef(String id, String title, boolean chosen) {}
 
     public record TopicDetail(TopicSummary summary, int minutes, String mainClass, String lessonHtml,
                               int hintCount, String previousId, String nextId, List<String> sourceFiles,
@@ -88,9 +91,11 @@ public class TopicController {
     private final ProgressService progress;
     private final Gate gate;
     private final QuickReference quickReference;
+    private final dev.cadence.course.Courses courses;
 
     public TopicController(ContentCatalog catalog, PracticeService practice, LessonRenderer lessons, EventHub events,
-                           ProgressService progress, Gate gate, QuickReference quickReference) {
+                           ProgressService progress, Gate gate, QuickReference quickReference, dev.cadence.course.Courses courses) {
+        this.courses = courses;
         this.catalog = catalog;
         this.practice = practice;
         this.lessons = lessons;
@@ -105,15 +110,17 @@ public class TopicController {
         Gate.Today today = gate.today();
         Map<String, Gate.Access> access = gate.accessAll(today);
         String frontier = access.values().stream().map(Gate.Access::frontierId).findFirst().orElse(null);
-        return new Catalog(catalog.modules(),
-                catalog.topics().stream().map(t -> summary(t, access.get(t.id()).locked())).toList(),
-                frontier, gate.authorMode(), today);
+        ContentCatalog course = courses.catalog();
+        return new Catalog(course.modules(),
+                course.topics().stream().map(t -> summary(t, access.get(t.id()).locked())).toList(),
+                frontier, gate.authorMode(), today,
+                new CourseRef(courses.activeId(), courses.active().title(), courses.chosen().isPresent()));
     }
 
     @GetMapping("/topics/{module}/{topic}")
     public TopicDetail topic(@PathVariable String module, @PathVariable String topic) throws IOException {
         Topic found = open(module, topic);
-        List<Topic> all = catalog.topics();
+        List<Topic> all = courses.catalog().topics();
         int index = all.indexOf(found);
         return new TopicDetail(summary(found, false), found.meta().minutes(), found.meta().practice().mainClass(),
                 lessons.render(Files.readString(found.lessonFile())), found.meta().hints().size(),

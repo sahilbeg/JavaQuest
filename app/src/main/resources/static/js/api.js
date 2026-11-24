@@ -40,6 +40,9 @@ export const api = {
   runMain: (id, input = "") =>
     fetch(`${topicPath(id)}/run`, { method: "POST", headers: WRITE_HEADERS, body: JSON.stringify({ input }) }).then(parse),
   career: () => fetch("/api/career").then(parse),
+  courses: () => fetch("/api/courses").then(parse),
+  chooseCourse: (courseId) =>
+    fetch("/api/courses/active", { method: "PUT", headers: WRITE_HEADERS, body: JSON.stringify({ courseId }) }).then(parse),
   teamPictures: () => fetch("/api/team/avatars").then(parse),
   settings: () => fetch("/api/settings").then(parse),
   voice: () => fetch("/api/settings/voice").then(parse),

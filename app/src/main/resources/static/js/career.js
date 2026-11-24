@@ -50,7 +50,7 @@ function weakBlock(weak) {
 function kudosBlock(kudos) {
   const earned = kudos.filter((k) => k.earned).length;
   return h("section", { class: "career-section", "aria-labelledby": "kudos-title" },
-    h("h2", { id: "kudos-title" }, `Kudos · ${earned} of ${kudos.length}`),
+    h("h2", { id: "kudos-title" }, `Shabaash · ${earned} of ${kudos.length}`),
     h("ul", { class: "kudos-grid" }, kudos.map((k) => h("li", { class: `kudos ${k.earned ? "is-earned" : "is-locked"}` },
       k.earned ? avatar(k.from) : icon("lock", "Not earned yet"),
       h("div", {},

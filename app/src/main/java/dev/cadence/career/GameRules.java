@@ -35,16 +35,25 @@ public final class GameRules {
 
     /** Every job title in order, from Intern up. The last title has no top level. */
     public static List<Rung> ladder() {
+        return ladder(JOB_TITLES);
+    }
+
+    /** A course's own ladder: each title covers 5 levels. */
+    public static List<Rung> ladder(List<String> titles) {
         var rungs = new java.util.ArrayList<Rung>();
-        for (int i = 0; i < JOB_TITLES.size(); i++) {
+        for (int i = 0; i < titles.size(); i++) {
             int first = i * LEVELS_PER_TITLE + 1;
-            rungs.add(new Rung(JOB_TITLES.get(i), first, xpForLevel(first)));
+            rungs.add(new Rung(titles.get(i), first, xpForLevel(first)));
         }
         return List.copyOf(rungs);
     }
 
     public static String jobTitle(int level) {
-        return JOB_TITLES.get(Math.min((level - 1) / LEVELS_PER_TITLE, JOB_TITLES.size() - 1));
+        return jobTitle(level, JOB_TITLES);
+    }
+
+    public static String jobTitle(int level, List<String> titles) {
+        return titles.get(Math.min((level - 1) / LEVELS_PER_TITLE, titles.size() - 1));
     }
 
     public static int dailyStreakXp(int streak) {

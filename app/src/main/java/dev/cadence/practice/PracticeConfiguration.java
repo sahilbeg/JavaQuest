@@ -17,8 +17,14 @@ import org.springframework.context.annotation.Configuration;
 public class PracticeConfiguration {
 
     @Bean
-    ContentCatalog contentCatalog(CadenceProperties properties) throws IOException {
-        return ContentCatalog.load(properties.contentDir(), properties.practiceDir());
+    dev.cadence.content.CourseLibrary courseLibrary(CadenceProperties properties) throws IOException {
+        return dev.cadence.content.CourseLibrary.load(properties.root());
+    }
+
+    /** Every topic of every course, for finding a topic by id. Course order and progress use {@code Courses}. */
+    @Bean
+    ContentCatalog contentCatalog(dev.cadence.content.CourseLibrary library) {
+        return library.library();
     }
 
     @Bean

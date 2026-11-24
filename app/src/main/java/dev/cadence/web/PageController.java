@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PageController {
 
-    @GetMapping({"/t/{module}/{topic}", "/review/{module}/{topic}", "/notes", "/notes/{module}/{topic}", "/career", "/offer"})
+    @GetMapping({"/t/{module}/{topic}", "/review/{module}/{topic}", "/notes", "/notes/{module}/{topic}", "/career", "/offer", "/start"})
     public String page() {
         return "forward:/index.html";
     }

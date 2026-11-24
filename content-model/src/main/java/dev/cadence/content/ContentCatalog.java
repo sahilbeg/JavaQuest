@@ -109,6 +109,38 @@ public final class ContentCatalog {
         }
     }
 
+    /** One catalog holding every pool's modules and topics, in the order given. A topic id may appear only once. */
+    public static ContentCatalog merge(List<ContentCatalog> pools) {
+        var modules = new ArrayList<ModuleInfo>();
+        var topics = new LinkedHashMap<String, Topic>();
+        for (ContentCatalog pool : pools) {
+            modules.addAll(pool.modules);
+            for (Topic topic : pool.orderedTopics) {
+                if (topics.putIfAbsent(topic.id(), topic) != null) {
+                    throw new InvalidContentException(topic.contentDir(), "topic id '" + topic.id() + "' is used in two content folders");
+                }
+            }
+        }
+        return new ContentCatalog(modules, topics);
+    }
+
+    /** A view with only these modules, in this order, and their topics. Ids that are not here yet are skipped. */
+    public ContentCatalog subset(List<String> moduleIds) {
+        var modules = new ArrayList<ModuleInfo>();
+        var topics = new LinkedHashMap<String, Topic>();
+        for (String id : moduleIds) {
+            this.modules.stream().filter(m -> m.id().equals(id)).findFirst().ifPresent(module -> {
+                modules.add(module);
+                orderedTopics.stream().filter(t -> t.meta().moduleId().equals(id)).forEach(t -> topics.put(t.id(), t));
+            });
+        }
+        return new ContentCatalog(modules, topics);
+    }
+
+    public static ContentCatalog empty() {
+        return new ContentCatalog(List.of(), new LinkedHashMap<>());
+    }
+
     public List<ModuleInfo> modules() {
         return modules;
     }

@@ -28,6 +28,7 @@ public final class TestRepository {
         copyTree(repo.resolve("content"), copy.resolve("content"));
         copyTree(repo.resolve("practice"), copy.resolve("practice"));
         resetSourcesToSkeletons(copy.resolve("practice"));
+        Files.copy(repo.resolve("courses.yaml"), copy.resolve("courses.yaml"));
         Path classpathFile = Files.createTempFile("runner-classpath", ".txt");
         Files.writeString(classpathFile, System.getProperty("junit.console.jar"));
         registry.add("cadence.root", copy::toString);

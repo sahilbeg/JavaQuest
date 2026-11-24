@@ -28,12 +28,12 @@ public class CareerService {
     public static final int FEATURE_XP = 400;
 
     private final CareerStore store;
-    private final ContentCatalog catalog;
+    private final dev.cadence.course.Courses courses;
     private final Clock clock;
 
-    public CareerService(CareerStore store, ContentCatalog catalog, Clock clock) {
+    public CareerService(CareerStore store, dev.cadence.course.Courses courses, Clock clock) {
         this.store = store;
-        this.catalog = catalog;
+        this.courses = courses;
         this.clock = clock;
     }
 
@@ -126,7 +126,10 @@ public class CareerService {
     }
 
     private void refreshKudos() {
-        var mastered = store.masteredTopics();
+        // Badges belong to the active course, so only its tickets count.
+        var inCourse = courses.catalog().topics().stream().map(Topic::id).collect(java.util.stream.Collectors.toSet());
+        var mastered = new java.util.TreeSet<>(store.masteredTopics());
+        mastered.retainAll(inCourse);
         var stats = new Kudos.Stats(mastered, store.countXp("code") > 0, store.countXp("code-no-hints"),
                 store.countXp("quiz-perfect"), store.spotBugsCorrect(), store.idePasses(), store.streak().longest(),
                 store.countXp("review"), completeModules(), store.countXp("boss"), store.countXp("boss-gold"));
@@ -141,6 +144,7 @@ public class CareerService {
     /** Only modules whose incident exists count, so a module never ships before its content is complete. */
     public Map<String, List<String>> completeModules() {
         var modules = new LinkedHashMap<String, List<String>>();
+        ContentCatalog catalog = courses.catalog();
         for (var module : catalog.modules()) {
             var units = catalog.topics().stream().filter(t -> t.meta().moduleId().equals(module.id())).map(Topic::id).toList();
             if (units.contains(module.id() + "/boss")) {
