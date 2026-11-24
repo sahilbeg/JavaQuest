@@ -54,7 +54,8 @@ Large modules can be written in parallel by subagents, one or two topics each. G
 ## Rules learned while building
 
 - **Voice:** explain like the reader is 15. Sentences under 25 words. Define every jargon word the first time it appears (`callout jargon`). Teammates send tickets but never teach.
-- **Fares:** whole cents (`long`), 100 cents to unlock, plus per minute: CLASSIC 15, EBIKE 30, CARGO 25. Bike B-1042 is an EBIKE. Stations: Riverside, Old Mill, Harbor, Uptown, Depot. Rental ids look like `rental-17`.
+- **Story:** `docs/STORY.md` (Dhaaga & Co., a crochet business in Pune) is the world for all new content: Java from module 02 on, and every web module. Its "Facts every lesson and test agrees on" section is binding: money in paise (`long`), the price list, item ids like `DC-1042`, order ids like `order-17`, payment modes, extras and delivery rules. Ticket keys: `DHG-MMTT` (Java) and `WEB-MMTT` (web).
+- **Spoke facts (Java modules 00 and 01 only, kept as the learner's internship; see `docs/archive/STORY-spoke.md`):** whole cents (`long`), 100 cents to unlock, plus per minute: CLASSIC 15, EBIKE 30, CARGO 25. Bike B-1042 is an EBIKE. Stations: Riverside, Old Mill, Harbor, Uptown, Depot. Rental ids look like `rental-17`.
 - **Lesson code is executed:** the content checker compiles every ```` ```java ```` and ```` ```java run ```` block. It also runs any `main` it finds, with a 10 s, 256 MB limit. A block that starts a web server or waits must be ```` ```java nocompile ````. Run-block output must not depend on the clock or the machine.
 - **Error texts and outputs** in lessons must come from real runs, not memory.
 - **Skeletons:** they compile and carry numbered `// TODO n:` lines. They fail the tests with assertion messages, not compile errors, and a Spring skeleton's context still starts. They include every import the solution uses, because the in-app editor cannot add imports.
