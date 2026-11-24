@@ -1,0 +1,24 @@
+id: web-05-dom-and-events/topic-09-local-storage
+title: "Remembering things: localStorage"
+order: 9
+minutes: 10
+prerequisites: [web-05-dom-and-events/topic-08-rendering-from-data]
+concepts: [local-storage, strings-only, json-round-trip, missing-values, broken-values, remove-and-keys]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0509
+  from: sam
+  title: "Mrs. Rao types her PIN code on every visit"
+  body: >
+    Raju here. Mrs. Rao from Kothrud shops with us every week. She says the site makes her type her PIN code for
+    the delivery check every single time, and the hearts she taps to save items for later vanish when she closes
+    the tab. Can the site remember these on her phone?
+hints:
+  - "localStorage.setItem(key, text) saves text in this browser, and getItem(key) reads it back, even after a reload. It returns null when nothing is saved."
+  - "localStorage only stores strings. Save the wishlist with JSON.stringify(ids), and read it back with JSON.parse. Wrap the parse in try and catch, because the saved text may be broken."
+  - "loadWishlist: if getItem gives null, return []. In try, parse it and return it only if Array.isArray(...) is true, else []. In catch, return []. toggleWish loads, adds or filters out the id, saves and returns the new array. forgetMe calls removeItem for both keys."
+review: true

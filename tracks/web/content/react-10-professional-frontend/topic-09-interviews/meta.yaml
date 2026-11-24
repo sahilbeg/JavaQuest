@@ -1,0 +1,23 @@
+id: react-10-professional-frontend/topic-09-interviews
+title: "Frontend interviews"
+order: 9
+minutes: 10
+prerequisites: [react-10-professional-frontend/topic-08-big-codebases]
+concepts: [frontend-loop, js-fundamentals, event-loop-order, ui-coding-round, coding-method, frontend-system-design, behavioural-star]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-1009
+  from: maya
+  title: "Get ready for Arjun's mock loop"
+  body: >
+    After launch, Meera Aunty wants to hire two more frontend engineers, and I'd like you on the interview panel.
+    The best way to learn to interview is to be interviewed, so Arjun will run our full frontend loop on you on Thursday, as practice.
+    Read up on how frontend interviews work and what each round is looking for.
+    No pressure. Well, a little.
+hints:
+  - "A frontend loop usually has a JavaScript round, a UI coding round, a frontend system design round and a behavioural round. Each one checks a different skill."
+  - "In any coding round: clarify, write examples, say a plan, code, then test by hand with the edge cases, talking all the way."
+  - "For behavioural questions, tell a real story with STAR: the Situation, your Task, the Action you took, and the Result."
+review: true

@@ -1,0 +1,23 @@
+id: web-07-tooling/topic-07-unit-tests
+title: "Writing tests with Vitest"
+order: 7
+minutes: 10
+prerequisites: [web-07-tooling/topic-06-debugging]
+concepts: [test-structure, matchers, choosing-cases, test-tables, running-tests]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0707
+  from: maya
+  title: "Free delivery broke twice, and customers found it first"
+  body: >
+    Free delivery broke twice this month. First, an order of exactly ₹999 got free delivery. Then someone
+    typed 60 instead of 6000, and Pune orders paid 60 paise. Both times Raju heard it from a customer.
+    Please write deliveryFee again, with a table of test cases that would have caught both mistakes.
+hints:
+  - "Start with deliveryFee: check the input first, then the empty cart, then the ₹999 line. \"Above ₹999\" means more than 99900, not equal to it."
+  - "Good cases sit on the edges: an empty cart, a normal small order, exactly 99900, just above it, and a big order."
+  - "Each case is an object like { name: \"exactly ₹999 still pays ₹60\", subtotal: 99900, expected: 6000 }. The checks tell you which broken version none of your cases catches."
+review: true

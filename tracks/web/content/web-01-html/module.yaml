@@ -1,0 +1,6 @@
+id: web-01-html
+title: HTML
+project: The catalogue page
+summary: Write the HTML for Dhaaga's catalogue page, one piece at a time, from headings and photos to a price table and an order form that everyone can use.
+unlockAfter: web-00-how-the-web-works/boss
+mascotIntro: "Shabaash, the visiting card is live! Now Dhaaga needs a real catalogue page. Every ticket here adds one piece of HTML to it."

@@ -1,0 +1,24 @@
+id: web-05-dom-and-events/topic-01-the-dom
+title: "The DOM: the page as a tree of objects"
+order: 1
+minutes: 9
+prerequisites: [web-04-javascript-in-depth/boss]
+concepts: [dom-tree, document-object, elements-and-text-nodes, parents-and-children, text-content, script-timing]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0501
+  from: maya
+  title: "How many items are on the catalogue page?"
+  body: >
+    Before we build the cart, I want a tiny page inspector. Raju keeps asking how many items the catalogue page shows
+    and which one comes first. Write a few functions that read the page and answer him. They'll fill the summary line
+    under the product list.
+hints:
+  - "Every function gets an element. Ask that element about its family: its children, its first and last child, its parent."
+  - "children holds only elements. childNodes also holds the spaces between tags, as text nodes. Count with children."
+  - "list.children.length counts. [...list.children].map((item) => item.textContent.trim()) gives the names. list.firstElementChild is null when the list is empty. element.parentElement.id gives the parent's id."
+review: true

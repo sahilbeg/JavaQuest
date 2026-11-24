@@ -1,0 +1,6 @@
+id: react-09-react-in-depth
+title: React in depth
+project: Checkout
+summary: Effects, data from the API, custom hooks, context, reducers, pages and forms, until dhaaga.in has a checkout that takes UPI.
+unlockAfter: react-08-react-fundamentals/boss
+mascotIntro: "Shabaash, the store runs on React! Now it has to talk to the server, remember the cart on every page and take payments. Let's build checkout."

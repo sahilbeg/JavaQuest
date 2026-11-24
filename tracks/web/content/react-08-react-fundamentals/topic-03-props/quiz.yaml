@@ -1,0 +1,160 @@
+topic: react-08-react-fundamentals/topic-03-props
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: props
+    prompt: "What are props?"
+    choices:
+      - "Values a parent passes into a component, like arguments to a function"
+      - "Values a component stores and changes by itself"
+      - "CSS rules for a component"
+      - "The HTML that React writes into the page"
+    answer: 0
+    explain: "Props are a component's inputs. The parent decides them, and the component uses them to decide what to show."
+    reteach: "### Props: a component's inputs"
+
+  - id: q02
+    type: mcq
+    concept: passing-props
+    prompt: "Which line passes the number 89900 as the paise prop?"
+    choices:
+      - "<ProductCard paise={89900} />"
+      - "<ProductCard paise=\"89900\" />"
+      - "<ProductCard paise=89900 />"
+      - "<ProductCard {paise: 89900} />"
+    answer: 0
+    explain: "Anything that is not plain text goes in curly braces. Quotes would pass the text \"89900\"."
+    reteach: "### Syntax: passing props"
+
+  - id: q03
+    type: predict-output
+    concept: passing-props
+    code: |
+      function note(props) {
+        return `With one more: ${props.qty + 1}`;
+      }
+      console.log(note({ qty: 2 }));
+      console.log(note({ qty: "2" }));
+    answer: "With one more: 3\nWith one more: 21"
+    explain: "The first call passes the number 2. The second passes the text \"2\", and + joins texts. That is what qty=\"2\" does in JSX."
+    reteach: "## Common mistakes"
+
+  - id: q04
+    type: fill-blank
+    concept: destructuring-props
+    goal: "Unpack the name and paise props into two variables in the function's brackets."
+    prompt: "function ProductCard(___) {"
+    answers: ["{ name, paise }", "{name, paise}", "{ name, paise}", "{name, paise }"]
+    explain: "React passes one object. Braces in the brackets unpack the two props you need."
+    reteach: "### Syntax: destructuring props"
+
+  - id: q05
+    type: predict-output
+    concept: default-props
+    code: |
+      function card({ name, colour = "Off-white" }) {
+        return `${name}: ${colour}`;
+      }
+      console.log(card({ name: "Golu", colour: "Indigo" }));
+      console.log(card({ name: "Coaster set" }));
+    answer: "Golu: Indigo\nCoaster set: Off-white"
+    explain: "A default is used only when the prop is missing. Golu has a colour, the coaster set does not."
+    reteach: "### Syntax: a default value"
+
+  - id: q06
+    type: mcq
+    concept: default-props
+    prompt: "function Badge({ text = \"New\" }) { ... } is used as <Badge text=\"Sale\" />. What is text inside Badge?"
+    choices:
+      - "\"Sale\""
+      - "\"New\""
+      - "\"NewSale\""
+      - "undefined"
+    answer: 0
+    explain: "The parent passed a value, so the default is not used."
+    reteach: "### Syntax: a default value"
+
+  - id: q07
+    type: mcq
+    concept: children
+    prompt: "<Badge>Only 2 left</Badge> — how does Badge get the text Only 2 left?"
+    choices:
+      - "As a prop called children"
+      - "As a prop called text"
+      - "It reads it from the page with document.querySelector"
+      - "It cannot: components never have anything between their tags"
+    answer: 0
+    explain: "Whatever is between a component's tags arrives as the children prop."
+    reteach: "### Syntax: the children prop"
+
+  - id: q08
+    type: fill-blank
+    concept: children
+    goal: "Show whatever was written between <Badge> and </Badge> inside the span."
+    prompt: "function Badge({ children }) { return <span className=\"badge\">___</span>; }"
+    answers: ["{children}", "{ children }"]
+    explain: "children holds what was between the tags. Curly braces put it into the span."
+    reteach: "### Syntax: the children prop"
+
+  - id: q09
+    type: spot-the-bug
+    concept: read-only-props
+    prompt: "This card shows a sale price, but it breaks a React rule. Which line?"
+    code: |
+      function ProductCard({ name, paise }) {
+        paise = paise - 1000;
+        return (
+          <article>
+            <h3>{name}</h3>
+            <p>{rupees(paise)}</p>
+          </article>
+        );
+      }
+    bugLine: 2
+    explain: "Props are read-only. Work out the sale price in a new variable, such as const salePaise = paise - 1000;."
+    reteach: "### Props flow down, and are read-only"
+
+  - id: q10
+    type: mcq
+    concept: read-only-props
+    prompt: "A ProductCard shows the wrong price. Where do you look first?"
+    choices:
+      - "At the parent that passes the paise prop"
+      - "At the card's children"
+      - "At the browser's cache"
+      - "At every component on the page, in any order"
+    answer: 0
+    explain: "Props flow one way, from parent to child. The value came from the parent."
+    reteach: "### Props flow down, and are read-only"
+
+  - id: q11
+    type: spot-the-bug
+    concept: destructuring-props
+    prompt: "React stops with \"objects are not valid as a React child\". Which line causes it?"
+    code: |
+      function PlaceCard(name, hours) {
+        return (
+          <article>
+            <h3>{name}</h3>
+            <p>{hours}</p>
+          </article>
+        );
+      }
+    bugLine: 1
+    explain: "Without braces, name is the whole props object. Write function PlaceCard({ name, hours })."
+    reteach: "## Common mistakes"
+
+  - id: q12
+    type: mcq
+    concept: passing-props
+    prompt: "What does <ProductCard name=\"Indigo tote bag\" onSale /> pass as onSale?"
+    choices:
+      - "true"
+      - "\"onSale\""
+      - "undefined"
+      - "Nothing: it is a syntax error"
+    answer: 0
+    explain: "A prop written with no value means true, the same as onSale={true}."
+    reteach: "### Any value can be a prop"

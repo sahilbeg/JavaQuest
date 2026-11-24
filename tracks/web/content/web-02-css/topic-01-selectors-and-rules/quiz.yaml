@@ -1,0 +1,119 @@
+topic: web-02-css/topic-01-selectors-and-rules
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: rule-syntax
+    prompt: "In the rule h1 { color: darkblue; }, which part is the property?"
+    choices: ["color", "h1", "darkblue", "{ }"]
+    answer: 0
+    explain: "h1 is the selector, color is the property, and darkblue is its value."
+    reteach: "### Syntax: a CSS rule"
+
+  - id: q02
+    type: spot-the-bug
+    concept: rule-syntax
+    code: |
+      h1 {
+        color: darkblue
+        text-align: center;
+      }
+    bugLine: 2
+    explain: "The declaration on line 2 has no semicolon, so the browser reads both lines as one broken value and drops them."
+    reteach: "## Common mistakes"
+
+  - id: q03
+    type: fill-blank
+    concept: linking-css
+    goal: "Tell the browser that the linked file holds this page's CSS rules."
+    prompt: "<link rel=\"___\" href=\"style.css\">"
+    answers: ["stylesheet"]
+    explain: "rel=\"stylesheet\" says what kind of file the link points at. Without it, the browser does not apply the file."
+    reteach: "### Syntax: linking a stylesheet"
+
+  - id: q04
+    type: mcq
+    concept: linking-css
+    prompt: "Where does the <link rel=\"stylesheet\"> line belong?"
+    choices: ["Inside <head>", "Inside style.css", "At the very end of <main>", "Inside the <h1>"]
+    answer: 0
+    explain: "The link goes in the page's head, so the browser finds the stylesheet before it draws the page."
+    reteach: "### Syntax: linking a stylesheet"
+
+  - id: q05
+    type: mcq
+    concept: type-selectors
+    prompt: "Which selector picks every <p> element on the page?"
+    choices: ["p", ".p", "#p", "<p>"]
+    answer: 0
+    explain: "A type selector is the bare tag name. .p picks class=\"p\", #p picks id=\"p\", and <p> is not a selector at all."
+    reteach: "### Syntax: type selectors"
+
+  - id: q06
+    type: mcq
+    concept: class-selectors
+    variants:
+      - { prompt: "Which selector picks <p class=\"price\">₹450.00</p>?", choices: [".price", "price", "#price", "p.price()"], answer: 0 }
+      - { prompt: "Which selector picks <span class=\"badge\">New</span>?", choices: [".badge", "badge", "#badge", "span#badge"], answer: 0 }
+    explain: "A class selector is a dot followed by the class name."
+    reteach: "### Syntax: class selectors"
+
+  - id: q07
+    type: mcq
+    concept: class-selectors
+    prompt: "An element is written <li class=\"product sold-out\">. Which selectors pick it?"
+    choices: ["Both .product and .sold-out", "Only .product", "Only .sold-out", "Only .product sold-out"]
+    answer: 0
+    explain: "The space in the class attribute separates two classes. Each one can be picked on its own."
+    reteach: "### Syntax: class selectors"
+
+  - id: q08
+    type: mcq
+    concept: id-selectors
+    prompt: "How many elements on one page may have id=\"visit\"?"
+    choices: ["Exactly one", "As many as you like", "Two at most", "One per section"]
+    answer: 0
+    explain: "An id must be unique on the page. Classes are for things that repeat."
+    reteach: "### Syntax: id selectors"
+
+  - id: q09
+    type: spot-the-bug
+    concept: id-selectors
+    code: |
+      /* the footer is written <footer id="visit"> */
+      .visit {
+        font-style: italic;
+      }
+    bugLine: 2
+    explain: "The footer has an id, not a class. The selector needs a hash: #visit."
+    reteach: "### Syntax: id selectors"
+
+  - id: q10
+    type: fill-blank
+    concept: grouping-selectors
+    goal: "Give second-level and third-level headings the same dark blue colour in one rule."
+    prompt: "h2___ h3 { color: darkblue; }"
+    answers: [","]
+    explain: "A comma between selectors groups them, so one rule styles both."
+    reteach: "### Syntax: grouping selectors"
+
+  - id: q11
+    type: mcq
+    concept: descendant-selectors
+    prompt: "What does the selector nav a pick?"
+    choices: ["Every <a> inside a <nav>", "Every <nav> and every <a>", "Only an <a> that comes right after a <nav>", "Every <nav> inside an <a>"]
+    answer: 0
+    explain: "A space means inside. nav a picks links that sit anywhere inside a nav. A comma would mean both."
+    reteach: "### Syntax: descendant selectors"
+
+  - id: q12
+    type: order
+    concept: rule-syntax
+    prompt: "Put the lines in order to make every price bold."
+    items:
+      - ".price {"
+      - "  font-weight: bold;"
+      - "}"
+    explain: "The selector and an opening brace come first, then the declaration, then the closing brace."
+    reteach: "### Syntax: a CSS rule"

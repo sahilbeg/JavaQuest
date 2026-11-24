@@ -1,0 +1,111 @@
+topic: web-01-html/topic-03-links-and-images
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: fill-blank
+    concept: links
+    goal: "Make a link that takes the customer to Dhaaga's WhatsApp chat."
+    prompt: "<a ___=\"https://wa.me/919876543210\">Order on WhatsApp</a>"
+    answers: ["href"]
+    explain: "href holds the address a link goes to."
+    reteach: "### Syntax: a link"
+
+  - id: q02
+    type: mcq
+    concept: links
+    prompt: "Which link text works best for a screen reader user who hears a list of all the links?"
+    choices: ["Order Golu on WhatsApp", "Click here", "Here", "Link"]
+    answer: 0
+    explain: "Out of context, only \"Order Golu on WhatsApp\" says where the link goes."
+    reteach: "### Syntax: a link"
+
+  - id: q03
+    type: mcq
+    concept: absolute-and-relative-urls
+    prompt: "Which href is an absolute URL?"
+    choices: ["https://wa.me/919876543210", "items/dc-1042.html", "../index.html", "#prices"]
+    answer: 0
+    explain: "An absolute URL starts with https:// and the site's name, so it works from anywhere."
+    reteach: "### Syntax: absolute and relative URLs"
+
+  - id: q04
+    type: mcq
+    concept: absolute-and-relative-urls
+    prompt: "The page https://dhaaga.in/index.html has a link with href=\"items/dc-1042.html\". Where does it go?"
+    choices: ["https://dhaaga.in/items/dc-1042.html", "https://items/dc-1042.html", "https://dhaaga.in/index.html/items/dc-1042.html", "Nowhere, because relative links need https://"]
+    answer: 0
+    explain: "A relative URL starts from the current page's folder, which is the top of dhaaga.in."
+    reteach: "### Syntax: absolute and relative URLs"
+
+  - id: q05
+    type: spot-the-bug
+    concept: absolute-and-relative-urls
+    prompt: "Which line sends the customer to a page that doesn't exist on dhaaga.in?"
+    code: |
+      <h2>Order</h2>
+      <p><a href="items/dc-1042.html">Meet Golu</a></p>
+      <p><a href="wa.me/919876543210">Order on WhatsApp</a></p>
+    bugLine: 3
+    explain: "Without https://, the WhatsApp address is relative, so the browser looks for a wa.me folder on dhaaga.in."
+    reteach: "### Syntax: absolute and relative URLs"
+
+  - id: q06
+    type: fill-blank
+    concept: page-anchors
+    goal: "Jump down to the element whose id is prices, on this same page."
+    prompt: "<a href=\"___\">See the prices</a>"
+    answers: ["#prices"]
+    explain: "A # in href points to a spot on the same page: the element with that id."
+    reteach: "### Syntax: a link to a spot on the same page"
+
+  - id: q07
+    type: spot-the-bug
+    concept: page-anchors
+    prompt: "The link does nothing when clicked. Which line is wrong?"
+    code: |
+      <p><a href="#catalogue">See the catalogue</a></p>
+      <p>Handmade crochet from Pune.</p>
+      <h2 id="Catalogue">Catalogue</h2>
+    bugLine: 3
+    explain: "Ids care about capital letters. The link wants catalogue, but the heading has Catalogue."
+    reteach: "### Syntax: a link to a spot on the same page"
+
+  - id: q08
+    type: mcq
+    concept: images
+    prompt: "Why give an img its width and height?"
+    choices: ["The browser saves the space while the picture loads, so the text doesn't jump", "Without them, the picture never shows", "They make the file smaller to download", "Screen readers read them aloud"]
+    answer: 0
+    explain: "Knowing the size early lets the browser lay out the page before the picture arrives."
+    reteach: "### Syntax: an image"
+
+  - id: q09
+    type: spot-the-bug
+    concept: images
+    prompt: "Which line is written wrongly?"
+    code: |
+      <h3>New this week</h3>
+      <img src="images/golu.jpg" alt="Golu, a crocheted elephant in Rani pink"></img>
+      <p>Golu is back.</p>
+    bugLine: 2
+    explain: "img is a void element. It has no closing tag, so </img> should not be there."
+    reteach: "### Syntax: an image"
+
+  - id: q10
+    type: mcq
+    concept: alt-text
+    prompt: "Which alt text is best for a photo of Golu?"
+    choices: ["Golu, a small crocheted elephant in Rani pink yarn", "golu.jpg", "Image of an image", "Photo"]
+    answer: 0
+    explain: "Good alt text says what matters in the picture. File names and \"photo\" tell a listener nothing."
+    reteach: "### Alt text: the picture in words"
+
+  - id: q11
+    type: mcq
+    concept: alt-text
+    prompt: "On slow 3G, Golu's photo fails to load. What does the browser show in its place?"
+    choices: ["The alt text", "The src path", "Nothing at all", "An error page"]
+    answer: 0
+    explain: "When the picture can't load, the alt text shows instead, so the page still makes sense."
+    reteach: "### Alt text: the picture in words"

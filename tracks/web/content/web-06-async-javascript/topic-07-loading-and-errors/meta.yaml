@@ -1,0 +1,23 @@
+id: web-06-async-javascript/topic-07-loading-and-errors
+title: "Loading and error states"
+order: 7
+minutes: 10
+prerequisites: [web-06-async-javascript/topic-06-json-apis]
+concepts: [request-states, loading-state, error-state, empty-state, try-catch-finally, network-vs-http-errors]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0607
+  from: sana
+  title: "The catalogue is just a blank page on slow phones"
+  body: >
+    I opened dhaaga.in on my cousin's old phone on 3G. For eight seconds the catalogue was completely blank, so I thought the site was broken.
+    When I turned on flight mode, it stayed blank forever. I've designed four looks for the status line: loading, ready, empty and error.
+    Can catalogue.js tell the page which one it's in?
+hints:
+  - "Everything before the first await runs at once. So set the loading message there, before you call fetch."
+  - "Wrap the request in try...catch. Throw an Error yourself when response.ok is false, so a 500 lands in the same catch as a dropped connection."
+  - "In catch: status.textContent = the error text, status.dataset.state = \"error\", retry.hidden = false. On success, call list.replaceChildren() before you add the items, then pick \"empty\" or \"ready\" from items.length."
+review: true

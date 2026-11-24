@@ -1,0 +1,141 @@
+topic: react-09-react-in-depth/topic-08-refs
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: use-ref
+    prompt: "A click handler sets countRef.current = 5. What does React do?"
+    choices: ["Nothing: the ref holds 5, but React does not render again", "It renders the component again with the new value", "It throws, because refs can't be changed", "It resets the ref to its first value"]
+    answer: 0
+    explain: "Changing a ref is silent. Only state changes make React render again."
+    reteach: "### Syntax: useRef"
+
+  - id: q02
+    type: predict-output
+    concept: use-ref
+    code: |
+      function makeComponent() {
+        const ref = { current: 0 };
+        return function render() {
+          let local = 0;
+          local += 5;
+          ref.current += 5;
+          return `${local}/${ref.current}`;
+        };
+      }
+      const render = makeComponent();
+      render();
+      render();
+      console.log(render());
+    answer: "5/15"
+    explain: "local starts at 0 on every call, so it is always 5. The ref object is kept between calls, like React keeps a ref between renders, so it reaches 15."
+    reteach: "### Syntax: useRef"
+
+  - id: q03
+    type: mcq
+    concept: ref-values
+    variants:
+      - { prompt: "Which of these belongs in a ref rather than in state?", choices: ["The id of the timer that hides the Notify me message", "The number shown on the Cart (3) badge", "The text the customer is typing, shown in the box", "Whether the cart drawer is open"], answer: 0 }
+      - { prompt: "Which of these belongs in state rather than in a ref?", choices: ["The id of a running timer", "The search input's DOM node", "The number of items shown in the cart badge", "The last width a card measured, used only inside an effect"], answer: 2 }
+    explain: "If the page shows it, it's state, so changing it renders again. If only your code needs it, a ref keeps it without rendering."
+    reteach: "### State or ref?"
+
+  - id: q04
+    type: fill-blank
+    concept: dom-ref
+    goal: "Make an empty box that React will fill with the search input element."
+    prompt: "const inputRef = ___(null);"
+    answers: ["useRef"]
+    explain: "useRef(null) starts with current set to null. Passing it as ref={inputRef} lets React put the input there."
+    reteach: "### Syntax: a ref to a DOM element"
+
+  - id: q05
+    type: fill-blank
+    concept: focus
+    goal: "Move the keyboard's cursor into the search box."
+    prompt: "inputRef.current.___();"
+    answers: ["focus"]
+    explain: "focus() makes the element the one the keyboard types into. On a phone it also opens the keyboard."
+    reteach: "### Moving focus"
+
+  - id: q06
+    type: spot-the-bug
+    concept: dom-ref
+    prompt: "Pressing Search throws a TypeError. Which line is wrong?"
+    code: |
+      function SearchBar() {
+        const inputRef = useRef(null);
+        return (
+          <>
+            <input ref={inputRef} />
+            <button onClick={() => inputRef.focus()}>Search</button>
+          </>
+        );
+      }
+    bugLine: 6
+    explain: "The ref is the box, not the element. The input is in inputRef.current, so call inputRef.current.focus()."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: mcq
+    concept: dom-ref
+    prompt: "What is inputRef.current while the component is rendering for the very first time?"
+    choices: ["null, because the input isn't on the page yet", "The input element", "undefined, always", "The text inside the input"]
+    answer: 0
+    explain: "React fills the ref after it puts the element on the page. That's why refs are used in effects and event handlers."
+    reteach: "### Don't read refs while rendering"
+
+  - id: q08
+    type: mcq
+    concept: measuring
+    prompt: "Why measure the card in useLayoutEffect instead of useEffect?"
+    choices: ["It runs before the browser paints, so the customer never sees the wrong layout flash", "useEffect can't use refs", "useLayoutEffect runs before the component renders", "getBoundingClientRect only works on the server"]
+    answer: 0
+    explain: "A layout effect runs after the page is updated but before it is painted. Adjusting there means one paint, with the right layout."
+    reteach: "### Syntax: measuring after render"
+
+  - id: q09
+    type: mcq
+    concept: measuring
+    prompt: "What does cardRef.current.getBoundingClientRect().width give you?"
+    choices: ["The card's width on screen, in pixels", "The number of characters in the card", "The width written in the CSS file", "The width of the whole browser window"]
+    answer: 0
+    explain: "getBoundingClientRect returns the element's real size and position, as the browser laid it out."
+    reteach: "### Syntax: measuring after render"
+
+  - id: q10
+    type: mcq
+    concept: ref-values
+    prompt: "Why does the Notify me button keep its timer id in a ref?"
+    choices: ["The id must survive between renders so clearTimeout can cancel it, and the screen never shows it", "Timers only work inside refs", "So React renders again every time the timer starts", "Because setTimeout returns a DOM node"]
+    answer: 0
+    explain: "A plain variable would be lost on the next render. State would work but would cause pointless renders. A ref is the right box."
+    reteach: "### Remembering a timer's id"
+
+  - id: q11
+    type: order
+    concept: ref-values
+    prompt: "The customer taps Notify me a second time. Put handleClick's steps in order."
+    items:
+      - "Cancel the old timer with clearTimeout(timerRef.current)"
+      - "Show the message with setShown(true)"
+      - "Start a new 3-second timer with setTimeout"
+      - "Save the new timer's id in timerRef.current"
+    explain: "Cancel the old timer first, so it can't hide the message early. Then show the message, start a fresh timer, and keep its id for next time."
+    reteach: "### Remembering a timer's id"
+
+  - id: q12
+    type: predict-output
+    concept: ref-values
+    code: |
+      const timerRef = { current: null };
+      function tap(label) {
+        clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => console.log("hide after", label), 10);
+      }
+      tap("first tap");
+      tap("second tap");
+    answer: "hide after second tap"
+    explain: "The second tap cancels the first timer before it fires. Only the second timer runs."
+    reteach: "### Remembering a timer's id"

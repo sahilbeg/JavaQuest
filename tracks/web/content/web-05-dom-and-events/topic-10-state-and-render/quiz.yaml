@@ -1,0 +1,134 @@
+topic: web-05-dom-and-events/topic-10-state-and-render
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: single-source-of-truth
+    prompt: "With the state-and-render pattern, where does the item page keep the quantity the customer picked?"
+    choices: ["In the state object, which the page only shows", "In the .qty span's textContent", "In both, kept in step by each handler", "In a data-qty attribute on the button"]
+    answer: 0
+    explain: "The state is the single source of truth. The page is drawn from it and never holds the fact itself."
+    reteach: "### One state object"
+
+  - id: q02
+    type: predict-output
+    concept: copying-state
+    code: |
+      const before = { qty: 1, giftWrap: false };
+      const after = { ...before, ...{ giftWrap: true } };
+      console.log(after.qty, after.giftWrap);
+      console.log(before.giftWrap);
+    answer: "1 true\nfalse"
+    explain: "The spread makes a new object: the old fields, with giftWrap laid on top. The old object is not changed."
+    reteach: "### Syntax: update, then render"
+
+  - id: q03
+    type: fill-blank
+    concept: events-change-state
+    goal: "Copy whether the gift wrap box is ticked into the state."
+    prompt: "wrap.addEventListener(\"change\", () => update({ giftWrap: wrap.___ }));"
+    answers: ["checked"]
+    explain: "A checkbox's checked property is true when it is ticked. The handler passes it to update and does nothing else."
+    reteach: "### Events only change state"
+
+  - id: q04
+    type: predict-output
+    concept: update-then-render
+    code: |
+      let state = { qty: 1 };
+      function render() {
+        console.log(`qty ${state.qty}`);
+      }
+      function update(changes) {
+        state = { ...state, ...changes };
+        render();
+      }
+      update({ qty: state.qty + 1 });
+      update({ qty: state.qty + 1 });
+    answer: "qty 2\nqty 3"
+    explain: "Each update makes a new state from the current one, then renders it."
+    reteach: "### Syntax: update, then render"
+
+  - id: q05
+    type: mcq
+    concept: derived-values
+    prompt: "Should the item page's state hold a total field next to qty, giftWrap and stitch?"
+    choices: ["No: the total can be worked out from the others, so render derives it", "Yes: storing it is faster", "Yes: otherwise render can't show it", "Only when gift wrap is ticked"]
+    answer: 0
+    explain: "A stored total has to be kept up to date by every handler, and one will forget. Derive it in render."
+    reteach: "### Derived values are worked out, not stored"
+
+  - id: q06
+    type: predict-output
+    concept: derived-values
+    code: |
+      function itemTotal(paise, state) {
+        const perPiece = paise + (state.stitch.trim() === "" ? 0 : 5000);
+        return perPiece * state.qty + (state.giftWrap ? 3000 : 0);
+      }
+      console.log(itemTotal(45000, { qty: 2, giftWrap: true, stitch: "" }));
+      console.log(itemTotal(45000, { qty: 2, giftWrap: true, stitch: "Aarav" }));
+    answer: "93000\n103000"
+    explain: "Two Golus are 90000, and one gift wrap adds 3000. With a name stitched on, each piece costs 5000 more: 100000 plus 3000."
+    reteach: "### Derived values are worked out, not stored"
+
+  - id: q07
+    type: spot-the-bug
+    concept: render-from-state
+    code: |
+      function render() {
+        const qty = Number(qtyText.textContent);
+        qtyText.textContent = String(qty);
+        total.textContent = rupees(item.paise * qty);
+      }
+    bugLine: 2
+    explain: "render reads the quantity back from the page, so the page is the memory again. Use state.qty."
+    reteach: "### Syntax: render from state"
+
+  - id: q08
+    type: spot-the-bug
+    concept: update-then-render
+    code: |
+      plus.addEventListener("click", () => {
+        state.qty += 1;
+      });
+    bugLine: 2
+    explain: "The state changes but render never runs, so the page still shows the old quantity. Call update({ qty: state.qty + 1 })."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: copying-state
+    prompt: "Why write state = { ...state, ...changes } instead of Object.assign(state, changes)?"
+    choices: ["It makes a new object, so code holding the old state doesn't see it change", "It is the only way to add a field", "Object.assign doesn't work on objects", "The spread renders the page by itself"]
+    answer: 0
+    explain: "Object.assign changes the old object in place. The spread builds a fresh state and leaves the old one alone."
+    reteach: "### Syntax: update, then render"
+
+  - id: q10
+    type: mcq
+    concept: events-change-state
+    prompt: "Why shouldn't render write state.stitch back into the stitch text box on every keystroke?"
+    choices: ["Rewriting the box while someone types can make the cursor jump", "Text boxes can't hold state", "render can't reach inputs", "It would delete the state"]
+    answer: 0
+    explain: "Let the box lead: its input handler copies the text into the state, and render draws everything else."
+    reteach: "### Boxes the customer types in"
+
+  - id: q11
+    type: mcq
+    concept: render-from-state
+    prompt: "Why does render set every part of the widget each time, not just the part that changed?"
+    choices: ["So nothing is ever left over from an earlier state", "Because the browser needs it", "Because textContent can only be set once", "So that it runs faster"]
+    answer: 0
+    explain: "Drawing everything from the state means the same state always gives the same page, whatever happened before."
+    reteach: "### Syntax: render from state"
+
+  - id: q12
+    type: mcq
+    concept: single-source-of-truth
+    prompt: "Ticking gift wrap and then pressing + made the ₹30 count twice. What was the real cause?"
+    choices: ["Each handler patched the total on the page by itself, with no shared state", "The gift wrap price was wrong", "The + button was clicked twice", "rupees() rounds badly"]
+    answer: 0
+    explain: "With the page as the only memory, each handler only knew its own piece. One state and one render fix the whole class of bug."
+    reteach: "### The page as memory: the bug"

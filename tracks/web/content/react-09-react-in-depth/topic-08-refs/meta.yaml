@@ -1,0 +1,24 @@
+id: react-09-react-in-depth/topic-08-refs
+title: "Refs: focus and measuring"
+order: 8
+minutes: 9
+prerequisites: [react-09-react-in-depth/topic-07-form-validation]
+concepts: [use-ref, dom-ref, focus, measuring, ref-values]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0908
+  from: sana
+  title: "Search needs two taps, cards squash, and Notify me vanishes"
+  body: >
+    Three small things from testing on my phone. Tapping Search doesn't put the cursor in the box, so you tap
+    twice. In the narrow cart drawer the product cards squash: below 400px they should stack. And if you tap
+    "Notify me" on the sold-out tote bag twice, the message disappears a second after the second tap.
+hints:
+  - "useRef(null) gives a box whose .current React fills with the DOM element when you write ref={inputRef} on it. Then inputRef.current.focus() moves the cursor there."
+  - "Measure in useLayoutEffect, after React has put the card on the page: cardRef.current.getBoundingClientRect().width. Under 400 is \"stack\"."
+  - "Keep the timer id in a ref: timerRef.current = setTimeout(...). Call clearTimeout(timerRef.current) before starting a new one, and in an effect's cleanup."
+review: true

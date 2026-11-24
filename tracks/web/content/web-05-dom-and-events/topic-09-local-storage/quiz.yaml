@@ -1,0 +1,135 @@
+topic: web-05-dom-and-events/topic-09-local-storage
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: local-storage
+    prompt: "Mrs. Rao reloads the page. Which of these is still there afterwards?"
+    choices: ["A value saved with localStorage.setItem", "A value kept in a let variable", "A value kept in a const variable", "The text she had typed but not saved anywhere"]
+    answer: 0
+    explain: "Variables start from nothing on every page load. localStorage keeps its text in the browser across reloads."
+    reteach: "### Why variables forget"
+
+  - id: q02
+    type: fill-blank
+    concept: local-storage
+    goal: "Save the customer's PIN code in this browser under the key dhaaga:pin."
+    prompt: "localStorage.___(\"dhaaga:pin\", \"411038\");"
+    answers: ["setItem"]
+    explain: "setItem(key, text) saves text under a key. getItem(key) reads it back."
+    reteach: "### Syntax: setItem and getItem"
+
+  - id: q03
+    type: predict-output
+    concept: strings-only
+    code: |
+      console.log(String(3) + 1);
+      console.log(String(["DC-1042", "DC-1013"]));
+      console.log(String({ id: "DC-1042" }));
+    answer: "31\nDC-1042,DC-1013\n[object Object]"
+    explain: "localStorage turns every value into a string like this. A number becomes text, an array loses its brackets, and an object becomes useless text."
+    reteach: "### Only strings"
+
+  - id: q04
+    type: predict-output
+    concept: json-round-trip
+    code: |
+      const text = JSON.stringify({ pin: "411038", hearts: ["DC-1042"] });
+      console.log(text);
+      const back = JSON.parse(text);
+      console.log(back.hearts[0]);
+    answer: "{\"pin\":\"411038\",\"hearts\":[\"DC-1042\"]}\nDC-1042"
+    explain: "stringify writes the object as JSON text with no spaces. parse builds a real object again, so back.hearts[0] works."
+    reteach: "### Syntax: JSON.stringify and JSON.parse"
+
+  - id: q05
+    type: fill-blank
+    concept: json-round-trip
+    goal: "Save the array of item ids as text that keeps its brackets and quotes."
+    prompt: "localStorage.setItem(\"dhaaga:wishlist\", JSON.___(ids));"
+    answers: ["stringify"]
+    explain: "JSON.stringify turns the array into JSON text. JSON.parse turns it back."
+    reteach: "### Syntax: JSON.stringify and JSON.parse"
+
+  - id: q06
+    type: mcq
+    concept: missing-values
+    prompt: "Nothing was ever saved under dhaaga:pin. What does localStorage.getItem(\"dhaaga:pin\") return?"
+    choices: ["null", "\"\"", "undefined", "It throws an error"]
+    answer: 0
+    explain: "getItem gives null for a key with nothing saved. Use ?? to give a default."
+    reteach: "### Nothing saved yet"
+
+  - id: q07
+    type: predict-output
+    concept: missing-values
+    code: |
+      const saved = null;
+      const pin = saved ?? "";
+      console.log(pin === "");
+      console.log(JSON.parse(saved));
+    answer: "true\nnull"
+    explain: "?? swaps null for the default \"\". JSON.parse(null) does not throw: it gives null, which then crashes code that expects an array."
+    reteach: "### Nothing saved yet"
+
+  - id: q08
+    type: spot-the-bug
+    concept: broken-values
+    code: |
+      function loadWishlist() {
+        const saved = localStorage.getItem("dhaaga:wishlist");
+        if (saved === null) {
+          return [];
+        }
+        return JSON.parse(saved);
+      }
+    bugLine: 6
+    explain: "Broken saved text makes JSON.parse throw, and the page stops on every visit. Parse inside try/catch, check Array.isArray, and fall back to []."
+    reteach: "### When the saved text is broken"
+
+  - id: q09
+    type: predict-output
+    concept: broken-values
+    code: |
+      function readIds(text) {
+        try {
+          const value = JSON.parse(text);
+          return Array.isArray(value) ? value : [];
+        } catch {
+          return [];
+        }
+      }
+      console.log(readIds('["DC-1042","DC-1013"]').length);
+      console.log(readIds("[DC-1042").length);
+      console.log(readIds('"DC-1042"').length);
+    answer: "2\n0\n0"
+    explain: "Good JSON gives the array of 2. Broken JSON is caught and gives []. A JSON string is valid, but it isn't an array, so it gives [] too."
+    reteach: "### When the saved text is broken"
+
+  - id: q10
+    type: mcq
+    concept: remove-and-keys
+    prompt: "A Forget me button should forget only the PIN and the wishlist. Which is right?"
+    choices: ["removeItem for dhaaga:pin and for dhaaga:wishlist", "localStorage.clear()", "setItem for both keys with null", "Reload the page"]
+    answer: 0
+    explain: "clear wipes every key the whole site saved. removeItem forgets just the keys you name."
+    reteach: "### Syntax: removeItem and clear"
+
+  - id: q11
+    type: mcq
+    concept: local-storage
+    prompt: "Which of these should never go into localStorage?"
+    choices: ["The customer's password", "The last colour filter she picked", "Her PIN code for the delivery check", "The ids of items she hearted"]
+    answer: 0
+    explain: "Any script on the page can read localStorage, so nothing secret belongs there."
+    reteach: "### What not to keep there"
+
+  - id: q12
+    type: mcq
+    concept: remove-and-keys
+    prompt: "Why name the keys dhaaga:pin and dhaaga:wishlist instead of just pin and list?"
+    choices: ["All pages of the site share one store, so a prefix stops keys from different features colliding", "localStorage needs a colon in every key", "Keys without a prefix are deleted on reload", "The prefix makes the value a secret"]
+    answer: 0
+    explain: "One site has one store. A clear prefix keeps your keys apart from anyone else's on the same site."
+    reteach: "### Name your keys"

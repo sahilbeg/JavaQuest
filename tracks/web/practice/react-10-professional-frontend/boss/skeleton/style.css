@@ -1,0 +1,53 @@
+:root {
+  --marigold: #F2A81D;
+  --indigo: #2E3A8C;
+  --off-white: #FAF7F0;
+}
+
+body {
+  margin: 0;
+  padding: 1rem;
+  font-family: system-ui, sans-serif;
+  background: var(--off-white);
+  color: #1f1f2e;
+}
+
+h1,
+h2 {
+  color: var(--indigo);
+}
+
+.tabs [role="tablist"],
+.tab-row {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 2px solid var(--indigo);
+}
+
+.tabs button,
+.tab {
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 0.5rem 0.5rem 0 0;
+  background: #ece6d8;
+  color: var(--indigo);
+  font: inherit;
+  cursor: pointer;
+}
+
+.tabs [aria-selected="true"],
+.tab.active {
+  background: var(--indigo);
+  color: white;
+}
+
+.tabs [role="tabpanel"],
+.panel {
+  padding: 1rem;
+  background: white;
+}
+
+.tabs :focus-visible {
+  outline: 3px solid var(--marigold);
+  outline-offset: 2px;
+}

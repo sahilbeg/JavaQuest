@@ -1,0 +1,24 @@
+id: web-03-javascript-basics/topic-02-numbers-and-paise
+title: "Numbers, maths and why prices are in paise"
+order: 2
+minutes: 9
+prerequisites: [web-03-javascript-basics/topic-01-variables]
+concepts: [number-type, arithmetic, rounding, remainder, floating-point, paise]
+practice:
+  kind: code
+  runner: vitest
+  mainClass: main.js
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0302
+  from: sam
+  title: "Split the bill asks for a third of a paisa"
+  body: >
+    Raju here. Three college friends wanted to split ₹1,000 for a birthday gift. Our calculator told each of them
+    to pay an amount with a long tail of 3s after the dot, and UPI won't send that. It also can't tell me how many
+    whole rupees and paise are in an amount. Can you fix src/paise.js?
+hints:
+  - "Every amount in this file is whole paise. lineTotal is a single multiplication."
+  - "Math.floor(paise / 100) gives the whole rupees, and paise % 100 gives the paise left over."
+  - "For shareEach, divide and then round down: return Math.floor(totalPaise / people);"
+review: true

@@ -1,0 +1,6 @@
+id: web-05-dom-and-events
+title: The DOM and events
+project: A working cart
+summary: Read and change the page from JavaScript, answer clicks and typing, draw the catalogue from data, and keep the cart when the page reloads.
+unlockAfter: web-04-javascript-in-depth/boss
+mascotIntro: "Shabaash, the catalogue engine works! It only lives in the console, though. Time to make the page itself move: buttons that answer, and a cart that remembers."

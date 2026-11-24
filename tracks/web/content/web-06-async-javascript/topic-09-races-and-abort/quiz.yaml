@@ -1,0 +1,141 @@
+topic: web-06-async-javascript/topic-09-races-and-abort
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: out-of-order-responses
+    prompt: "The page sends request A, then request B, to the same server. Which answer arrives first?"
+    choices: ["Either one: nothing promises the answers come back in order", "Always A, because it was sent first", "Always B, because it is newer", "They always arrive at the same moment"]
+    answer: 0
+    explain: "Each request travels on its own, and any one can be slow. The order of answers is not fixed."
+    reteach: "### Answers can arrive out of order"
+
+  - id: q02
+    type: mcq
+    concept: race-condition
+    variants:
+      - { prompt: "What is a race condition?", choices: ["A bug where the result depends on which of two things finishes first", "A request that is too fast", "Two buttons with the same id", "A loop that never ends"], answer: 0 }
+      - { prompt: "Why might a race condition never show up on your laptop but happen every day on 3G?", choices: ["Fast Wi-Fi makes the lucky order happen almost every time", "3G phones run a different JavaScript", "Laptops can't have bugs", "3G blocks fetch"], answer: 0 }
+    explain: "A race works when the timing is lucky and breaks when it isn't. Slow, uneven connections make unlucky timing common."
+    reteach: "### What a race condition is"
+
+  - id: q03
+    type: predict-output
+    concept: race-condition
+    code: |
+      const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      let screen = "";
+      async function check(pin, ms) {
+        await wait(ms);
+        screen = pin;
+      }
+      check("560001", 20);
+      check("411045", 5);
+      setTimeout(() => console.log(screen), 50);
+    answer: "560001"
+    explain: "The newer check finishes first, then the older, slower one overwrites it. That is the race."
+    reteach: "### What a race condition is"
+
+  - id: q04
+    type: predict-output
+    concept: latest-request-wins
+    code: |
+      const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      let latest = 0;
+      let screen = "";
+      async function check(pin, ms) {
+        latest = latest + 1;
+        const mine = latest;
+        await wait(ms);
+        if (mine === latest) screen = pin;
+      }
+      check("560001", 20);
+      check("411045", 5);
+      setTimeout(() => console.log(screen), 50);
+    answer: "411045"
+    explain: "The first check got number 1, but latest became 2. When its slow answer arrives, 1 isn't the latest, so it is ignored."
+    reteach: "### Fix 1: only the newest request may change the screen"
+
+  - id: q05
+    type: predict-output
+    concept: abort-controller
+    code: |
+      const controller = new AbortController();
+      console.log(controller.signal.aborted);
+      controller.abort();
+      console.log(controller.signal.aborted);
+    answer: "false\ntrue"
+    explain: "A new signal isn't aborted. After abort(), it is, and it stays that way."
+    reteach: "### Syntax: AbortController"
+
+  - id: q06
+    type: fill-blank
+    concept: abort-controller
+    goal: "Cancel the old delivery request before starting a new one."
+    prompt: "oldController.___();"
+    answers: ["abort"]
+    explain: "controller.abort() stops every fetch that was given this controller's signal."
+    reteach: "### Syntax: AbortController"
+
+  - id: q07
+    type: fill-blank
+    concept: abort-controller
+    goal: "Hand the controller's cancel switch to fetch, so this request can be stopped later."
+    prompt: "fetch(url, { ___: controller.signal });"
+    answers: ["signal"]
+    explain: "fetch's options take a signal. When the controller aborts, fetch stops."
+    reteach: "### Syntax: AbortController"
+
+  - id: q08
+    type: mcq
+    concept: abort-error
+    prompt: "You abort a fetch that is still waiting. What happens to its promise?"
+    choices: ["It rejects with an error whose name is \"AbortError\"", "It is fulfilled with undefined", "It stays pending forever", "It is fulfilled with status 0"]
+    answer: 0
+    explain: "An aborted fetch rejects with an AbortError, so the code after await doesn't run."
+    reteach: "### What an aborted fetch does"
+
+  - id: q09
+    type: spot-the-bug
+    concept: latest-request-wins
+    code: |
+      async function check(pin, show) {
+        let latest = 0;
+        latest = latest + 1;
+        const mine = latest;
+        const response = await fetch(`/api/delivery?pin=${pin}`);
+        const data = await response.json();
+        if (mine !== latest) return;
+        show(data.deliverable ? "We deliver here" : "Not yet");
+      }
+    bugLine: 2
+    explain: "latest is made fresh inside every call, so mine always equals it and old answers are never ignored. Declare it once, outside the function."
+    reteach: "### Fix 1: only the newest request may change the screen"
+
+  - id: q10
+    type: mcq
+    concept: timeouts
+    prompt: "How do you give a fetch a time limit of 5 seconds by hand?"
+    choices: ["Start setTimeout(() => controller.abort(), 5000), pass controller.signal to fetch, and clear the timer in finally", "Call fetch(url, 5000)", "Put fetch inside a while loop for 5 seconds", "Call controller.abort(5000) before fetch"]
+    answer: 0
+    explain: "The timer aborts the request if it is too slow. Clearing it in finally stops it firing after a quick answer."
+    reteach: "### Giving up after a time limit"
+
+  - id: q11
+    type: mcq
+    concept: latest-request-wins
+    prompt: "With numbered requests, where do you check whether this answer is still the newest?"
+    choices: ["Right after the await, just before changing the page", "Before calling fetch", "In a finally block only", "Before the function is called"]
+    answer: 0
+    explain: "A newer request can start while this one waits. So check after the await, right before you touch the page."
+    reteach: "### Fix 1: only the newest request may change the screen"
+
+  - id: q12
+    type: mcq
+    concept: abort-error
+    prompt: "In catch, how do you tell \"I cancelled this request\" apart from a real failure?"
+    choices: ["Check error.name === \"AbortError\" and return quietly", "Check response.ok", "Check whether error is null", "You can't, so always show the error"]
+    answer: 0
+    explain: "An abort is something you asked for, not a failure. Its error is named AbortError, so skip the error message for it."
+    reteach: "### Fix 2: cancel the old request"

@@ -1,0 +1,24 @@
+id: react-09-react-in-depth/topic-10-error-boundaries
+title: "When things break: error boundaries"
+order: 10
+minutes: 9
+prerequisites: [react-09-react-in-depth/topic-09-performance]
+concepts: [render-errors, class-component, error-boundary, fallback-ui, boundary-limits]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0910
+  from: sam
+  title: "One review turned Golu's page white"
+  body: >
+    Raju here. Somebody left a review for Golu the elephant with stars but no words, and now Golu's whole
+    page is blank white, on every phone. Our bestseller can't be bought! Reviews are nice to have, but they
+    should never be able to take the whole page down with them.
+hints:
+  - "An error boundary is a class component. static getDerivedStateFromError(error) returns the new state, { error }, when something below it throws while rendering."
+  - "In render, if this.state.error is set, return the fallback: a <div role=\"alert\"> with this.props.fallback ?? \"Something went wrong.\" and a Try again button that calls this.setState({ error: null }). Otherwise return this.props.children."
+  - "componentDidCatch(error) is where you report: this.props.onError?.(error). In ItemPage, put <ErrorBoundary fallback=\"...\"> around <Reviews>, not around the whole page."
+review: true

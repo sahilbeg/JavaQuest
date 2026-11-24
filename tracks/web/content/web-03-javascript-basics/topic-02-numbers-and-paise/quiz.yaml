@@ -1,0 +1,120 @@
+topic: web-03-javascript-basics/topic-02-numbers-and-paise
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: arithmetic
+    code: |
+      console.log(7 / 2);
+    answer: "3.5"
+    explain: "/ keeps the decimals when the answer isn't whole."
+    reteach: "### Syntax: arithmetic"
+
+  - id: q02
+    type: predict-output
+    concept: remainder
+    code: |
+      console.log(15050 % 100);
+    answer: "50"
+    explain: "15050 holds 150 whole hundreds, with 50 left over. % gives the 50."
+    reteach: "### Syntax: the remainder, %"
+
+  - id: q03
+    type: predict-output
+    concept: rounding
+    code: |
+      console.log(Math.floor(15050 / 100));
+      console.log(Math.round(3.5));
+      console.log(Math.ceil(3.1));
+    answer: "150\n4\n4"
+    explain: "15050 / 100 is 150.5, and Math.floor rounds down to 150. Math.round(3.5) goes to 4, and Math.ceil always rounds up."
+    reteach: "### Syntax: Math.floor and Math.round"
+
+  - id: q04
+    type: mcq
+    concept: floating-point
+    prompt: "What does console.log(0.1 + 0.2) print?"
+    choices: ["0.30000000000000004", "0.3", "0.30", "It's an error"]
+    answer: 0
+    explain: "0.1 and 0.2 are stored as close guesses in binary, so their sum is a hair too big."
+    reteach: "### The 0.1 + 0.2 surprise"
+
+  - id: q05
+    type: mcq
+    concept: paise
+    prompt: "Why does Dhaaga's code store ₹150 as 15000?"
+    choices: ["Whole numbers add up exactly, but decimals like 0.1 are stored as close guesses", "15000 uses less memory than 150", "JavaScript can't store decimals at all", "UPI only accepts numbers above 10000"]
+    answer: 0
+    explain: "Sums of whole paise are always exact. Rupee decimals pick up tiny errors."
+    reteach: "### Why Dhaaga counts in paise"
+
+  - id: q06
+    type: fill-blank
+    concept: paise
+    goal: "Turn the tote bag's price of ₹899 into paise, the unit the calculator stores."
+    prompt: "const bagPaise = 899 ___ 100;"
+    answers: ["*"]
+    explain: "₹1 is 100 paise, so multiply rupees by 100: 89900."
+    reteach: "## Concept"
+
+  - id: q07
+    type: predict-output
+    concept: arithmetic
+    code: |
+      const coasterSet = 15000;
+      const total = coasterSet * 3;
+      console.log(total);
+      console.log(total / 100);
+    answer: "45000\n450"
+    explain: "Three sets at 15000 paise is 45000 paise, which is ₹450."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: mcq
+    concept: number-type
+    prompt: "What is the type of 5, and what is the type of 5.5, in JavaScript?"
+    choices: ["Both are number", "5 is int and 5.5 is double", "5 is number and 5.5 is decimal", "5 is whole and 5.5 is float"]
+    answer: 0
+    explain: "JavaScript has one type, number, for whole numbers and decimals alike."
+    reteach: "### One kind of number"
+
+  - id: q09
+    type: predict-output
+    concept: floating-point
+    code: |
+      console.log(Math.round(0.29 * 100));
+    answer: "29"
+    explain: "0.29 * 100 is 28.999999999999996, and Math.round takes it to the nearest whole number, 29."
+    reteach: "### Rupees in, paise out"
+
+  - id: q10
+    type: spot-the-bug
+    concept: rounding
+    code: |
+      const bill = 100000;
+      const friends = 3;
+      const each = bill / friends;
+      console.log(each);
+    bugLine: 3
+    explain: "100000 / 3 isn't a whole number of paise. Round it down: Math.floor(bill / friends)."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: remainder
+    prompt: "Which expression gives the paise left over in 89950 after the whole rupees?"
+    choices: ["89950 % 100", "89950 / 100", "Math.floor(89950 / 100)", "89950 * 100"]
+    answer: 0
+    explain: "% gives the remainder: 89950 % 100 is 50."
+    reteach: "### Syntax: the remainder, %"
+
+  - id: q12
+    type: predict-output
+    concept: number-type
+    code: |
+      console.log(Number("150") + 30);
+      console.log(Number("two"));
+    answer: "180\nNaN"
+    explain: "Number turns the text \"150\" into 150, so + adds. \"two\" isn't a number, so you get NaN."
+    reteach: "### Numbers from text"

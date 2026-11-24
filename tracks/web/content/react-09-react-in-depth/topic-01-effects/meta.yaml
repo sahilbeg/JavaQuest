@@ -1,0 +1,24 @@
+id: react-09-react-in-depth/topic-01-effects
+title: "Effects with useEffect"
+order: 1
+minutes: 10
+prerequisites: [react-08-react-fundamentals/boss]
+concepts: [side-effects, use-effect, dependency-array, cleanup, stale-closure]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0901
+  from: sana
+  title: "The tab never shows the cart, and the sale clock is frozen"
+  body: >
+    I keep twenty tabs open, and I forgot I had three coaster sets in my Dhaaga cart. WhatsApp Web shows
+    "(3)" in its tab, so can our tab say "(3) Dhaaga & Co." too? Also, the Diwali sale banner is meant to
+    count down the seconds, but it sits at 30 and never moves.
+hints:
+  - "Both jobs reach outside React: one changes the browser tab, the other starts a timer. That is what useEffect is for."
+  - "The title effect should run again only when count changes, so list count in the dependency array. The timer effect starts once, so its array is empty, and it returns a function that stops the timer."
+  - "Inside the timer, write setLeft((l) => Math.max(l - 1, 0)). The updater form always gets the newest value, even though the effect ran only once."
+review: true

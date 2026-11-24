@@ -1,0 +1,24 @@
+id: web-01-html/topic-04-lists
+title: "Lists"
+order: 4
+minutes: 7
+prerequisites: [web-01-html/topic-03-links-and-images]
+concepts: [unordered-lists, ordered-lists, list-items, nested-lists]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0104
+  from: maya
+  title: "The product list is just lines with br between them"
+  body: >
+    The "What we make" part is five lines held apart with br, and the order steps are three loose
+    paragraphs. A screen reader can't tell there are five products or three steps. Please make them
+    real lists, and show the amigurumi colours under the amigurumi.
+hints:
+  - "Products in no special order go in a ul. Steps that happen in order go in an ol. Every entry is an li."
+  - "Remove the br tags: each li starts on its own line by itself."
+  - "A nested list goes inside the li it belongs to: <li>Amigurumi (small toy) <ul><li>Marigold</li>...</ul></li>"
+review: true

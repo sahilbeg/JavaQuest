@@ -1,0 +1,173 @@
+topic: react-08-react-fundamentals/topic-07-lists-and-keys
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: map-to-jsx
+    prompt: "Which line draws one <li> per product?"
+    choices:
+      - "{products.map((p) => <li key={p.id}>{p.name}</li>)}"
+      - "{for (const p of products) { <li>{p.name}</li> }}"
+      - "{products.forEach((p) => <li key={p.id}>{p.name}</li>)}"
+      - "{<li>{products.name}</li>}"
+    answer: 0
+    explain: "map returns a new array of elements, which React draws. for is a statement, and forEach returns undefined."
+    reteach: "### Syntax: map to make elements"
+
+  - id: q02
+    type: predict-output
+    concept: map-to-jsx
+    code: |
+      const products = [
+        { id: "DC-1043", name: "Coaster set" },
+        { id: "DC-1044", name: "Keychain" },
+        { id: "DC-1042", name: "Golu" },
+      ];
+      const rows = products.map((p) => `${p.id}: ${p.name}`);
+      console.log(rows.length);
+      console.log(rows[2]);
+    answer: "3\nDC-1042: Golu"
+    explain: "map makes one result per item, in the same order. The third row is Golu's."
+    reteach: "### Syntax: map to make elements"
+
+  - id: q03
+    type: spot-the-bug
+    concept: map-to-jsx
+    prompt: "The list is empty and there is no error. Which line is the problem?"
+    code: |
+      function Names({ products }) {
+        return (
+          <ul>
+            {products.map((p) => {
+              <li key={p.id}>{p.name}</li>;
+            })}
+          </ul>
+        );
+      }
+    bugLine: 5
+    explain: "With curly braces, the arrow function needs return. Without it, every call returns undefined. Write return <li ...>, or use round brackets."
+    reteach: "## Common mistakes"
+
+  - id: q04
+    type: mcq
+    concept: keys
+    prompt: "What does React use keys for?"
+    choices:
+      - "To match each row with the same item between renders"
+      - "To sort the list"
+      - "To style each row"
+      - "To pass the id to the child as a prop"
+    answer: 0
+    explain: "A key is a name tag. React uses it to tell which old row belongs to which item. The child never receives it as a prop."
+    reteach: "### Keys: a name tag for each row"
+
+  - id: q05
+    type: fill-blank
+    concept: keys
+    goal: "Name each row after its product's id so React can recognise it."
+    prompt: "{products.map((p) => <li ___={p.id}>{p.name}</li>)}"
+    answers: ["key"]
+    explain: "The key prop is React's name tag for an item in a list."
+    reteach: "### Keys: a name tag for each row"
+
+  - id: q06
+    type: spot-the-bug
+    concept: keys
+    prompt: "The console still warns that each child in a list should have a unique key. Which line should carry the key?"
+    code: |
+      function Names({ products }) {
+        return (
+          <ul>
+            {products.map((p) => (
+              <li>
+                <span key={p.id}>{p.name}</span>
+              </li>
+            ))}
+          </ul>
+        );
+      }
+    bugLine: 5
+    explain: "The key belongs on the element the map returns, the <li>, not on something inside it."
+    reteach: "### Syntax: the key goes on the outer element"
+
+  - id: q07
+    type: mcq
+    concept: key-choice
+    prompt: "Which key is best for a product in the catalogue?"
+    choices:
+      - "key={p.id}, like DC-1042"
+      - "key={index}, its position in the array"
+      - "key={Math.random()}"
+      - "key={p.paise}, its price"
+    answer: 0
+    explain: "An id from the data is unique and moves with the item. Positions shift, random keys change every render, and two items can share a price."
+    reteach: "### Syntax: choosing a key"
+
+  - id: q08
+    type: mcq
+    concept: key-choice
+    prompt: "A list uses key={Math.random()}. What happens on every re-render?"
+    choices:
+      - "React treats every row as new, throws the old ones away, and loses what they held"
+      - "Nothing: any unique key works"
+      - "React sorts the rows by their keys"
+      - "The build fails"
+    answer: 0
+    explain: "Keys must stay the same between renders. A new random key means a new row every time."
+    reteach: "### Syntax: choosing a key"
+
+  - id: q09
+    type: mcq
+    concept: key-choice
+    prompt: "Each delivery row holds a typed note. A new order is added at the top, and every note jumps to the order below it. What is the likely cause?"
+    choices:
+      - "The rows use their position as the key"
+      - "The rows use the order id as the key"
+      - "The notes are stored in a const"
+      - "The list uses map instead of a for loop"
+    answer: 0
+    explain: "With position keys, the new order takes key 0 and with it the first row's note. Order ids would keep each note with its order."
+    reteach: "### Keys: a name tag for each row"
+
+  - id: q10
+    type: predict-output
+    concept: filter-map
+    code: |
+      const products = [
+        { name: "Golu", paise: 45000 },
+        { name: "Tote bag", paise: 89900 },
+        { name: "Keychain", paise: 12000 },
+      ];
+      const names = products
+        .filter((p) => p.paise < 50000)
+        .map((p) => p.name);
+      console.log(names.join(", "));
+    answer: "Golu, Keychain"
+    explain: "filter keeps the items under ₹500, then map takes their names. The tote bag is filtered out."
+    reteach: "### Syntax: filter, then map"
+
+  - id: q11
+    type: predict-output
+    concept: sort-copy
+    code: |
+      const products = [{ name: "Tote", paise: 89900 }, { name: "Keychain", paise: 12000 }];
+      const sorted = products.sort((a, b) => a.paise - b.paise);
+      console.log(products[0].name);
+      console.log(sorted === products);
+    answer: "Keychain\ntrue"
+    explain: "sort changes the array it is called on and returns that same array. Sort a copy, [...products], to leave a prop alone."
+    reteach: "### Syntax: sorting a copy"
+
+  - id: q12
+    type: mcq
+    concept: sort-copy
+    prompt: "products is a prop. Which line sorts cheapest first without changing it?"
+    choices:
+      - "const cheapFirst = [...products].sort((a, b) => a.paise - b.paise);"
+      - "const cheapFirst = products.sort((a, b) => a.paise - b.paise);"
+      - "products = products.sort((a, b) => a.paise - b.paise);"
+      - "const cheapFirst = products; cheapFirst.sort((a, b) => a.paise - b.paise);"
+    answer: 0
+    explain: "Spreading makes a new array, so sort changes only the copy. The others all sort the parent's array."
+    reteach: "### Syntax: sorting a copy"

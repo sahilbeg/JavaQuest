@@ -1,0 +1,80 @@
+/* Sana's design for the shop and the cart drawer. */
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #FAF7F0;
+  color: #2E3A8C;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 2px solid #2E3A8C;
+}
+
+button {
+  font: inherit;
+  border: 0;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  background: #F2A81D;
+  color: #2E3A8C;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:focus-visible {
+  outline: 3px solid #2E3A8C;
+  outline-offset: 2px;
+}
+
+#products {
+  list-style: none;
+  padding: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.product {
+  border: 2px solid #2E3A8C;
+  border-radius: 12px;
+  padding: 1rem;
+  width: 12rem;
+}
+
+#cart-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(22rem, 100%);
+  padding: 1rem;
+  background: #FFFFFF;
+  border-left: 4px solid #F2A81D;
+  box-shadow: -4px 0 16px rgba(46, 58, 140, 0.2);
+  overflow-y: auto;
+}
+
+#drawer-lines {
+  list-style: none;
+  padding: 0;
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #EEEEEE;
+}
+
+.line .name {
+  flex: 1;
+}
+
+.line button {
+  padding: 0.25rem 0.6rem;
+}

@@ -1,0 +1,23 @@
+id: web-06-async-javascript/topic-10-debounce
+title: "Debounce: searching as you type"
+order: 10
+minutes: 9
+prerequisites: [web-06-async-javascript/topic-09-races-and-abort]
+concepts: [debounce, timer-reset, rest-args, search-as-you-type, throttle]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0610
+  from: maya
+  title: "Every key press in the search box hits the server"
+  body: >
+    Arjun noticed the search box sends a request on every key press. Typing "rani pink keychain" fires 18 requests in two seconds,
+    and on Saturday the API slowed down for everyone. Sometimes the results even show an older word.
+    Search should wait until the customer pauses for 300 ms, and only the newest answer should show. It's all in search.js.
+hints:
+  - "Debouncing means: every new call cancels the waiting timer and starts a fresh one. Only a call followed by a quiet gap runs."
+  - "Keep timer in a variable inside debounce, outside the function it returns. The returned function takes (...args), calls clearTimeout(timer), then sets timer = setTimeout(() => fn(...args), ms)."
+  - "createSearch returns debounce(async (text) => { ... }, ms). Inside: count the search as you did for the PIN checker, trim the text, show([]) for an empty one, otherwise fetch `/api/catalogue?${new URLSearchParams({ q })}` and, if still the newest, show the names."
+review: true

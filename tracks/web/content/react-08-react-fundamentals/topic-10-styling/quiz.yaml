@@ -1,0 +1,155 @@
+topic: react-08-react-fundamentals/topic-10-styling
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: css-import
+    prompt: "In a Vite React project, how does style.css usually reach the page?"
+    choices:
+      - "main.jsx imports it with import \"./style.css\"; and the build tool adds it"
+      - "Every component reads it with fetch"
+      - "React finds every .css file in the folder by itself"
+      - "It is pasted into each component as a string"
+    answer: 0
+    explain: "You import the stylesheet once from JavaScript. Its rules then apply to the whole page."
+    reteach: "### Syntax: importing a CSS file"
+
+  - id: q02
+    type: fill-blank
+    concept: class-name
+    goal: "Give the button the CSS class chip, using JSX's spelling of the attribute."
+    prompt: "<button type=\"button\" ___=\"chip\">Mint</button>"
+    answers: ["className"]
+    explain: "JSX uses className because class is a special word in JavaScript."
+    reteach: "### Syntax: className"
+
+  - id: q03
+    type: mcq
+    concept: conditional-classes
+    prompt: "Which className gives a picked chip both the chip and chip--selected classes?"
+    choices:
+      - "className={selected ? \"chip chip--selected\" : \"chip\"}"
+      - "className={selected ? \"chipchip--selected\" : \"chip\"}"
+      - "className=\"chip\" selected=\"chip--selected\""
+      - "className={[\"chip\", \"chip--selected\"]}"
+    answer: 0
+    explain: "className is one string with a space between names. Gluing them makes one wrong name."
+    reteach: "### Syntax: a class that depends on state"
+
+  - id: q04
+    type: predict-output
+    concept: conditional-classes
+    code: |
+      function chipClass(selected) {
+        return "chip" + (selected ? " chip--selected" : "");
+      }
+      console.log(chipClass(true));
+      console.log(chipClass(false));
+    answer: "chip chip--selected\nchip"
+    explain: "The modifier starts with a space, so the two names stay apart. When not selected, nothing is added."
+    reteach: "### Syntax: a class that depends on state"
+
+  - id: q05
+    type: predict-output
+    concept: conditional-classes
+    code: |
+      const onSale = true;
+      const soldOut = false;
+      const classes = ["price", onSale && "price--sale", soldOut && "price--sold"]
+        .filter(Boolean)
+        .join(" ");
+      console.log(classes);
+    answer: "price price--sale"
+    explain: "soldOut && ... gives false, which filter(Boolean) removes. The rest are joined with spaces."
+    reteach: "### Syntax: a class that depends on state"
+
+  - id: q06
+    type: spot-the-bug
+    concept: conditional-classes
+    prompt: "When the chip is picked, it loses all its styles. Which line?"
+    code: |
+      function ColourChip({ colour, selected }) {
+        const name = "chip" + (selected ? "chip--selected" : "");
+        return (
+          <button type="button" className={name}>
+            {colour}
+          </button>
+        );
+      }
+    bugLine: 2
+    explain: "Without a space, the class becomes chipchip--selected, which matches no rule. Write \" chip--selected\"."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: mcq
+    concept: style-prop
+    prompt: "Which style prop is correct?"
+    choices:
+      - "style={{ backgroundColor: \"#F2A81D\" }}"
+      - "style=\"background-color: #F2A81D\""
+      - "style={{ background-color: \"#F2A81D\" }}"
+      - "style={backgroundColor: \"#F2A81D\"}"
+    answer: 0
+    explain: "style takes an object, so it needs two pairs of braces, with camelCase keys."
+    reteach: "### Syntax: the style prop"
+
+  - id: q08
+    type: mcq
+    concept: style-prop
+    prompt: "What does style={{ width: 24 }} set the width to?"
+    choices:
+      - "24px"
+      - "24%"
+      - "24em"
+      - "Nothing: a number is ignored"
+    answer: 0
+    explain: "For sizes, React adds px to a plain number."
+    reteach: "### Syntax: the style prop"
+
+  - id: q09
+    type: fill-blank
+    concept: style-prop
+    goal: "Paint the swatch with this colour's hex code, using the camelCase style key."
+    prompt: "<span className=\"swatch\" style={{ ___: HEX[colour] }} />"
+    answers: ["backgroundColor"]
+    explain: "background-color becomes backgroundColor in a style object."
+    reteach: "### Syntax: the style prop"
+
+  - id: q10
+    type: mcq
+    concept: style-prop
+    prompt: "When is the style prop a better choice than a class?"
+    choices:
+      - "When the value comes from data, like a swatch's colour or a progress bar's width"
+      - "Always, because it is faster"
+      - "For hover and focus effects"
+      - "For styles that many elements share"
+    answer: 0
+    explain: "Inline styles suit values that change with data. Shared looks, hover and focus belong in CSS rules."
+    reteach: "### Syntax: the style prop"
+
+  - id: q11
+    type: mcq
+    concept: css-modules
+    prompt: "What do CSS Modules do?"
+    choices:
+      - "They make each file's class names unique, so two components can both use .chip without clashing"
+      - "They let you write CSS inside JSX strings"
+      - "They turn CSS into JavaScript objects for the style prop"
+      - "They remove unused HTML"
+    answer: 0
+    explain: "A file ending in .module.css gets unique class names from the build tool. You use them with className={styles.chip}."
+    reteach: "### CSS Modules and other tools"
+
+  - id: q12
+    type: order
+    concept: css-modules
+    prompt: "Put the lines in order to style a chip with a CSS Module."
+    items:
+      - "import styles from \"./Chip.module.css\";"
+      - "export function Chip({ colour }) {"
+      - "  return <button type=\"button\" className={styles.chip}>{colour}</button>;"
+      - "}"
+    explain: "Import the module at the top, then use its class names inside the component."
+    reteach: "### CSS Modules and other tools"

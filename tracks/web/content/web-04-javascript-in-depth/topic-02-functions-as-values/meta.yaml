@@ -1,0 +1,23 @@
+id: web-04-javascript-in-depth/topic-02-functions-as-values
+title: "Functions as values: callbacks and arrow functions"
+order: 2
+minutes: 9
+prerequisites: [web-04-javascript-in-depth/topic-01-scope-and-closures]
+concepts: [functions-as-values, arrow-functions, callbacks, higher-order-functions]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0402
+  from: maya
+  title: "Three copies of the same counting loop"
+  body: >
+    The catalogue code has countIndigo, countInStock and countUnder350. They are the same loop with one line changed.
+    Meera Aunty now wants a count of Marigold items, which would make a fourth copy.
+    Please write one counting function that takes the test as a value, plus a few helpers for the price tags.
+hints:
+  - "A function can go into a parameter like any other value. Inside countWhere, call test(item) for each item and count the times it returns true."
+  - "priceAtMost(maxPaise) returns a new function. Write it as an arrow: return (item) => item.paise <= maxPaise;"
+  - "withGiftWrap(priceOf) returns (item) => priceOf(item) + 3000. applyToAll pushes change(item) into a new array for every item."
+review: true

@@ -1,0 +1,23 @@
+id: web-07-tooling/topic-05-github-pull-requests
+title: "GitHub and pull requests"
+order: 5
+minutes: 10
+prerequisites: [web-07-tooling/topic-04-git-branches]
+concepts: [remotes, push-and-pull, pull-requests, code-review, ci-checks]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-0705
+  from: maya
+  title: "Branches on laptops aren't enough"
+  body: >
+    Branches stopped half-done work going live, but they live on our own laptops. I can't see your
+    work until it's merged, and last week a branch with a failing test was merged anyway. Let's put
+    dhaaga.in on GitHub: every change becomes a pull request, a robot runs the tests, and one of us
+    reviews it before it reaches main.
+hints:
+  - "git push -u origin your-branch uploads your branch to GitHub. -u links the two, so later a plain git push is enough."
+  - "A pull request is a page that asks to merge your branch, with the diff, comments and the robot's checks."
+  - "Merge only when the checks are green and a reviewer has approved. Then delete the branch."
+review: true

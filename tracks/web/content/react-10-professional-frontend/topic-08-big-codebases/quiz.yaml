@@ -1,0 +1,181 @@
+topic: react-10-professional-frontend/topic-08-big-codebases
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: first-map
+    variants:
+      - prompt: "It's your first day on a 400-file React codebase. What is the best plan?"
+        choices:
+          - "Map how it starts and where things live, trace one feature end to end, then read what your ticket needs"
+          - "Read every file from top to bottom before changing anything"
+          - "Start rewriting the parts you don't like"
+          - "Wait until someone explains every file to you"
+        answer: 0
+      - prompt: "What do a package.json's scripts tell you on day one?"
+        choices:
+          - "How the team runs, tests, lints and builds the app"
+          - "Which customers use the app"
+          - "Every component's props"
+          - "The database password"
+        answer: 0
+    explain: "Nobody holds a big codebase in their head. Start at package.json and the README, map the entry and folders, trace one feature, and read the rest when you need it."
+    reteach: "### Don't read it all"
+
+  - id: q02
+    type: order
+    concept: entry-and-routes
+    prompt: "Put the chain a React app starts with in order."
+    items:
+      - "index.html"
+      - "src/main.jsx"
+      - "<App /> with its providers"
+      - "The routes"
+      - "The page component for the current URL"
+    explain: "index.html loads main.jsx, which renders App. The routes map each URL to a page, so they tell you which file draws any screen."
+    reteach: "### Find the entry and the routes"
+
+  - id: q03
+    type: mcq
+    concept: entry-and-routes
+    prompt: "You see a bug at /account/orders. Where do you look first to find the file that draws it?"
+    choices:
+      - "The routes, which map each URL to its page component"
+      - "The CSS files"
+      - "package-lock.json"
+      - "The test folder"
+    answer: 0
+    explain: "The routes are the app's table of contents. From a URL they point straight at the page component."
+    reteach: "### Find the entry and the routes"
+
+  - id: q04
+    type: mcq
+    concept: following-a-feature
+    prompt: "Why trace one feature, such as Add to cart, all the way through?"
+    choices:
+      - "It shows the team's patterns for state, data and errors, which most other features share"
+      - "Because Add to cart is the only feature that matters"
+      - "To find code to delete"
+      - "It isn't useful: features are all different"
+    answer: 0
+    explain: "One feature traced from the click to the server and back teaches where state lives and how data moves. The rest of the app usually follows the same patterns."
+    reteach: "### Follow one feature end to end"
+
+  - id: q05
+    type: mcq
+    concept: search-tools
+    variants:
+      - prompt: "Searching for \"Out of stock\" finds only i18n/en.json: \"stock.out\": \"Out of stock\". What next?"
+        choices:
+          - "Search for the key stock.out, to find the component that uses it"
+          - "Change the words in en.json and you're done"
+          - "Give up: translations can't be traced"
+          - "Search for the word stock in every file and read them all"
+        answer: 0
+      - prompt: "What does Find all references do in VS Code?"
+        choices:
+          - "Lists every place a name, such as StockBadge, is used, following imports"
+          - "Opens the browser"
+          - "Deletes unused code"
+          - "Shows the Git history"
+        answer: 0
+    explain: "Search for the words on screen, then for keys and names. Go to definition and find all references understand imports, so they beat plain text search for names."
+    reteach: "### Search like a professional"
+
+  - id: q06
+    type: predict-output
+    concept: search-tools
+    prompt: "This counts which files use a component. What does it print?"
+    code: |
+      const files = {
+        "a/Badge.jsx": "export function Badge",
+        "b/Card.jsx": "<Badge tone='grey' />",
+        "c/List.jsx": "<Card /><Badge tone='marigold' />",
+      };
+      const uses = (name) => Object.keys(files).filter((p) => files[p].includes("<" + name)).length;
+      console.log(uses("Badge"), uses("Card"));
+    answer: "2 1"
+    explain: "Two files contain <Badge, and one contains <Card. The file that defines Badge doesn't use it, so it isn't counted."
+    reteach: "### Search like a professional"
+
+  - id: q07
+    type: mcq
+    concept: react-devtools
+    prompt: "What is the fastest way from a badge you can see on the page to its component, props and parents?"
+    choices:
+      - "React DevTools' Components tab: pick the badge on the page"
+      - "Read every file in the components folder"
+      - "View the page source"
+      - "Ask a customer"
+    answer: 0
+    explain: "The Components tab's picker selects the component behind any element, and shows its props, state and the parents that rendered it."
+    reteach: "### React DevTools"
+
+  - id: q08
+    type: mcq
+    concept: git-history
+    variants:
+      - prompt: "Which command shows, line by line, the last commit that changed each line of a file?"
+        choices: ["git blame", "git status", "git push", "git init"]
+        answer: 0
+      - prompt: "Why read git log before changing StockBadge.jsx?"
+        choices:
+          - "Commit messages explain why the code is the way it is, such as 'moved here for the admin app'"
+          - "git log runs the tests"
+          - "It undoes your change"
+          - "It shows the badge's CSS"
+        answer: 0
+    explain: "The code shows what; history shows why. git log lists a file's commits, git blame shows each line's last change, and both often link to tickets."
+    reteach: "### git log and git blame"
+
+  - id: q09
+    type: mcq
+    concept: shared-components
+    variants:
+      - prompt: "StockBadge is used by the catalogue and the admin app. Only the catalogue should say 'Back after Diwali'. What is the safest change?"
+        choices:
+          - "Add an optional preorder prop, defaulting to false, and pass it only from the catalogue"
+          - "Change what StockBadge shows for stock 0"
+          - "Copy StockBadge into a new file for the catalogue"
+          - "Change the words in the translation file"
+        answer: 0
+      - prompt: "You need a badge in a new screen. What should you do first?"
+        choices:
+          - "Look for the shared Badge in components/ui or Storybook"
+          - "Write a new MyBadge component"
+          - "Copy the CSS from another site"
+          - "Ask the designer to remove the badge"
+        answer: 0
+    explain: "Shared components change every screen that uses them, so find all references and add an option instead of changing the default. Reuse them rather than writing new ones."
+    reteach: "### Shared components and conventions"
+
+  - id: q10
+    type: mcq
+    concept: asking-and-first-changes
+    variants:
+      - prompt: "Which question is easiest for a teammate to answer?"
+        choices:
+          - "\"I'm doing WEB-1008. I found StockBadge and the stock.out key; the admin app uses it too. Is a preorder prop the usual way?\""
+          - "\"Where's the badge?\""
+          - "\"Nothing works, help.\""
+          - "\"Can you do WEB-1008 for me?\""
+        answer: 0
+      - prompt: "Roughly how long should you try on your own before asking for help?"
+        choices: ["About 30 minutes", "Never ask", "A whole week", "Ten seconds"]
+        answer: 0
+    explain: "Try for about 30 minutes, then ask with what you're doing, what you found and tried, and one specific question."
+    reteach: "### Ask good questions"
+
+  - id: q11
+    type: mcq
+    concept: asking-and-first-changes
+    prompt: "What does a good first change in a new codebase look like?"
+    choices:
+      - "Small, with a test in the team's style, and checked with tests, lint, build and the preview"
+      - "A refactor of a whole folder, to show what you can do"
+      - "A new state library, because you prefer it"
+      - "No tests, to save time"
+    answer: 0
+    explain: "Small, tested changes are safe to review and safe to ship. Leave things a little better, like an out-of-date README line, without rewriting the world."
+    reteach: "### Your first changes"

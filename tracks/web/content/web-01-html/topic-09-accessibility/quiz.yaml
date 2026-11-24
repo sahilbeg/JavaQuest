@@ -1,0 +1,105 @@
+topic: web-01-html/topic-09-accessibility
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: assistive-tech
+    prompt: "Which of these is assistive technology?"
+    choices: ["A screen reader like TalkBack", "A CSS file", "A web server", "A UPI app"]
+    answer: 0
+    explain: "Assistive technology helps people use a computer: screen readers, keyboards, magnifiers, voice control."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: assistive-tech
+    prompt: "What does a screen reader say for a link?"
+    choices: ["Its role and its name, like \"link, Read our story\"", "Its href", "Its colour and size", "Only the word link"]
+    answer: 0
+    explain: "The browser gives each element a role and an accessible name, and the screen reader reads both."
+    reteach: "### What a screen reader hears"
+
+  - id: q03
+    type: mcq
+    concept: informative-and-decorative-images
+    prompt: "A curly yarn border is only there to look nice. Which img is right?"
+    choices: ["<img src=\"images/yarn-border.png\" alt=\"\">", "<img src=\"images/yarn-border.png\">", "<img src=\"images/yarn-border.png\" alt=\"yarn-border.png\">", "<img src=\"images/yarn-border.png\" alt=\"decoration image\">"]
+    answer: 0
+    explain: "An empty alt marks a picture as decoration, so screen readers skip it. With no alt, many read the file name."
+    reteach: "### Syntax: a decorative image"
+
+  - id: q04
+    type: fill-blank
+    concept: informative-and-decorative-images
+    goal: "Mark this swirl as pure decoration, so screen readers skip it."
+    prompt: "<img src=\"images/swirl.png\" alt=___>"
+    answers: ["\"\"", "''"]
+    explain: "Two quotes with nothing between them make an empty alt."
+    reteach: "### Syntax: a decorative image"
+
+  - id: q05
+    type: mcq
+    concept: informative-and-decorative-images
+    prompt: "A link holds only a WhatsApp icon. Which alt text is best?"
+    choices: ["Chat with us on WhatsApp", "Green phone icon", "whatsapp.png", "Leave alt empty"]
+    answer: 0
+    explain: "The icon's alt becomes the link's name, so it must say where the link goes."
+    reteach: "### Syntax: an image inside a link"
+
+  - id: q06
+    type: spot-the-bug
+    concept: link-text
+    prompt: "Which line has a link that makes no sense in a list of links?"
+    code: |
+      <p><a href="items/dc-1042.html">Meet Golu</a></p>
+      <p>For our story, <a href="story.html">click here</a>.</p>
+      <p><a href="#prices">See the prices</a></p>
+    bugLine: 2
+    explain: "\"click here\" says nothing on its own. Put the meaning in the link, like \"Read our story\"."
+    reteach: "### Syntax: link text that stands alone"
+
+  - id: q07
+    type: mcq
+    concept: native-controls
+    prompt: "Sana styled a div to look like a button. What goes wrong for a keyboard user?"
+    choices: ["The Tab key skips it, so they can't press it", "It turns invisible", "It presses itself twice", "Nothing: a styled div works the same"]
+    answer: 0
+    explain: "A real button can be reached with Tab and pressed with Enter or Space. A div can't."
+    reteach: "### Use real buttons and links"
+
+  - id: q08
+    type: mcq
+    concept: native-controls
+    prompt: "\"Show more colours\" changes something on this page. Which element should it be?"
+    choices: ["<button type=\"button\">", "<a> with no href", "<div onclick=...>", "<span class=\"button\">"]
+    answer: 0
+    explain: "A button does something on the page. A link with an href goes somewhere."
+    reteach: "### Use real buttons and links"
+
+  - id: q09
+    type: mcq
+    concept: native-controls
+    prompt: "Which key moves keyboard focus to the next link, button or field?"
+    choices: ["Tab", "Shift", "Escape", "Delete"]
+    answer: 0
+    explain: "Tab moves focus forward through everything you can use. Shift and Tab together move back."
+    reteach: "### Use real buttons and links"
+
+  - id: q10
+    type: fill-blank
+    concept: language-of-parts
+    goal: "Tell screen readers to read this one word in a Hindi voice."
+    prompt: "<span ___=\"hi\">धागा</span>"
+    answers: ["lang"]
+    explain: "The lang attribute works on any element, not just html. hi is the code for Hindi."
+    reteach: "### Syntax: language of parts"
+
+  - id: q11
+    type: mcq
+    concept: assistive-tech
+    prompt: "What is the quickest first check you can do on your own page?"
+    choices: ["Put the mouse away and use the page with only the Tab and Enter keys", "Make the font smaller", "Delete all the images", "Add aria- to every element"]
+    answer: 0
+    explain: "A keyboard-only run shows at once whether every link, button and field can be reached and used."
+    reteach: "### Check it yourself"

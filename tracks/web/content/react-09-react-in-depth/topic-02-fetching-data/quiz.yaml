@@ -1,0 +1,134 @@
+topic: react-09-react-in-depth/topic-02-fetching-data
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: fetch-in-effect
+    prompt: "Where should OrderStatus start its request to /api/orders/order-17?"
+    choices: ["Inside a useEffect", "Directly in the component body, before the return", "Inside the JSX, in curly braces", "In a click handler that the customer must press first"]
+    answer: 0
+    explain: "Fetching is a side effect. In the body it would run on every render, even renders React throws away. An effect runs after the page is updated."
+    reteach: "### Fetching is a side effect"
+
+  - id: q02
+    type: mcq
+    concept: async-in-effect
+    prompt: "Why shouldn't you write useEffect(async () => { ... })?"
+    choices: ["An async function returns a promise, but React expects the effect to return a cleanup function or nothing", "await is not allowed anywhere in a component", "fetch only works in functions that are not async", "React runs async effects twice"]
+    answer: 0
+    explain: "The promise isn't a cleanup, so React warns and your cleanup never runs. Put an async function inside the effect and call it."
+    reteach: "### Why the effect itself can't be async"
+
+  - id: q03
+    type: predict-output
+    concept: async-in-effect
+    code: |
+      async function effect() {
+        return () => console.log("cleanup");
+      }
+      const returned = effect();
+      console.log(typeof returned);
+      console.log(returned instanceof Promise);
+    answer: "object\ntrue"
+    explain: "Even though the async function returns a cleanup, the caller gets a promise wrapped around it. React would receive a promise, not a function."
+    reteach: "### Why the effect itself can't be async"
+
+  - id: q04
+    type: mcq
+    concept: loading-error-data
+    prompt: "order starts as null. What should the very first render of OrderStatus show?"
+    choices: ["A loading message, like Loading order-17...", "Status: undefined", "Nothing at all, until the data arrives", "An error message, because there is no data"]
+    answer: 0
+    explain: "The first render always happens before the answer, so it should say the page is waiting."
+    reteach: "### Three states: loading, error and data"
+
+  - id: q05
+    type: predict-output
+    concept: loading-error-data
+    code: |
+      const res = { ok: false, status: 404 };
+      let message = "";
+      try {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        message = "loaded";
+      } catch (e) {
+        message = `We couldn't load order-99 (${e.message})`;
+      }
+      console.log(message);
+    answer: "We couldn't load order-99 (HTTP 404)"
+    explain: "res.ok is false, so the code throws. The catch builds the message from the error's text."
+    reteach: "### Syntax: checking for errors"
+
+  - id: q06
+    type: mcq
+    concept: loading-error-data
+    prompt: "The server answers 404 for order-99. What does await fetch(\"/api/orders/order-99\") do?"
+    choices: ["It gives back a response with ok set to false. It does not throw", "It throws an error straight away", "It returns null", "It waits forever"]
+    answer: 0
+    explain: "fetch only throws when there is no answer at all, like with no internet. An error code is still an answer, so check res.ok."
+    reteach: "### Syntax: checking for errors"
+
+  - id: q07
+    type: fill-blank
+    concept: ignore-stale
+    goal: "Show the answer only if this run of the effect has not been cleaned up yet."
+    prompt: "if (___) setOrder(data);"
+    answers: ["!ignore"]
+    explain: "The cleanup sets ignore to true. A run whose flag is true belongs to an old orderId, so its answer is dropped."
+    reteach: "### Syntax: ignoring a stale answer"
+
+  - id: q08
+    type: spot-the-bug
+    concept: refetch-on-change
+    prompt: "Tapping order-18 changes the heading, but the status is still order-17's. Which line is wrong?"
+    code: |
+      useEffect(() => {
+        async function load() {
+          const res = await fetch(`/api/orders/${orderId}`);
+          setOrder(await res.json());
+        }
+        load();
+      }, []);
+    bugLine: 7
+    explain: "The empty array means the effect runs only once. It reads orderId, so the array must be [orderId]."
+    reteach: "### When the id changes"
+
+  - id: q09
+    type: mcq
+    concept: ignore-stale
+    prompt: "A customer opens order-17, then order-18. order-17's answer arrives last and the page shows it. What is this bug called?"
+    choices: ["A race condition", "A stale closure in a timer", "A missing key", "A memory leak"]
+    answer: 0
+    explain: "The result depends on which request finishes first. The slower, older one wins."
+    reteach: "### A slow answer can arrive last"
+
+  - id: q10
+    type: order
+    concept: refetch-on-change
+    prompt: "OrderStatus changes from order-17 to order-18. Put the steps in order."
+    items:
+      - "React renders with orderId order-18"
+      - "React runs order-17's cleanup, which sets its ignore to true"
+      - "The new effect clears the old order and asks for order-18"
+      - "order-18's answer arrives and the page shows it"
+    explain: "Render first. Then the old effect is cleaned up before the new one runs and sends its request."
+    reteach: "### Syntax: ignoring a stale answer"
+
+  - id: q11
+    type: mcq
+    concept: ignore-stale
+    prompt: "Why does the cleanup for order-17 not stop order-18's answer from showing?"
+    choices: ["Each run of the effect has its own ignore variable, and only order-17's was set to true", "The cleanup only runs after the new answer is shown", "ignore is reset to false by React", "setOrder ignores the flag for new requests"]
+    answer: 0
+    explain: "let ignore = false is made fresh every time the effect runs. The cleanup changes only the variable of its own run."
+    reteach: "### Syntax: ignoring a stale answer"
+
+  - id: q12
+    type: mcq
+    concept: refetch-on-change
+    prompt: "Why does the effect call setOrder(null) before fetching a new order?"
+    choices: ["So order-17's status doesn't show under order-18 while the new answer loads", "Because fetch needs the state to be null", "To make the effect run twice", "So React knows the request failed"]
+    answer: 0
+    explain: "Clearing the old data puts the page back in its loading state for the new id."
+    reteach: "### When the id changes"

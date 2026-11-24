@@ -1,0 +1,38 @@
+:root {
+  --marigold: #F2A81D;
+  --indigo: #2E3A8C;
+  --off-white: #FAF7F0;
+}
+
+body {
+  margin: 0;
+  padding: 1rem;
+  font-family: system-ui, sans-serif;
+  background: var(--off-white);
+  color: #1f1f2e;
+}
+
+h1 {
+  color: var(--indigo);
+}
+
+.reviews {
+  padding: 0;
+  list-style: none;
+}
+
+.reviews li {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-left: 4px solid var(--marigold);
+  background: white;
+}
+
+.stars span {
+  color: var(--marigold);
+}
+
+.author {
+  font-weight: bold;
+  color: var(--indigo);
+}

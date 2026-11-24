@@ -1,0 +1,22 @@
+id: web-07-tooling/topic-10-production-builds
+title: "Production builds and caching"
+order: 10
+minutes: 10
+prerequisites: [web-07-tooling/topic-09-environment-config]
+concepts: [minification, content-hashing, caching, source-maps, bundle-size]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-0710
+  from: sam
+  title: "Customers still see ₹NaN after the fix"
+  body: >
+    Raju here. Kavya shipped the fix for the ₹NaN booties total on Monday, and on my phone it works.
+    But today two customers at the Aundh shop showed me their phones, and the cart still says ₹NaN.
+    Mrs. Deshpande cleared her browser history and then it was fine. What is going on?
+hints:
+  - "Browsers keep copies of files they downloaded, so they don't fetch them again. That is caching."
+  - "If the file is always called app.js, a phone that cached the old app.js keeps using it. Vite's build puts a hash of the content in each file name."
+  - "Cache the hashed files in assets/ for a long time, but make the browser re-check index.html on every visit. index.html names the newest files."
+review: true

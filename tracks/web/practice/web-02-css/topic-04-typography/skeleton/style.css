@@ -1,0 +1,66 @@
+/* The catalogue's stylesheet. Colours and cards are done; now the letters. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #faf7f0;
+  color: #2e3a8c;
+  margin: 0;
+  /* TODO 1: set the page's font stack to system-ui, sans-serif and its line-height to 1.5 (no unit) */
+}
+
+.site-header {
+  background-color: #2e3a8c;
+  color: #faf7f0;
+  padding: 1rem 2rem;
+}
+
+/* TODO 2: give h1 and h2 the font stack Georgia, serif, in one grouped rule */
+
+h1 {
+  font-size: 2rem;
+}
+
+h2, h3 {
+  color: #2e3a8c;
+}
+
+/* TODO 3: show h2 in spaced capitals: text-transform: uppercase and letter-spacing: 0.1em */
+
+.tagline {
+  /* TODO 4: slant the tagline: font-style: italic */
+}
+
+nav a {
+  color: #faf7f0;
+  /* TODO 5: remove the underline: text-decoration: none */
+}
+
+.products {
+  list-style: none;
+  padding: 0;
+}
+
+.product {
+  padding: 1rem;
+  border: 2px solid #2e3a8c;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.price {
+  font-weight: 700;
+  /* TODO 6: make prices easy to spot: font-size: 1.25rem */
+}
+
+.buy {
+  background-color: #f2a81d;
+  color: #2e3a8c;
+}
+
+.code {
+  font-size: 0.875rem;
+  color: rgb(90, 90, 90);
+}

@@ -1,0 +1,167 @@
+topic: react-09-react-in-depth/topic-05-reducers
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: action
+    prompt: "Which is a well-shaped action for removing the keychain line?"
+    choices: ["{ type: \"removed\", code: \"KEY\" }", "{ lines: [] }", "() => setLines([])", "\"remove the keychain please\""]
+    answer: 0
+    explain: "An action is a plain object with a type saying what happened, plus the data the change needs."
+    reteach: "### Syntax: an action"
+
+  - id: q02
+    type: mcq
+    concept: reducer
+    prompt: "What does a reducer take, and what does it return?"
+    choices: ["It takes the current state and an action, and returns the next state", "It takes an action and returns JSX", "It takes the state and changes it in place, returning nothing", "It takes a dispatch function and returns an action"]
+    answer: 0
+    explain: "A reducer is (state, action) => nextState. React keeps what it returns."
+    reteach: "### Syntax: a reducer"
+
+  - id: q03
+    type: predict-output
+    concept: reducer
+    code: |
+      function counter(state, action) {
+        switch (action.type) {
+          case "added":
+            return { count: state.count + action.qty };
+          case "cleared":
+            return { count: 0 };
+          default:
+            throw new Error("Unknown action: " + action.type);
+        }
+      }
+
+      const actions = [
+        { type: "added", qty: 2 },
+        { type: "added", qty: 3 },
+        { type: "cleared" },
+        { type: "added", qty: 1 },
+      ];
+      console.log(actions.reduce(counter, { count: 0 }).count);
+    answer: "1"
+    explain: "The count goes 0, 2, 5, then cleared to 0, then 1. reduce feeds each result into the next call."
+    reteach: "### Syntax: a reducer"
+
+  - id: q04
+    type: predict-output
+    concept: pure-reducer
+    code: |
+      function bad(state) {
+        state.lines.push("CST");
+        return state;
+      }
+      function good(state) {
+        return { ...state, lines: [...state.lines, "CST"] };
+      }
+
+      const first = { lines: ["KEY"] };
+      const a = bad(first);
+      console.log(a === first, first.lines.length);
+
+      const second = { lines: ["KEY"] };
+      const b = good(second);
+      console.log(b === second, second.lines.length);
+    answer: "true 2\nfalse 1"
+    explain: "bad changes the old state and hands back the same object, so React would see no change. good returns a new object and leaves the old one alone."
+    reteach: "### A reducer must be pure"
+
+  - id: q05
+    type: spot-the-bug
+    concept: pure-reducer
+    prompt: "This reducer is not pure. Which line breaks the rule?"
+    code: |
+      function cartReducer(state, action) {
+        switch (action.type) {
+          case "cleared":
+            localStorage.removeItem("dhaaga-cart");
+            return emptyCart;
+          default:
+            throw new Error(`Unknown action: ${action.type}`);
+        }
+      }
+    bugLine: 4
+    explain: "Writing to localStorage is a side effect. A reducer only works out the next state; save it in a useEffect instead."
+    reteach: "### A reducer must be pure"
+
+  - id: q06
+    type: fill-blank
+    concept: use-reducer
+    goal: "Keep the cart in a reducer, starting from the empty cart."
+    prompt: "const [cart, dispatch] = ___(cartReducer, emptyCart);"
+    answers: ["useReducer"]
+    explain: "useReducer takes the reducer and the starting state, and returns the current state and a dispatch function."
+    reteach: "### Syntax: useReducer"
+
+  - id: q07
+    type: fill-blank
+    concept: use-reducer
+    goal: "Send an action saying the customer removed the keychain line."
+    prompt: "___({ type: \"removed\", code: \"KEY\" });"
+    answers: ["dispatch"]
+    explain: "dispatch sends the action to the reducer. React keeps the new state and renders again."
+    reteach: "### Syntax: useReducer"
+
+  - id: q08
+    type: mcq
+    concept: unknown-action
+    prompt: "The reducer ends with default: return state;. A button dispatches { type: \"remove\" } by mistake. What does the customer see?"
+    choices: ["Nothing happens, and there is no error anywhere", "An error page saying Unknown action", "The whole cart is emptied", "The keychain line is removed anyway"]
+    answer: 0
+    explain: "No case matches, so the reducer silently returns the old state. Throwing in default would name the typo."
+    reteach: "### Unknown actions should throw"
+
+  - id: q09
+    type: predict-output
+    concept: unknown-action
+    code: |
+      function reducer(state, action) {
+        switch (action.type) {
+          case "removed":
+            return { count: state.count - 1 };
+          default:
+            throw new Error(`Unknown action: ${action.type}`);
+        }
+      }
+
+      try {
+        reducer({ count: 2 }, { type: "remove" });
+      } catch (e) {
+        console.log(e.message);
+      }
+    answer: "Unknown action: remove"
+    explain: "\"remove\" doesn't match \"removed\", so the default case throws, and the message names the bad type."
+    reteach: "### Unknown actions should throw"
+
+  - id: q10
+    type: mcq
+    concept: use-reducer
+    prompt: "When is useReducer a better fit than useState?"
+    choices: ["When one piece of state can change in many different ways, and you want those rules in one testable place", "Whenever a component has any state at all", "Only when the state is a number", "When the component has no event handlers"]
+    answer: 0
+    explain: "Simple values with simple changes are fine with useState. Many kinds of change to one state read better as a reducer."
+    reteach: "### useState or useReducer?"
+
+  - id: q11
+    type: order
+    concept: use-reducer
+    prompt: "A customer clicks Remove on the keychain line. Put the steps in order."
+    items:
+      - "The click handler dispatches { type: \"removed\", code: \"KEY\" }"
+      - "React calls the reducer with the current state and the action"
+      - "The reducer returns a new state without the keychain line"
+      - "React renders the cart with the new state"
+    explain: "Components only dispatch. React runs the reducer, keeps the new state, and renders."
+    reteach: "### Syntax: useReducer"
+
+  - id: q12
+    type: mcq
+    concept: pure-reducer
+    prompt: "Why write return { ...state, lines: newLines } instead of return { lines: newLines }?"
+    choices: ["It keeps every other field of the state, like a coupon added later", "Spreading makes the reducer run faster", "React requires every state to be spread", "It changes the old state in place"]
+    answer: 0
+    explain: "{ ...state } copies all the old fields first, then lines is replaced. Without it, any other field would be lost."
+    reteach: "### A reducer must be pure"

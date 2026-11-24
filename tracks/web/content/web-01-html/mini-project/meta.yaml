@@ -1,0 +1,24 @@
+id: web-01-html/mini-project
+title: "FEAT-01: The custom-order request form"
+order: 100
+minutes: 15
+prerequisites: [web-01-html/topic-10-head-and-meta]
+concepts: [forms, labels, input-types, validation, radio-and-select]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: FEAT-01
+  from: priya
+  title: "Let customers ask for something made just for them"
+  body: >
+    Every week someone asks me for something special: Golu in Mint for a grandson, six coaster sets
+    for a wedding, booties with a baby's name on them. Right now it's all lost in WhatsApp messages.
+    Can our website have a proper request form, so I get the name, the phone number, the item, the
+    colour, how many, and any notes, all in one place?
+hints:
+  - "Build it one field at a time, each in its own p with a label joined by for and id. Sana's design in the KB page lists every id and name."
+  - "The colours are five radio buttons that all share name=\"colour\", inside a fieldset with the legend Colour. Put required on the first one."
+  - "The phone pattern can be [0-9]{10}. The quantity is <input type=\"number\" id=\"qty\" name=\"qty\" min=\"1\" max=\"20\" value=\"1\">."
+review: false

@@ -1,0 +1,22 @@
+id: web-04-javascript-in-depth/mini-project
+title: "FEAT-04: The catalogue filter engine"
+order: 100
+minutes: 14
+prerequisites: [web-04-javascript-in-depth/topic-11-maps-and-sets]
+concepts: [filter, sort, object-destructuring, default-values, set-basics]
+practice:
+  kind: code
+  runner: vitest
+ticket:
+  key: FEAT-04
+  from: priya
+  title: "Let customers find things by themselves"
+  body: >
+    Every evening I answer the same WhatsApp question: "Do you have something in Indigo under ₹500?"
+    I want the website to answer it. Let people pick a colour and a price range, hide what's sold out,
+    type part of a name, and sort by price. Sana has drawn the buttons; she needs the engine behind them.
+hints:
+  - "Unpack the options with defaults first: const { colour = \"\", minPaise, maxPaise, inStockOnly = false, search = \"\", sort } = options. Then narrow a copy of the list one filter at a time."
+  - "Only filter when an option was given: if (minPaise !== undefined) ... A minimum of 0 is a real value, so don't test it with if (minPaise). Compare colours and names after toLowerCase(), and trim the search text."
+  - "Sort last, on the filtered copy: (a, b) => a.paise - b.paise for \"price-asc\", b.paise - a.paise for \"price-desc\". colourOptions is [...new Set(colours)].sort()."
+review: false

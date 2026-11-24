@@ -1,0 +1,156 @@
+topic: web-04-javascript-in-depth/topic-03-array-methods
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: map
+    code: |
+      const prices = [15000, 12000, 45000];
+      const rupees = prices.map((p) => p / 100);
+      console.log(rupees.join(" "));
+    answer: "150 120 450"
+    explain: "map calls the arrow once per price and collects each result in a new array."
+    reteach: "### Syntax: map"
+
+  - id: q02
+    type: predict-output
+    concept: filter
+    code: |
+      const stock = [3, 12, 0, 5, 0];
+      console.log(stock.filter((n) => n > 0).length);
+    answer: "3"
+    explain: "filter keeps 3, 12 and 5, the numbers above 0. The new array has 3 items."
+    reteach: "### Syntax: filter"
+
+  - id: q03
+    type: predict-output
+    concept: find
+    code: |
+      const items = [
+        { id: "DC-1043", colour: "Marigold" },
+        { id: "DC-1045", colour: "Indigo" },
+        { id: "DC-1042", colour: "Indigo" },
+      ];
+      const first = items.find((item) => item.colour === "Indigo");
+      console.log(first.id);
+    answer: "DC-1045"
+    explain: "find returns the first match and stops. DC-1045 comes before DC-1042 in the list."
+    reteach: "### Syntax: find"
+
+  - id: q04
+    type: mcq
+    concept: find
+    prompt: "items.find((item) => item.id === \"DC-9999\") runs on a list with no such id. What does it return?"
+    choices:
+      - "undefined"
+      - "An empty array []"
+      - "null"
+      - "It throws an error"
+    answer: 0
+    explain: "find returns undefined when nothing matches. filter would return an empty array."
+    reteach: "### Syntax: find"
+
+  - id: q05
+    type: predict-output
+    concept: reduce
+    code: |
+      const cart = [
+        { paise: 15000, qty: 2 },
+        { paise: 12000, qty: 1 },
+      ];
+      const total = cart.reduce((sum, line) => sum + line.paise * line.qty, 0);
+      console.log(total);
+    answer: "42000"
+    explain: "sum starts at 0, becomes 30000 after the first line, then 42000 after the second."
+    reteach: "### Syntax: reduce"
+
+  - id: q06
+    type: predict-output
+    concept: sort
+    code: |
+      const prices = [89900, 12000, 3000];
+      prices.sort();
+      console.log(prices.join(" "));
+    answer: "12000 3000 89900"
+    explain: "Without a compare function, sort compares the numbers as text. \"1\" comes before \"3\", which comes before \"8\"."
+    reteach: "### Syntax: sort with a compare function"
+
+  - id: q07
+    type: fill-blank
+    concept: filter
+    goal: "Keep only the items that still have stock, in a new array."
+    prompt: "const available = items.___((item) => item.stock > 0);"
+    answers: ["filter"]
+    explain: "filter returns a new array of the items for which the callback returns true."
+    reteach: "### Syntax: filter"
+
+  - id: q08
+    type: mcq
+    concept: sort
+    prompt: "Which call sorts a copy of items with the dearest item first?"
+    choices:
+      - "items.slice().sort((a, b) => b.paise - a.paise)"
+      - "items.slice().sort((a, b) => a.paise - b.paise)"
+      - "items.slice().sort()"
+      - "items.slice().sort((a, b) => a.paise > b.paise)"
+    answer: 0
+    explain: "b.paise - a.paise is negative when a costs more, so the dearer item goes first."
+    reteach: "### Syntax: sort with a compare function"
+
+  - id: q09
+    type: spot-the-bug
+    concept: map
+    code: |
+      const cart = [{ code: "CST" }, { code: "BAG" }];
+      const codes = cart.map((line) => {
+        line.code;
+      });
+      console.log(codes.join(", "));
+    bugLine: 3
+    explain: "The callback body has braces but no return, so map collects undefined. Write return line.code; or drop the braces."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: reduce
+    prompt: "Why give reduce a starting value, as in prices.reduce((sum, p) => sum + p, 0)?"
+    choices:
+      - "It sets the first running total, and stops an empty array from throwing an error"
+      - "It tells reduce to skip the first item"
+      - "It makes reduce return an array"
+      - "It sorts the array before adding"
+    answer: 0
+    explain: "Without a starting value, reduce on an empty array throws TypeError: Reduce of empty array with no initial value."
+    reteach: "### Syntax: reduce"
+
+  - id: q11
+    type: mcq
+    concept: sort
+    prompt: "What does sort do to the array you call it on?"
+    choices:
+      - "It reorders that same array, so every other piece of code sees the new order"
+      - "Nothing: it always returns a sorted copy"
+      - "It empties it"
+      - "It only works on arrays of numbers"
+    answer: 0
+    explain: "sort changes the array in place. Call slice() first, or use toSorted, when the original order matters."
+    reteach: "### Syntax: sort with a compare function"
+
+  - id: q12
+    type: predict-output
+    concept: map
+    code: |
+      const items = [
+        { name: "Golu", paise: 45000, stock: 3 },
+        { name: "Owl", paise: 12000, stock: 0 },
+        { name: "Coasters", paise: 15000, stock: 12 },
+      ];
+      const names = items
+        .filter((item) => item.stock > 0)
+        .sort((a, b) => a.paise - b.paise)
+        .map((item) => item.name);
+      console.log(names.join(", "));
+    answer: "Coasters, Golu"
+    explain: "filter drops the owl, sort puts the cheaper coasters first, and map keeps only the names."
+    reteach: "### Chaining: one method after another"

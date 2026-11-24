@@ -1,0 +1,126 @@
+topic: web-05-dom-and-events/topic-03-changing-the-page
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: writing-text
+    prompt: "What does the page show after h3.textContent = \"Golu <em>the</em> elephant\"?"
+    choices: ["Golu <em>the</em> elephant, with the angle brackets visible", "Golu the elephant, with \"the\" in italics", "Golu elephant", "Nothing, because textContent can't hold tags"]
+    answer: 0
+    explain: "textContent writes plain text. Tags in the string are shown as characters, never turned into elements."
+    reteach: "### Syntax: writing textContent"
+
+  - id: q02
+    type: mcq
+    concept: inner-html-danger
+    prompt: "A customer typed the name to stitch on a gift. Which line puts it on the page safely?"
+    choices: ["label.textContent = stitchName;", "label.innerHTML = stitchName;", "label.innerHTML = \"<b>\" + stitchName + \"</b>\";", "label.outerHTML = stitchName;"]
+    answer: 0
+    explain: "Text from a person must never be parsed as HTML. textContent keeps it as plain text, so no code can sneak in."
+    reteach: "### innerHTML, and why not for text"
+
+  - id: q03
+    type: fill-blank
+    concept: class-list
+    goal: "Make sure the card has the sold-out class, even if it already had it, and keep its other classes."
+    prompt: "card.classList.___(\"sold-out\");"
+    answers: ["add"]
+    explain: "classList.add puts the class on and does nothing if it is already there. Other classes stay."
+    reteach: "### Syntax: classList"
+
+  - id: q04
+    type: mcq
+    concept: class-list
+    prompt: "The card has the class low, and stock is 5. What does card.classList.toggle(\"low\", stock <= 3) do?"
+    choices: ["Removes low, because the condition is false", "Adds a second low class", "Keeps low, because toggle only adds", "Throws an error, because toggle takes one argument"]
+    answer: 0
+    explain: "With a second argument, toggle makes the class match the condition: on when true, off when false. 5 <= 3 is false."
+    reteach: "### Syntax: classList"
+
+  - id: q05
+    type: mcq
+    concept: properties
+    prompt: "What happens after button.setAttribute(\"disabled\", \"false\")?"
+    choices: ["The button is disabled, because the attribute is there", "The button is enabled", "The page throws an error", "Nothing changes at all"]
+    answer: 0
+    explain: "disabled is a boolean attribute: being present means off, whatever its value. Use button.disabled = false to enable it."
+    reteach: "### Attributes and properties"
+
+  - id: q06
+    type: fill-blank
+    concept: properties
+    goal: "Switch the Add to cart button back on, so customers can tap it again."
+    prompt: "button.___ = false;"
+    answers: ["disabled"]
+    explain: "The disabled property takes true or false, unlike the attribute."
+    reteach: "### Attributes and properties"
+
+  - id: q07
+    type: mcq
+    concept: dataset
+    prompt: "An element is written <li data-item-id=\"DC-1042\">. How do you read DC-1042 with dataset?"
+    choices: ["li.dataset.itemId", "li.dataset.item-id", "li.dataset[\"data-item-id\"]", "li.dataset.ItemId"]
+    answer: 0
+    explain: "dataset drops the data- part and turns the dashed name into camelCase: item-id becomes itemId."
+    reteach: "### Syntax: dataset"
+
+  - id: q08
+    type: predict-output
+    concept: dataset
+    code: |
+      const stock = "4";
+      console.log(stock + 1);
+      console.log(Number(stock) + 1);
+    answer: "41\n5"
+    explain: "Values from dataset are strings, so + joins them as text. Convert with Number first to add."
+    reteach: "### Syntax: dataset"
+
+  - id: q09
+    type: mcq
+    concept: attributes
+    prompt: "A button has no aria-label attribute. What does button.getAttribute(\"aria-label\") return?"
+    choices: ["null", "\"\"", "undefined", "false"]
+    answer: 0
+    explain: "getAttribute returns null when the attribute is missing."
+    reteach: "### Syntax: getAttribute and setAttribute"
+
+  - id: q10
+    type: spot-the-bug
+    concept: class-list
+    code: |
+      function markSoldOut(card) {
+        card.className = "sold-out";
+        card.querySelector(".add").disabled = true;
+      }
+    bugLine: 2
+    explain: "Setting className replaces every class, so the card loses product. Use card.classList.add(\"sold-out\")."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: class-list
+    prompt: "Sana wants to change how sold-out cards look next month. Which way lets her do it without touching any JavaScript?"
+    choices: ["JavaScript adds a sold-out class, and her CSS styles .sold-out", "JavaScript sets card.style.opacity = \"0.5\"", "JavaScript rewrites the card with innerHTML", "JavaScript removes the card from the page"]
+    answer: 0
+    explain: "JavaScript marks the state with a class. The CSS owns how that state looks, so the designer changes only the CSS."
+    reteach: "### Classes, not styles"
+
+  - id: q12
+    type: predict-output
+    concept: writing-text
+    code: |
+      function stockText(stock) {
+        if (stock === 0) {
+          return "Sold out";
+        }
+        if (stock <= 3) {
+          return `Only ${stock} left`;
+        }
+        return "In stock";
+      }
+      console.log(stockText(3));
+      console.log(stockText(4));
+    answer: "Only 3 left\nIn stock"
+    explain: "3 is at most 3, so it is low. 4 is above 3, so it is simply in stock."
+    reteach: "## Try it"

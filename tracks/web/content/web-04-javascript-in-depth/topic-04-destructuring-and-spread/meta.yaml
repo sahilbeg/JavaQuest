@@ -1,0 +1,22 @@
+id: web-04-javascript-in-depth/topic-04-destructuring-and-spread
+title: "Destructuring, spread and rest"
+order: 4
+minutes: 9
+prerequisites: [web-04-javascript-in-depth/topic-03-array-methods]
+concepts: [object-destructuring, array-destructuring, default-values, spread, rest]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0404
+  from: sana
+  title: "Item cards say \"(undefined)\" for plain items"
+  body: >
+    Sana here. The new item cards say "(undefined)" when an item has no colour yet, like the plain keychains Meera Aunty hasn't dyed.
+    Plain items should say Off-white. While you're in there, the card code needs a few small helpers for prices and stock.
+hints:
+  - "Pull the fields out right in the parameter list: function cardLabel({ name, paise, colour = \"Off-white\" }). The default only kicks in when colour is missing."
+  - "withStock returns { ...item, stock: stock }: a new object with every field copied, then stock replaced. mergeCatalogues returns [...a, ...b]."
+  - "splitFeatured: const [featured, ...others] = items; then return { featured, others }. totalPaise(...prices) gathers every argument into one array."
+review: true

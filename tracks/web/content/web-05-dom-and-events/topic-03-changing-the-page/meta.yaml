@@ -1,0 +1,24 @@
+id: web-05-dom-and-events/topic-03-changing-the-page
+title: "Changing text, attributes and classes"
+order: 3
+minutes: 10
+prerequisites: [web-05-dom-and-events/topic-02-selecting-elements]
+concepts: [writing-text, inner-html-danger, attributes, properties, dataset, class-list]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0503
+  from: sana
+  title: "Sold-out items still look buyable"
+  body: >
+    The Indigo tote bag sold out on Saturday, but its card still had a bright Add to cart button. Two customers
+    tapped it and got confused. I've written the CSS already: add the class sold-out when nothing is left, and low
+    when three or fewer are left. Can you make each card show its name, price and stock properly?
+hints:
+  - "Find each part inside the card with card.querySelector, then change it: textContent for text, setAttribute for an attribute, classList for classes."
+  - "classList.toggle(name, condition) adds the class when the condition is true and removes it when false. The button has a disabled property you can set to true or false."
+  - "showStock: text is \"Sold out\" for 0, `Only ${stock} left` for 1 to 3, else \"In stock\". Then card.classList.toggle(\"sold-out\", stock === 0), card.classList.toggle(\"low\", stock > 0 && stock <= 3), button.disabled = stock === 0 and card.dataset.stock = String(stock)."
+review: true

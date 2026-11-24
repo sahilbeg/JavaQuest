@@ -1,0 +1,127 @@
+topic: web-03-javascript-basics/topic-09-arrays
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: index-and-length
+    code: |
+      const basket = ["CST", "KEY", "AMI"];
+      console.log(basket[1]);
+    answer: "KEY"
+    explain: "Positions start at 0, so position 1 is the second element."
+    reteach: "### Syntax: reading by index"
+
+  - id: q02
+    type: predict-output
+    concept: index-and-length
+    code: |
+      const basket = ["CST", "KEY", "AMI"];
+      console.log(basket[3]);
+    answer: "undefined"
+    explain: "The positions are 0, 1 and 2. Reading a position that doesn't exist gives undefined."
+    reteach: "### Syntax: reading by index"
+
+  - id: q03
+    type: predict-output
+    concept: push-and-pop
+    code: |
+      const basket = ["CST"];
+      basket.push("KEY");
+      basket.push("BAG");
+      console.log(basket.length);
+    answer: "3"
+    explain: "Each push adds one element to the end: 1 + 2 is 3."
+    reteach: "### Syntax: push and pop"
+
+  - id: q04
+    type: predict-output
+    concept: push-and-pop
+    code: |
+      const basket = ["CST", "KEY", "BAG"];
+      const removed = basket.pop();
+      console.log(removed);
+      console.log(basket.length);
+    answer: "BAG\n2"
+    explain: "pop removes the last element, BAG, and hands it back. Two are left."
+    reteach: "### Syntax: push and pop"
+
+  - id: q05
+    type: predict-output
+    concept: join-and-slice
+    code: |
+      console.log(["CST", "KEY"].join(" & "));
+    answer: "CST & KEY"
+    explain: "join glues the elements into one string, with the separator between them."
+    reteach: "### Syntax: join and slice"
+
+  - id: q06
+    type: predict-output
+    concept: includes-and-indexof
+    code: |
+      const basket = ["CST", "KEY"];
+      console.log(basket.indexOf("BAG"));
+      console.log(basket.indexOf("KEY"));
+    answer: "-1\n1"
+    explain: "indexOf gives -1 when the value isn't there, and the position of the first match when it is."
+    reteach: "### Syntax: includes and indexOf"
+
+  - id: q07
+    type: fill-blank
+    concept: push-and-pop
+    goal: "Add the tote bag's code to the end of the basket array."
+    prompt: "basket.___(\"BAG\");"
+    answers: ["push"]
+    explain: "push adds an element to the end of an array."
+    reteach: "### Syntax: push and pop"
+
+  - id: q08
+    type: mcq
+    concept: index-and-length
+    prompt: "How do you read the last element of any array called basket?"
+    choices: ["basket[basket.length - 1]", "basket[basket.length]", "basket[-1]", "basket.last"]
+    answer: 0
+    explain: "Positions run from 0 to length - 1, so the last element is at length - 1."
+    reteach: "### Syntax: reading by index"
+
+  - id: q09
+    type: spot-the-bug
+    concept: index-and-length
+    code: |
+      const basket = ["CST", "KEY"];
+      for (let i = 0; i <= basket.length; i++) {
+        console.log(basket[i]);
+      }
+    bugLine: 2
+    explain: "With <=, i reaches 2, which is past the end, so it prints undefined. Use i < basket.length."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: predict-output
+    concept: references
+    code: |
+      console.log(["CST"] === ["CST"]);
+    answer: "false"
+    explain: "These are two separate arrays. === asks whether both sides are the very same array."
+    reteach: "### Two names, one array"
+
+  - id: q11
+    type: mcq
+    concept: references
+    prompt: "const basket = [\"CST\"]; basket.push(\"KEY\"); What happens?"
+    choices: ["It works: const stops reassigning the name, not changing the array", "TypeError, because a const array can't change", "Nothing happens, the push is ignored", "It works only if you write let instead"]
+    answer: 0
+    explain: "const keeps basket pointing to the same array. The array itself can still change."
+    reteach: "### const arrays can still change"
+
+  - id: q12
+    type: predict-output
+    concept: array-literals
+    code: |
+      const basket = [];
+      console.log(basket.length);
+      basket.push("AMI");
+      console.log(basket[0]);
+    answer: "0\nAMI"
+    explain: "[] is an empty array with length 0. After the push, AMI sits at position 0."
+    reteach: "### Syntax: an array"

@@ -1,0 +1,24 @@
+id: react-10-professional-frontend/boss
+title: "INC-10: The mock frontend interview loop"
+order: 99
+minutes: 15
+prerequisites: [react-10-professional-frontend/topic-09-interviews]
+concepts: [edge-cases, time-zones, tabs-pattern, roving-tabindex, abort-and-errors]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: INC-10
+  from: theo
+  title: "The mock frontend interview loop"
+  body: >
+    I'm running your mock loop today, and I'm playing the interviewer.
+    Here are the answers a previous candidate gave in three rounds: a JavaScript question, a UI component and a React hook.
+    Every one worked when they tried it once, and every one failed the round.
+    Fix them the way I'd want to see in a real loop. Edge cases first.
+hints:
+  - "Bronze: try groupOrdersByDay by hand on one order, two orders on the same day, and order-20 at 02:10. Loop from the first order, add to the day's count and total, take the day from placedAt.slice(0, 10), and sort the days at the end."
+  - "Silver: buttons with role=\"tab\" inside a role=\"tablist\", tabIndex={index === selected ? 0 : -1}, and panels with hidden={index !== selected}. In onKeyDown, work out the next index (wrapping with the length), then setSelected(next) and tabRefs.current[next].focus()."
+  - "Gold: keep one state object. In the effect: const controller = new AbortController(); set loading; fetch(url, { signal: controller.signal }); throw new Error(`HTTP ${response.status}`) when !response.ok; in catch, return early if error.name === \"AbortError\"; and return () => controller.abort()."
+review: false

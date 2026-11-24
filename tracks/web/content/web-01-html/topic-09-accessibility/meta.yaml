@@ -1,0 +1,24 @@
+id: web-01-html/topic-09-accessibility
+title: "Accessibility: pages everyone can use"
+order: 9
+minutes: 10
+prerequisites: [web-01-html/topic-08-form-inputs-and-validation]
+concepts: [assistive-tech, informative-and-decorative-images, link-text, native-controls, language-of-parts]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0109
+  from: sana
+  title: "I listened to our page with a screen reader. Ouch."
+  body: >
+    I tried the catalogue page with TalkBack on my phone. It read "yarn border dot png", said
+    "link, click here" with no clue where it goes, and the WhatsApp icon was just "link, image".
+    It also read our Hindi word धागा in an English voice. Could you fix these four before we add any CSS?
+hints:
+  - "A decoration gets an empty alt, alt=\"\", so screen readers skip it. A picture inside a link describes where the link goes."
+  - "Link text should make sense on its own, out of the sentence. Move the meaning into the link."
+  - "Wrap the Hindi word in a span with its own language: <span lang=\"hi\">धागा</span>."
+review: true

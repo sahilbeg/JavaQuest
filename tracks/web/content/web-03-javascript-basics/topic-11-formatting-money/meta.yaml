@@ -1,0 +1,24 @@
+id: web-03-javascript-basics/topic-11-formatting-money
+title: "Showing rupees: toFixed and Intl.NumberFormat"
+order: 11
+minutes: 9
+prerequisites: [web-03-javascript-basics/topic-10-objects]
+concepts: [paise-to-rupees, to-fixed, intl-number-format, indian-grouping, padding]
+practice:
+  kind: code
+  runner: vitest
+  mainClass: main.js
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0311
+  from: sana
+  title: "Prices should read ₹1,299.00, not 1299"
+  body: >
+    Sana here. On the new item pages, prices show up as 1299 and 150.5, and on one screen as 129900! A price should
+    read the way people in India expect: ₹1,299.00, with the ₹ sign, commas in the right places and two decimals.
+    The receipt columns don't line up either. Can you fix src/money.js?
+hints:
+  - "Divide paise by 100 to get rupees first. (15050 / 100).toFixed(2) gives \"150.50\"."
+  - "Make the formatter once, outside the functions: const inr = new Intl.NumberFormat(\"en-IN\", { style: \"currency\", currency: \"INR\" }); then inr.format(paise / 100)."
+  - "For receiptRow: label.padEnd(12) + formatINR(paise).padStart(10)"
+review: true

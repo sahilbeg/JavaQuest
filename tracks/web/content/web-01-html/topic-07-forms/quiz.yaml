@@ -1,0 +1,128 @@
+topic: web-01-html/topic-07-forms
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: fill-blank
+    concept: form-action-method
+    goal: "Send the form's values to the /orders address on Dhaaga's site."
+    prompt: "<form ___=\"/orders\" method=\"post\">"
+    answers: ["action"]
+    explain: "action is the URL a form sends to. method says how it's sent."
+    reteach: "### Syntax: a form"
+
+  - id: q02
+    type: mcq
+    concept: form-action-method
+    prompt: "Which method suits an order form, so the values don't show in the address bar?"
+    choices: ["post", "get", "put", "link"]
+    answer: 0
+    explain: "post sends the values inside the request. get adds them to the end of the URL, which suits searches."
+    reteach: "### Syntax: a form"
+
+  - id: q03
+    type: mcq
+    concept: inputs-and-names
+    prompt: "A customer types her phone number into <input type=\"text\" id=\"order-phone\">. What does the server receive?"
+    choices: ["Nothing from that field, because it has no name", "phone=her number", "order-phone=her number", "An error page"]
+    answer: 0
+    explain: "Only fields with a name are sent. The id is for labels and links, not for the server."
+    reteach: "### Syntax: a text input"
+
+  - id: q04
+    type: spot-the-bug
+    concept: inputs-and-names
+    prompt: "The server gets the name but never the phone number. Which line is wrong?"
+    code: |
+      <form action="/orders" method="post">
+        <input type="text" id="order-name" name="name">
+        <input type="text" id="order-phone">
+        <button type="submit">Send order</button>
+      </form>
+    bugLine: 3
+    explain: "The phone field has no name, so the form never sends it. Add name=\"phone\"."
+    reteach: "### Syntax: a text input"
+
+  - id: q05
+    type: fill-blank
+    concept: labels
+    goal: "Join this label to the input whose id is order-name."
+    prompt: "<label ___=\"order-name\">Your name</label>"
+    answers: ["for"]
+    explain: "A label's for must match the field's id. Then screen readers read the label with the field."
+    reteach: "### Syntax: a label"
+
+  - id: q06
+    type: spot-the-bug
+    concept: labels
+    prompt: "A screen reader says only \"edit text\" for the phone box. Which line causes it?"
+    code: |
+      <p>
+        <label for="phone">Phone number</label>
+        <input type="text" id="order-phone" name="phone">
+      </p>
+    bugLine: 2
+    explain: "for must match the field's id, order-phone, not its name."
+    reteach: "### Syntax: a label"
+
+  - id: q07
+    type: mcq
+    concept: labels
+    prompt: "What happens when a customer taps a label that is joined to its field?"
+    choices: ["The cursor jumps into the field", "The form is sent", "The label turns bold", "Nothing"]
+    answer: 0
+    explain: "A joined label is part of the field's target, which helps a lot on small phone screens."
+    reteach: "### Syntax: a label"
+
+  - id: q08
+    type: mcq
+    concept: labels
+    prompt: "Why isn't placeholder=\"Your name\" enough on its own?"
+    choices: ["It vanishes once you type, and screen readers may not read it", "Placeholders are not allowed on text inputs", "It makes the field required", "It sends the hint to the server"]
+    answer: 0
+    explain: "A placeholder is a hint. Every field still needs a real label."
+    reteach: "### Placeholder is not a label"
+
+  - id: q09
+    type: mcq
+    concept: textarea
+    prompt: "Which field fits \"What would you like?\", where customers may write several lines?"
+    choices: ["textarea", "input type=\"text\"", "label", "button"]
+    answer: 0
+    explain: "textarea holds several lines of text. A text input holds one line."
+    reteach: "### Syntax: a textarea"
+
+  - id: q10
+    type: spot-the-bug
+    concept: textarea
+    prompt: "The Send button shows up as text inside the message box. Which line is wrong?"
+    code: |
+      <form action="/orders" method="post">
+        <label for="order-message">What would you like?</label>
+        <textarea id="order-message" name="message" rows="4">
+        <button type="submit">Send order</button>
+      </form>
+    bugLine: 3
+    explain: "textarea needs its closing tag. Without </textarea>, everything after it becomes text inside the box."
+    reteach: "### Syntax: a textarea"
+
+  - id: q11
+    type: fill-blank
+    concept: submit-button
+    goal: "Make this button send the form it sits in."
+    prompt: "<button type=\"___\">Send order</button>"
+    answers: ["submit"]
+    explain: "type=\"submit\" sends the form. type=\"button\" does nothing until JavaScript gives it a job."
+    reteach: "### Syntax: a submit button"
+
+  - id: q12
+    type: order
+    concept: form-action-method
+    prompt: "Put the steps in order, from typing to the server."
+    items:
+      - "The customer fills in the fields"
+      - "The customer presses the submit button"
+      - "The browser collects a name=value pair for each named field"
+      - "The browser sends them to the form's action URL"
+    explain: "The browser only gathers and sends the values once the submit button is pressed."
+    reteach: "### What happens when you press Send"

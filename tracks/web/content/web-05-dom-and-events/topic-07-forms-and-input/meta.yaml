@@ -1,0 +1,24 @@
+id: web-05-dom-and-events/topic-07-forms-and-input
+title: "Forms and input events"
+order: 7
+minutes: 10
+prerequisites: [web-05-dom-and-events/topic-06-event-delegation]
+concepts: [input-value, input-event, submit-event, prevent-default, form-data, validation-messages]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0507
+  from: sam
+  title: "Orders arrive with 9-digit phone numbers"
+  body: >
+    Raju here. Three website orders this week had 9-digit phone numbers, and one had no PIN code, so the delivery
+    bhaiya couldn't reach them. Also, the name-to-stitch box lets people type 30 letters, but we can only stitch 12.
+    Can the form check things before the order goes through?
+hints:
+  - "Listen for submit on the form, not click on the button, and call event.preventDefault() first so the page doesn't reload."
+  - "validate is plain JavaScript: start with an empty errors object and add a message for each field that is wrong. Remove the spaces from the phone with replaceAll(\" \", \"\"), then check it is 10 digits with onlyDigits and length."
+  - "In the submit handler: read the fields with new FormData(form), call validate, then for each field write errors[field] ?? \"\" into its [data-error-for] message and set aria-invalid to String(field in errors). Call onOrder only when Object.keys(errors).length is 0."
+review: true

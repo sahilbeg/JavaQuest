@@ -1,0 +1,112 @@
+topic: web-01-html/topic-06-semantic-layout
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: semantic-elements
+    prompt: "What does a div tell the browser about its content?"
+    choices: ["Nothing: it's a box with no meaning", "That it's the main content", "That it's a menu", "That it's a heading"]
+    answer: 0
+    explain: "div is a plain box. Use it for styling hooks only when no semantic element fits."
+    reteach: "### div and span: boxes with no meaning"
+
+  - id: q02
+    type: mcq
+    concept: semantic-elements
+    prompt: "Sana writes <div class=\"header\">. Does a screen reader treat it as the page's header?"
+    choices: ["No: only the element's name has meaning, not its class", "Yes: the class name tells it", "Yes, but only on phones", "Only if the div comes first"]
+    answer: 0
+    explain: "Class names are labels for CSS and JavaScript. To mean header, the element must be <header>."
+    reteach: "## Common mistakes"
+
+  - id: q03
+    type: fill-blank
+    concept: header-and-footer
+    goal: "Open the block at the bottom of the page that holds the shop's address and hours."
+    prompt: "<___>"
+    answers: ["footer"]
+    explain: "footer holds the closing details of the page: address, hours, contact links."
+    reteach: "### Syntax: header and footer"
+
+  - id: q04
+    type: mcq
+    concept: header-and-footer
+    prompt: "What usually goes in the header?"
+    choices: ["The site's name or logo, and often the main menu", "The price table", "The shop's opening hours", "Customer reviews"]
+    answer: 0
+    explain: "The header introduces the page. The hours and address usually live in the footer."
+    reteach: "### Syntax: header and footer"
+
+  - id: q05
+    type: mcq
+    concept: nav
+    prompt: "Which block should be a nav?"
+    choices: ["The menu of links to Our story, Catalogue and Prices", "One link in the middle of a paragraph", "The list of products", "The price table"]
+    answer: 0
+    explain: "nav wraps the page's main menu of links. A single link in a sentence is just a link."
+    reteach: "### Syntax: nav"
+
+  - id: q06
+    type: order
+    concept: nav
+    prompt: "Put the lines in order to build a menu with one link."
+    items:
+      - "<nav>"
+      - "<ul>"
+      - "<li><a href=\"#prices\">Prices</a></li>"
+      - "</ul>"
+      - "</nav>"
+    explain: "The nav wraps a list, and each link sits in its own li."
+    reteach: "### Syntax: nav"
+
+  - id: q07
+    type: mcq
+    concept: main
+    prompt: "How many main elements should a page have?"
+    choices: ["Exactly one", "One per section", "None: main is optional decoration", "As many as you like"]
+    answer: 0
+    explain: "main is the page's main content, so there's one. Parts inside it are sections."
+    reteach: "### Syntax: main"
+
+  - id: q08
+    type: mcq
+    concept: main
+    prompt: "Why do landmarks like main help a blind customer?"
+    choices: ["The screen reader can jump straight to them, skipping the header and menu", "They make the text larger", "They read the page faster", "They hide the footer"]
+    answer: 0
+    explain: "Screen readers list landmarks in a menu, so a listener can jump to the part they want."
+    reteach: "### Landmarks: shortcuts for screen readers"
+
+  - id: q09
+    type: mcq
+    concept: sections-and-articles
+    prompt: "A customer review would make sense even if shared on its own. Which element fits it?"
+    choices: ["article", "section", "nav", "footer"]
+    answer: 0
+    explain: "article is for a piece that stands alone. section is a part of this page with its own heading."
+    reteach: "### Syntax: section and article"
+
+  - id: q10
+    type: spot-the-bug
+    concept: header-and-footer
+    prompt: "This page has a header and a main. Which line breaks it?"
+    code: |
+      <header>
+        <h1>Dhaaga &amp; Co.</h1>
+      </div>
+      <main>
+        <h2>Catalogue</h2>
+      </main>
+    bugLine: 3
+    explain: "The header was opened, so it must be closed with </header>. A stray </div> leaves the header open."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: sections-and-articles
+    prompt: "What should every section have?"
+    choices: ["A heading, usually an h2", "An id", "A footer", "A nav"]
+    answer: 0
+    explain: "A section is a titled part of the page. The heading says what it's about."
+    reteach: "### Syntax: section and article"

@@ -1,0 +1,114 @@
+topic: web-00-how-the-web-works/topic-04-editor-and-files
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: code-editor
+    prompt: "Why write HTML in VS Code rather than in Microsoft Word?"
+    choices: ["VS Code saves plain text, and Word mixes hidden formatting into the file", "Word can't type angle brackets", "VS Code makes the page load faster on phones", "Browsers only open files made on a Mac"]
+    answer: 0
+    explain: "A code editor saves exactly the letters you typed. Word adds hidden formatting that a browser can't read."
+    reteach: "### A code editor"
+
+  - id: q02
+    type: mcq
+    concept: project-folder
+    prompt: "What is the project folder of a website?"
+    choices: ["The one folder that holds all of the site's files", "The folder where your browser keeps downloads", "A folder on the customer's phone", "The images folder"]
+    answer: 0
+    explain: "The project folder, like dhaaga-site, holds everything the site needs."
+    reteach: "### A website is a folder"
+
+  - id: q03
+    type: mcq
+    concept: file-extensions
+    variants:
+      - { prompt: "Which file most likely holds CSS rules?", choices: ["style.css", "index.html", "main.js", "coaster.jpg"], answer: 0 }
+      - { prompt: "Which file most likely holds JavaScript?", choices: ["main.js", "style.css", "index.html", "tote-bag.png"], answer: 0 }
+    explain: "The extension after the last dot says what's inside: .html, .css, .js, or a picture like .jpg."
+    reteach: "### File extensions say what is inside"
+
+  - id: q04
+    type: fill-blank
+    concept: index-html
+    goal: "Name the home page file, which the server sends when a URL ends at a folder."
+    prompt: "___.html"
+    answers: ["index"]
+    explain: "When a URL ends at a folder, the server sends that folder's index.html."
+    reteach: "### index.html is the front door"
+
+  - id: q05
+    type: mcq
+    concept: relative-paths
+    prompt: "index.html sits in dhaaga-site, and the photo is dhaaga-site/images/coaster.jpg. Which src finds it from index.html?"
+    choices: ["images/coaster.jpg", "dhaaga-site/images/coaster.jpg", "coaster.jpg", "../images/coaster.jpg"]
+    answer: 0
+    explain: "A relative path starts in index.html's own folder. From there: go into images, then take coaster.jpg."
+    reteach: "### Paths: how one file finds another"
+
+  - id: q06
+    type: mcq
+    concept: relative-paths
+    prompt: "In a path, what does ../ mean?"
+    choices: ["Go up one folder", "Go into the images folder", "Start at the home page", "Skip this file"]
+    answer: 0
+    explain: "../ steps up to the folder that holds the current one."
+    reteach: "### Paths: how one file finds another"
+
+  - id: q07
+    type: mcq
+    concept: file-names
+    variants:
+      - { prompt: "Which is the best name for a photo of a tote bag?", choices: ["tote-bag.jpg", "Tote Bag.jpg", "TOTE_BAG FINAL.JPG", "tote bag (2).jpg"], answer: 0 }
+      - { prompt: "Which is the best name for the baby booties page?", choices: ["baby-booties.html", "Baby Booties.html", "baby booties.HTML", "BabyBooties FINAL.html"], answer: 0 }
+    explain: "Lowercase, dashes instead of spaces, and one dot before the extension. Those names never break."
+    reteach: "### Names that never break"
+
+  - id: q08
+    type: mcq
+    concept: file-names
+    prompt: "The HTML asks for coaster.jpg and the file is Coaster.jpg. It works on your Mac. What happens on the server?"
+    choices: ["It's a 404, because most servers treat capitals as different letters", "It works the same as on the Mac", "The server renames the file for you", "The photo loads, but in black and white"]
+    answer: 0
+    explain: "Macs ignore capitals in file names, but most servers don't. Lowercase every name to stay safe."
+    reteach: "### Names that never break"
+
+  - id: q09
+    type: mcq
+    concept: code-editor
+    prompt: "You changed index.html and reloaded the browser, but nothing changed. The VS Code tab shows a dot. Why?"
+    choices: ["The file isn't saved yet", "The browser is broken", "The server is down", "The dot means the HTML has an error"]
+    answer: 0
+    explain: "The dot means unsaved changes. The browser reads the file on disk, so save with Cmd+S first."
+    reteach: "### Saving your work"
+
+  - id: q10
+    type: mcq
+    concept: terminal
+    variants:
+      - { prompt: "Which terminal command makes a new folder called images?", choices: ["mkdir images", "cd images", "ls images", "pwd images"], answer: 0 }
+      - { prompt: "Which terminal command lists what's in the current folder?", choices: ["ls", "pwd", "mkdir", "cd .."], answer: 0 }
+      - { prompt: "Which terminal command moves you into the dhaaga-site folder?", choices: ["cd dhaaga-site", "mkdir dhaaga-site", "ls dhaaga-site", "touch dhaaga-site"], answer: 0 }
+    explain: "mkdir makes a folder, cd moves into one, ls lists what's there, and pwd shows where you are."
+    reteach: "### The terminal inside VS Code"
+
+  - id: q11
+    type: order
+    concept: terminal
+    prompt: "Put the commands in order to make a site folder with an index.html inside it."
+    items:
+      - "mkdir dhaaga-site"
+      - "cd dhaaga-site"
+      - "touch index.html"
+    explain: "Make the folder, move into it, then make the file inside it."
+    reteach: "## Worked example"
+
+  - id: q12
+    type: mcq
+    concept: file-extensions
+    prompt: "Your page opens in the browser showing all the tags as plain text. The file is called index.html.txt. What's wrong?"
+    choices: ["The real extension is .txt, so the browser doesn't treat it as HTML", "The tags are spelled wrong", "The browser needs device mode", "The page needs a CSS file first"]
+    answer: 0
+    explain: "Only the letters after the last dot count. Rename it index.html, with extensions shown in Finder."
+    reteach: "## Common mistakes"

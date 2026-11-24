@@ -1,0 +1,22 @@
+id: web-00-how-the-web-works/topic-02-html-css-js
+title: "HTML, CSS and JavaScript: three languages, three jobs"
+order: 2
+minutes: 9
+prerequisites: [web-00-how-the-web-works/topic-01-how-a-page-arrives]
+concepts: [html, elements, attributes, css, javascript, linking-files]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-0002
+  from: sana
+  title: "My sketch of the visiting card needs three kinds of code"
+  body: >
+    Sana here! I sketched the visiting card for Meera Aunty: Dhaaga's name in Indigo, the opening hours,
+    and a big WhatsApp button. Kavya says building it takes HTML, CSS and JavaScript. Please read up on
+    what each one does before we start, so we speak the same language.
+hints:
+  - "Think of building the stall: the frame and table, then the cloth and colours, then someone who answers questions."
+  - "HTML says what is on the page. CSS says how it looks. JavaScript says what it does."
+  - "An element is an opening tag, content and a closing tag, like <p>Hello</p>. A CSS rule is a selector plus { property: value; }."
+review: true

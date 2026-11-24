@@ -1,0 +1,195 @@
+topic: react-10-professional-frontend/topic-04-security
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: xss
+    variants:
+      - prompt: "What is XSS?"
+        choices:
+          - "An attack where someone gets their own JavaScript to run on your site, in other people's browsers"
+          - "A way to make CSS load faster"
+          - "A server running out of memory"
+          - "A typo in a URL"
+        answer: 0
+      - prompt: "An attacker's script runs on dhaaga.in's payment page. What can it do?"
+        choices:
+          - "Anything the page's own code can, such as swapping the UPI ID or reading what the customer types"
+          - "Nothing, because it came from a review"
+          - "Only change the colours"
+          - "Only show an alert box"
+        answer: 0
+    explain: "A script running on your page has your page's full power: it can read inputs, send requests as the customer, and change what they see."
+    reteach: "### What XSS is"
+
+  - id: q02
+    type: mcq
+    concept: xss
+    prompt: "Why is a poisoned review called stored XSS?"
+    choices:
+      - "The payload is saved on the server, so it runs for every customer who opens that page"
+      - "It is stored in the attacker's own browser only"
+      - "It only works when the customer stores the page"
+      - "It is stored in CSS"
+    answer: 0
+    explain: "The attacker saves the payload once, as a review. Every visitor's browser then gets it from your server and, if it isn't escaped, runs it."
+    reteach: "### How an attack travels"
+
+  - id: q03
+    type: predict-output
+    concept: react-escaping
+    prompt: "This is what escaping does. What does it print?"
+    code: |
+      const escape = (text) => text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+      console.log(escape("<i>Golu</i>"));
+    answer: "&lt;i&gt;Golu&lt;/i&gt;"
+    explain: "Each < becomes &lt; and each > becomes &gt;. A browser shows those as brackets but never treats them as a tag."
+    reteach: "### React escapes text for you"
+
+  - id: q04
+    type: mcq
+    concept: react-escaping
+    variants:
+      - prompt: "A review's text is '<img src=x onerror=alert(1)>'. What does <p>{review.text}</p> show?"
+        choices:
+          - "The characters <img src=x onerror=alert(1)>, as plain text"
+          - "A broken image, and an alert box"
+          - "Nothing at all"
+          - "A React error"
+        answer: 0
+      - prompt: "Why are React apps safe from most XSS by default?"
+        choices:
+          - "React escapes everything you put in curly braces in JSX"
+          - "React removes every <img> tag"
+          - "Browsers never run JavaScript inside React apps"
+          - "React only allows text from your own server"
+        answer: 0
+    explain: "Curly braces in JSX always escape. The text shows exactly as typed, and no tag is ever made from it."
+    reteach: "### React escapes text for you"
+
+  - id: q05
+    type: spot-the-bug
+    concept: dangerous-html
+    prompt: "Which line lets a review run code on the page?"
+    code: |
+      export function Review({ review }) {
+        return (
+          <li>
+            <p>{review.author}</p>
+            <p dangerouslySetInnerHTML={{ __html: review.text }} />
+          </li>
+        );
+      }
+    bugLine: 5
+    explain: "dangerouslySetInnerHTML turns the review's text into real HTML, so an <img onerror> in it runs. Use <p>{review.text}</p>."
+    reteach: "### Syntax: dangerouslySetInnerHTML"
+
+  - id: q06
+    type: mcq
+    concept: dangerous-html
+    variants:
+      - prompt: "Sellers want bold text in product descriptions they write. What is the safest way to show their HTML?"
+        choices:
+          - "Clean it with a tested sanitizer such as DOMPurify before using dangerouslySetInnerHTML"
+          - "Use dangerouslySetInnerHTML as it is, because sellers are trusted"
+          - "Write a regular expression that removes <script>"
+          - "Use eval to check it first"
+        answer: 0
+      - prompt: "When is dangerouslySetInnerHTML acceptable?"
+        choices:
+          - "For HTML you wrote yourself or fully trust, never for anything a customer typed"
+          - "Whenever the text is short"
+          - "For customer reviews, if you add a try/catch"
+          - "Never, under any circumstances"
+        answer: 0
+    explain: "Only trusted HTML may skip escaping. HTML from others must go through a well-tested sanitizer; home-made regular expressions miss tricks."
+    reteach: "### If you really must show HTML"
+
+  - id: q07
+    type: predict-output
+    concept: url-schemes
+    prompt: "What does this print?"
+    code: |
+      const site = "  JavaScript:alert(1)";
+      console.log(site.startsWith("javascript:"), new URL(site).protocol);
+    answer: "false javascript:"
+    explain: "The naive check is fooled by the spaces and capitals. The URL parser strips the spaces and lowers the capitals, just as a browser would, and sees javascript:."
+    reteach: "### Syntax: checking a URL with new URL"
+
+  - id: q08
+    type: mcq
+    concept: url-schemes
+    variants:
+      - prompt: "Which rule is safest for a reviewer's website link?"
+        choices:
+          - "Allow only https: and http:, and refuse everything else"
+          - "Refuse only addresses that start with javascript:"
+          - "Allow anything that contains a dot"
+          - "Allow anything the customer typed"
+        answer: 0
+      - prompt: "What happens when you call new URL(\"instagram.com/anjali\")?"
+        choices:
+          - "It throws, because there is no scheme, so it isn't a full address"
+          - "It returns protocol https:"
+          - "It returns null"
+          - "It adds https:// for you"
+        answer: 0
+    explain: "An allowlist of schemes can't be fooled by a scheme you forgot. new URL throws for text that isn't a full address, so catch it and treat it as unsafe."
+    reteach: "### Dangerous links: javascript:"
+
+  - id: q09
+    type: fill-blank
+    concept: link-safety
+    goal: "Stop the customer's site in the new tab from reaching back to control our page through window.opener."
+    prompt: "<a href={link} target=\"_blank\" rel=\"nofollow ___ noreferrer\">{review.author}</a>"
+    answers: ["noopener"]
+    explain: "noopener cuts the link back to your page. noreferrer hides which page the customer came from, and nofollow tells search engines it isn't your recommendation."
+    reteach: "### target=\"_blank\" and rel"
+
+  - id: q10
+    type: mcq
+    concept: link-safety
+    prompt: "Why add nofollow to links in customer reviews?"
+    choices:
+      - "Search engines then don't treat them as your recommendation, so spammers gain nothing by posting links"
+      - "It makes the link open faster"
+      - "It blocks javascript: links"
+      - "It hides the link from screen readers"
+    answer: 0
+    explain: "nofollow is about search engines. It doesn't block dangerous schemes: that's the allowlist's job."
+    reteach: "### target=\"_blank\" and rel"
+
+  - id: q11
+    type: mcq
+    concept: defence-in-depth
+    variants:
+      - prompt: "Which header tells the browser to run only scripts from your own site, blocking inline onerror code?"
+        choices:
+          - "Content-Security-Policy: script-src 'self'"
+          - "Cache-Control: no-store"
+          - "Content-Type: text/html"
+          - "Accept-Language: en-IN"
+        answer: 0
+      - prompt: "Why keep the login session in an HttpOnly cookie instead of localStorage?"
+        choices:
+          - "JavaScript can't read an HttpOnly cookie, so an injected script can't steal it"
+          - "localStorage is slower"
+          - "Cookies are bigger"
+          - "localStorage is deleted every day"
+        answer: 0
+    explain: "Defence in depth means more than one layer: escaping first, then a CSP, HttpOnly cookies, no secrets in localStorage, and checks on the server."
+    reteach: "### Defence in depth"
+
+  - id: q12
+    type: mcq
+    concept: defence-in-depth
+    prompt: "Which of these is a door around React's escaping that you should watch for in code reviews?"
+    choices:
+      - "element.innerHTML = review.text"
+      - "<p>{review.text}</p>"
+      - "element.textContent = review.text"
+      - "<h3>{product.name}</h3>"
+    answer: 0
+    explain: "innerHTML turns a string into HTML, just like dangerouslySetInnerHTML. textContent and JSX curly braces keep it as text."
+    reteach: "### Other doors"

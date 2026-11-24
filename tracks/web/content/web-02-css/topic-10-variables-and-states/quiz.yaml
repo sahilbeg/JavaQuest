@@ -1,0 +1,121 @@
+topic: web-02-css/topic-10-variables-and-states
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: custom-properties
+    prompt: "Which line defines a custom property correctly?"
+    choices: ["--indigo: #2e3a8c;", "-indigo: #2e3a8c;", "$indigo: #2e3a8c;", "var indigo = #2e3a8c;"]
+    answer: 0
+    explain: "A custom property's name starts with two dashes."
+    reteach: "### Syntax: custom properties"
+
+  - id: q02
+    type: mcq
+    concept: custom-properties
+    prompt: "Why keep the brand colours in custom properties?"
+    choices: ["Each colour is written once, so a change is one line", "It makes the colours brighter", "Browsers only accept colours from variables", "It hides the colours from DevTools"]
+    answer: 0
+    explain: "Every rule reads the same named value. Change it in one place and the whole page follows."
+    reteach: "### Syntax: custom properties"
+
+  - id: q03
+    type: fill-blank
+    concept: var-function
+    goal: "Paint the Order button with the Marigold colour stored in the --marigold custom property."
+    prompt: ".buy { background-color: ___(--marigold); }"
+    answers: ["var"]
+    explain: "var(--marigold) reads the custom property's value."
+    reteach: "### Syntax: var()"
+
+  - id: q04
+    type: spot-the-bug
+    concept: var-function
+    code: |
+      :root {
+        --marigold: #f2a81d;
+      }
+      .buy {
+        background-color: --marigold;
+      }
+    bugLine: 5
+    explain: "A custom property is read with var(). On its own, --marigold isn't a colour, so the line is dropped."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: mcq
+    concept: root-selector
+    prompt: "Why are brand colours usually set on :root?"
+    choices: ["It's the top element, and custom properties are inherited, so every element can read them", "Only :root may hold custom properties", ":root loads before the CSS file", "It makes the properties private"]
+    answer: 0
+    explain: ":root is the <html> element. Custom properties inherit, so values set there reach the whole page."
+    reteach: "### Syntax: the :root selector"
+
+  - id: q06
+    type: mcq
+    concept: var-function
+    prompt: "--accent is not set anywhere. What colour does color: var(--accent, #2e3a8c); give?"
+    choices: ["#2e3a8c", "black, always", "No colour, the page breaks", "--accent"]
+    answer: 0
+    explain: "The value after the comma is the fallback. It's used when the custom property isn't set."
+    reteach: "### Syntax: a fallback value"
+
+  - id: q07
+    type: mcq
+    concept: overriding-variables
+    prompt: ".product sets --card-border: #2e3a8c; and uses border: 2px solid var(--card-border);. .sold-out sets --card-border: #5a5a5a;. Which cards get grey borders?"
+    choices: ["Only the sold-out card", "Every card", "No card", "Every card except the sold-out one"]
+    answer: 0
+    explain: "The sold-out card sets its own value of --card-border, so only it, and anything inside it, reads grey."
+    reteach: "### Changing a variable for one part of the page"
+
+  - id: q08
+    type: mcq
+    concept: hover
+    prompt: "When does .buy:hover apply?"
+    choices: ["While the mouse pointer is over an Order button", "After a button has been clicked once", "When the page first loads", "When the keyboard reaches the button"]
+    answer: 0
+    explain: ":hover picks an element while the pointer is over it. Keyboard focus is :focus-visible's job."
+    reteach: "### Syntax: :hover"
+
+  - id: q09
+    type: spot-the-bug
+    concept: hover
+    code: |
+      .buy {
+        background-color: var(--marigold);
+      }
+      .buy :hover {
+        background-color: var(--indigo);
+      }
+    bugLine: 4
+    explain: "The space means inside, so it picks hovered elements inside .buy. Write .buy:hover with no space."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: focus-visible
+    prompt: "Who is helped most by a clear :focus-visible ring?"
+    choices: ["People who move through the page with the Tab key", "People using a mouse", "Search engines", "People on slow internet"]
+    answer: 0
+    explain: "Keyboard users need to see which element has focus before they press Enter."
+    reteach: "### Syntax: :focus-visible"
+
+  - id: q11
+    type: mcq
+    concept: focus-visible
+    prompt: "What's wrong with .buy:focus { outline: none; } on its own?"
+    choices: ["Keyboard users can no longer see which button they're on", "It makes the button bigger", "It removes the hover colour", "Nothing, it's good practice"]
+    answer: 0
+    explain: "Removing the ring without a replacement leaves keyboard users lost. Replace it with your own outline instead."
+    reteach: "## Common mistakes"
+
+  - id: q12
+    type: mcq
+    concept: focus-visible
+    prompt: "Why use outline rather than border for a focus ring?"
+    choices: ["An outline takes no space, so nothing shifts when it appears", "Borders can't be coloured", "Outlines are always round", "Borders don't work on links"]
+    answer: 0
+    explain: "A border adds to the box's size, so the layout would jump. An outline is drawn outside without taking space."
+    reteach: "### Syntax: :focus-visible"

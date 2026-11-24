@@ -1,0 +1,23 @@
+id: react-10-professional-frontend/topic-07-code-reviews
+title: "Code reviews for frontend work"
+order: 7
+minutes: 10
+prerequisites: [react-10-professional-frontend/topic-06-deployment]
+concepts: [why-review, reviewable-prs, frontend-checklist, writing-comments, review-decisions, receiving-feedback]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-1007
+  from: maya
+  title: "You're on the frontend review rota"
+  body: >
+    From this week you review frontend pull requests too.
+    The first one is waiting: a new "Your orders" list for the account page. Its preview deploy is linked in the PR.
+    Also, your checkout PR came back with 14 comments. That's normal, I promise.
+    Review theirs properly, answer yours calmly, and tell me how both went.
+hints:
+  - "Open the preview deploy before you read the diff. Click through it on a phone-sized screen and with only the keyboard."
+  - "Review in order of cost: does it work for every case, is the state and effect logic right, is it accessible and safe, do the tests prove it, is it fast? Naming and formatting come last, and robots handle formatting."
+  - "Label every comment so the author knows what blocks the merge: issue (blocking), suggestion, question, nitpick (non-blocking), praise."
+review: true

@@ -1,0 +1,24 @@
+id: react-08-react-fundamentals/topic-03-props
+title: "Props: passing data down"
+order: 3
+minutes: 9
+prerequisites: [react-08-react-fundamentals/topic-02-components-and-jsx]
+concepts: [props, passing-props, destructuring-props, default-props, children, read-only-props]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0803
+  from: sana
+  title: "One product card for every product"
+  body: >
+    The home page shows this week's favourites: Golu the elephant, the Marigold coaster set and the Indigo
+    tote bag. Right now each card is copied by hand, and the tote bag one still says ₹150. Please make one
+    ProductCard that takes the name, price and colour, and use it three times.
+hints:
+  - "Props arrive as one object. Unpack it in the brackets: function ProductCard({ name, paise, colour }) { ... }."
+  - "Give a default right in the brackets: { colour = \"Off-white\" }. Show the price with {rupees(paise)}."
+  - "Badge is function Badge({ children }) { return <span className=\"badge\">{children}</span>; }. Pass numbers in braces: <ProductCard name=\"Golu the elephant\" paise={45000} colour=\"Indigo\" />."
+review: true

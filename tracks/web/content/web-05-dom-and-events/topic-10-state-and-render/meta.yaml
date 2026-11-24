@@ -1,0 +1,24 @@
+id: web-05-dom-and-events/topic-10-state-and-render
+title: "State and render: keeping the page in sync"
+order: 10
+minutes: 10
+prerequisites: [web-05-dom-and-events/topic-09-local-storage]
+concepts: [single-source-of-truth, render-from-state, update-then-render, derived-values, events-change-state, copying-state]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0510
+  from: maya
+  title: "Gift wrap is counted twice on the item page"
+  body: >
+    Golu's item page shows the wrong total if you change things in a different order. Tick gift wrap, press +,
+    and the ₹30 gets counted twice, because each handler patches the total on the page by itself. Let's keep one
+    state object, change only that, and draw the whole page from it.
+hints:
+  - "Keep every choice in one state object: qty, giftWrap and stitch. Handlers only change state; one render function draws everything from it."
+  - "itemTotal is plain maths: each piece costs item.paise, plus STITCH_PAISE when the stitch text isn't blank. Multiply by qty, then add GIFT_WRAP_PAISE once if giftWrap is true."
+  - "update(changes) is state = { ...state, ...changes }; render(). The + button calls update({ qty: state.qty + 1 }) when qty < max, the checkbox's change calls update({ giftWrap: wrap.checked }), and the stitch box's input calls update({ stitch: stitch.value })."
+review: true

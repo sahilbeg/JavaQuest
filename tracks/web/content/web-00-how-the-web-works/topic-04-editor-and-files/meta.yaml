@@ -1,0 +1,22 @@
+id: web-00-how-the-web-works/topic-04-editor-and-files
+title: "VS Code, files and folders for a website"
+order: 4
+minutes: 10
+prerequisites: [web-00-how-the-web-works/topic-03-devtools]
+concepts: [code-editor, project-folder, file-extensions, index-html, relative-paths, file-names, terminal]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-0004
+  from: maya
+  title: "Set up your laptop for the Dhaaga site"
+  body: >
+    Time to get your laptop ready. Install VS Code, make a folder for the Dhaaga site, and learn how
+    its files find each other. Meera Aunty's nephew once named a photo "Coaster Photo FINAL.JPG" and the
+    live site lost it, so pay attention to the naming part.
+hints:
+  - "A website is a folder of files. index.html is the front door, and the other files sit next to it or in folders below it."
+  - "A path like images/coaster.jpg is read from the folder of the file that uses it: go into images, then find coaster.jpg."
+  - "Name files in lowercase with dashes and no spaces, like coaster-set.jpg. Capitals count on a server."
+review: true

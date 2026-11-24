@@ -1,0 +1,23 @@
+id: web-05-dom-and-events/mini-project
+title: "FEAT-05: The cart drawer"
+order: 100
+minutes: 15
+prerequisites: [web-05-dom-and-events/topic-10-state-and-render]
+concepts: [state-and-render, event-delegation, aria-expanded, focus-management, cart-maths]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: FEAT-05
+  from: priya
+  title: "A cart that slides out from the side"
+  body: >
+    Beta, customers keep asking "what's in my cart?" and scrolling all the way down to find out. Sana has drawn a
+    little drawer that slides out when you tap the cart button, with + and − next to each item and the total at the
+    bottom. Can we have it before the Diwali rush? The details are in the KB page.
+hints:
+  - "Start with the three plain functions: countItems adds up qty, cartTotal adds up price times qty, and changeQty returns a new array with one line changed, added or removed."
+  - "Keep { open, lines } in one state object and draw everything in render: the button's text and aria-expanded, drawer.hidden, the lines, the empty message and the total. Every handler only calls update."
+  - "Use one listener on #products for Add and one on #drawer-lines for + and −, with closest. Opening calls close.focus(); closing, by the button or by Escape in a keydown listener on the drawer, calls toggle.focus()."
+review: false

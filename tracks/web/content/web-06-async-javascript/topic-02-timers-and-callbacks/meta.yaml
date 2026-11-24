@@ -1,0 +1,23 @@
+id: web-06-async-javascript/topic-02-timers-and-callbacks
+title: "Timers and callbacks"
+order: 2
+minutes: 9
+prerequisites: [web-06-async-javascript/topic-01-sync-and-async]
+concepts: [set-timeout, clear-timeout, set-interval, clear-interval, timer-id, callbacks]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0602
+  from: sana
+  title: "The Added to cart message vanishes too soon"
+  body: >
+    When you add two things quickly, the second "Added to cart" message disappears after a second instead of three.
+    It looks like the first message's timer hides the second one. Also, the UPI QR on checkout needs a countdown,
+    so customers know it expires in five minutes. Both live in timers.js.
+hints:
+  - "setTimeout gives you back a timer id. Keep it in hideTimer, so the next toast can cancel it with clearTimeout before it starts its own."
+  - "For the countdown, use setInterval with 1000 ms. Each time it runs, take one off the seconds left, then decide: tick, or stop and finish?"
+  - "Inside the interval: left = left - 1; if (left > 0) onTick(left); else { clearInterval(id); onDone(); }. Return () => clearInterval(id) so the caller can stop it early."
+review: true

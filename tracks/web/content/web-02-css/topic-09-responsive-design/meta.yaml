@@ -1,0 +1,24 @@
+id: web-02-css/topic-09-responsive-design
+title: "Responsive design: phone first"
+order: 9
+minutes: 10
+prerequisites: [web-02-css/topic-08-grid]
+concepts: [viewport-meta, media-queries, min-width, mobile-first, breakpoints]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0209
+  from: sana
+  title: "The header and footer are cramped on my phone"
+  body: >
+    Most of our customers find us from a WhatsApp link, on their phones. On mine, the shop name and the nav fight for one line,
+    and the two shop timings in the footer squeeze side by side. Please design for the phone first:
+    stack things on small screens, and spread them out only when there's room.
+hints:
+  - "Write the phone styles first, with no media query. Then add an @media (min-width: 48rem) block for screens at least 48rem wide."
+  - "The header stacks with flex-direction: column on phones, and goes back to a row with space-between inside the media query. The footer's .places gets two columns only inside it."
+  - "Also check the page's <head>: without <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">, phones pretend to be 980px wide and shrink everything."
+review: true

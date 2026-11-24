@@ -1,0 +1,24 @@
+id: react-09-react-in-depth/topic-09-performance
+title: "Performance: memo, useMemo and useCallback"
+order: 9
+minutes: 10
+prerequisites: [react-09-react-in-depth/topic-08-refs]
+concepts: [why-rerender, memo, same-props, use-callback, use-memo]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0909
+  from: sam
+  title: "The catalogue freezes on an old phone"
+  body: >
+    Raju here. Mr. Pathak orders keychains for his whole office from a very old phone, and the catalogue
+    freezes for a moment every time he taps Add. Kavya ran the profiler: one tap draws every product row
+    again and sorts the whole price list again, even though only the cart count changed.
+hints:
+  - "Wrap ProductRow in memo(...) so it skips rendering when its props are the same as last time."
+  - "memo compares each prop with Object.is. A new arrow function every render is a new prop, so wrap handleAdd in useCallback with an empty array, and use the updater form setCount((c) => c + 1)."
+  - "Keep the sorted list with useMemo(() => sortByPrice(items, order), [items, order]), so it is worked out again only when items or order change."
+review: true

@@ -1,0 +1,24 @@
+id: web-02-css/topic-04-typography
+title: "Fonts and text"
+order: 4
+minutes: 9
+prerequisites: [web-02-css/topic-03-box-model]
+concepts: [font-family, font-stack, font-size-weight, line-height, text-styles]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0204
+  from: sana
+  title: "The text feels like a tax form"
+  body: >
+    The cards look great, but the words still feel like a tax form. Headings should feel handmade and warm,
+    like the labels Meera Aunty writes on the coaster boxes. Body text must be easy to read on a cheap phone in the sun.
+    I've written the font choices in the KB, so the text reads like Dhaaga.
+hints:
+  - "font-family takes a list. The browser uses the first font it has, so always end with a general family like serif or sans-serif."
+  - "line-height without a unit, like 1.5, means 1.5 times the text size. text-decoration: none removes the underline from links."
+  - "Try: body { font-family: system-ui, sans-serif; line-height: 1.5; } and h1, h2 { font-family: Georgia, serif; }"
+review: true

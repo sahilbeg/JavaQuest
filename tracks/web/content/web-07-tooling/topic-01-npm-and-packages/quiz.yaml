@@ -1,0 +1,131 @@
+topic: web-07-tooling/topic-01-npm-and-packages
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: npm
+    variants:
+      - { prompt: "What is npm?", choices: ["A tool that downloads JavaScript packages, and the public store they come from", "A browser for testing websites", "A Git command for sharing code", "The folder where Vite puts the finished site"], answer: 0 }
+      - { prompt: "What is a package?", choices: ["Published, reusable code with a name and a version", "A zip of your own project on a pen drive", "A single JavaScript function", "A Git branch someone else made"], answer: 0 }
+      - { prompt: "Where does npm come from on your laptop?", choices: ["It is installed together with Node.js", "It is built into every web browser", "It comes with Git", "It is part of VS Code"], answer: 0 }
+    explain: "npm comes with Node.js. It fetches packages, published code with a name and a version, from the npm registry."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: package-json
+    variants:
+      - { prompt: "What does package.json hold?", choices: ["The project's name, scripts and the packages it needs", "The code of every package you installed", "The exact version of every package, including hidden ones", "Your Git history"], answer: 0 }
+      - { prompt: "What does \"private\": true in package.json do?", choices: ["It stops the project from being published to the registry by mistake", "It hides the code from customers' browsers", "It makes the Git repository private", "It skips the lock file"], answer: 0 }
+      - { prompt: "What does \"type\": \"module\" in package.json tell Node?", choices: ["That .js files use import and export", "That the project is a React app", "That the package is a devDependency", "That tests run in a browser"], answer: 0 }
+    explain: "package.json is the project's ID card: name, version, settings, scripts and the list of packages it needs."
+    reteach: "### Syntax: starting a project"
+
+  - id: q03
+    type: mcq
+    concept: package-json
+    variants:
+      - { prompt: "Which package belongs in devDependencies?", choices: ["vitest, the test runner", "dayjs, used by the opening-hours code on the page", "react, which draws the shop's pages", "A library that formats prices in the browser"], answer: 0 }
+      - { prompt: "Which package belongs in dependencies?", choices: ["dayjs, which the page's opening-hours code runs in the browser", "vite, the dev server", "eslint, which checks your code", "prettier, which formats your code"], answer: 0 }
+      - { prompt: "Which command adds vite to devDependencies?", choices: ["npm install --save-dev vite", "npm install vite", "npm ci vite", "npm run vite"], answer: 0 }
+    explain: "dependencies run in the customer's browser. devDependencies are tools only developers use, added with --save-dev or -D."
+    reteach: "### Syntax: installing a package"
+
+  - id: q04
+    type: mcq
+    concept: semver-ranges
+    variants:
+      - { prompt: "package.json says \"dayjs\": \"^1.11.13\". Which version could npm install?", choices: ["1.19.0", "2.0.0", "1.11.12", "0.9.0"], answer: 0 }
+      - { prompt: "package.json says \"dayjs\": \"~1.11.13\". Which version could npm install?", choices: ["1.11.20", "1.12.0", "2.0.0", "1.10.9"], answer: 0 }
+      - { prompt: "package.json says \"lib\": \"^0.4.2\". Which version could npm install?", choices: ["0.4.9", "0.5.0", "1.0.0", "0.4.1"], answer: 0 }
+      - { prompt: "Which written version accepts only exactly 1.11.13?", choices: ["\"1.11.13\"", "\"^1.11.13\"", "\"~1.11.13\"", "\"*\""], answer: 0 }
+    explain: "^ allows newer minors and patches below the next major. ~ allows only newer patches. Under 1.0, ^ allows only patches. No symbol means exactly that version."
+    reteach: "### Version ranges: ^ and ~"
+
+  - id: q05
+    type: mcq
+    concept: semver-ranges
+    variants:
+      - { prompt: "A library goes from 3.2.1 to 4.0.0. What does semver say?", choices: ["Something old code relied on may have changed. Read the release notes.", "Only a bug was fixed", "A new feature was added and nothing breaks", "Nothing changed, only the date"], answer: 0 }
+      - { prompt: "A library goes from 3.2.1 to 3.2.2. What does semver say?", choices: ["A bug fix, with nothing new and nothing removed", "A breaking change", "A brand-new feature", "The library was renamed"], answer: 0 }
+    explain: "MAJOR goes up when old code might break, MINOR for new features, PATCH for bug fixes. It is a promise, so still run your tests."
+    reteach: "### Version ranges: ^ and ~"
+
+  - id: q06
+    type: mcq
+    concept: node-modules
+    variants:
+      - { prompt: "Why is node_modules never committed to Git?", choices: ["Anyone can rebuild it from package.json and the lock file", "Git cannot store JavaScript files", "It only holds secret keys", "npm deletes it after every commit"], answer: 0 }
+      - { prompt: "You fixed a bug inside node_modules/dayjs by hand. What happens next?", choices: ["The next install throws your change away", "npm publishes your fix to the registry", "Git commits the fix automatically", "dayjs updates its own version number"], answer: 0 }
+      - { prompt: "You installed three packages but node_modules has hundreds of folders. Why?", choices: ["Packages need packages, and npm fetches all of them", "npm downloads every package in the registry", "Each folder is a backup of a version", "Vite copies your files there"], answer: 0 }
+    explain: "node_modules holds every downloaded package, including the packages your packages need. It is rebuilt by an install, so never edit or commit it."
+    reteach: "### node_modules: where packages live"
+
+  - id: q07
+    type: fill-blank
+    concept: node-modules
+    goal: "A line in .gitignore that stops Git tracking the folder of downloaded packages."
+    prompt: "___/"
+    answers: ["node_modules"]
+    explain: "node_modules/ in .gitignore keeps the downloaded packages out of Git."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: mcq
+    concept: lock-file
+    variants:
+      - { prompt: "What does package-lock.json record?", choices: ["The exact version of every installed package, including hidden ones", "The ranges you are willing to accept", "Which files Git ignores", "Passwords for the npm registry"], answer: 0 }
+      - { prompt: "Why commit package-lock.json?", choices: ["So every laptop installs exactly the same versions", "So npm can publish the project", "Because Git refuses commits without it", "So node_modules does not need a .gitignore line"], answer: 0 }
+      - { prompt: "Tests pass on your laptop but fail on Sana's. She installed a month later with the same package.json. What was most likely missing?", choices: ["The committed lock file", "A node_modules folder in Git", "The scripts section", "The \"private\": true line"], answer: 0 }
+    explain: "package.json says which versions you accept. The lock file says exactly what you got. Committing it gives everyone the same code."
+    reteach: "### The lock file"
+
+  - id: q09
+    type: mcq
+    concept: lock-file
+    variants:
+      - { prompt: "What does npm ci do?", choices: ["Deletes node_modules and installs exactly what the lock file lists", "Updates every package to its newest version", "Adds a new package to package.json", "Commits node_modules to Git"], answer: 0 }
+      - { prompt: "package.json and package-lock.json disagree. What does npm ci do?", choices: ["It stops with an error", "It quietly rewrites the lock file", "It picks the newest version of everything", "It deletes package.json"], answer: 0 }
+      - { prompt: "When should you use npm install instead of npm ci?", choices: ["When you add, remove or update a package", "When a robot builds the project", "When you set up a fresh clone", "Never: npm install is the old name"], answer: 0 }
+    explain: "npm ci gives a clean, exact install from the lock file and never changes it. npm install is for changing what the project uses."
+    reteach: "### Syntax: npm ci"
+
+  - id: q10
+    type: order
+    concept: lock-file
+    prompt: "Sana has a new laptop. Put her steps to run dhaaga.in in order."
+    items:
+      - "Install Node.js"
+      - "git clone the repository"
+      - "npm ci"
+      - "npm run dev"
+    explain: "Node brings npm. Clone the code, install exactly what the lock file says, then start the dev server."
+    reteach: "## Worked example"
+
+  - id: q11
+    type: mcq
+    concept: npm-scripts
+    variants:
+      - { prompt: "scripts has \"build\": \"vite build\". Which command runs it?", choices: ["npm run build", "npm build", "npx build", "node build"], answer: 0 }
+      - { prompt: "Which script can you run without the word run?", choices: ["test", "build", "dev", "lint"], answer: 0 }
+      - { prompt: "Why put commands in scripts?", choices: ["Everyone runs the same command with a short name", "Scripts run faster than typed commands", "npm refuses commands outside scripts", "Scripts are hidden from Git"], answer: 0 }
+    explain: "npm run <name> runs a script from package.json. Only test and start work without run."
+    reteach: "### Syntax: running scripts"
+
+  - id: q12
+    type: spot-the-bug
+    concept: package-json
+    prompt: "This package.json is for dhaaga.in. Which line puts a package in the wrong list?"
+    code: |
+      {
+        "name": "dhaaga-web",
+        "private": true,
+        "dependencies": {
+          "vite": "^7.1.3",
+          "dayjs": "^1.11.13"
+        }
+      }
+    bugLine: 5
+    explain: "Vite is a tool for developers. It belongs in devDependencies. dayjs runs in the browser, so it stays in dependencies."
+    reteach: "## Common mistakes"

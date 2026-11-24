@@ -1,0 +1,23 @@
+id: web-03-javascript-basics/topic-04-booleans-and-comparison
+title: "Booleans and comparison: === and its friends"
+order: 4
+minutes: 9
+prerequisites: [web-03-javascript-basics/topic-03-strings]
+concepts: [booleans, comparison, strict-equality, truthy-falsy, null-and-undefined, typeof]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0304
+  from: maya
+  title: "Four yes-or-no questions for the checkout"
+  body: >
+    The new checkout needs a few yes-or-no answers before it can price an order. Is delivery free? Is this amount
+    whole paise? Did the customer type the quantity we expected? Is the gift note blank? Every function in
+    src/checks.js says false right now. Can you make them tell the truth?
+hints:
+  - "A comparison like subtotalPaise > 99900 already gives true or false, so you can return it straight away."
+  - "Number.isInteger(value) is true only for a whole number. It's false for text like \"15000\" and for 150.5."
+  - "Number(typed) turns \"2\" into 2, then compare it with ===. For the note, compare note.trim() with \"\"."
+review: true

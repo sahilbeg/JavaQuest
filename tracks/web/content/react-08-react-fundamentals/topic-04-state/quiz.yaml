@@ -1,0 +1,170 @@
+topic: react-08-react-fundamentals/topic-04-state
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: use-state
+    prompt: "A component has let qty = 1; and a + button that runs qty = qty + 1. Why does the page keep showing 1?"
+    choices:
+      - "React is not told about the change, and every render starts again at let qty = 1."
+      - "Buttons cannot change numbers in React."
+      - "qty must be a string to show on the page."
+      - "The browser caches the old number."
+    answer: 0
+    explain: "Local variables last for one render, and changing them does not ask React to re-render. State fixes both."
+    reteach: "### Why a plain variable is not enough"
+
+  - id: q02
+    type: fill-blank
+    concept: use-state
+    goal: "Ask React to remember a quantity that starts at 1, with a setter to change it."
+    prompt: "const [qty, setQty] = ___(1);"
+    answers: ["useState"]
+    explain: "useState gives back the current value and its setter. The 1 is the starting value."
+    reteach: "### Syntax: useState"
+
+  - id: q03
+    type: mcq
+    concept: use-state
+    prompt: "In const [saved, setSaved] = useState(false); what is false?"
+    choices:
+      - "The value saved has the first time the component renders"
+      - "The value saved has on every render"
+      - "A flag that turns the state off"
+      - "The value setSaved returns"
+    answer: 0
+    explain: "The argument to useState is only the starting value. After that, React remembers whatever you last set."
+    reteach: "### Syntax: useState"
+
+  - id: q04
+    type: mcq
+    concept: setter
+    prompt: "What does calling setQty(3) do?"
+    choices:
+      - "It stores 3 and asks React to re-render the component."
+      - "It changes the qty variable in the current render to 3."
+      - "It changes the page's HTML directly, without a render."
+      - "It only stores 3; you must call render yourself."
+    answer: 0
+    explain: "A setter stores the new value and schedules a re-render. The next render sees 3."
+    reteach: "### What happens when you call the setter"
+
+  - id: q05
+    type: spot-the-bug
+    concept: setter
+    prompt: "The first tap throws TypeError: Assignment to constant variable. Which line?"
+    code: |
+      function QuantityPicker() {
+        const [qty, setQty] = useState(1);
+        function handlePlus() {
+          qty = qty + 1;
+        }
+        return <button type="button" onClick={handlePlus}>{qty}</button>;
+      }
+    bugLine: 4
+    explain: "State only changes through its setter. Write setQty(qty + 1)."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: spot-the-bug
+    concept: re-render-on-set
+    prompt: "React stops with an error about too many re-renders. Which line causes it?"
+    code: |
+      function QuantityPicker() {
+        const [qty, setQty] = useState(1);
+        return (
+          <button type="button" onClick={setQty(qty + 1)}>
+            {qty}
+          </button>
+        );
+      }
+    bugLine: 4
+    explain: "setQty(qty + 1) runs during the render, which causes another render, forever. Pass a function: onClick={() => setQty(qty + 1)}."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: predict-output
+    concept: snapshot
+    code: |
+      let count = 0;
+      function render() {
+        const qty = count;
+        return function onClick() {
+          count = qty + 1;
+          console.log(qty);
+        };
+      }
+      const click = render();
+      click();
+      click();
+      console.log(count);
+    answer: "0\n0\n1"
+    explain: "Both clicks use the same snapshot, where qty is 0. So both log 0 and both set count to 0 + 1."
+    reteach: "### Each render is a snapshot"
+
+  - id: q08
+    type: mcq
+    concept: snapshot
+    prompt: "qty is 1. A handler runs setQty(qty + 1); and then console.log(qty);. What is logged?"
+    choices:
+      - "1"
+      - "2"
+      - "undefined"
+      - "It throws an error"
+    answer: 0
+    explain: "qty is this render's snapshot. The new value arrives in the next render."
+    reteach: "### Each render is a snapshot"
+
+  - id: q09
+    type: predict-output
+    concept: updater-function
+    code: |
+      let stored = 5;
+      let queue = [];
+      const setQty = (next) => queue.push(next);
+      const qty = stored;
+      setQty(qty + 1);
+      setQty((q) => q * 2);
+      for (const next of queue) {
+        stored = typeof next === "function" ? next(stored) : next;
+      }
+      console.log(stored);
+    answer: "12"
+    explain: "The first call sets 6. The updater gets the newest value, 6, and doubles it."
+    reteach: "### Syntax: the updater function"
+
+  - id: q10
+    type: mcq
+    concept: updater-function
+    prompt: "qty is 1. A handler calls setQty((q) => q + 1); twice. What does the next render show?"
+    choices:
+      - "3"
+      - "2"
+      - "1"
+      - "11"
+    answer: 0
+    explain: "Each updater gets the result of the one before: 1 becomes 2, then 3. Two setQty(qty + 1) calls would give only 2."
+    reteach: "### Syntax: the updater function"
+
+  - id: q11
+    type: fill-blank
+    concept: updater-function
+    goal: "Use the updater form to add one to the newest quantity, even when other updates are waiting."
+    prompt: "setQty((q) => ___);"
+    answers: ["q + 1", "q+1", "1 + q", "1+q"]
+    explain: "React passes the newest state as q. Return one more than it."
+    reteach: "### Syntax: the updater function"
+
+  - id: q12
+    type: mcq
+    concept: state-per-instance
+    prompt: "The page shows two QuantityPickers, one for Golu and one for the coaster set. You tap + on Golu's twice. What does the coaster set's picker show?"
+    choices:
+      - "1, its own starting value"
+      - "3, the same as Golu's"
+      - "2, half of Golu's taps"
+      - "Nothing until you tap it"
+    answer: 0
+    explain: "Each place a component appears gets its own state. Golu's taps change only Golu's qty."
+    reteach: "### State belongs to each copy"

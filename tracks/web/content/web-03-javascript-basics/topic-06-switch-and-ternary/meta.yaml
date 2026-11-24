@@ -1,0 +1,23 @@
+id: web-03-javascript-basics/topic-06-switch-and-ternary
+title: "switch and the ternary operator"
+order: 6
+minutes: 8
+prerequisites: [web-03-javascript-basics/topic-05-if-else]
+concepts: [switch, break, default-case, grouped-cases, ternary]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0306
+  from: maya
+  title: "Turn item codes into names and prices"
+  body: >
+    WhatsApp orders arrive as codes like AMI and BTY. The order screen needs the full name and the price for each
+    code, and it should say "1 item" or "3 items" properly. The weekend check needs redoing too. Can you fill in
+    src/items.js?
+hints:
+  - "Inside a switch, each case can return straight away, like case \"CST\": return 15000; so you don't need break."
+  - "Two cases can share one return: case \"Sat\": case \"Sun\": return true; and default: return false;"
+  - "For itemsText: return `${count} ${count === 1 ? \"item\" : \"items\"}`;"
+review: true

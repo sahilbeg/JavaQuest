@@ -1,0 +1,24 @@
+id: react-09-react-in-depth/topic-02-fetching-data
+title: "Fetching data in a component"
+order: 2
+minutes: 10
+prerequisites: [react-09-react-in-depth/topic-01-effects]
+concepts: [fetch-in-effect, async-in-effect, loading-error-data, refetch-on-change, ignore-stale]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0902
+  from: sam
+  title: "The order status page says Loading forever"
+  body: >
+    Raju here. Mrs. Deshpande ordered baby booties for her granddaughter, and she calls every day to ask
+    whether order-17 has shipped. We made her an order status page, but it only ever says "Loading order-17...".
+    Can it show what the server says, and a clear message when an order doesn't exist?
+hints:
+  - "Fetching is a side effect, so it goes in useEffect. Put an async function inside the effect and call it, because the effect itself can't be async."
+  - "Check res.ok before reading the JSON. Wrap the request in try/catch, and set the error text in the catch."
+  - "List [orderId] as the dependency. Start the effect with let ignore = false, only call setOrder when !ignore, and return () => { ignore = true; }."
+review: true

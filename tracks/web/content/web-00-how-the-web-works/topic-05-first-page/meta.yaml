@@ -1,0 +1,24 @@
+id: web-00-how-the-web-works/topic-05-first-page
+title: "Your first web page"
+order: 5
+minutes: 10
+prerequisites: [web-00-how-the-web-works/topic-04-editor-and-files]
+concepts: [doctype, html-head-body, meta-lines, title, headings, paragraphs, comments]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0005
+  from: sana
+  title: "A first page with Dhaaga's name on it"
+  body: >
+    Sana here. Before the full visiting card, let's get one real page working: the name in the browser tab,
+    the name as a big heading, and two short lines under it about what we make and where to find us.
+    Keep it plain. I'll add the colours later.
+hints:
+  - "The title goes inside <head>. Everything people see on the page goes inside <body>."
+  - "Each piece is an element: an opening tag, the text, and a closing tag with a slash, like <p>...</p>."
+  - "Inside <head>: <title>Dhaaga & Co.</title>. Inside <body>: <h1>Dhaaga & Co.</h1>, then two <p> paragraphs, one mentioning crochet and one mentioning FC Road."
+review: true

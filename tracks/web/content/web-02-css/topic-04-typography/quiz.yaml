@@ -1,0 +1,117 @@
+topic: web-02-css/topic-04-typography
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: font-family
+    prompt: "The rule is h1 { font-family: Georgia, serif; }. The phone has Georgia. Which font does the heading use?"
+    choices: ["Georgia", "The phone's serif font", "Both, mixed together", "The browser's default font"]
+    answer: 0
+    explain: "The browser uses the first font in the list that it can find. Georgia is there, so the rest of the list is never needed."
+    reteach: "### Syntax: font-family"
+
+  - id: q02
+    type: mcq
+    concept: font-stack
+    prompt: "A phone doesn't have Georgia. What happens with font-family: Georgia, serif;?"
+    choices: ["It uses the phone's serif font instead", "It shows an error message", "The text disappears", "It downloads Georgia automatically"]
+    answer: 0
+    explain: "A missing font is skipped quietly. The browser moves to the next name in the stack, the generic serif."
+    reteach: "### Font stacks and fallbacks"
+
+  - id: q03
+    type: mcq
+    concept: font-stack
+    prompt: "Which font stack is the safest?"
+    choices: ["\"Times New Roman\", Georgia, serif", "\"Times New Roman\", Georgia", "Georgia", "serif, Georgia"]
+    answer: 0
+    explain: "It lists the first choices in order and ends with a generic family every device has. Putting serif first would mean Georgia is never used."
+    reteach: "### Font stacks and fallbacks"
+
+  - id: q04
+    type: fill-blank
+    concept: font-stack
+    goal: "Use Arial if the phone has it, otherwise any clean font without feet."
+    prompt: "body { font-family: Arial, ___; }"
+    answers: ["sans-serif"]
+    explain: "sans-serif is the generic family for clean letters with no serifs. It is the safe last item."
+    reteach: "### Font stacks and fallbacks"
+
+  - id: q05
+    type: mcq
+    concept: font-size-weight
+    prompt: "Which font-weight is the same as bold?"
+    choices: ["700", "400", "100", "900"]
+    answer: 0
+    explain: "400 is normal and 700 is bold. The scale runs from 100 to 900."
+    reteach: "### Syntax: font-size and font-weight"
+
+  - id: q06
+    type: mcq
+    concept: line-height
+    prompt: "Text is 20px with line-height: 1.5;. How tall is each line?"
+    choices: ["30px", "1.5px", "20px", "21.5px"]
+    answer: 0
+    explain: "A unitless line-height multiplies the font size: 1.5 times 20 is 30."
+    reteach: "### Syntax: line-height"
+
+  - id: q07
+    type: spot-the-bug
+    concept: line-height
+    code: |
+      body {
+        font-family: system-ui, sans-serif;
+        line-height: 24px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+    bugLine: 3
+    explain: "A fixed 24px line is too short for the 32px heading, so its wrapped lines overlap. A plain number like 1.5 follows each element's size."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: text-styles
+    prompt: "Which property removes the underline from links?"
+    choices: ["text-decoration", "text-transform", "font-style", "letter-spacing"]
+    answer: 0
+    explain: "Underlines are a text decoration. text-decoration: none removes them."
+    reteach: "### Syntax: text styles"
+
+  - id: q09
+    type: fill-blank
+    concept: text-styles
+    goal: "Show every section title in capital letters, while the HTML keeps normal text."
+    prompt: "h2 { text-transform: ___; }"
+    answers: ["uppercase"]
+    explain: "text-transform: uppercase changes only how the text looks. The HTML and screen readers keep the normal words."
+    reteach: "### Syntax: text styles"
+
+  - id: q10
+    type: mcq
+    concept: text-styles
+    prompt: "A heading is 30px with letter-spacing: 0.1em;. How much space goes between letters?"
+    choices: ["3px", "1.6px", "0.1px", "30px"]
+    answer: 0
+    explain: "em is measured from the element's own font size: 0.1 times 30 is 3."
+    reteach: "### Syntax: the em unit"
+
+  - id: q11
+    type: mcq
+    concept: font-family
+    prompt: "You set font-family on body only. Why do the paragraphs inside change too?"
+    choices: ["Text properties like font-family are inherited by the elements inside", "body is a class selector", "Paragraphs copy the last rule in the file", "font-family always applies to the whole page, whatever the selector"]
+    answer: 0
+    explain: "Elements inherit text properties like font-family, color and line-height from the element around them."
+    reteach: "## Worked example"
+
+  - id: q12
+    type: mcq
+    concept: font-family
+    prompt: "Which declaration is written correctly?"
+    choices: ["font-family: \"Times New Roman\", serif;", "font-family: Times-New-Roman serif;", "font-family = Georgia, serif;", "font: family Georgia;"]
+    answer: 0
+    explain: "Fonts are separated by commas, and a name with spaces goes in quotes."
+    reteach: "### Syntax: font-family"

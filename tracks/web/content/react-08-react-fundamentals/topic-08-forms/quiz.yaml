@@ -1,0 +1,150 @@
+topic: react-08-react-fundamentals/topic-08-forms
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: controlled-inputs
+    prompt: "What makes an input controlled?"
+    choices:
+      - "Its value comes from state, and onChange stores every change back in state"
+      - "It has a label joined with htmlFor"
+      - "It sits inside a <form>"
+      - "It has the required attribute"
+    answer: 0
+    explain: "A controlled input shows state through value and updates state through onChange."
+    reteach: "### Controlled inputs: state holds the value"
+
+  - id: q02
+    type: fill-blank
+    concept: controlled-inputs
+    goal: "Store the text now in the name box each time the customer types."
+    prompt: "<input id=\"name\" value={name} onChange={(event) => setName(event.target.___)} />"
+    answers: ["value"]
+    explain: "event.target is the input, and its value is the text in it right now."
+    reteach: "### Syntax: a controlled text input"
+
+  - id: q03
+    type: spot-the-bug
+    concept: controlled-inputs
+    prompt: "Typing in this box does nothing, and the console warns about it. Which line?"
+    code: |
+      function PhoneField() {
+        const [phone, setPhone] = useState("");
+        return (
+          <input id="phone" type="tel" value={phone} />
+        );
+      }
+    bugLine: 4
+    explain: "A value with no onChange freezes the box. Add onChange={(event) => setPhone(event.target.value)}."
+    reteach: "## Common mistakes"
+
+  - id: q04
+    type: predict-output
+    concept: input-values-are-text
+    code: |
+      const fromInput = "3";
+      console.log(fromInput + 2);
+      console.log(Number(fromInput) + 2);
+    answer: "32\n5"
+    explain: "Input values are text, so + joins them. Number() turns the text into a number first."
+    reteach: "### Every input value is text"
+
+  - id: q05
+    type: mcq
+    concept: input-values-are-text
+    prompt: "Which onChange stores the chosen quantity as a number?"
+    choices:
+      - "onChange={(event) => setQty(Number(event.target.value))}"
+      - "onChange={(event) => setQty(event.target.value)}"
+      - "onChange={(event) => setQty(event.target.checked)}"
+      - "onChange={(event) => setQty(event.value)}"
+    answer: 0
+    explain: "event.target.value is always text. Number() turns it into a number before it goes into state."
+    reteach: "### Every input value is text"
+
+  - id: q06
+    type: mcq
+    concept: checkbox-checked
+    prompt: "Which attribute and event property does a controlled checkbox use?"
+    choices:
+      - "checked={giftWrap} and event.target.checked"
+      - "value={giftWrap} and event.target.value"
+      - "selected={giftWrap} and event.target.selected"
+      - "on={giftWrap} and event.target.on"
+    answer: 0
+    explain: "A checkbox is on or off, so it uses checked. event.target.value of a checkbox is the text \"on\"."
+    reteach: "### Syntax: a checkbox"
+
+  - id: q07
+    type: fill-blank
+    concept: checkbox-checked
+    goal: "Store true or false in giftWrap, depending on whether the box is ticked."
+    prompt: "onChange={(event) => setGiftWrap(event.target.___)}"
+    answers: ["checked"]
+    explain: "event.target.checked is true when the box is ticked and false when it is not."
+    reteach: "### Syntax: a checkbox"
+
+  - id: q08
+    type: mcq
+    concept: select-options
+    prompt: "<select value={code} onChange={(event) => setCode(event.target.value)}> has <option value=\"BAG\">Tote bag</option>. The customer picks Tote bag. What is stored in code?"
+    choices:
+      - "\"BAG\""
+      - "\"Tote bag\""
+      - "1"
+      - "The whole <option> element"
+    answer: 0
+    explain: "event.target.value of a select is the value of the chosen option, not its text."
+    reteach: "### Syntax: a select"
+
+  - id: q09
+    type: mcq
+    concept: form-submit
+    prompt: "Where should the order be sent from, so both the Place order button and the Enter key work?"
+    choices:
+      - "onSubmit on the <form>"
+      - "onClick on the button"
+      - "onKeyDown on every input"
+      - "onChange on the last input"
+    answer: 0
+    explain: "A form sends itself for a submit button and for Enter. onSubmit catches both."
+    reteach: "### Syntax: sending the form"
+
+  - id: q10
+    type: order
+    concept: form-submit
+    prompt: "Put the lines of the submit handler in order."
+    items:
+      - "function handleSubmit(event) {"
+      - "  event.preventDefault();"
+      - "  onSubmit({ name, phone, code, qty, giftWrap });"
+      - "}"
+    explain: "Stop the browser's page load first. Then hand over the order."
+    reteach: "### Syntax: sending the form"
+
+  - id: q11
+    type: mcq
+    concept: form-submit
+    prompt: "A customer taps Place order and the page reloads, losing everything typed. What is missing?"
+    choices:
+      - "event.preventDefault() in the submit handler"
+      - "event.stopPropagation() in the submit handler"
+      - "A key on the form"
+      - "type=\"button\" on every input"
+    answer: 0
+    explain: "Sending a form loads a new page by default. preventDefault stops that."
+    reteach: "### Syntax: sending the form"
+
+  - id: q12
+    type: mcq
+    concept: derived-values
+    prompt: "The form needs a total. What is the best way to keep it?"
+    choices:
+      - "Work it out from the fields' state during each render"
+      - "Keep it in its own state and update it in every onChange"
+      - "Read it from the page with document.querySelector"
+      - "Ask the customer to type it"
+    answer: 0
+    explain: "A derived value is worked out from state, so it can never disagree with the fields."
+    reteach: "### Work things out from state"

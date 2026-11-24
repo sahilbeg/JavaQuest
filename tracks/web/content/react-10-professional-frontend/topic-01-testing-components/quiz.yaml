@@ -1,0 +1,183 @@
+topic: react-10-professional-frontend/topic-01-testing-components
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: user-centred-tests
+    variants:
+      - prompt: "Which test is most like the way a customer uses the product card?"
+        choices:
+          - "Click the button named Add to cart, then check what onAdd received"
+          - "Read the component's quantity state and check it is 1"
+          - "Call the click handler function directly"
+          - "Check that the button has the class add-btn"
+        answer: 0
+      - prompt: "A teammate rewrites ProductCard completely, but customers see and do exactly the same things. What should happen to good tests?"
+        choices:
+          - "They all stay green"
+          - "They all fail, because the code changed"
+          - "Half of them fail"
+          - "They must be deleted and written again"
+        answer: 0
+    explain: "Tests that look at the screen and act like a person only fail when a customer would notice. Tests that read state or class names break on harmless rewrites and miss real bugs."
+    reteach: "### Why test like a user"
+
+  - id: q02
+    type: mcq
+    concept: user-centred-tests
+    prompt: "Which of these should a component test NOT check?"
+    choices:
+      - "That the internal quantity state equals 3"
+      - "That the select labelled Quantity shows 3"
+      - "That onAdd was called with DC-1042 and 3"
+      - "That Out of stock appears when stock is 0"
+    answer: 0
+    explain: "A customer never sees a state variable. They see the select and the cart. Checking state ties the test to how the code is written, not to what it does."
+    reteach: "### What not to test"
+
+  - id: q03
+    type: mcq
+    concept: queries-by-role
+    variants:
+      - prompt: "Which query should you try first for the Add to cart button?"
+        choices:
+          - "screen.getByRole(\"button\", { name: \"Add to cart\" })"
+          - "screen.getByTestId(\"add-button\")"
+          - "container.querySelector(\".add-btn\")"
+          - "screen.getByText(\"Add\")"
+        answer: 0
+      - prompt: "Why does finding a select with getByLabelText(\"Quantity\") make a test more useful?"
+        choices:
+          - "If the label is removed, the test fails, just as a screen reader user would be stuck"
+          - "It runs faster than every other query"
+          - "It works even when the select is not on the page"
+          - "It checks the select's CSS"
+        answer: 0
+    explain: "Query by role first, then by label, then by text. Test ids are a last resort, because no customer can see them. Role and label queries also prove the page is accessible."
+    reteach: "### Picking a query: role first"
+
+  - id: q04
+    type: fill-blank
+    concept: queries-by-role
+    goal: "Find the Add to cart button by what it is and its name, throwing an error at once if it is missing."
+    prompt: "const button = screen.___(\"button\", { name: \"Add to cart\" });"
+    answers: ["getByRole"]
+    explain: "getByRole finds an element by its role and accessible name, and throws when nothing matches. queryByRole would return null instead, and findByRole returns a promise."
+    reteach: "### Syntax: getBy, queryBy and findBy"
+
+  - id: q05
+    type: mcq
+    concept: query-variants
+    variants:
+      - prompt: "You want to check that the Quantity select is NOT shown for a sold-out item. Which query fits?"
+        choices:
+          - "queryByLabelText, because it returns null when nothing matches"
+          - "getByLabelText, because it throws when nothing matches"
+          - "findByLabelText, because it waits"
+          - "getAllByLabelText, because it returns a list"
+        answer: 0
+      - prompt: "The stock badge appears only after a fetch finishes. Which query fits?"
+        choices:
+          - "await screen.findByText(\"7 in stock\")"
+          - "screen.getByText(\"7 in stock\")"
+          - "screen.queryByText(\"7 in stock\")"
+          - "screen.getByTestId(\"stock\")"
+        answer: 0
+    explain: "getBy throws when something is missing, queryBy returns null (for checking absence), and findBy waits for something that appears later."
+    reteach: "### Syntax: getBy, queryBy and findBy"
+
+  - id: q06
+    type: spot-the-bug
+    concept: query-variants
+    prompt: "This test should pass when the select is hidden, but it crashes instead. Which line is wrong?"
+    code: |
+      it("hides the quantity for a sold-out item", () => {
+        render(<ProductCard product={{ ...golu, stock: 0 }} onAdd={vi.fn()} />);
+        expect(screen.getByLabelText("Quantity"), "no select when sold out").toBeNull();
+      });
+    bugLine: 3
+    explain: "getByLabelText throws when nothing matches, so the test crashes before expect can check for null. Use queryByLabelText, which returns null."
+    reteach: "### Syntax: getBy, queryBy and findBy"
+
+  - id: q07
+    type: spot-the-bug
+    concept: user-event
+    prompt: "The button works, but this test sometimes sees no call. Which line is the bug?"
+    code: |
+      it("adds one Golu", async () => {
+        const user = userEvent.setup();
+        const onAdd = vi.fn();
+        render(<ProductCard product={golu} onAdd={onAdd} />);
+        user.click(screen.getByRole("button", { name: "Add to cart" }));
+        expect(onAdd.mock.calls, "one Golu").toEqual([["DC-1042", 1]]);
+      });
+    bugLine: 5
+    explain: "Every userEvent action returns a promise. Without await, expect can run before the click has finished. Write await user.click(...)."
+    reteach: "### Syntax: userEvent"
+
+  - id: q08
+    type: mcq
+    concept: user-event
+    prompt: "Why prefer userEvent.click over fireEvent.click?"
+    choices:
+      - "userEvent fires the whole chain of events a real click fires, and won't click a disabled button"
+      - "fireEvent does not work in jsdom"
+      - "userEvent skips React, so it is faster"
+      - "fireEvent can only be used on links"
+    answer: 0
+    explain: "userEvent acts like a person: pointer down, mouse down, pointer up, mouse up, then click. fireEvent sends one event and can click things no person could."
+    reteach: "### Syntax: userEvent"
+
+  - id: q09
+    type: fill-blank
+    concept: mock-callbacks
+    goal: "Make a spy function that remembers every call, to pass to the card as its onAdd prop."
+    prompt: "const onAdd = vi.___();"
+    answers: ["fn"]
+    explain: "vi.fn() makes a mock function. Its mock.calls list holds the arguments of every call."
+    reteach: "### Checking callbacks with vi.fn"
+
+  - id: q10
+    type: predict-output
+    concept: mock-callbacks
+    prompt: "This is a home-made spy, like a tiny vi.fn. What does it print?"
+    code: |
+      function spy() {
+        const fn = (...args) => fn.calls.push(args);
+        fn.calls = [];
+        return fn;
+      }
+      const onAdd = spy();
+      onAdd("DC-1042", 1);
+      onAdd("DC-1042", 3);
+      console.log(onAdd.calls.length + " " + onAdd.calls[1][1]);
+    answer: "2 3"
+    explain: "Each call pushes its arguments as one entry. There are 2 entries, and the second entry's second argument is 3. vi.fn's mock.calls works the same way."
+    reteach: "### Checking callbacks with vi.fn"
+
+  - id: q11
+    type: mcq
+    concept: mock-callbacks
+    prompt: "Which check catches a card that calls onAdd twice on one click?"
+    choices:
+      - "expect(onAdd.mock.calls, \"one call\").toEqual([[\"DC-1042\", 1]])"
+      - "expect(onAdd.mock.calls.length > 0, \"called\").toBe(true)"
+      - "expect(onAdd.mock.calls[0][0], \"right id\").toBe(\"DC-1042\")"
+      - "expect(typeof onAdd, \"a function\").toBe(\"function\")"
+    answer: 0
+    explain: "Comparing the whole list catches an extra call, a missing call and a wrong argument. The other checks would all pass with two calls."
+    reteach: "### Checking callbacks with vi.fn"
+
+  - id: q12
+    type: predict-output
+    concept: tests-that-catch-bugs
+    prompt: "A check is run on the real total and on a broken copy. What does it print?"
+    code: |
+      const real = (qty) => qty * 45000;
+      const broken = (qty) => qty * 45000 + (qty > 1 ? 1 : 0);
+      const check = (total) => total(1) === 45000;
+      console.log(check(real), check(broken));
+    answer: "true true"
+    explain: "The bug only shows for 2 or more, and the check only tries 1. Both copies pass, so the check misses the bug. Testing with qty 2 would catch it."
+    reteach: "### Would it fail if the code were wrong?"

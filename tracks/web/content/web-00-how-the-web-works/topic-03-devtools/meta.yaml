@@ -1,0 +1,22 @@
+id: web-00-how-the-web-works/topic-03-devtools
+title: "The browser's DevTools: Elements, Console and Network"
+order: 3
+minutes: 10
+prerequisites: [web-00-how-the-web-works/topic-02-html-css-js]
+concepts: [open-devtools, elements-panel, console-panel, network-panel, device-mode]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-0003
+  from: sam
+  title: "The coaster photo won't show on the test page"
+  body: >
+    Raju here. Mrs. Deshpande opened our test page and says the coaster photo is just a little broken icon.
+    It's the same on my phone. Kavya says every browser has a hidden toolbox that shows why.
+    Can you learn to use it and tell me what's wrong?
+hints:
+  - "Open the toolbox with Cmd+Option+I on a Mac, or F12 on Windows. Right-click and Inspect works too."
+  - "Elements shows the page's HTML. Console shows messages and errors. Network shows every request and its status."
+  - "A broken image is usually a 404 in the Network panel. Compare the file name asked for with the real file name."
+review: true

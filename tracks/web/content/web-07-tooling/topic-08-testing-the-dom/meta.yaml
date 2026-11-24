@@ -1,0 +1,23 @@
+id: web-07-tooling/topic-08-testing-the-dom
+title: "Testing the page"
+order: 8
+minutes: 10
+prerequisites: [web-07-tooling/topic-07-unit-tests]
+concepts: [jsdom, before-each, dom-queries, simulating-events, mock-functions]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0708
+  from: sana
+  title: "The sold-out button keeps coming back"
+  body: >
+    Twice now, a change to the product card brought back the Add to cart button on sold-out items, and
+    a customer paid for baby booties we didn't have. Kavya says the card needs checks that click it the
+    way a customer does. Can you rebuild the card so those checks pass?
+hints:
+  - "Read test/productCard.test.js first. Each test sets up an empty #shelf, draws a card into it, then looks inside with querySelector."
+  - "Build each part with document.createElement and set its text with textContent. Give the price and stock paragraphs the classes price and stock."
+  - "Set button.disabled = product.stock === 0, add a click listener that calls onAdd(product.id), and finish with container.replaceChildren(article)."
+review: true

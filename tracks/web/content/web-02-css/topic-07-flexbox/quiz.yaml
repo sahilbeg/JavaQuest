@@ -1,0 +1,118 @@
+topic: web-02-css/topic-07-flexbox
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: flex-container
+    prompt: "To line up the product cards (<li class=\"product\">) in a row, which element gets display: flex?"
+    choices: ["The <ul class=\"products\"> around them", "Each <li class=\"product\">", "The <h3> inside each card", "The <body>"]
+    answer: 0
+    explain: "display: flex goes on the parent. Its direct children, the cards, become flex items and line up."
+    reteach: "### Flex containers and flex items"
+
+  - id: q02
+    type: mcq
+    concept: flex-container
+    prompt: "display: flex is on .products. Does the <h3> inside each card become a flex item?"
+    choices: ["No, only the direct children of .products are flex items", "Yes, every element inside becomes a flex item", "Only if it has a class", "Only the first <h3>"]
+    answer: 0
+    explain: "Only direct children are flex items. Grandchildren are laid out by their own parent."
+    reteach: "### Flex containers and flex items"
+
+  - id: q03
+    type: mcq
+    concept: main-axis
+    prompt: "A container has flex-direction: column. Which way does the main axis run?"
+    choices: ["Top to bottom", "Left to right", "Right to left", "Diagonally"]
+    answer: 0
+    explain: "column turns the main axis on its side, so items stack from top to bottom."
+    reteach: "### The two axes"
+
+  - id: q04
+    type: fill-blank
+    concept: justify-content
+    goal: "Push the brand to the far left of the header and the nav to the far right."
+    prompt: ".site-header { display: flex; justify-content: ___; }"
+    answers: ["space-between"]
+    explain: "space-between puts the first item at the start, the last at the end, and shares the rest as gaps between them."
+    reteach: "### Syntax: justify-content"
+
+  - id: q05
+    type: mcq
+    concept: align-items
+    prompt: "In a flex row, the brand is taller than the nav. Which line centres them up and down?"
+    choices: ["align-items: center;", "justify-content: center;", "text-align: center;", "flex-wrap: center;"]
+    answer: 0
+    explain: "In a row, up and down is the cross axis. align-items works across the main axis."
+    reteach: "### Syntax: align-items"
+
+  - id: q06
+    type: mcq
+    concept: justify-content
+    prompt: "Which property spreads items along the main axis?"
+    choices: ["justify-content", "align-items", "flex-wrap", "gap"]
+    answer: 0
+    explain: "justify works along the main axis, the way the items flow. align works across it."
+    reteach: "### Syntax: justify-content"
+
+  - id: q07
+    type: mcq
+    concept: flex-wrap
+    prompt: "On a phone, five cards squeeze into one row, each a few words wide. What's missing?"
+    choices: ["flex-wrap: wrap;", "flex-direction: row;", "align-items: stretch;", "display: block;"]
+    answer: 0
+    explain: "Flex items stay on one line by default. flex-wrap: wrap lets them move to a new row."
+    reteach: "### Syntax: flex-wrap"
+
+  - id: q08
+    type: mcq
+    concept: gap
+    prompt: "Why is gap: 1rem on the container better than margin-right: 1rem on every card?"
+    choices: ["gap only adds space between items, so the last card in a row gets no extra space", "gap makes cards bigger", "margin doesn't work in flexbox", "gap also adds a border"]
+    answer: 0
+    explain: "A margin on every card also pushes the last card away from the edge. gap only goes between items."
+    reteach: "### Syntax: gap"
+
+  - id: q09
+    type: mcq
+    concept: flex-grow
+    prompt: "What does flex: 1 1 14rem mean on a card?"
+    choices: ["Start at 14rem, and grow or shrink to fill the row", "Exactly 14rem wide, never more or less", "14 cards per row", "1rem margin and a 14rem gap"]
+    answer: 0
+    explain: "The three values are grow, shrink and basis. 1 means yes for grow and shrink, and 14rem is the starting size."
+    reteach: "### Syntax: the flex shorthand"
+
+  - id: q10
+    type: predict-output
+    concept: flex-grow
+    code: |
+      const row = 500;
+      const basis = 100;
+      const cards = 4;
+      const spare = row - basis * cards;
+      console.log(basis + spare / cards);
+    answer: "125"
+    explain: "Four cards use 400px, leaving 100px spare. With equal grow, each card gets 25px more: 125px."
+    reteach: "### Syntax: the flex shorthand"
+
+  - id: q11
+    type: spot-the-bug
+    concept: justify-content
+    code: |
+      .site-header {
+        display: flex;
+        align-items: space-between;
+      }
+    bugLine: 3
+    explain: "space-between isn't a value for align-items, so the line is dropped. Spreading along the row is justify-content's job."
+    reteach: "## Common mistakes"
+
+  - id: q12
+    type: mcq
+    concept: align-items
+    prompt: "Each card is a column flex container. How do you push its Order button to the bottom of the card?"
+    choices: [".buy { margin-top: auto; }", ".buy { position: bottom; }", ".buy { justify-content: flex-end; }", ".buy { align-items: bottom; }"]
+    answer: 0
+    explain: "An auto margin in a flex container soaks up the spare space. In a column, margin-top: auto pushes the item down."
+    reteach: "### Pushing one item away with auto margins"

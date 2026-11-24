@@ -1,0 +1,6 @@
+id: react-10-professional-frontend
+title: Professional frontend
+project: Launch day
+summary: Ship dhaaga.in like a professional. Test components the way customers use them, make every screen work with a keyboard and a screen reader, load fast, render customer text safely, get found and shared, deploy, review code, find your way in a big codebase, and pass the frontend interview loop.
+unlockAfter: react-09-react-in-depth/boss
+mascotIntro: "The store works. Now let's make it fast, safe, kind to every customer, and ready for launch day."

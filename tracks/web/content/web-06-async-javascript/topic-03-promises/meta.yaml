@@ -1,0 +1,23 @@
+id: web-06-async-javascript/topic-03-promises
+title: "Promises"
+order: 3
+minutes: 10
+prerequisites: [web-06-async-javascript/topic-02-timers-and-callbacks]
+concepts: [promise-states, then, catch, finally, chaining, new-promise, microtasks]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0603
+  from: sam
+  title: "The QR popup stays open after a failed UPI payment"
+  body: >
+    Raju here. A college student tried to pay ₹450 for Golu by UPI on Saturday, and her bank app crashed.
+    Our checkout just kept showing the QR, with no message at all. She waited five minutes and then walked off.
+    When a payment fails, the screen should say so and close the QR. Kavya says the fix goes in payment.js.
+hints:
+  - "A promise ends in one of two ways. then handles a success, catch handles a failure, and finally runs after either."
+  - "wait(ms) wraps setTimeout: return new Promise((resolve) => setTimeout(resolve, ms)). For paymentMessage, return payment.then(...).catch(...), and make each callback return the text."
+  - "closeQrWhenSettled is one line: return payment.finally(closeQr). finally doesn't change the result, so the success or the failure passes straight through."
+review: true

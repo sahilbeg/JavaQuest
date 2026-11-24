@@ -1,0 +1,109 @@
+topic: web-01-html/topic-02-text-and-headings
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: headings
+    prompt: "How many h1 elements should Dhaaga's catalogue page have?"
+    choices: ["Exactly one, for the page's name", "One for every part of the page", "None: h1 is too big", "As many as you like"]
+    answer: 0
+    explain: "The h1 names the whole page, so there is one. Each part of the page gets an h2."
+    reteach: "### Syntax: headings"
+
+  - id: q02
+    type: mcq
+    concept: headings
+    prompt: "You want a small title, so you use an h5 straight under the h1. What's the better way?"
+    choices: ["Use the level the outline needs, an h2, and make it smaller with CSS later", "Keep the h5, because it is the right size", "Use a bold paragraph instead of a heading", "Use an h1, then shrink it"]
+    answer: 0
+    explain: "Heading levels describe the outline. Size is a job for CSS."
+    reteach: "### Choose headings by meaning, not size"
+
+  - id: q03
+    type: spot-the-bug
+    concept: heading-order
+    prompt: "Which line skips a heading level?"
+    code: |
+      <h1>Dhaaga &amp; Co.</h1>
+      <h2>Catalogue</h2>
+      <h4>New this week</h4>
+      <p>Golu is back, in Rani pink.</p>
+    bugLine: 3
+    explain: "Under an h2, the next level is h3. An h4 here leaves a hole in the outline."
+    reteach: "### Syntax: heading order"
+
+  - id: q04
+    type: order
+    concept: heading-order
+    prompt: "Put the headings in a correct outline, from the top of the page down."
+    items:
+      - "<h1>Dhaaga &amp; Co.</h1>"
+      - "<h2>Catalogue</h2>"
+      - "<h3>New this week</h3>"
+      - "<h2>Price list</h2>"
+    explain: "One h1 first, then a big part (h2), a part inside it (h3), and then the next big part (h2)."
+    reteach: "### Syntax: heading order"
+
+  - id: q05
+    type: mcq
+    concept: heading-order
+    prompt: "After an h3, which heading can start the next big part of the page?"
+    choices: ["An h2", "Only another h3", "Only an h4", "An h1"]
+    answer: 0
+    explain: "Going down skips no levels, but going back up is fine. A new big part starts with an h2."
+    reteach: "### Syntax: heading order"
+
+  - id: q06
+    type: mcq
+    concept: paragraphs
+    prompt: "In your file, a paragraph's text is split over two lines with Enter. What does the page show?"
+    choices: ["One line, with a space where you pressed Enter", "Two lines", "Two paragraphs", "Nothing, because it's an error"]
+    answer: 0
+    explain: "Every run of spaces and new lines counts as one space. Use <br> or two p elements for a real break."
+    reteach: "### Syntax: paragraphs and line breaks"
+
+  - id: q07
+    type: fill-blank
+    concept: paragraphs
+    goal: "Put the stall's hours on a new line, inside the same paragraph."
+    prompt: "<p>Stall: FC Road___Saturday and Sunday, 10:00 to 20:00</p>"
+    answers: ["<br>", "<br/>", "<br />"]
+    explain: "<br> breaks a line inside a paragraph. It's a void element, so it has no closing tag."
+    reteach: "### Syntax: paragraphs and line breaks"
+
+  - id: q08
+    type: mcq
+    concept: emphasis
+    prompt: "Which element marks words as important, like a warning that orders close on Friday?"
+    choices: ["strong", "em", "br", "h6"]
+    answer: 0
+    explain: "strong means important, and browsers show it in bold. em is for stress on a word."
+    reteach: "### Syntax: strong and em"
+
+  - id: q09
+    type: mcq
+    concept: emphasis
+    prompt: "\"I asked for Mint, not Marigold.\" Which element fits the stressed word Mint?"
+    choices: ["em", "strong", "h3", "p"]
+    answer: 0
+    explain: "em marks the stress you'd put on a word when saying it out loud."
+    reteach: "### Syntax: strong and em"
+
+  - id: q10
+    type: fill-blank
+    concept: entities
+    goal: "Show the shop's name with a plain ampersand sign between the two words."
+    prompt: "<h1>Dhaaga ___ Co.</h1>"
+    answers: ["&amp;"]
+    explain: "& starts a character reference, so you write a plain ampersand as &amp;."
+    reteach: "### Syntax: character references"
+
+  - id: q11
+    type: mcq
+    concept: entities
+    prompt: "<p>Use the code <GOLU> at the stall.</p> shows \"Use the code at the stall.\" Why?"
+    choices: ["The browser read <GOLU> as a tag, so the word isn't shown", "GOLU is a secret word in HTML", "The page needs a bigger font", "Capital letters are not allowed in a p"]
+    answer: 0
+    explain: "< starts a tag. Write &lt;GOLU&gt; to show the angle brackets and the word as text."
+    reteach: "### Syntax: character references"

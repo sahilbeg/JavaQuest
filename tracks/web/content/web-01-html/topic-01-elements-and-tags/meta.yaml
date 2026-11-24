@@ -1,0 +1,24 @@
+id: web-01-html/topic-01-elements-and-tags
+title: "Elements, tags and attributes"
+order: 1
+minutes: 8
+prerequisites: [web-00-how-the-web-works/boss]
+concepts: [elements-and-tags, attributes, nesting, void-elements]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0101
+  from: sana
+  title: "The welcome text is one long jumble"
+  body: >
+    I typed the welcome words for the new catalogue page, but the tagline isn't wrapped in anything,
+    and the screen reader on Raju's phone reads the page in the wrong accent. The bold on Meera
+    Aunty's name is closed in the wrong place, and I'd like a line under the welcome. Could you tidy the tags?
+hints:
+  - "Each fix is one small change: an attribute, a pair of tags, one new element, and moving one closing tag."
+  - "Attributes go inside the opening tag, like <html lang=\"en\">. A class works the same way: <p class=\"tagline\">."
+  - "<hr> has no closing tag. For the last line, the element opened last closes first: ...<strong>Meera Aunty</strong>.</p>"
+review: true

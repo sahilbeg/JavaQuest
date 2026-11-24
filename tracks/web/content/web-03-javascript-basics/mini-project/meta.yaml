@@ -1,0 +1,23 @@
+id: web-03-javascript-basics/mini-project
+title: "FEAT-03: The price and delivery calculator"
+order: 100
+minutes: 15
+prerequisites: [web-03-javascript-basics/topic-11-formatting-money]
+concepts: [functions, objects, loops, if-else, formatting]
+practice:
+  kind: code
+  runner: vitest
+  mainClass: main.js
+ticket:
+  key: FEAT-03
+  from: priya
+  title: "Tell customers the full price before they pay"
+  body: >
+    On WhatsApp, every customer asks me the same things. How much with gift wrap? Is delivery free? Do I get the
+    Diwali offer? I work it all out by hand on a calculator. Can the computer write me a neat quote, with every
+    item, the extras, delivery, the offer and the total, that I can paste straight into the chat?
+hints:
+  - "Build it from the bottom up: formatRupees, itemsTotal and extrasTotal first. A missing giftWrap or name is undefined, which is falsy."
+  - "quote calls the smaller functions: subtotal = items + extras. Discount and delivery both look at the subtotal, and total = subtotal - discount + delivery."
+  - "For receipt, push each row into an array, add the Diwali row only when the discount is above 0, and finish with rows.join(\"\\n\")."
+review: false

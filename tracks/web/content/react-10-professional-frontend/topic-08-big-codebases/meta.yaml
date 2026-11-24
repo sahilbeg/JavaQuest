@@ -1,0 +1,23 @@
+id: react-10-professional-frontend/topic-08-big-codebases
+title: "Finding your way in a big frontend codebase"
+order: 8
+minutes: 10
+prerequisites: [react-10-professional-frontend/topic-07-code-reviews]
+concepts: [first-map, entry-and-routes, following-a-feature, search-tools, react-devtools, git-history, shared-components, asking-and-first-changes]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-1008
+  from: maya
+  title: "Change one badge in a 400-file codebase"
+  body: >
+    The store has grown to about 400 files, and last week we merged in the admin app an agency built for us.
+    Raju wants pre-order items to say "Back after Diwali" instead of "Out of stock" on the catalogue, and nowhere else.
+    It's a one-line change once you find the right line. Finding it is the real ticket.
+    Have a look at how to find your way around before you touch anything.
+hints:
+  - "Don't read everything. Start from package.json's scripts, then index.html, main.jsx and the routes, and draw a rough map."
+  - "Search for the words the customer sees. If they're in a translation file, search again for the key, then for the component that uses it."
+  - "Before changing a shared component, find every place that uses it. A badge used by the admin app too needs a new prop, not a new default."
+review: true

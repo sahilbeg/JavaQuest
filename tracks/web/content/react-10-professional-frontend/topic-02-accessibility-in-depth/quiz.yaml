@@ -1,0 +1,197 @@
+topic: react-10-professional-frontend/topic-02-accessibility-in-depth
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: keyboard-access
+    variants:
+      - prompt: "What is focus?"
+        choices:
+          - "The one element that keyboard keys go to right now"
+          - "The element the mouse is hovering over"
+          - "The biggest heading on the page"
+          - "The element with the brightest colour"
+        answer: 0
+      - prompt: "Which customers depend on every action working with the keyboard alone?"
+        choices:
+          - "Screen reader users, people with motor difficulties, and people who simply prefer the keyboard"
+          - "Only blind customers"
+          - "Only customers on old computers"
+          - "Nobody: everyone has a mouse or a touch screen"
+        answer: 0
+    explain: "Screen reader users, switch and voice users, and keyboard fans all move with focus. If Tab can't reach a control, it doesn't exist for them."
+    reteach: "### Who uses the keyboard"
+
+  - id: q02
+    type: mcq
+    concept: native-elements
+    variants:
+      - prompt: "What does a real <button> give you that a <div onClick> does not?"
+        choices:
+          - "Tab stops on it, Enter and Space press it, and a screen reader says it is a button"
+          - "A blue border"
+          - "Faster clicks"
+          - "Nothing: they behave the same"
+        answer: 0
+      - prompt: "You add role=\"button\" to a <div onClick>. What still doesn't work?"
+        choices:
+          - "Tab still skips it, and Enter and Space still do nothing"
+          - "The screen reader still does not say button"
+          - "Mouse clicks stop working"
+          - "Everything works now, exactly like a <button>"
+        answer: 0
+    explain: "ARIA only changes what is announced. A <button> brings focus, keyboard pressing and its role with it. That is the first rule of ARIA: use the native element when one exists."
+    reteach: "### The first rule of ARIA"
+
+  - id: q03
+    type: mcq
+    concept: keyboard-access
+    variants:
+      - prompt: "Which tabIndex lets code call .focus() on a heading, while Tab still skips it?"
+        choices: ["-1", "0", "1", "100"]
+        answer: 0
+      - prompt: "Why should you avoid tabIndex values of 1 or more?"
+        choices:
+          - "They make Tab visit those elements before everything else, scrambling the order"
+          - "They make the element invisible"
+          - "React refuses to render them"
+          - "They disable the element"
+        answer: 0
+    explain: "0 puts an element in the normal Tab order, -1 removes it from Tab but allows .focus(), and positive values jump the queue, which confuses everyone."
+    reteach: "### Syntax: tabIndex"
+
+  - id: q04
+    type: predict-output
+    concept: keyboard-access
+    prompt: "This program puts elements in the order Tab visits them. What does it print?"
+    code: |
+      const els = [
+        { name: "Logo", tabIndex: 0 },
+        { name: "Banner", tabIndex: 2 },
+        { name: "Search", tabIndex: 0 },
+        { name: "Card", tabIndex: -1 },
+      ];
+      const first = els.filter((e) => e.tabIndex > 0).map((e) => e.name);
+      const rest = els.filter((e) => e.tabIndex === 0).map((e) => e.name);
+      console.log([...first, ...rest].join(","));
+    answer: "Banner,Logo,Search"
+    explain: "Positive tabIndex goes first, then tabIndex 0 in page order. -1 is skipped. That is why the banner jumps ahead of the logo."
+    reteach: "### Syntax: tabIndex"
+
+  - id: q05
+    type: mcq
+    concept: keyboard-access
+    prompt: "A designer wants no focus ring after mouse clicks. What is the best answer?"
+    choices:
+      - "Style :focus-visible, which shows the ring for keyboard focus but usually not after a click"
+      - "button:focus { outline: none; }"
+      - "Remove every button's tabIndex"
+      - "Make the ring the same colour as the background"
+    answer: 0
+    explain: "Removing the outline leaves keyboard users lost. :focus-visible keeps the ring for them and hides it for most mouse clicks."
+    reteach: "### Focus you can see"
+
+  - id: q06
+    type: fill-blank
+    concept: aria-attributes
+    goal: "Tell a screen reader whether this button's answer panel is open or closed right now."
+    prompt: "<button type=\"button\" aria-___={open} aria-controls={panelId}>Delivery and returns</button>"
+    answers: ["expanded"]
+    explain: "aria-expanded says whether the panel a button controls is open. Together with aria-controls, it makes the disclosure pattern."
+    reteach: "### The disclosure pattern"
+
+  - id: q07
+    type: spot-the-bug
+    concept: native-elements
+    prompt: "This size guide opens with a mouse but not with a keyboard. Which line causes it?"
+    code: |
+      export function SizeGuide() {
+        const [open, setOpen] = useState(false);
+        return (
+          <section>
+            <div className="title" onClick={() => setOpen(!open)}>Size guide</div>
+            <div id="size-panel" hidden={!open}>Booties fit 0 to 6 months.</div>
+          </section>
+        );
+      }
+    bugLine: 5
+    explain: "A div can't take focus or be pressed with Enter or Space. Make the title a <button type=\"button\"> with aria-expanded and aria-controls=\"size-panel\"."
+    reteach: "### Native elements do the work"
+
+  - id: q08
+    type: mcq
+    concept: accessible-names
+    variants:
+      - prompt: "A cart has three Remove buttons. What should each one's accessible name be?"
+        choices:
+          - "\"Remove Golu the elephant\", and so on, naming each item"
+          - "\"Remove\" for all three"
+          - "\"Button 1\", \"Button 2\" and \"Button 3\""
+          - "No name, since the item is shown next to it"
+        answer: 0
+      - prompt: "Where does a modal dialog usually get its accessible name from?"
+        choices:
+          - "Its own heading, linked with aria-labelledby"
+          - "Its CSS class"
+          - "The page title"
+          - "It doesn't need a name"
+        answer: 0
+    explain: "A screen reader user often hears controls out of their visual context. aria-label can name a button fully, and aria-labelledby points at visible text such as a heading."
+    reteach: "### Accessible names: aria-label and aria-labelledby"
+
+  - id: q09
+    type: order
+    concept: focus-management
+    prompt: "Put what happens to focus during a Remove dialog in order."
+    items:
+      - "Focus is on the Remove button, and the customer presses Enter"
+      - "The dialog opens and focus moves to Cancel"
+      - "Tab moves between the dialog's buttons only"
+      - "The customer presses Escape and the dialog closes"
+      - "Focus goes back to the Remove button"
+    explain: "Focus moves in when the dialog opens, stays inside while it is open, and returns to the opener when it closes."
+    reteach: "### Dialogs: focus in, focus out"
+
+  - id: q10
+    type: fill-blank
+    concept: focus-management
+    goal: "Move the keyboard's attention onto the Cancel button as soon as the dialog has opened."
+    prompt: "useEffect(() => { if (open) cancelRef.current.___(); }, [open]);"
+    answers: ["focus"]
+    explain: "The Cancel button only exists after the dialog renders, so an effect calls .focus() on it through its ref."
+    reteach: "### Syntax: moving focus with a ref"
+
+  - id: q11
+    type: mcq
+    concept: focus-management
+    prompt: "A dialog closes but nothing calls focus() on the opener. What does a keyboard user experience?"
+    choices:
+      - "Focus falls back to the top of the page, and they must Tab all the way back to the cart"
+      - "Nothing different: browsers always return focus"
+      - "The dialog opens again"
+      - "The page reloads"
+    answer: 0
+    explain: "Without returning focus, the customer loses their place. Keep a ref to the opener and focus it when the dialog closes."
+    reteach: "### Dialogs: focus in, focus out"
+
+  - id: q12
+    type: mcq
+    concept: live-regions
+    variants:
+      - prompt: "The header's cart count changes when a customer adds Golu. How can a screen reader user hear it without moving focus?"
+        choices:
+          - "Put the message in an element with role=\"status\" that is on the page from the start"
+          - "Give the count tabIndex={0}"
+          - "Show an alert() box"
+          - "Make the count bigger"
+        answer: 0
+      - prompt: "When should you use role=\"alert\" instead of role=\"status\"?"
+        choices:
+          - "For errors that must interrupt, because alert is read out at once"
+          - "For every message, because it is louder"
+          - "For headings"
+          - "Never: they are the same"
+        answer: 0
+    explain: "A live region reads out changes to its text. role=\"status\" waits politely; role=\"alert\" interrupts, so keep it for errors."
+    reteach: "### Announcing changes: live regions"

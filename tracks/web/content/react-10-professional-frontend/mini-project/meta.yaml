@@ -1,0 +1,24 @@
+id: react-10-professional-frontend/mini-project
+title: "CAPSTONE: Launch the dhaaga.in online store"
+order: 100
+minutes: 15
+prerequisites: [react-10-professional-frontend/topic-09-interviews]
+concepts: [pricing-rules, search-and-filters, cart-reducer, checkout-steps, accessible-layout, end-to-end-tests]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: CAPSTONE
+  from: priya
+  title: "dhaaga.in opens on Friday"
+  body: >
+    Beta, this is the big one. On Friday at 10:00 I post the link on Instagram, and dhaaga.in opens to the whole of India.
+    People must find Golu quickly, see the right price with the Diwali offer and free delivery, and pay by UPI without any confusion.
+    My friend Mrs. Bhosale will try it with her screen reader, so it must work for her too.
+    Make it simple, make it work, and make me proud.
+hints:
+  - "Go stage by stage, and run the checks after each one. Stage 1 is one reduce for the subtotal, Math.floor(subtotal / 10) for the offer, and one condition for delivery: free when the cart is empty or the total after the offer is above 99900."
+  - "Stages 2 and 3 reuse what you know: filter(...).includes(...) with toLowerCase and trim, a reducer that returns new arrays with map and filter, and controlled inputs. Tie each label to its input with htmlFor and id."
+  - "Stage 4: useEffect(() => { headingRef.current.focus(); }, [step]); and call onPlaced at the end of pay. Stage 5: const [lines, dispatch] = useReducer(cartReducer, []); count = lines.reduce((sum, line) => sum + line.qty, 0); and render Checkout instead of the shop when view is \"checkout\"."
+review: false

@@ -1,0 +1,24 @@
+id: web-02-css/topic-02-colours-and-units
+title: "Colours and units"
+order: 2
+minutes: 9
+prerequisites: [web-02-css/topic-01-selectors-and-rules]
+concepts: [hex-colours, rgb-colours, named-colours, colour-contrast, px-units, rem-units, percent-units]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0202
+  from: sana
+  title: "Use the real Dhaaga colours, not darkblue"
+  body: >
+    The brand colours are final! Marigold is #F2A81D, Indigo is #2E3A8C, and the background is Off-white #FAF7F0.
+    Please swap the stand-in colour names for these exact codes, put the header on Indigo, and make the Order buttons Marigold.
+    Also the shop name is tiny on my phone, so give it a proper size.
+hints:
+  - "Each colour goes in as a hex code after the property, like color: #2e3a8c; Background colours use the property background-color."
+  - "Sizes for text use rem: 1rem is the reader's normal text size, so 2rem is twice that."
+  - "Try: body { background-color: #faf7f0; color: #2e3a8c; } and .buy { background-color: #f2a81d; color: #2e3a8c; }"
+review: true

@@ -1,0 +1,122 @@
+topic: web-07-tooling/topic-06-debugging
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: order
+    concept: reading-errors
+    prompt: "Put the debugging loop in order."
+    items:
+      - "Reproduce the bug on your own screen"
+      - "Read what the Console already tells you"
+      - "Look at the values while the code runs"
+      - "Fix the cause"
+      - "Check the fix with the same steps that showed the bug"
+    explain: "Reproduce, read, look, fix, then check with the same steps. Skipping the first step means you can't tell whether the fix worked."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: reading-errors
+    variants:
+      - { prompt: "In a stack trace, which line shows where the code actually crashed?", choices: ["The top line under the error message", "The bottom line", "The middle line", "The longest line"], answer: 0 }
+      - { prompt: "What does \"at lineTotal (cart.js:8:15)\" tell you?", choices: ["The crash was in lineTotal, in cart.js, line 8, column 15", "lineTotal was called 8 times", "cart.js has 15 errors", "The page took 8.15 seconds"], answer: 0 }
+      - { prompt: "The lines below the top of a stack trace show...", choices: ["the functions that called the one above, in turn", "other errors that happened at the same time", "lines ESLint warned about", "the next lines the code would have run"], answer: 0 }
+    explain: "The top line of a stack trace is where it crashed. Each line below is the function that called the one above."
+    reteach: "### Reading an error"
+
+  - id: q03
+    type: mcq
+    concept: reading-errors
+    prompt: "The Console says: TypeError: Cannot read properties of undefined (reading 'paise'). What happened?"
+    choices: ["Something was undefined, and the code asked it for .paise", "The paise value was a string", "The paise variable was never declared", "The file paise.js is missing"]
+    answer: 0
+    explain: "The code wrote something.paise, but that something was undefined. Look one step back: why was it undefined?"
+    reteach: "### Reading an error"
+
+  - id: q04
+    type: predict-output
+    concept: console-methods
+    code: |
+      const PRICES = { CST: 15000, BTY: 35000 };
+      let total = 15000;
+      total += PRICES["KEY"];
+      console.log(total);
+    answer: "NaN"
+    explain: "There is no KEY in this price list, so PRICES[\"KEY\"] is undefined. A number plus undefined is NaN."
+    reteach: "### Syntax: console methods"
+
+  - id: q05
+    type: mcq
+    concept: console-methods
+    variants:
+      - { prompt: "Which console method draws an array of objects as a table?", choices: ["console.table", "console.log", "console.warn", "console.grid"], answer: 0 }
+      - { prompt: "Why give every console.log a label, like console.log(\"price\", price)?", choices: ["So you know which value each printed line is", "Labels make the code run faster", "Without a label nothing is printed", "ESLint requires labels"], answer: 0 }
+      - { prompt: "What does NaN mean?", choices: ["Not a Number: the result of maths that makes no sense", "A value that is not yet loaded", "A number that is too big", "Null and nothing"], answer: 0 }
+    explain: "Label your prints so they are readable. console.table suits arrays of objects. NaN is what bad maths gives, and it spreads through any sum."
+    reteach: "### Syntax: console methods"
+
+  - id: q06
+    type: mcq
+    concept: breakpoints
+    variants:
+      - { prompt: "What does a breakpoint do?", choices: ["Pauses the code on that line, before it runs, so you can see the values", "Deletes the line from the code", "Stops the code for good with an error", "Prints the line in the Console"], answer: 0 }
+      - { prompt: "Where do you set a breakpoint in Chrome's DevTools?", choices: ["Click a line number in the Sources panel", "Type it in the Elements panel", "Right-click the page and choose Inspect", "Add it in package.json"], answer: 0 }
+      - { prompt: "While paused, which panel lists every variable the line can see, with its value now?", choices: ["Scope", "Network", "Elements", "Application"], answer: 0 }
+    explain: "A breakpoint pauses the code before a line runs. While paused, Scope shows the variables, Watch your own expressions, and Call Stack the callers."
+    reteach: "### Breakpoints"
+
+  - id: q07
+    type: mcq
+    concept: breakpoints
+    variants:
+      - { prompt: "A cart has 40 lines and only one breaks. Which breakpoint saves you stepping 40 times?", choices: ["A conditional breakpoint that pauses only when PRICES[line.code] is undefined", "A breakpoint on every line", "A debugger statement in a loop", "Pressing F8 forty times"], answer: 0 }
+      - { prompt: "What is a conditional breakpoint?", choices: ["A breakpoint that pauses only when an expression is true", "A breakpoint that only works in Firefox", "A breakpoint that deletes itself after one pause", "An if statement in your code"], answer: 0 }
+    explain: "A conditional breakpoint lets the code run at full speed and pauses only on the case you care about."
+    reteach: "### Conditional breakpoints"
+
+  - id: q08
+    type: mcq
+    concept: stepping
+    variants:
+      - { prompt: "You are paused on a line that calls lineTotal(line). Which button goes inside lineTotal?", choices: ["Step into (F11)", "Step over (F10)", "Step out (Shift+F11)", "Resume (F8)"], answer: 0 }
+      - { prompt: "What does Step over (F10) do?", choices: ["Runs the current line and pauses on the next one", "Skips the current line without running it", "Runs to the end of the program", "Goes inside the function on this line"], answer: 0 }
+      - { prompt: "What does Resume (F8) do?", choices: ["Runs until the next breakpoint", "Runs one line", "Restarts the page", "Removes all breakpoints"], answer: 0 }
+      - { prompt: "You stepped into a long function and want to get back to its caller. Which button?", choices: ["Step out (Shift+F11)", "Step into (F11)", "Step over (F10)", "Reload"], answer: 0 }
+    explain: "Step over runs one line. Step into enters a function. Step out finishes the function. Resume runs to the next breakpoint."
+    reteach: "### Syntax: stepping"
+
+  - id: q09
+    type: fill-blank
+    concept: debugger-statement
+    goal: "A line of code that pauses the program right here whenever DevTools is open."
+    prompt: "___;"
+    answers: ["debugger"]
+    explain: "The debugger statement pauses like a breakpoint when DevTools is open. Delete it before you commit."
+    reteach: "### Syntax: the debugger statement"
+
+  - id: q10
+    type: spot-the-bug
+    concept: debugger-statement
+    prompt: "This is about to be committed. Which line must go first?"
+    code: |
+      export function cartTotal(lines) {
+        let total = 0;
+        for (const line of lines) {
+          debugger;
+          total += line.paise * line.qty;
+        }
+        return total;
+      }
+    bugLine: 4
+    explain: "A committed debugger statement freezes the site for anyone with DevTools open, and ESLint reports it as no-debugger."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: stepping
+    prompt: "Stepping through the cart, total goes 15000, then NaN on the line total += PRICES[code], when code is \"bty\". Where is the best place to fix it?"
+    choices: ["On that line: look the code up in capitals and fail loudly for unknown codes", "Where the total is shown: replace NaN with 0", "In the CSS, so NaN is hidden", "Nowhere: NaN fixes itself on the next order"]
+    answer: 0
+    explain: "Fix the value where it first goes wrong. Hiding NaN where it is shown just makes the booties free."
+    reteach: "## Worked example"

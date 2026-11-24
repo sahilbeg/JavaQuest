@@ -1,0 +1,22 @@
+id: web-00-how-the-web-works/topic-07-git-basics
+title: "Git basics: save points for your code"
+order: 7
+minutes: 10
+prerequisites: [web-00-how-the-web-works/topic-06-first-javascript]
+concepts: [version-control, repository, staging, commit, history-and-diff, gitignore]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-0007
+  from: maya
+  title: "Save points for the Dhaaga site"
+  body: >
+    Yesterday I changed the hours on the test page and broke the heading without noticing. I had no copy of the
+    old version, so fixing it took an hour. From today, the Dhaaga site lives in Git. Learn the basics, so every
+    change you make can be seen and undone.
+hints:
+  - "Git is a logbook for your folder. Each entry, called a commit, is a snapshot of your files with a message."
+  - "Changes travel in three steps: you edit in the working folder, git add puts them on the tray, and git commit saves them."
+  - "git status shows where your changes are. git log --oneline lists commits. git diff shows the lines that changed."
+review: true

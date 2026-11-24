@@ -1,0 +1,24 @@
+id: react-08-react-fundamentals/topic-02-components-and-jsx
+title: "Components and JSX"
+order: 2
+minutes: 10
+prerequisites: [react-08-react-fundamentals/topic-01-why-react]
+concepts: [function-components, jsx-rules, curly-braces, fragments, jsx-attributes, composition]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0802
+  from: sana
+  title: "The top of the store, as components"
+  body: >
+    Here is the first screen of the React store: the name, our tagline, a photo of Golu and the opening hours
+    of the FC Road stall and the Aundh shop. I want each part as its own component, so we can reuse the header
+    on every page. The exact texts are in the README.
+hints:
+  - "A component is a function with a capital letter that returns JSX. Return one parent element, like <header> or <ul>."
+  - "Put JavaScript values into JSX with curly braces: <p>{TAGLINE}</p>. Write className, not class, and close the image tag: <img ... />."
+  - "StoreFront is just <main><StoreHeader /><OpeningHours /></main>: use your components like tags."
+review: true

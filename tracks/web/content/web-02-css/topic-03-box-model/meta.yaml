@@ -1,0 +1,24 @@
+id: web-02-css/topic-03-box-model
+title: "The box model: margin, border, padding"
+order: 3
+minutes: 10
+prerequisites: [web-02-css/topic-02-colours-and-units]
+concepts: [box-layers, padding, border, margin, box-sizing, shorthand]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0203
+  from: sana
+  title: "The product cards are glued together"
+  body: >
+    The colours look lovely now, but the products are a wall of text. Golu's name touches the edge of the screen,
+    and you can't tell where the coaster set ends and the keychain starts. Each product needs to be a card:
+    some breathing room inside, an Indigo outline, soft corners and a gap below it.
+hints:
+  - "Think of each product as a framed photo: padding is the space inside the frame, border is the frame, and margin is the gap on the wall."
+  - "Browsers add their own spacing: 8px of margin around body and some padding on the left of every list. Set them to 0 to start clean."
+  - "Try: .product { padding: 1rem; border: 2px solid #2e3a8c; border-radius: 8px; margin-bottom: 1rem; }"
+review: true

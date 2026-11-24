@@ -1,0 +1,120 @@
+topic: web-07-tooling/topic-04-git-branches
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: branches
+    variants:
+      - { prompt: "What is a Git branch?", choices: ["A movable label that points at one commit", "A full copy of every file in a new folder", "A backup of the project on GitHub", "A list of files waiting to be committed"], answer: 0 }
+      - { prompt: "What is HEAD?", choices: ["Git's marker for where you are now, usually a branch", "The very first commit", "The newest commit on GitHub", "The person who merges pull requests"], answer: 0 }
+      - { prompt: "Sana commits on feat/diwali-banner. What happens to the main label?", choices: ["It stays where it was", "It moves to her new commit too", "It is deleted", "It moves back one commit"], answer: 0 }
+    explain: "A branch is a label on a commit. Committing moves only the branch HEAD points at."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: branches
+    goal: "Create the branch feat/diwali-banner and move onto it, in one command."
+    prompt: "git ___ -c feat/diwali-banner"
+    answers: ["switch"]
+    explain: "git switch -c creates a branch at the current commit and moves you onto it."
+    reteach: "### Syntax: making a branch"
+
+  - id: q03
+    type: mcq
+    concept: switching
+    variants:
+      - { prompt: "You run git switch main. What happens to the files in your folder?", choices: ["Git swaps them to match main", "Nothing: switching only changes a label", "Git deletes every file not on main forever", "Git uploads them to GitHub"], answer: 0 }
+      - { prompt: "git branch prints \"* feat/diwali-banner\" and \"  main\". What does the * mean?", choices: ["HEAD points at feat/diwali-banner: you are on it", "feat/diwali-banner has unsaved changes", "feat/diwali-banner is the newest branch", "feat/diwali-banner is protected"], answer: 0 }
+      - { prompt: "You edited offers.js without committing, and main has a different version of it. What does git switch main do?", choices: ["Refuses to switch and lists the file, so your edits are not lost", "Switches and throws your edits away", "Commits your edits for you", "Merges your edits into main"], answer: 0 }
+    explain: "git switch moves HEAD to another branch and swaps your files to match. Git refuses if it would overwrite uncommitted edits."
+    reteach: "### Syntax: moving between branches"
+
+  - id: q04
+    type: mcq
+    concept: merging
+    variants:
+      - { prompt: "When can git merge fast-forward?", choices: ["When the receiving branch got no new commits since you branched", "When both branches changed the same line", "Only after deleting the branch", "Only on GitHub"], answer: 0 }
+      - { prompt: "What is a merge commit?", choices: ["A commit with two parents that joins two lines of history", "A commit that undoes a merge", "The first commit on a new branch", "A commit only GitHub can make"], answer: 0 }
+      - { prompt: "Both main and feat/diwali-banner have new commits. What does git merge feat/diwali-banner on main make?", choices: ["A merge commit", "A fast-forward with no new commit", "A new branch", "Nothing, until you push"], answer: 0 }
+    explain: "If main has not moved, Git slides its label forward. If both sides moved, Git joins them with a two-parent merge commit."
+    reteach: "### Syntax: merging"
+
+  - id: q05
+    type: mcq
+    concept: merging
+    prompt: "The Diwali banner is finished on feat/diwali-banner. Which commands bring it into main?"
+    choices: ["git switch main, then git merge feat/diwali-banner", "git switch feat/diwali-banner, then git merge main", "git merge main feat/diwali-banner --delete", "git branch -d main"]
+    answer: 0
+    explain: "Stand on the branch that receives the work, then name the branch to bring in. Merging main into the feature does the opposite job."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: mcq
+    concept: merge-conflicts
+    variants:
+      - { prompt: "When does Git stop a merge with a conflict?", choices: ["When both branches changed the same lines", "Whenever both branches have new commits", "When a branch name has a slash", "When the tests fail"], answer: 0 }
+      - { prompt: "In a conflict, which version sits between <<<<<<< HEAD and =======?", choices: ["Yours, from the branch you are on", "The incoming one, from the branch being merged in", "The version from the first commit", "A version Git wrote by itself"], answer: 0 }
+      - { prompt: "Halfway through a messy merge, you want everything back as it was. What do you run?", choices: ["git merge --abort", "git branch -d main", "git switch -c undo", "git commit"], answer: 0 }
+    explain: "Git only stops when both sides changed the same lines. The top half is HEAD, your side. git merge --abort undoes the whole merge."
+    reteach: "### Merge conflicts"
+
+  - id: q07
+    type: order
+    concept: merge-conflicts
+    prompt: "git merge just reported a conflict in src/offers.js. Put the steps to finish it in order."
+    items:
+      - "Open src/offers.js and find the <<<<<<< line"
+      - "Edit the lines into the final code and delete all three marker lines"
+      - "Check the site still works with npm run dev"
+      - "git add src/offers.js"
+      - "git commit"
+    explain: "Fix the code and remove the markers, check it, then git add marks the file resolved and git commit finishes the merge."
+    reteach: "### Syntax: finishing a conflicted merge"
+
+  - id: q08
+    type: spot-the-bug
+    concept: merge-conflicts
+    prompt: "Someone resolved this conflict and committed. Which line will stop Vite from loading the file?"
+    code: |
+      export const FREE_ABOVE_PAISE = 99900;
+      export const BANNER = "Diwali: 10% off orders above ₹1,500";
+      >>>>>>> feat/diwali-banner
+      export const GIFT_WRAP_PAISE = 3000;
+    bugLine: 3
+    explain: "A leftover >>>>>>> marker is not JavaScript. Delete every marker line and check the site before you finish a merge."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: branch-workflow
+    variants:
+      - { prompt: "Why did Sana's half-finished banner go live?", choices: ["Everyone worked straight on main, so deploying main shipped it", "Vite deploys every branch", "Git merged it by itself at night", "The banner was in node_modules"], answer: 0 }
+      - { prompt: "What does git branch -d feat/diwali-banner do after the merge?", choices: ["Deletes the label; the work is safe in main", "Deletes the banner code from main", "Deletes the branch on GitHub only", "Undoes the merge"], answer: 0 }
+      - { prompt: "git branch -d refuses to delete a branch. Why?", choices: ["It has commits that are not merged anywhere yet", "The branch name is too long", "You are not on main", "The branch was made today"], answer: 0 }
+    explain: "One change, one branch. Only finished, merged work is on main. git branch -d removes the label and refuses if work would be lost."
+    reteach: "### Syntax: deleting a merged branch"
+
+  - id: q10
+    type: order
+    concept: branch-workflow
+    prompt: "Put one change's life on a branch in order."
+    items:
+      - "Start on main: git status says On branch main"
+      - "git switch -c fix/delivery-fee"
+      - "Edit, git add and git commit"
+      - "git switch main to receive the work"
+      - "git merge fix/delivery-fee"
+      - "git branch -d fix/delivery-fee"
+    explain: "Branch from main, work and commit there, come back to main, merge the branch in, then delete the label."
+    reteach: "## Worked example"
+
+  - id: q11
+    type: fill-blank
+    concept: merging
+    goal: "Bring the commits of feat/diwali-banner into the branch you are on."
+    prompt: "git ___ feat/diwali-banner"
+    answers: ["merge"]
+    explain: "git merge brings another branch's commits into the current one."
+    reteach: "### Syntax: merging"

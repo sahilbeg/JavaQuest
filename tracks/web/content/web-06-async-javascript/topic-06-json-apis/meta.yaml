@@ -1,0 +1,23 @@
+id: web-06-async-javascript/topic-06-json-apis
+title: "Talking to a JSON API"
+order: 6
+minutes: 10
+prerequisites: [web-06-async-javascript/topic-05-http-and-fetch]
+concepts: [endpoints, query-strings, post-requests, content-type, json-body, error-body]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0606
+  from: maya
+  title: "Check the PIN, then place the order"
+  body: >
+    Two pieces of checkout now talk to Arjun's API. The PIN box should ask GET /api/delivery?pin=411001 whether we deliver there.
+    The Place order button should POST the order as JSON to /api/orders and get back its id, like order-17.
+    When the server says no, show its own error message, not a made-up one. All of it goes in api.js.
+hints:
+  - "Build the query with new URLSearchParams({ pin }), and put it after a ? in the URL. A GET needs no options."
+  - "For the POST, give fetch a second argument: { method, headers, body }. The body must be text, so use JSON.stringify(order)."
+  - "In createOrder, read the body with await response.json() first. If response.ok is false, throw new Error(data.error). Otherwise return data.id."
+review: true

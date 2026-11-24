@@ -1,0 +1,121 @@
+topic: web-02-css/topic-09-responsive-design
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: viewport-meta
+    prompt: "A page has no viewport meta tag. What happens on a phone?"
+    choices: ["The phone pretends to be about 980px wide and shrinks the whole page", "The page doesn't load", "The page looks exactly the same as with the tag", "The CSS file is ignored"]
+    answer: 0
+    explain: "Without the tag, phones assume a laptop-sized page, draw it at about 980px and zoom out. Text becomes tiny and phone styles never apply."
+    reteach: "### Syntax: the viewport meta tag"
+
+  - id: q02
+    type: fill-blank
+    concept: viewport-meta
+    goal: "Tell the phone to lay the page out at the phone screen's real width."
+    prompt: "<meta name=\"viewport\" content=\"width=___, initial-scale=1\">"
+    answers: ["device-width"]
+    explain: "width=device-width uses the screen's real width instead of pretending to be a laptop."
+    reteach: "### Syntax: the viewport meta tag"
+
+  - id: q03
+    type: mcq
+    concept: media-queries
+    prompt: "When do the rules inside @media (min-width: 48rem) { ... } apply?"
+    choices: ["When the viewport is at least 48rem wide", "When the viewport is at most 48rem wide", "Only on phones", "Always, but only after 48 seconds"]
+    answer: 0
+    explain: "min-width means this wide or wider. Narrower screens skip the whole block."
+    reteach: "### Syntax: media queries"
+
+  - id: q04
+    type: mcq
+    concept: min-width
+    prompt: "A tablet is exactly 768px wide, and the base size is 16px. Does @media (min-width: 48rem) apply?"
+    choices: ["Yes, because 48rem is 768px and min-width includes that width", "No, it must be wider than 768px", "Only in landscape", "Only if the tablet has no viewport tag"]
+    answer: 0
+    explain: "48 times 16 is 768. min-width means at least, so exactly 768px counts."
+    reteach: "### Why rem in a media query"
+
+  - id: q05
+    type: mcq
+    concept: min-width
+    prompt: "What does @media (max-width: 30rem) mean?"
+    choices: ["Screens 30rem wide or narrower", "Screens 30rem wide or wider", "Screens exactly 30rem wide", "Text no bigger than 30rem"]
+    answer: 0
+    explain: "max-width means this wide or less. min-width means this wide or more."
+    reteach: "### min-width and max-width queries"
+
+  - id: q06
+    type: mcq
+    concept: mobile-first
+    prompt: "In phone-first CSS, where do the phone styles go?"
+    choices: ["In the base rules, with no media query", "Inside a max-width media query", "In a separate phone.css file", "Inside a min-width media query"]
+    answer: 0
+    explain: "Phone first means the base rules are for the smallest screen. min-width queries then add to them for wider screens."
+    reteach: "### Phone first"
+
+  - id: q07
+    type: mcq
+    concept: mobile-first
+    prompt: "Which pair is written phone first?"
+    choices: [".places { display: grid; } then @media (min-width: 48rem) { .places { grid-template-columns: 1fr 1fr; } }", ".places { grid-template-columns: 1fr 1fr; } then @media (max-width: 48rem) { .places { grid-template-columns: 1fr; } }", "Only @media (max-width: 48rem) rules, nothing else", ".places { grid-template-columns: 1fr 1fr; } with no media query"]
+    answer: 0
+    explain: "The base gives phones one column, and the min-width query adds the second column for wider screens."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: order
+    concept: media-queries
+    prompt: "Put the lines in order to make the shop name bigger on wide screens."
+    items:
+      - "@media (min-width: 48rem) {"
+      - "  h1 {"
+      - "    font-size: 2.5rem;"
+      - "  }"
+      - "}"
+    explain: "The media query wraps an ordinary rule. Each opening brace needs its own closing brace."
+    reteach: "### Syntax: media queries"
+
+  - id: q09
+    type: spot-the-bug
+    concept: media-queries
+    code: |
+      @media min-width: 48rem {
+        .places {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    bugLine: 1
+    explain: "The condition needs round brackets: @media (min-width: 48rem). Without them, the block never applies."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: breakpoints
+    prompt: "How should you pick a breakpoint?"
+    choices: ["Where the design starts to look cramped or stretched", "At the exact width of the newest iPhone", "Always at 1000px", "At the width of your own laptop"]
+    answer: 0
+    explain: "Breakpoints follow the content. Phones come in too many sizes to chase one model."
+    reteach: "### Syntax: media queries"
+
+  - id: q11
+    type: mcq
+    concept: breakpoints
+    prompt: "The media query comes first in the file, then the base rule h1 { font-size: 1.75rem; }. What size is the laptop's h1?"
+    choices: ["1.75rem, because the later rule wins the tie", "2.5rem, because media queries always win", "Both sizes, one after the other", "The browser's default size"]
+    answer: 0
+    explain: "Both rules have the same specificity, so the later one wins. Put media queries after the base rules they change."
+    reteach: "## Common mistakes"
+
+  - id: q12
+    type: predict-output
+    concept: breakpoints
+    code: |
+      const breakpoint = 48 * 16;
+      const width = 412;
+      console.log(width >= breakpoint ? "wide" : "phone");
+    answer: "phone"
+    explain: "48 times 16 is 768. A 412px phone is narrower, so min-width is false."
+    reteach: "### Why rem in a media query"

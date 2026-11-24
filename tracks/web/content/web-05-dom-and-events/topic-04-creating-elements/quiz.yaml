@@ -1,0 +1,107 @@
+topic: web-05-dom-and-events/topic-04-creating-elements
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: create-element
+    prompt: "After const li = document.createElement(\"li\"); li.textContent = \"Keychain\"; what new thing shows on the page?"
+    choices: ["Nothing yet: the li is detached until you append it", "A Keychain line at the end of the first list", "A Keychain line at the top of the body", "An empty bullet point"]
+    answer: 0
+    explain: "createElement makes the element in memory only. It shows up once you append it to an element on the page."
+    reteach: "### Syntax: createElement"
+
+  - id: q02
+    type: fill-blank
+    concept: create-element
+    goal: "Make a brand-new list item element in memory, not yet on the page."
+    prompt: "const li = document.___(\"li\");"
+    answers: ["createElement"]
+    explain: "document.createElement(\"li\") returns a new, empty, detached li element."
+    reteach: "### Syntax: createElement"
+
+  - id: q03
+    type: mcq
+    concept: append
+    variants:
+      - { prompt: "The slip already has two lines. Where does slip.prepend(li) put the new line?", choices: ["Before the first line", "After the last line", "Between the two lines", "It replaces both lines"], answer: 0 }
+      - { prompt: "The slip already has two lines. Where does slip.append(li) put the new line?", choices: ["After the last line", "Before the first line", "Between the two lines", "It replaces both lines"], answer: 0 }
+    explain: "append adds children at the end. prepend adds them at the start."
+    reteach: "### Syntax: append"
+
+  - id: q04
+    type: mcq
+    concept: append
+    prompt: "What does the string \" × \" become in li.append(name, \" × \", qty)?"
+    choices: ["A text node between the two spans", "An error, because append only takes elements", "A new span element", "Nothing: strings are ignored"]
+    answer: 0
+    explain: "append accepts strings and turns each into a text node, so you can mix text and elements."
+    reteach: "### Syntax: append"
+
+  - id: q05
+    type: mcq
+    concept: remove
+    prompt: "line holds the baby booties line on the slip. Which call takes it off the page?"
+    choices: ["line.remove();", "line.delete();", "slip.remove(line);", "line.textContent = null;"]
+    answer: 0
+    explain: "element.remove() takes the element, and everything inside it, out of the page."
+    reteach: "### Syntax: remove"
+
+  - id: q06
+    type: mcq
+    concept: replace-children
+    prompt: "A customer has paid. What does slip.replaceChildren() with no arguments do?"
+    choices: ["Removes every line from the slip", "Removes the slip itself from the page", "Does nothing, because it needs arguments", "Copies every line"]
+    answer: 0
+    explain: "With no arguments, replaceChildren empties the element. The slip element itself stays."
+    reteach: "### Syntax: replaceChildren"
+
+  - id: q07
+    type: spot-the-bug
+    concept: inner-html-rebuild
+    code: |
+      function addLine(slip, item) {
+        slip.innerHTML += `<li>${item.name}</li>`;
+      }
+    bugLine: 2
+    explain: "innerHTML += rebuilds every old line, dropping their handlers, and turns a name with tags into HTML. Create the li, set its textContent and append it."
+    reteach: "### Why not innerHTML +="
+
+  - id: q08
+    type: mcq
+    concept: inner-html-rebuild
+    prompt: "The slip has Remove buttons with click handlers. After slip.innerHTML += \"<li>Keychain</li>\", the old Remove buttons stop working. Why?"
+    choices: ["innerHTML += rebuilt every old line as new elements, without their handlers", "innerHTML can only hold one li", "The new li disabled the other buttons", "Click handlers only last one minute"]
+    answer: 0
+    explain: "The whole list turns into a string and back, so every old element is replaced by a new copy with no handlers."
+    reteach: "### Why not innerHTML +="
+
+  - id: q09
+    type: mcq
+    concept: building-pieces
+    prompt: "name holds text a customer typed. Which line puts it into a new span safely?"
+    choices: ["span.textContent = name;", "span.innerHTML = name;", "span.outerHTML = name;", "span.innerHTML = `<b>${name}</b>`;"]
+    answer: 0
+    explain: "textContent keeps the text as text, so no tags inside it can become HTML."
+    reteach: "### Building a line from small pieces"
+
+  - id: q10
+    type: order
+    concept: building-pieces
+    prompt: "Put the lines in order: make the line, fill it while it is detached, add it to the slip, then print the count."
+    items:
+      - "const li = document.createElement(\"li\");"
+      - "li.textContent = \"Keychain\";"
+      - "slip.append(li);"
+      - "console.log(slip.children.length);"
+    explain: "Create, fill, append, then the count includes the new line."
+    reteach: "## Worked example"
+
+  - id: q11
+    type: mcq
+    concept: append
+    prompt: "line is already on the slip. What happens after saved.append(line)?"
+    choices: ["line moves from the slip to saved", "line is copied, so it shows in both places", "An error, because line already has a parent", "Nothing happens"]
+    answer: 0
+    explain: "An element can have only one parent, so appending it somewhere else moves it."
+    reteach: "### An element lives in one place"

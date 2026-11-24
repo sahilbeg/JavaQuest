@@ -1,0 +1,23 @@
+id: web-04-javascript-in-depth/topic-08-errors
+title: "Errors: throw, try and catch"
+order: 8
+minutes: 10
+prerequisites: [web-04-javascript-in-depth/topic-07-modules]
+concepts: [throw, try-catch, error-types, custom-errors, finally]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0408
+  from: sam
+  title: "The site sold three Golus when we had one"
+  body: >
+    Raju here. A customer in Nagpur ordered three Golu elephants on the website last night, and it said "Order placed!".
+    We only had one left. Now the stock page says -2 and I have to phone her to apologise.
+    The stock code should refuse orders it can't fill, and the order page should tell the customer kindly.
+hints:
+  - "throw stops a function at once. Check the quantity first: if (!Number.isInteger(qty) || qty < 1) throw new RangeError(...). Then check qty > item.stock."
+  - "In the OutOfStockError constructor, super(message) has already run. After it, set this.name = \"OutOfStockError\" and this.itemId = item.id."
+  - "tryReserve: try { return { ok: true, item: reserve(item, qty) }; } catch (error) { if (error instanceof OutOfStockError) return { ok: false, message: error.message }; throw error; }"
+review: true

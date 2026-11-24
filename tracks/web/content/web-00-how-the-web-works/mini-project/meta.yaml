@@ -1,0 +1,23 @@
+id: web-00-how-the-web-works/mini-project
+title: "FEAT-00: A one-page visiting card with the UPI QR"
+order: 100
+minutes: 12
+prerequisites: [web-00-how-the-web-works/topic-07-git-basics]
+concepts: [page-structure, images, alt-text, links]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: FEAT-00
+  from: priya
+  title: "A visiting card page people can open at the stall"
+  body: >
+    Meera Aunty here. People at the stall keep asking for our number and how to pay. I'd love one small page
+    they can open on their phones: our name, what we make, where and when to find us, the UPI QR code, and a
+    button to message us on WhatsApp. Can you make it?
+hints:
+  - "Start with the heading and the two paragraphs, just like your first page. Then add the picture and the link."
+  - "A picture is <img src=\"...\" alt=\"...\">, with no closing tag. A link is <a href=\"...\">text people tap</a>."
+  - "Use <img src=\"upi-qr.svg\" alt=\"UPI QR code to pay Dhaaga & Co.\"> and <a href=\"https://wa.me/919876543210\">Message us on WhatsApp</a>."
+review: false

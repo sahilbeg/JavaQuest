@@ -1,0 +1,173 @@
+topic: react-10-professional-frontend/topic-03-performance
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: web-vitals
+    variants:
+      - prompt: "A customer taps Golu, the page jumps as a photo loads, and they hit the tote bag instead. Which Core Web Vital measures this?"
+        choices: ["CLS", "LCP", "INP", "HTML"]
+        answer: 0
+      - prompt: "Which Core Web Vital measures how long until the main photo on the first screen appears?"
+        choices: ["LCP", "CLS", "INP", "DNS"]
+        answer: 0
+      - prompt: "A customer taps Add to cart and nothing visibly happens for half a second. Which Core Web Vital is bad?"
+        choices: ["INP", "LCP", "CLS", "CSS"]
+        answer: 0
+    explain: "LCP is when the biggest thing on the first screen appears. CLS is how much the page jumps. INP is how quickly the page reacts visibly to a tap or key."
+    reteach: "### What \"fast\" means: Core Web Vitals"
+
+  - id: q02
+    type: mcq
+    concept: web-vitals
+    prompt: "What is a good LCP?"
+    choices: ["2.5 seconds or less", "10 seconds or less", "Exactly 0 seconds", "Any time, as long as it loads"]
+    answer: 0
+    explain: "Google calls LCP good at 2.5 seconds or less, CLS at 0.1 or less, and INP at 200 milliseconds or less, measured on real customers' phones."
+    reteach: "### What \"fast\" means: Core Web Vitals"
+
+  - id: q03
+    type: mcq
+    concept: image-weight
+    variants:
+      - prompt: "The catalogue shows photos 200 pixels wide, but each file is the 4000-pixel camera original. What is the best first fix?"
+        choices:
+          - "Save each photo at the sizes you show, in a modern format like WebP"
+          - "Add more CSS to shrink the photos"
+          - "Buy a faster server"
+          - "Turn the photos into black and white"
+        answer: 0
+      - prompt: "Why is a 4000-pixel photo shown 200 pixels wide wasteful?"
+        choices:
+          - "The phone downloads far more pixels than it can show, then throws them away"
+          - "Browsers can't show photos smaller than they are"
+          - "It makes the photo blurry"
+          - "It isn't wasteful: CSS shrinks the download too"
+        answer: 0
+    explain: "CSS changes how big a photo looks, not how big the download is. Resize and compress before anything else."
+    reteach: "### Images are most of the weight"
+
+  - id: q04
+    type: mcq
+    concept: layout-shift
+    variants:
+      - prompt: "How do width and height on an <img> stop the page from jumping?"
+        choices:
+          - "The browser reserves a box of the right shape before the photo arrives"
+          - "They make the photo download faster"
+          - "They stop the photo from loading until it is needed"
+          - "They turn the photo into a background image"
+        answer: 0
+      - prompt: "A photo has width={400} height={400}, and CSS max-width: 100%; height: auto. On a phone it shows 300 pixels wide. How tall is its box?"
+        choices: ["300 pixels", "400 pixels", "0 pixels until it loads", "100 pixels"]
+        answer: 0
+    explain: "width and height give the browser the photo's shape before it loads. height: auto keeps that shape when max-width shrinks it, so a square stays square."
+    reteach: "### Syntax: width and height"
+
+  - id: q05
+    type: fill-blank
+    concept: lazy-loading
+    goal: "This keychain photo sits far down the page, so fetch it only when the customer scrolls near it."
+    prompt: "<img src=\"/img/DC-1201-400.webp\" alt=\"Mint keychain\" width={400} height={400} loading=\"___\" />"
+    answers: ["lazy"]
+    explain: "loading=\"lazy\" makes the browser wait until the photo is close to the screen before downloading it."
+    reteach: "### Syntax: loading=\"lazy\""
+
+  - id: q06
+    type: mcq
+    concept: lazy-loading
+    variants:
+      - prompt: "Why should the big Golu photo at the top of his page NOT be lazy?"
+        choices:
+          - "It is the LCP, and lazy loading delays it until the layout is known"
+          - "Lazy loading only works on small photos"
+          - "Lazy photos can't have alt text"
+          - "It should be lazy: every photo should"
+        answer: 0
+      - prompt: "Which photos in a catalogue should have loading=\"eager\"?"
+        choices:
+          - "The few on the first screen, above the fold"
+          - "All of them"
+          - "None of them"
+          - "Only the last one"
+        answer: 0
+    explain: "Lazy-load what is below the fold. Photos on the first screen load eagerly, and the main one can also get fetchPriority=\"high\"."
+    reteach: "### Don't lazy-load the first screen"
+
+  - id: q07
+    type: predict-output
+    concept: lazy-loading
+    prompt: "Six photos of 60 KB each; the first four are eager. What does it print?"
+    code: |
+      const photosKB = [60, 60, 60, 60, 60, 60];
+      const eager = 4;
+      const firstLoad = photosKB.slice(0, eager).reduce((sum, kb) => sum + kb, 0);
+      console.log(firstLoad + " KB now, " + (photosKB.length - eager) + " photos later");
+    answer: "240 KB now, 2 photos later"
+    explain: "slice(0, 4) keeps the first four photos, which add up to 240 KB. The other 2 wait until the customer scrolls."
+    reteach: "### Syntax: loading=\"lazy\""
+
+  - id: q08
+    type: mcq
+    concept: responsive-images
+    variants:
+      - prompt: "What does srcSet=\"/img/DC-1042-400.webp 400w, /img/DC-1042-800.webp 800w\" tell the browser?"
+        choices:
+          - "Which files exist and how many pixels wide each one really is"
+          - "To download both files"
+          - "To show the photo 400 and 800 CSS pixels wide"
+          - "To load the 800 file only on Wi-Fi"
+        answer: 0
+      - prompt: "What does sizes=\"(min-width: 600px) 400px, 100vw\" tell the browser?"
+        choices:
+          - "How wide the photo will be shown, so it can pick the right file from srcset"
+          - "Which file sizes in KB are allowed"
+          - "To crop the photo to 400 pixels"
+          - "To lazy-load the photo on small screens"
+        answer: 0
+    explain: "srcset lists the files with their real widths. sizes says how wide the photo shows. The browser picks the smallest file that will look sharp."
+    reteach: "### Syntax: srcset and sizes"
+
+  - id: q09
+    type: mcq
+    concept: code-splitting
+    variants:
+      - prompt: "Which part of dhaaga.in is the best candidate to split out of the main bundle?"
+        choices:
+          - "The size guide, which most customers never open"
+          - "The Add to cart button"
+          - "The price formatting function"
+          - "The header with the logo"
+        answer: 0
+      - prompt: "Why does a big JavaScript bundle slow down a React page's first view?"
+        choices:
+          - "React can't draw anything until the bundle has downloaded and run"
+          - "Browsers download JavaScript after every photo"
+          - "Big bundles break CSS"
+          - "It doesn't: bundle size never matters"
+        answer: 0
+    explain: "The bundle must arrive and run before React draws. Split off large parts most customers never open; don't split tiny pieces everyone needs."
+    reteach: "### Smaller JavaScript: code splitting"
+
+  - id: q10
+    type: fill-blank
+    concept: code-splitting
+    goal: "Wrap the split-off size guide so a loading message shows while its file downloads."
+    prompt: "<___ fallback={<p>Loading the size guide…</p>}>"
+    answers: ["Suspense"]
+    explain: "React.lazy loads the component's file on first use, and Suspense shows its fallback until that file arrives."
+    reteach: "### Syntax: React.lazy and Suspense"
+
+  - id: q11
+    type: mcq
+    concept: web-vitals
+    prompt: "You think a change made the catalogue faster. What should you do?"
+    choices:
+      - "Measure before and after, with Lighthouse and real-user data"
+      - "Trust it, because it feels faster on your laptop"
+      - "Ask a teammate if it feels faster"
+      - "Ship it and never check"
+    answer: 0
+    explain: "Your laptop on Wi-Fi is not a customer's phone on mobile data. Measure with Lighthouse in the lab and the web-vitals package in the field."
+    reteach: "### Measuring: Lighthouse and DevTools"

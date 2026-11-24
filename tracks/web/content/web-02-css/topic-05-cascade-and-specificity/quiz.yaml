@@ -1,0 +1,119 @@
+topic: web-02-css/topic-05-cascade-and-specificity
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: order
+    concept: cascade-order
+    prompt: "Put the cascade's steps in the order the browser checks them."
+    items:
+      - "importance (!important)"
+      - "specificity"
+      - "source order"
+    explain: "The browser checks importance first, then specificity, and uses source order only when everything else ties."
+    reteach: "### When rules disagree"
+
+  - id: q02
+    type: mcq
+    concept: cascade-order
+    prompt: "One rule sets an h3's colour and another sets its font-size. What happens?"
+    choices: ["The h3 gets both, because they set different properties", "Only the more specific rule applies", "Only the later rule applies", "The browser shows an error"]
+    answer: 0
+    explain: "Rules only fight when they set the same property on the same element. Different properties simply add up."
+    reteach: "### When rules disagree"
+
+  - id: q03
+    type: mcq
+    concept: specificity
+    variants:
+      - { prompt: "What is the specificity of .sold-out h3?", choices: ["(0, 1, 1)", "(1, 0, 1)", "(0, 2, 0)", "(0, 0, 2)"], answer: 0 }
+      - { prompt: "What is the specificity of #catalogue p?", choices: ["(1, 0, 1)", "(0, 1, 1)", "(1, 1, 0)", "(0, 0, 2)"], answer: 0 }
+      - { prompt: "What is the specificity of main p?", choices: ["(0, 0, 2)", "(0, 1, 1)", "(1, 0, 1)", "(0, 2, 0)"], answer: 0 }
+    explain: "Count ids, then classes, then tag names. A class like .sold-out goes in the middle column; an id like #catalogue goes on the left."
+    reteach: "### Syntax: specificity scores"
+
+  - id: q04
+    type: mcq
+    concept: specificity
+    prompt: "Which selector wins a fight with .product .price .sale (three classes)?"
+    choices: ["#catalogue p", "main ul li p", ".price", "p"]
+    answer: 0
+    explain: "#catalogue p has one id. Scores are compared from the left, so one id beats any number of classes."
+    reteach: "### Syntax: specificity scores"
+
+  - id: q05
+    type: mcq
+    concept: specificity
+    prompt: "<p class=\"stock\"> sits inside <main id=\"catalogue\">. The rules are #catalogue p { color: grey } and .stock { color: red }. What colour is the label?"
+    choices: ["grey", "red", "whichever rule is written later", "a mix of both"]
+    answer: 0
+    explain: "#catalogue p scores (1, 0, 1) and .stock scores (0, 1, 0). The id wins in the first column, so the label is grey."
+    reteach: "### Syntax: specificity scores"
+
+  - id: q06
+    type: mcq
+    concept: source-order
+    prompt: "Two rules both use the selector .buy. One sets Marigold and a later one sets gray. What colour are the buttons?"
+    choices: ["gray", "Marigold", "Marigold on phones, gray on laptops", "No colour at all"]
+    answer: 0
+    explain: "Same selector means the same specificity. On a tie, the rule written later wins."
+    reteach: "### Source order breaks ties"
+
+  - id: q07
+    type: mcq
+    concept: inheritance
+    prompt: "Which property is inherited by the elements inside?"
+    choices: ["color", "padding", "border", "margin"]
+    answer: 0
+    explain: "Text properties like color, font-family and line-height are inherited. Box properties like padding, border and margin are not."
+    reteach: "### Inheritance"
+
+  - id: q08
+    type: mcq
+    concept: inheritance
+    prompt: "body sets color: Indigo, and a rule p { color: grey } exists. What colour is a paragraph inside body?"
+    choices: ["grey", "Indigo", "black", "a mix of both"]
+    answer: 0
+    explain: "An inherited value is the weakest. Any rule that picks the element itself, even plain p, beats it."
+    reteach: "### Inheritance"
+
+  - id: q09
+    type: mcq
+    concept: important
+    prompt: "Why is !important a trap?"
+    choices: ["Only another !important can beat it, so it spreads and makes the CSS hard to change", "It makes the page load slowly", "Browsers ignore it on phones", "It deletes the other rules"]
+    answer: 0
+    explain: "!important jumps ahead of specificity. To change that value later, you need another !important, and soon every rule shouts."
+    reteach: "### Syntax: !important"
+
+  - id: q10
+    type: spot-the-bug
+    concept: important
+    code: |
+      h3 {
+        color: #2e3a8c !important;
+      }
+      .sold-out h3 {
+        color: #5a5a5a;
+      }
+    bugLine: 2
+    explain: "The !important on line 2 beats the more specific .sold-out h3, so sold-out names never turn grey. Remove it."
+    reteach: "### Syntax: !important"
+
+  - id: q11
+    type: mcq
+    concept: specificity
+    prompt: "#catalogue p keeps beating your .stock rule. What's the best fix?"
+    choices: ["Change #catalogue p to main p", "Add !important to .stock", "Add a second id to .stock", "Move .stock to a separate file"]
+    answer: 0
+    explain: "Lowering the winning selector's specificity lets the class win, without starting an !important war."
+    reteach: "## Worked example"
+
+  - id: q12
+    type: mcq
+    concept: source-order
+    prompt: "Two rules: .product h3 { color: #f2a81d } (Marigold) comes first, then h3 { color: red }. What colour are product names?"
+    choices: ["Marigold", "red", "whichever comes later", "the inherited body colour"]
+    answer: 0
+    explain: ".product h3 scores (0, 1, 1) and h3 scores (0, 0, 1). Specificity is checked before source order, so .product h3 wins wherever it is."
+    reteach: "### When rules disagree"

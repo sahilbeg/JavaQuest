@@ -1,0 +1,132 @@
+topic: web-06-async-javascript/topic-01-sync-and-async
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: single-thread
+    variants:
+      - { prompt: "How many threads does JavaScript in one browser tab use to run your code?", choices: ["One, the main thread", "One per function", "One per click", "As many as the phone has cores"], answer: 0 }
+      - { prompt: "Your page's JavaScript is busy adding up a huge cart. What happens to a tap on the Add to cart button?", choices: ["It waits until the current code finishes", "It runs at the same moment on another thread", "It is lost forever", "It stops the current code halfway"], answer: 0 }
+    explain: "A tab runs your code on one main thread. While that thread is busy, taps and other callbacks wait their turn."
+    reteach: "### One thing at a time"
+
+  - id: q02
+    type: mcq
+    concept: blocking
+    prompt: "A function spins in a while loop for three seconds until a pretend answer arrives. What does the customer see?"
+    choices: ["The whole page freezes for three seconds", "The page works normally while the loop runs", "Only the button that started it stops working", "The browser runs the loop on a second thread"]
+    answer: 0
+    explain: "The loop keeps the one thread busy. Nothing else can run, so taps, scrolling and drawing all stop. That is blocking."
+    reteach: "### Blocking: when waiting freezes the page"
+
+  - id: q03
+    type: mcq
+    concept: asynchronous
+    variants:
+      - { prompt: "What does asynchronous code do with a slow job?", choices: ["Starts it, carries on, and runs a callback when it is done", "Waits for it before running the next line", "Runs it twice to make it faster", "Skips it"], answer: 0 }
+      - { prompt: "What is a callback?", choices: ["A function you hand over, to be run later when something happens", "A phone call to the server", "A function that runs itself every second", "The line that called the current function"], answer: 0 }
+    explain: "Async code starts a job and does not wait for it. The function you hand over, the callback, runs when the job is done."
+    reteach: "### Asynchronous: start now, finish later"
+
+  - id: q04
+    type: predict-output
+    concept: asynchronous
+    code: |
+      console.log("A");
+      setTimeout(() => console.log("B"), 0);
+      console.log("C");
+    answer: "A\nC\nB"
+    explain: "Plain lines run first, top to bottom. The timer's callback waits in the queue until the script has finished, even with a delay of 0."
+    reteach: "### Why a delay of 0 still waits"
+
+  - id: q05
+    type: predict-output
+    concept: task-queue
+    code: |
+      setTimeout(() => console.log("stock"), 20);
+      setTimeout(() => console.log("banner"), 5);
+      console.log("page");
+    answer: "page\nbanner\nstock"
+    explain: "The plain line prints first. Then the callbacks run in the order their timers finish: 5 ms before 20 ms."
+    reteach: "## Worked example"
+
+  - id: q06
+    type: predict-output
+    concept: synchronous
+    code: |
+      let stock = 0;
+      setTimeout(() => {
+        stock = 3;
+      }, 0);
+      console.log(`Stock: ${stock}`);
+    answer: "Stock: 0"
+    explain: "The last line runs before the callback does, so stock is still 0 when it prints."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: predict-output
+    concept: event-loop
+    code: |
+      console.log("1");
+      setTimeout(() => {
+        console.log("3");
+        setTimeout(() => console.log("5"), 0);
+        console.log("4");
+      }, 0);
+      console.log("2");
+    answer: "1\n2\n3\n4\n5"
+    explain: "The script prints 1 and 2. Then the first callback runs and prints 3 and 4. The timer it set goes to the back of the queue, so 5 prints last."
+    reteach: "### The task queue and the event loop"
+
+  - id: q08
+    type: mcq
+    concept: call-stack
+    prompt: "When can the event loop move a waiting callback onto the call stack?"
+    choices: ["Only when the call stack is empty", "Whenever the timer ends, even in the middle of a function", "Only after the page reloads", "Only when the task queue is empty"]
+    answer: 0
+    explain: "The thread works on the top of the call stack. A callback runs only once the stack is empty and the thread is free."
+    reteach: "### The call stack"
+
+  - id: q09
+    type: mcq
+    concept: task-queue
+    variants:
+      - { prompt: "Where does a timer's callback wait once its timer has finished?", choices: ["In the task queue", "On the call stack", "Inside the setTimeout line", "In localStorage"], answer: 0 }
+      - { prompt: "Two callbacks are waiting in the task queue. Which runs first?", choices: ["The one that joined the queue first", "The one with the shorter name", "The one written lower in the file", "Both at the same time"], answer: 0 }
+    explain: "Finished callbacks wait in the task queue, first in, first out, until the event loop runs them."
+    reteach: "### The task queue and the event loop"
+
+  - id: q10
+    type: fill-blank
+    concept: asynchronous
+    goal: "Ask the browser to run this callback after at least 500 milliseconds, while the code below carries on."
+    prompt: "___(() => console.log(\"Show the banner\"), 500);"
+    answers: ["setTimeout"]
+    explain: "setTimeout(callback, ms) hands the callback to the browser and returns at once."
+    reteach: "### Asynchronous: start now, finish later"
+
+  - id: q11
+    type: order
+    concept: event-loop
+    prompt: "Put the steps in order for one timer callback, from start to finish."
+    items:
+      - "The script calls setTimeout and carries on with its next line"
+      - "The timer finishes, and the browser puts the callback in the task queue"
+      - "The event loop finds the call stack empty and takes the callback from the queue"
+      - "The callback runs on the call stack"
+    explain: "The browser holds the timer, the finished callback waits in the queue, and the event loop runs it when the stack is empty."
+    reteach: "### The task queue and the event loop"
+
+  - id: q12
+    type: spot-the-bug
+    concept: blocking
+    code: |
+      function showStockLater() {
+        const end = Date.now() + 2000;
+        while (Date.now() < end) {}
+        console.log("Stock: 3");
+      }
+    bugLine: 3
+    explain: "The while loop keeps the only thread busy for two seconds, so the page freezes. Use setTimeout so the thread stays free."
+    reteach: "### Blocking: when waiting freezes the page"

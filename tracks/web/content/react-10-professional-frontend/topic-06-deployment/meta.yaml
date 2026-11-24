@@ -1,0 +1,22 @@
+id: react-10-professional-frontend/topic-06-deployment
+title: "Deploying a frontend"
+order: 6
+minutes: 10
+prerequisites: [react-10-professional-frontend/topic-05-seo-and-sharing]
+concepts: [build-output, static-hosting-and-cdn, caching-headers, spa-fallback, public-env-vars, preview-and-rollback, domains-and-https]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-1006
+  from: maya
+  title: "dhaaga.in has to be live by Friday"
+  body: >
+    Launch is Friday at 10:00, when Meera Aunty posts the link on Instagram.
+    Right now the store only runs on our laptops. I want it on a real host, on dhaaga.in with HTTPS, with a preview link for every pull request and a rollback we can do in one click.
+    Read up on how a frontend gets deployed, so we can pick a host and plan launch morning together.
+hints:
+  - "A React app builds into plain files: npm run build makes a dist/ folder with index.html and hashed files under assets/. A static host or CDN just serves those files."
+  - "Cache the hashed assets for a year, but never cache index.html, so a new deploy reaches everyone at once. Send every unknown path to index.html, so /products/DC-1042 works on refresh."
+  - "Anything in a VITE_ variable ends up in the bundle, readable by anyone. Secrets belong on a server, never in the frontend."
+review: true

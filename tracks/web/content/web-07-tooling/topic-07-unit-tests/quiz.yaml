@@ -1,0 +1,118 @@
+topic: web-07-tooling/topic-07-unit-tests
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: test-structure
+    variants:
+      - { prompt: "What is a unit test?", choices: ["Code that runs one small piece, like a function, with an example and checks the answer", "A person who clicks through the website before launch", "A list of bugs customers reported", "A build step that makes the bundle smaller"], answer: 0 }
+      - { prompt: "How does Vitest find your test files?", choices: ["By their name ending, like delivery.test.js", "By reading package.json's dependencies", "By looking for files in dist/", "You must list each file by hand"], answer: 0 }
+      - { prompt: "In a Vitest file, what is it(...)?", choices: ["One test, with a name that reads as a sentence", "A group of tests", "A matcher", "The function being tested"], answer: 0 }
+    explain: "A unit test runs one small unit with an example and checks the answer. Vitest finds files ending in .test.js; describe groups tests, and it is one test."
+    reteach: "### Syntax: a test file"
+
+  - id: q02
+    type: order
+    concept: test-structure
+    prompt: "Put the three parts of a test in order."
+    items:
+      - "Arrange: set up the input, like a cart with one amigurumi"
+      - "Act: call the code, like orderTotal(lines)"
+      - "Assert: check the answer with expect"
+    explain: "Arrange, act, assert: set up, call, then check."
+    reteach: "### Arrange, act, assert"
+
+  - id: q03
+    type: mcq
+    concept: test-structure
+    variants:
+      - { prompt: "What is the second argument in expect(fee, \"₹450 pays ₹60 delivery\")?", choices: ["A message shown when the test fails", "The value the test expects", "The test's name", "How long the test may take"], answer: 0 }
+      - { prompt: "Why give each test one idea?", choices: ["So the test's name can say exactly what broke", "Vitest refuses tests with two expects", "Tests with one idea run on every browser", "So the test file is shorter"], answer: 0 }
+    explain: "The message explains the rule to whoever reads the failure. One idea per test means the name says what broke."
+    reteach: "### Arrange, act, assert"
+
+  - id: q04
+    type: predict-output
+    concept: matchers
+    code: |
+      const a = { code: "KEY", qty: 2 };
+      const b = { code: "KEY", qty: 2 };
+      console.log(a === b);
+      console.log(JSON.stringify(a) === JSON.stringify(b));
+    answer: "false\ntrue"
+    explain: "a and b are two different objects, so === says false, like toBe. Their contents are the same, which is what toEqual checks."
+    reteach: "### Syntax: matchers"
+
+  - id: q05
+    type: mcq
+    concept: matchers
+    variants:
+      - { prompt: "Which matcher checks that firstLine(cart) has the contents { code: \"KEY\", qty: 2 }?", choices: ["toEqual", "toBe", "toThrow", "toBeGreaterThan"], answer: 0 }
+      - { prompt: "Which line checks that deliveryFee(-6000) throws a RangeError?", choices: ["expect(() => deliveryFee(-6000)).toThrow(RangeError)", "expect(deliveryFee(-6000)).toThrow(RangeError)", "expect(deliveryFee).toBe(RangeError)", "expect(RangeError).toThrow(deliveryFee(-6000))"], answer: 0 }
+      - { prompt: "How does toBe compare?", choices: ["Like ===: the same value, or the very same object", "Like ==, converting types first", "By comparing the contents of objects", "By comparing the text of the code"], answer: 0 }
+    explain: "toBe compares with ===. toEqual compares contents. toThrow needs the call wrapped in () => so it can catch the error."
+    reteach: "### Syntax: matchers"
+
+  - id: q06
+    type: spot-the-bug
+    concept: matchers
+    prompt: "This test crashes instead of passing, even though deliveryFee is correct. Which line is wrong?"
+    code: |
+      import { it, expect } from "vitest";
+      import { deliveryFee } from "../src/delivery.js";
+
+      it("refuses a negative subtotal", () => {
+        expect(deliveryFee(-6000)).toThrow(RangeError);
+      });
+    bugLine: 5
+    explain: "deliveryFee(-6000) throws before expect starts. Write expect(() => deliveryFee(-6000)).toThrow(RangeError)."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: mcq
+    concept: choosing-cases
+    variants:
+      - { prompt: "Free delivery starts above ₹999. Which pair of cases sits on both sides of the boundary?", choices: ["99900 and 99901 paise", "45000 and 200000 paise", "0 and 15000 paise", "1 and 2 paise"], answer: 0 }
+      - { prompt: "Which case would catch a deliveryFee that uses >= 99900 instead of > 99900?", choices: ["Exactly 99900 paise, expecting 6000", "45000 paise, expecting 6000", "200000 paise, expecting 0", "0 paise, expecting 0"], answer: 0 }
+      - { prompt: "Which case would catch a deliveryFee that returns 60 instead of 6000?", choices: ["15000 paise, expecting 6000", "200000 paise, expecting 0", "0 paise, expecting 0", "99901 paise, expecting 0"], answer: 0 }
+    explain: "Put cases on both sides of every boundary, at the edges, and use real amounts, so each kind of mistake changes at least one answer."
+    reteach: "### Choosing good cases"
+
+  - id: q08
+    type: mcq
+    concept: choosing-cases
+    variants:
+      - { prompt: "What is a mutant?", choices: ["A copy of the code with one small mistake put in on purpose", "A test that changes every time it runs", "A package with a broken version number", "A branch that was merged twice"], answer: 0 }
+      - { prompt: "Your cases all pass on a version of deliveryFee that is never free. What does that tell you?", choices: ["Your cases are missing an order above ₹999", "Your deliveryFee is wrong", "The never-free version is correct", "Vitest is broken"], answer: 0 }
+      - { prompt: "You run deliveryFee(99900), see 0, and write expected: 0 into a case. What is wrong?", choices: ["The expected answer must come from the rule, not from the code", "Nothing: the code is always right", "Cases cannot use 99900", "expected must be a string"], answer: 0 }
+    explain: "A test is only as good as the bugs it catches. Work out expected answers from the rule, and check your cases fail on broken versions."
+    reteach: "### Do your tests catch bugs?"
+
+  - id: q09
+    type: mcq
+    concept: test-tables
+    variants:
+      - { prompt: "What does it.each(cases)(\"$name\", ...) do?", choices: ["Makes one test per case, named after each case's name", "Runs one test with all the cases joined", "Checks that cases is an array", "Runs the tests in a random order"], answer: 0 }
+      - { prompt: "Why write many similar tests as a table of cases?", choices: ["Adding a test becomes adding one line of data", "Tables run faster than it", "Vitest only allows one it per file", "Tables don't need expect"], answer: 0 }
+    explain: "it.each turns an array of examples into one test each, so a new example is one new line."
+    reteach: "### Syntax: a table of cases"
+
+  - id: q10
+    type: fill-blank
+    concept: test-tables
+    goal: "Write the test case that checks an order of exactly ₹999 still pays ₹60 delivery."
+    prompt: "{ name: \"exactly ₹999 still pays ₹60\", subtotal: 99900, expected: ___ }"
+    answers: ["6000"]
+    explain: "₹60 is 6000 paise. Exactly ₹999 is not above ₹999, so delivery is still charged."
+    reteach: "### Choosing good cases"
+
+  - id: q11
+    type: mcq
+    concept: running-tests
+    variants:
+      - { prompt: "What does plain npx vitest do?", choices: ["Runs the tests, then runs them again every time you save", "Runs the tests once and stops", "Builds the site into dist/", "Installs Vitest"], answer: 0 }
+      - { prompt: "Which command should a CI robot use?", choices: ["vitest run, which runs once and stops", "npx vitest in watch mode", "npm run dev", "vite preview"], answer: 0 }
+      - { prompt: "A failure says: expected 60 to be 6000 // Object.is equality. What did the code return?", choices: ["60", "6000", "Object.is", "Nothing"], answer: 0 }
+    explain: "npx vitest watches and reruns. vitest run runs once, for CI. In a failure, \"expected X to be Y\" means your code gave X and the test wanted Y."
+    reteach: "### Syntax: running the tests"

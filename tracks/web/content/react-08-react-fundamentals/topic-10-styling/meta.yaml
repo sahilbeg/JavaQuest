@@ -1,0 +1,24 @@
+id: react-08-react-fundamentals/topic-10-styling
+title: "Styling components"
+order: 10
+minutes: 9
+prerequisites: [react-08-react-fundamentals/topic-09-lifting-state]
+concepts: [css-import, class-name, conditional-classes, style-prop, css-modules]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0810
+  from: sana
+  title: "Colour chips that show which one is picked"
+  body: >
+    Customers choose a yarn colour with little chips, but nothing shows which chip is picked, so Mrs. D'Souza
+    ordered Rani pink booties thinking she had picked Mint. Each chip needs a real swatch of its colour and an
+    Indigo border when picked. Sale prices should get a Marigold highlight too.
+hints:
+  - "Build the class name from the state: className={selected ? \"chip chip--selected\" : \"chip\"}. Note the space between the two class names."
+  - "The swatch colour comes from data, so it is a good place for the style prop: style={{ backgroundColor: HEX[colour] }}. Style keys are camelCase."
+  - "In style.css, write .chip--selected { border-color: #2E3A8C; } and .price--sale { background-color: #F2A81D; }."
+review: true

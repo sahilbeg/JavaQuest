@@ -1,0 +1,115 @@
+topic: web-07-tooling/topic-10-production-builds
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: minification
+    variants:
+      - { prompt: "What does minification do?", choices: ["Makes code as short as possible without changing what it does", "Removes features nobody uses from the page", "Makes images smaller", "Turns JavaScript into HTML"], answer: 0 }
+      - { prompt: "Why is minified code hard to read but fine to ship?", choices: ["People need names and spaces, but the browser doesn't", "Browsers can only run minified code", "Minified code is encrypted", "It is only used in tests"], answer: 0 }
+    explain: "Minification removes spaces and comments and shortens names. The browser runs it the same way, and it downloads faster."
+    reteach: "### Minification"
+
+  - id: q02
+    type: predict-output
+    concept: minification
+    code: |
+      const t=e=>e.paise*e.qty;
+      console.log(t({paise:35000,qty:2}));
+    answer: "70000"
+    explain: "Minified code still works: two baby booties at 35000 paise each are 70000 paise."
+    reteach: "### Minification"
+
+  - id: q03
+    type: mcq
+    concept: bundle-size
+    variants:
+      - { prompt: "money.js exports five functions and the page imports two. What does tree shaking do?", choices: ["Leaves the three unused functions out of the bundle", "Puts all five in the bundle", "Throws an error for unused exports", "Moves the unused ones into public/"], answer: 0 }
+      - { prompt: "What does a dynamic import(\"./giftGuide.js\") do in a build?", choices: ["Puts giftGuide.js in its own file, downloaded only when needed", "Copies giftGuide.js into every page", "Deletes giftGuide.js", "Runs giftGuide.js at build time"], answer: 0 }
+      - { prompt: "In the build output, which size is closest to what travels to the phone?", choices: ["The gzip size", "The size before gzip", "The size of src/", "The size of node_modules"], answer: 0 }
+    explain: "Tree shaking drops unused code, dynamic import splits rare parts into their own files, and the gzip size is what really travels."
+    reteach: "### Bundle size"
+
+  - id: q04
+    type: mcq
+    concept: caching
+    variants:
+      - { prompt: "What is a browser cache?", choices: ["A store of copies of files the browser already downloaded", "The list of tabs you have open", "A folder on the server", "The site's database"], answer: 0 }
+      - { prompt: "What does Cache-Control: no-cache mean?", choices: ["Keep a copy, but check with the server before every use", "Never keep a copy at all", "Keep the copy for a year", "Delete the file after one use"], answer: 0 }
+      - { prompt: "What does Cache-Control: max-age=31536000, immutable mean?", choices: ["Use your copy for a year without asking; it will never change", "Check the server every time", "The file is 31536000 bytes", "The file expires in 31 seconds"], answer: 0 }
+    explain: "The cache keeps copies to save time. max-age says how long to trust a copy without asking. no-cache says re-check every time."
+    reteach: "### Caching"
+
+  - id: q05
+    type: mcq
+    concept: caching
+    prompt: "The old site served app.js with a week-long max-age, then shipped a fix in a new app.js. Why do some phones still show ₹NaN?"
+    choices: ["They cached the old app.js and may use it for a week without asking", "The server deleted the fix", "Phones can't run fixes", "The fix only works on the dev server"]
+    answer: 0
+    explain: "Same name, long max-age: phones trust their old copy until it expires. That is why file names should change with their content."
+    reteach: "### Caching"
+
+  - id: q06
+    type: mcq
+    concept: content-hashing
+    variants:
+      - { prompt: "What is a content hash in a file name, like index-C3r9kQe1.js?", choices: ["A short code worked out from the file's content", "The date the file was built", "A random name that changes every build, even with no changes", "The developer's initials"], answer: 0 }
+      - { prompt: "You change one line in cart.js and build again. What happens to the JavaScript file's name?", choices: ["It changes, because the content changed", "It stays the same", "It gets a number added, like index-2.js", "It is deleted"], answer: 0 }
+      - { prompt: "You build twice with no changes at all. What happens to the hashed names?", choices: ["They stay the same", "They all change", "Only the CSS name changes", "The build fails"], answer: 0 }
+    explain: "The same content always gives the same hash, and changed content gives a new one. So a hashed name never changes its meaning."
+    reteach: "### Content hashing"
+
+  - id: q07
+    type: mcq
+    concept: content-hashing
+    variants:
+      - { prompt: "Which caching rules work with hashed files?", choices: ["index.html: no-cache. assets/: max-age of a year, immutable", "index.html: a year. assets/: no-cache", "Everything: a year", "Nothing may be cached"], answer: 0 }
+      - { prompt: "Why must index.html be re-checked on every visit?", choices: ["It keeps its name and lists the newest hashed file names", "It is the biggest file", "Browsers never cache HTML", "It holds the source maps"], answer: 0 }
+      - { prompt: "Why is it safe to cache files in assets/ for a year?", choices: ["A file never changes under its name: new content gets a new name", "Browsers ignore max-age for JavaScript", "assets/ files are never used", "The server deletes them after a year"], answer: 0 }
+    explain: "Hashed files can be cached for a year because new content means a new name. index.html keeps its name, so it is re-checked every time."
+    reteach: "### Content hashing"
+
+  - id: q08
+    type: spot-the-bug
+    concept: content-hashing
+    prompt: "These are the server's caching rules for dhaaga.in. Which line makes customers run old code for a year after a deploy?"
+    code: |
+      /index.html       Cache-Control: max-age=31536000
+      /assets/*.js      Cache-Control: max-age=31536000, immutable
+      /assets/*.css     Cache-Control: max-age=31536000, immutable
+      /favicon.svg      Cache-Control: max-age=86400
+    bugLine: 1
+    explain: "index.html keeps its name and lists the newest files. If phones trust it for a year, they never learn the new names. Give it no-cache."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: source-maps
+    variants:
+      - { prompt: "What is a source map?", choices: ["A file that links minified code back to the lines you wrote", "A map of the shop's locations", "A list of every file in src/", "A picture of the bundle sizes"], answer: 0 }
+      - { prompt: "A live error says at t (index-C3r9kQe1.js:1:2783). What helps you find your own line?", choices: ["A source map, so DevTools shows your file and line", "Reading the minified file by hand", "Clearing the cache", "Running npm ci"], answer: 0 }
+      - { prompt: "Which setting makes Vite write source maps?", choices: ["build: { sourcemap: true } in vite.config.js", "\"sourcemap\": true in package.json's dependencies", "VITE_SOURCEMAP=true in .env", "npm run preview --maps"], answer: 0 }
+    explain: "A source map links each spot in the minified bundle back to your source, so the debugger and error reports show your own lines."
+    reteach: "### Source maps"
+
+  - id: q10
+    type: order
+    concept: caching
+    prompt: "A customer visited on Sunday. Kavya ships a fix on Monday. Put Tuesday's visit in order."
+    items:
+      - "The phone re-checks index.html with the server"
+      - "It gets the new index.html, which names index-b7.js"
+      - "index-b7.js is not in its cache, so it downloads it"
+      - "The fixed cart runs, with nothing cleared by hand"
+    explain: "index.html is always re-checked, and it points at the new hashed file, which the phone has never seen, so it downloads it."
+    reteach: "### Content hashing"
+
+  - id: q11
+    type: fill-blank
+    concept: caching
+    goal: "The Cache-Control value that lets a browser keep index.html but makes it re-check with the server before every use."
+    prompt: "Cache-Control: ___"
+    answers: ["no-cache"]
+    explain: "no-cache means keep a copy if you like, but always check it is still current before using it."
+    reteach: "### Caching"

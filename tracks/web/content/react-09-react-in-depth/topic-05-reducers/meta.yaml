@@ -1,0 +1,25 @@
+id: react-09-react-in-depth/topic-05-reducers
+title: "useReducer for the cart"
+order: 5
+minutes: 10
+prerequisites: [react-09-react-in-depth/topic-04-context]
+concepts: [action, reducer, pure-reducer, use-reducer, unknown-action]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0905
+  from: maya
+  title: "Five ways to change the cart, in five places"
+  body: >
+    The cart can now add, remove, change a quantity and empty itself, and coupons are coming next month.
+    Each change is a different setLines call in a different file, and last week "one less" on a keychain
+    left a line with qty 0. Please move every cart change into one reducer, so it all lives in one
+    function we can test without React.
+hints:
+  - "A reducer takes (state, action) and returns the next state. Use a switch on action.type, with one case per action."
+  - "Never change state. Return a new object: { ...state, lines: state.lines.filter(...) }, or map with { ...line, qty: action.qty } for the changed line."
+  - "For quantityChanged, if action.qty is 0 or less, return the same thing as removed. In CartPanel, write const [cart, dispatch] = useReducer(cartReducer, emptyCart);"
+review: true

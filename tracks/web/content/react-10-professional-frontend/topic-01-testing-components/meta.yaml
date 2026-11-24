@@ -1,0 +1,25 @@
+id: react-10-professional-frontend/topic-01-testing-components
+title: "Testing components like a user"
+order: 1
+minutes: 10
+prerequisites: [react-09-react-in-depth/boss]
+concepts: [user-centred-tests, queries-by-role, query-variants, user-event, mock-callbacks, tests-that-catch-bugs]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-1001
+  from: maya
+  title: "Checks that would catch a broken Add button"
+  body: >
+    We launch dhaaga.in next week, and the product card has no tests at all.
+    Last Diwali an Add button sent the wrong item for two days before Raju noticed the angry WhatsApp messages.
+    Write checks for ProductCard that use it like a customer: click, pick a quantity, try a sold-out item.
+    I'll know they're good when they fail on every broken copy I throw at them.
+hints:
+  - "Copy the worked example. Each check renders <Card ... />, does what a customer does, then uses expect with a message."
+  - "Make onAdd a spy with vi.fn(). After the click, onAdd.mock.calls is a list of every call, like [[\"DC-1042\", 1]]. Compare the whole list with toEqual, so a second call or a wrong id fails."
+  - "const user = userEvent.setup(); await user.selectOptions(screen.getByLabelText(\"Quantity\"), \"3\"); await user.click(screen.getByRole(\"button\", { name: \"Add to cart\" })); For sold out, check button.disabled is true and onAdd.mock.calls.length is 0 after a click."
+review: true

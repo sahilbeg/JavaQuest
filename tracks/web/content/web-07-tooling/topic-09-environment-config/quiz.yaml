@@ -1,0 +1,109 @@
+topic: web-07-tooling/topic-09-environment-config
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: env-variables
+    variants:
+      - { prompt: "What is configuration?", choices: ["Settings that change between environments while the code stays the same", "The code that draws the catalogue", "The list of packages in package.json", "The CSS for each page"], answer: 0 }
+      - { prompt: "Which value should come from an environment variable?", choices: ["The orders API address, which differs between laptop, staging and live", "The rule that ₹1 is 100 paise", "The name of the cartTotal function", "The text on the Add to cart button"], answer: 0 }
+      - { prompt: "What was wrong with typing the API address into cart.js?", choices: ["Every environment used the same address, so the test site talked to the real shop", "cart.js became too long", "Addresses can't be written in JavaScript", "Vite refuses to build files with URLs in them"], answer: 0 }
+    explain: "Configuration is what changes from place to place. Handing it in from outside lets the same code run safely on a laptop, on staging and live."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: import-meta-env
+    variants:
+      - { prompt: "In a Vite project, where do settings arrive?", choices: ["import.meta.env", "window.settings", "process.config", "package.json's scripts"], answer: 0 }
+      - { prompt: "What is import.meta.env.MODE during npm run build?", choices: ["\"production\"", "\"development\"", "\"build\"", "undefined"], answer: 0 }
+      - { prompt: ".env says API_URL=https://api.dhaaga.in. What is import.meta.env.API_URL?", choices: ["undefined, because the name doesn't start with VITE_", "\"https://api.dhaaga.in\"", "true", "An error at build time"], answer: 0 }
+    explain: "Vite fills import.meta.env from .env files. MODE says development or production, and only names starting with VITE_ reach the page."
+    reteach: "### Syntax: import.meta.env"
+
+  - id: q03
+    type: mcq
+    concept: import-meta-env
+    variants:
+      - { prompt: "Which .env file should never be committed to Git?", choices: [".env.local", ".env", ".env.production", ".env.development"], answer: 0 }
+      - { prompt: "You changed .env.development while npm run dev was running. What do you do?", choices: ["Restart npm run dev, because values are read when it starts", "Nothing, the page updates by itself", "Run npm ci", "Commit the file first"], answer: 0 }
+      - { prompt: "Which .env file does npm run build use, besides .env?", choices: [".env.production", ".env.development", ".env.test", "None: builds ignore .env files"], answer: 0 }
+    explain: ".env applies everywhere, .env.development to the dev server and .env.production to the build. *.local files are personal and stay out of Git."
+    reteach: "### Syntax: .env files"
+
+  - id: q04
+    type: fill-blank
+    concept: import-meta-env
+    goal: "A line in .env.production that gives the site the live orders API address, with the prefix Vite needs."
+    prompt: "___=https://api.dhaaga.in"
+    answers: ["VITE_API_URL"]
+    explain: "Only names starting with VITE_ reach import.meta.env, so the setting is VITE_API_URL."
+    reteach: "### Syntax: .env files"
+
+  - id: q05
+    type: predict-output
+    concept: env-strings
+    code: |
+      const env = { VITE_SHOW_DIWALI: "false" };
+      console.log(Boolean(env.VITE_SHOW_DIWALI));
+      console.log(env.VITE_SHOW_DIWALI === "true");
+    answer: "true\nfalse"
+    explain: "Environment values are text. Any non-empty text, even \"false\", is truthy. Compare the text with === \"true\" instead."
+    reteach: "### Everything is text"
+
+  - id: q06
+    type: predict-output
+    concept: env-strings
+    code: |
+      const env = { VITE_FREE_DELIVERY_ABOVE: "99900" };
+      console.log(env.VITE_FREE_DELIVERY_ABOVE + 100);
+      console.log(Number(env.VITE_FREE_DELIVERY_ABOVE) + 100);
+    answer: "99900100\n100000"
+    explain: "+ on text joins it. Convert the text to a number first, once, in the config module."
+    reteach: "### Everything is text"
+
+  - id: q07
+    type: mcq
+    concept: defaults-and-validation
+    variants:
+      - { prompt: "The live build has no VITE_API_URL. What should the config do?", choices: ["Throw an Error that names VITE_API_URL, so the problem is found at once", "Use http://localhost:3000", "Use an empty string", "Carry on and let each order fail"], answer: 0 }
+      - { prompt: "VITE_SHOW_DIWALI is missing. What is a safe default?", choices: ["false: no banner", "true: show the banner", "Throw an error", "\"maybe\""], answer: 0 }
+      - { prompt: "What does failing fast mean?", choices: ["Stopping as early as possible with a clear message when something is wrong", "Making the site load quickly", "Skipping slow tests", "Retrying a failed request quickly"], answer: 0 }
+    explain: "Use a safe default where one exists. Where none does, like the live API address, fail fast with a message that names the setting."
+    reteach: "### Defaults and failing fast"
+
+  - id: q08
+    type: spot-the-bug
+    concept: defaults-and-validation
+    prompt: "This config runs on the live site. Which line can send every order to nowhere?"
+    code: |
+      export function loadConfig(env) {
+        const mode = env.MODE ?? "development";
+        const apiUrl = env.VITE_API_URL || "http://localhost:3000";
+        const showDiwaliOffer = env.VITE_SHOW_DIWALI === "true";
+        return Object.freeze({ mode, apiUrl, showDiwaliOffer });
+      }
+    bugLine: 3
+    explain: "If production forgets VITE_API_URL, the site quietly uses localhost, which no customer's phone has. In production, throw instead."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: defaults-and-validation
+    variants:
+      - { prompt: "Why does loadConfig take env as an argument instead of reading import.meta.env inside?", choices: ["A test can pass in any settings object it likes", "import.meta.env can only be read once", "Arguments make the bundle smaller", "Vite requires it"], answer: 0 }
+      - { prompt: "What does Object.freeze(config) do?", choices: ["Makes the object read-only, so no code can change a setting later", "Saves the config to disk", "Makes the config load faster", "Hides the config from DevTools"], answer: 0 }
+      - { prompt: "Why read every setting in one config module?", choices: ["Each setting is checked once, and names and defaults live in one file", "Other files are not allowed to import", "It makes every setting a secret", "Vite only reads one file"], answer: 0 }
+    explain: "One module reads, converts and checks every setting once. Taking env as an argument makes it testable, and freezing keeps it unchanged."
+    reteach: "### One config module"
+
+  - id: q10
+    type: mcq
+    concept: secrets
+    variants:
+      - { prompt: "Why must a payment secret key never be in a VITE_ variable?", choices: ["VITE_ values are copied into the bundle, which anyone can read", "VITE_ variables can't hold long text", "Secrets make the build fail", "Only numbers can be VITE_ variables"], answer: 0 }
+      - { prompt: "Where does the UPI gateway's secret key belong?", choices: ["On the server, which the website asks to do the secret work", "In .env.production", "In a VITE_ variable with a long name", "In a comment in main.js"], answer: 0 }
+      - { prompt: "Which value is fine to put in a VITE_ variable?", choices: ["The public orders API address", "The payment gateway's secret key", "The database password", "An admin's login token"], answer: 0 }
+    explain: "Everything in import.meta.env ships to every browser. Public values are fine. Secrets stay on the server."
+    reteach: "### Secrets do not belong in the browser"

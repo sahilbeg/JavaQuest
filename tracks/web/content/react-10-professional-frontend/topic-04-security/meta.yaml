@@ -1,0 +1,25 @@
+id: react-10-professional-frontend/topic-04-security
+title: "Security: XSS and safe rendering"
+order: 4
+minutes: 10
+prerequisites: [react-10-professional-frontend/topic-03-performance]
+concepts: [xss, react-escaping, dangerous-html, url-schemes, link-safety, defence-in-depth]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-1004
+  from: sam
+  title: "A review on Golu's page is doing something strange"
+  body: >
+    Raju here. Two customers phoned about Golu's page this morning.
+    One saw a strange message pop up under a review from "Rohan", and the other clicked his name and the page went blank.
+    The review looks like gibberish with angle brackets in our admin screen.
+    I've hidden reviews for now. Can you make them safe before we switch them back on?
+hints:
+  - "React already escapes anything you put in curly braces. {review.text} shows <img ...> as plain characters. The danger is the attribute that skips that escaping."
+  - "new URL(\"  JavaScript:alert(1)\").protocol is \"javascript:\": the parser strips the spaces and lowers the capitals for you. Wrap it in try/catch, because new URL throws for anything that isn't a full address."
+  - "In ReviewList: const link = safeUrl(review.website); then {link ? <a href={link} target=\"_blank\" rel=\"nofollow noopener noreferrer\">{review.author}</a> : review.author}"
+review: true

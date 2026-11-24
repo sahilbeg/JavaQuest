@@ -1,0 +1,5 @@
+id: react-08-react-fundamentals
+title: React fundamentals
+project: The store in React
+summary: Rebuild the Dhaaga store with React components, props, state, events, lists, forms and styles, so the page always matches the data.
+unlockAfter: web-07-tooling/boss

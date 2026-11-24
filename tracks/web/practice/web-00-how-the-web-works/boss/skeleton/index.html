@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+  <!-- TODO 1 (bronze): phones show each rupee sign as three strange letters. Tell the browser how this file's letters are stored. -->
+  <!-- TODO 2 (silver): that line must be the very first element inside the head. -->
+  <!-- TODO 3 (gold): give the html element a lang attribute, and add the viewport line for phones. -->
+  <title>Dhaaga & Co. price board</title>
+  <style>
+    /* Sana's brand colours: Marigold #F2A81D, Indigo #2E3A8C and Off-white #FAF7F0. */
+    body {
+      margin: 0;
+      padding: 24px 16px;
+      background: #FAF7F0;
+      color: #2E3A8C;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+      color: #2E3A8C;
+      border-bottom: 4px solid #F2A81D;
+    }
+
+    .note {
+      margin: 0 0 24px;
+      color: #555555;
+      font-size: 16px;
+    }
+
+    .price {
+      display: flex;
+      justify-content: space-between;
+      margin: 0 0 8px;
+      padding: 12px 16px;
+      background: #FFFFFF;
+      border: 1px solid #E8E1D0;
+      border-radius: 8px;
+    }
+
+    .price strong {
+      color: #2E3A8C;
+      font-weight: 700;
+    }
+
+    .footer {
+      margin-top: 24px;
+      font-size: 14px;
+      color: #555555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dhaaga & Co.</h1>
+  <p class="note">Prices at the FC Road stall. Pay by cash or UPI.</p>
+  <p class="price">Coaster set (4) <strong>₹150</strong></p>
+  <p class="price">Keychain <strong>₹120</strong></p>
+  <p class="price">Amigurumi (small toy) <strong>₹450</strong></p>
+  <p class="price">Tote bag <strong>₹899</strong></p>
+  <p class="price">Baby booties <strong>₹350</strong></p>
+  <p class="footer">Open Saturday and Sunday, 10:00 to 20:00.</p>
+</body>
+</html>

@@ -1,0 +1,61 @@
+:root {
+  --marigold: #F2A81D;
+  --indigo: #2E3A8C;
+  --off-white: #FAF7F0;
+}
+
+body {
+  margin: 0;
+  padding: 1rem;
+  font-family: system-ui, sans-serif;
+  background: var(--off-white);
+  color: #1f1f2e;
+}
+
+h1,
+h2 {
+  color: var(--indigo);
+}
+
+.lines li {
+  margin-bottom: 0.5rem;
+}
+
+button,
+.disclosure-title {
+  padding: 0.4rem 0.9rem;
+  border: 2px solid var(--indigo);
+  border-radius: 0.5rem;
+  background: white;
+  color: var(--indigo);
+  font: inherit;
+  cursor: pointer;
+}
+
+.disclosure h3 {
+  margin: 0.5rem 0;
+}
+
+.panel {
+  padding: 0 1rem;
+}
+
+button:focus-visible {
+  outline: 3px solid var(--marigold);
+  outline-offset: 2px;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.dialog {
+  max-width: 22rem;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  background: white;
+}

@@ -1,0 +1,22 @@
+id: react-10-professional-frontend/topic-05-seo-and-sharing
+title: "Search engines and sharing links"
+order: 5
+minutes: 10
+prerequisites: [react-10-professional-frontend/topic-04-security]
+concepts: [crawling-and-indexing, titles-and-descriptions, urls-and-canonical, spa-rendering, open-graph, robots-and-sitemaps, structured-data]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-1005
+  from: sana
+  title: "Golu's link looks blank on WhatsApp"
+  body: >
+    Sana here. Meera Aunty shared Golu's page in her school friends' WhatsApp group, and the preview just said "Vite + React". No photo, no price.
+    And when I search Google for "crochet elephant Pune", we're nowhere, even though Golu is the best one in the city.
+    Can you find out how search engines and link previews read our pages, and what we need to fix before launch?
+hints:
+  - "Search engines and link-preview bots fetch your HTML. Many of them, including WhatsApp's, don't run your JavaScript, so what they see is index.html as it arrives."
+  - "Every page needs its own <title> and <meta name=\"description\">. A shared link's card comes from Open Graph tags: og:title, og:description, og:image and og:url."
+  - "For a React store, render the product pages to HTML on the server or at build time, so the tags and the words are there before any JavaScript runs."
+review: true

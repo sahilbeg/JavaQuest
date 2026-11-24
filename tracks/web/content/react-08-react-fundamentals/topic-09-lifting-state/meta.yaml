@@ -1,0 +1,24 @@
+id: react-08-react-fundamentals/topic-09-lifting-state
+title: "Lifting state up"
+order: 9
+minutes: 10
+prerequisites: [react-08-react-fundamentals/topic-08-forms]
+concepts: [shared-state, lifting-state, callbacks-up, immutable-updates, single-source-of-truth]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0809
+  from: maya
+  title: "The cart summary always says 0"
+  body: >
+    Each product card counts its own Add taps, so the cards look right, but the cart summary at the top
+    always says 0 items and ₹0.00. Meera Aunty tried it on her phone and asked if the cart is broken.
+    The cart has to live in one place that both the cards and the summary read from.
+hints:
+  - "Move the useState out of ProductCard and into Shop, the closest parent of both the cards and the summary. Pass inCart and onAdd down to each card."
+  - "Keep the cart as an object from id to quantity. Add one with a new object: setCart((old) => ({ ...old, [id]: (old[id] ?? 0) + 1 }))."
+  - "Work out count with Object.values(cart).reduce(...) and the total with products.reduce((sum, p) => sum + p.paise * (cart[p.id] ?? 0), 0). Clear cart is just setCart({})."
+review: true

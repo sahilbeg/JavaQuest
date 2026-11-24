@@ -1,0 +1,24 @@
+id: react-08-react-fundamentals/topic-07-lists-and-keys
+title: "Lists and keys"
+order: 7
+minutes: 10
+prerequisites: [react-08-react-fundamentals/topic-06-conditional-rendering]
+concepts: [map-to-jsx, keys, key-choice, filter-map, sort-copy]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0807
+  from: maya
+  title: "Draw the catalogue from the product data"
+  body: >
+    Meera Aunty adds new items every week, and someone has to hand-write a card for each one. Let's draw the
+    list straight from the product data instead. She also wants a "Gifts under ₹500" shelf for Rakhi, cheapest
+    first. Keep the console clean: no key warnings.
+hints:
+  - "Turn the array into elements with map: {products.map((p) => <li key={p.id}>...</li>)}. The key goes on the outermost element the map returns."
+  - "Use the product's id as the key. It is unique and never changes, unlike its position in the list."
+  - "In GiftsUnder, filter first, then sort a copy: [...products].filter(...) or products.filter(...) already makes a new array, then .sort((a, b) => a.paise - b.paise)."
+review: true

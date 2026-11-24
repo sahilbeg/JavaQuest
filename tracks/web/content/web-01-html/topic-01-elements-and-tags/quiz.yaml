@@ -1,0 +1,115 @@
+topic: web-01-html/topic-01-elements-and-tags
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: elements-and-tags
+    prompt: "In <p>Handmade crochet</p>, what is the whole line, from <p> to </p>, called?"
+    choices: ["An element", "A tag", "An attribute", "A class"]
+    answer: 0
+    explain: "The whole thing is an element. <p> and </p> are its two tags, and the text between them is its content."
+    reteach: "### Syntax: an element"
+
+  - id: q02
+    type: mcq
+    concept: elements-and-tags
+    prompt: "What does the slash in </p> tell the browser?"
+    choices: ["The paragraph ends here", "The paragraph starts here", "The paragraph is hidden", "The paragraph is a link"]
+    answer: 0
+    explain: "A closing tag has a slash before the name. It marks where the element's content stops."
+    reteach: "### Syntax: an element"
+
+  - id: q03
+    type: fill-blank
+    concept: attributes
+    goal: "Label this paragraph tagline, a label many elements can share, so CSS can find it later."
+    prompt: "<p ___=\"tagline\">Handmade crochet from Pune.</p>"
+    answers: ["class"]
+    explain: "class gives an element a label that many elements can share. It goes inside the opening tag."
+    reteach: "### Syntax: attributes"
+
+  - id: q04
+    type: mcq
+    concept: attributes
+    prompt: "Which line tells screen readers that the page is in English?"
+    choices: ["<html lang=\"en\">", "<html class=\"en\">", "<html id=\"english\">", "<html>en</html>"]
+    answer: 0
+    explain: "The lang attribute names the page's language. Screen readers use it to pick the right voice."
+    reteach: "### Syntax: the lang attribute"
+
+  - id: q05
+    type: mcq
+    concept: attributes
+    prompt: "What is the difference between id and class?"
+    choices: ["An id must be unique on the page; many elements can share a class", "A class must be unique; many elements can share an id", "There is no difference", "id is for text and class is for photos"]
+    answer: 0
+    explain: "Only one element may have a given id. A class is a label that any number of elements can wear."
+    reteach: "### Syntax: attributes"
+
+  - id: q06
+    type: spot-the-bug
+    concept: nesting
+    prompt: "Which line breaks the nesting rule?"
+    code: |
+      <body>
+        <p class="tagline">Handmade crochet from Pune.</p>
+        <p>Made by <strong>Meera Aunty</p></strong>
+        <hr>
+      </body>
+    bugLine: 3
+    explain: "strong opened last, so it must close first: <strong>Meera Aunty</strong></p>."
+    reteach: "### Syntax: nesting"
+
+  - id: q07
+    type: order
+    concept: nesting
+    prompt: "Put the pieces in order to make a paragraph with one bold name inside it."
+    items:
+      - "<p>"
+      - "Made by"
+      - "<strong>"
+      - "Meera Aunty"
+      - "</strong>"
+      - "</p>"
+    explain: "p opens first, so it closes last. strong opens inside it and closes before it."
+    reteach: "### Syntax: nesting"
+
+  - id: q08
+    type: mcq
+    concept: nesting
+    prompt: "In <p>Made by <strong>Meera Aunty</strong></p>, what is p to strong?"
+    choices: ["Its parent", "Its child", "Its attribute", "Its closing tag"]
+    answer: 0
+    explain: "strong sits inside p, so strong is the child and p is the parent in the browser's tree."
+    reteach: "### The page is a tree"
+
+  - id: q09
+    type: mcq
+    concept: void-elements
+    prompt: "Which of these is a void element, with no closing tag?"
+    choices: ["<hr>", "<p>", "<strong>", "<body>"]
+    answer: 0
+    explain: "<hr> draws a line and can't hold content, so it has only an opening tag."
+    reteach: "### Syntax: void elements"
+
+  - id: q10
+    type: spot-the-bug
+    concept: void-elements
+    prompt: "Which line has a closing tag that should not be there?"
+    code: |
+      <p>Welcome to Dhaaga.</p>
+      <hr></hr>
+      <p>Open on Saturday and Sunday.</p>
+    bugLine: 2
+    explain: "<hr> is a void element. Write just <hr>, with no </hr>."
+    reteach: "### Syntax: void elements"
+
+  - id: q11
+    type: mcq
+    concept: elements-and-tags
+    prompt: "Two lines of text sit loose in the body, one under the other, outside any element. What does the browser show?"
+    choices: ["Both lines run together as one line, marked as nothing", "Two separate paragraphs", "Nothing: loose text is hidden", "An error message instead of the page"]
+    answer: 0
+    explain: "A new line in the file counts as a space, so the two lines join up. Wrap each one in <p> to make two paragraphs."
+    reteach: "### Text with no element"

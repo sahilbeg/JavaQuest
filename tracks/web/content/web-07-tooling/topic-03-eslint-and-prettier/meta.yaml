@@ -1,0 +1,22 @@
+id: web-07-tooling/topic-03-eslint-and-prettier
+title: "ESLint and Prettier"
+order: 3
+minutes: 9
+prerequisites: [web-07-tooling/topic-02-vite]
+concepts: [linting, lint-rules, formatting, lint-and-format-together, lint-scripts]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-0703
+  from: maya
+  title: "Half of every review is about spaces"
+  body: >
+    Yesterday's cart review had 31 comments. Twenty-six were about quotes, semicolons and tabs, and the
+    real bug, a == where there should have been a ===, got one comment at the very end. Please set up
+    ESLint and Prettier, so the tools argue about style and we can talk about bugs.
+hints:
+  - "ESLint looks for likely bugs, like unused variables and ==. Prettier only changes how the code looks."
+  - "Rules live in eslint.config.js. Prettier settings live in .prettierrc."
+  - "Add scripts like \"lint\": \"eslint .\" and \"format\": \"prettier --write .\", then run npm run lint before you push."
+review: true

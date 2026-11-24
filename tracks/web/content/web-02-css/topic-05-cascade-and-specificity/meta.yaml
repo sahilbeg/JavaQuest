@@ -1,0 +1,24 @@
+id: web-02-css/topic-05-cascade-and-specificity
+title: "The cascade and specificity: which rule wins"
+order: 5
+minutes: 10
+prerequisites: [web-02-css/topic-04-typography]
+concepts: [cascade-order, specificity, source-order, inheritance, important]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0205
+  from: sam
+  title: "Nobody can see that the booties are sold out"
+  body: >
+    Raju here. Mrs. Deshpande ordered two pairs of baby booties on WhatsApp last night, and we have none left.
+    She says the website looked normal. The Sold out label is there, but it's tiny grey text, and the Order button is grey too.
+    Sana says her CSS makes it red, so why doesn't the page listen?
+hints:
+  - "When two rules set the same property, the one with the stronger selector wins. An id beats any number of classes, and a class beats any number of tags."
+  - "#catalogue p has an id in it, so it beats .stock. !important beats everything, so .sold-out h3 can never win. And when two rules tie, the later one wins."
+  - "Change #catalogue p to main p, delete !important, and delete the old .buy rule at the bottom. Then add .sold-out .price { text-decoration: line-through; }"
+review: true

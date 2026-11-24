@@ -1,0 +1,163 @@
+topic: web-04-javascript-in-depth/topic-02-functions-as-values
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: arrow-functions
+    prompt: "Which arrow function returns double the price it is given?"
+    choices:
+      - "(paise) => paise * 2"
+      - "(paise) -> paise * 2"
+      - "(paise) => { paise * 2 }"
+      - "=> paise * 2"
+    answer: 0
+    explain: "An arrow is parameters, =>, then a body. A body in braces needs return, so the third one returns undefined."
+    reteach: "### Syntax: arrow functions"
+
+  - id: q02
+    type: predict-output
+    concept: functions-as-values
+    code: |
+      const greet = (name) => "Namaste, " + name;
+      const hello = greet;
+      console.log(hello("Meera"));
+      console.log(typeof hello);
+    answer: "Namaste, Meera\nfunction"
+    explain: "hello holds the same function as greet, so calling it works the same. typeof a function is \"function\"."
+    reteach: "### A function is a value"
+
+  - id: q03
+    type: predict-output
+    concept: callbacks
+    code: |
+      function countWhere(items, test) {
+        let count = 0;
+        for (const item of items) {
+          if (test(item)) {
+            count = count + 1;
+          }
+        }
+        return count;
+      }
+      const prices = [15000, 12000, 45000, 89900, 35000];
+      console.log(countWhere(prices, (p) => p > 20000));
+    answer: "3"
+    explain: "The callback returns true for 45000, 89900 and 35000, so countWhere counts three."
+    reteach: "### Callbacks: handing a function over"
+
+  - id: q04
+    type: mcq
+    concept: callbacks
+    prompt: "What is a callback?"
+    choices:
+      - "A function passed to another function, which calls it when it needs to"
+      - "A function that calls itself"
+      - "The value a function returns"
+      - "A function that can only be called once"
+    answer: 0
+    explain: "You hand a callback over as an argument. The function you gave it to decides when to call it."
+    reteach: "### Callbacks: handing a function over"
+
+  - id: q05
+    type: fill-blank
+    concept: arrow-functions
+    goal: "Write a short function that takes a price in paise and gives back half of it."
+    prompt: "const half = (paise) ___ paise / 2;"
+    answers: ["=>"]
+    explain: "An arrow function puts => between its parameters and its body."
+    reteach: "### Syntax: arrow functions"
+
+  - id: q06
+    type: predict-output
+    concept: higher-order-functions
+    code: |
+      function makeAdder(extra) {
+        return (paise) => paise + extra;
+      }
+      const addWrap = makeAdder(3000);
+      const addName = makeAdder(5000);
+      console.log(addWrap(15000), addName(addWrap(45000)));
+    answer: "18000 53000"
+    explain: "addWrap adds 3000 and addName adds 5000. 45000 + 3000 + 5000 is 53000."
+    reteach: "### Returning a function"
+
+  - id: q07
+    type: spot-the-bug
+    concept: callbacks
+    code: |
+      function sumBy(items, valueOf) {
+        let total = 0;
+        for (const item of items) {
+          total = total + valueOf(item);
+        }
+        return total;
+      }
+      const getPaise = (item) => item.paise;
+      console.log(sumBy([{ paise: 15000 }], getPaise()));
+    bugLine: 9
+    explain: "getPaise() calls the function with no item and crashes. Pass the function itself: getPaise, with no brackets."
+    reteach: "### Passing a function, not calling it"
+
+  - id: q08
+    type: predict-output
+    concept: arrow-functions
+    code: |
+      const makeLine = (code) => { code: code };
+      const fixed = (code) => ({ code: code });
+      console.log(makeLine("BAG"));
+      console.log(fixed("BAG").code);
+    answer: "undefined\nBAG"
+    explain: "Without round brackets, the braces are read as a block, which returns nothing. With them, the arrow returns an object."
+    reteach: "### Syntax: arrow bodies with braces"
+
+  - id: q09
+    type: mcq
+    concept: higher-order-functions
+    prompt: "Which of these is a higher-order function?"
+    choices:
+      - "function makeDiscount(percent) { return (p) => p - (p * percent) / 100; }"
+      - "function lineTotal(paise, qty) { return paise * qty; }"
+      - "function hello() { return \"Namaste\"; }"
+      - "function rupees(paise) { return paise / 100; }"
+    answer: 0
+    explain: "makeDiscount returns a function. The others take and return plain values."
+    reteach: "### Higher-order functions"
+
+  - id: q10
+    type: mcq
+    concept: arrow-functions
+    prompt: "const total = (a, b) => { a + b }; What does total(2, 3) return?"
+    choices:
+      - "undefined"
+      - "5"
+      - "\"23\""
+      - "It throws a SyntaxError"
+    answer: 0
+    explain: "A body in braces is a block. Without a return statement, it returns undefined."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: order
+    concept: higher-order-functions
+    prompt: "Put the lines in order so the program prints 40500."
+    items:
+      - "const makeDiscount = (percent) =>"
+      - "  (paise) => paise - (paise * percent) / 100;"
+      - "const tenOff = makeDiscount(10);"
+      - "console.log(tenOff(45000));"
+    explain: "makeDiscount must exist before it is called, and tenOff must exist before it is used. 45000 minus 10% is 40500."
+    reteach: "### Returning a function"
+
+  - id: q12
+    type: mcq
+    concept: functions-as-values
+    prompt: "In sumBy(cart, lineTotal), what is passed as the second argument?"
+    choices:
+      - "The lineTotal function itself"
+      - "The number that lineTotal returns"
+      - "A copy of the cart"
+      - "The string \"lineTotal\""
+    answer: 0
+    explain: "lineTotal without brackets is the function. sumBy will call it for each line."
+    reteach: "### Passing a function, not calling it"

@@ -1,0 +1,126 @@
+topic: web-03-javascript-basics/topic-01-variables
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: const
+    prompt: "Which line makes a box whose value can never be replaced?"
+    choices: ['const shop = "Dhaaga & Co.";', 'let shop = "Dhaaga & Co.";', 'shop = "Dhaaga & Co.";', 'shop == "Dhaaga & Co.";']
+    answer: 0
+    explain: "const makes a box you can't reassign. let makes one you can."
+    reteach: "### Syntax: const"
+
+  - id: q02
+    type: predict-output
+    concept: reassignment
+    code: |
+      let coasters = 12;
+      coasters = coasters - 3;
+      coasters = coasters + 5;
+      console.log(coasters);
+    answer: "14"
+    explain: "12 - 3 is 9, then 9 + 5 is 14. Each line reads the box as it is at that moment."
+    reteach: "### Syntax: reassigning"
+
+  - id: q03
+    type: predict-output
+    concept: undefined
+    code: |
+      let customer;
+      console.log(customer);
+    answer: "undefined"
+    explain: "A let box declared without a value holds undefined: nothing has been put in it yet."
+    reteach: "### undefined: an empty box"
+
+  - id: q04
+    type: spot-the-bug
+    concept: const
+    code: |
+      const coasters = 12;
+      console.log(coasters);
+      coasters = coasters - 1;
+      console.log(coasters);
+    bugLine: 3
+    explain: "coasters is a const, so it can't be reassigned. Declare it with let if it has to change."
+    reteach: "### const really means const"
+
+  - id: q05
+    type: fill-blank
+    concept: let
+    goal: "Make a box for the keychain count that is allowed to change as keychains sell."
+    prompt: "___ keychains = 20;"
+    answers: ["let"]
+    explain: "A count that changes needs a box you can reassign, and that's what let makes."
+    reteach: "### Syntax: let"
+
+  - id: q06
+    type: mcq
+    concept: naming
+    variants:
+      - { prompt: "Which name follows the usual JavaScript style for a variable?", choices: ["giftWrapFee", "GiftWrapFee", "gift-wrap-fee", "2giftWrapFee"], answer: 0 }
+      - { prompt: "Which of these is NOT a valid variable name?", choices: ["2ndItem", "secondItem", "item2", "_item"], answer: 0 }
+    explain: "Most names use camelCase. A name can't start with a digit or contain a dash or a space."
+    reteach: "### Naming rules"
+
+  - id: q07
+    type: predict-output
+    concept: reassignment
+    code: |
+      let item = "Keychain";
+      console.log(item);
+      item = "Tote bag";
+      console.log(item);
+      console.log("item");
+    answer: "Keychain\nTote bag\nitem"
+    explain: "Without quotes, JavaScript prints what is in the box. With quotes, it prints the word itself."
+    reteach: "### Syntax: reassigning"
+
+  - id: q08
+    type: mcq
+    concept: const
+    prompt: "The shop's name never changes, but the number of keychains in the box does. Which pair follows the lesson's advice?"
+    choices: ["const for the name, let for the count", "let for the name, const for the count", "const for both", "var for both"]
+    answer: 0
+    explain: "Start with const, and use let only for a box you must reassign, like a count."
+    reteach: "### Which one to use"
+
+  - id: q09
+    type: spot-the-bug
+    concept: reassignment
+    code: |
+      let coasters = 12;
+      let coasters = 10;
+      console.log(coasters);
+    bugLine: 2
+    explain: "The box already exists. Reassign it without let: coasters = 10;"
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: order
+    concept: reassignment
+    prompt: "Put the lines in order so the program prints 10."
+    items:
+      - "let coasters = 12;"
+      - "coasters = coasters - 2;"
+      - "console.log(coasters);"
+    explain: "Make the box first, then change it, then print it."
+    reteach: "## Worked example"
+
+  - id: q11
+    type: mcq
+    concept: undefined
+    prompt: "What does a let variable hold if you declare it without a value?"
+    choices: ["undefined", "0", "an empty text, \"\"", "It's an error"]
+    answer: 0
+    explain: "An empty let box holds undefined until you put something in it."
+    reteach: "### undefined: an empty box"
+
+  - id: q12
+    type: mcq
+    concept: naming
+    prompt: "Are coasters and Coasters the same variable?"
+    choices: ["No, capitals matter, so they are two different names", "Yes, JavaScript ignores capitals", "Yes, but only for numbers", "No, because Coasters is not allowed"]
+    answer: 0
+    explain: "JavaScript is case sensitive. A change in capital letters makes a different name."
+    reteach: "### Naming rules"

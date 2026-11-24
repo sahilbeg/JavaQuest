@@ -1,0 +1,24 @@
+id: react-08-react-fundamentals/topic-05-events
+title: "Handling events"
+order: 5
+minutes: 10
+prerequisites: [react-08-react-fundamentals/topic-04-state]
+concepts: [event-handlers, passing-arguments, event-object, bubbling, stop-propagation, handler-props]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0805
+  from: sam
+  title: "Add to cart opens the product page instead"
+  body: >
+    Raju here. A college student at the counter showed me her phone: she taps Add to cart on the Golu tile,
+    and the site jumps to Golu's page with an empty cart. Pressing Enter in the search box does nothing either.
+    Can you sort out the buttons and the search box?
+hints:
+  - "Give React a function to call later: onClick={handleClick}, or onClick={() => onOpen(id)} when you need to pass the id."
+  - "A click on the button bubbles up to the <article> around it. Call event.stopPropagation() in the button's handler so the tile never hears it."
+  - "In the search box's onKeyDown handler, check if (event.key === \"Enter\") and then call onSearch(event.target.value)."
+review: true

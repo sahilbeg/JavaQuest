@@ -1,0 +1,23 @@
+id: web-06-async-javascript/topic-08-parallel-requests
+title: "Many requests at once: Promise.all"
+order: 8
+minutes: 9
+prerequisites: [web-06-async-javascript/topic-07-loading-and-errors]
+concepts: [sequential-vs-parallel, promise-all, result-order, fail-fast, promise-all-settled]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0608
+  from: maya
+  title: "The stock list takes twelve seconds on 3G"
+  body: >
+    The stall's tablet shows stock for every item on the table. It asks for them one at a time,
+    so twelve items take twelve round trips, and on Sunday's 3G that was twelve seconds of spinner.
+    Also, one bad id stops the whole list from showing. Please make stockAll.js ask for them all at once.
+hints:
+  - "Calling getStock(id) for every id starts every request straight away. ids.map(...) gives you an array of promises."
+  - "Promise.all(promises) waits for all of them and keeps the order of the ids. Promise.allSettled does the same but never rejects: each result says fulfilled or rejected."
+  - "const stocks = await Promise.all(ids.map((id) => getStock(id))); then return ids.map((id, i) => ({ id, stock: stocks[i] })). In stockReport, loop over the settled results and push to found or failed by result.status."
+review: true

@@ -1,0 +1,118 @@
+topic: web-05-dom-and-events/topic-01-the-dom
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: dom-tree
+    variants:
+      - { prompt: "What is the DOM?", choices: ["The tree of objects the browser builds from the HTML", "The HTML file saved on the server", "A list of every CSS rule on the page", "A JavaScript library you install with npm"], answer: 0 }
+      - { prompt: "When your JavaScript changes the page, what does it change?", choices: ["The DOM objects in the browser", "The index.html file on the server", "The HTML text the phone downloaded", "The CSS file"], answer: 0 }
+    explain: "The browser parses the HTML into a tree of objects, the DOM. JavaScript reads and changes those objects. The HTML file never changes."
+    reteach: "### From HTML text to a tree"
+
+  - id: q02
+    type: mcq
+    concept: document-object
+    prompt: "Which ready-made variable is the root of the page's tree, where every search starts?"
+    choices: ["document", "page", "html", "dom"]
+    answer: 0
+    explain: "The browser gives every script the document object. document.body, document.title and document.querySelector all start from it."
+    reteach: "### The document object"
+
+  - id: q03
+    type: fill-blank
+    concept: elements-and-text-nodes
+    goal: "Count the list's li elements, skipping the spaces and line breaks between the tags."
+    prompt: "const count = list.___.length;"
+    answers: ["children"]
+    explain: "children holds only elements. childNodes would also count the text nodes between the tags."
+    reteach: "### Elements and text nodes"
+
+  - id: q04
+    type: mcq
+    concept: elements-and-text-nodes
+    prompt: "A ul holds three li tags, each on its own line, with spaces before them. What is list.childNodes.length?"
+    choices: ["7", "3", "4", "6"]
+    answer: 0
+    explain: "There is a text node before the first li, between each pair, and after the last: 4 text nodes plus 3 elements make 7."
+    reteach: "### Elements and text nodes"
+
+  - id: q05
+    type: mcq
+    concept: parents-and-children
+    prompt: "An li sits inside ul#products, which sits inside section#catalogue. What does item.parentElement.id give for that li?"
+    choices: ["\"products\"", "\"catalogue\"", "\"\"", "null"]
+    answer: 0
+    explain: "parentElement walks up exactly one step, to the ul. Its id is products."
+    reteach: "### Syntax: walking the tree"
+
+  - id: q06
+    type: mcq
+    concept: parents-and-children
+    prompt: "The list ul#products is empty. What is list.firstElementChild?"
+    choices: ["null", "undefined", "An empty string", "It throws an error"]
+    answer: 0
+    explain: "firstElementChild is null when there are no child elements. Check for null before you read its text."
+    reteach: "### Syntax: walking the tree"
+
+  - id: q07
+    type: spot-the-bug
+    concept: parents-and-children
+    code: |
+      const list = document.querySelector("#products");
+      const names = list.children.map((item) => item.textContent.trim());
+      console.log(names);
+    bugLine: 2
+    explain: "list.children is an HTMLCollection, not an array, so it has no map. Spread it first: [...list.children].map(...)."
+    reteach: "### children is not an array"
+
+  - id: q08
+    type: predict-output
+    concept: text-content
+    code: |
+      const text = "\n    Golu the elephant\n  ";
+      console.log(text === "Golu the elephant");
+      console.log(text.trim() === "Golu the elephant");
+    answer: "false\ntrue"
+    explain: "textContent keeps the line breaks and spaces from the HTML. Only the trimmed text equals the name."
+    reteach: "### Syntax: textContent"
+
+  - id: q09
+    type: mcq
+    concept: text-content
+    prompt: "What is the textContent of <li><strong>Golu</strong> the elephant</li>?"
+    choices: ["\"Golu the elephant\"", "\"<strong>Golu</strong> the elephant\"", "\"Golu\"", "\" the elephant\""]
+    answer: 0
+    explain: "textContent joins all the text inside the element and leaves the tags out."
+    reteach: "### Syntax: textContent"
+
+  - id: q10
+    type: mcq
+    concept: script-timing
+    prompt: "A plain <script src=\"main.js\"> sits in <head>. Inside it, document.querySelector(\"#products\") returns null. Why?"
+    choices: ["The script ran before the browser parsed the body, so the list did not exist yet", "querySelector only works on classes", "The id must be written without the #", "Scripts cannot read the page at all"]
+    answer: 0
+    explain: "A plain script runs as soon as the browser reaches it. Use type=\"module\" or defer so it waits for the whole page."
+    reteach: "### When your script runs"
+
+  - id: q11
+    type: mcq
+    concept: script-timing
+    prompt: "Which script tag waits until the whole page is parsed before it runs?"
+    choices: ["<script type=\"module\" src=\"main.js\"></script>", "<script src=\"main.js\"></script>", "<script src=\"main.js\" charset=\"utf-8\"></script>", "<script src=\"main.js\" type=\"text/javascript\"></script>"]
+    answer: 0
+    explain: "Module scripts are deferred: they run after parsing, when every element exists."
+    reteach: "### When your script runs"
+
+  - id: q12
+    type: order
+    concept: dom-tree
+    prompt: "Put the lines in order to print every product name in the list."
+    items:
+      - "const list = document.querySelector(\"#products\");"
+      - "const items = [...list.children];"
+      - "const names = items.map((item) => item.textContent.trim());"
+      - "console.log(names);"
+    explain: "Find the list, spread its children into an array, map each to its trimmed text, then print."
+    reteach: "## Worked example"

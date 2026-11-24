@@ -1,0 +1,23 @@
+id: web-04-javascript-in-depth/topic-05-objects-in-depth
+title: "Objects in depth: methods, this and copying"
+order: 5
+minutes: 10
+prerequisites: [web-04-javascript-in-depth/topic-04-destructuring-and-spread]
+concepts: [methods, this, references, shallow-copy, deep-copy]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0405
+  from: sam
+  title: "Editing order-18 changed order-17 too"
+  body: >
+    Raju here. Mr. Fernandes ordered two Golu elephants yesterday as order-17. Today his sister wants the same,
+    so I copied order-17 to make order-18 and changed her quantity to 3. Now order-17 says 3 as well, and he is getting a bill for three.
+    Can you make the copy a real copy? The basket code needs fixing too.
+hints:
+  - "Inside a method, this is the object before the dot. In add, push onto this.lines, then return this so calls can be chained."
+  - "total() loops over this.lines and adds paise * qty. A reduce with a starting value of 0 does it in one line."
+  - "A spread copy shares the inner objects. Copy each level: { ...order, customer: { ...order.customer }, lines: order.lines.map((line) => ({ ...line })) }."
+review: true

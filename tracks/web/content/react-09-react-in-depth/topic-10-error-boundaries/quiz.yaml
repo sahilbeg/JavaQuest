@@ -1,0 +1,135 @@
+topic: react-09-react-in-depth/topic-10-error-boundaries
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: render-errors
+    prompt: "A component deep in the page throws while rendering, and there is no error boundary. What does the customer see?"
+    choices: ["A blank page: React removes the whole app", "The page, with only the broken component missing", "An error message inside the broken component", "The last version of the page, frozen"]
+    answer: 0
+    explain: "An uncaught render error removes everything React rendered. A boundary limits how much is lost."
+    reteach: "### One error can blank the whole page"
+
+  - id: q02
+    type: predict-output
+    concept: render-errors
+    code: |
+      const review = { author: "Vikram", stars: 4, text: null };
+      try {
+        console.log(review.text.trim());
+      } catch (e) {
+        console.log(e.name);
+      }
+      console.log(review.text?.trim() ?? "(no comment)");
+    answer: "TypeError\n(no comment)"
+    explain: "Calling .trim() on null throws a TypeError. With ?. the call is skipped and gives undefined, so ?? falls back to the default text."
+    reteach: "### One error can blank the whole page"
+
+  - id: q03
+    type: mcq
+    concept: class-component
+    prompt: "Inside a class component, how do you read its props?"
+    choices: ["this.props", "props, passed to render()", "useProps()", "this.state.props"]
+    answer: 0
+    explain: "A class component keeps its props in this.props and its state in this.state. render() takes no arguments."
+    reteach: "### Class components in one card"
+
+  - id: q04
+    type: mcq
+    concept: class-component
+    prompt: "Why is an error boundary written as a class, when other components are functions?"
+    choices: ["React has no hook that catches render errors, only the class methods do", "Classes render faster", "Function components can't show messages", "Hooks are not allowed near errors"]
+    answer: 0
+    explain: "getDerivedStateFromError and componentDidCatch exist only for class components. Boundaries are the one common case for a class today."
+    reteach: "### Syntax: an error boundary"
+
+  - id: q05
+    type: fill-blank
+    concept: error-boundary
+    goal: "Turn an error thrown below into new state, so the fallback shows on the next render."
+    prompt: "___ getDerivedStateFromError(error) {"
+    answers: ["static"]
+    explain: "getDerivedStateFromError must be static. Without it, React ignores the method and the boundary catches nothing."
+    reteach: "### Two methods that catch errors"
+
+  - id: q06
+    type: mcq
+    concept: error-boundary
+    prompt: "What is componentDidCatch for, next to getDerivedStateFromError?"
+    choices: ["Side effects like reporting the error, after the fallback state is set", "Choosing the fallback state", "Stopping React from logging the error", "Rendering the children again"]
+    answer: 0
+    explain: "getDerivedStateFromError only turns the error into state. componentDidCatch runs afterwards and is where you tell a logging service, or call onError."
+    reteach: "### Two methods that catch errors"
+
+  - id: q07
+    type: spot-the-bug
+    concept: error-boundary
+    prompt: "This boundary shows nothing at all when there is no error. Which line is wrong?"
+    code: |
+      class ErrorBoundary extends Component {
+        state = { error: null };
+        static getDerivedStateFromError(error) {
+          return { error };
+        }
+        render() {
+          if (this.state.error) return <p>{this.props.fallback}</p>;
+          return this.state.children;
+        }
+      }
+    bugLine: 8
+    explain: "The children are a prop, not state. It should return this.props.children."
+    reteach: "### Syntax: an error boundary"
+
+  - id: q08
+    type: mcq
+    concept: fallback-ui
+    prompt: "Only the reviews on Golu's page might crash. Where should the error boundary go?"
+    choices: ["Around <Reviews>, so the price and Add to cart stay when reviews break", "Around the whole app only", "Inside the Reviews component, after the list", "Around the Add to cart button"]
+    answer: 0
+    explain: "A boundary hides everything inside it when something breaks. Put it close to the risky part, so the rest of the page keeps working."
+    reteach: "### Syntax: using a boundary"
+
+  - id: q09
+    type: fill-blank
+    concept: fallback-ui
+    goal: "Clear the stored error so the boundary renders its children once more."
+    prompt: "<button onClick={() => this.setState({ error: ___ })}>Try again</button>"
+    answers: ["null"]
+    explain: "With no error in state, render returns this.props.children again. If they still throw, the fallback comes back."
+    reteach: "### Letting the customer try again"
+
+  - id: q10
+    type: mcq
+    concept: boundary-limits
+    variants:
+      - { prompt: "Which error will an error boundary catch?", choices: ["A child throws while rendering its JSX", "An onClick handler inside it throws", "A fetch inside an effect rejects after a second", "The boundary's own render method throws"], answer: 0 }
+      - { prompt: "Which error will an error boundary NOT catch?", choices: ["A child throws while rendering", "A grandchild throws while rendering", "An onClick handler inside it throws", "A child's render reads a property of null"], answer: 2 }
+    explain: "Boundaries catch errors thrown while React renders their children. Event handlers and async code run later, outside rendering, so use try/catch there."
+    reteach: "### What boundaries don't catch"
+
+  - id: q11
+    type: predict-output
+    concept: boundary-limits
+    code: |
+      const log = [];
+      try {
+        log.push("start");
+        setTimeout(() => log.push("timer ran"), 0);
+        log.push("end of try");
+      } catch (e) {
+        log.push("caught");
+      }
+      setTimeout(() => console.log(log.join(", ")), 5);
+    answer: "start, end of try, timer ran"
+    explain: "The try block finishes before the timer runs. Anything the timer threw would be outside this try, just as a click handler's error is outside a boundary."
+    reteach: "### What boundaries don't catch"
+
+  - id: q12
+    type: mcq
+    concept: boundary-limits
+    prompt: "Pressing Apply coupon runs JSON.parse on bad text inside onClick. The button sits inside an ErrorBoundary. What happens?"
+    choices: ["The boundary doesn't catch it, so use try/catch in the handler and show a message from state", "The boundary shows its fallback", "React removes the whole page", "The coupon is applied anyway"]
+    answer: 0
+    explain: "The error happens in an event handler, after rendering. Boundaries don't see it, so the handler must catch it itself."
+    reteach: "## Common mistakes"

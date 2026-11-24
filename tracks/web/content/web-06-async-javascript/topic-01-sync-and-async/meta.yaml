@@ -1,0 +1,22 @@
+id: web-06-async-javascript/topic-01-sync-and-async
+title: "Waiting without freezing: the event loop"
+order: 1
+minutes: 9
+prerequisites: [web-05-dom-and-events/boss]
+concepts: [synchronous, blocking, asynchronous, single-thread, call-stack, task-queue, event-loop]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-0601
+  from: maya
+  title: "Before we touch live stock"
+  body: >
+    Arjun now keeps stock on the server, so the website has to ask for it, and the answer takes a moment.
+    Last week someone tried a loop that waited for an answer, and the whole page froze on Meera Aunty's phone.
+    Read the KB page on how JavaScript waits, then pass the onboarding check before you write any of it.
+hints:
+  - "JavaScript in a page runs one thing at a time. Ask yourself: is anything else allowed to run while this line works?"
+  - "A timer's callback goes into a queue. It only runs once the code that is running now has finished, even with a delay of 0."
+  - "Run every plain line first, top to bottom. Then run the queued callbacks, shortest timer first."
+review: true

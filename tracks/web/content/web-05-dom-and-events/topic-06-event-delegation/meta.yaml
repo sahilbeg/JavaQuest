@@ -1,0 +1,24 @@
+id: web-05-dom-and-events/topic-06-event-delegation
+title: "Event delegation: one listener for many buttons"
+order: 6
+minutes: 9
+prerequisites: [web-05-dom-and-events/topic-05-events]
+concepts: [bubbling, delegation, closest, data-action, target-vs-current-target, new-elements]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0506
+  from: maya
+  title: "New product cards have dead Add buttons"
+  body: >
+    The catalogue gives every Add to cart button its own listener, in a loop, when the page loads. The Diwali cards
+    we add later have dead buttons, and a tap on the little cart icon inside a button misses too. Let's use one
+    listener on the list instead. The cart lines need the same for their + and − buttons.
+hints:
+  - "Clicks bubble up from the element you tapped to every ancestor. One listener on the list hears clicks on every button inside it, even buttons added later."
+  - "event.target may be the icon inside the button. event.target.closest(\".add\") walks up to the button, or gives null when the click was somewhere else."
+  - "In listenForAdds: const button = event.target.closest(\".add\"); if it is null, return; otherwise onAdd(button.closest(\".product\").dataset.id). For the lines, closest(\"button[data-action]\"), then actions[button.dataset.action], and call it only if it exists."
+review: true

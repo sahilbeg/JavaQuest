@@ -1,0 +1,24 @@
+id: web-03-javascript-basics/topic-07-loops
+title: "Loops: for, while and for...of"
+order: 7
+minutes: 10
+prerequisites: [web-03-javascript-basics/topic-06-switch-and-ternary]
+concepts: [for-of, accumulator, for-loop, while-loop, break-continue]
+practice:
+  kind: code
+  runner: vitest
+  mainClass: main.js
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0307
+  from: maya
+  title: "Add up a basket of any size"
+  body: >
+    The calculator can price one item, but a WhatsApp order can hold any number of them, so Raju still adds them up
+    on his phone. Meera Aunty also wants to know how many toys a ball of yarn makes, and we need to find the first
+    big item in a list. Can you write the loops in src/cart.js?
+hints:
+  - "Start with let total = 0; then for (const price of prices) { total = total + price; } and return total after the loop."
+  - "For toysFromYarn, start let toys = 0; then while (grams >= 40) { grams = grams - 40; toys = toys + 1; } and return toys."
+  - "For firstIndexOver: for (let i = 0; i < prices.length; i++) { if (prices[i] > limit) { return i; } } and return -1 after the loop ends."
+review: true

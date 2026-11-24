@@ -1,0 +1,24 @@
+id: web-05-dom-and-events/topic-04-creating-elements
+title: "Creating and removing elements"
+order: 4
+minutes: 9
+prerequisites: [web-05-dom-and-events/topic-03-changing-the-page]
+concepts: [create-element, append, building-pieces, remove, replace-children, inner-html-rebuild]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0504
+  from: maya
+  title: "The counter's order slip is still on paper"
+  body: >
+    Raju writes every counter order on a paper slip, and on Sunday he lost three of them. Let's put the slip on the
+    tablet. For now I only need the building blocks: make a line for an item, add it to the slip, remove one line,
+    and clear the whole slip after payment.
+hints:
+  - "document.createElement(\"li\") makes a new element that is not on the page yet. Fill it, then append it to the list."
+  - "Build the line from small pieces: two spans and a button, each with its class and textContent, then li.append(name, qty, button). Removing is element.remove()."
+  - "removeLine finds list.querySelector(`[data-code=\"${code}\"]`), returns false for null, otherwise calls line.remove() and returns true. clearSlip is list.replaceChildren()."
+review: true

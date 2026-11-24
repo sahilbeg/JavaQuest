@@ -1,0 +1,135 @@
+topic: web-06-async-javascript/topic-10-debounce
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: debounce
+    variants:
+      - { prompt: "What does debouncing a function do?", choices: ["Delays it until calls have stopped for a set time, so only the last call in a burst runs", "Runs it twice to be safe", "Runs it at most once every so often, at a steady beat", "Makes it run on another thread"], answer: 0 }
+      - { prompt: "A customer types golu into a debounced search box. How many searches run?", choices: ["One, for golu, after the pause", "Four, one per letter", "None until she presses Enter", "Two: g and golu"], answer: 0 }
+    explain: "Each call cancels the waiting one and starts the wait again. Only a call followed by a quiet gap runs."
+    reteach: "### What debouncing is"
+
+  - id: q02
+    type: predict-output
+    concept: debounce
+    code: |
+      function debounce(fn, ms) {
+        let timer = null;
+        return (...args) => {
+          clearTimeout(timer);
+          timer = setTimeout(() => fn(...args), ms);
+        };
+      }
+      const search = debounce((text) => console.log(text), 10);
+      search("k");
+      search("ke");
+      search("key");
+    answer: "key"
+    explain: "The first two calls are cancelled by the next ones. Only the last call's timer runs out."
+    reteach: "### Watch the timer reset"
+
+  - id: q03
+    type: predict-output
+    concept: timer-reset
+    code: |
+      function debounce(fn, ms) {
+        let timer = null;
+        return (...args) => {
+          clearTimeout(timer);
+          timer = setTimeout(() => fn(...args), ms);
+        };
+      }
+      const save = debounce((n) => console.log(`saved ${n}`), 10);
+      save(1);
+      save(2);
+      setTimeout(() => save(3), 30);
+    answer: "saved 2\nsaved 3"
+    explain: "1 and 2 come in one burst, so only 2 is saved. After a pause, 3 starts a new burst and is saved too."
+    reteach: "### Watch the timer reset"
+
+  - id: q04
+    type: predict-output
+    concept: timer-reset
+    code: |
+      function debounce(fn, ms) {
+        return (...args) => {
+          let timer = null;
+          clearTimeout(timer);
+          timer = setTimeout(() => fn(...args), ms);
+        };
+      }
+      const search = debounce((text) => console.log(text), 10);
+      search("g");
+      search("go");
+    answer: "g\ngo"
+    explain: "timer is new on every call, so clearTimeout never cancels the earlier wait. Both calls run."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: fill-blank
+    concept: timer-reset
+    goal: "Cancel the call that is still waiting, before starting a fresh wait."
+    prompt: "___(timer);"
+    answers: ["clearTimeout"]
+    explain: "clearTimeout cancels the waiting call, so only the newest one can run."
+    reteach: "### Syntax: a debounce function"
+
+  - id: q06
+    type: fill-blank
+    concept: rest-args
+    goal: "Pass every argument that the debounced call received on to the real function, one by one."
+    prompt: "timer = setTimeout(() => fn(___), ms);"
+    answers: ["...args"]
+    explain: "(...args) gathered the arguments into an array. fn(...args) spreads them back out."
+    reteach: "### Syntax: a debounce function"
+
+  - id: q07
+    type: spot-the-bug
+    concept: search-as-you-type
+    code: |
+      const box = document.querySelector("#search");
+      box.addEventListener("input", () => {
+        const runSearch = debounce(searchNow, 300);
+        runSearch(box.value);
+      });
+    bugLine: 3
+    explain: "A new debounced function, with its own empty timer, is made on every key press, so nothing is ever cancelled. Make runSearch once, outside the listener."
+    reteach: "### Wiring it to the search box"
+
+  - id: q08
+    type: mcq
+    concept: throttle
+    variants:
+      - { prompt: "A progress bar should update regularly while the customer scrolls a long page. Which fits?", choices: ["Throttle: run at most once every so often", "Debounce: run only after scrolling stops", "Run it once when the page loads", "setInterval with 0 ms"], answer: 0 }
+      - { prompt: "A draft should save once the customer stops typing. Which fits?", choices: ["Debounce", "Throttle", "Promise.all", "AbortController"], answer: 0 }
+    explain: "Debounce waits for a pause. Throttle keeps a steady beat during a long action."
+    reteach: "### Throttle, debounce's cousin"
+
+  - id: q09
+    type: mcq
+    concept: search-as-you-type
+    prompt: "The search is debounced. Why still keep the rule that only the newest answer may change the results?"
+    choices: ["Two searches a second apart are both sent, and the older answer can still arrive last", "Debounce makes requests arrive in order", "fetch needs it to work", "It makes the debounce wait shorter"]
+    answer: 0
+    explain: "Debouncing cuts the number of requests, but the ones that go out can still race. The newest-answer rule handles that."
+    reteach: "### Debounce plus the newest-answer rule"
+
+  - id: q10
+    type: mcq
+    concept: timer-reset
+    prompt: "A search is debounced by 300 ms. A customer types one letter every 100 ms for 2 seconds, then stops. When does the search run?"
+    choices: ["300 ms after the last letter", "Every 300 ms while she types", "After the first letter", "Never"]
+    answer: 0
+    explain: "Each letter arrives before 300 ms have passed, so it resets the wait. The search runs once, 300 ms after the typing stops."
+    reteach: "### What debouncing is"
+
+  - id: q11
+    type: mcq
+    concept: rest-args
+    prompt: "In (...args) => { ... }, what is args?"
+    choices: ["An array of every argument the call received", "Only the first argument", "The number of arguments", "A promise"]
+    answer: 0
+    explain: "A rest parameter gathers all the arguments into one array."
+    reteach: "### Syntax: a debounce function"

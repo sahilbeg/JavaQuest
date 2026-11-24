@@ -1,0 +1,115 @@
+topic: web-00-how-the-web-works/topic-05-first-page
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: doctype
+    prompt: "What must be the very first line of every HTML page?"
+    choices: ["<!doctype html>", "<html>", "<head>", "<title>"]
+    answer: 0
+    explain: "The doctype comes first. It tells the browser to use modern HTML rules."
+    reteach: "### Syntax: the doctype"
+
+  - id: q02
+    type: mcq
+    concept: html-head-body
+    variants:
+      - { prompt: "Where do the headings and paragraphs people see go?", choices: ["Inside <body>", "Inside <head>", "Before <!doctype html>", "After </html>"], answer: 0 }
+      - { prompt: "Which part of the page holds facts about it, like the title, that don't show on the page itself?", choices: ["<head>", "<body>", "<h1>", "<p>"], answer: 0 }
+    explain: "The head holds facts about the page. The body holds everything people see."
+    reteach: "### Syntax: html, head and body"
+
+  - id: q03
+    type: order
+    concept: html-head-body
+    prompt: "Put the lines in order to make a whole page."
+    items:
+      - "<!doctype html>"
+      - "<html lang=\"en\">"
+      - "<head><title>Dhaaga & Co.</title></head>"
+      - "<body><h1>Dhaaga & Co.</h1></body>"
+      - "</html>"
+    explain: "Doctype first, then html wraps the head and then the body, and closes last."
+    reteach: "### The skeleton of every page"
+
+  - id: q04
+    type: fill-blank
+    concept: title
+    goal: "Set the name shown in the browser tab to Dhaaga & Co."
+    prompt: "<___>Dhaaga & Co.</title>"
+    answers: ["title"]
+    explain: "The <title> element, inside <head>, sets the tab's name."
+    reteach: "### Syntax: the title"
+
+  - id: q05
+    type: mcq
+    concept: title
+    prompt: "Where does the text of <title>Dhaaga & Co.</title> appear?"
+    choices: ["In the browser tab", "As a big heading at the top of the page", "As the first paragraph", "Nowhere at all"]
+    answer: 0
+    explain: "The title shows in the tab, in bookmarks and in search results, not on the page itself."
+    reteach: "### Syntax: the title"
+
+  - id: q06
+    type: mcq
+    concept: headings
+    prompt: "How many <h1> main headings should a page have?"
+    choices: ["Exactly one", "None", "One per paragraph", "As many as you like"]
+    answer: 0
+    explain: "The <h1> says what the whole page is about, so there is one. Use <h2> to <h6> for sections."
+    reteach: "### Syntax: headings"
+
+  - id: q07
+    type: spot-the-bug
+    concept: headings
+    code: |
+      <body>
+        <h1>Dhaaga & Co.</hl>
+        <p>Handmade crochet from Pune.</p>
+      </body>
+    bugLine: 2
+    explain: "The closing tag says hl, with a letter L. It must be </h1>, with the number one."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: paragraphs
+    prompt: "Inside one <p>, you press Enter between two sentences. How does the page show them?"
+    choices: ["On one line, with a space between them", "On two lines", "As two paragraphs", "With the second one missing"]
+    answer: 0
+    explain: "The browser turns line breaks into spaces. Use a second <p> for a new paragraph."
+    reteach: "### Syntax: paragraphs"
+
+  - id: q09
+    type: spot-the-bug
+    concept: title
+    code: |
+      <head>
+        <meta charset="utf-8">
+        <title>Dhaaga & Co.
+      </head>
+      <body>
+        <h1>Dhaaga & Co.</h1>
+      </body>
+    bugLine: 3
+    explain: "The title never closes, so the browser reads the rest of the file as title text and the page goes blank."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: comments
+    prompt: "What does the browser do with <!-- TODO 2: add a heading -->?"
+    choices: ["Ignores it: a comment is a note for people", "Shows it as a heading", "Shows it in the browser tab", "Stops reading the page"]
+    answer: 0
+    explain: "Everything between <!-- and --> is a comment, and the browser skips it."
+    reteach: "### Syntax: comments"
+
+  - id: q11
+    type: mcq
+    concept: meta-lines
+    prompt: "Which line in the head tells a phone to use its real screen width?"
+    choices: ["<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">", "<title>Dhaaga & Co.</title>", "<!doctype html>", "<html lang=\"en\">"]
+    answer: 0
+    explain: "The viewport meta line stops a phone from shrinking a laptop-sized page."
+    reteach: "### The two meta lines"

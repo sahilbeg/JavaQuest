@@ -1,0 +1,141 @@
+topic: web-03-javascript-basics/topic-08-functions
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: function-declaration
+    code: |
+      function wrapFee(items) {
+        return items * 3000;
+      }
+      console.log(wrapFee(3));
+    answer: "9000"
+    explain: "The call passes 3 into items, and the function returns 3 * 3000."
+    reteach: "### Syntax: a function declaration"
+
+  - id: q02
+    type: predict-output
+    concept: return
+    code: |
+      function wrapFee(items) {
+        items * 3000;
+      }
+      console.log(wrapFee(3));
+    answer: "undefined"
+    explain: "There's no return, so the call hands back undefined. The sum is thrown away."
+    reteach: "## Common mistakes"
+
+  - id: q03
+    type: predict-output
+    concept: default-parameters
+    code: |
+      function greet(name = "friend") {
+        return "Hi " + name + "!";
+      }
+      console.log(greet("Asha"));
+      console.log(greet());
+    answer: "Hi Asha!\nHi friend!"
+    explain: "The default is used only when the argument is left out."
+    reteach: "### Syntax: default parameters"
+
+  - id: q04
+    type: predict-output
+    concept: parameters
+    code: |
+      function lineTotal(paise, qty) {
+        return paise * qty;
+      }
+      console.log(lineTotal(12000));
+    answer: "NaN"
+    explain: "qty was left out, so it holds undefined, and 12000 * undefined is NaN."
+    reteach: "### Missing arguments are undefined"
+
+  - id: q05
+    type: fill-blank
+    concept: return
+    goal: "Hand the finished total back to whoever called the function."
+    prompt: "  ___ total;"
+    answers: ["return"]
+    explain: "return gives a value back to the caller and ends the function."
+    reteach: "### Syntax: return"
+
+  - id: q06
+    type: predict-output
+    concept: arrow-functions
+    code: |
+      const toRupees = (paise) => paise / 100;
+      console.log(toRupees(89900));
+    answer: "899"
+    explain: "An arrow function with a single expression returns that expression's value."
+    reteach: "### Syntax: arrow functions"
+
+  - id: q07
+    type: mcq
+    concept: parameters
+    prompt: "In function lineTotal(paise, qty) and the call lineTotal(15000, 2), what is 15000?"
+    choices: ["An argument: the value passed in for paise", "A parameter", "The value the function returns", "A default value"]
+    answer: 0
+    explain: "Values in a call are arguments. They fill the parameters, here paise and qty, in order."
+    reteach: "### Syntax: parameters and arguments"
+
+  - id: q08
+    type: spot-the-bug
+    concept: return
+    code: |
+      function addWrap(paise) {
+        const withWrap = paise + 3000;
+        return paise;
+      }
+      console.log(addWrap(45000));
+    bugLine: 3
+    explain: "The function works out withWrap but returns the old paise. It should return withWrap."
+    reteach: "### Syntax: return"
+
+  - id: q09
+    type: predict-output
+    concept: return
+    code: |
+      function check(qty) {
+        if (qty === 0) {
+          return "Empty";
+        }
+        return "Has items";
+      }
+      console.log(check(0));
+      console.log(check(2));
+    answer: "Empty\nHas items"
+    explain: "return stops the function, so check(0) never reaches the second return."
+    reteach: "### Syntax: return"
+
+  - id: q10
+    type: mcq
+    concept: scope
+    prompt: "A const is declared inside a function. Where can you use it?"
+    choices: ["Only inside that function", "Anywhere in the file", "Anywhere, but only after the function has run", "In every other file too"]
+    answer: 0
+    explain: "A box made inside a function lives only in that function's scope. Return the value to use it outside."
+    reteach: "### Scope: boxes live inside their function"
+
+  - id: q11
+    type: predict-output
+    concept: function-declaration
+    code: |
+      function shopName() {
+        return "Dhaaga & Co.";
+      }
+      console.log(shopName());
+      console.log(shopName);
+    answer: "Dhaaga & Co.\n[Function: shopName]"
+    explain: "With brackets, the function runs and gives its result. Without them, you get the function itself."
+    reteach: "## Common mistakes"
+
+  - id: q12
+    type: predict-output
+    concept: arrow-functions
+    code: |
+      const toRupees = (paise) => { paise / 100; };
+      console.log(toRupees(15000));
+    answer: "undefined"
+    explain: "With curly braces, an arrow function needs its own return statement."
+    reteach: "### Syntax: arrow functions"

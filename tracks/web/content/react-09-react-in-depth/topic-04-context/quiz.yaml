@@ -1,0 +1,131 @@
+topic: react-09-react-in-depth/topic-04-context
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: prop-drilling
+    prompt: "Main, Shelf and ProductCard all take a cart prop only to hand it down to AddButton. What is this called?"
+    choices: ["Prop drilling", "Lifting state up", "A stale closure", "A race condition"]
+    answer: 0
+    explain: "Passing a prop through components that don't use it, just so it reaches one that does, is prop drilling."
+    reteach: "### Prop drilling"
+
+  - id: q02
+    type: mcq
+    concept: create-context
+    prompt: "Where should you call createContext for the cart?"
+    choices: ["Once, at the top level of a file, and export the result", "Inside CartProvider, so each render gets a fresh context", "Inside every component that reads the cart", "Inside a useEffect"]
+    answer: 0
+    explain: "A context must be the same object every time. Made inside a component, each render would create a new, empty one."
+    reteach: "### Syntax: createContext"
+
+  - id: q03
+    type: fill-blank
+    concept: create-context
+    goal: "Make a new context for the cart, with null as its default value."
+    prompt: "export const CartContext = ___(null);"
+    answers: ["createContext"]
+    explain: "createContext makes a context. Its argument is what components get when no provider is above them."
+    reteach: "### Syntax: createContext"
+
+  - id: q04
+    type: mcq
+    concept: provider
+    prompt: "In React 19, which line shares cart with everything inside it?"
+    choices: ["<CartContext value={cart}>{children}</CartContext>", "<CartContext cart={cart}>{children}</CartContext>", "useContext(CartContext, cart)", "<CartContext>{cart}</CartContext>"]
+    answer: 0
+    explain: "A provider takes the shared value in its value prop. Older code writes the same thing as <CartContext.Provider value={cart}>."
+    reteach: "### Syntax: providing a value"
+
+  - id: q05
+    type: fill-blank
+    concept: use-context
+    goal: "Read the cart from the nearest provider above this component."
+    prompt: "const cart = ___(CartContext);"
+    answers: ["useContext"]
+    explain: "useContext returns the value from the nearest provider above, and re-renders the component when that value changes."
+    reteach: "### Syntax: useContext"
+
+  - id: q06
+    type: predict-output
+    concept: context-scope
+    code: |
+      function nearest(node) {
+        while (node !== null) {
+          if (node.value !== undefined) return node.value;
+          node = node.parent;
+        }
+        return "default";
+      }
+
+      const app = { value: "main cart", parent: null };
+      const gifts = { value: "gift cart", parent: app };
+      const button = { parent: gifts };
+      const header = { parent: app };
+      const banner = { parent: null };
+
+      console.log(nearest(button));
+      console.log(nearest(header));
+      console.log(nearest(banner));
+    answer: "gift cart\nmain cart\ndefault"
+    explain: "The search climbs from each node and stops at the first value. The button finds the nearer gift cart. The banner has nothing above it, so it gets the default, like a component outside every provider."
+    reteach: "### How a component finds its cart"
+
+  - id: q07
+    type: mcq
+    concept: use-context
+    prompt: "The cart in CartProvider changes. Which components render again because of it?"
+    choices: ["Every component that reads the cart context", "Only the component that called add", "Only CartProvider itself", "No components, because context never changes"]
+    answer: 0
+    explain: "A new context value makes React render every component that reads that context, wherever it sits."
+    reteach: "### When to reach for context"
+
+  - id: q08
+    type: mcq
+    concept: context-scope
+    prompt: "CartContext was made with createContext(null). A Banner component outside every CartProvider calls useContext(CartContext). What does it get?"
+    choices: ["null, the default value", "The cart from the first CartProvider on the page", "An empty cart object", "undefined, always"]
+    answer: 0
+    explain: "With no provider above, a component gets the default value given to createContext."
+    reteach: "### Syntax: createContext"
+
+  - id: q09
+    type: spot-the-bug
+    concept: provider
+    prompt: "Every component inside the provider crashes when it reads the cart. Which line is wrong?"
+    code: |
+      export function CartProvider({ children }) {
+        const cart = useCart();
+        return <CartContext>{children}</CartContext>;
+      }
+    bugLine: 3
+    explain: "The provider has no value, so everything inside reads undefined. It should be <CartContext value={cart}>."
+    reteach: "### Syntax: providing a value"
+
+  - id: q10
+    type: mcq
+    concept: context-scope
+    prompt: "A page has two CartProviders, one for the shop and one for a gift panel. A button inside the gift panel adds a keychain. Which cart changes?"
+    choices: ["Only the gift panel's cart, because the button reads from its nearest provider", "Both carts", "Only the shop's cart, because it comes first on the page", "Neither: two providers cancel each other out"]
+    answer: 0
+    explain: "Each provider calls useCart once and holds its own cart. Components read from the nearest provider above them."
+    reteach: "### Each provider makes its own cart"
+
+  - id: q11
+    type: mcq
+    concept: prop-drilling
+    prompt: "Which value is the poorest fit for context?"
+    choices: ["What the customer is typing in one search box, used only by that box", "The logged-in customer, shown in the header and at checkout", "The cart, used by the header, buttons and total", "The language the site is shown in"]
+    answer: 0
+    explain: "State used by one component should stay in that component. Context is for values many components at different depths need."
+    reteach: "### When to reach for context"
+
+  - id: q12
+    type: mcq
+    concept: use-context
+    prompt: "Why does useCartContext throw an Error when useContext(CartContext) is null?"
+    choices: ["To replace a confusing crash with a clear message about the missing provider", "Because React requires every context hook to throw", "To make the component render faster", "So the provider can catch it and create a cart"]
+    answer: 0
+    explain: "Without the guard, the component would crash later on null with a message that never mentions the cart. The guard names the real problem."
+    reteach: "### Syntax: a hook that guards the context"

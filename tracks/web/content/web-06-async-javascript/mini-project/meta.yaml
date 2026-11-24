@@ -1,0 +1,22 @@
+id: web-06-async-javascript/mini-project
+title: "FEAT-06: Live stock badges"
+order: 100
+minutes: 15
+prerequisites: [web-06-async-javascript/topic-10-debounce]
+concepts: [promise-all, polling, rendering-badges, keep-last-good-data]
+practice:
+  kind: code
+  runner: vitest
+ticket:
+  key: FEAT-06
+  from: priya
+  title: "Show customers what's left, live"
+  body: >
+    Beta, during the Diwali rush people order things that sold out an hour ago, and then I have to phone them and say sorry.
+    Can every item in the catalogue show a little badge: "In stock", "Only 2 left" or "Sold out"?
+    And it should stay fresh while they browse, without them pressing reload. Arjun says the stock API can take it.
+hints:
+  - "Start with the small pieces: badgeText and badgeLevel only look at one number. Then fetchStock asks for every id at once with Promise.all and builds an object such as { \"DC-1042\": 2 }."
+  - "renderBadges finds every [data-item] element inside root, looks up its stock by badge.dataset.item, and sets its text and data-level. Skip ids that aren't in the object."
+  - "startLiveStock reads the ids from the badges, defines an async refresh that does renderBadges(root, await fetchStock(ids)) inside try...catch, calls refresh() once now, then setInterval(refresh, ms). Return () => clearInterval(timer)."
+review: false

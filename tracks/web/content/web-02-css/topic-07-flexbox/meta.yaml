@@ -1,0 +1,24 @@
+id: web-02-css/topic-07-flexbox
+title: "Flexbox: rows and columns"
+order: 7
+minutes: 10
+prerequisites: [web-02-css/topic-06-display-and-position]
+concepts: [flex-container, main-axis, justify-content, align-items, flex-wrap, gap, flex-grow]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0207
+  from: sana
+  title: "Put the products side by side"
+  body: >
+    On my laptop the catalogue is one long column, and you scroll forever to reach the tote bag.
+    In my design the shop name sits on the left of the header and the nav on the right, in one line.
+    The product cards sit side by side and wrap onto new rows, with every Order button lined up at the bottom.
+hints:
+  - "display: flex on a parent puts its children in a row. justify-content spreads them along the row, and align-items lines them up across it."
+  - "flex-wrap: wrap lets cards move to a new row when they run out of room. gap puts space between them. flex: 1 1 14rem means grow, shrink, and start at 14rem."
+  - "Inside a card, display: flex with flex-direction: column stacks the parts. margin-top: auto on .buy pushes the button to the bottom."
+review: true

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "lastUpdated": "2026-11-18T19:12:42+05:30",
+  "lastUpdated": "2026-11-25T00:00:48+05:30",
   "phase": "PHASE 1: build",
   "milestone": "C09B",
   "resumeHere": "Modules 09a (Platform and DevOps) and 09b (Data in depth) are committed at ui_wired, between modules 09 and 10; module 10 now unlocks after 09b. Every milestone is built. What is left needs a person: the browser read-through of modules 0 to 10 and a real VoiceOver pass. Windows support stays deferred.",
@@ -65,7 +65,8 @@
     "M5: capstone rubric (lesson card and README), /offer completion screen (Tsunade's offer letter, printable), launch dialog on closing the capstone, Full-time offer kudos, kudos earnedOn dates; kudos toasts name the teammate; tested in a throwaway author app",
     "M6: fresh-clone test on macOS (one command builds and starts; grading verified end to end in the clone); run.sh checks Java 21+, reports a busy port, and switches on the commit guard in a clone; README with quick start, Java install, how you learn, progress and backups, commands, troubleshooting and limits",
     "C09A/C09B: module 09a Platform and DevOps (Dockerfiles, Compose, GitHub Actions, Kubernetes manifests, Helm/Kustomize, Terraform/GitOps, config and secrets, Prometheus; INC-11 the deploy that took Spoke down, FEAT-11 one-click deploys) and module 09b Data in depth (advanced SQL, B+ tree index internals, MVCC/WAL, NoSQL modelling, Redis patterns, replication and sharding, data pipelines with Airflow concepts and a Java DAG scheduler, Postgres in production; INC-12 month-end reports, FEAT-12 rider statements data mart); content model allows module-NNa ids; 4 independent reviews (about 45 findings, one image-tag format module-wide) fixed; all checks green",
-    "Rename to Cadence across code, build, UI, scripts, docs and content; legacy progress folder and flag names kept working; all checks green"
+    "Rename to Cadence across code, build, UI, scripts, docs and content; legacy progress folder and flag names kept working; all checks green",
+    "W00-W10: Frontend course (JavaScript + React), 11 web modules and 130 units in tracks/web, checked and verified; the frontend-react course is ready"
   ],
   "nextTask": "Your browser read-through of modules 0 to 10 (09a and 09b included), which moves them from ui_wired to done; then a real VoiceOver pass",
   "openDecisions": [
@@ -166,7 +167,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:21+05:30"
+            "verifiedAt": "2026-11-24T23:54:48+05:30"
           }
         },
         {
@@ -194,7 +195,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:19+05:30"
+            "verifiedAt": "2026-11-24T23:54:46+05:30"
           }
         },
         {
@@ -208,7 +209,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:20+05:30"
+            "verifiedAt": "2026-11-24T23:54:47+05:30"
           }
         }
       ],
@@ -230,7 +231,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:23+05:30"
+            "verifiedAt": "2026-11-24T23:54:50+05:30"
           }
         },
         {
@@ -244,7 +245,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:24+05:30"
+            "verifiedAt": "2026-11-24T23:54:51+05:30"
           }
         },
         {
@@ -258,7 +259,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:25+05:30"
+            "verifiedAt": "2026-11-24T23:54:52+05:30"
           }
         },
         {
@@ -272,7 +273,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:26+05:30"
+            "verifiedAt": "2026-11-24T23:54:53+05:30"
           }
         },
         {
@@ -286,7 +287,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:27+05:30"
+            "verifiedAt": "2026-11-24T23:54:54+05:30"
           }
         },
         {
@@ -300,7 +301,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:28+05:30"
+            "verifiedAt": "2026-11-24T23:54:55+05:30"
           }
         },
         {
@@ -314,7 +315,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:29+05:30"
+            "verifiedAt": "2026-11-24T23:54:56+05:30"
           }
         },
         {
@@ -328,7 +329,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:29+05:30"
+            "verifiedAt": "2026-11-24T23:54:57+05:30"
           }
         },
         {
@@ -342,7 +343,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:30+05:30"
+            "verifiedAt": "2026-11-24T23:54:57+05:30"
           }
         },
         {
@@ -356,7 +357,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:31+05:30"
+            "verifiedAt": "2026-11-24T23:54:58+05:30"
           }
         },
         {
@@ -370,7 +371,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:32+05:30"
+            "verifiedAt": "2026-11-24T23:54:59+05:30"
           }
         },
         {
@@ -384,7 +385,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:33+05:30"
+            "verifiedAt": "2026-11-24T23:55+05:30"
           }
         },
         {
@@ -398,7 +399,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:21+05:30"
+            "verifiedAt": "2026-11-24T23:54:49+05:30"
           }
         },
         {
@@ -412,7 +413,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:22+05:30"
+            "verifiedAt": "2026-11-24T23:54:49+05:30"
           }
         }
       ],
@@ -434,7 +435,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:36+05:30"
+            "verifiedAt": "2026-11-24T23:55:03+05:30"
           }
         },
         {
@@ -448,7 +449,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:37+05:30"
+            "verifiedAt": "2026-11-24T23:55:04+05:30"
           }
         },
         {
@@ -462,7 +463,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:38+05:30"
+            "verifiedAt": "2026-11-24T23:55:05+05:30"
           }
         },
         {
@@ -476,7 +477,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:39+05:30"
+            "verifiedAt": "2026-11-24T23:55:05+05:30"
           }
         },
         {
@@ -490,7 +491,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:39+05:30"
+            "verifiedAt": "2026-11-24T23:55:06+05:30"
           }
         },
         {
@@ -504,7 +505,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:40+05:30"
+            "verifiedAt": "2026-11-24T23:55:07+05:30"
           }
         },
         {
@@ -518,7 +519,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:41+05:30"
+            "verifiedAt": "2026-11-24T23:55:08+05:30"
           }
         },
         {
@@ -532,7 +533,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:42+05:30"
+            "verifiedAt": "2026-11-24T23:55:09+05:30"
           }
         },
         {
@@ -546,7 +547,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:43+05:30"
+            "verifiedAt": "2026-11-24T23:55:10+05:30"
           }
         },
         {
@@ -560,7 +561,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:44+05:30"
+            "verifiedAt": "2026-11-24T23:55:11+05:30"
           }
         },
         {
@@ -574,7 +575,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:45+05:30"
+            "verifiedAt": "2026-11-24T23:55:12+05:30"
           }
         },
         {
@@ -588,7 +589,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:46+05:30"
+            "verifiedAt": "2026-11-24T23:55:13+05:30"
           }
         },
         {
@@ -602,7 +603,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:34+05:30"
+            "verifiedAt": "2026-11-24T23:55:01+05:30"
           }
         },
         {
@@ -616,7 +617,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:35+05:30"
+            "verifiedAt": "2026-11-24T23:55:02+05:30"
           }
         }
       ],
@@ -638,7 +639,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:49+05:30"
+            "verifiedAt": "2026-11-24T23:55:15+05:30"
           }
         },
         {
@@ -652,7 +653,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:50+05:30"
+            "verifiedAt": "2026-11-24T23:55:16+05:30"
           }
         },
         {
@@ -666,7 +667,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:50+05:30"
+            "verifiedAt": "2026-11-24T23:55:17+05:30"
           }
         },
         {
@@ -680,7 +681,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:51+05:30"
+            "verifiedAt": "2026-11-24T23:55:18+05:30"
           }
         },
         {
@@ -695,7 +696,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:52+05:30"
+            "verifiedAt": "2026-11-24T23:55:19+05:30"
           }
         },
         {
@@ -709,7 +710,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:53+05:30"
+            "verifiedAt": "2026-11-24T23:55:20+05:30"
           }
         },
         {
@@ -723,7 +724,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:54+05:30"
+            "verifiedAt": "2026-11-24T23:55:21+05:30"
           }
         },
         {
@@ -737,7 +738,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:55+05:30"
+            "verifiedAt": "2026-11-24T23:55:22+05:30"
           }
         },
         {
@@ -751,7 +752,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:57+05:30"
+            "verifiedAt": "2026-11-24T23:55:23+05:30"
           }
         },
         {
@@ -765,7 +766,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:58+05:30"
+            "verifiedAt": "2026-11-24T23:55:24+05:30"
           }
         },
         {
@@ -779,7 +780,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:59+05:30"
+            "verifiedAt": "2026-11-24T23:55:25+05:30"
           }
         },
         {
@@ -793,7 +794,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:59+05:30"
+            "verifiedAt": "2026-11-24T23:55:26+05:30"
           }
         },
         {
@@ -807,7 +808,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:01+05:30"
+            "verifiedAt": "2026-11-24T23:55:27+05:30"
           }
         },
         {
@@ -821,7 +822,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:02+05:30"
+            "verifiedAt": "2026-11-24T23:55:28+05:30"
           }
         },
         {
@@ -835,7 +836,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:03+05:30"
+            "verifiedAt": "2026-11-24T23:55:29+05:30"
           }
         },
         {
@@ -849,7 +850,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:04+05:30"
+            "verifiedAt": "2026-11-24T23:55:29+05:30"
           }
         },
         {
@@ -863,7 +864,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:47+05:30"
+            "verifiedAt": "2026-11-24T23:55:14+05:30"
           }
         },
         {
@@ -877,7 +878,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:09:48+05:30"
+            "verifiedAt": "2026-11-24T23:55:14+05:30"
           }
         }
       ],
@@ -899,7 +900,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:06+05:30"
+            "verifiedAt": "2026-11-24T23:55:32+05:30"
           }
         },
         {
@@ -913,7 +914,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:07+05:30"
+            "verifiedAt": "2026-11-24T23:55:33+05:30"
           }
         },
         {
@@ -927,7 +928,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:08+05:30"
+            "verifiedAt": "2026-11-24T23:55:34+05:30"
           }
         },
         {
@@ -941,7 +942,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:09+05:30"
+            "verifiedAt": "2026-11-24T23:55:35+05:30"
           }
         },
         {
@@ -955,7 +956,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:10+05:30"
+            "verifiedAt": "2026-11-24T23:55:36+05:30"
           }
         },
         {
@@ -969,7 +970,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:11+05:30"
+            "verifiedAt": "2026-11-24T23:55:36+05:30"
           }
         },
         {
@@ -983,7 +984,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:12+05:30"
+            "verifiedAt": "2026-11-24T23:55:37+05:30"
           }
         },
         {
@@ -998,7 +999,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:13+05:30"
+            "verifiedAt": "2026-11-24T23:55:38+05:30"
           }
         },
         {
@@ -1012,7 +1013,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:14+05:30"
+            "verifiedAt": "2026-11-24T23:55:39+05:30"
           }
         },
         {
@@ -1026,7 +1027,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:15+05:30"
+            "verifiedAt": "2026-11-24T23:55:40+05:30"
           }
         },
         {
@@ -1040,7 +1041,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:16+05:30"
+            "verifiedAt": "2026-11-24T23:55:41+05:30"
           }
         },
         {
@@ -1054,7 +1055,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:17+05:30"
+            "verifiedAt": "2026-11-24T23:55:42+05:30"
           }
         },
         {
@@ -1068,7 +1069,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:18+05:30"
+            "verifiedAt": "2026-11-24T23:55:43+05:30"
           }
         },
         {
@@ -1082,7 +1083,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:19+05:30"
+            "verifiedAt": "2026-11-24T23:55:44+05:30"
           }
         },
         {
@@ -1096,7 +1097,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:20+05:30"
+            "verifiedAt": "2026-11-24T23:55:45+05:30"
           }
         },
         {
@@ -1110,7 +1111,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:21+05:30"
+            "verifiedAt": "2026-11-24T23:55:46+05:30"
           }
         },
         {
@@ -1124,7 +1125,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:22+05:30"
+            "verifiedAt": "2026-11-24T23:55:47+05:30"
           }
         },
         {
@@ -1138,7 +1139,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:23+05:30"
+            "verifiedAt": "2026-11-24T23:55:48+05:30"
           }
         },
         {
@@ -1152,7 +1153,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:24+05:30"
+            "verifiedAt": "2026-11-24T23:55:49+05:30"
           }
         },
         {
@@ -1166,7 +1167,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:25+05:30"
+            "verifiedAt": "2026-11-24T23:55:50+05:30"
           }
         },
         {
@@ -1180,7 +1181,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:05+05:30"
+            "verifiedAt": "2026-11-24T23:55:30+05:30"
           }
         },
         {
@@ -1194,7 +1195,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:05+05:30"
+            "verifiedAt": "2026-11-24T23:55:31+05:30"
           }
         }
       ],
@@ -1216,7 +1217,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:34+05:30"
+            "verifiedAt": "2026-11-24T23:55:59+05:30"
           }
         },
         {
@@ -1230,7 +1231,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:35+05:30"
+            "verifiedAt": "2026-11-24T23:56+05:30"
           }
         },
         {
@@ -1244,7 +1245,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:36+05:30"
+            "verifiedAt": "2026-11-24T23:56:01+05:30"
           }
         },
         {
@@ -1259,7 +1260,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:37+05:30"
+            "verifiedAt": "2026-11-24T23:56:02+05:30"
           }
         },
         {
@@ -1273,7 +1274,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:38+05:30"
+            "verifiedAt": "2026-11-24T23:56:03+05:30"
           }
         },
         {
@@ -1287,7 +1288,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:39+05:30"
+            "verifiedAt": "2026-11-24T23:56:04+05:30"
           }
         },
         {
@@ -1343,7 +1344,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:39+05:30"
+            "verifiedAt": "2026-11-24T23:56:05+05:30"
           }
         },
         {
@@ -1357,7 +1358,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:40+05:30"
+            "verifiedAt": "2026-11-24T23:56:06+05:30"
           }
         },
         {
@@ -1371,7 +1372,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:41+05:30"
+            "verifiedAt": "2026-11-24T23:56:07+05:30"
           }
         },
         {
@@ -1385,7 +1386,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:42+05:30"
+            "verifiedAt": "2026-11-24T23:56:08+05:30"
           }
         },
         {
@@ -1399,7 +1400,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:45+05:30"
+            "verifiedAt": "2026-11-24T23:56:11+05:30"
           }
         },
         {
@@ -1413,7 +1414,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:52+05:30"
+            "verifiedAt": "2026-11-24T23:56:18+05:30"
           }
         },
         {
@@ -1427,7 +1428,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:32+05:30"
+            "verifiedAt": "2026-11-24T23:55:57+05:30"
           }
         },
         {
@@ -1441,7 +1442,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:33+05:30"
+            "verifiedAt": "2026-11-24T23:55:58+05:30"
           }
         }
       ],
@@ -1463,7 +1464,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:55+05:30"
+            "verifiedAt": "2026-11-24T23:56:21+05:30"
           }
         },
         {
@@ -1477,7 +1478,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:56+05:30"
+            "verifiedAt": "2026-11-24T23:56:22+05:30"
           }
         },
         {
@@ -1491,7 +1492,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:57+05:30"
+            "verifiedAt": "2026-11-24T23:56:23+05:30"
           }
         },
         {
@@ -1505,7 +1506,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:58+05:30"
+            "verifiedAt": "2026-11-24T23:56:24+05:30"
           }
         },
         {
@@ -1519,7 +1520,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:59+05:30"
+            "verifiedAt": "2026-11-24T23:56:25+05:30"
           }
         },
         {
@@ -1533,7 +1534,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:59+05:30"
+            "verifiedAt": "2026-11-24T23:56:26+05:30"
           }
         },
         {
@@ -1561,7 +1562,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11+05:30"
+            "verifiedAt": "2026-11-24T23:56:27+05:30"
           }
         },
         {
@@ -1576,7 +1577,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:02+05:30"
+            "verifiedAt": "2026-11-24T23:56:28+05:30"
           }
         },
         {
@@ -1590,7 +1591,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:03+05:30"
+            "verifiedAt": "2026-11-24T23:56:29+05:30"
           }
         },
         {
@@ -1604,7 +1605,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:03+05:30"
+            "verifiedAt": "2026-11-24T23:56:30+05:30"
           }
         },
         {
@@ -1618,7 +1619,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:04+05:30"
+            "verifiedAt": "2026-11-24T23:56:31+05:30"
           }
         },
         {
@@ -1632,7 +1633,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:05+05:30"
+            "verifiedAt": "2026-11-24T23:56:32+05:30"
           }
         },
         {
@@ -1646,7 +1647,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:53+05:30"
+            "verifiedAt": "2026-11-24T23:56:19+05:30"
           }
         },
         {
@@ -1660,7 +1661,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:10:54+05:30"
+            "verifiedAt": "2026-11-24T23:56:20+05:30"
           }
         }
       ],
@@ -1794,7 +1795,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:06+05:30"
+            "verifiedAt": "2026-11-24T23:56:33+05:30"
           }
         },
         {
@@ -1808,7 +1809,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:07+05:30"
+            "verifiedAt": "2026-11-24T23:56:34+05:30"
           }
         }
       ],
@@ -1872,7 +1873,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:19+05:30"
+            "verifiedAt": "2026-11-24T23:56:47+05:30"
           }
         },
         {
@@ -1887,7 +1888,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:23+05:30"
+            "verifiedAt": "2026-11-24T23:56:50+05:30"
           }
         },
         {
@@ -1901,7 +1902,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:25+05:30"
+            "verifiedAt": "2026-11-24T23:56:53+05:30"
           }
         },
         {
@@ -1915,7 +1916,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:28+05:30"
+            "verifiedAt": "2026-11-24T23:56:55+05:30"
           }
         },
         {
@@ -1929,7 +1930,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:29+05:30"
+            "verifiedAt": "2026-11-24T23:56:57+05:30"
           }
         },
         {
@@ -1943,7 +1944,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:47+05:30"
+            "verifiedAt": "2026-11-24T23:57:16+05:30"
           }
         },
         {
@@ -1957,7 +1958,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:31+05:30"
+            "verifiedAt": "2026-11-24T23:56:58+05:30"
           }
         },
         {
@@ -1972,7 +1973,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:34+05:30"
+            "verifiedAt": "2026-11-24T23:57:02+05:30"
           }
         },
         {
@@ -1986,7 +1987,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:38+05:30"
+            "verifiedAt": "2026-11-24T23:57:06+05:30"
           }
         },
         {
@@ -2000,7 +2001,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:48+05:30"
+            "verifiedAt": "2026-11-24T23:57:17+05:30"
           }
         },
         {
@@ -2014,7 +2015,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:42+05:30"
+            "verifiedAt": "2026-11-24T23:57:11+05:30"
           }
         },
         {
@@ -2028,7 +2029,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:46+05:30"
+            "verifiedAt": "2026-11-24T23:57:14+05:30"
           }
         },
         {
@@ -2042,7 +2043,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:12+05:30"
+            "verifiedAt": "2026-11-24T23:56:39+05:30"
           }
         },
         {
@@ -2056,7 +2057,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:16+05:30"
+            "verifiedAt": "2026-11-24T23:56:43+05:30"
           }
         }
       ],
@@ -2078,7 +2079,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:54+05:30"
+            "verifiedAt": "2026-11-24T23:57:23+05:30"
           }
         },
         {
@@ -2093,7 +2094,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:55+05:30"
+            "verifiedAt": "2026-11-24T23:57:24+05:30"
           }
         },
         {
@@ -2121,7 +2122,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:56+05:30"
+            "verifiedAt": "2026-11-24T23:57:26+05:30"
           }
         },
         {
@@ -2135,7 +2136,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:59+05:30"
+            "verifiedAt": "2026-11-24T23:57:29+05:30"
           }
         },
         {
@@ -2163,7 +2164,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12+05:30"
+            "verifiedAt": "2026-11-24T23:57:30+05:30"
           }
         },
         {
@@ -2191,7 +2192,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:01+05:30"
+            "verifiedAt": "2026-11-24T23:57:31+05:30"
           }
         },
         {
@@ -2219,7 +2220,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:49+05:30"
+            "verifiedAt": "2026-11-24T23:57:18+05:30"
           }
         },
         {
@@ -2233,7 +2234,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:11:50+05:30"
+            "verifiedAt": "2026-11-24T23:57:19+05:30"
           }
         }
       ],
@@ -2255,7 +2256,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:15+05:30"
+            "verifiedAt": "2026-11-24T23:57:45+05:30"
           }
         },
         {
@@ -2283,7 +2284,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:16+05:30"
+            "verifiedAt": "2026-11-24T23:57:46+05:30"
           }
         },
         {
@@ -2297,7 +2298,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:17+05:30"
+            "verifiedAt": "2026-11-24T23:57:47+05:30"
           }
         },
         {
@@ -2339,7 +2340,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:18+05:30"
+            "verifiedAt": "2026-11-24T23:57:48+05:30"
           }
         },
         {
@@ -2367,7 +2368,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:13+05:30"
+            "verifiedAt": "2026-11-24T23:57:43+05:30"
           }
         },
         {
@@ -2381,7 +2382,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:14+05:30"
+            "verifiedAt": "2026-11-24T23:57:44+05:30"
           }
         }
       ],
@@ -2403,7 +2404,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:22+05:30"
+            "verifiedAt": "2026-11-24T23:57:52+05:30"
           }
         },
         {
@@ -2417,7 +2418,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:23+05:30"
+            "verifiedAt": "2026-11-24T23:57:53+05:30"
           }
         },
         {
@@ -2459,7 +2460,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:24+05:30"
+            "verifiedAt": "2026-11-24T23:57:54+05:30"
           }
         },
         {
@@ -2473,7 +2474,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:25+05:30"
+            "verifiedAt": "2026-11-24T23:57:55+05:30"
           }
         },
         {
@@ -2487,7 +2488,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:26+05:30"
+            "verifiedAt": "2026-11-24T23:57:56+05:30"
           }
         },
         {
@@ -2515,7 +2516,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:19+05:30"
+            "verifiedAt": "2026-11-24T23:57:50+05:30"
           }
         },
         {
@@ -2529,7 +2530,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:20+05:30"
+            "verifiedAt": "2026-11-24T23:57:51+05:30"
           }
         }
       ],
@@ -2607,7 +2608,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:41+05:30"
+            "verifiedAt": "2026-11-24T23:58:12+05:30"
           }
         },
         {
@@ -2621,7 +2622,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:42+05:30"
+            "verifiedAt": "2026-11-24T23:58:14+05:30"
           }
         },
         {
@@ -2635,7 +2636,7 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:36+05:30"
+            "verifiedAt": "2026-11-24T23:58:06+05:30"
           }
         },
         {
@@ -2649,13 +2650,1832 @@
           "verification": {
             "solutionPasses": true,
             "skeletonFails": true,
-            "verifiedAt": "2026-11-18T19:12:40+05:30"
+            "verifiedAt": "2026-11-24T23:58:11+05:30"
           }
         }
       ],
       "project": "Full-time offer"
     }
   ],
+  "tracks": {
+    "web": {
+      "course": "frontend-react",
+      "modules": [
+        {
+          "id": "web-00-how-the-web-works",
+          "title": "How the web works",
+          "status": "ui_wired",
+          "project": "A visiting card online",
+          "topics": [
+            {
+              "id": "web-00-how-the-web-works/topic-01-how-a-page-arrives",
+              "title": "How a page reaches your phone: browsers, servers, URLs",
+              "practice": "quiz",
+              "prerequisites": [],
+              "status": "ui_wired"
+            },
+            {
+              "id": "web-00-how-the-web-works/topic-02-html-css-js",
+              "title": "HTML, CSS and JavaScript: three languages, three jobs",
+              "practice": "quiz",
+              "prerequisites": [
+                "web-00-how-the-web-works/topic-01-how-a-page-arrives"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "web-00-how-the-web-works/topic-03-devtools",
+              "title": "The browser's DevTools: Elements, Console and Network",
+              "practice": "quiz",
+              "prerequisites": [
+                "web-00-how-the-web-works/topic-02-html-css-js"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "web-00-how-the-web-works/topic-04-editor-and-files",
+              "title": "VS Code, files and folders for a website",
+              "practice": "quiz",
+              "prerequisites": [
+                "web-00-how-the-web-works/topic-03-devtools"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "web-00-how-the-web-works/topic-05-first-page",
+              "title": "Your first web page",
+              "practice": "code",
+              "prerequisites": [
+                "web-00-how-the-web-works/topic-04-editor-and-files"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:11+05:30"
+              }
+            },
+            {
+              "id": "web-00-how-the-web-works/topic-06-first-javascript",
+              "title": "Your first JavaScript: console.log",
+              "practice": "code",
+              "prerequisites": [
+                "web-00-how-the-web-works/topic-05-first-page"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:12+05:30"
+              }
+            },
+            {
+              "id": "web-00-how-the-web-works/topic-07-git-basics",
+              "title": "Git basics: save points for your code",
+              "practice": "quiz",
+              "prerequisites": [
+                "web-00-how-the-web-works/topic-06-first-javascript"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "web-00-how-the-web-works/boss",
+              "title": "INC-00: The ₹ sign shows as garbage on Raju's phone",
+              "practice": "code",
+              "prerequisites": [
+                "web-00-how-the-web-works/topic-07-git-basics"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:08+05:30"
+              }
+            },
+            {
+              "id": "web-00-how-the-web-works/mini-project",
+              "title": "FEAT-00: A one-page visiting card with the UPI QR",
+              "practice": "code",
+              "prerequisites": [
+                "web-00-how-the-web-works/topic-07-git-basics"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:10+05:30"
+              }
+            }
+          ]
+        },
+        {
+          "id": "web-01-html",
+          "title": "HTML",
+          "status": "ui_wired",
+          "project": "The catalogue page",
+          "topics": [
+            {
+              "id": "web-01-html/topic-01-elements-and-tags",
+              "title": "Elements, tags and attributes",
+              "practice": "code",
+              "prerequisites": [
+                "web-00-how-the-web-works/boss"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:15+05:30"
+              }
+            },
+            {
+              "id": "web-01-html/topic-02-text-and-headings",
+              "title": "Headings, paragraphs and text",
+              "practice": "code",
+              "prerequisites": [
+                "web-01-html/topic-01-elements-and-tags"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:16+05:30"
+              }
+            },
+            {
+              "id": "web-01-html/topic-03-links-and-images",
+              "title": "Links and images",
+              "practice": "code",
+              "prerequisites": [
+                "web-01-html/topic-02-text-and-headings"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:18+05:30"
+              }
+            },
+            {
+              "id": "web-01-html/topic-04-lists",
+              "title": "Lists",
+              "practice": "code",
+              "prerequisites": [
+                "web-01-html/topic-03-links-and-images"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:19+05:30"
+              }
+            },
+            {
+              "id": "web-01-html/topic-05-tables",
+              "title": "Tables for the price list",
+              "practice": "code",
+              "prerequisites": [
+                "web-01-html/topic-04-lists"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:20+05:30"
+              }
+            },
+            {
+              "id": "web-01-html/topic-06-semantic-layout",
+              "title": "Page structure: header, nav, main, section, footer",
+              "practice": "code",
+              "prerequisites": [
+                "web-01-html/topic-05-tables"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:21+05:30"
+              }
+            },
+            {
+              "id": "web-01-html/topic-07-forms",
+              "title": "Forms: sending what the customer types",
+              "practice": "code",
+              "prerequisites": [
+                "web-01-html/topic-06-semantic-layout"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:22+05:30"
+              }
+            },
+            {
+              "id": "web-01-html/topic-08-form-inputs-and-validation",
+              "title": "Input types and built-in validation",
+              "practice": "code",
+              "prerequisites": [
+                "web-01-html/topic-07-forms"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:23+05:30"
+              }
+            },
+            {
+              "id": "web-01-html/topic-09-accessibility",
+              "title": "Accessibility: pages everyone can use",
+              "practice": "code",
+              "prerequisites": [
+                "web-01-html/topic-08-form-inputs-and-validation"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:24+05:30"
+              }
+            },
+            {
+              "id": "web-01-html/topic-10-head-and-meta",
+              "title": "The head: title, meta tags and the viewport",
+              "practice": "code",
+              "prerequisites": [
+                "web-01-html/topic-09-accessibility"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:26+05:30"
+              }
+            },
+            {
+              "id": "web-01-html/boss",
+              "title": "INC-01: A blind customer can't place an order",
+              "practice": "code",
+              "prerequisites": [
+                "web-01-html/topic-10-head-and-meta"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:13+05:30"
+              }
+            },
+            {
+              "id": "web-01-html/mini-project",
+              "title": "FEAT-01: The custom-order request form",
+              "practice": "code",
+              "prerequisites": [
+                "web-01-html/topic-10-head-and-meta"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:14+05:30"
+              }
+            }
+          ]
+        },
+        {
+          "id": "web-02-css",
+          "title": "CSS",
+          "status": "ui_wired",
+          "project": "Making it ours",
+          "topics": [
+            {
+              "id": "web-02-css/topic-01-selectors-and-rules",
+              "title": "CSS rules and selectors",
+              "practice": "code",
+              "prerequisites": [
+                "web-01-html/boss"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:29+05:30"
+              }
+            },
+            {
+              "id": "web-02-css/topic-02-colours-and-units",
+              "title": "Colours and units",
+              "practice": "code",
+              "prerequisites": [
+                "web-02-css/topic-01-selectors-and-rules"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:30+05:30"
+              }
+            },
+            {
+              "id": "web-02-css/topic-03-box-model",
+              "title": "The box model: margin, border, padding",
+              "practice": "code",
+              "prerequisites": [
+                "web-02-css/topic-02-colours-and-units"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:32+05:30"
+              }
+            },
+            {
+              "id": "web-02-css/topic-04-typography",
+              "title": "Fonts and text",
+              "practice": "code",
+              "prerequisites": [
+                "web-02-css/topic-03-box-model"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:33+05:30"
+              }
+            },
+            {
+              "id": "web-02-css/topic-05-cascade-and-specificity",
+              "title": "The cascade and specificity: which rule wins",
+              "practice": "code",
+              "prerequisites": [
+                "web-02-css/topic-04-typography"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:34+05:30"
+              }
+            },
+            {
+              "id": "web-02-css/topic-06-display-and-position",
+              "title": "Display and position",
+              "practice": "code",
+              "prerequisites": [
+                "web-02-css/topic-05-cascade-and-specificity"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:35+05:30"
+              }
+            },
+            {
+              "id": "web-02-css/topic-07-flexbox",
+              "title": "Flexbox: rows and columns",
+              "practice": "code",
+              "prerequisites": [
+                "web-02-css/topic-06-display-and-position"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:36+05:30"
+              }
+            },
+            {
+              "id": "web-02-css/topic-08-grid",
+              "title": "Grid: the product grid",
+              "practice": "code",
+              "prerequisites": [
+                "web-02-css/topic-07-flexbox"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:37+05:30"
+              }
+            },
+            {
+              "id": "web-02-css/topic-09-responsive-design",
+              "title": "Responsive design: phone first",
+              "practice": "code",
+              "prerequisites": [
+                "web-02-css/topic-08-grid"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:39+05:30"
+              }
+            },
+            {
+              "id": "web-02-css/topic-10-variables-and-states",
+              "title": "Custom properties, hover and focus",
+              "practice": "code",
+              "prerequisites": [
+                "web-02-css/topic-09-responsive-design"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:40+05:30"
+              }
+            },
+            {
+              "id": "web-02-css/boss",
+              "title": "INC-02: The catalogue breaks on small Android phones",
+              "practice": "code",
+              "prerequisites": [
+                "web-02-css/topic-10-variables-and-states"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:27+05:30"
+              }
+            },
+            {
+              "id": "web-02-css/mini-project",
+              "title": "FEAT-02: A festive Diwali theme",
+              "practice": "code",
+              "prerequisites": [
+                "web-02-css/topic-10-variables-and-states"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:28+05:30"
+              }
+            }
+          ]
+        },
+        {
+          "id": "web-03-javascript-basics",
+          "title": "JavaScript basics",
+          "status": "ui_wired",
+          "project": "The price calculator",
+          "topics": [
+            {
+              "id": "web-03-javascript-basics/topic-01-variables",
+              "title": "Variables: let and const",
+              "practice": "code",
+              "prerequisites": [
+                "web-02-css/boss"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:44+05:30"
+              }
+            },
+            {
+              "id": "web-03-javascript-basics/topic-02-numbers-and-paise",
+              "title": "Numbers, maths and why prices are in paise",
+              "practice": "code",
+              "prerequisites": [
+                "web-03-javascript-basics/topic-01-variables"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:45+05:30"
+              }
+            },
+            {
+              "id": "web-03-javascript-basics/topic-03-strings",
+              "title": "Strings and template literals",
+              "practice": "code",
+              "prerequisites": [
+                "web-03-javascript-basics/topic-02-numbers-and-paise"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:47+05:30"
+              }
+            },
+            {
+              "id": "web-03-javascript-basics/topic-04-booleans-and-comparison",
+              "title": "Booleans and comparison: === and its friends",
+              "practice": "code",
+              "prerequisites": [
+                "web-03-javascript-basics/topic-03-strings"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:48+05:30"
+              }
+            },
+            {
+              "id": "web-03-javascript-basics/topic-05-if-else",
+              "title": "Decisions: if, else and logical operators",
+              "practice": "code",
+              "prerequisites": [
+                "web-03-javascript-basics/topic-04-booleans-and-comparison"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:49+05:30"
+              }
+            },
+            {
+              "id": "web-03-javascript-basics/topic-06-switch-and-ternary",
+              "title": "switch and the ternary operator",
+              "practice": "code",
+              "prerequisites": [
+                "web-03-javascript-basics/topic-05-if-else"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:50+05:30"
+              }
+            },
+            {
+              "id": "web-03-javascript-basics/topic-07-loops",
+              "title": "Loops: for, while and for...of",
+              "practice": "code",
+              "prerequisites": [
+                "web-03-javascript-basics/topic-06-switch-and-ternary"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:51+05:30"
+              }
+            },
+            {
+              "id": "web-03-javascript-basics/topic-08-functions",
+              "title": "Functions: parameters and return values",
+              "practice": "code",
+              "prerequisites": [
+                "web-03-javascript-basics/topic-07-loops"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:52+05:30"
+              }
+            },
+            {
+              "id": "web-03-javascript-basics/topic-09-arrays",
+              "title": "Arrays",
+              "practice": "code",
+              "prerequisites": [
+                "web-03-javascript-basics/topic-08-functions"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:54+05:30"
+              }
+            },
+            {
+              "id": "web-03-javascript-basics/topic-10-objects",
+              "title": "Objects",
+              "practice": "code",
+              "prerequisites": [
+                "web-03-javascript-basics/topic-09-arrays"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:55+05:30"
+              }
+            },
+            {
+              "id": "web-03-javascript-basics/topic-11-formatting-money",
+              "title": "Showing rupees: toFixed and Intl.NumberFormat",
+              "practice": "code",
+              "prerequisites": [
+                "web-03-javascript-basics/topic-10-objects"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:56+05:30"
+              }
+            },
+            {
+              "id": "web-03-javascript-basics/boss",
+              "title": "INC-03: The cart total is off by a few paise",
+              "practice": "code",
+              "prerequisites": [
+                "web-03-javascript-basics/topic-11-formatting-money"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:42+05:30"
+              }
+            },
+            {
+              "id": "web-03-javascript-basics/mini-project",
+              "title": "FEAT-03: The price and delivery calculator",
+              "practice": "code",
+              "prerequisites": [
+                "web-03-javascript-basics/topic-11-formatting-money"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:43+05:30"
+              }
+            }
+          ]
+        },
+        {
+          "id": "web-04-javascript-in-depth",
+          "title": "JavaScript in depth",
+          "status": "ui_wired",
+          "project": "The catalogue engine",
+          "topics": [
+            {
+              "id": "web-04-javascript-in-depth/topic-01-scope-and-closures",
+              "title": "Scope and closures",
+              "practice": "code",
+              "prerequisites": [
+                "web-03-javascript-basics/boss"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00+05:30"
+              }
+            },
+            {
+              "id": "web-04-javascript-in-depth/topic-02-functions-as-values",
+              "title": "Functions as values: callbacks and arrow functions",
+              "practice": "code",
+              "prerequisites": [
+                "web-04-javascript-in-depth/topic-01-scope-and-closures"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:01+05:30"
+              }
+            },
+            {
+              "id": "web-04-javascript-in-depth/topic-03-array-methods",
+              "title": "Array methods: map, filter, reduce, find and sort",
+              "practice": "code",
+              "prerequisites": [
+                "web-04-javascript-in-depth/topic-02-functions-as-values"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:02+05:30"
+              }
+            },
+            {
+              "id": "web-04-javascript-in-depth/topic-04-destructuring-and-spread",
+              "title": "Destructuring, spread and rest",
+              "practice": "code",
+              "prerequisites": [
+                "web-04-javascript-in-depth/topic-03-array-methods"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:03+05:30"
+              }
+            },
+            {
+              "id": "web-04-javascript-in-depth/topic-05-objects-in-depth",
+              "title": "Objects in depth: methods, this and copying",
+              "practice": "code",
+              "prerequisites": [
+                "web-04-javascript-in-depth/topic-04-destructuring-and-spread"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:04+05:30"
+              }
+            },
+            {
+              "id": "web-04-javascript-in-depth/topic-06-classes",
+              "title": "Classes: a Cart with methods",
+              "practice": "code",
+              "prerequisites": [
+                "web-04-javascript-in-depth/topic-05-objects-in-depth"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:06+05:30"
+              }
+            },
+            {
+              "id": "web-04-javascript-in-depth/topic-07-modules",
+              "title": "Modules: import and export",
+              "practice": "code",
+              "prerequisites": [
+                "web-04-javascript-in-depth/topic-06-classes"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:07+05:30"
+              }
+            },
+            {
+              "id": "web-04-javascript-in-depth/topic-08-errors",
+              "title": "Errors: throw, try and catch",
+              "practice": "code",
+              "prerequisites": [
+                "web-04-javascript-in-depth/topic-07-modules"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:08+05:30"
+              }
+            },
+            {
+              "id": "web-04-javascript-in-depth/topic-09-json",
+              "title": "JSON: the catalogue as data",
+              "practice": "code",
+              "prerequisites": [
+                "web-04-javascript-in-depth/topic-08-errors"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:09+05:30"
+              }
+            },
+            {
+              "id": "web-04-javascript-in-depth/topic-10-dates",
+              "title": "Dates and times: opening hours",
+              "practice": "code",
+              "prerequisites": [
+                "web-04-javascript-in-depth/topic-09-json"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:10+05:30"
+              }
+            },
+            {
+              "id": "web-04-javascript-in-depth/topic-11-maps-and-sets",
+              "title": "Map and Set",
+              "practice": "code",
+              "prerequisites": [
+                "web-04-javascript-in-depth/topic-10-dates"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:12+05:30"
+              }
+            },
+            {
+              "id": "web-04-javascript-in-depth/boss",
+              "title": "INC-04: The Diwali discount is applied twice",
+              "practice": "code",
+              "prerequisites": [
+                "web-04-javascript-in-depth/topic-11-maps-and-sets"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:57+05:30"
+              }
+            },
+            {
+              "id": "web-04-javascript-in-depth/mini-project",
+              "title": "FEAT-04: The catalogue filter engine",
+              "practice": "code",
+              "prerequisites": [
+                "web-04-javascript-in-depth/topic-11-maps-and-sets"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:58+05:30"
+              }
+            }
+          ]
+        },
+        {
+          "id": "web-05-dom-and-events",
+          "title": "The DOM and events",
+          "status": "ui_wired",
+          "project": "A working cart",
+          "topics": [
+            {
+              "id": "web-05-dom-and-events/topic-01-the-dom",
+              "title": "The DOM: the page as a tree of objects",
+              "practice": "code",
+              "prerequisites": [
+                "web-04-javascript-in-depth/boss"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:15+05:30"
+              }
+            },
+            {
+              "id": "web-05-dom-and-events/topic-02-selecting-elements",
+              "title": "Finding elements: querySelector",
+              "practice": "code",
+              "prerequisites": [
+                "web-05-dom-and-events/topic-01-the-dom"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:16+05:30"
+              }
+            },
+            {
+              "id": "web-05-dom-and-events/topic-03-changing-the-page",
+              "title": "Changing text, attributes and classes",
+              "practice": "code",
+              "prerequisites": [
+                "web-05-dom-and-events/topic-02-selecting-elements"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:18+05:30"
+              }
+            },
+            {
+              "id": "web-05-dom-and-events/topic-04-creating-elements",
+              "title": "Creating and removing elements",
+              "practice": "code",
+              "prerequisites": [
+                "web-05-dom-and-events/topic-03-changing-the-page"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:19+05:30"
+              }
+            },
+            {
+              "id": "web-05-dom-and-events/topic-05-events",
+              "title": "Events: click and friends",
+              "practice": "code",
+              "prerequisites": [
+                "web-05-dom-and-events/topic-04-creating-elements"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:20+05:30"
+              }
+            },
+            {
+              "id": "web-05-dom-and-events/topic-06-event-delegation",
+              "title": "Event delegation: one listener for many buttons",
+              "practice": "code",
+              "prerequisites": [
+                "web-05-dom-and-events/topic-05-events"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:21+05:30"
+              }
+            },
+            {
+              "id": "web-05-dom-and-events/topic-07-forms-and-input",
+              "title": "Forms and input events",
+              "practice": "code",
+              "prerequisites": [
+                "web-05-dom-and-events/topic-06-event-delegation"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:22+05:30"
+              }
+            },
+            {
+              "id": "web-05-dom-and-events/topic-08-rendering-from-data",
+              "title": "Drawing the page from data",
+              "practice": "code",
+              "prerequisites": [
+                "web-05-dom-and-events/topic-07-forms-and-input"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:24+05:30"
+              }
+            },
+            {
+              "id": "web-05-dom-and-events/topic-09-local-storage",
+              "title": "Remembering things: localStorage",
+              "practice": "code",
+              "prerequisites": [
+                "web-05-dom-and-events/topic-08-rendering-from-data"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:25+05:30"
+              }
+            },
+            {
+              "id": "web-05-dom-and-events/topic-10-state-and-render",
+              "title": "State and render: keeping the page in sync",
+              "practice": "code",
+              "prerequisites": [
+                "web-05-dom-and-events/topic-09-local-storage"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:26+05:30"
+              }
+            },
+            {
+              "id": "web-05-dom-and-events/boss",
+              "title": "INC-05: The cart empties on refresh",
+              "practice": "code",
+              "prerequisites": [
+                "web-05-dom-and-events/topic-10-state-and-render"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:13+05:30"
+              }
+            },
+            {
+              "id": "web-05-dom-and-events/mini-project",
+              "title": "FEAT-05: The cart drawer",
+              "practice": "code",
+              "prerequisites": [
+                "web-05-dom-and-events/topic-10-state-and-render"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:14+05:30"
+              }
+            }
+          ]
+        },
+        {
+          "id": "web-06-async-javascript",
+          "title": "Async JavaScript",
+          "status": "ui_wired",
+          "project": "Live stock",
+          "topics": [
+            {
+              "id": "web-06-async-javascript/topic-01-sync-and-async",
+              "title": "Waiting without freezing: the event loop",
+              "practice": "quiz",
+              "prerequisites": [
+                "web-05-dom-and-events/boss"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "web-06-async-javascript/topic-02-timers-and-callbacks",
+              "title": "Timers and callbacks",
+              "practice": "code",
+              "prerequisites": [
+                "web-06-async-javascript/topic-01-sync-and-async"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:31+05:30"
+              }
+            },
+            {
+              "id": "web-06-async-javascript/topic-03-promises",
+              "title": "Promises",
+              "practice": "code",
+              "prerequisites": [
+                "web-06-async-javascript/topic-02-timers-and-callbacks"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:32+05:30"
+              }
+            },
+            {
+              "id": "web-06-async-javascript/topic-04-async-await",
+              "title": "async and await",
+              "practice": "code",
+              "prerequisites": [
+                "web-06-async-javascript/topic-03-promises"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:34+05:30"
+              }
+            },
+            {
+              "id": "web-06-async-javascript/topic-05-http-and-fetch",
+              "title": "HTTP and fetch",
+              "practice": "code",
+              "prerequisites": [
+                "web-06-async-javascript/topic-04-async-await"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:35+05:30"
+              }
+            },
+            {
+              "id": "web-06-async-javascript/topic-06-json-apis",
+              "title": "Talking to a JSON API",
+              "practice": "code",
+              "prerequisites": [
+                "web-06-async-javascript/topic-05-http-and-fetch"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:37+05:30"
+              }
+            },
+            {
+              "id": "web-06-async-javascript/topic-07-loading-and-errors",
+              "title": "Loading and error states",
+              "practice": "code",
+              "prerequisites": [
+                "web-06-async-javascript/topic-06-json-apis"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:38+05:30"
+              }
+            },
+            {
+              "id": "web-06-async-javascript/topic-08-parallel-requests",
+              "title": "Many requests at once: Promise.all",
+              "practice": "code",
+              "prerequisites": [
+                "web-06-async-javascript/topic-07-loading-and-errors"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:39+05:30"
+              }
+            },
+            {
+              "id": "web-06-async-javascript/topic-09-races-and-abort",
+              "title": "Race conditions and AbortController",
+              "practice": "code",
+              "prerequisites": [
+                "web-06-async-javascript/topic-08-parallel-requests"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:40+05:30"
+              }
+            },
+            {
+              "id": "web-06-async-javascript/topic-10-debounce",
+              "title": "Debounce: searching as you type",
+              "practice": "code",
+              "prerequisites": [
+                "web-06-async-javascript/topic-09-races-and-abort"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:41+05:30"
+              }
+            },
+            {
+              "id": "web-06-async-javascript/boss",
+              "title": "INC-06: Slow 3G shows the wrong stock",
+              "practice": "code",
+              "prerequisites": [
+                "web-06-async-javascript/topic-10-debounce"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:28+05:30"
+              }
+            },
+            {
+              "id": "web-06-async-javascript/mini-project",
+              "title": "FEAT-06: Live stock badges",
+              "practice": "code",
+              "prerequisites": [
+                "web-06-async-javascript/topic-10-debounce"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:29+05:30"
+              }
+            }
+          ]
+        },
+        {
+          "id": "web-07-tooling",
+          "title": "Tooling",
+          "status": "ui_wired",
+          "project": "A real project",
+          "topics": [
+            {
+              "id": "web-07-tooling/topic-01-npm-and-packages",
+              "title": "npm and packages",
+              "practice": "quiz",
+              "prerequisites": [
+                "web-06-async-javascript/boss"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "web-07-tooling/topic-02-vite",
+              "title": "Vite: a dev server and a build",
+              "practice": "quiz",
+              "prerequisites": [
+                "web-07-tooling/topic-01-npm-and-packages"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "web-07-tooling/topic-03-eslint-and-prettier",
+              "title": "ESLint and Prettier",
+              "practice": "quiz",
+              "prerequisites": [
+                "web-07-tooling/topic-02-vite"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "web-07-tooling/topic-04-git-branches",
+              "title": "Git branches and merging",
+              "practice": "quiz",
+              "prerequisites": [
+                "web-07-tooling/topic-03-eslint-and-prettier"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "web-07-tooling/topic-05-github-pull-requests",
+              "title": "GitHub and pull requests",
+              "practice": "quiz",
+              "prerequisites": [
+                "web-07-tooling/topic-04-git-branches"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "web-07-tooling/topic-06-debugging",
+              "title": "Debugging with breakpoints",
+              "practice": "quiz",
+              "prerequisites": [
+                "web-07-tooling/topic-05-github-pull-requests"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "web-07-tooling/topic-07-unit-tests",
+              "title": "Writing tests with Vitest",
+              "practice": "code",
+              "prerequisites": [
+                "web-07-tooling/topic-06-debugging"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:45+05:30"
+              }
+            },
+            {
+              "id": "web-07-tooling/topic-08-testing-the-dom",
+              "title": "Testing the page",
+              "practice": "code",
+              "prerequisites": [
+                "web-07-tooling/topic-07-unit-tests"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:46+05:30"
+              }
+            },
+            {
+              "id": "web-07-tooling/topic-09-environment-config",
+              "title": "Configuration and environment variables",
+              "practice": "code",
+              "prerequisites": [
+                "web-07-tooling/topic-08-testing-the-dom"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:48+05:30"
+              }
+            },
+            {
+              "id": "web-07-tooling/topic-10-production-builds",
+              "title": "Production builds and caching",
+              "practice": "quiz",
+              "prerequisites": [
+                "web-07-tooling/topic-09-environment-config"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "web-07-tooling/boss",
+              "title": "INC-07: The build breaks only on deploy",
+              "practice": "code",
+              "prerequisites": [
+                "web-07-tooling/topic-10-production-builds"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:43+05:30"
+              }
+            },
+            {
+              "id": "web-07-tooling/mini-project",
+              "title": "FEAT-07: A tested utilities package",
+              "practice": "code",
+              "prerequisites": [
+                "web-07-tooling/topic-10-production-builds"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-25T00:00:44+05:30"
+              }
+            }
+          ]
+        },
+        {
+          "id": "react-08-react-fundamentals",
+          "title": "React fundamentals",
+          "status": "ui_wired",
+          "project": "The store in React",
+          "topics": [
+            {
+              "id": "react-08-react-fundamentals/topic-01-why-react",
+              "title": "Why React: components and the virtual DOM",
+              "practice": "quiz",
+              "prerequisites": [
+                "web-07-tooling/boss"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "react-08-react-fundamentals/topic-02-components-and-jsx",
+              "title": "Components and JSX",
+              "practice": "code",
+              "prerequisites": [
+                "react-08-react-fundamentals/topic-01-why-react"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:20+05:30"
+              }
+            },
+            {
+              "id": "react-08-react-fundamentals/topic-03-props",
+              "title": "Props: passing data down",
+              "practice": "code",
+              "prerequisites": [
+                "react-08-react-fundamentals/topic-02-components-and-jsx"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:22+05:30"
+              }
+            },
+            {
+              "id": "react-08-react-fundamentals/topic-04-state",
+              "title": "State with useState",
+              "practice": "code",
+              "prerequisites": [
+                "react-08-react-fundamentals/topic-03-props"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:24+05:30"
+              }
+            },
+            {
+              "id": "react-08-react-fundamentals/topic-05-events",
+              "title": "Handling events",
+              "practice": "code",
+              "prerequisites": [
+                "react-08-react-fundamentals/topic-04-state"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:25+05:30"
+              }
+            },
+            {
+              "id": "react-08-react-fundamentals/topic-06-conditional-rendering",
+              "title": "Showing things conditionally",
+              "practice": "code",
+              "prerequisites": [
+                "react-08-react-fundamentals/topic-05-events"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:26+05:30"
+              }
+            },
+            {
+              "id": "react-08-react-fundamentals/topic-07-lists-and-keys",
+              "title": "Lists and keys",
+              "practice": "code",
+              "prerequisites": [
+                "react-08-react-fundamentals/topic-06-conditional-rendering"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:28+05:30"
+              }
+            },
+            {
+              "id": "react-08-react-fundamentals/topic-08-forms",
+              "title": "Forms in React",
+              "practice": "code",
+              "prerequisites": [
+                "react-08-react-fundamentals/topic-07-lists-and-keys"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:29+05:30"
+              }
+            },
+            {
+              "id": "react-08-react-fundamentals/topic-09-lifting-state",
+              "title": "Lifting state up",
+              "practice": "code",
+              "prerequisites": [
+                "react-08-react-fundamentals/topic-08-forms"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:31+05:30"
+              }
+            },
+            {
+              "id": "react-08-react-fundamentals/topic-10-styling",
+              "title": "Styling components",
+              "practice": "code",
+              "prerequisites": [
+                "react-08-react-fundamentals/topic-09-lifting-state"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:32+05:30"
+              }
+            },
+            {
+              "id": "react-08-react-fundamentals/boss",
+              "title": "INC-08: Removing one item removes another",
+              "practice": "code",
+              "prerequisites": [
+                "react-08-react-fundamentals/topic-10-styling"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:17+05:30"
+              }
+            },
+            {
+              "id": "react-08-react-fundamentals/mini-project",
+              "title": "FEAT-08: The React catalogue",
+              "practice": "code",
+              "prerequisites": [
+                "react-08-react-fundamentals/topic-10-styling"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:19+05:30"
+              }
+            }
+          ]
+        },
+        {
+          "id": "react-09-react-in-depth",
+          "title": "React in depth",
+          "status": "ui_wired",
+          "project": "Checkout",
+          "topics": [
+            {
+              "id": "react-09-react-in-depth/topic-01-effects",
+              "title": "Effects with useEffect",
+              "practice": "code",
+              "prerequisites": [
+                "react-08-react-fundamentals/boss"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:37+05:30"
+              }
+            },
+            {
+              "id": "react-09-react-in-depth/topic-02-fetching-data",
+              "title": "Fetching data in a component",
+              "practice": "code",
+              "prerequisites": [
+                "react-09-react-in-depth/topic-01-effects"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:43+05:30"
+              }
+            },
+            {
+              "id": "react-09-react-in-depth/topic-03-custom-hooks",
+              "title": "Custom hooks: useCart",
+              "practice": "code",
+              "prerequisites": [
+                "react-09-react-in-depth/topic-02-fetching-data"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:44+05:30"
+              }
+            },
+            {
+              "id": "react-09-react-in-depth/topic-04-context",
+              "title": "Context: sharing state without passing props",
+              "practice": "code",
+              "prerequisites": [
+                "react-09-react-in-depth/topic-03-custom-hooks"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:46+05:30"
+              }
+            },
+            {
+              "id": "react-09-react-in-depth/topic-05-reducers",
+              "title": "useReducer for the cart",
+              "practice": "code",
+              "prerequisites": [
+                "react-09-react-in-depth/topic-04-context"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:47+05:30"
+              }
+            },
+            {
+              "id": "react-09-react-in-depth/topic-06-routing",
+              "title": "Pages and routing: one app, many pages",
+              "practice": "code",
+              "prerequisites": [
+                "react-09-react-in-depth/topic-05-reducers"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:49+05:30"
+              }
+            },
+            {
+              "id": "react-09-react-in-depth/topic-07-form-validation",
+              "title": "Forms with validation",
+              "practice": "code",
+              "prerequisites": [
+                "react-09-react-in-depth/topic-06-routing"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:51+05:30"
+              }
+            },
+            {
+              "id": "react-09-react-in-depth/topic-08-refs",
+              "title": "Refs: focus and measuring",
+              "practice": "code",
+              "prerequisites": [
+                "react-09-react-in-depth/topic-07-form-validation"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:52+05:30"
+              }
+            },
+            {
+              "id": "react-09-react-in-depth/topic-09-performance",
+              "title": "Performance: memo, useMemo and useCallback",
+              "practice": "code",
+              "prerequisites": [
+                "react-09-react-in-depth/topic-08-refs"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:54+05:30"
+              }
+            },
+            {
+              "id": "react-09-react-in-depth/topic-10-error-boundaries",
+              "title": "When things break: error boundaries",
+              "practice": "code",
+              "prerequisites": [
+                "react-09-react-in-depth/topic-09-performance"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:55+05:30"
+              }
+            },
+            {
+              "id": "react-09-react-in-depth/boss",
+              "title": "INC-09: A render loop floods the API during the sale",
+              "practice": "code",
+              "prerequisites": [
+                "react-09-react-in-depth/topic-10-error-boundaries"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:34+05:30"
+              }
+            },
+            {
+              "id": "react-09-react-in-depth/mini-project",
+              "title": "FEAT-09: Checkout with a UPI step",
+              "practice": "code",
+              "prerequisites": [
+                "react-09-react-in-depth/topic-10-error-boundaries"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:35+05:30"
+              }
+            }
+          ]
+        },
+        {
+          "id": "react-10-professional-frontend",
+          "title": "Professional frontend",
+          "status": "ui_wired",
+          "project": "Launch day",
+          "topics": [
+            {
+              "id": "react-10-professional-frontend/topic-01-testing-components",
+              "title": "Testing components like a user",
+              "practice": "code",
+              "prerequisites": [
+                "react-09-react-in-depth/boss"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:03+05:30"
+              }
+            },
+            {
+              "id": "react-10-professional-frontend/topic-02-accessibility-in-depth",
+              "title": "Accessibility in depth: keyboard, focus and ARIA",
+              "practice": "code",
+              "prerequisites": [
+                "react-10-professional-frontend/topic-01-testing-components"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:05+05:30"
+              }
+            },
+            {
+              "id": "react-10-professional-frontend/topic-03-performance",
+              "title": "Fast pages: images, lazy loading and Web Vitals",
+              "practice": "code",
+              "prerequisites": [
+                "react-10-professional-frontend/topic-02-accessibility-in-depth"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:06+05:30"
+              }
+            },
+            {
+              "id": "react-10-professional-frontend/topic-04-security",
+              "title": "Security: XSS and safe rendering",
+              "practice": "code",
+              "prerequisites": [
+                "react-10-professional-frontend/topic-03-performance"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:07+05:30"
+              }
+            },
+            {
+              "id": "react-10-professional-frontend/topic-05-seo-and-sharing",
+              "title": "Search engines and sharing links",
+              "practice": "quiz",
+              "prerequisites": [
+                "react-10-professional-frontend/topic-04-security"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "react-10-professional-frontend/topic-06-deployment",
+              "title": "Deploying a frontend",
+              "practice": "quiz",
+              "prerequisites": [
+                "react-10-professional-frontend/topic-05-seo-and-sharing"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "react-10-professional-frontend/topic-07-code-reviews",
+              "title": "Code reviews for frontend work",
+              "practice": "quiz",
+              "prerequisites": [
+                "react-10-professional-frontend/topic-06-deployment"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "react-10-professional-frontend/topic-08-big-codebases",
+              "title": "Finding your way in a big frontend codebase",
+              "practice": "quiz",
+              "prerequisites": [
+                "react-10-professional-frontend/topic-07-code-reviews"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "react-10-professional-frontend/topic-09-interviews",
+              "title": "Frontend interviews",
+              "practice": "quiz",
+              "prerequisites": [
+                "react-10-professional-frontend/topic-08-big-codebases"
+              ],
+              "status": "ui_wired"
+            },
+            {
+              "id": "react-10-professional-frontend/boss",
+              "title": "INC-10: The mock frontend interview loop",
+              "practice": "code",
+              "prerequisites": [
+                "react-10-professional-frontend/topic-09-interviews"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:58:59+05:30"
+              }
+            },
+            {
+              "id": "react-10-professional-frontend/mini-project",
+              "title": "CAPSTONE: Launch the dhaaga.in online store",
+              "practice": "code",
+              "prerequisites": [
+                "react-10-professional-frontend/topic-09-interviews"
+              ],
+              "status": "ui_wired",
+              "verification": {
+                "solutionPasses": true,
+                "skeletonFails": true,
+                "verifiedAt": "2026-11-24T23:59:02+05:30"
+              }
+            }
+          ]
+        }
+      ],
+      "status": "ui_wired"
+    }
+  },
   "decisions": [
     "Helper: Satoru Gojo (was Byte the owl); team: Tsunade, Kakashi, Jiraiya, Itachi (see docs/STORY.md)",
     "Skip ahead: removed (user feedback, 2026-11-16). Tickets open one at a time when the one before is mastered; ./run.sh --unlock-all is author mode",

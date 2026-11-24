@@ -1,0 +1,115 @@
+topic: web-00-how-the-web-works/topic-01-how-a-page-arrives
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: browser
+    variants:
+      - { prompt: "Which of these is a browser?", choices: ["Chrome", "dhaaga.in", "DNS", "A data centre"], answer: 0 }
+      - { prompt: "What does a browser do?", choices: ["Asks for pages and draws them on the screen", "Stores every website's files", "Turns domain names into numbers", "Scrambles messages so nobody can read them"], answer: 0 }
+    explain: "A browser, like Chrome or Safari, is the app that asks for pages and draws them. It is the client in the conversation."
+    reteach: "### The browser: the one who asks"
+
+  - id: q02
+    type: mcq
+    concept: server
+    prompt: "Where do the files of Dhaaga's website live, ready to be sent to anyone who asks?"
+    choices: ["On a server", "In the customer's browser", "In DNS", "Inside the URL"]
+    answer: 0
+    explain: "A server is a computer that stays on, keeps a site's files and sends them when a browser asks."
+    reteach: "### The server: the one who answers"
+
+  - id: q03
+    type: mcq
+    concept: url
+    variants:
+      - { prompt: "In https://dhaaga.in/prices, which part is the domain?", choices: ["dhaaga.in", "https://", "/prices", "prices"], answer: 0 }
+      - { prompt: "In https://dhaaga.in/prices, which part is the path?", choices: ["/prices", "dhaaga.in", "https://", "dhaaga"], answer: 0 }
+    explain: "The scheme is https://, the domain dhaaga.in names the server, and the path /prices names the page on it."
+    reteach: "### URLs: the address of a page"
+
+  - id: q04
+    type: mcq
+    concept: url
+    prompt: "Which URL asks for Dhaaga's home page?"
+    choices: ["https://dhaaga.in/", "https://dhaaga.in/home page", "dhaaga.in//home", "https:/dhaaga.in"]
+    answer: 0
+    explain: "A path of just / means the home page. The others have a space, a doubled slash or a missing slash."
+    reteach: "### URLs: the address of a page"
+
+  - id: q05
+    type: mcq
+    concept: dns
+    variants:
+      - { prompt: "What does DNS do?", choices: ["Turns a domain name into an IP address", "Draws the page on the screen", "Stores the website's photos", "Checks the spelling of the path"], answer: 0 }
+      - { prompt: "The browser has the name dhaaga.in but needs a number to reach the server. Who gives it that number?", choices: ["DNS", "The server", "HTTPS", "The status code"], answer: 0 }
+    explain: "DNS is the internet's phone book. It turns a name like dhaaga.in into an IP address like 203.0.113.10."
+    reteach: "### DNS: turning names into numbers"
+
+  - id: q06
+    type: fill-blank
+    concept: http
+    goal: "Ask the server to send the prices page back to the browser."
+    prompt: "___ /prices HTTP/1.1"
+    answers: ["GET"]
+    explain: "GET asks the server to send something back. The path after it says which page."
+    reteach: "### HTTP: the language of asking and answering"
+
+  - id: q07
+    type: mcq
+    concept: http
+    prompt: "In HTTP, what is the server's answer called?"
+    choices: ["A response", "A request", "A domain", "A packet name"]
+    answer: 0
+    explain: "The browser sends a request, and the server sends back a response."
+    reteach: "### HTTP: the language of asking and answering"
+
+  - id: q08
+    type: fill-blank
+    concept: status-codes
+    goal: "The status line a server sends when the path asked for has no page."
+    prompt: "HTTP/1.1 ___ Not Found"
+    answers: ["404"]
+    explain: "404 Not Found means the server is fine but has no page at that path."
+    reteach: "### Status codes: how did it go?"
+
+  - id: q09
+    type: mcq
+    concept: status-codes
+    variants:
+      - { prompt: "The server answers with status 200. What does that mean?", choices: ["OK: here is the page", "The page was not found", "The server crashed", "The page moved somewhere else"], answer: 0 }
+      - { prompt: "A bug in the server's own code makes it fail. Which status family does the browser get?", choices: ["5xx, like 500", "2xx, like 200", "3xx, like 301", "4xx, like 404"], answer: 0 }
+    explain: "2 means success, 3 means go somewhere else, 4 means the request asked for something wrong, and 5 means the server failed."
+    reteach: "### Status codes: how did it go?"
+
+  - id: q10
+    type: mcq
+    concept: https
+    prompt: "Why must a payment page use https:// and not http://?"
+    choices: ["HTTPS scrambles the data so people on the network can't read it", "HTTPS pages load ten times faster", "Only HTTPS pages can show photos", "HTTPS skips the DNS step"]
+    answer: 0
+    explain: "The s means secure: the request and response are encrypted on the way."
+    reteach: "### HTTPS: the sealed envelope"
+
+  - id: q11
+    type: order
+    concept: http
+    prompt: "Put the steps in order for a customer opening https://dhaaga.in/ on a phone."
+    items:
+      - "The browser asks DNS for the IP address of dhaaga.in"
+      - "The browser sends GET / to the server"
+      - "The server answers 200 OK with the HTML"
+      - "The browser asks for the photos the HTML mentions"
+      - "The browser draws the page"
+    explain: "Name to number first, then the request, the response, the extra files, and finally the drawing."
+    reteach: "### The whole trip"
+
+  - id: q12
+    type: mcq
+    concept: server
+    prompt: "A page loads, but one coaster photo shows as a broken image. What most likely happened?"
+    choices: ["The request for that one photo got a 404", "The whole server is down", "DNS forgot the domain name", "The browser is not HTTPS"]
+    answer: 0
+    explain: "Each file has its own request. One missing file gets a 404 while the rest of the page loads fine."
+    reteach: "### One page, many requests"

@@ -1,0 +1,129 @@
+topic: web-06-async-javascript/topic-05-http-and-fetch
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: client-server
+    variants:
+      - { prompt: "A customer opens dhaaga.in on her phone and the page asks for Golu's stock. Which is the client?", choices: ["The browser on her phone", "Dhaaga's server", "The stock records", "The UPI app"], answer: 0 }
+      - { prompt: "What is an API?", choices: ["The set of questions a server agrees to answer, and the shape of its answers", "A kind of browser", "A file of CSS rules", "A button on the page"], answer: 0 }
+    explain: "The client asks and the server answers. The API is the list of questions the server answers, and what the answers look like."
+    reteach: "### Clients and servers"
+
+  - id: q02
+    type: mcq
+    concept: http-request
+    variants:
+      - { prompt: "Which HTTP method reads data without changing anything?", choices: ["GET", "POST", "SEND", "READ"], answer: 0 }
+      - { prompt: "Which part of a request says which thing you are asking about, such as /api/stock/DC-1042?", choices: ["The URL", "The status code", "The method", "The response body"], answer: 0 }
+    explain: "A request has a method (GET reads, POST sends new data), a URL naming the thing, headers, and sometimes a body."
+    reteach: "### What a request holds"
+
+  - id: q03
+    type: mcq
+    concept: status-codes
+    variants:
+      - { prompt: "The page asks for /api/stock/DC-9999, an item that doesn't exist. Which status code fits?", choices: ["404 Not Found", "200 OK", "201 Created", "500 Internal Server Error"], answer: 0 }
+      - { prompt: "What does status 500 mean?", choices: ["The server broke while answering", "The request worked", "The item was not found", "A new order was created"], answer: 0 }
+      - { prompt: "What does status 201 mean?", choices: ["It worked, and a new thing was created", "The item was not found", "The server broke", "The request was wrong"], answer: 0 }
+    explain: "200 OK and 201 Created are successes. 404 means nothing is at that URL. 500 means the server failed."
+    reteach: "### Status codes"
+
+  - id: q04
+    type: mcq
+    concept: response-ok
+    prompt: "The server answers a fetch with status 404. What happens to fetch's promise?"
+    choices: ["It is fulfilled with a response whose ok is false", "It is rejected with an error", "It stays pending forever", "It is fulfilled with undefined"]
+    answer: 0
+    explain: "A 404 is still an answer, so fetch succeeds. You check response.ok yourself."
+    reteach: "### fetch only fails when the network does"
+
+  - id: q05
+    type: fill-blank
+    concept: response-json
+    goal: "Wait for the body of the response and turn it into a JavaScript object."
+    prompt: "const data = await response.___();"
+    answers: ["json"]
+    explain: "response.json() returns a promise. It reads the body and parses it into an object."
+    reteach: "### Syntax: response.json"
+
+  - id: q06
+    type: fill-blank
+    concept: response-ok
+    goal: "Throw an error when the server's status is not in the 200s."
+    prompt: "if (!response.___) throw new Error(`Failed: ${response.status}`);"
+    answers: ["ok"]
+    explain: "response.ok is true for statuses 200 to 299 and false for everything else."
+    reteach: "### fetch only fails when the network does"
+
+  - id: q07
+    type: fill-blank
+    concept: fetch
+    goal: "Send a GET request for Golu's stock and wait for the response."
+    prompt: "const response = await ___(\"/api/stock/DC-1042\");"
+    answers: ["fetch"]
+    explain: "fetch(url) sends a GET by default and returns a promise of the response."
+    reteach: "### Syntax: fetch"
+
+  - id: q08
+    type: spot-the-bug
+    concept: response-json
+    code: |
+      async function goluStock() {
+        const response = await fetch("/api/stock/DC-1042");
+        const data = response.json();
+        return data.stock;
+      }
+    bugLine: 3
+    explain: "response.json() returns a promise. Without await, data.stock is undefined. Write const data = await response.json();."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: predict-output
+    concept: response-ok
+    code: |
+      async function pretendFetch(url) {
+        return { ok: false, status: 404, json: async () => ({ error: "No such item" }) };
+      }
+      async function main() {
+        const response = await pretendFetch("/api/stock/DC-9999");
+        const data = await response.json();
+        console.log(data.stock);
+      }
+      main();
+    answer: "undefined"
+    explain: "The 404 body is { error: ... }, with no stock in it. Without checking response.ok, the code reads undefined."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: status-codes
+    prompt: "A status code starts with 4, like 400 or 404. Who needs to change something?"
+    choices: ["The client: the request was wrong", "The server: it crashed", "Nobody: it worked", "The customer's phone company"]
+    answer: 0
+    explain: "4xx means the client asked wrongly, such as a bad PIN or an unknown id. 5xx means the server failed."
+    reteach: "### Status codes"
+
+  - id: q11
+    type: order
+    concept: fetch
+    prompt: "Put the lines in order to fetch Golu's stock, checking the status before reading the body."
+    items:
+      - "async function goluStock() {"
+      - "  const response = await fetch(\"/api/stock/DC-1042\");"
+      - "  if (!response.ok) throw new Error(\"Stock check failed\");"
+      - "  const data = await response.json();"
+      - "  return data.stock;"
+      - "}"
+    explain: "Send the request, check the status, read the body, then use the data."
+    reteach: "### fetch only fails when the network does"
+
+  - id: q12
+    type: mcq
+    concept: fetch
+    prompt: "When does the promise from fetch reject?"
+    choices: ["When no answer comes back at all, such as no internet", "Whenever the status is not 200", "Only for status 500", "Never: fetch can't fail"]
+    answer: 0
+    explain: "fetch rejects only when the request can't complete. Any status, even 404 or 500, is a response."
+    reteach: "### fetch only fails when the network does"

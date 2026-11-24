@@ -1,0 +1,133 @@
+topic: react-09-react-in-depth/topic-03-custom-hooks
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: custom-hook
+    prompt: "What makes a function a custom hook?"
+    choices: ["Its name starts with use, and it calls other hooks inside", "It returns JSX", "It is written as a class", "It is exported from a file called hooks.js"]
+    answer: 0
+    explain: "A custom hook is an ordinary function that starts with use and calls hooks like useState and useEffect. It returns values, not JSX."
+    reteach: "### Syntax: a custom hook"
+
+  - id: q02
+    type: mcq
+    concept: custom-hook
+    prompt: "Which is a good reason to write a custom hook?"
+    choices: ["Two components need the same logic built from useState and useEffect", "The header and the grid must show one shared cart", "A component renders too slowly", "A plain function needs to add two numbers"]
+    answer: 0
+    explain: "Custom hooks share stateful logic. They don't share the state itself, so one shared cart needs context instead."
+    reteach: "### Two components, the same logic"
+
+  - id: q03
+    type: spot-the-bug
+    concept: rules-of-hooks
+    prompt: "Which line breaks the rules of hooks?"
+    code: |
+      function PriceTag({ code, showStock }) {
+        const price = usePrice(code);
+        if (showStock) {
+          const stock = useStock(code);
+          return <p>{price} ({stock} left)</p>;
+        }
+        return <p>{price}</p>;
+      }
+    bugLine: 4
+    explain: "useStock is called inside an if, so some renders call one hook and others call two. Call every hook at the top level, before any condition."
+    reteach: "### The rules of hooks"
+
+  - id: q04
+    type: mcq
+    concept: rules-of-hooks
+    prompt: "Why must hooks be called in the same order on every render?"
+    choices: ["React tells hooks apart by their position in the call order", "JavaScript runs functions faster in a fixed order", "Hooks are sorted by name before they run", "Only the first hook in a component is allowed to change"]
+    answer: 0
+    explain: "React has no names for your hooks. The first useState is slot one, the second is slot two. Skipping one shifts every slot after it."
+    reteach: "### The rules of hooks"
+
+  - id: q05
+    type: mcq
+    concept: own-state
+    prompt: "Header and ProductGrid both call useCart(). A customer adds a keychain from the grid. What does the header's Cart (n) show?"
+    choices: ["Still Cart (0), because each call to useCart has its own state", "Cart (1), because they call the same hook", "Cart (2), because both hooks add the item", "An error, because a hook can only be used once"]
+    answer: 0
+    explain: "A hook shares logic, not data. Each component's call runs its own useState."
+    reteach: "### Each call gets its own state"
+
+  - id: q06
+    type: predict-output
+    concept: updater-form
+    code: |
+      function applyAll(start, updates) {
+        let state = start;
+        for (const update of updates) {
+          state = typeof update === "function" ? update(state) : update;
+        }
+        return state;
+      }
+
+      const count = 0;
+      console.log(applyAll(count, [count + 1, count + 1, count + 1]));
+      console.log(applyAll(count, [(c) => c + 1, (c) => c + 1, (c) => c + 1]));
+    answer: "1\n3"
+    explain: "The plain values were all worked out from the same count, 0, so each is 1. The updater functions each start from the result of the one before."
+    reteach: "### Syntax: updating from the newest state"
+
+  - id: q07
+    type: fill-blank
+    concept: updater-form
+    goal: "Add one more line to the cart, starting from the newest lines React has."
+    prompt: "setLines((current) => [...___, line]);"
+    answers: ["current"]
+    explain: "The updater gets the newest state as its argument. Spread that, not the lines from this render."
+    reteach: "### Syntax: updating from the newest state"
+
+  - id: q08
+    type: predict-output
+    concept: updater-form
+    code: |
+      const lines = [{ code: "KEY", qty: 1 }, { code: "CST", qty: 2 }];
+      const next = lines.map((l) => (l.code === "KEY" ? { ...l, qty: l.qty + 1 } : l));
+      console.log(next === lines);
+      console.log(next[1] === lines[1]);
+      console.log(lines[0].qty, next[0].qty);
+    answer: "false\ntrue\n1 2"
+    explain: "map makes a new array. The keychain line is a new object with qty 2, and the old one still has 1. The coaster line is reused untouched."
+    reteach: "### Adding without duplicating lines"
+
+  - id: q09
+    type: mcq
+    concept: lazy-initial-state
+    prompt: "What is the difference between useState(loadLines(key)) and useState(() => loadLines(key))?"
+    choices: ["The second calls loadLines only on the first render. The first calls it on every render", "There is no difference", "The first one is lazy and the second runs every time", "The second one never calls loadLines"]
+    answer: 0
+    explain: "With a value, loadLines runs every render and React ignores the result after the first. With a function, React calls it once."
+    reteach: "### Syntax: lazy initial state"
+
+  - id: q10
+    type: fill-blank
+    concept: lazy-initial-state
+    goal: "Read the saved cart from localStorage once, on the first render only."
+    prompt: "const [lines, setLines] = useState(___ loadLines(storageKey));"
+    answers: ["() =>", "()=>"]
+    explain: "Passing a function makes the initial state lazy. React calls it only for the first render."
+    reteach: "### Syntax: lazy initial state"
+
+  - id: q11
+    type: mcq
+    concept: custom-hook
+    prompt: "Where should useCart write the cart to localStorage?"
+    choices: ["In a useEffect that depends on lines", "Directly in the hook body, before the return", "Inside the useState initial value", "In every component that calls useCart"]
+    answer: 0
+    explain: "Saving is a side effect, so it goes in an effect. Depending on lines makes it save every time the cart changes."
+    reteach: "### Saving with an effect"
+
+  - id: q12
+    type: mcq
+    concept: custom-hook
+    prompt: "In a test, const { result } = renderHook(() => useCart()). What is result.current?"
+    choices: ["What useCart returned on its latest render", "The test component's JSX", "The first value useCart ever returned", "The number of times the hook rendered"]
+    answer: 0
+    explain: "result.current always points at the latest return value, so check it after act has finished an update."
+    reteach: "### Syntax: testing a hook with renderHook"

@@ -1,0 +1,23 @@
+id: web-00-how-the-web-works/boss
+title: "INC-00: The ₹ sign shows as garbage on Raju's phone"
+order: 99
+minutes: 12
+prerequisites: [web-00-how-the-web-works/topic-07-git-basics]
+concepts: [character-encoding, charset, lang-attribute, viewport]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: INC-00
+  from: theo
+  title: "The ₹ sign shows as garbage on Raju's phone"
+  body: >
+    Arjun here. It's Sunday morning at the FC Road stall, and the price board page on Raju's phone says
+    â‚¹150 instead of ₹150. Customers think we've switched to some strange currency. Please fix the page
+    before the lunchtime crowd arrives.
+hints:
+  - "Bronze: the browser has to be told how the letters in this file are stored. One line in <head> does it."
+  - "Silver: browsers only look for that line near the very top of the file. Move it above the <title> and the long <style> block."
+  - "Gold: write <html lang=\"en\">, and add <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> inside <head>."
+review: false

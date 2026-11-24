@@ -1,0 +1,136 @@
+topic: react-09-react-in-depth/topic-01-effects
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: side-effects
+    variants:
+      - { prompt: "Which of these is a side effect that belongs in useEffect?", choices: ["Setting document.title to \"(3) Dhaaga & Co.\"", "Working out total = paise * qty", "Choosing which JSX to return", "Turning 15000 paise into \"₹150.00\" for the page"], answer: 0 }
+      - { prompt: "Which of these is a side effect that belongs in useEffect?", choices: ["Filtering the items to show only Marigold ones", "Starting a timer with setInterval", "Adding up the cart's quantities", "Picking \"Sold out\" or \"In stock\" for a badge"], answer: 1 }
+    explain: "A side effect reaches outside React: the tab title, timers, servers, localStorage. Working out values from props and state is plain rendering."
+    reteach: "### Rendering must stay pure"
+
+  - id: q02
+    type: mcq
+    concept: use-effect
+    prompt: "When does React run the function you pass to useEffect?"
+    choices: ["After React has updated the page for that render", "Before React calls your component", "In the middle of rendering, before the JSX is returned", "Only when the user clicks something"]
+    answer: 0
+    explain: "React renders, puts the changes on the page, and only then runs effects."
+    reteach: "### When does an effect run?"
+
+  - id: q03
+    type: mcq
+    concept: dependency-array
+    variants:
+      - { prompt: "What does useEffect(fn, []) do?", choices: ["Runs fn once, after the first render", "Runs fn after every render", "Never runs fn", "Runs fn before every render"], answer: 0 }
+      - { prompt: "What does useEffect(fn) do, with no array at all?", choices: ["Runs fn once, after the first render", "Runs fn after every render", "Never runs fn", "Runs fn only when the props change"], answer: 1 }
+      - { prompt: "What does useEffect(fn, [count]) do?", choices: ["Runs fn only when the user clicks", "Runs fn after every render", "Runs fn after the first render, then again whenever count changes", "Runs fn once and never again"], answer: 2 }
+    explain: "No array means every render. An empty array means once. A list of values means after the first render, then whenever one of them changes."
+    reteach: "### Syntax: the three dependency arrays"
+
+  - id: q04
+    type: predict-output
+    concept: dependency-array
+    code: |
+      const before = ["DC-1042", 2];
+      const after = ["DC-1042", 2];
+      console.log(after.some((v, i) => !Object.is(v, before[i])));
+
+      const oldDeps = [{ qty: 2 }];
+      const newDeps = [{ qty: 2 }];
+      console.log(newDeps.some((v, i) => !Object.is(v, oldDeps[i])));
+    answer: "false\ntrue"
+    explain: "Text and numbers that are equal pass Object.is, so nothing changed. Two separate objects are never Object.is equal, even when they look the same, so React would run the effect again."
+    reteach: "### Syntax: the three dependency arrays"
+
+  - id: q05
+    type: fill-blank
+    concept: dependency-array
+    goal: "Run the effect after the first render, and again whenever the order id changes."
+    prompt: "useEffect(() => { load(orderId); }, ___);"
+    answers: ["[orderId]"]
+    explain: "List the values the effect reads. React runs it again when orderId changes."
+    reteach: "### Syntax: useEffect"
+
+  - id: q06
+    type: mcq
+    concept: cleanup
+    prompt: "When does React call the cleanup function an effect returns?"
+    choices: ["Before the effect runs again, and when the component leaves the page", "Only when the browser tab is closed", "Right after the effect runs, every time", "Never: you have to call it yourself"]
+    answer: 0
+    explain: "React cleans up the old effect before running the new one, and once more when the component is unmounted."
+    reteach: "### Syntax: cleanup"
+
+  - id: q07
+    type: spot-the-bug
+    concept: cleanup
+    prompt: "The sale banner never moves at all. Which line is wrong?"
+    code: |
+      useEffect(() => {
+        const id = setInterval(() => setLeft((l) => l - 1), 1000);
+        return clearInterval(id);
+      }, []);
+    bugLine: 3
+    explain: "This calls clearInterval right away and returns its result, so the timer stops before it ticks. Return a function instead: return () => clearInterval(id);"
+    reteach: "### Syntax: cleanup"
+
+  - id: q08
+    type: predict-output
+    concept: stale-closure
+    code: |
+      function makeTimer(left) {
+        return () => console.log(left - 1);
+      }
+      const timer = makeTimer(30);
+      timer();
+      timer();
+
+      const updater = (l) => l - 1;
+      let left = 30;
+      left = updater(left);
+      left = updater(left);
+      console.log(left);
+    answer: "29\n29\n28"
+    explain: "The timer's function keeps the 30 it saw when it was made, so it prints 29 twice. The updater gets the current value each time, so it goes 30, 29, 28."
+    reteach: "### Timers see the values from their own render"
+
+  - id: q09
+    type: mcq
+    concept: stale-closure
+    prompt: "A countdown starts its interval in useEffect with an empty array. It shows 29 and then stops changing. What is the fix?"
+    choices: ["Use the updater form: setLeft((l) => l - 1)", "Remove the empty array so the effect runs after every render", "Call setInterval during rendering instead", "Make left a normal let variable instead of state"]
+    answer: 0
+    explain: "The timer's function was made in the first render and still sees left as 30. The updater form always receives the newest value."
+    reteach: "### Timers see the values from their own render"
+
+  - id: q10
+    type: mcq
+    concept: cleanup
+    prompt: "In development, your countdown drops two seconds every second. The app uses StrictMode. What is the most likely cause?"
+    choices: ["The effect has no cleanup, so the first of the two timers is never stopped", "StrictMode makes every second shorter", "The dependency array has too many values", "setInterval always runs twice in React"]
+    answer: 0
+    explain: "StrictMode runs each effect, cleans it up and runs it again. Without a cleanup, both timers keep ticking."
+    reteach: "### Strict Mode runs effects twice in development"
+
+  - id: q11
+    type: mcq
+    concept: side-effects
+    prompt: "A component needs total, which is paise times qty. What is the best way to get it?"
+    choices: ["const total = paise * qty; while rendering", "Keep total in state and set it in a useEffect with [paise, qty]", "Set total in a useEffect with no array", "Store total in localStorage and read it back"]
+    answer: 0
+    explain: "A value worked out from props and state is not a side effect. An effect would render once with the wrong total and then again."
+    reteach: "### You might not need an effect"
+
+  - id: q12
+    type: order
+    concept: use-effect
+    prompt: "count changes from 2 to 3. Put what React does in order."
+    items:
+      - "React calls CartTitle with count 3"
+      - "React updates the page with the new JSX"
+      - "React runs the cleanup from the effect of the last render"
+      - "React runs the new effect, which sets the tab title"
+    explain: "Render first, then update the page. Then the old effect is cleaned up and the new one runs."
+    reteach: "### When does an effect run?"

@@ -1,0 +1,178 @@
+topic: react-10-professional-frontend/topic-06-deployment
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: build-output
+    variants:
+      - prompt: "What does npm run build produce for a Vite React app?"
+        choices:
+          - "Plain files in dist/: an index.html and hashed JavaScript and CSS files"
+          - "A running server that must stay on"
+          - "A database"
+          - "A copy of node_modules"
+        answer: 0
+      - prompt: "Why can a React store be hosted without its own server program?"
+        choices:
+          - "After the build it is only files, which any static host can serve"
+          - "React runs on the host's computer instead of the phone"
+          - "Browsers download React from Google"
+          - "It can't: every React app needs a Java server"
+        answer: 0
+    explain: "The build turns your code into static files. Deploying a frontend is mostly building them, uploading them and pointing the domain at them."
+    reteach: "### What deploying a frontend means"
+
+  - id: q02
+    type: order
+    concept: build-output
+    prompt: "Put a safe deploy, from merge to customers, in order."
+    items:
+      - "A pull request is merged into main"
+      - "CI installs packages and runs the tests"
+      - "CI builds the dist folder"
+      - "The files are uploaded as a new version on the host"
+      - "The domain now serves the new version"
+    explain: "Tests run before the build is uploaded, so a red test stops the deploy. The old version stays stored for a rollback."
+    reteach: "### What deploying a frontend means"
+
+  - id: q03
+    type: mcq
+    concept: static-hosting-and-cdn
+    prompt: "What does a CDN do for a customer in Nagpur?"
+    choices:
+      - "Serves the files from a server near them, so the page loads faster"
+      - "Builds the React app on their phone"
+      - "Stores their cart"
+      - "Translates the page into Marathi"
+    answer: 0
+    explain: "A CDN keeps copies of your files on servers around the world. Each customer is answered by one nearby."
+    reteach: "### Static hosting and CDNs"
+
+  - id: q04
+    type: mcq
+    concept: caching-headers
+    variants:
+      - prompt: "Why is it safe to cache /assets/index-4f9a1c2b.js for a whole year?"
+        choices:
+          - "Its name contains a hash of its content, so a changed file always gets a new name"
+          - "JavaScript files never change"
+          - "Browsers ignore cache headers on JavaScript"
+          - "It isn't safe: it should never be cached"
+        answer: 0
+      - prompt: "You deployed a fix an hour ago, but customers still see the bug. index.html has Cache-Control: max-age=86400. What is wrong?"
+        choices:
+          - "Browsers keep the old index.html for a day, so they still load the old assets"
+          - "The CDN is too fast"
+          - "The hashed assets are cached too briefly"
+          - "Nothing: fixes always take a day"
+        answer: 0
+    explain: "Hashed assets can be cached for a year because new content means a new name. index.html must be checked every time, or customers keep the old app."
+    reteach: "### Caching: forever for assets, never for index.html"
+
+  - id: q05
+    type: fill-blank
+    concept: caching-headers
+    goal: "Make every browser check with the server for a newer index.html on every visit."
+    prompt: "Cache-Control: ___"
+    answers: ["no-cache"]
+    explain: "no-cache means a browser may keep a copy but must check with the server before using it. index.html is tiny, so the check costs almost nothing."
+    reteach: "### Caching: forever for assets, never for index.html"
+
+  - id: q06
+    type: predict-output
+    concept: caching-headers
+    prompt: "A year-long cache is written in seconds. What does this print?"
+    code: |
+      console.log(60 * 60 * 24 * 365);
+    answer: "31536000"
+    explain: "60 seconds × 60 minutes × 24 hours × 365 days is 31,536,000 seconds, the max-age used for hashed assets."
+    reteach: "### Caching: forever for assets, never for index.html"
+
+  - id: q07
+    type: mcq
+    concept: spa-fallback
+    prompt: "The home page works, but opening https://dhaaga.in/products/DC-1042 from WhatsApp shows 404 Not Found. What is missing?"
+    choices:
+      - "A fallback rule that answers unknown paths with index.html, so React's router can draw the page"
+      - "A bigger CDN"
+      - "An og:image tag"
+      - "A second copy of the app"
+    answer: 0
+    explain: "There is no file called products/DC-1042 on the host. The fallback sends index.html with status 200, and the router shows Golu's page."
+    reteach: "### The refresh 404: send every page to index.html"
+
+  - id: q08
+    type: predict-output
+    concept: spa-fallback
+    prompt: "This acts like a host with a fallback. What does it print?"
+    code: |
+      const files = ["/index.html", "/assets/app-9c1e.js"];
+      const serve = (path) => (files.includes(path) ? path : "/index.html");
+      console.log(serve("/products/DC-1042") + " " + serve("/assets/app-9c1e.js"));
+    answer: "/index.html /assets/app-9c1e.js"
+    explain: "A path with no real file falls back to index.html. A real file, like the asset, is served as itself."
+    reteach: "### The refresh 404: send every page to index.html"
+
+  - id: q09
+    type: mcq
+    concept: public-env-vars
+    variants:
+      - prompt: "Which value is safe to put in a VITE_ environment variable?"
+        choices:
+          - "The public address of Dhaaga's API"
+          - "The UPI gateway's secret key"
+          - "The admin password"
+          - "The database password"
+        answer: 0
+      - prompt: "Why must a frontend never hold a secret key?"
+        choices:
+          - "The build puts it inside a JavaScript file anyone can download and read"
+          - "Secrets make the bundle too big"
+          - "Browsers delete secrets"
+          - "It's fine if the variable name starts with VITE_"
+        answer: 0
+    explain: "Vite replaces import.meta.env values at build time, inside the public bundle. Secrets live on a server, which acts for the frontend."
+    reteach: "### Environment variables are public"
+
+  - id: q10
+    type: mcq
+    concept: preview-and-rollback
+    variants:
+      - prompt: "Checkout breaks five minutes after a deploy on the Diwali sale morning. What should you do first?"
+        choices:
+          - "Roll back to the last good version, then fix calmly"
+          - "Write a quick hotfix and deploy it without tests"
+          - "Wait for customers to report more details"
+          - "Delete the CDN"
+        answer: 0
+      - prompt: "What is a preview deploy for?"
+        choices:
+          - "A temporary copy of the site built from one pull request, so reviewers can click through the change"
+          - "A copy of the live site for search engines"
+          - "A backup of the database"
+          - "The version customers see"
+        answer: 0
+    explain: "Previews let reviewers try a change before it is merged. Kept versions make rollback one click, so you roll back first and fix second."
+    reteach: "### Rolling back"
+
+  - id: q11
+    type: mcq
+    concept: domains-and-https
+    variants:
+      - prompt: "When should you connect dhaaga.in's DNS to the new host?"
+        choices:
+          - "Days before launch, because DNS changes can take hours to reach everyone"
+          - "At 9:55 on launch morning"
+          - "After launch, once customers complain"
+          - "Never: customers can use the host's address"
+        answer: 0
+      - prompt: "Why does the store need HTTPS?"
+        choices:
+          - "Browsers mark plain http pages Not secure, and payment pages require HTTPS"
+          - "HTTPS makes images smaller"
+          - "Search engines can't read http pages at all"
+          - "It doesn't: HTTPS is only for banks"
+        answer: 0
+    explain: "DNS is the internet's phone book, and updates spread slowly, so set it up early. Static hosts provide and renew HTTPS certificates for you."
+    reteach: "### Your domain and HTTPS"

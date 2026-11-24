@@ -1,0 +1,22 @@
+id: web-07-tooling/topic-06-debugging
+title: "Debugging with breakpoints"
+order: 6
+minutes: 10
+prerequisites: [web-07-tooling/topic-05-github-pull-requests]
+concepts: [reading-errors, console-methods, breakpoints, stepping, debugger-statement]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-0706
+  from: sam
+  title: "The cart total says NaN for baby booties"
+  body: >
+    Raju here. Mrs. Deshpande ordered two coaster sets and baby booties on the website this morning,
+    and her cart total said "₹NaN". Two coaster sets alone work fine. She paid by UPI at the stall in
+    the end, but can you find out what NaN means and why the booties cause it?
+hints:
+  - "Open DevTools and read the Console first. If there is an error, its first line says what, and the next lines say where."
+  - "Put a breakpoint inside the loop that adds up the cart. Step through it and watch total in the Scope panel."
+  - "Watch which line turns total into NaN. Look at the item code on that line: is it spelled exactly like the key in the price list?"
+review: true

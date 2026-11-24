@@ -1,0 +1,24 @@
+id: web-02-css/topic-08-grid
+title: "Grid: the product grid"
+order: 8
+minutes: 10
+prerequisites: [web-02-css/topic-07-flexbox]
+concepts: [grid-container, grid-template-columns, fr-unit, repeat, spanning, grid-vs-flex]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0208
+  from: sana
+  title: "The last row of cards is huge"
+  body: >
+    The flex cards are nearly there, but on my laptop the tote bag and the booties end up on a row of their own,
+    stretched twice as wide as everything above them. I want neat columns where every card lines up, like a shop shelf.
+    And Golu is our star, so his card should be two columns wide.
+hints:
+  - "Grid lays items out in rows and columns at the same time. Put display: grid on the list, then say how many columns with grid-template-columns."
+  - "repeat(3, 1fr) means three columns, each one equal share of the space. gap works in grids just like in flexbox."
+  - "Try: .products { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } and .featured { grid-column: span 2; }"
+review: true

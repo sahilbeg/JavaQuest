@@ -1,0 +1,24 @@
+id: web-07-tooling/topic-09-environment-config
+title: "Configuration and environment variables"
+order: 9
+minutes: 10
+prerequisites: [web-07-tooling/topic-08-testing-the-dom]
+concepts: [env-variables, import-meta-env, env-strings, defaults-and-validation, secrets]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0709
+  from: maya
+  title: "The test site sent orders to the live shop"
+  body: >
+    The orders API address is typed straight into cart.js, so last week the test copy of the site sent
+    three practice orders to the real shop, and Raju nearly posted them. Turning the Diwali banner on also
+    means editing code. Please move these settings into one config module that reads the environment,
+    fills in safe defaults, and refuses to start when something important is missing.
+hints:
+  - "Every environment value is text, or missing. The finished read(env, name) helper gives you the trimmed text, or undefined when it is missing or blank."
+  - "Text \"false\" is truthy. Compare with === \"true\" and === \"false\", and throw for anything else. Turn digits into a number with Number, after checking them with /^\\d+$/."
+  - "Only production must have VITE_API_URL: throw an Error that names it. Elsewhere, fall back to DEFAULTS.apiUrl. Remove trailing slashes with .replace(/\\/+$/, \"\"), and Object.freeze the result."
+review: true

@@ -1,0 +1,121 @@
+topic: web-02-css/topic-03-box-model
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: order
+    concept: box-layers
+    prompt: "Put the layers of a box in order, from the inside out."
+    items:
+      - "content"
+      - "padding"
+      - "border"
+      - "margin"
+    explain: "The content sits in the middle. Padding wraps it, the border wraps the padding, and margin is outside everything."
+    reteach: "### Every element is a box"
+
+  - id: q02
+    type: mcq
+    concept: padding
+    prompt: "Golu's name touches the frame of its card. Which property adds room between the text and the frame?"
+    choices: ["padding", "margin", "border", "border-radius"]
+    answer: 0
+    explain: "Padding is the space inside the border, around the content. Margin is outside the border."
+    reteach: "### Syntax: padding"
+
+  - id: q03
+    type: mcq
+    concept: margin
+    prompt: "A card has a Marigold background. What colour is its margin?"
+    choices: ["See-through: the page behind shows", "Marigold, like the background", "The border's colour", "Always white"]
+    answer: 0
+    explain: "Padding takes the box's background colour. Margin has no colour of its own, so whatever is behind the box shows through."
+    reteach: "### Syntax: margin"
+
+  - id: q04
+    type: fill-blank
+    concept: margin
+    goal: "Add 1rem of see-through space below this card's frame only, pushing the next product card down."
+    prompt: ".product { ___: 1rem; }"
+    answers: ["margin-bottom"]
+    explain: "margin-bottom adds see-through space below the border, pushing the next box away."
+    reteach: "### Syntax: margin"
+
+  - id: q05
+    type: spot-the-bug
+    concept: border
+    code: |
+      .product {
+        padding: 1rem;
+        border: 2px #2e3a8c;
+        border-radius: 8px;
+      }
+    bugLine: 3
+    explain: "The border has no style. Without solid, dashed or dotted, nothing is drawn."
+    reteach: "### Syntax: border"
+
+  - id: q06
+    type: mcq
+    concept: border
+    prompt: "Which declaration draws a thin dashed Marigold frame?"
+    choices: ["border: 1px dashed #f2a81d;", "border: dashed;", "border-color: #f2a81d 1px;", "border: 1px #f2a81d;"]
+    answer: 0
+    explain: "border takes a width, a style and a colour. The others miss the width, the style, or both."
+    reteach: "### Syntax: border"
+
+  - id: q07
+    type: mcq
+    concept: shorthand
+    variants:
+      - { prompt: "What does padding: 1rem 2rem; mean?", choices: ["1rem top and bottom, 2rem left and right", "1rem left and right, 2rem top and bottom", "1rem top, 2rem bottom", "1rem on all sides, then 2rem more"], answer: 0 }
+      - { prompt: "What does margin: 0 1rem; mean?", choices: ["No margin top and bottom, 1rem left and right", "No margin left and right, 1rem top and bottom", "No margin on top, 1rem on the bottom", "1rem on all four sides"], answer: 0 }
+    explain: "With two values, the first is top and bottom, and the second is left and right."
+    reteach: "### Syntax: shorthand with several values"
+
+  - id: q08
+    type: mcq
+    concept: shorthand
+    prompt: "In padding: 1rem 2rem 3rem 4rem;, which side gets 4rem?"
+    choices: ["left", "top", "right", "bottom"]
+    answer: 0
+    explain: "Four values go clockwise from the top: top, right, bottom, left."
+    reteach: "### Syntax: shorthand with several values"
+
+  - id: q09
+    type: predict-output
+    concept: box-sizing
+    code: |
+      const width = 200;
+      const padding = 10;
+      const border = 1;
+      console.log(width + 2 * padding + 2 * border);
+    answer: "222"
+    explain: "With the default content-box, padding and border are added on both sides: 200 + 20 + 2 = 222."
+    reteach: "### Syntax: box-sizing"
+
+  - id: q10
+    type: mcq
+    concept: box-sizing
+    prompt: "A card has width: 300px, padding: 16px and box-sizing: border-box. How wide is it on screen?"
+    choices: ["300px", "332px", "268px", "316px"]
+    answer: 0
+    explain: "border-box makes width include padding and border, so the card is exactly 300px. The content gets narrower instead."
+    reteach: "### Syntax: box-sizing"
+
+  - id: q11
+    type: mcq
+    concept: padding
+    prompt: "You removed the bullets from the products list, but the cards still start 40px in from the left. Why?"
+    choices: ["The browser gives every list some left padding, so add padding: 0", "list-style: none adds 40px of margin", "The cards have a 40px border", "Bullets leave a gap until the page reloads"]
+    answer: 0
+    explain: "Browsers add left padding to lists to make room for bullets. Setting padding to 0 removes it."
+    reteach: "### The browser's own spacing"
+
+  - id: q12
+    type: mcq
+    concept: box-layers
+    prompt: "What does the selector * pick?"
+    choices: ["Every element on the page", "Only the body", "Elements with no class", "Nothing until you add a class"]
+    answer: 0
+    explain: "* is the universal selector. It picks every element, which is why it's used for box-sizing: border-box."
+    reteach: "### Syntax: box-sizing"

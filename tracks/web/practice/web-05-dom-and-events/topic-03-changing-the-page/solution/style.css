@@ -1,0 +1,43 @@
+/* Sana's card styles. JavaScript only adds and removes classes; this file decides the look. */
+body {
+  font-family: system-ui, sans-serif;
+  background: #FAF7F0;
+  color: #2E3A8C;
+  padding: 1rem;
+}
+
+#products {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.product {
+  border: 2px solid #2E3A8C;
+  border-radius: 12px;
+  padding: 1rem;
+  width: 14rem;
+}
+
+.add {
+  background: #F2A81D;
+  color: #2E3A8C;
+  border: 0;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+}
+
+.add:disabled {
+  background: #DDDDDD;
+  color: #666666;
+}
+
+.product.low .stock {
+  color: #B45309;
+  font-weight: bold;
+}
+
+.product.sold-out {
+  opacity: 0.5;
+}

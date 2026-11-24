@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Place an order | Dhaaga &amp; Co.</title>
+  <meta name="description" content="Order handmade crochet from Dhaaga &amp; Co. in Pune: coasters, keychains, toys, tote bags and baby booties.">
+</head>
+<body>
+  <!-- TODO gold: a screen reader finds no landmarks on this page to jump to. -->
+  <div class="top">
+    <div class="logo">Dhaaga &amp; Co.</div>
+    <div class="links">
+      <a href="index.html">Catalogue</a>
+      <a href="order.html">Order</a>
+    </div>
+  </div>
+
+  <div class="page">
+    <!-- TODO gold: the screen reader's list of headings starts at level 3, then jumps to level 5. -->
+    <h3>Place an order</h3>
+
+    <!-- TODO silver: the photos are read out as file names, and the stitched line too. -->
+    <div class="photos">
+      <img src="images/coasters.jpg" width="200" height="200">
+      <img src="images/golu.jpg" width="200" height="200">
+      <img src="images/tote-bag.jpg" width="200" height="200">
+    </div>
+    <img src="images/stitch-line.png" width="600" height="20">
+
+    <h5>Your details</h5>
+    <form action="/orders" method="post">
+      <!-- TODO bronze: a screen reader says only "edit text" for each of these fields. -->
+      <p><input type="text" id="name" name="name" placeholder="Your name" required></p>
+      <p><input type="tel" id="phone" name="phone" placeholder="Phone number (10 digits)" pattern="[0-9]{10}" required></p>
+      <p>
+        <select id="item" name="item" required>
+          <option value="">Choose an item</option>
+          <option value="CST">Coaster set (4)</option>
+          <option value="KEY">Keychain</option>
+          <option value="AMI">Amigurumi (small toy)</option>
+          <option value="BAG">Tote bag</option>
+          <option value="BTY">Baby booties</option>
+        </select>
+      </p>
+      <p><input type="number" id="qty" name="qty" placeholder="How many?" min="1" max="10" value="1"></p>
+
+      <!-- TODO silver: the Tab key never reaches Place order, and a screen reader doesn't call it a button. -->
+      <div class="button" onclick="this.closest('form').requestSubmit()">Place order</div>
+    </form>
+  </div>
+
+  <div class="bottom">
+    <p>Dhaaga &amp; Co., Aundh, Pune. Shop open Tuesday to Sunday, 11:00 to 21:00.</p>
+  </div>
+</body>
+</html>

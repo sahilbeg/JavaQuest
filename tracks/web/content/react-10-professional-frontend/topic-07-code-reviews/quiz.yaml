@@ -1,0 +1,185 @@
+topic: react-10-professional-frontend/topic-07-code-reviews
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: why-review
+    variants:
+      - prompt: "Which is a real reason teams review every change?"
+        choices:
+          - "At least two people understand each component, so knowledge isn't stuck in one head"
+          - "It proves the reviewer knows more than the author"
+          - "It replaces automated tests"
+          - "It lets the reviewer rewrite the code in their own style"
+        answer: 0
+      - prompt: "When is a change ready to approve?"
+        choices:
+          - "When it makes the code healthier overall, even if it isn't how you would write it"
+          - "Only when it is written exactly the way you would write it"
+          - "When it has no comments at all"
+          - "When you have found at least one problem"
+        answer: 0
+    explain: "Reviews catch bugs early, spread knowledge, keep code consistent and teach both ways. Different is not wrong: approve when the change improves the code."
+    reteach: "### Why teams review code"
+
+  - id: q02
+    type: mcq
+    concept: reviewable-prs
+    variants:
+      - prompt: "Which frontend PR is easiest to review well?"
+        choices:
+          - "A 200-line change with a description, before and after screenshots, and a preview link"
+          - "A 3,000-line PR that renames every component and adds a feature"
+          - "A 40-line PR described only as 'fixes'"
+          - "A PR with red CI, marked ready for review"
+        answer: 0
+      - prompt: "What should a PR that changes the cart drawer's look include?"
+        choices:
+          - "Before and after screenshots, one at phone width, and the preview deploy link"
+          - "Nothing: the diff says it all"
+          - "The whole design file"
+          - "A video of the author's face"
+        answer: 0
+    explain: "Small, single-purpose PRs with green CI, a clear description and something to see get careful, quick reviews."
+    reteach: "### A pull request that is easy to review"
+
+  - id: q03
+    type: mcq
+    concept: frontend-checklist
+    variants:
+      - prompt: "You have 20 minutes to review a frontend PR. What should you do first?"
+        choices:
+          - "Open the preview deploy and try it, at phone width and with the keyboard"
+          - "Check that the quotes are double quotes"
+          - "Count the lines"
+          - "Read the import order"
+        answer: 0
+      - prompt: "Which of these should a human reviewer leave to tools?"
+        choices:
+          - "Semicolons, quotes and spacing"
+          - "Whether a dialog moves focus"
+          - "Whether a gift note is rendered as HTML"
+          - "Whether the tests can fail"
+        answer: 0
+    explain: "Try the change first, then review by cost: it works, state and effects, accessibility, security, tests, performance. Prettier and ESLint handle formatting in CI."
+    reteach: "### The frontend review checklist"
+
+  - id: q04
+    type: spot-the-bug
+    concept: frontend-checklist
+    prompt: "An admin switches from one customer to another, but the list keeps the first customer's orders. Which line is the bug?"
+    code: |
+      function OrdersList({ customerId }) {
+        const [orders, setOrders] = useState([]);
+        useEffect(() => {
+          fetch(`/api/customers/${customerId}/orders`).then((r) => r.json()).then(setOrders);
+        }, []);
+        return <ul>{orders.map((o) => <li key={o.id}>{o.id}</li>)}</ul>;
+      }
+    bugLine: 5
+    explain: "With an empty dependency list the effect runs once. Add customerId to the list, so it fetches again when the customer changes, and clean up with an AbortController."
+    reteach: "### Keys, effects and other React traps"
+
+  - id: q05
+    type: predict-output
+    concept: frontend-checklist
+    prompt: "This copies how React keeps row state by index. What does it print?"
+    code: |
+      const notes = ["Blue wrap", "Red wrap", "No wrap"];
+      const items = ["KEY", "CST", "BAG"];
+      items.splice(1, 1);
+      console.log(items[1] + " gets " + notes[1]);
+    answer: "BAG gets Red wrap"
+    explain: "Removing CST moves BAG into position 1, but the state at position 1 still belongs to CST. Keys that are stable ids keep state with its item."
+    reteach: "### Keys, effects and other React traps"
+
+  - id: q06
+    type: fill-blank
+    concept: frontend-checklist
+    goal: "Key each order's row by something that stays with that order when other rows are removed."
+    prompt: "<li key={order.___}>"
+    answers: ["id"]
+    explain: "A stable id keeps each row's state with its order. key={index} moves state to the wrong row when the list changes."
+    reteach: "### Keys, effects and other React traps"
+
+  - id: q07
+    type: predict-output
+    concept: frontend-checklist
+    prompt: "A PR shows prices like this. What does it print for 25050 paise?"
+    code: |
+      console.log("₹" + 25050 / 100);
+    answer: "₹250.5"
+    explain: "Dividing gives 250.5, and JavaScript drops the trailing zero. The store's shared formatter shows ₹250.50, so the comment is: use formatRupees."
+    reteach: "### The frontend review checklist"
+
+  - id: q08
+    type: mcq
+    concept: writing-comments
+    variants:
+      - prompt: "Which review comment is the most helpful?"
+        choices:
+          - "\"This shows ₹149.9 for 14990 paise. Could we use formatRupees so it says ₹149.90?\""
+          - "\"Prices are wrong.\""
+          - "\"Why would you do this??\""
+          - "\"You never format money.\""
+        answer: 0
+      - prompt: "You aren't sure whether the list can render before the orders arrive. What is the best comment?"
+        choices:
+          - "\"question: what does this show while the orders load? I couldn't see a loading state.\""
+          - "\"This is broken.\""
+          - "\"Did you even test this?\""
+          - "Say nothing, because you aren't sure"
+        answer: 0
+    explain: "Good comments point at the line, say what is wrong and why, suggest a fix, and ask when unsure. They talk about the code, not the person."
+    reteach: "### How to write a review comment"
+
+  - id: q09
+    type: mcq
+    concept: writing-comments
+    prompt: "Which Conventional Comments label fits 'res could be called response'?"
+    choices:
+      - "nitpick (non-blocking)"
+      - "issue (blocking)"
+      - "praise"
+      - "question"
+    answer: 0
+    explain: "A better name is a tiny point that shouldn't hold up the merge: a non-blocking nitpick. Security holes and wrong data are blocking issues."
+    reteach: "### Label the severity: Conventional Comments"
+
+  - id: q10
+    type: mcq
+    concept: review-decisions
+    variants:
+      - prompt: "A PR renders customers' gift notes with dangerouslySetInnerHTML. Which button fits?"
+        choices: ["Request changes", "Approve", "Comment with LGTM", "Merge it and fix it later"]
+        answer: 0
+      - prompt: "Your only comments are two nitpicks about names. Which button fits?"
+        choices: ["Approve, saying the nits are optional", "Request changes", "Close the PR", "Comment, then never come back"]
+        answer: 0
+      - prompt: "A teammate asks for an early look at a draft PR's approach. Which button fits?"
+        choices: ["Comment", "Approve", "Request changes", "None: drafts are never read"]
+        answer: 0
+    explain: "Request changes for real problems like a security hole. Approve when nothing blocks, even with optional nits. Comment gives feedback without a verdict."
+    reteach: "### Approve, comment or request changes"
+
+  - id: q11
+    type: mcq
+    concept: receiving-feedback
+    variants:
+      - prompt: "Your PR gets 14 comments, and you disagree with one. What should you do?"
+        choices:
+          - "Reply with your reasons, and fix or answer all the others"
+          - "Ignore that comment and merge when you can"
+          - "Close the PR and open a new one"
+          - "Fix it silently even though you think it's wrong"
+        answer: 0
+      - prompt: "A review thread has gone back and forth five times. What now?"
+        choices:
+          - "Have a short call, then write the outcome in the PR"
+          - "Keep replying until the other person gives up"
+          - "Approve your own PR"
+          - "Delete the thread"
+        answer: 0
+    explain: "Assume good intent, reply to every comment, disagree with reasons, and move long threads to a call. Write the outcome where everyone can see it."
+    reteach: "### Receiving feedback"

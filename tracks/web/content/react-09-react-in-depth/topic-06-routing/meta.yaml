@@ -1,0 +1,24 @@
+id: react-09-react-in-depth/topic-06-routing
+title: "Pages and routing: one app, many pages"
+order: 6
+minutes: 10
+prerequisites: [react-09-react-in-depth/topic-05-reducers]
+concepts: [client-routing, url-hash, hashchange, route-matching, links]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0906
+  from: sana
+  title: "Every page has the same address, and Back leaves the site"
+  body: >
+    I wanted to send a customer the link to Golu the elephant, but the address bar says dhaaga.in on
+    every page, so the link only opens the home page. Worse, pressing Back on the cart page leaves our site
+    completely. Can each page get its own address, like dhaaga.in/#/item/DC-1042?
+hints:
+  - "The part of the address after # is window.location.hash. currentPath() already turns \"#/cart\" into \"/cart\". matchRoute turns that path into { page, id }."
+  - "useHashRoute keeps the path in state. In an effect, add a \"hashchange\" listener on window that calls setPath(currentPath()), and remove the same function in the cleanup."
+  - "Link renders <a href={\"#\" + to}>. In App's Page, switch on route.page and return the matching page, passing route.id to ItemPage."
+review: true

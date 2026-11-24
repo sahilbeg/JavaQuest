@@ -1,0 +1,117 @@
+topic: web-01-html/topic-05-tables
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: rows-and-cells
+    prompt: "Which element is one row of a table?"
+    choices: ["tr", "td", "th", "tbody"]
+    answer: 0
+    explain: "tr is a table row. The cells inside it are td or th elements."
+    reteach: "### Syntax: rows and cells"
+
+  - id: q02
+    type: fill-blank
+    concept: rows-and-cells
+    goal: "Add a plain data cell that shows the tote bag's price."
+    prompt: "<___>₹899.00</td>"
+    answers: ["td"]
+    explain: "td is a table data cell. th is only for titles."
+    reteach: "### Syntax: rows and cells"
+
+  - id: q03
+    type: mcq
+    concept: rows-and-cells
+    prompt: "Which element makes a column in HTML?"
+    choices: ["None: a column is the cells in the same position in every row", "col", "tc", "tr"]
+    answer: 0
+    explain: "Tables are built row by row. The second cell of every row makes the second column."
+    reteach: "### Syntax: rows and cells"
+
+  - id: q04
+    type: fill-blank
+    concept: header-cells
+    goal: "Make this header cell the title of the column below it."
+    prompt: "<th scope=\"___\">Price</th>"
+    answers: ["col"]
+    explain: "scope=\"col\" ties a header to its column. scope=\"row\" ties it to its row."
+    reteach: "### Syntax: header cells"
+
+  - id: q05
+    type: mcq
+    concept: header-cells
+    prompt: "In the price list, each row starts with an item code like BAG. What should that cell be?"
+    choices: ["<th scope=\"row\">BAG</th>", "<td>BAG</td>", "<th scope=\"col\">BAG</th>", "<caption>BAG</caption>"]
+    answer: 0
+    explain: "The code names its row, so it's a header cell with scope=\"row\"."
+    reteach: "### Syntax: header cells"
+
+  - id: q06
+    type: mcq
+    concept: header-cells
+    prompt: "With proper th headers, what does a screen reader say on the tote bag's price cell?"
+    choices: ["The row and column titles with the price, like \"BAG, Price, ₹899.00\"", "Only \"₹899.00\"", "Every cell in the table", "Nothing: screen readers skip tables"]
+    answer: 0
+    explain: "Header cells let the screen reader say what a cell means, not just its value."
+    reteach: "### Why headers matter"
+
+  - id: q07
+    type: spot-the-bug
+    concept: caption
+    prompt: "Which line is in the wrong place?"
+    code: |
+      <table>
+        <thead>
+          <tr><th scope="col">Code</th><th scope="col">Price</th></tr>
+        </thead>
+        <caption>Our prices</caption>
+      </table>
+    bugLine: 5
+    explain: "caption must be the first thing inside table, right after <table>."
+    reteach: "### Syntax: a caption"
+
+  - id: q08
+    type: order
+    concept: table-sections
+    prompt: "Put the parts of the price table in order."
+    items:
+      - "<table>"
+      - "<caption>Our prices</caption>"
+      - "<thead>...column titles...</thead>"
+      - "<tbody>...one row per item...</tbody>"
+      - "</table>"
+    explain: "The caption comes first, then the head with the column titles, then the body with the data rows."
+    reteach: "### Syntax: thead and tbody"
+
+  - id: q09
+    type: mcq
+    concept: table-sections
+    prompt: "Which part of a table holds the row of column titles?"
+    choices: ["thead", "tbody", "tfoot", "caption"]
+    answer: 0
+    explain: "thead holds the title row. tbody holds the data rows, and tfoot holds a footer like a total."
+    reteach: "### Syntax: thead and tbody"
+
+  - id: q10
+    type: spot-the-bug
+    concept: rows-and-cells
+    prompt: "In this three-column table (Code, Item, Price), which row puts a value under the wrong title?"
+    code: |
+      <tbody>
+        <tr><th scope="row">CST</th><td>Coaster set (4)</td><td>₹150.00</td></tr>
+        <tr><th scope="row">AMI</th><td>₹450.00</td></tr>
+        <tr><th scope="row">BTY</th><td>Baby booties</td><td>₹350.00</td></tr>
+      </tbody>
+    bugLine: 3
+    explain: "The AMI row is missing its Item cell, so its price slides into the Item column."
+    reteach: "### Syntax: rows and cells"
+
+  - id: q11
+    type: mcq
+    concept: tables-for-data
+    prompt: "Sana wants the menu on the left and the catalogue on the right. Should you use a table?"
+    choices: ["No: tables are for rows and columns of data, and CSS does layout", "Yes: tables are the best way to make columns", "Yes, if you add a caption", "Only on phones"]
+    answer: 0
+    explain: "A layout table makes screen readers read the page as a grid of nonsense. Layout is CSS's job."
+    reteach: "### Tables are for data, not layout"

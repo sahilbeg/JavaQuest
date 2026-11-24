@@ -1,0 +1,24 @@
+id: web-05-dom-and-events/topic-02-selecting-elements
+title: "Finding elements: querySelector"
+order: 2
+minutes: 9
+prerequisites: [web-05-dom-and-events/topic-01-the-dom]
+concepts: [query-selector, query-selector-all, selectors, not-found, scoped-search, attribute-selectors]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0502
+  from: sam
+  title: "The price checker says ₹450 for everything"
+  body: >
+    Raju here. The price checker on the counter tablet shows ₹450 whatever I look up, which is Golu's price.
+    Mrs. Kapoor nearly paid ₹450 for a ₹120 keychain this morning. Can you make it find the right item and the
+    right price?
+hints:
+  - "Every function gets a root to search in. Use root.querySelector for one element and root.querySelectorAll for all of them, with the same selectors you write in CSS."
+  - "A search for .price from the root finds the first price on the whole page. Find the product's card first, then search for .price inside that card."
+  - "findProduct is root.querySelector(`.product[data-id=\"${id}\"]`). priceOf calls it, returns \"\" for null, then card.querySelector(\".price\").textContent.trim(). Spread querySelectorAll into an array before you map."
+review: true

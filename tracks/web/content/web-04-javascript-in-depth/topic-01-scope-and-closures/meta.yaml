@@ -1,0 +1,23 @@
+id: web-04-javascript-in-depth/topic-01-scope-and-closures
+title: "Scope and closures"
+order: 1
+minutes: 9
+prerequisites: [web-03-javascript-basics/boss]
+concepts: [block-scope, function-scope, scope-chain, closures, private-state]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0401
+  from: sam
+  title: "Two customers both got order-17"
+  body: >
+    Raju here. On Saturday, Mrs. Deshpande and a college student both got receipts that said order-17.
+    The order counter is a loose variable at the top of the file, and the stock script sets it back to 17 whenever it loads.
+    Can you lock the counter away so no other code can touch it?
+hints:
+  - "A function can keep a variable alive after it returns. Declare the variable inside the outer function, and use it in the function you return."
+  - "makeOrderNumbers: let next = start; then return a function that builds the id from next and adds 1. The stock counter works the same way, but returns an object of three functions."
+  - "makeNumberedLabels has a loop with var. Change var to let, so each turn of the loop gets its own i."
+review: true

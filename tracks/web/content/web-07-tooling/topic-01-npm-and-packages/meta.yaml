@@ -1,0 +1,22 @@
+id: web-07-tooling/topic-01-npm-and-packages
+title: "npm and packages"
+order: 1
+minutes: 10
+prerequisites: [web-06-async-javascript/boss]
+concepts: [npm, package-json, semver-ranges, node-modules, lock-file, npm-scripts]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-0701
+  from: maya
+  title: "The website only runs on one laptop"
+  body: >
+    Sana got a new laptop on Monday and still can't run dhaaga.in on it. Right now we pass the
+    project around as a zip on a pen drive, and nobody knows which library versions are inside.
+    Please turn it into a proper npm project, so anyone can set it up with one command.
+hints:
+  - "package.json is the project's ID card: its name, its scripts and the packages it needs."
+  - "The lock file records the exact version of every package. Commit it. Never commit node_modules."
+  - "A new laptop runs git clone, then npm ci, then npm run dev. Nothing else."
+review: true

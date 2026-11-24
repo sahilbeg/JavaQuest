@@ -1,0 +1,22 @@
+id: web-07-tooling/topic-02-vite
+title: "Vite: a dev server and a build"
+order: 2
+minutes: 9
+prerequisites: [web-07-tooling/topic-01-npm-and-packages]
+concepts: [dev-server, hot-reload, bundling, build-output, public-folder]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-0702
+  from: sana
+  title: "I change a colour and wait for nothing"
+  body: >
+    Every time I nudge the Marigold on the price tags, I save, switch to the browser and press refresh,
+    and my place in the cart is lost. On the old site, a phone on slow 4G also downloads twelve separate
+    script files. Kavya says Vite fixes both. Can you set it up for dhaaga.in?
+hints:
+  - "Vite has two jobs: a dev server while you work, and a build when you ship."
+  - "npm run dev starts the dev server on http://localhost:5173. Save a file and the page updates by itself."
+  - "npm run build writes a small, finished site into dist/. That folder is what goes to the server."
+review: true

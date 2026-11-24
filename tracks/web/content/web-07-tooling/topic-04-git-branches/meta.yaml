@@ -1,0 +1,22 @@
+id: web-07-tooling/topic-04-git-branches
+title: "Git branches and merging"
+order: 4
+minutes: 10
+prerequisites: [web-07-tooling/topic-03-eslint-and-prettier]
+concepts: [branches, switching, merging, merge-conflicts, branch-workflow]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-0704
+  from: maya
+  title: "Half a Diwali banner went live"
+  body: >
+    On Friday I deployed main to fix the delivery fee, and Sana's half-finished Diwali banner went
+    live with it, saying "10% off orders above ₹1,5". We both work straight on main, so anything
+    unfinished ships with everything else. From today, each change gets its own branch.
+hints:
+  - "A branch is a label on a commit. git switch -c makes one and moves you onto it."
+  - "Finish the work on the branch. Then git switch main and git merge the branch in."
+  - "A conflict means both branches changed the same lines. Edit the file into the final code, delete the <<<<<<<, ======= and >>>>>>> lines, then git add and git commit."
+review: true

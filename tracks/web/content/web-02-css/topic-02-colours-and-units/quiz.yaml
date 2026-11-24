@@ -1,0 +1,114 @@
+topic: web-02-css/topic-02-colours-and-units
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: hex-colours
+    prompt: "In the hex colour #2E3A8C, which pair is the amount of blue?"
+    choices: ["8C", "2E", "3A", "#2"]
+    answer: 0
+    explain: "The three pairs are red, green and blue, in that order. 8C is the last pair, so it's blue."
+    reteach: "### Syntax: hex colours"
+
+  - id: q02
+    type: mcq
+    concept: hex-colours
+    variants:
+      - { prompt: "Which hex code is pure white?", choices: ["#ffffff", "#000000", "#ff0000", "#fff000"], answer: 0 }
+      - { prompt: "Which hex code is pure black?", choices: ["#000000", "#ffffff", "#0000ff", "#00ff00"], answer: 0 }
+    explain: "ff means a light is full on, and 00 means it is off. All three full is white. All three off is black."
+    reteach: "### How a screen makes colour"
+
+  - id: q03
+    type: mcq
+    concept: hex-colours
+    prompt: "Do #2E3A8C and #2e3a8c show the same colour?"
+    choices: ["Yes, capital and small letters mean the same in hex", "No, capitals are brighter", "No, only the capital one works", "Only on phones"]
+    answer: 0
+    explain: "Hex digits a to f can be written in either case. Both codes are Dhaaga's Indigo."
+    reteach: "### Syntax: hex colours"
+
+  - id: q04
+    type: mcq
+    concept: rgb-colours
+    prompt: "Which rgb() colour is the same as #ff0000?"
+    choices: ["rgb(255, 0, 0)", "rgb(0, 0, 255)", "rgb(0, 255, 0)", "rgb(100, 0, 0)"]
+    answer: 0
+    explain: "ff is 255. The first pair is red, so #ff0000 is full red with no green or blue: rgb(255, 0, 0)."
+    reteach: "### Syntax: rgb colours"
+
+  - id: q05
+    type: mcq
+    concept: named-colours
+    prompt: "Why does Dhaaga use #2E3A8C instead of the name darkblue?"
+    choices: ["A brand needs one exact colour, and a name like darkblue is a different blue", "Names don't work in CSS", "Hex codes load faster", "darkblue only works on phones"]
+    answer: 0
+    explain: "Colour names work, but darkblue is the browser's blue, not Dhaaga's. The hex code is the exact brand colour."
+    reteach: "### Named colours"
+
+  - id: q06
+    type: fill-blank
+    concept: hex-colours
+    goal: "Paint the box behind the page's content Off-white, the brand's page colour."
+    prompt: "body { ___: #faf7f0; }"
+    answers: ["background-color"]
+    explain: "background-color paints the box behind the content. color would paint the text."
+    reteach: "### Syntax: background colours"
+
+  - id: q07
+    type: mcq
+    concept: colour-contrast
+    prompt: "Which pair is easiest to read at a sunny stall?"
+    choices: ["Indigo #2E3A8C text on Off-white #FAF7F0", "Marigold #F2A81D text on Off-white #FAF7F0", "Off-white #FAF7F0 text on white #FFFFFF", "Light grey #DDDDDD text on Off-white #FAF7F0"]
+    answer: 0
+    explain: "Dark Indigo on a light background has high contrast. The others are light on light."
+    reteach: "### Contrast: can people read it?"
+
+  - id: q08
+    type: mcq
+    concept: rem-units
+    prompt: "The reader's base text size is 16px. How big is 1.5rem?"
+    choices: ["24px", "16px", "1.5px", "32px"]
+    answer: 0
+    explain: "rem multiplies the base size: 1.5 times 16 is 24."
+    reteach: "### Syntax: rem"
+
+  - id: q09
+    type: mcq
+    concept: rem-units
+    prompt: "A reader turns up their phone's text size. Which heading grows with it?"
+    choices: ["h1 { font-size: 2rem; }", "h1 { font-size: 32px; }", "Both of them", "Neither of them"]
+    answer: 0
+    explain: "rem is measured from the reader's base text size, so it follows their setting. px is fixed."
+    reteach: "### Syntax: rem"
+
+  - id: q10
+    type: mcq
+    concept: px-units
+    prompt: "Which job suits px best?"
+    choices: ["A thin 2px line under the header", "The main text size", "A width that follows the screen", "The heading size for readers who need big text"]
+    answer: 0
+    explain: "px is fixed, which suits small details like thin lines. Text sizes use rem, and widths that follow the screen use %."
+    reteach: "### Which unit when"
+
+  - id: q11
+    type: mcq
+    concept: percent-units
+    prompt: "A box is 400px wide. What width does a child with width: 50% get?"
+    choices: ["200px", "50px", "400px", "800px"]
+    answer: 0
+    explain: "A percentage width is measured from the parent box: half of 400 is 200."
+    reteach: "### Syntax: percentages"
+
+  - id: q12
+    type: spot-the-bug
+    concept: rem-units
+    code: |
+      h1 {
+        color: #2e3a8c;
+        font-size: 2 rem;
+      }
+    bugLine: 3
+    explain: "There must be no space between the number and the unit. Write 2rem."
+    reteach: "## Common mistakes"

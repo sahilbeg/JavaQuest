@@ -1,0 +1,119 @@
+topic: web-02-css/topic-06-display-and-position
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: block-inline
+    prompt: "Which element is inline by default?"
+    choices: ["<a>", "<p>", "<li>", "<section>"]
+    answer: 0
+    explain: "Links, spans and strong text sit inside a line. Paragraphs, list items and sections are blocks."
+    reteach: "### Syntax: display block and inline"
+
+  - id: q02
+    type: mcq
+    concept: block-inline
+    prompt: "Two <p> elements come one after the other. How do they sit?"
+    choices: ["One below the other, each on its own line", "Side by side on one line", "On top of each other", "Only the first one shows"]
+    answer: 0
+    explain: "A block element starts on a new line and takes the full width, so paragraphs stack."
+    reteach: "### Syntax: display block and inline"
+
+  - id: q03
+    type: mcq
+    concept: inline-block
+    prompt: "The Order link has padding: 0.5rem 1rem, but its background spills over the price above. What fixes it?"
+    choices: ["display: inline-block;", "display: none;", "position: absolute;", "More padding"]
+    answer: 0
+    explain: "An inline link's top and bottom padding don't push other lines away. inline-block makes the padding count while the link stays in the line."
+    reteach: "### Syntax: inline-block"
+
+  - id: q04
+    type: fill-blank
+    concept: display-none
+    goal: "Remove the Order button from sold-out cards completely, so it takes no space at all."
+    prompt: ".sold-out .buy { display: ___; }"
+    answers: ["none"]
+    explain: "display: none removes the box from the page. It takes no space and screen readers skip it."
+    reteach: "### Syntax: display none"
+
+  - id: q05
+    type: mcq
+    concept: display-none
+    prompt: "What's the difference between display: none and visibility: hidden?"
+    choices: ["display: none removes the box; visibility: hidden keeps its space but paints nothing", "They are exactly the same", "visibility: hidden removes the box; display: none keeps its space", "display: none only works on phones"]
+    answer: 0
+    explain: "visibility: hidden leaves an empty gap where the element was. display: none takes it out of the layout completely."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: mcq
+    concept: position-absolute
+    prompt: "An element with position: absolute is placed against which box?"
+    choices: ["Its nearest ancestor whose position isn't static", "Always the whole page", "Its next sibling", "The element just before it in the HTML"]
+    answer: 0
+    explain: "Absolute elements use their nearest positioned ancestor as the containing block. With none, they use the page."
+    reteach: "### Syntax: position absolute"
+
+  - id: q07
+    type: mcq
+    concept: position-relative
+    prompt: "The New badge appears in the top-right of the whole page instead of on Golu's card. What's missing?"
+    choices: [".product { position: relative; }", ".badge { position: relative; }", ".badge { display: block; }", ".product { display: none; }"]
+    answer: 0
+    explain: "The card must be positioned to become the badge's anchor. position: relative does that without moving the card."
+    reteach: "### Syntax: position relative"
+
+  - id: q08
+    type: order
+    concept: position-absolute
+    prompt: "Put the lines in order to pin the badge 0.5rem from the top-right corner of its card."
+    items:
+      - ".badge {"
+      - "  position: absolute;"
+      - "  top: 0.5rem;"
+      - "  right: 0.5rem;"
+      - "}"
+    explain: "The selector opens the rule, then position, then the two offsets, then the closing brace. The card itself needs position: relative."
+    reteach: "### Syntax: position absolute"
+
+  - id: q09
+    type: spot-the-bug
+    concept: position-sticky
+    code: |
+      .site-header {
+        background-color: #2e3a8c;
+        position: sticky;
+        top: ;
+      }
+    bugLine: 4
+    explain: "Sticky needs an edge to stick to. top has no value, so it is dropped and the header scrolls away. Write top: 0;."
+    reteach: "### Syntax: position sticky"
+
+  - id: q10
+    type: mcq
+    concept: position-sticky
+    prompt: "How does position: sticky; top: 0; behave?"
+    choices: ["It sits in normal flow until scrolled to the top, then stays there", "It is pinned to the screen from the start", "It leaves the flow and pins to its parent's corner", "It hides the header while scrolling"]
+    answer: 0
+    explain: "Sticky starts in normal flow and only sticks once you scroll it to the top edge. fixed is pinned from the start."
+    reteach: "### Syntax: position sticky"
+
+  - id: q11
+    type: mcq
+    concept: position-absolute
+    prompt: "What happens to the space an absolute element used to take in the flow?"
+    choices: ["Other elements close the gap, as if it weren't there", "The space stays empty", "It doubles", "The page shows a scroll bar"]
+    answer: 0
+    explain: "position: absolute lifts the element out of normal flow. Other elements move up into its space."
+    reteach: "### Syntax: position absolute"
+
+  - id: q12
+    type: mcq
+    concept: position-sticky
+    prompt: "Which position keeps a floating WhatsApp button in the same spot on the screen, however far you scroll?"
+    choices: ["fixed", "relative", "static", "absolute"]
+    answer: 0
+    explain: "fixed pins the element to the screen itself. absolute would scroll away with its anchor."
+    reteach: "### Syntax: position fixed"

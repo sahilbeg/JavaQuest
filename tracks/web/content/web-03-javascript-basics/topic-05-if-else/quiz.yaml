@@ -1,0 +1,139 @@
+topic: web-03-javascript-basics/topic-05-if-else
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: if-else
+    code: |
+      const subtotal = 99900;
+      if (subtotal > 99900) {
+        console.log("Free delivery");
+      } else {
+        console.log("Delivery ₹60");
+      }
+    answer: "Delivery ₹60"
+    explain: "99900 isn't greater than 99900, so the else block runs."
+    reteach: "### Syntax: if and else"
+
+  - id: q02
+    type: predict-output
+    concept: else-if
+    code: |
+      const grams = 30;
+      if (grams < 40) {
+        console.log("Too little");
+      } else if (grams < 200) {
+        console.log("Running low");
+      } else {
+        console.log("Plenty");
+      }
+    answer: "Too little"
+    explain: "30 < 40 is the first true condition, so that block runs and the rest are skipped. 30 < 200 is never checked."
+    reteach: "### Syntax: else if"
+
+  - id: q03
+    type: predict-output
+    concept: logical-operators
+    code: |
+      console.log(true && false);
+      console.log(true || false);
+      console.log(!true);
+    answer: "false\ntrue\nfalse"
+    explain: "&& needs both sides, || needs either side, and ! flips the value."
+    reteach: "### Syntax: &&, || and !"
+
+  - id: q04
+    type: mcq
+    concept: logical-operators
+    prompt: "What is wrong with if (day === \"Sat\" || \"Sun\")?"
+    choices: ["\"Sun\" on its own is truthy, so the condition is true on every day", "|| can't join two strings", "Nothing, it checks for Saturday or Sunday", "It should use == instead of ==="]
+    answer: 0
+    explain: "When day isn't \"Sat\", || hands back \"Sun\", which is truthy. Write day === \"Sat\" || day === \"Sun\"."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: predict-output
+    concept: logical-operators
+    code: |
+      const hour = 25;
+      console.log(10 <= hour < 20);
+    answer: "true"
+    explain: "10 <= 25 is true, and true < 20 becomes 1 < 20, which is true. Join comparisons with && instead."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: fill-blank
+    concept: logical-operators
+    goal: "Make the condition pass only when the payment arrived and the item is in stock as well."
+    prompt: "if (paid ___ inStock) {"
+    answers: ["&&"]
+    explain: "&& is truthy only when both sides are."
+    reteach: "### Syntax: &&, || and !"
+
+  - id: q07
+    type: spot-the-bug
+    concept: if-else
+    code: |
+      let qty = 3;
+      if (qty = 0) {
+        console.log("Cart is empty");
+      }
+      console.log(qty);
+    bugLine: 2
+    explain: "qty = 0 stores 0 instead of comparing. Use qty === 0."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: short-circuit
+    prompt: "In the condition note && note.length > 20, what happens when note is null?"
+    choices: ["JavaScript stops at note, so note.length never runs", "It crashes when it reads note.length", "note.length is treated as 0", "null is turned into an empty string first"]
+    answer: 0
+    explain: "null is falsy, so && already knows the answer is false and skips the right side."
+    reteach: "### && and || stop early"
+
+  - id: q09
+    type: predict-output
+    concept: nullish-default
+    code: |
+      const note = null;
+      const shown = note ?? "No note";
+      console.log(shown);
+    answer: "No note"
+    explain: "note is null, so ?? falls back to the right side."
+    reteach: "### Syntax: a default with ??"
+
+  - id: q10
+    type: predict-output
+    concept: truthy-conditions
+    code: |
+      const note = "";
+      if (note) {
+        console.log("Note: " + note);
+      } else {
+        console.log("No note");
+      }
+    answer: "No note"
+    explain: "An empty string is falsy, so the else block runs."
+    reteach: "### Conditions use truthy and falsy"
+
+  - id: q11
+    type: mcq
+    concept: logical-operators
+    prompt: "Which condition is true only on Saturday and Sunday?"
+    choices: ['day === "Sat" || day === "Sun"', 'day === "Sat" && day === "Sun"', 'day === "Sat" || "Sun"', 'day === ("Sat" || "Sun")']
+    answer: 0
+    explain: "Each side needs its own comparison, joined with ||. A day can't be both, so && is never true."
+    reteach: "### Syntax: &&, || and !"
+
+  - id: q12
+    type: predict-output
+    concept: nullish-default
+    code: |
+      const qty = 0;
+      console.log(qty || 1);
+      console.log(qty ?? 1);
+    answer: "1\n0"
+    explain: "|| falls back for any falsy value, including 0. ?? falls back only for null and undefined."
+    reteach: "### Syntax: a default with ??"

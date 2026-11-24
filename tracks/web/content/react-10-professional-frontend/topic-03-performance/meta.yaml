@@ -1,0 +1,25 @@
+id: react-10-professional-frontend/topic-03-performance
+title: "Fast pages: images, lazy loading and Web Vitals"
+order: 3
+minutes: 10
+prerequisites: [react-10-professional-frontend/topic-02-accessibility-in-depth]
+concepts: [web-vitals, image-weight, layout-shift, lazy-loading, responsive-images, code-splitting]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-1003
+  from: sana
+  title: "The Diwali catalogue jumps and crawls on my phone"
+  body: >
+    Sana here. I opened the Diwali catalogue on my phone at the FC Road stall, on the stall's patchy 4G.
+    It took ages, and the grid kept jumping as each photo arrived, so I tapped Golu and got the tote bag instead.
+    I checked DevTools: every photo is the 1600-pixel original, and all forty load at once.
+    Can you make the photos behave before the launch?
+hints:
+  - "Start with photoSrcSet: PHOTO_WIDTHS.map(...) gives one string per width, and .join(\", \") puts them together."
+  - "width and height on an <img> let the browser reserve the box before the photo arrives. The CSS height: auto then keeps the shape when the photo is shown smaller."
+  - "map gives you the index as its second argument: loading={index < ABOVE_THE_FOLD ? \"eager\" : \"lazy\"}. Use src={photoUrl(product.id, 400)}."
+review: true

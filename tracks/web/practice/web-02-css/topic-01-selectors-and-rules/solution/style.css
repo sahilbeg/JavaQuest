@@ -1,0 +1,21 @@
+/* The catalogue's first stylesheet. */
+
+h1 {
+  text-align: center;
+}
+
+.price {
+  font-weight: bold;
+}
+
+#visit {
+  font-style: italic;
+}
+
+h2, h3 {
+  color: darkblue;
+}
+
+nav a {
+  color: darkred;
+}

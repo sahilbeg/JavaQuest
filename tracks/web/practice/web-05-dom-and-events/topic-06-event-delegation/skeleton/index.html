@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catalogue | Dhaaga &amp; Co.</title>
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <h1>Dhaaga &amp; Co.</h1>
+  <ul id="products">
+    <li class="product" data-id="DC-1042">
+      <h3>Golu the elephant</h3>
+      <button class="add" type="button"><span class="icon" aria-hidden="true">🛒</span> Add to cart</button>
+    </li>
+    <li class="product" data-id="DC-1013">
+      <h3>Rani pink keychain</h3>
+      <button class="add" type="button"><span class="icon" aria-hidden="true">🛒</span> Add to cart</button>
+    </li>
+  </ul>
+  <button id="more" type="button">Show the Diwali special</button>
+  <p id="status" role="status"></p>
+
+  <h2>Your cart</h2>
+  <ul id="lines">
+    <li class="line" data-id="DC-1001">
+      <span class="name">Marigold coaster set</span>
+      <button type="button" data-action="dec" aria-label="One less Marigold coaster set">−</button>
+      <span class="qty">2</span>
+      <button type="button" data-action="inc" aria-label="One more Marigold coaster set">+</button>
+      <button type="button" data-action="remove" aria-label="Remove Marigold coaster set">Remove</button>
+    </li>
+  </ul>
+</body>
+</html>

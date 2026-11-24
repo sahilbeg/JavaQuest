@@ -1,0 +1,24 @@
+id: web-05-dom-and-events/topic-08-rendering-from-data
+title: "Drawing the page from data"
+order: 8
+minutes: 10
+prerequisites: [web-05-dom-and-events/topic-07-forms-and-input]
+concepts: [render-function, data-first, map-to-elements, redraw, empty-state, render-and-listen]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0508
+  from: maya
+  title: "The catalogue page ignores catalogue.json"
+  body: >
+    Meera Aunty added the new Rakhi items to catalogue.json on Monday, but the page still shows last month's list,
+    because every card is typed into the HTML by hand. Let's draw the cards from the data instead. Then the colour
+    filter can simply redraw the list.
+hints:
+  - "Write one function that turns one product object into one card element. Then the list is just that function applied to every product."
+  - "renderCatalogue: list.replaceChildren(...products.map(productCard)). replaceChildren removes the old cards first, so drawing twice never doubles the list. Don't forget the spread dots."
+  - "In productCard, a stock of 0 adds the class sold-out, sets button.disabled = true and the button's text to \"Sold out\". For no products, replaceChildren with one <li class=\"empty\"> saying \"No items match.\". countText: 0 is \"No items\", 1 is \"1 item\", else `${count} items`."
+review: true

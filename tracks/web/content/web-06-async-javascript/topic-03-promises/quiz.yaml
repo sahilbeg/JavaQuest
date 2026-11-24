@@ -1,0 +1,129 @@
+topic: web-06-async-javascript/topic-03-promises
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: promise-states
+    variants:
+      - { prompt: "Which three states can a promise be in?", choices: ["Pending, fulfilled and rejected", "Started, running and stopped", "Waiting, sleeping and awake", "Open, closed and locked"], answer: 0 }
+      - { prompt: "A payment promise has been fulfilled. Can it become rejected later?", choices: ["No: a promise settles only once", "Yes, if the bank changes its mind", "Yes, if you call then again", "Only inside a finally callback"], answer: 0 }
+    explain: "A promise starts pending, then settles once: fulfilled with a value or rejected with a reason. After that it never changes."
+    reteach: "### What a promise is"
+
+  - id: q02
+    type: predict-output
+    concept: chaining
+    code: |
+      Promise.resolve(2)
+        .then((n) => n * 3)
+        .then((n) => n + 1)
+        .then((n) => console.log(n));
+    answer: "7"
+    explain: "Each callback's return value goes to the next step: 2 becomes 6, then 7."
+    reteach: "### Chaining: every then makes a new promise"
+
+  - id: q03
+    type: predict-output
+    concept: microtasks
+    code: |
+      console.log("1");
+      setTimeout(() => console.log("4"), 0);
+      Promise.resolve().then(() => console.log("3"));
+      console.log("2");
+    answer: "1\n2\n3\n4"
+    explain: "Plain lines print first. Then the microtask queue empties, so the promise callback prints 3 before the timer prints 4."
+    reteach: "### Promise callbacks jump the queue"
+
+  - id: q04
+    type: predict-output
+    concept: catch
+    code: |
+      Promise.reject(new Error("Bank app closed"))
+        .then(() => console.log("paid"))
+        .catch((error) => console.log(error.message));
+    answer: "Bank app closed"
+    explain: "The promise is rejected, so the then callback is skipped and the failure falls through to catch."
+    reteach: "### Syntax: catch"
+
+  - id: q05
+    type: predict-output
+    concept: finally
+    code: |
+      Promise.resolve("Paid")
+        .finally(() => console.log("QR closed"))
+        .then((value) => console.log(value));
+    answer: "QR closed\nPaid"
+    explain: "finally runs its clean-up first and passes the value on unchanged, so the next then still gets Paid."
+    reteach: "### Syntax: finally"
+
+  - id: q06
+    type: fill-blank
+    concept: catch
+    goal: "Show the error's text on the screen if the payment promise fails."
+    prompt: "payment.___((error) => showMessage(error.message));"
+    answers: ["catch"]
+    explain: "catch registers a callback that runs when the promise is rejected."
+    reteach: "### Syntax: catch"
+
+  - id: q07
+    type: fill-blank
+    concept: new-promise
+    goal: "Inside new Promise, fulfil the promise after 10 ms, handing over the bank's reference."
+    prompt: "setTimeout(() => ___(\"UPI-5521\"), 10);"
+    answers: ["resolve"]
+    explain: "Calling resolve(value) fulfils the promise you are making, with that value."
+    reteach: "### Syntax: new Promise"
+
+  - id: q08
+    type: spot-the-bug
+    concept: chaining
+    code: |
+      Promise.resolve(45000)
+        .then((paise) => {
+          paise + 3000;
+        })
+        .then((total) => console.log(`Total: ${total}`));
+    bugLine: 3
+    explain: "With curly braces, the arrow function returns nothing, so the next step gets undefined. Write return paise + 3000;."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: finally
+    prompt: "The QR popup must close whether the payment worked or failed. Where does closeQr() belong?"
+    choices: ["In a finally callback", "In the then callback only", "In the catch callback only", "On the line after the chain"]
+    answer: 0
+    explain: "finally runs once the promise settles, either way. The line after the chain would run before the payment even finished."
+    reteach: "### Syntax: finally"
+
+  - id: q10
+    type: mcq
+    concept: then
+    variants:
+      - { prompt: "What does promise.then(callback) return?", choices: ["A new promise for whatever the callback returns", "The callback itself", "The value, straight away", "Nothing"], answer: 0 }
+      - { prompt: "A promise is already fulfilled when you call .then(callback) on it. When does callback run?", choices: ["Later, once the code running now has finished", "Straight away, on the same line", "Never, because it is too late", "Only after a timer"], answer: 0 }
+    explain: "then always returns a new promise, which is what makes chains work. Its callback always runs later, from the microtask queue, never on the same line."
+    reteach: "### Syntax: then"
+
+  - id: q11
+    type: order
+    concept: new-promise
+    prompt: "Put the lines in order to write wait(ms), a promise that is fulfilled after ms milliseconds."
+    items:
+      - "function wait(ms) {"
+      - "  return new Promise((resolve) => {"
+      - "    setTimeout(resolve, ms);"
+      - "  });"
+      - "}"
+    explain: "The function returns a new promise. Inside, a timer calls resolve after ms milliseconds."
+    reteach: "### Syntax: new Promise"
+
+  - id: q12
+    type: mcq
+    concept: microtasks
+    prompt: "A promise callback and a 0 ms timer callback are both ready, and the call stack is empty. Which runs first?"
+    choices: ["The promise callback, because the microtask queue is emptied first", "The timer callback, because timers are older", "Whichever was written first in the file", "They run at the same time"]
+    answer: 0
+    explain: "The event loop empties the microtask queue, where promise callbacks wait, before it takes the next timer from the task queue."
+    reteach: "### Promise callbacks jump the queue"

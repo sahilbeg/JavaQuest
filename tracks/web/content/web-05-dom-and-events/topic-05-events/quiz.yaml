@@ -1,0 +1,142 @@
+topic: web-05-dom-and-events/topic-05-events
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: events-and-listeners
+    prompt: "What is an event listener?"
+    choices: ["A function you give the browser to run when a certain event happens on an element", "A loop that checks the button again and again", "A CSS rule for buttons", "An HTML attribute that stores clicks"]
+    answer: 0
+    explain: "You hand the browser a function for an element and an event type. The browser calls it each time that event happens."
+    reteach: "### What an event is"
+
+  - id: q02
+    type: fill-blank
+    concept: add-event-listener
+    goal: "Ask the browser to run addOne every time the plus button is clicked."
+    prompt: "plus.___(\"click\", addOne);"
+    answers: ["addEventListener"]
+    explain: "addEventListener takes the event type and the function to run."
+    reteach: "### Syntax: addEventListener"
+
+  - id: q03
+    type: spot-the-bug
+    concept: handler-not-call
+    code: |
+      function addOne() {
+        qty += 1;
+      }
+      plus.addEventListener("click", addOne());
+    bugLine: 4
+    explain: "addOne() runs the function once, right now, and passes its result, undefined. Pass the function itself: addEventListener(\"click\", addOne)."
+    reteach: "### Pass the function, don't call it"
+
+  - id: q04
+    type: predict-output
+    concept: handler-not-call
+    code: |
+      const button = new EventTarget();
+      let clicks = 0;
+      function count() {
+        clicks += 1;
+      }
+      button.addEventListener("click", count);
+      button.dispatchEvent(new Event("click"));
+      button.dispatchEvent(new Event("click"));
+      console.log(clicks);
+    answer: "2"
+    explain: "Adding the listener runs nothing. Each of the two click events runs count once."
+    reteach: "### Pass the function, don't call it"
+
+  - id: q05
+    type: predict-output
+    concept: add-event-listener
+    code: |
+      const button = new EventTarget();
+      let shown = 0;
+      button.addEventListener("click", () => {
+        shown += 1;
+      }, { once: true });
+      button.dispatchEvent(new Event("click"));
+      button.dispatchEvent(new Event("click"));
+      console.log(shown);
+    answer: "1"
+    explain: "With { once: true }, the listener removes itself after its first run, so the second click finds no listener."
+    reteach: "### Removing a listener"
+
+  - id: q06
+    type: mcq
+    concept: event-object
+    prompt: "A button holds an icon <span>. The listener is on the button, and the click lands on the span. What is event.currentTarget?"
+    choices: ["The button, because the listener is on it", "The span, because the click landed there", "The document", "null"]
+    answer: 0
+    explain: "currentTarget is always the element the listener was added to. target is where the click started, here the span."
+    reteach: "### The event object"
+
+  - id: q07
+    type: fill-blank
+    concept: keyboard-events
+    goal: "Check whether the customer just pressed Escape."
+    prompt: "if (event.___ === \"Escape\") {"
+    answers: ["key"]
+    explain: "Keyboard events carry event.key, the name of the key that was pressed."
+    reteach: "### Syntax: keyboard events"
+
+  - id: q08
+    type: mcq
+    concept: keyboard-events
+    prompt: "Which event type fires when a key on the keyboard goes down?"
+    choices: ["keydown", "click", "input", "submit"]
+    answer: 0
+    explain: "keydown fires for every key press, and event.key says which key it was."
+    reteach: "### Common event types"
+
+  - id: q09
+    type: mcq
+    concept: state-in-handlers
+    prompt: "This code always shows \"Added 1 to your cart\", even after the customer picks 3. Why? const qty = readQty(); button.addEventListener(\"click\", () => { status.textContent = `Added ${qty} to your cart`; });"
+    choices: ["qty was read once, when the page loaded, not when the button was clicked", "Template literals can't hold numbers", "The listener runs before the click", "readQty always returns 1"]
+    answer: 0
+    explain: "Read the value inside the handler, at click time: `Added ${readQty()} to your cart`."
+    reteach: "### State lives in a variable"
+
+  - id: q10
+    type: predict-output
+    concept: state-in-handlers
+    code: |
+      function setupCounter(target) {
+        let count = 0;
+        target.addEventListener("click", () => {
+          count += 1;
+          console.log(count);
+        });
+      }
+      const a = new EventTarget();
+      const b = new EventTarget();
+      setupCounter(a);
+      setupCounter(b);
+      a.dispatchEvent(new Event("click"));
+      a.dispatchEvent(new Event("click"));
+      b.dispatchEvent(new Event("click"));
+    answer: "1\n2\n1"
+    explain: "Each call to setupCounter makes its own count, kept alive by its handler. a counts to 2, and b starts from its own 0."
+    reteach: "### State lives in a variable"
+
+  - id: q11
+    type: mcq
+    concept: events-and-listeners
+    prompt: "Why use <button type=\"button\"> instead of a <div> with a click listener for the + control?"
+    choices: ["A button also works with Tab, Enter and Space, and screen readers announce it", "A div can't have a click listener", "Buttons load faster than divs", "A div can't contain the + sign"]
+    answer: 0
+    explain: "A div only answers the mouse. A real button works for keyboard and screen reader users too."
+    reteach: "### Use real buttons"
+
+  - id: q12
+    type: mcq
+    concept: add-event-listener
+    prompt: "plus.addEventListener(\"click\", () => addOne()); then later plus.removeEventListener(\"click\", () => addOne()); What happens on the next click?"
+    choices: ["addOne still runs: the second arrow is a different function", "Nothing runs: the listener was removed", "An error is thrown", "addOne runs twice"]
+    answer: 0
+    explain: "removeEventListener needs the very same function. Two arrow functions that look alike are still two different functions."
+    reteach: "### Removing a listener"

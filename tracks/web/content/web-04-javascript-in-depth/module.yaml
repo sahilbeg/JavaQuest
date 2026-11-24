@@ -1,0 +1,5 @@
+id: web-04-javascript-in-depth
+title: JavaScript in depth
+project: The catalogue engine
+summary: Closures, callbacks, array methods, classes, modules, errors, JSON, dates, Map and Set, used to build the engine behind Dhaaga's online catalogue.
+unlockAfter: web-03-javascript-basics/boss

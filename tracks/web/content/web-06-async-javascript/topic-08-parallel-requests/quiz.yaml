@@ -1,0 +1,116 @@
+topic: web-06-async-javascript/topic-08-parallel-requests
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: sequential-vs-parallel
+    variants:
+      - { prompt: "Four stock requests each take about 1 second and don't depend on each other. You await them one by one. About how long does it take?", choices: ["4 seconds", "1 second", "0 seconds", "16 seconds"], answer: 0 }
+      - { prompt: "The same four 1-second requests are started together and awaited with Promise.all. About how long does it take?", choices: ["1 second", "4 seconds", "0 seconds", "8 seconds"], answer: 0 }
+    explain: "One by one, the waits add up. In parallel, they overlap, so the total is about as long as the slowest one."
+    reteach: "### One after another is slow"
+
+  - id: q02
+    type: predict-output
+    concept: result-order
+    code: |
+      const wait = (ms, value) => new Promise((resolve) => setTimeout(() => resolve(value), ms));
+      Promise.all([wait(20, "A"), wait(5, "B"), wait(10, "C")]).then((values) => console.log(values.join(",")));
+    answer: "A,B,C"
+    explain: "Promise.all keeps the order of the promises you passed in, not the order they finished."
+    reteach: "### Syntax: Promise.all"
+
+  - id: q03
+    type: predict-output
+    concept: fail-fast
+    code: |
+      Promise.all([Promise.resolve(3), Promise.reject(new Error("404"))])
+        .then((values) => console.log("got", values.length))
+        .catch((error) => console.log("failed", error.message));
+    answer: "failed 404"
+    explain: "One rejected promise rejects the whole Promise.all, so then is skipped and catch runs."
+    reteach: "### One failure fails them all"
+
+  - id: q04
+    type: predict-output
+    concept: promise-all-settled
+    code: |
+      Promise.allSettled([Promise.resolve(3), Promise.reject(new Error("404"))])
+        .then((results) => console.log(results.map((r) => r.status).join(" ")));
+    answer: "fulfilled rejected"
+    explain: "allSettled never rejects. Each result has a status, in the same order as the promises."
+    reteach: "### Syntax: Promise.allSettled"
+
+  - id: q05
+    type: fill-blank
+    concept: promise-all
+    goal: "Wait for every stock request together and get their values in order, rejecting if any one fails."
+    prompt: "const stocks = await Promise.___(promises);"
+    answers: ["all"]
+    explain: "Promise.all is fulfilled with every value, in order, and fails fast if any promise is rejected."
+    reteach: "### Syntax: Promise.all"
+
+  - id: q06
+    type: fill-blank
+    concept: promise-all-settled
+    goal: "Wait for every request without ever rejecting, so each result says whether it worked."
+    prompt: "const results = await Promise.___(promises);"
+    answers: ["allSettled"]
+    explain: "Promise.allSettled gives { status, value } or { status, reason } for each promise."
+    reteach: "### Syntax: Promise.allSettled"
+
+  - id: q07
+    type: mcq
+    concept: fail-fast
+    prompt: "You ask for 12 items' stock with Promise.all, and one id gets a 404. What do you get?"
+    choices: ["A rejection with that error; the 11 good answers are lost", "11 numbers and one undefined", "12 numbers, with 0 for the bad id", "It waits forever"]
+    answer: 0
+    explain: "Promise.all is fail-fast. Use Promise.allSettled when the good answers should still show."
+    reteach: "### One failure fails them all"
+
+  - id: q08
+    type: spot-the-bug
+    concept: promise-all
+    code: |
+      async function board(ids) {
+        const stocks = ids.map(async (id) => await getStock(id));
+        return stocks.map((stock) => `${stock} left`);
+      }
+    bugLine: 2
+    explain: "map with an async callback gives an array of promises, so each line says [object Promise] left. Write const stocks = await Promise.all(ids.map((id) => getStock(id)));."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: sequential-vs-parallel
+    prompt: "Which pair of requests must stay one after another, not in parallel?"
+    choices: ["Reserve Golu, then pay for it", "Stock for Golu and stock for the coaster set", "The catalogue and the delivery check for 411001", "Stock for three tote bags"]
+    answer: 0
+    explain: "Paying needs the reservation to have worked. Independent questions, like stock for different items, can run together."
+    reteach: "### When to stay sequential"
+
+  - id: q10
+    type: mcq
+    concept: promise-all-settled
+    prompt: "What does Promise.allSettled give for a promise that was rejected?"
+    choices: ["{ status: \"rejected\", reason: theError }", "undefined", "It throws the error", "{ status: \"fulfilled\", value: null }"]
+    answer: 0
+    explain: "A rejected result has status \"rejected\" and the error in reason. A fulfilled one has status \"fulfilled\" and value."
+    reteach: "### Syntax: Promise.allSettled"
+
+  - id: q11
+    type: predict-output
+    concept: sequential-vs-parallel
+    code: |
+      const log = [];
+      async function getStock(id) {
+        log.push(`ask ${id}`);
+        await null;
+        log.push(`got ${id}`);
+        return 1;
+      }
+      Promise.all(["A", "B"].map((id) => getStock(id))).then(() => console.log(log.join(", ")));
+    answer: "ask A, ask B, got A, got B"
+    explain: "map calls getStock for every id at once. Both ask before either gets its answer: that is parallel."
+    reteach: "### Start them all, then wait"

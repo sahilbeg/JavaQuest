@@ -1,0 +1,130 @@
+topic: web-05-dom-and-events/topic-07-forms-and-input
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: input-value
+    code: |
+      const value = "10";
+      console.log(value === 10);
+      console.log(Number(value) === 10);
+    answer: "false\ntrue"
+    explain: "An input's value is always a string. \"10\" is not the number 10 until you convert it."
+    reteach: "### Syntax: reading a value"
+
+  - id: q02
+    type: predict-output
+    concept: input-value
+    code: |
+      const typed = "98765 43210";
+      const digits = typed.replaceAll(" ", "");
+      console.log(digits.length);
+    answer: "10"
+    explain: "replaceAll removes the space, leaving the 10 digits."
+    reteach: "### Syntax: reading a value"
+
+  - id: q03
+    type: mcq
+    concept: input-event
+    prompt: "The name-to-stitch box should show a letter count that updates with every key the customer types. Which event fits?"
+    choices: ["input", "change", "submit", "load"]
+    answer: 0
+    explain: "input fires on every change to the text, so the count is always up to date."
+    reteach: "### Syntax: the input event"
+
+  - id: q04
+    type: mcq
+    concept: input-event
+    prompt: "When does the change event fire on a text box?"
+    choices: ["Once, when the customer leaves the box after changing it", "After every keystroke", "Only when the form is submitted", "When the page loads"]
+    answer: 0
+    explain: "For text boxes, change waits until the value is committed, usually when focus leaves the box."
+    reteach: "### input and change"
+
+  - id: q05
+    type: mcq
+    concept: submit-event
+    prompt: "Where should the order checks listen, so they also run when the customer presses Enter in a box?"
+    choices: ["A submit listener on the form", "A click listener on the submit button", "A keydown listener on the button", "A change listener on the last input"]
+    answer: 0
+    explain: "Enter submits the form without clicking the button. The submit event on the form catches both ways."
+    reteach: "### Syntax: the submit event"
+
+  - id: q06
+    type: fill-blank
+    concept: prevent-default
+    goal: "Stop the browser from loading a new page when the order form is sent."
+    prompt: "event.___();"
+    answers: ["preventDefault"]
+    explain: "preventDefault cancels the browser's default action, here the page load, so your code stays in charge."
+    reteach: "### Syntax: preventDefault"
+
+  - id: q07
+    type: mcq
+    concept: prevent-default
+    prompt: "A submit handler shows error messages but never calls event.preventDefault(). What does the customer see?"
+    choices: ["The messages flash, then the page reloads and the typed details are gone", "The messages stay on screen", "An error in the console", "The order is checked twice"]
+    answer: 0
+    explain: "Without preventDefault, the form does its default action and loads a new page."
+    reteach: "### Syntax: preventDefault"
+
+  - id: q08
+    type: mcq
+    concept: form-data
+    prompt: "Which attribute does new FormData(form) use to find and label each field?"
+    choices: ["name", "id", "class", "for"]
+    answer: 0
+    explain: "FormData collects fields that have a name, and data.get(\"phone\") reads the field named phone."
+    reteach: "### Syntax: FormData"
+
+  - id: q09
+    type: fill-blank
+    concept: form-data
+    goal: "Collect every named field of the order form, so each value can be read with get."
+    prompt: "const data = new ___(form);"
+    answers: ["FormData"]
+    explain: "new FormData(form) gathers the form's named fields, and data.get(name) reads one."
+    reteach: "### Syntax: FormData"
+
+  - id: q10
+    type: spot-the-bug
+    concept: validation-messages
+    code: |
+      for (const field of ["name", "phone", "pin"]) {
+        if (errors[field]) {
+          messageFor(field).textContent = errors[field];
+        }
+      }
+    bugLine: 2
+    explain: "Messages are only ever written, never cleared, so a fixed field keeps its old error. Always set the text to errors[field] ?? \"\"."
+    reteach: "### Showing errors that everyone can find"
+
+  - id: q11
+    type: predict-output
+    concept: validation-messages
+    code: |
+      function validate(details) {
+        const errors = {};
+        if (details.name.trim() === "") {
+          errors.name = "Please enter your name.";
+        }
+        if (details.pin.length !== 6) {
+          errors.pin = "Enter a 6-digit PIN code.";
+        }
+        return errors;
+      }
+      console.log(Object.keys(validate({ name: "  ", pin: "411007" })));
+      console.log(Object.keys(validate({ name: "Asha", pin: "411007" })).length);
+    answer: "[ 'name' ]\n0"
+    explain: "A name of only spaces trims to \"\", so it gets a message. The PIN has 6 digits. With a real name, there are no errors at all."
+    reteach: "### Checking the values"
+
+  - id: q12
+    type: mcq
+    concept: validation-messages
+    prompt: "Why set aria-invalid=\"true\" on the phone input when its number is wrong?"
+    choices: ["Screen readers then tell the customer the field's value is wrong", "It stops the customer typing", "It makes the browser fix the number", "It turns the box red with no CSS"]
+    answer: 0
+    explain: "aria-invalid tells assistive technology the value is wrong, and aria-describedby lets it read out the message."
+    reteach: "### Showing errors that everyone can find"

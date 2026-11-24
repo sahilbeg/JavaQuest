@@ -1,0 +1,24 @@
+id: web-03-javascript-basics/topic-10-objects
+title: "Objects"
+order: 10
+minutes: 10
+prerequisites: [web-03-javascript-basics/topic-09-arrays]
+concepts: [object-literals, property-access, bracket-access, changing-properties, arrays-of-objects, missing-properties]
+practice:
+  kind: code
+  runner: vitest
+  mainClass: main.js
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0310
+  from: maya
+  title: "One price list instead of five switches"
+  body: >
+    The price list is copied into switch statements in three different files, and they've started to disagree.
+    Let's keep it in one place: an object where each code points to the item's name and price. The baby booties
+    are missing from it, too. Can you finish src/catalogue.js?
+hints:
+  - "Each entry looks like BTY: { name: \"Baby booties\", paise: 35000 }, with a comma after the one before it."
+  - "Use square brackets to look up a code held in a variable: CATALOGUE[code]. A code that isn't there gives undefined."
+  - "makeLine can return { code, name: item.name, paise: item.paise, qty }. For cartTotal, loop over the lines and add line.paise * line.qty."
+review: true

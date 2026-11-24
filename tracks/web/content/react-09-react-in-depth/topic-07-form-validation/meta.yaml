@@ -1,0 +1,24 @@
+id: react-09-react-in-depth/topic-07-form-validation
+title: "Forms with validation"
+order: 7
+minutes: 10
+prerequisites: [react-09-react-in-depth/topic-06-routing]
+concepts: [form-state, validation-function, pattern-checks, when-to-show-errors, accessible-errors]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0907
+  from: sam
+  title: "Three parcels came back with bad addresses"
+  body: >
+    Raju here. Three parcels came back this week. One had a 5-digit PIN code, one had no house number,
+    and one phone number had only 9 digits, so the courier couldn't even call. The address form takes
+    anything you type. Can it check the address before the order goes through?
+hints:
+  - "validateAddress is a plain function: start with const errors = {}, add a message for each field that fails, and return errors. An empty object means everything is fine."
+  - "Phone: remove the spaces with replaceAll(\" \", \"\") and test against /^\\d{10}$/. PIN code: /^[1-9]\\d{5}$/ on the trimmed value."
+  - "In the form, work out errors on every render, but pass them to the fields only when tried is true. In handleSubmit: preventDefault, setTried(true), and call onSubmit only when Object.keys(errors).length is 0."
+review: true

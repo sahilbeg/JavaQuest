@@ -1,0 +1,106 @@
+/* The catalogue's stylesheet. Now: a badge, real buttons and a header that stays put. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #faf7f0;
+  color: #2e3a8c;
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+.site-header {
+  background-color: #2e3a8c;
+  color: #faf7f0;
+  padding: 1rem 2rem;
+  /* TODO 1: keep the header at the top while scrolling: position: sticky, top: 0, and z-index: 10 to stay above the cards */
+}
+
+h1, h2 {
+  font-family: Georgia, serif;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  color: #2e3a8c;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+h3 {
+  color: #2e3a8c;
+}
+
+.tagline {
+  font-style: italic;
+}
+
+nav a {
+  color: #faf7f0;
+  text-decoration: none;
+}
+
+.products {
+  list-style: none;
+  padding: 0;
+}
+
+.product {
+  padding: 1rem;
+  border: 2px solid #2e3a8c;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  /* TODO 2: make each card the anchor for its badge: position: relative */
+}
+
+.badge {
+  background-color: #f2a81d;
+  color: #2e3a8c;
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  /* TODO 3: pin the badge to the card's corner: position: absolute, top: 0.5rem, right: 0.5rem */
+}
+
+main p {
+  color: #5a5a5a;
+}
+
+.price {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.code {
+  font-size: 0.875rem;
+  color: rgb(90, 90, 90);
+}
+
+.stock {
+  color: #b3261e;
+  font-weight: 700;
+}
+
+.sold-out h3 {
+  color: #5a5a5a;
+}
+
+.sold-out .price {
+  text-decoration: line-through;
+}
+
+.buy {
+  background-color: #f2a81d;
+  color: #2e3a8c;
+  border-radius: 4px;
+  /* TODO 4: make the link a real button: display: inline-block and padding: 0.5rem 1rem */
+}
+
+/* TODO 5: remove the Order button from sold-out cards: .sold-out .buy with display: none */

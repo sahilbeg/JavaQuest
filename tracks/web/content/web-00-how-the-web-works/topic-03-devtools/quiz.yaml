@@ -1,0 +1,115 @@
+topic: web-00-how-the-web-works/topic-03-devtools
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: open-devtools
+    variants:
+      - { prompt: "You're on a Mac, using Chrome. Which shortcut opens DevTools?", choices: ["Cmd+Option+I", "Cmd+S", "Cmd+Q", "Cmd+P"], answer: 0 }
+      - { prompt: "Which of these opens DevTools on a part of the page you choose?", choices: ["Right-click it and choose Inspect", "Double-click the address bar", "Press Cmd+S", "Close and reopen the browser"], answer: 0 }
+    explain: "Cmd+Option+I (F12 on Windows) opens DevTools. Right-click and Inspect opens it straight at that element."
+    reteach: "### Opening DevTools"
+
+  - id: q02
+    type: mcq
+    concept: elements-panel
+    prompt: "Which panel shows the page's HTML as a tree you can open and close?"
+    choices: ["Elements", "Console", "Network", "Device mode"]
+    answer: 0
+    explain: "Elements shows every element of the page, with nested elements indented below their parent."
+    reteach: "### The Elements panel: the page's HTML, live"
+
+  - id: q03
+    type: mcq
+    concept: elements-panel
+    prompt: "You change a heading's text in the Elements panel, then reload the page. What happens?"
+    choices: ["The old text comes back, because the edit was only in your browser", "The new text is saved on the server", "The page shows a 404", "The edit is saved into your index.html file"]
+    answer: 0
+    explain: "Elements edits change only your browser's copy, until you reload. Make real changes in your files."
+    reteach: "### Change the page, just for you"
+
+  - id: q04
+    type: mcq
+    concept: elements-panel
+    prompt: "Where do you see, and try out, the CSS rules for the element you selected?"
+    choices: ["The Styles pane next to Elements", "The Network panel", "The address bar", "The Console's red errors"]
+    answer: 0
+    explain: "The Styles pane lists the CSS rules for the selected element. You can change them there to try ideas."
+    reteach: "### Styles: the CSS for what you picked"
+
+  - id: q05
+    type: mcq
+    concept: console-panel
+    variants:
+      - { prompt: "Where does a page's console.log(\"Namaste!\") show its message?", choices: ["In the Console panel", "In the Elements panel", "In the browser tab's title", "In the Network panel"], answer: 0 }
+      - { prompt: "The Console shows: Uncaught ReferenceError: totl is not defined at main.js:4:13. Where is the problem?", choices: ["Line 4 of main.js", "Line 13 of index.html", "In the server's DNS", "In the CSS file"], answer: 0 }
+    explain: "The Console shows console.log messages and errors. An error names the file and line, like main.js:4."
+    reteach: "### The Console: messages from JavaScript"
+
+  - id: q06
+    type: mcq
+    concept: console-panel
+    prompt: "You type 150 * 4 into the Console and press Enter. What does it show?"
+    choices: ["600", "150 * 4", "An error", "1504"]
+    answer: 0
+    explain: "The Console runs JavaScript you type, so it works out 150 times 4."
+    reteach: "### The Console: messages from JavaScript"
+
+  - id: q07
+    type: mcq
+    concept: network-panel
+    prompt: "A photo is missing from the page. Which panel shows whether its request came back 404?"
+    choices: ["Network", "Elements", "Styles", "Device mode"]
+    answer: 0
+    explain: "Network lists every request with its status code. A missing file shows a red 404 row."
+    reteach: "### The Network panel: every request"
+
+  - id: q08
+    type: mcq
+    concept: network-panel
+    prompt: "You open the Network panel on a page that has already loaded. It's empty. What should you do?"
+    choices: ["Reload the page with the panel open", "Close DevTools and try another browser", "Type the file names into the Console", "Nothing: the page made no requests"]
+    answer: 0
+    explain: "Network only records while it is open. Reload, and every request shows up."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: order
+    concept: network-panel
+    prompt: "Put the steps in order to find out why a photo won't show."
+    items:
+      - "Open DevTools"
+      - "Click the Network tab"
+      - "Reload the page"
+      - "Find the red row and read its status code"
+      - "Fix the file name and reload to check"
+    explain: "The Network panel must be open before the reload. Then read the status, fix, and check again."
+    reteach: "## Worked example"
+
+  - id: q10
+    type: mcq
+    concept: device-mode
+    prompt: "How can you see roughly how Dhaaga's page looks on a phone, from your laptop?"
+    choices: ["Turn on device mode in DevTools", "Make the font smaller in the Console", "Open the Network panel", "Rename index.html to phone.html"]
+    answer: 0
+    explain: "Device mode (Cmd+Shift+M) shrinks the page to a phone's size."
+    reteach: "### Device mode: see it like a phone"
+
+  - id: q11
+    type: mcq
+    concept: network-panel
+    prompt: "The HTML asks for images/coaster.jpg, and Network shows 404. The file in the folder is Coaster.JPG. What's the fix?"
+    choices: ["Make the file name and the HTML match exactly, capitals included", "Reload the page ten times", "Add more CSS to the image", "Turn on device mode"]
+    answer: 0
+    explain: "Servers treat capital letters as different letters. The name in the HTML must match the file exactly."
+    reteach: "### Tracking down the broken photo"
+
+  - id: q12
+    type: mcq
+    concept: open-devtools
+    prompt: "You changed style.css, but the browser still shows the old colours. What should you try first?"
+    choices: ["A hard reload with Cmd+Shift+R", "Delete the page's HTML", "Restart the server's DNS", "Edit the colours in Elements"]
+    answer: 0
+    explain: "Browsers keep copies of files. A hard reload fetches every file fresh."
+    reteach: "## Common mistakes"

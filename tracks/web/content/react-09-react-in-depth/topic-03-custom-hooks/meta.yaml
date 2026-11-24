@@ -1,0 +1,25 @@
+id: react-09-react-in-depth/topic-03-custom-hooks
+title: "Custom hooks: useCart"
+order: 3
+minutes: 10
+prerequisites: [react-09-react-in-depth/topic-02-fetching-data]
+concepts: [custom-hook, rules-of-hooks, own-state, updater-form, lazy-initial-state]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0903
+  from: maya
+  title: "Two copies of the cart code, and they disagree"
+  body: >
+    The product grid and the cart drawer each have their own copy of the add-to-cart code, and they've
+    drifted apart. Yesterday the drawer added a second line for the same keychain instead of making it 2.
+    Please pull the cart logic into one useCart hook that both can call, and save the cart so a refresh
+    doesn't empty it.
+hints:
+  - "A custom hook is a function whose name starts with use and which calls other hooks. Keep the lines in useState and return what components need: lines, add, remove, count and total."
+  - "In add, use the updater form: setLines((current) => ...). If a line with the same code exists, map it to qty + 1; otherwise add { ...item, qty: 1 } at the end."
+  - "Start the state with useState(() => loadLines(storageKey)), and save in an effect: useEffect(() => localStorage.setItem(storageKey, JSON.stringify(lines)), [storageKey, lines])."
+review: true

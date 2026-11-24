@@ -1,0 +1,42 @@
+/* The catalogue's stylesheet, in Dhaaga's colours. */
+
+body {
+  background-color: #faf7f0;
+  color: #2e3a8c;
+}
+
+.site-header {
+  background-color: #2e3a8c;
+  color: #faf7f0;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2rem;
+}
+
+h2, h3 {
+  color: #2e3a8c;
+}
+
+nav a {
+  color: #faf7f0;
+}
+
+.price {
+  font-weight: bold;
+}
+
+.buy {
+  background-color: #f2a81d;
+  color: #2e3a8c;
+}
+
+.code {
+  font-size: 0.875rem;
+  color: rgb(90, 90, 90);
+}
+
+#visit {
+  font-style: italic;
+}

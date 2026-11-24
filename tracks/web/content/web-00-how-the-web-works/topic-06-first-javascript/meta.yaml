@@ -1,0 +1,24 @@
+id: web-00-how-the-web-works/topic-06-first-javascript
+title: "Your first JavaScript: console.log"
+order: 6
+minutes: 10
+prerequisites: [web-00-how-the-web-works/topic-05-first-page]
+concepts: [console-log, strings, top-to-bottom, comments, functions-return, export-import]
+practice:
+  kind: code
+  runner: vitest
+  mainClass: main.js
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0006
+  from: maya
+  title: "Print Dhaaga's welcome card, line by line"
+  body: >
+    Raju types the same welcome message into WhatsApp for every new customer, and he keeps making typos.
+    Let's write a tiny JavaScript program that prints the welcome card for him to copy, line by line.
+    It's also your first real JavaScript, so keep it simple and get the text exactly right.
+hints:
+  - "Text in JavaScript goes inside quotes, like \"this\". console.log(...) prints one line."
+  - "welcomeLine() needs return followed by the text. printCard() needs three console.log lines, in order."
+  - "In printCard(), the first line is console.log(welcomeLine()); then the other two lines of text, each in its own console.log."
+review: true

@@ -1,0 +1,24 @@
+id: web-03-javascript-basics/topic-08-functions
+title: "Functions: parameters and return values"
+order: 8
+minutes: 10
+prerequisites: [web-03-javascript-basics/topic-07-loops]
+concepts: [function-declaration, parameters, return, default-parameters, arrow-functions, scope]
+practice:
+  kind: code
+  runner: vitest
+  mainClass: main.js
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0308
+  from: maya
+  title: "Gift wrap and names are added by hand"
+  body: >
+    Every time a customer wants gift wrap or a name stitched on, Raju adds the extra by hand, and he forgot it twice
+    last week. Let's give the calculator small functions, one per job: a line total, the extras for one item, an
+    item's full cost and the delivery fee. They're waiting in src/extras.js.
+hints:
+  - "A default parameter looks like function lineTotal(paise, qty = 1). The 1 is used only when qty is left out."
+  - "In extrasFor, start with let extra = 0; then add 3000 if giftWrap is truthy, and 5000 if name is truthy. A missing name is undefined, which is falsy."
+  - "itemCost can be one line: return lineTotal(paise, qty) + extrasFor(giftWrap, name) * qty; and deliveryFor can be (subtotalPaise) => subtotalPaise > 99900 ? 0 : 6000"
+review: true

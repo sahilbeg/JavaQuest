@@ -1,0 +1,25 @@
+id: react-10-professional-frontend/topic-02-accessibility-in-depth
+title: "Accessibility in depth: keyboard, focus and ARIA"
+order: 2
+minutes: 10
+prerequisites: [react-10-professional-frontend/topic-01-testing-components]
+concepts: [keyboard-access, native-elements, aria-attributes, accessible-names, focus-management, live-regions]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-1002
+  from: sam
+  title: "Mrs. Bhosale can't use the cart with her keyboard"
+  body: >
+    Raju here. Mrs. Bhosale shops with only a keyboard, and her grandson set up a screen reader for her.
+    On the help page, the "Delivery and returns" answer would not open for her at all.
+    In her cart, pressing Remove opened something her screen reader never mentioned, and she got stuck behind it.
+    She ordered Golu on WhatsApp in the end, but she shouldn't have to.
+hints:
+  - "Start with Disclosure: a real <button> already works with Tab, Enter and Space. Then tell assistive technology what it does with aria-expanded and aria-controls."
+  - "For the dialog: role=\"dialog\", aria-modal=\"true\" and aria-labelledby={titleId} on the box. Give the opener aria-label={`Remove ${itemName}`}. For Escape, add onKeyDown to the dialog and check event.key === \"Escape\"."
+  - "Focus in: useEffect(() => { if (open) cancelRef.current.focus(); }, [open]); Focus out: in close(), after setOpen(false), call openerRef.current.focus()."
+review: true

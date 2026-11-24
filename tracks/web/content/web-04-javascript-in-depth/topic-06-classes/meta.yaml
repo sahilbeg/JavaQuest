@@ -1,0 +1,23 @@
+id: web-04-javascript-in-depth/topic-06-classes
+title: "Classes: a Cart with methods"
+order: 6
+minutes: 10
+prerequisites: [web-04-javascript-in-depth/topic-05-objects-in-depth]
+concepts: [class-syntax, constructor, instance-methods, getters, private-fields]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0406
+  from: maya
+  title: "One Cart for the whole website"
+  body: >
+    Every page of the new site builds its own cart object by hand, and each copy has its own bugs.
+    Yesterday a customer added Golu twice and got two separate lines instead of a quantity of 2.
+    Let's write one Cart class that every page uses, with the lines kept private so no page can mess them up.
+hints:
+  - "The constructor runs when you write new Cart(\"Asha\"). Store the name with this.customer = customer. The lines live in the private field #lines."
+  - "In add, look for an existing line with this.#lines.find((line) => line.id === item.id). If there is one, add to its qty. If not, push a new line."
+  - "Getters are written get count() { ... } and read without brackets. lines() returns this.#lines.map((line) => ({ ...line })) so callers get copies."
+review: true

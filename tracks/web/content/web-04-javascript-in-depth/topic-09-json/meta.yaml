@@ -1,0 +1,23 @@
+id: web-04-javascript-in-depth/topic-09-json
+title: "JSON: the catalogue as data"
+order: 9
+minutes: 9
+prerequisites: [web-04-javascript-in-depth/topic-08-errors]
+concepts: [json-format, json-parse, json-stringify, invalid-json]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0409
+  from: maya
+  title: "Load the catalogue from catalogue.json"
+  body: >
+    Sana now keeps the catalogue as JSON, so she can add a new amigurumi without touching any code.
+    The site has to turn that text into items, save the stock counts back as JSON, and give a clear error
+    when someone leaves a stray comma in the file. Last week one comma took the whole catalogue page down.
+hints:
+  - "JSON.parse(text) turns JSON text into arrays and objects. It throws a SyntaxError when the text is broken, so call it inside try."
+  - "After parsing, Array.isArray(data) tells you whether you got a list. Throw new Error(\"catalogue.json should hold a list of items\") when you didn't."
+  - "catalogueToJson: JSON.stringify(items, null, 2). stockSnapshot: JSON.stringify(items.map(({ id, stock }) => ({ id, stock })))."
+review: true

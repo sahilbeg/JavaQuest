@@ -1,0 +1,22 @@
+id: react-08-react-fundamentals/topic-01-why-react
+title: "Why React: components and the virtual DOM"
+order: 1
+minutes: 9
+prerequisites: [web-07-tooling/boss]
+concepts: [declarative-ui, components, jsx-intro, re-render, virtual-dom, react-root]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0801
+  from: maya
+  title: "Why we are moving the store to React"
+  body: >
+    Raju found it again this morning: the header says 2 items, but Mrs. Joshi's cart drawer shows 3.
+    Every new button means another place to update by hand, and we keep missing one. Before we rebuild
+    dhaaga.in in React, read up on how it works so we all speak the same language.
+hints:
+  - "React asks you to describe what the page should look like for the data you have. It works out the changes."
+  - "A component is a function that returns a description of part of the page. When its data changes, React calls it again."
+  - "The virtual DOM is a set of plain objects. React compares the old set with the new one and changes only the real elements that differ."
+review: true

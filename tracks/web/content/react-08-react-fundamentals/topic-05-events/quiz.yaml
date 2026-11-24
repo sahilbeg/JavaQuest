@@ -1,0 +1,154 @@
+topic: react-08-react-fundamentals/topic-05-events
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: event-handlers
+    prompt: "Which button runs handleClick only when it is clicked?"
+    choices:
+      - "<button type=\"button\" onClick={handleClick}>Add</button>"
+      - "<button type=\"button\" onClick={handleClick()}>Add</button>"
+      - "<button type=\"button\" onclick=\"handleClick()\">Add</button>"
+      - "<button type=\"button\" click={handleClick}>Add</button>"
+    answer: 0
+    explain: "Pass the function itself. With round brackets it runs while drawing. React event props are camelCase and start with on."
+    reteach: "### Syntax: an event handler"
+
+  - id: q02
+    type: spot-the-bug
+    concept: event-handlers
+    prompt: "Every product lands in the cart as soon as the page loads. Which line is wrong?"
+    code: |
+      function CartButton({ id, onAdd }) {
+        return (
+          <button type="button" onClick={onAdd(id)}>
+            Add to cart
+          </button>
+        );
+      }
+    bugLine: 3
+    explain: "onAdd(id) is called while drawing. Wrap it in an arrow function: onClick={() => onAdd(id)}."
+    reteach: "## Common mistakes"
+
+  - id: q03
+    type: fill-blank
+    concept: passing-arguments
+    goal: "When the button is clicked, call onAdd with this product's id."
+    prompt: "<button type=\"button\" onClick={___}>Add to cart</button>"
+    answers: ["() => onAdd(id)", "()=>onAdd(id)", "() =>onAdd(id)", "()=> onAdd(id)"]
+    explain: "The arrow function is what React calls on a click. It then calls onAdd with the id."
+    reteach: "### Syntax: passing an argument"
+
+  - id: q04
+    type: mcq
+    concept: handler-props
+    prompt: "CartButton gets onAdd as a prop from its parent. What is onAdd?"
+    choices:
+      - "A function the child calls to tell the parent about a click"
+      - "A number of items to add"
+      - "A CSS class for the button"
+      - "An event object"
+    answer: 0
+    explain: "Parents pass functions down as props. The child calls them to report events back up."
+    reteach: "### Functions as props"
+
+  - id: q05
+    type: mcq
+    concept: event-object
+    prompt: "In an onKeyDown handler on a search box, how do you check that the customer pressed Enter?"
+    choices:
+      - "if (event.key === \"Enter\")"
+      - "if (event.target.value === \"Enter\")"
+      - "if (event === \"Enter\")"
+      - "if (onKeyDown === \"Enter\")"
+    answer: 0
+    explain: "event.key names the key. event.target.value is the text typed in the box."
+    reteach: "### Syntax: the event object"
+
+  - id: q06
+    type: fill-blank
+    concept: event-object
+    goal: "Pass the text currently typed in the search box to onSearch."
+    prompt: "onSearch(event.target.___);"
+    answers: ["value"]
+    explain: "event.target is the input, and its value property holds the text."
+    reteach: "### Syntax: the event object"
+
+  - id: q07
+    type: mcq
+    concept: bubbling
+    prompt: "A button sits inside an <article> that has its own onClick. You click the button. Which handlers run?"
+    choices:
+      - "The button's, then the article's"
+      - "Only the button's"
+      - "Only the article's"
+      - "The article's, then the button's"
+    answer: 0
+    explain: "Events bubble from where they happened up through the elements around it."
+    reteach: "### Events bubble up"
+
+  - id: q08
+    type: predict-output
+    concept: bubbling
+    code: |
+      const path = ["button", "article", "section", "main"];
+      let heard = 0;
+      for (const element of path) {
+        heard = heard + 1;
+        if (element === "article") break;
+      }
+      console.log(heard);
+    answer: "2"
+    explain: "The loop models bubbling that is stopped at the article: the button and the article hear the click, and nothing above them does."
+    reteach: "### Events bubble up"
+
+  - id: q09
+    type: fill-blank
+    concept: stop-propagation
+    goal: "Stop this click from reaching the clickable tile around the button."
+    prompt: "event.___();"
+    answers: ["stopPropagation"]
+    explain: "stopPropagation ends the bubbling, so handlers further up are not called."
+    reteach: "### Syntax: stopPropagation"
+
+  - id: q10
+    type: mcq
+    concept: stop-propagation
+    prompt: "Which method stops a form from reloading the page when it is sent?"
+    choices:
+      - "event.preventDefault()"
+      - "event.stopPropagation()"
+      - "event.stop()"
+      - "return false from the JSX"
+    answer: 0
+    explain: "preventDefault stops the element's built-in action. stopPropagation only stops the bubbling."
+    reteach: "### Syntax: preventDefault"
+
+  - id: q11
+    type: order
+    concept: event-object
+    prompt: "Put the lines in order: a key handler that searches only when Enter is pressed."
+    items:
+      - "function handleKeyDown(event) {"
+      - "  if (event.key === \"Enter\") {"
+      - "    onSearch(event.target.value);"
+      - "  }"
+      - "}"
+    explain: "The handler receives the event, checks which key it was, and only then reads the text and searches."
+    reteach: "### Syntax: the event object"
+
+  - id: q12
+    type: spot-the-bug
+    concept: event-handlers
+    prompt: "Clicking does nothing, and the console warns about an invalid event handler. Which line?"
+    code: |
+      function WishlistButton({ onSave }) {
+        function handleClick() {
+          onSave();
+        }
+        return <button type="button" onclick={handleClick}>Save</button>;
+      }
+    bugLine: 5
+    explain: "React event props are camelCase: onClick, not onclick."
+    reteach: "## Common mistakes"

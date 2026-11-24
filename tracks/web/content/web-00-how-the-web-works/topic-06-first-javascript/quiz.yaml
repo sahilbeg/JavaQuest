@@ -1,0 +1,129 @@
+topic: web-00-how-the-web-works/topic-06-first-javascript
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: fill-blank
+    concept: console-log
+    goal: "Print Namaste! as one line of output."
+    prompt: "console.___(\"Namaste!\");"
+    answers: ["log"]
+    explain: "console.log prints what is inside the brackets, then moves to a new line."
+    reteach: "### Syntax: console.log"
+
+  - id: q02
+    type: predict-output
+    concept: top-to-bottom
+    code: |
+      console.log("Dhaaga & Co.");
+      console.log("Open on Sunday");
+      console.log("FC Road");
+    answer: "Dhaaga & Co.\nOpen on Sunday\nFC Road"
+    explain: "Statements run from top to bottom, and each console.log prints its own line."
+    reteach: "### Statements run from top to bottom"
+
+  - id: q03
+    type: order
+    concept: top-to-bottom
+    prompt: "Put the lines in order so the program prints Namaste!, then Welcome to Dhaaga & Co., then Thank you."
+    items:
+      - "console.log(\"Namaste!\");"
+      - "console.log(\"Welcome to Dhaaga & Co.\");"
+      - "console.log(\"Thank you\");"
+    explain: "The output comes out in the same order as the statements."
+    reteach: "### Statements run from top to bottom"
+
+  - id: q04
+    type: mcq
+    concept: strings
+    variants:
+      - { prompt: "Which line prints the text Hello?", choices: ["console.log(\"Hello\");", "console.log(Hello);", "console.log(\"Hello');", "Console.log(\"Hello\");"], answer: 0 }
+      - { prompt: "Which line prints the text Namaste?", choices: ["console.log('Namaste');", "console.log(Namaste);", "console.log('Namaste\");", "console.Log('Namaste');"], answer: 0 }
+    explain: "Text needs quotes, both quotes must match, and console.log is all lowercase."
+    reteach: "### Syntax: strings"
+
+  - id: q05
+    type: predict-output
+    concept: strings
+    code: |
+      console.log(150 + 30);
+      console.log("150" + "30");
+    answer: "180\n15030"
+    explain: "With numbers, + adds. With strings, + glues the text together."
+    reteach: "### Numbers are not strings"
+
+  - id: q06
+    type: spot-the-bug
+    concept: strings
+    code: |
+      console.log("Namaste!");
+      console.log(Welcome to Dhaaga);
+      console.log("See you Sunday");
+    bugLine: 2
+    explain: "The text on line 2 has no quotes, so JavaScript thinks Welcome is the name of something."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: spot-the-bug
+    concept: console-log
+    code: |
+      console.log("Namaste!");
+      Console.log("Welcome to Dhaaga & Co.");
+    bugLine: 2
+    explain: "JavaScript cares about capitals. It's console, with a small c."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: predict-output
+    concept: comments
+    code: |
+      // console.log("Closed today");
+      console.log("Open today");
+    answer: "Open today"
+    explain: "The first line is a comment, so JavaScript skips it. Only the second line prints."
+    reteach: "### Syntax: comments"
+
+  - id: q09
+    type: fill-blank
+    concept: functions-return
+    goal: "Inside shopName(), hand the shop's name back to whoever called the function."
+    prompt: "___ \"Dhaaga & Co.\";"
+    answers: ["return"]
+    explain: "return hands a value back to the caller."
+    reteach: "### Syntax: a function that returns text"
+
+  - id: q10
+    type: predict-output
+    concept: functions-return
+    code: |
+      function greet() {
+        return "Namaste!";
+      }
+
+      console.log(greet());
+      console.log("Welcome");
+    answer: "Namaste!\nWelcome"
+    explain: "greet() returns Namaste!, which console.log prints. Then the next line prints Welcome."
+    reteach: "### Syntax: a function that returns text"
+
+  - id: q11
+    type: predict-output
+    concept: functions-return
+    code: |
+      function shopName() {
+        "Dhaaga & Co.";
+      }
+
+      console.log(shopName());
+    answer: "undefined"
+    explain: "Without return, the function hands nothing back, so console.log prints undefined."
+    reteach: "## Common mistakes"
+
+  - id: q12
+    type: mcq
+    concept: export-import
+    prompt: "card.js has export function printCard() { ... }. What does main.js need before it can call printCard()?"
+    choices: ["import { printCard } from \"./card.js\";", "export { printCard } from \"./main.js\";", "console.log(\"./card.js\");", "Nothing: every file can see every function"]
+    answer: 0
+    explain: "export lets other files use a function, and import brings it into the file that wants it."
+    reteach: "### Syntax: export and import"

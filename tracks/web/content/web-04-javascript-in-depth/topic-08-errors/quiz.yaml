@@ -1,0 +1,184 @@
+topic: web-04-javascript-in-depth/topic-08-errors
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: try-catch
+    code: |
+      function check(qty) {
+        if (qty < 1) {
+          throw new Error("too few");
+        }
+        return "ok";
+      }
+      try {
+        console.log(check(2));
+        console.log(check(0));
+        console.log(check(3));
+      } catch (error) {
+        console.log(error.message);
+      }
+    answer: "ok\ntoo few"
+    explain: "check(0) throws, so the rest of try is skipped. check(3) never runs, and catch prints the message."
+    reteach: "### Syntax: try and catch"
+
+  - id: q02
+    type: mcq
+    concept: throw
+    prompt: "A function reaches a throw statement. What happens to the lines after it in that function?"
+    choices:
+      - "They don't run: the function stops and the error goes to its caller"
+      - "They run, then the error is thrown at the end"
+      - "They run only if there is no catch"
+      - "The function starts again from the top"
+    answer: 0
+    explain: "throw stops the function at once. The error travels up until some catch handles it."
+    reteach: "### Syntax: throw"
+
+  - id: q03
+    type: predict-output
+    concept: finally
+    code: |
+      function pack() {
+        try {
+          console.log("packing");
+          throw new Error("no tape");
+        } catch (error) {
+          console.log("caught " + error.message);
+        } finally {
+          console.log("tidy up");
+        }
+      }
+      pack();
+    answer: "packing\ncaught no tape\ntidy up"
+    explain: "try prints, then throws. catch handles the error, and finally always runs last."
+    reteach: "### Syntax: finally"
+
+  - id: q04
+    type: predict-output
+    concept: error-types
+    code: |
+      try {
+        const item = null;
+        console.log(item.name);
+      } catch (error) {
+        console.log(error.name);
+      }
+    answer: "TypeError"
+    explain: "Reading a property of null is using a value of the wrong kind, so JavaScript throws a TypeError."
+    reteach: "### Error objects: name and message"
+
+  - id: q05
+    type: fill-blank
+    concept: throw
+    goal: "Stop the function and send a RangeError up to the caller, because the quantity is too big."
+    prompt: "___ new RangeError(\"qty is too big\");"
+    answers: ["throw"]
+    explain: "throw sends the error up and stops the function."
+    reteach: "### Syntax: throw"
+
+  - id: q06
+    type: predict-output
+    concept: custom-errors
+    code: |
+      class SoldOutError extends Error {
+        constructor(id) {
+          super(id + " is sold out");
+          this.name = "SoldOutError";
+        }
+      }
+      const error = new SoldOutError("DC-1044");
+      console.log(error.name + " | " + error.message);
+      console.log(error instanceof Error);
+    answer: "SoldOutError | DC-1044 is sold out\ntrue"
+    explain: "super sets the message and the constructor sets the name. A SoldOutError is also an Error, because it extends Error."
+    reteach: "### Syntax: your own error class"
+
+  - id: q07
+    type: spot-the-bug
+    concept: throw
+    code: |
+      function reserve(stock, qty) {
+        if (qty > stock) {
+          throw "Only " + stock + " left";
+        }
+        return stock - qty;
+      }
+    bugLine: 3
+    explain: "This throws a plain string, which has no name or message. Throw an object: throw new Error(\"Only \" + stock + \" left\");"
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: custom-errors
+    prompt: "In a class that extends Error, what must the constructor do before it uses this?"
+    choices:
+      - "Call super(...), usually with the message"
+      - "Call new Error()"
+      - "Set this.name first"
+      - "Nothing; the order doesn't matter"
+    answer: 0
+    explain: "In a class that extends another, this doesn't exist until super(...) has run. Using it first is a ReferenceError."
+    reteach: "### Syntax: your own error class"
+
+  - id: q09
+    type: predict-output
+    concept: try-catch
+    code: |
+      function handle(error) {
+        if (error instanceof RangeError) {
+          return "bad qty";
+        }
+        throw error;
+      }
+      try {
+        console.log(handle(new RangeError("qty 0")));
+        console.log(handle(new TypeError("null item")));
+      } catch (error) {
+        console.log("rethrown: " + error.message);
+      }
+    answer: "bad qty\nrethrown: null item"
+    explain: "handle deals with a RangeError itself. A TypeError is thrown again, and the outer catch prints it."
+    reteach: "### Catch what you can handle, throw the rest"
+
+  - id: q10
+    type: mcq
+    concept: error-types
+    prompt: "Which error does JavaScript throw when code uses a name that doesn't exist?"
+    choices:
+      - "ReferenceError"
+      - "TypeError"
+      - "RangeError"
+      - "SyntaxError"
+    answer: 0
+    explain: "A ReferenceError means the name refers to nothing. A TypeError is a value of the wrong kind."
+    reteach: "### Error objects: name and message"
+
+  - id: q11
+    type: mcq
+    concept: try-catch
+    prompt: "What is wrong with try { left = reserve(left, 5); } catch (error) {}?"
+    choices:
+      - "The empty catch hides the error, so the program carries on as if the order worked"
+      - "catch needs a finally after it"
+      - "try can't contain an assignment"
+      - "Nothing; this is the safest way"
+    answer: 0
+    explain: "Catching an error and doing nothing throws away the warning. Tell the customer, or rethrow it."
+    reteach: "## Common mistakes"
+
+  - id: q12
+    type: order
+    concept: finally
+    prompt: "Put the lines in order: try to reserve, print the message if it fails, and print done either way."
+    items:
+      - "try {"
+      - "  reserve(golu, 5);"
+      - "} catch (error) {"
+      - "  console.log(error.message);"
+      - "} finally {"
+      - "  console.log(\"done\");"
+      - "}"
+    explain: "try comes first, then catch, then finally. Each block's body sits inside its own braces."
+    reteach: "### Syntax: finally"

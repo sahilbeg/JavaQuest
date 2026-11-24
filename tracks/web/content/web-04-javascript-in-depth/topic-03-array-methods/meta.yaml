@@ -1,0 +1,23 @@
+id: web-04-javascript-in-depth/topic-03-array-methods
+title: "Array methods: map, filter, reduce, find and sort"
+order: 3
+minutes: 10
+prerequisites: [web-04-javascript-in-depth/topic-02-functions-as-values]
+concepts: [map, filter, find, reduce, sort]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0403
+  from: maya
+  title: "Five answers from one catalogue list"
+  body: >
+    Sana's new catalogue page needs five things from the item list: the names, the items in stock, the value of all our stock,
+    one item by its id, and the list from cheapest to dearest. The old code does each one with a long for loop.
+    Please rewrite them with array methods so the page code stays short.
+hints:
+  - "Each answer is one array method with an arrow function: map for names, filter for stock, reduce for the value, find for the id, sort for the order."
+  - "stockValue: items.reduce((sum, item) => sum + item.paise * item.stock, 0). Don't forget the 0 at the end."
+  - "cheapestFirst must not reorder the list it was given. Copy first: items.slice().sort((a, b) => a.paise - b.paise)."
+review: true

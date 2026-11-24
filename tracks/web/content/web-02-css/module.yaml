@@ -1,0 +1,6 @@
+id: web-02-css
+title: CSS
+project: Making it ours
+summary: Give the catalogue Dhaaga's colours, spacing, fonts and layout, and make it work on every phone, with CSS rules, the box model, flexbox, grid and media queries.
+unlockAfter: web-01-html/boss
+mascotIntro: "The catalogue works, but it looks like a school notice. This project dresses it in Dhaaga's colours, one CSS rule at a time."

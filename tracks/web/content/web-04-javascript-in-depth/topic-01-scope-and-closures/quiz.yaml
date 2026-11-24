@@ -1,0 +1,173 @@
+topic: web-04-javascript-in-depth/topic-01-scope-and-closures
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: block-scope
+    prompt: "What happens when this runs? if (true) { const label = \"Mint\"; } console.log(label);"
+    choices:
+      - "It stops with ReferenceError: label is not defined"
+      - "It prints Mint"
+      - "It prints undefined"
+      - "It prints an empty line"
+    answer: 0
+    explain: "const belongs to the block it was made in. After the closing brace, label no longer exists."
+    reteach: "### Syntax: block scope"
+
+  - id: q02
+    type: predict-output
+    concept: scope-chain
+    code: |
+      const shop = "Aundh";
+      function where() {
+        const shop = "FC Road";
+        return shop;
+      }
+      console.log(where());
+      console.log(shop);
+    answer: "FC Road\nAundh"
+    explain: "Inside where, JavaScript finds the inner shop first and stops looking. Outside, only the outer shop is visible."
+    reteach: "### The scope chain: looking outward"
+
+  - id: q03
+    type: predict-output
+    concept: closures
+    code: |
+      function makeCounter() {
+        let count = 0;
+        return function () {
+          count = count + 1;
+          return count;
+        };
+      }
+      const a = makeCounter();
+      const b = makeCounter();
+      a();
+      a();
+      console.log(a(), b());
+    answer: "3 1"
+    explain: "a and b come from two calls, so each has its own count. a was called three times, b once."
+    reteach: "### Every call makes a new closure"
+
+  - id: q04
+    type: mcq
+    concept: closures
+    prompt: "Which sentence describes a closure?"
+    choices:
+      - "A function that keeps access to the variables from where it was made, even after that outer function returned"
+      - "A function that has finished running and can't be called again"
+      - "A block of code between curly braces"
+      - "A variable made with const, so it can't change"
+    answer: 0
+    explain: "A closure is a function plus the variables it could see when it was made. It keeps them alive."
+    reteach: "### Closures: a function remembers where it was born"
+
+  - id: q05
+    type: fill-blank
+    concept: block-scope
+    goal: "Declare a block-scoped variable that starts at 0 and may be given a new value later."
+    prompt: "___ count = 0;"
+    answers: ["let"]
+    explain: "let is block-scoped and can be reassigned. const can't be reassigned, and var ignores blocks."
+    reteach: "### Syntax: block scope"
+
+  - id: q06
+    type: predict-output
+    concept: block-scope
+    code: |
+      const fns = [];
+      for (var i = 0; i < 3; i++) {
+        fns.push(function () { return i; });
+      }
+      console.log(fns[0]() + fns[2]());
+    answer: "6"
+    explain: "var makes one i for the whole loop. When the functions run, i is 3, so the sum is 3 + 3."
+    reteach: "### var: the old way, and its loop trap"
+
+  - id: q07
+    type: spot-the-bug
+    concept: private-state
+    code: |
+      function makeOrderNumbers(start) {
+        return function () {
+          let next = start;
+          const id = "order-" + next;
+          next = next + 1;
+          return id;
+        };
+      }
+    bugLine: 3
+    explain: "next is made fresh on every call, so every id is the start number. Move let next = start; up into makeOrderNumbers."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: predict-output
+    concept: private-state
+    code: |
+      function makeWallet(paise) {
+        let balance = paise;
+        return {
+          spend: function (p) { balance = balance - p; },
+          show: function () { return balance; },
+        };
+      }
+      const w = makeWallet(50000);
+      w.spend(12000);
+      w.balance = 0;
+      console.log(w.show());
+    answer: "38000"
+    explain: "w.balance = 0 adds a new property to the object. The private balance in the closure is untouched, so it is still 50000 - 12000."
+    reteach: "### Private state: variables nobody else can touch"
+
+  - id: q09
+    type: mcq
+    concept: function-scope
+    prompt: "lineTotal(paise, qty) makes a const total inside its body. What happens to total each time lineTotal is called?"
+    choices:
+      - "A new total is made for that call, and code outside the function can't see it"
+      - "The same total is shared by every call"
+      - "total becomes a global variable the first time"
+      - "total keeps the value from the previous call"
+    answer: 0
+    explain: "Each call of a function gets fresh parameters and fresh local variables. They belong to that call only."
+    reteach: "### Function scope: fresh variables every call"
+
+  - id: q10
+    type: order
+    concept: scope-chain
+    prompt: "Code inside an if block, inside a function, uses a name. Put the places JavaScript searches in order."
+    items:
+      - "The if block itself"
+      - "The function around the if block"
+      - "The top level of the file"
+    explain: "JavaScript starts in the innermost block and moves outward, one level at a time."
+    reteach: "### The scope chain: looking outward"
+
+  - id: q11
+    type: predict-output
+    concept: function-scope
+    code: |
+      let count = 10;
+      function bump() {
+        let count = 0;
+        count = count + 1;
+        return count;
+      }
+      console.log(bump(), bump(), count);
+    answer: "1 1 10"
+    explain: "Each call makes its own count starting at 0. The outer count is a different variable and stays 10."
+    reteach: "### Function scope: fresh variables every call"
+
+  - id: q12
+    type: mcq
+    concept: closures
+    prompt: "stall = makeTally(\"FC Road stall\") and shop = makeTally(\"Aundh shop\"). Why don't they share one count?"
+    choices:
+      - "Each call to makeTally makes a new count, and each returned function keeps its own"
+      - "Because the names are different strings"
+      - "Because let variables can only be used once"
+      - "They do share it; calling stall() also raises shop's count"
+    answer: 0
+    explain: "Every call of the outer function creates fresh variables, so each closure has a private count."
+    reteach: "### Every call makes a new closure"

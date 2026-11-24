@@ -1,0 +1,24 @@
+id: react-09-react-in-depth/boss
+title: "INC-09: A render loop floods the API during the sale"
+order: 99
+minutes: 12
+prerequisites: [react-09-react-in-depth/topic-10-error-boundaries]
+concepts: [render-loop, dependency-array, refetch-on-change, ignore-stale]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: INC-09
+  from: theo
+  title: "40,000 stock requests in ten minutes"
+  body: >
+    Arjun here. The Diwali sale went live at 10:00, and by 10:10 the stock API had taken 40,000 requests and
+    fallen over. Every single one came from the stock badge on the item pages: each open page asks, and asks,
+    and never stops. On slow 3G the badge also shows one item's stock under another item's id after you switch.
+    The next sale starts at 6 pm. Please fix it before then.
+hints:
+  - "Bronze: look at the useEffect in SaleStock. When does an effect with no dependency array run? And what does each answer from the API cause?"
+  - "Silver: the effect reads itemId, so itemId belongs in its dependency array. An empty array stops the flood but never asks about a new item."
+  - "Gold: at the start of the effect, setLeft(null) so the old number disappears. Add let ignore = false, only call setLeft when !ignore, and return () => { ignore = true; }."
+review: false

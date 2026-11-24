@@ -1,0 +1,23 @@
+id: web-06-async-javascript/topic-05-http-and-fetch
+title: "HTTP and fetch"
+order: 5
+minutes: 10
+prerequisites: [web-06-async-javascript/topic-04-async-await]
+concepts: [client-server, http-request, status-codes, fetch, response-json, response-ok]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0605
+  from: maya
+  title: "Golu's page always says In stock"
+  body: >
+    The item page for Golu the elephant (DC-1042) has "In stock" typed into the HTML, so it never changes.
+    On Sunday we sold the last one at the FC Road stall, and three people still ordered it online.
+    Arjun now serves real numbers at GET /api/stock/DC-1042. Please make stock.js ask the server.
+hints:
+  - "fetch(url) gives a promise of a response. await it, then await response.json() to get the data."
+  - "fetch doesn't throw for a 404 or a 500. Check response.ok yourself, and throw an Error that includes response.status."
+  - "const response = await fetch(stockUrl(id)); if (!response.ok) throw new Error(`Stock check failed: ${response.status}`); const data = await response.json(); return data.stock;"
+review: true

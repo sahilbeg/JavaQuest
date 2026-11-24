@@ -1,0 +1,24 @@
+id: react-08-react-fundamentals/topic-04-state
+title: "State with useState"
+order: 4
+minutes: 10
+prerequisites: [react-08-react-fundamentals/topic-03-props]
+concepts: [use-state, setter, re-render-on-set, snapshot, updater-function, state-per-instance]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0804
+  from: sam
+  title: "The + button on the quantity picker does nothing"
+  body: >
+    Raju here. Mrs. Bhosale from Kothrud wanted three Marigold coaster sets for her daughter's wedding,
+    but the + button on the item page never moves past 1. She ordered on WhatsApp in the end. Can you make
+    the picker count up and down, and show the right price for the quantity?
+hints:
+  - "A plain let variable starts again at 1 every time React calls the component, and changing it does not tell React to redraw."
+  - "Write const [qty, setQty] = useState(1); at the top of the component. Then the buttons call setQty(qty + 1) and setQty(qty - 1)."
+  - "Disable with disabled={qty === 1} on the minus button and disabled={qty === stock} on the plus button. The total is rupees(paise * qty)."
+review: true

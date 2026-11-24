@@ -1,0 +1,50 @@
+/* Sana's brand colours: Marigold #F2A81D, Indigo #2E3A8C, Off-white #FAF7F0. */
+body {
+  margin: 0;
+  padding: 1rem;
+  font-family: system-ui, sans-serif;
+  background: #faf7f0;
+  color: #2e3a8c;
+}
+
+main {
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+.order-form {
+  display: grid;
+  gap: 0.4rem;
+  background: #ffffff;
+  border: 2px solid #2e3a8c;
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.order-form input,
+.order-form select,
+.order-form button {
+  font: inherit;
+  padding: 0.4rem;
+}
+
+.order-form .check {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.total {
+  font-weight: 700;
+}
+
+.order-form button {
+  background: #f2a81d;
+  color: #2e3a8c;
+  border: none;
+  border-radius: 0.5rem;
+}
+
+.order-form button:disabled {
+  opacity: 0.5;
+}

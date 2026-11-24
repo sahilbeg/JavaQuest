@@ -1,0 +1,157 @@
+topic: react-08-react-fundamentals/topic-01-why-react
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: declarative-ui
+    prompt: "Which sentence describes declarative code?"
+    choices:
+      - "It says what the page should look like for the current data, and something else makes it so."
+      - "It finds each element and changes its text, one step at a time."
+      - "It runs only on the server, never in the browser."
+      - "It stores every price as a decimal number."
+    answer: 0
+    explain: "Declarative code describes the result. Imperative code lists the steps to get there."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: declarative-ui
+    prompt: "In the hand-written cart, the header said 2 items while the drawer showed 3. Why does React stop this kind of bug?"
+    choices:
+      - "Each part of the page is described from the same state, so every part always matches it."
+      - "React checks the page for wrong numbers once a minute."
+      - "React stops customers from adding more than two items."
+      - "React makes document.querySelector faster."
+    answer: 0
+    explain: "UI = f(state). The badge and the drawer are both drawn from the cart state, so they cannot disagree."
+    reteach: "### Declarative: describe the result"
+
+  - id: q03
+    type: mcq
+    concept: components
+    prompt: "Which of these is a React component?"
+    choices:
+      - "function CartBadge() { return <span>Cart (0)</span>; }"
+      - "const cartBadge = \"<span>Cart (0)</span>\";"
+      - "document.querySelector(\".badge\")"
+      - "<span>Cart (0)</span>"
+    answer: 0
+    explain: "A component is a function, named with a capital letter, that returns JSX. The last choice is JSX, but it is not a function."
+    reteach: "### Components: building blocks for pages"
+
+  - id: q04
+    type: mcq
+    concept: components
+    prompt: "The store shows 20 product cards. How many ProductCard components do you write?"
+    choices:
+      - "One, used 20 times with different data"
+      - "20, one for each product"
+      - "None: React writes them from the database"
+      - "Two: one for cheap items and one for expensive items"
+    answer: 0
+    explain: "A component is written once and reused. Each use gets its own data."
+    reteach: "### Components: building blocks for pages"
+
+  - id: q05
+    type: predict-output
+    concept: declarative-ui
+    code: |
+      function cartBadge(state) {
+        return `Cart (${state.items.length})`;
+      }
+      let state = { items: ["DC-1042"] };
+      console.log(cartBadge(state));
+      state = { items: ["DC-1042", "DC-1043", "DC-1044"] };
+      console.log(cartBadge(state));
+    answer: "Cart (1)\nCart (3)"
+    explain: "The function only describes the badge for the state it gets. Call it with new state and you get the new text."
+    reteach: "## Worked example"
+
+  - id: q06
+    type: mcq
+    concept: re-render
+    prompt: "A customer taps Add, and the cart state changes. What does React do first?"
+    choices:
+      - "It calls the component function again to get a new description of the page."
+      - "It reloads the whole page from the server."
+      - "It deletes every element and builds the page from nothing."
+      - "Nothing: you must call document.querySelector yourself."
+    answer: 0
+    explain: "A state change causes a re-render: React calls the component again. Then it compares and updates only what changed."
+    reteach: "### Rendering and re-rendering"
+
+  - id: q07
+    type: mcq
+    concept: virtual-dom
+    prompt: "What is the virtual DOM?"
+    choices:
+      - "Plain JavaScript objects that describe what the page should look like"
+      - "A second, hidden browser tab"
+      - "A copy of the page saved on the server"
+      - "The browser's developer tools"
+    answer: 0
+    explain: "The virtual DOM is React's description of the page, made of objects. Building it touches no real elements."
+    reteach: "### The virtual DOM"
+
+  - id: q08
+    type: mcq
+    concept: virtual-dom
+    prompt: "Only the badge text changed from Cart (0) to Cart (1). What does React change on the real page?"
+    choices:
+      - "Just the text inside the badge"
+      - "Every element in the header"
+      - "The whole page"
+      - "Nothing until the customer refreshes"
+    answer: 0
+    explain: "Reconciliation finds the smallest change. Only the badge text differs, so only it is updated."
+    reteach: "### Reconciliation: finding what changed"
+
+  - id: q09
+    type: predict-output
+    concept: virtual-dom
+    code: |
+      const before = ["Golu", "₹450.00", "Cart (0)", "Pay"];
+      const after = ["Golu", "₹900.00", "Cart (2)", "Pay"];
+      for (let i = 0; i < after.length; i++) {
+        if (before[i] !== after[i]) {
+          console.log(`change ${i}`);
+        }
+      }
+    answer: "change 1\nchange 2"
+    explain: "Positions 0 and 3 are the same in both lists. Only positions 1 and 2 differ, so only they are reported."
+    reteach: "### Reconciliation: finding what changed"
+
+  - id: q10
+    type: fill-blank
+    concept: react-root
+    goal: "Tell React to draw the App component inside the page's root div."
+    prompt: "createRoot(document.getElementById(\"root\")).___(<App />);"
+    answers: ["render"]
+    explain: "createRoot connects React to the root element. render puts the first component inside it."
+    reteach: "### Syntax: starting a React app"
+
+  - id: q11
+    type: order
+    concept: react-root
+    prompt: "Put these lines of main.jsx in order. App is already imported above them."
+    items:
+      - "import { createRoot } from \"react-dom/client\";"
+      - "const root = createRoot(document.getElementById(\"root\"));"
+      - "root.render(<App />);"
+    explain: "Import what you need first, then connect React to the root element, then render the app into it."
+    reteach: "### Syntax: starting a React app"
+
+  - id: q12
+    type: mcq
+    concept: jsx-intro
+    prompt: "What happens to JSX like <span>Cart (1)</span> before the browser runs it?"
+    choices:
+      - "A build tool turns each tag into an ordinary JavaScript function call."
+      - "The browser reads JSX directly, like HTML."
+      - "It is sent to a server, which sends back HTML."
+      - "It is ignored, and only the text inside is kept."
+    answer: 0
+    explain: "Browsers do not understand JSX. A build tool, such as the one inside Vite, turns tags into function calls first."
+    reteach: "### JSX: HTML-like code inside JavaScript"

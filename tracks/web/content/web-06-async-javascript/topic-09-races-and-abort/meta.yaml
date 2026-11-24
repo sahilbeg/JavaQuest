@@ -1,0 +1,23 @@
+id: web-06-async-javascript/topic-09-races-and-abort
+title: "Race conditions and AbortController"
+order: 9
+minutes: 10
+prerequisites: [web-06-async-javascript/topic-08-parallel-requests]
+concepts: [out-of-order-responses, race-condition, latest-request-wins, abort-controller, abort-error, timeouts]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0609
+  from: sam
+  title: "The PIN check says no to a Pune customer"
+  body: >
+    Raju here. A customer in Baner typed 560001 by mistake, then fixed it to 411045 and pressed Check again.
+    The screen said "We don't deliver to 560001 yet", even though she'd already fixed it. She almost gave up on her order.
+    Also, on a bad connection the check just spins forever. Kavya says both fixes go in delivery.js.
+hints:
+  - "Answers can come back in a different order from the questions. Only the newest check should be allowed to change the screen."
+  - "Keep a counter outside check. Each call takes the next number and remembers it. After the await, if a newer call has taken a bigger number, return without showing anything."
+  - "For fetchWithTimeout: const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), ms); then try { return await fetch(url, { signal: controller.signal }); } finally { clearTimeout(timer); }."
+review: true

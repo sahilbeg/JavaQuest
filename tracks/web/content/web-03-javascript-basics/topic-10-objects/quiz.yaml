@@ -1,0 +1,134 @@
+topic: web-03-javascript-basics/topic-10-objects
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: property-access
+    code: |
+      const item = { code: "KEY", paise: 12000 };
+      console.log(item.paise);
+    answer: "12000"
+    explain: "item.paise reads the value stored under the key paise."
+    reteach: "### Syntax: reading a property with a dot"
+
+  - id: q02
+    type: predict-output
+    concept: missing-properties
+    code: |
+      const item = { code: "KEY", paise: 12000 };
+      console.log(item.colour);
+    answer: "undefined"
+    explain: "There's no colour property, so reading it gives undefined."
+    reteach: "### Syntax: reading a property with a dot"
+
+  - id: q03
+    type: predict-output
+    concept: bracket-access
+    code: |
+      const prices = { CST: 15000, KEY: 12000 };
+      const code = "KEY";
+      console.log(prices[code]);
+      console.log(prices.code);
+    answer: "12000\nundefined"
+    explain: "prices[code] uses the value inside code, \"KEY\". prices.code looks for a property literally named code."
+    reteach: "### Syntax: square brackets"
+
+  - id: q04
+    type: predict-output
+    concept: changing-properties
+    code: |
+      const line = { code: "CST", qty: 1 };
+      line.qty = line.qty + 2;
+      console.log(line.qty);
+    answer: "3"
+    explain: "line.qty reads 1, adds 2, and stores 3 back under qty."
+    reteach: "### Syntax: changing and adding properties"
+
+  - id: q05
+    type: fill-blank
+    concept: object-literals
+    goal: "Get an array of the item object's property names."
+    prompt: "const names = Object.___(item);"
+    answers: ["keys"]
+    explain: "Object.keys gives an array of an object's keys, in the order they were added."
+    reteach: "### Syntax: Object.keys"
+
+  - id: q06
+    type: mcq
+    concept: bracket-access
+    prompt: "The variable code holds an item code, like \"BAG\". Which expression looks up that item in catalogue?"
+    choices: ["catalogue[code]", "catalogue.code", "catalogue[\"code\"]", "catalogue(code)"]
+    answer: 0
+    explain: "Brackets with no quotes use the value in the variable. catalogue.code and catalogue[\"code\"] both look for a key named code."
+    reteach: "### Syntax: square brackets"
+
+  - id: q07
+    type: spot-the-bug
+    concept: property-access
+    code: |
+      const line = { code: "AMI", paise: 45000, qty: 2 };
+      const cost = line.price * line.qty;
+      console.log(cost);
+    bugLine: 2
+    explain: "The key is paise, not price. line.price is undefined, so the cost is NaN."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: predict-output
+    concept: arrays-of-objects
+    code: |
+      const order = [
+        { code: "KEY", qty: 2 },
+        { code: "CST", qty: 1 },
+      ];
+      let items = 0;
+      for (const line of order) {
+        items = items + line.qty;
+      }
+      console.log(items);
+    answer: "3"
+    explain: "Each round, line is one object. Adding the qty of both lines gives 2 + 1."
+    reteach: "### Arrays of objects"
+
+  - id: q09
+    type: predict-output
+    concept: object-literals
+    code: |
+      const item = { name: "Golu", stock: { Indigo: 2, Mint: 0 } };
+      console.log(item.stock.Indigo);
+    answer: "2"
+    explain: "item.stock is an object, and its Indigo property is 2."
+    reteach: "### Objects inside objects"
+
+  - id: q10
+    type: mcq
+    concept: missing-properties
+    prompt: "catalogue.XYZ is undefined. What does catalogue.XYZ.paise do?"
+    choices: ["It crashes with a TypeError", "It prints undefined", "It gives 0", "It gives null"]
+    answer: 0
+    explain: "You can't read a property of undefined. JavaScript stops with Cannot read properties of undefined."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: predict-output
+    concept: object-literals
+    code: |
+      const code = "BTY";
+      const qty = 2;
+      const line = { code, qty };
+      console.log(line.code + " x " + line.qty);
+    answer: "BTY x 2"
+    explain: "{ code, qty } is short for { code: code, qty: qty }."
+    reteach: "### Syntax: shorthand properties"
+
+  - id: q12
+    type: predict-output
+    concept: changing-properties
+    code: |
+      const item = { code: "CST" };
+      item.giftWrap = true;
+      console.log(Object.keys(item).length);
+    answer: "2"
+    explain: "Assigning giftWrap adds a second property, so there are two keys."
+    reteach: "### Syntax: changing and adding properties"

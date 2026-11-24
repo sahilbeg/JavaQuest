@@ -1,0 +1,137 @@
+topic: web-06-async-javascript/topic-02-timers-and-callbacks
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: set-timeout
+    variants:
+      - { prompt: "What does setTimeout(hideToast, 3000) do?", choices: ["Runs hideToast once, about 3 seconds from now, while the code carries on", "Runs hideToast every 3 seconds", "Pauses the whole page for 3 seconds, then runs hideToast", "Runs hideToast now and again after 3 seconds"], answer: 0 }
+      - { prompt: "How long is a delay of 1500 in setTimeout?", choices: ["At least one and a half seconds", "Exactly 1500 seconds", "At least 15 seconds", "1500 runs of the event loop"], answer: 0 }
+    explain: "setTimeout runs the callback once, after at least ms milliseconds. 1000 ms is one second, and the code below carries on at once."
+    reteach: "### Syntax: setTimeout"
+
+  - id: q02
+    type: fill-blank
+    concept: clear-timeout
+    goal: "Cancel the timer whose ticket is stored in hideTimer, so its callback never runs."
+    prompt: "___(hideTimer);"
+    answers: ["clearTimeout"]
+    explain: "clearTimeout(id) cancels a timer that has not run yet."
+    reteach: "### Syntax: clearTimeout"
+
+  - id: q03
+    type: predict-output
+    concept: clear-timeout
+    code: |
+      const id = setTimeout(() => console.log("hide"), 0);
+      clearTimeout(id);
+      console.log("shown");
+    answer: "shown"
+    explain: "The timer is cancelled before it can run, so only shown prints."
+    reteach: "### Syntax: clearTimeout"
+
+  - id: q04
+    type: predict-output
+    concept: set-interval
+    code: |
+      let left = 3;
+      const id = setInterval(() => {
+        left = left - 1;
+        if (left > 0) {
+          console.log(`tick ${left}`);
+        } else {
+          clearInterval(id);
+          console.log("done");
+        }
+      }, 5);
+    answer: "tick 2\ntick 1\ndone"
+    explain: "The first run makes left 2, the second makes it 1, and the third makes it 0, which stops the interval and prints done."
+    reteach: "### Syntax: setInterval and clearInterval"
+
+  - id: q05
+    type: mcq
+    concept: clear-interval
+    variants:
+      - { prompt: "A countdown uses setInterval but never calls clearInterval. What happens?", choices: ["It keeps running every interval for as long as the page is open", "It stops by itself after the first run", "It stops when the number reaches 0", "The browser stops it after one minute"], answer: 0 }
+      - { prompt: "Which line stops a repeating timer whose id is in tick?", choices: ["clearInterval(tick)", "tick.stop()", "setInterval(tick, 0)", "clearInterval()"], answer: 0 }
+    explain: "An interval never stops by itself. Hand its id to clearInterval to stop it."
+    reteach: "### Syntax: setInterval and clearInterval"
+
+  - id: q06
+    type: spot-the-bug
+    concept: set-timeout
+    code: |
+      function hideToast() {
+        document.querySelector("#toast").hidden = true;
+      }
+      setTimeout(hideToast(), 3000);
+    bugLine: 4
+    explain: "hideToast() runs at once and hands undefined to setTimeout. Pass the function itself: setTimeout(hideToast, 3000)."
+    reteach: "### Pass the function, don't call it"
+
+  - id: q07
+    type: mcq
+    concept: timer-id
+    prompt: "Why do you keep the value that setTimeout returns?"
+    choices: ["So you can cancel that exact timer later", "Because the callback will not run otherwise", "To find out how long the timer took", "Because setTimeout throws an error if you don't"]
+    answer: 0
+    explain: "The return value is the timer's id, a ticket you hand to clearTimeout to cancel it."
+    reteach: "### Syntax: setTimeout"
+
+  - id: q08
+    type: mcq
+    concept: callbacks
+    prompt: "A function is called as startCountdown(300, onTick, onDone). What does it mean that onTick and onDone are callbacks?"
+    choices: ["startCountdown calls them at the right moments, and the caller decides what they do", "They run before startCountdown starts", "They are timer ids", "startCountdown must print their names"]
+    answer: 0
+    explain: "The function decides when to call them. The caller decides what they do, such as updating the QR's label."
+    reteach: "### Callbacks you write yourself"
+
+  - id: q09
+    type: predict-output
+    concept: callbacks
+    code: |
+      function afterPacking(orderId, onDone) {
+        setTimeout(() => onDone(`${orderId} packed`), 0);
+      }
+      afterPacking("order-17", (message) => console.log(message));
+      console.log("started");
+    answer: "started\norder-17 packed"
+    explain: "afterPacking only sets a timer. The plain line prints first, then the timer calls onDone with the message."
+    reteach: "### Callbacks you write yourself"
+
+  - id: q10
+    type: spot-the-bug
+    concept: timer-id
+    code: |
+      function showToast(el, text) {
+        let hideTimer = null;
+        el.textContent = text;
+        el.hidden = false;
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => {
+          el.hidden = true;
+        }, 3000);
+      }
+    bugLine: 2
+    explain: "hideTimer is made fresh as null on every call, so clearTimeout never cancels the old timer. Declare it once, outside the function."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: fill-blank
+    concept: set-interval
+    goal: "Run refreshStock again and again, every 30 seconds, until someone stops it."
+    prompt: "const id = ___(refreshStock, 30000);"
+    answers: ["setInterval"]
+    explain: "setInterval repeats the callback every ms milliseconds and returns an id for clearInterval."
+    reteach: "### Syntax: setInterval and clearInterval"
+
+  - id: q12
+    type: mcq
+    concept: callbacks
+    prompt: "Three steps each wait for the one before: check stock, take payment, send the receipt. What goes wrong when you write them with callbacks?"
+    choices: ["Each step nests inside the last, so the code drifts right and gets hard to read", "The steps run in a random order", "Callbacks cannot call other functions", "The browser refuses more than two callbacks"]
+    answer: 0
+    explain: "Each callback holds the next step, so the code nests deeper and deeper. Promises, in the next ticket, keep the steps flat."
+    reteach: "### When callbacks pile up"

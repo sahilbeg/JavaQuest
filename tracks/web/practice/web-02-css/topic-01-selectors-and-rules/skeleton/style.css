@@ -1,0 +1,11 @@
+/* The catalogue's first stylesheet. Write one rule under each TODO. */
+
+/* TODO 2: centre the shop name: give every h1 text-align: center */
+
+/* TODO 3: make every price bold: a class selector .price with font-weight: bold */
+
+/* TODO 4: make the Visit us footer italic: an id selector #visit with font-style: italic */
+
+/* TODO 5: colour every h2 and h3 darkblue, in one grouped rule (h2, h3) */
+
+/* TODO 6: colour only the links inside the nav darkred, with the descendant selector nav a */

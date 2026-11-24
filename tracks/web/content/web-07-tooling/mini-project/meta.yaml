@@ -1,0 +1,23 @@
+id: web-07-tooling/mini-project
+title: "FEAT-07: A tested utilities package"
+order: 100
+minutes: 15
+prerequisites: [web-07-tooling/topic-10-production-builds]
+concepts: [utility-modules, money-formatting, parsing-input, slugs, entry-point]
+practice:
+  kind: code
+  runner: vitest
+ticket:
+  key: FEAT-07
+  from: priya
+  title: "One toolbox for prices, links and PIN codes"
+  body: >
+    Every page of our website shows prices its own way. The catalogue says ₹1299, the cart says ₹1,299.00,
+    and the WhatsApp message says Rs 1299.0. The delivery check is written three times, too. Kavya says one
+    small, tested toolbox would fix this. I want prices that look the same everywhere, neat web addresses
+    for each product, and one place that knows which PIN codes are in Pune.
+hints:
+  - "formatRupees divides by 100 and uses new Intl.NumberFormat(\"en-IN\", { style: \"currency\", currency: \"INR\" }). Check Number.isInteger first."
+  - "paiseFromRupees: trim, remove a leading ₹ and every comma, then match /^(\\d+)(?:\\.(\\d{1,2}))?$/. Rupees times 100, plus the decimals padded to two digits with padEnd(2, \"0\")."
+  - "slugify: normalize(\"NFD\"), remove /[\\u0300-\\u036f]/g, lower-case, turn runs of anything but a-z and 0-9 into one -, then trim - from both ends. isPunePin: /^411 ?\\d{3}$/ on the trimmed text."
+review: false

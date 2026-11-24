@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your details | Dhaaga &amp; Co.</title>
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <h1>Your details</h1>
+  <form id="order" novalidate>
+    <p>
+      <label for="name">Your name</label>
+      <input id="name" name="name" autocomplete="name" aria-describedby="name-error">
+    </p>
+    <p class="error" id="name-error" data-error-for="name"></p>
+
+    <p>
+      <label for="phone">Phone number</label>
+      <input id="phone" name="phone" inputmode="numeric" autocomplete="tel" aria-describedby="phone-error">
+    </p>
+    <p class="error" id="phone-error" data-error-for="phone"></p>
+
+    <p>
+      <label for="pin">PIN code</label>
+      <input id="pin" name="pin" inputmode="numeric" autocomplete="postal-code" aria-describedby="pin-error">
+    </p>
+    <p class="error" id="pin-error" data-error-for="pin"></p>
+
+    <p>
+      <label for="stitch">Name to stitch on, up to 12 letters (₹50)</label>
+      <input id="stitch" name="stitch">
+      <span id="stitch-count">0/12</span>
+    </p>
+
+    <button type="submit">Place order</button>
+  </form>
+  <p id="thanks" role="status"></p>
+</body>
+</html>

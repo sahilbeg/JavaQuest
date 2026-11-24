@@ -1,0 +1,24 @@
+id: web-04-javascript-in-depth/topic-07-modules
+title: "Modules: import and export"
+order: 7
+minutes: 9
+prerequisites: [web-04-javascript-in-depth/topic-06-classes]
+concepts: [named-exports, default-exports, imports, module-scope]
+practice:
+  kind: code
+  runner: vitest
+  mainClass: main.js
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0407
+  from: maya
+  title: "Split the pricing file into modules"
+  body: >
+    All our price code sits in one long file: the price list, the rupee formatting and the receipt lines.
+    Two of us can't work on it at once without stepping on each other. I've started splitting it into
+    prices.js, format.js and receipt.js. Can you finish wiring them together with imports and exports?
+hints:
+  - "A name is only visible to other files when it is exported. Write export const DELIVERY_PAISE = 6000; in prices.js."
+  - "format.js should export only rupees, as its default. Remove the word export in front of formatter, so it stays private to the file."
+  - "receipt.js imports the whole prices module as prices, so use prices.priceOf(code) and prices.DELIVERY_PAISE. Build lines like `${qty} x ${code} = ${rupees(paise * qty)}`."
+review: true

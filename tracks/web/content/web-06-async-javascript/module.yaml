@@ -1,0 +1,6 @@
+id: web-06-async-javascript
+title: Async JavaScript
+project: Live stock
+summary: Wait for slow things without freezing the page, talk to Dhaaga's stock API with fetch, and keep the screen honest when answers arrive late, fail or race each other.
+unlockAfter: web-05-dom-and-events/boss
+mascotIntro: "The website can't keep a notebook of stock. It has to ask the server, and the server takes its time. Let's learn to wait without freezing!"

@@ -1,0 +1,150 @@
+topic: web-04-javascript-in-depth/topic-07-modules
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: named-exports
+    prompt: "prices.js has export function priceOf(code) { ... }. Which line imports it into a file in the same folder?"
+    choices:
+      - "import { priceOf } from \"./prices.js\";"
+      - "import priceOf from \"./prices.js\";"
+      - "import { priceOf } from \"prices\";"
+      - "import { priceOf } from \"./prices\".js;"
+    answer: 0
+    explain: "A named export is imported with braces and its exact name, from a path that starts with ./ and ends in .js."
+    reteach: "### Syntax: named imports"
+
+  - id: q02
+    type: mcq
+    concept: default-exports
+    prompt: "format.js has export default function rupees(paise) { ... }. Which line imports it?"
+    choices:
+      - "import rupees from \"./format.js\";"
+      - "import { rupees } from \"./format.js\";"
+      - "import { default } from \"./format.js\";"
+      - "import rupees from \"format\";"
+    answer: 0
+    explain: "A default export is imported without braces. The importing file picks the name."
+    reteach: "### Syntax: default export"
+
+  - id: q03
+    type: fill-blank
+    concept: named-exports
+    goal: "Share the delivery price with other files, under its own name."
+    prompt: "___ const DELIVERY_PAISE = 6000;"
+    answers: ["export"]
+    explain: "export in front of a declaration makes a named export."
+    reteach: "### Syntax: named exports"
+
+  - id: q04
+    type: fill-blank
+    concept: default-exports
+    goal: "Make rupees the one main value of this file, so other files import it without braces."
+    prompt: "export ___ function rupees(paise) {"
+    answers: ["default"]
+    explain: "export default marks a module's main value. There can be only one per file."
+    reteach: "### Syntax: default export"
+
+  - id: q05
+    type: mcq
+    concept: module-scope
+    prompt: "format.js has const formatter = new Intl.NumberFormat(...) with no export in front. Can receipt.js use formatter?"
+    choices:
+      - "No. It is private to format.js, because it isn't exported"
+      - "Yes, every top-level variable is shared"
+      - "Yes, but only if receipt.js imports the default"
+      - "Only in the browser, not in Node"
+    answer: 0
+    explain: "Each module has its own scope. Only exported names can be imported by other files."
+    reteach: "### Module scope: private unless exported"
+
+  - id: q06
+    type: mcq
+    concept: imports
+    prompt: "A file starts with import * as prices from \"./prices.js\";. How does it call priceOf?"
+    choices:
+      - "prices.priceOf(\"CST\")"
+      - "priceOf(\"CST\")"
+      - "prices(\"CST\")"
+      - "prices.default.priceOf(\"CST\")"
+    answer: 0
+    explain: "A namespace import puts every named export on one object, so you reach them with a dot."
+    reteach: "### Syntax: import a whole module"
+
+  - id: q07
+    type: spot-the-bug
+    concept: imports
+    code: |
+      // receipt.js, in the same folder as prices.js and format.js
+      import rupees from "./format.js";
+      import { priceOf } from "prices";
+      export function line(code) {
+        return code + ": " + rupees(priceOf(code));
+      }
+    bugLine: 3
+    explain: "\"prices\" is a bare name, which means a package. A file of your own needs \"./prices.js\"."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: module-scope
+    prompt: "prices.js and format.js both have a top-level const round = ... and neither exports it. What happens?"
+    choices:
+      - "Nothing goes wrong: each round lives in its own module"
+      - "The second file to load throws a SyntaxError"
+      - "The later round replaces the earlier one in both files"
+      - "Both files must rename it"
+    answer: 0
+    explain: "Modules don't share top-level names unless they export and import them, so the two never clash."
+    reteach: "### Each file is a module"
+
+  - id: q09
+    type: mcq
+    concept: imports
+    prompt: "Which path means \"prices.js in the same folder as this file\"?"
+    choices:
+      - "\"./prices.js\""
+      - "\"prices.js\""
+      - "\"../prices.js\""
+      - "\"/prices\""
+    answer: 0
+    explain: "./ means this folder. ../ goes up one folder, and a bare name means a package."
+    reteach: "### Syntax: named imports"
+
+  - id: q10
+    type: mcq
+    concept: default-exports
+    prompt: "How many default exports can one module have?"
+    choices:
+      - "At most one"
+      - "Exactly two"
+      - "As many as it likes"
+      - "None; only named exports exist"
+    answer: 0
+    explain: "A module has at most one default export. It can have as many named exports as it needs."
+    reteach: "### Syntax: default export"
+
+  - id: q11
+    type: mcq
+    concept: imports
+    prompt: "main.js uses import. Which script tag lets the browser run it?"
+    choices:
+      - "<script type=\"module\" src=\"main.js\"></script>"
+      - "<script src=\"main.js\"></script>"
+      - "<script import src=\"main.js\"></script>"
+      - "<link rel=\"module\" href=\"main.js\">"
+    answer: 0
+    explain: "Without type=\"module\", the browser treats import as a syntax error."
+    reteach: "### Modules in the browser"
+
+  - id: q12
+    type: spot-the-bug
+    concept: default-exports
+    code: |
+      // format.js has: export default function rupees(paise) { ... }
+      import { rupees } from "./format.js";
+      console.log(rupees(15000));
+    bugLine: 2
+    explain: "rupees is the default export, so it is imported without braces: import rupees from \"./format.js\";"
+    reteach: "## Common mistakes"

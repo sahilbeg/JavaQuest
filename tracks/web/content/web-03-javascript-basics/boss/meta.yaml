@@ -1,0 +1,24 @@
+id: web-03-javascript-basics/boss
+title: "INC-03: The cart total is off by a few paise"
+order: 99
+minutes: 12
+prerequisites: [web-03-javascript-basics/topic-11-formatting-money]
+concepts: [paise, floating-point, rounding, formatting]
+practice:
+  kind: code
+  runner: vitest
+  mainClass: main.js
+ticket:
+  key: INC-03
+  from: theo
+  title: "The cart total is off by a few paise"
+  body: >
+    Arjun here. In the Diwali rush, Mrs. Kapoor ordered two tote bags, baby booties and a coaster set. The calculator
+    asked UPI for ₹2068.19, but her bill is ₹2,068.20, and the receipt shows the same wrong amount. Big orders keep
+    coming out a paisa short, so the day's takings never match the UPI statement. Please fix src/cart.js before
+    tonight's rush.
+hints:
+  - "Bronze: multiply every price in PRICES by 100, so cartTotal adds whole paise and needs no toPaise at all. In toPaise, Math.round finds the nearest paisa."
+  - "Silver: the offer is for orders above ₹1,500, so compare with > 150000. Math.floor(subtotalPaise / 10) is 10% rounded down."
+  - "Gold: make const inr = new Intl.NumberFormat(\"en-IN\", { style: \"currency\", currency: \"INR\" }); once, outside the function, and return inr.format(paise / 100)."
+review: false

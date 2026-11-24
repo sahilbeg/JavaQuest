@@ -1,0 +1,129 @@
+topic: web-05-dom-and-events/topic-06-event-delegation
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: bubbling
+    prompt: "A customer taps a span inside a button, inside li.product, inside ul#products. Only the ul has a click listener. Does it run?"
+    choices: ["Yes: the click bubbles up from the span to every ancestor, including the ul", "No: only the span hears the click", "No: only the button hears the click", "Only if the span has a listener too"]
+    answer: 0
+    explain: "Events bubble from the element clicked up through every ancestor, so a listener on the ul hears clicks anywhere inside it."
+    reteach: "### Events bubble"
+
+  - id: q02
+    type: order
+    concept: bubbling
+    prompt: "A customer taps the cart icon inside an Add button. Put the elements in the order the click visits them."
+    items:
+      - "span.icon"
+      - "button.add"
+      - "li.product"
+      - "ul#products"
+      - "document"
+    explain: "The click starts where it landed and bubbles up, one parent at a time, to document."
+    reteach: "### Events bubble"
+
+  - id: q03
+    type: fill-blank
+    concept: closest
+    goal: "Walk up from where the tap landed to the nearest Add button, or get null if there is none."
+    prompt: "const button = event.target.___(\".add\");"
+    answers: ["closest"]
+    explain: "closest checks the element itself and then each ancestor, and returns the first match or null."
+    reteach: "### Syntax: closest"
+
+  - id: q04
+    type: mcq
+    concept: closest
+    prompt: "el is a button with class add. What does el.closest(\".add\") return?"
+    choices: ["el itself", "el's parent", "null, because closest only looks at ancestors", "The first .add inside el"]
+    answer: 0
+    explain: "closest starts with the element itself, so a matching element returns itself."
+    reteach: "### Syntax: closest"
+
+  - id: q05
+    type: mcq
+    concept: new-elements
+    prompt: "With one delegated listener on ul#products, a Diwali card is added to the list later. Does its Add button work?"
+    choices: ["Yes: its clicks bubble to the same listener on the list", "No: it was not there when the listener was added", "Only after the page reloads", "Only if it gets its own listener"]
+    answer: 0
+    explain: "The listener is on the list, not on the buttons. Anything inside the list, old or new, bubbles its clicks to it."
+    reteach: "### Syntax: event delegation"
+
+  - id: q06
+    type: mcq
+    concept: target-vs-current-target
+    prompt: "The listener is on ul#products. A tap lands on the icon span inside an Add button. What is event.currentTarget?"
+    choices: ["The ul", "The span", "The button", "The li"]
+    answer: 0
+    explain: "currentTarget is where the listener sits, the ul. target is where the tap landed, the span."
+    reteach: "### target and currentTarget"
+
+  - id: q07
+    type: spot-the-bug
+    concept: closest
+    code: |
+      list.addEventListener("click", (event) => {
+        if (!event.target.classList.contains("add")) {
+          return;
+        }
+        addToCart(event.target.closest(".product").dataset.id);
+      });
+    bugLine: 2
+    explain: "A tap on the icon inside the button has the span as its target, so it is ignored. Find the button with event.target.closest(\".add\") and check it for null."
+    reteach: "### target and currentTarget"
+
+  - id: q08
+    type: predict-output
+    concept: data-action
+    code: |
+      const actions = {
+        inc: (id) => console.log(`+1 ${id}`),
+        dec: (id) => console.log(`-1 ${id}`),
+      };
+      for (const action of ["dec", "inc", "remove"]) {
+        const run = actions[action];
+        if (run !== undefined) {
+          run("DC-1042");
+        }
+      }
+    answer: "-1 DC-1042\n+1 DC-1042"
+    explain: "dec and inc are in the object, so they run in that order. remove isn't, so actions.remove is undefined and is skipped."
+    reteach: "### Telling buttons apart with data-action"
+
+  - id: q09
+    type: mcq
+    concept: data-action
+    prompt: "A button is written <button data-action=\"remove\">. What is button.dataset.action?"
+    choices: ["\"remove\"", "\"data-action\"", "true", "undefined"]
+    answer: 0
+    explain: "dataset.action reads the data-action attribute, as a string."
+    reteach: "### Telling buttons apart with data-action"
+
+  - id: q10
+    type: mcq
+    concept: delegation
+    prompt: "drawCatalogue() redraws the cards and also calls list.addEventListener(\"click\", (event) => onListClick(event)). After three redraws, what does one tap on Add do?"
+    choices: ["Adds the item three times: three listeners are stacked on the list", "Adds the item once", "Nothing, because the old listeners were removed", "Throws an error"]
+    answer: 0
+    explain: "The list stays on the page, and each redraw adds a new arrow function as a listener. Add the delegated listener once, outside the redraw."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: bubbling
+    prompt: "A button's own listener calls event.stopPropagation(). What happens to the delegated listener on the list?"
+    choices: ["It never hears clicks on that button", "It hears them twice", "It hears them first", "Nothing changes"]
+    answer: 0
+    explain: "stopPropagation stops the bubbling, so no ancestor's listener runs for that click."
+    reteach: "### Stopping the bubble"
+
+  - id: q12
+    type: mcq
+    concept: delegation
+    prompt: "The catalogue shows 40 cards, each with an Add button. With event delegation, how many click listeners do the buttons need?"
+    choices: ["One, on the list that holds them", "40, one per button", "41", "None at all, anywhere"]
+    answer: 0
+    explain: "One listener on the shared parent handles every button inside it."
+    reteach: "### Syntax: event delegation"

@@ -1,0 +1,24 @@
+id: web-02-css/topic-10-variables-and-states
+title: "Custom properties, hover and focus"
+order: 10
+minutes: 10
+prerequisites: [web-02-css/topic-09-responsive-design]
+concepts: [custom-properties, var-function, root-selector, overriding-variables, hover, focus-visible]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0210
+  from: sana
+  title: "One place for the brand colours, and buttons that answer back"
+  body: >
+    Meera Aunty asked whether the Indigo could be a touch darker. I counted, and #2E3A8C is typed in seven places in our CSS!
+    Please keep each brand colour in one place, so a change like that is one line.
+    Also, the Order buttons should react when you point at them, and show a clear ring when you reach them with the Tab key.
+hints:
+  - "A custom property is a name that starts with two dashes, like --indigo. Define them all in a :root rule, then use var(--indigo) wherever the hex code was."
+  - ":hover styles an element while the mouse is over it. :focus-visible styles it when the keyboard has moved to it."
+  - "Try: :root { --indigo: #2e3a8c; } .buy:hover { background-color: var(--indigo); color: var(--off-white); } .buy:focus-visible { outline: 3px solid var(--indigo); outline-offset: 2px; }"
+review: true

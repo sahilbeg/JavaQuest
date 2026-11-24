@@ -1,0 +1,143 @@
+topic: react-09-react-in-depth/topic-09-performance
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: why-rerender
+    prompt: "Catalogue's cart count changes. By default, what happens to the ProductRow components inside it?"
+    choices: ["They render again too, even if their props didn't change", "Nothing, because their props didn't change", "They are removed and created again from scratch", "Only the first row renders again"]
+    answer: 0
+    explain: "When a component renders, React renders its children too, unless something like memo tells it to skip."
+    reteach: "### Why a component renders again"
+
+  - id: q02
+    type: mcq
+    concept: why-rerender
+    prompt: "A page feels slow. What should you do before adding memo, useMemo or useCallback?"
+    choices: ["Record it with the React DevTools Profiler to find what really costs time", "Wrap every component in memo", "Rewrite the page without React", "Remove all state"]
+    answer: 0
+    explain: "Measure first. Speed fixes add code, so put them only where a profile shows a real cost."
+    reteach: "### Measure before you fix"
+
+  - id: q03
+    type: mcq
+    concept: memo
+    prompt: "What does memo(ProductRow) do?"
+    choices: ["React skips rendering the row when all its props are the same as last time", "It makes the row render twice to check for bugs", "It saves the row in localStorage", "It changes what the row shows"]
+    answer: 0
+    explain: "memo lets React reuse the last result when nothing the component receives has changed. What it shows stays the same."
+    reteach: "### Syntax: memo"
+
+  - id: q04
+    type: predict-output
+    concept: same-props
+    code: |
+      const a = { code: "KEY" };
+      const b = { code: "KEY" };
+      console.log(Object.is(a, b));
+      console.log(Object.is(a, a));
+      console.log(Object.is("KEY", "KEY"));
+      const f = () => 1;
+      const g = () => 1;
+      console.log(Object.is(f, g));
+    answer: "false\ntrue\ntrue\nfalse"
+    explain: "Strings compare by value. Objects and functions compare by identity: two that look the same are still two different ones."
+    reteach: "### \"The same props\" means the same values"
+
+  - id: q05
+    type: mcq
+    concept: same-props
+    prompt: "ProductRow is wrapped in memo, but Catalogue passes onAdd={() => setCount((c) => c + 1)}. What happens on each tap?"
+    choices: ["Every row still renders, because the arrow is a new function each render", "No row renders, because memo is there", "Only the tapped row renders", "React throws an error about the arrow function"]
+    answer: 0
+    explain: "memo compares onAdd with Object.is. A new arrow each render is a different function, so the props look changed."
+    reteach: "### \"The same props\" means the same values"
+
+  - id: q06
+    type: fill-blank
+    concept: use-callback
+    goal: "Keep the same add handler function between renders, so memo'd rows see no change."
+    prompt: "const handleAdd = ___(() => setCount((c) => c + 1), []);"
+    answers: ["useCallback"]
+    explain: "useCallback gives back the same function until something in its array changes. Here the array is empty, so it never changes."
+    reteach: "### Syntax: useCallback"
+
+  - id: q07
+    type: fill-blank
+    concept: use-memo
+    goal: "Sort the catalogue again only when the items or the sort order change."
+    prompt: "const sorted = ___(() => sortByPrice(items, order), [items, order]);"
+    answers: ["useMemo"]
+    explain: "useMemo keeps the result of the calculation and runs it again only when a dependency changes."
+    reteach: "### Syntax: useMemo"
+
+  - id: q08
+    type: spot-the-bug
+    concept: use-memo
+    prompt: "Choosing High to low does nothing: the list stays cheapest first. Which line is wrong?"
+    code: |
+      function Catalogue({ items }) {
+        const [order, setOrder] = useState("low-first");
+        const sorted = useMemo(() => sortByPrice(items, order), [items]);
+        return <List items={sorted} onSort={setOrder} />;
+      }
+    bugLine: 3
+    explain: "The calculation reads order, but order is missing from the array, so the old result is reused. It should be [items, order]."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: predict-output
+    concept: use-memo
+    code: |
+      let runs = 0;
+      function slowSort(items) {
+        runs++;
+        return [...items].sort((a, b) => a - b);
+      }
+
+      let lastDeps = null;
+      let lastResult = null;
+      function memoLike(calc, deps) {
+        if (lastDeps === null || deps.some((d, i) => !Object.is(d, lastDeps[i]))) {
+          lastResult = calc();
+          lastDeps = deps;
+        }
+        return lastResult;
+      }
+
+      const prices = [45000, 12000, 15000];
+      memoLike(() => slowSort(prices), [prices, "low"]);
+      memoLike(() => slowSort(prices), [prices, "low"]);
+      const sorted = memoLike(() => slowSort(prices), [prices, "high"]);
+      console.log(runs, sorted.join(","));
+    answer: "2 12000,15000,45000"
+    explain: "The second call has the same dependencies, so it reuses the result. The third has a new one, \"high\", so it sorts again. That makes 2 runs."
+    reteach: "### Syntax: useMemo"
+
+  - id: q10
+    type: mcq
+    concept: use-callback
+    prompt: "Why can useCallback(() => setCount((c) => c + 1), []) have an empty array?"
+    choices: ["The updater form gets the newest count from React, so the function reads no props or state itself", "useCallback ignores its array", "count never changes", "Empty arrays make the function run once"]
+    answer: 0
+    explain: "A function that read count directly would need [count], and would change on every tap. The updater form avoids that."
+    reteach: "### Syntax: useCallback"
+
+  - id: q11
+    type: mcq
+    concept: memo
+    prompt: "Which is the poorest use of useMemo?"
+    choices: ["useMemo(() => `Cart (${count})`, [count]) for a short label", "Keeping a sorted list of 500 products", "Keeping the result of a slow search over every order", "Keeping a filtered list passed to memo'd rows"]
+    answer: 0
+    explain: "Building a short string is cheaper than storing and comparing dependencies. Memoise only real costs."
+    reteach: "### Don't memo everything"
+
+  - id: q12
+    type: mcq
+    concept: use-memo
+    prompt: "Why does sortByPrice sort [...items] instead of items?"
+    choices: ["sort changes the array it is called on, and items belongs to the parent", "Spreading makes sort faster", "sort only works on copies", "React freezes every prop, so sorting items would crash"]
+    answer: 0
+    explain: "Sorting items in place would reorder the parent's array behind its back. Sorting a copy leaves the prop alone."
+    reteach: "## Common mistakes"

@@ -1,0 +1,24 @@
+id: web-03-javascript-basics/topic-03-strings
+title: "Strings and template literals"
+order: 3
+minutes: 9
+prerequisites: [web-03-javascript-basics/topic-02-numbers-and-paise]
+concepts: [strings, concatenation, template-literals, string-methods, indexing]
+practice:
+  kind: code
+  runner: vitest
+  mainClass: main.js
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0303
+  from: sam
+  title: "\" ami \" is not an item code, says the calculator"
+  body: >
+    Raju here. Customers type item codes on WhatsApp like " ami " or "Bag", and the calculator finds nothing.
+    Mr. Fernandes also wants his granddaughter's initials stitched on her baby booties, and I work them out by hand.
+    Our item labels and "ready" messages look messy too. Can you tidy up the text in src/labels.js?
+hints:
+  - "A template literal uses backticks and ${...}, like `${code}: ${name}`."
+  - "trim() removes the spaces at both ends, and toUpperCase() makes capitals. You can chain them: typed.trim().toUpperCase()."
+  - "first[0] is the first letter of first. Join the two first letters with +, then call toUpperCase() on the result."
+review: true

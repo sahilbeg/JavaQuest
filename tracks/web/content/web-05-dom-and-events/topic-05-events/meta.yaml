@@ -1,0 +1,24 @@
+id: web-05-dom-and-events/topic-05-events
+title: "Events: click and friends"
+order: 5
+minutes: 10
+prerequisites: [web-05-dom-and-events/topic-04-creating-elements]
+concepts: [events-and-listeners, add-event-listener, handler-not-call, event-object, keyboard-events, state-in-handlers]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0505
+  from: sam
+  title: "The + button on the item page does nothing"
+  body: >
+    Raju here. Mr. Fernandes wanted three Rani pink keychains for his nieces. He tapped + three times on the item
+    page and the number stayed at 1, so he called the stall instead. The Add to cart button doesn't say anything
+    either. Can you make the buttons actually do something?
+hints:
+  - "A button does nothing until you ask it to. element.addEventListener(\"click\", handler) runs handler every time the button is clicked."
+  - "Keep the quantity in a let variable inside setupStepper. Each handler changes it, then calls show() so the page matches. Pass the function itself, never handler()."
+  - "plus: if (qty < max) { qty += 1; } then show(). show writes String(qty) into .qty and sets minus.disabled = qty <= 1 and plus.disabled = qty >= max. In setupAddButton, call readQty() inside the click handler. For Escape, check event.key === \"Escape\" in a keydown listener."
+review: true

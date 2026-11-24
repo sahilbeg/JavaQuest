@@ -1,0 +1,114 @@
+topic: web-07-tooling/topic-02-vite
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: dev-server
+    variants:
+      - { prompt: "What are Vite's two main jobs?", choices: ["A dev server while you work, and a build for shipping", "Installing packages and writing the lock file", "Checking code style and formatting it", "Hosting the live site and sending emails"], answer: 0 }
+      - { prompt: "What is a dev server?", choices: ["A small web server on your laptop that serves the project while you build it", "The live server customers visit", "A teammate who reviews your code", "A folder of finished files"], answer: 0 }
+      - { prompt: "npm run dev prints Local: http://localhost:5173/. What is 5173?", choices: ["The port the dev server listens on", "The number of files served", "Vite's version number", "How many milliseconds it took to start"], answer: 0 }
+    explain: "Vite serves your project on your own laptop (localhost) at port 5173 while you work, and builds finished files when you ship."
+    reteach: "### Syntax: the dev server"
+
+  - id: q02
+    type: mcq
+    concept: dev-server
+    variants:
+      - { prompt: "Why can't you just double-click index.html to open a Vite project?", choices: ["Browsers block module scripts from file:// addresses, and bare imports like \"dayjs\" need Vite", "Vite deletes index.html after every build", "index.html only works on a phone", "Double-clicking opens it in VS Code"], answer: 0 }
+      - { prompt: "main.js says import dayjs from \"dayjs\". Who makes that work in the browser during development?", choices: ["The Vite dev server, which rewrites the import to point into node_modules", "The browser, which searches npm by itself", "Git, which copies dayjs into src", "Nobody: bare imports always fail"], answer: 0 }
+    explain: "Browsers can't find npm packages by name and won't load modules from file://. Open the http://localhost address the dev server prints."
+    reteach: "## Common mistakes"
+
+  - id: q03
+    type: mcq
+    concept: hot-reload
+    variants:
+      - { prompt: "You change a colour in style.css and save, with npm run dev running. What happens?", choices: ["The new CSS swaps into the open page without a reload", "Nothing until you run npm run build", "The browser downloads a new dist folder", "The dev server stops and must be restarted"], answer: 0 }
+      - { prompt: "What is hot module replacement?", choices: ["Swapping only the changed file into the running page", "Replacing old npm packages with new ones", "Building the site again from scratch", "Copying public files into dist"], answer: 0 }
+      - { prompt: "Why is a CSS hot update nicer than pressing refresh?", choices: ["The page keeps its state, like what is in the cart", "It makes the CSS file smaller", "It also commits the change to Git", "It works without a browser"], answer: 0 }
+    explain: "Vite watches your files. A saved CSS change is swapped into the running page, so you keep your place and your cart."
+    reteach: "### Hot reload"
+
+  - id: q04
+    type: mcq
+    concept: bundling
+    variants:
+      - { prompt: "What is bundling?", choices: ["Joining many JavaScript files and their packages into a few files", "Zipping node_modules for a teammate", "Sorting imports by name", "Running all the tests at once"], answer: 0 }
+      - { prompt: "Why does bundling help a customer on slow 4G?", choices: ["Their phone downloads a few files instead of many", "It makes the phone's network faster", "It removes all the images", "It turns JavaScript into HTML"], answer: 0 }
+      - { prompt: "How does the build know which files belong in the bundle?", choices: ["It follows the imports, starting from the entry file main.js", "It takes every file on your laptop", "It reads the list in .gitignore", "It asks you for each file"], answer: 0 }
+    explain: "The build starts at the entry file, follows every import, and joins what it finds into a few bundles."
+    reteach: "### Syntax: the build"
+
+  - id: q05
+    type: fill-blank
+    concept: build-output
+    goal: "Run the package.json script that writes the finished site into the dist folder."
+    prompt: "npm run ___"
+    answers: ["build"]
+    explain: "npm run build runs vite build, which writes the finished files into dist/."
+    reteach: "### Syntax: the build"
+
+  - id: q06
+    type: mcq
+    concept: build-output
+    variants:
+      - { prompt: "Which folder goes to the live server?", choices: ["dist/", "src/", "node_modules/", "public/ only"], answer: 0 }
+      - { prompt: "You fixed a typo directly in dist/assets/index-C3r9kQe1.js. What happens at the next build?", choices: ["The build overwrites dist/ and the typo comes back", "The build copies your fix into src/", "Vite refuses to build", "Git keeps your fix in dist/"], answer: 0 }
+      - { prompt: "Should dist/ be committed to Git?", choices: ["No: it is made by the build from src/", "Yes: it is the most important folder", "Only the .css files in it", "Only on the main branch"], answer: 0 }
+    explain: "dist/ is the build's output. Change src/, build again, and ship dist/. Never edit or commit it."
+    reteach: "### Syntax: the build"
+
+  - id: q07
+    type: mcq
+    concept: build-output
+    variants:
+      - { prompt: "What does npm run preview do?", choices: ["Serves the built dist/ folder on localhost:4173 to check it", "Starts the dev server with hot reload", "Uploads dist/ to the live site", "Shows a picture of the page in the terminal"], answer: 0 }
+      - { prompt: "Why check the site with preview before shipping?", choices: ["The dev server takes shortcuts, and preview serves the real built files", "Preview is faster than the dev server", "Preview fixes bugs in the build", "The live server needs preview to be running"], answer: 0 }
+    explain: "npm run preview serves dist/ the way a real server would, so you test what you will ship."
+    reteach: "### Syntax: preview the build"
+
+  - id: q08
+    type: order
+    concept: build-output
+    prompt: "Put the steps from a code change to a checked, finished site in order."
+    items:
+      - "Change src/style.css while npm run dev is running"
+      - "See the change in the browser at localhost:5173"
+      - "npm run build"
+      - "npm run preview and check localhost:4173"
+    explain: "Work with the dev server, then build the finished files and check them with preview."
+    reteach: "## Worked example"
+
+  - id: q09
+    type: mcq
+    concept: public-folder
+    variants:
+      - { prompt: "Which file belongs in public/?", choices: ["favicon.svg, which must keep its exact name", "cart.js, which main.js imports", "style.css, which main.js imports", "package.json"], answer: 0 }
+      - { prompt: "How does the page refer to public/favicon.svg?", choices: ["/favicon.svg", "/public/favicon.svg", "./src/favicon.svg", "import favicon from \"public\""], answer: 0 }
+      - { prompt: "What does Vite do with the files in public/ when it builds?", choices: ["Copies them into the finished site as they are", "Bundles them into the JavaScript file", "Deletes them", "Renames them with random letters"], answer: 0 }
+    explain: "public/ is for files that need a fixed name. Vite copies them as they are, and you refer to them from the top of the site, like /favicon.svg."
+    reteach: "### The public folder"
+
+  - id: q10
+    type: spot-the-bug
+    concept: public-folder
+    prompt: "main.js for dhaaga.in. Which line will Vite refuse?"
+    code: |
+      import "./style.css";
+      import { renderCatalogue } from "./catalogue.js";
+      import "/public/diwali.css";
+      renderCatalogue(document.querySelector("#catalogue"));
+    bugLine: 3
+    explain: "Files in public/ can't be imported from JavaScript. Move diwali.css into src/ and import it with ./diwali.css."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: bundling
+    variants:
+      - { prompt: "In a Vite project, what does import \"./style.css\" in main.js do?", choices: ["Adds the stylesheet to the page", "Prints the CSS to the console", "Nothing: JavaScript can't import CSS", "Copies style.css into public/"], answer: 0 }
+      - { prompt: "What does import goluUrl from \"./golu.png\" give you?", choices: ["The image's address as text, to put in an img's src", "The picture's pixels as an array", "An <img> element already on the page", "An error: only .js files can be imported"], answer: 0 }
+    explain: "Vite lets JavaScript import CSS, which it adds to the page, and images, which give you their address."
+    reteach: "### Importing CSS and images"

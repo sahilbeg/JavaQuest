@@ -1,0 +1,23 @@
+id: react-08-react-fundamentals/mini-project
+title: "FEAT-08: The React catalogue"
+order: 100
+minutes: 15
+prerequisites: [react-08-react-fundamentals/topic-10-styling]
+concepts: [components, props, state, events, lists-and-keys, controlled-inputs, derived-values]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: FEAT-08
+  from: priya
+  title: "Let customers find things on dhaaga.in"
+  body: >
+    People ask me on WhatsApp, "Do you have anything in Mint?" or "Where are the coaster sets?" I want the
+    website to answer that itself. Let them type a name or tap a colour, see the prices, and add things to the
+    cart without losing what they already added. Everything Sana and I agreed is on the KB page.
+hints:
+  - "Start with ProductCard: it only shows its product and calls onAdd(product.id). Then keep three things in state in CatalogueApp: the search text, the chosen colour and the cart count."
+  - "Work out the visible list on every render: products.filter((p) => matchesName && matchesColour). For the name, compare p.name.toLowerCase() with query.trim().toLowerCase() using includes."
+  - "The colour buttons come from [\"All\", ...COLOURS].map(...), each with aria-pressed={colour === c}. The cart count lives in CatalogueApp, so filtering never resets it."
+review: false

@@ -1,0 +1,148 @@
+topic: web-03-javascript-basics/topic-06-switch-and-ternary
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: switch
+    code: |
+      const mode = "CASH";
+      switch (mode) {
+        case "CASH":
+          console.log("Count the notes");
+          break;
+        case "UPI":
+          console.log("Check the payment message");
+          break;
+      }
+    answer: "Count the notes"
+    explain: "The CASH case matches, runs its line, and break jumps out before the UPI case."
+    reteach: "### Syntax: switch"
+
+  - id: q02
+    type: predict-output
+    concept: break
+    code: |
+      const code = "KEY";
+      switch (code) {
+        case "KEY":
+          console.log("Keychain");
+        case "BAG":
+          console.log("Tote bag");
+          break;
+        default:
+          console.log("Unknown");
+      }
+    answer: "Keychain\nTote bag"
+    explain: "There's no break after the KEY case, so it falls through into BAG. The break there stops it before default."
+    reteach: "### Why break matters"
+
+  - id: q03
+    type: predict-output
+    concept: default-case
+    code: |
+      const code = "ami";
+      switch (code) {
+        case "AMI":
+          console.log("Amigurumi");
+          break;
+        default:
+          console.log("Unknown item");
+      }
+    answer: "Unknown item"
+    explain: "switch uses ===, and \"ami\" is not \"AMI\", so default runs."
+    reteach: "### switch compares with ==="
+
+  - id: q04
+    type: predict-output
+    concept: ternary
+    code: |
+      const qty = 2;
+      console.log(qty === 1 ? "1 item" : qty + " items");
+    answer: "2 items"
+    explain: "qty === 1 is false, so the ternary gives the value after the colon."
+    reteach: "### Syntax: the ternary operator"
+
+  - id: q05
+    type: mcq
+    concept: break
+    prompt: "Which line, written at the end of a case, jumps out of the switch so the next case doesn't run?"
+    choices: ["break;", "default:", "else;", "case;"]
+    answer: 0
+    explain: "break jumps out of the switch, so the case doesn't fall through."
+    reteach: "### Why break matters"
+
+  - id: q06
+    type: mcq
+    concept: switch
+    prompt: "How does switch decide that a case matches?"
+    choices: ["It compares with ===, so the type must match too", "It compares with ==, converting types first", "It checks whether the value is truthy", "It compares only the first letter"]
+    answer: 0
+    explain: "switch uses strict equality, so the text \"1\" won't match case 1."
+    reteach: "### switch compares with ==="
+
+  - id: q07
+    type: spot-the-bug
+    concept: ternary
+    code: |
+      const subtotal = 120000;
+      const delivery = subtotal > 99900 ? 6000 : 0;
+      console.log(delivery);
+    bugLine: 2
+    explain: "The two values are swapped. Above ₹999 delivery is free: subtotal > 99900 ? 0 : 6000."
+    reteach: "### Syntax: the ternary operator"
+
+  - id: q08
+    type: mcq
+    concept: ternary
+    prompt: "Which job suits the ternary operator best?"
+    choices: ["Picking one of two values, like 0 or 6000", "Running ten lines of code in each branch", "Choosing among the five item codes", "Repeating a step for every line of the cart"]
+    answer: 0
+    explain: "A ternary picks between two values. Several lines per branch need an if, and many fixed options suit a switch."
+    reteach: "### Which one to use"
+
+  - id: q09
+    type: predict-output
+    concept: grouped-cases
+    code: |
+      const day = "Sun";
+      switch (day) {
+        case "Sat":
+        case "Sun":
+          console.log("Stall open");
+          break;
+        default:
+          console.log("Stall closed");
+      }
+    answer: "Stall open"
+    explain: "\"Sat\" and \"Sun\" are two labels sharing the same code."
+    reteach: "### Syntax: sharing one case"
+
+  - id: q10
+    type: predict-output
+    concept: switch
+    code: |
+      const typed = "1";
+      switch (typed) {
+        case 1:
+          console.log("one");
+          break;
+        default:
+          console.log("no match");
+      }
+    answer: "no match"
+    explain: "The text \"1\" is not === the number 1, so no case matches."
+    reteach: "### switch compares with ==="
+
+  - id: q11
+    type: order
+    concept: switch
+    prompt: "Put the lines in order to make a switch that prints Coaster set when code is \"CST\"."
+    items:
+      - "switch (code) {"
+      - "  case \"CST\":"
+      - "    console.log(\"Coaster set\");"
+      - "    break;"
+      - "}"
+    explain: "The switch opens, the case label comes next, then its code, then break, then the closing brace."
+    reteach: "### Syntax: switch"

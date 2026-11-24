@@ -1,0 +1,24 @@
+id: react-08-react-fundamentals/topic-08-forms
+title: "Forms in React"
+order: 8
+minutes: 10
+prerequisites: [react-08-react-fundamentals/topic-07-lists-and-keys]
+concepts: [controlled-inputs, input-values-are-text, checkbox-checked, select-options, form-submit, derived-values]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0808
+  from: maya
+  title: "A WhatsApp-style order form that adds up as you type"
+  body: >
+    Most WhatsApp orders are a name, a phone number, one item, a quantity and "gift wrap please". Let's give
+    customers a form on dhaaga.in that shows the total as they fill it in, and hands us a clean order object.
+    The packing team needs qty as a number, not text.
+hints:
+  - "Keep every field in state, then make it controlled: value={name} and onChange={(event) => setName(event.target.value)}. A checkbox uses checked and event.target.checked."
+  - "Everything an input gives you is text. Turn the quantity into a number with Number(event.target.value). Work out the total from state on every render: find the item in ITEMS by code, then price * qty, plus GIFT_WRAP_PAISE if giftWrap."
+  - "In handleSubmit, call event.preventDefault() first, then onSubmit({ name, phone, code, qty, giftWrap }). Disable the button with disabled={name.trim() === \"\" || phone.trim() === \"\"}."
+review: true

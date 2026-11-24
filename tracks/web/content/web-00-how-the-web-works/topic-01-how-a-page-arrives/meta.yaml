@@ -1,0 +1,22 @@
+id: web-00-how-the-web-works/topic-01-how-a-page-arrives
+title: "How a page reaches your phone: browsers, servers, URLs"
+order: 1
+minutes: 10
+prerequisites: []
+concepts: [browser, server, url, dns, http, status-codes, https]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: WEB-0001
+  from: maya
+  title: "Meera Aunty wants Dhaaga on people's phones"
+  body: >
+    Welcome to Dhaaga & Co.! Meera Aunty wants customers at the FC Road stall to scan a code and see our page on
+    their phones. Before we build anything, I want you to know how a page travels from a computer to a phone.
+    Read the KB page and pass the onboarding check, then we'll start.
+hints:
+  - "Think of the stall: a customer asks a question, and someone at the counter answers it."
+  - "The browser asks and the server answers. DNS turns a name like dhaaga.in into a number the network can use."
+  - "A URL has a scheme (https://), a domain (dhaaga.in) and a path (/prices). Status 200 means OK, and 404 means not found."
+review: true

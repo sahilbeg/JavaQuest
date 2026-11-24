@@ -1,0 +1,167 @@
+topic: react-10-professional-frontend/topic-05-seo-and-sharing
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: order
+    concept: crawling-and-indexing
+    prompt: "Put the steps of web search in order."
+    items:
+      - "A crawler fetches a page"
+      - "It follows the page's links to find more pages"
+      - "It stores what each page is about in the index"
+      - "Someone searches, and the engine ranks the indexed pages"
+    explain: "Crawl, index, rank. A page that no link points to may never be crawled, which is one reason sitemaps exist."
+    reteach: "### How a search engine finds pages"
+
+  - id: q02
+    type: mcq
+    concept: crawling-and-indexing
+    prompt: "Which of these really helps dhaaga.in rank for 'crochet elephant Pune'?"
+    choices:
+      - "A fast, reachable page about Golu, with a clear title, real headings and alt text"
+      - "Hiding 'crochet Pune' fifty times in white text"
+      - "Paying Google for a better organic rank"
+      - "Putting every product on one address"
+    answer: 0
+    explain: "Search engines reward pages that are reachable, readable, fast and useful. Keyword stuffing gets pages pushed down, and organic rank can't be bought."
+    reteach: "### Good pages beat tricks"
+
+  - id: q03
+    type: mcq
+    concept: titles-and-descriptions
+    variants:
+      - prompt: "Which <title> is best for Golu's product page?"
+        choices:
+          - "Golu the elephant, crocheted toy | Dhaaga & Co."
+          - "Vite + React"
+          - "Home"
+          - "Dhaaga & Co. | Dhaaga & Co. | Dhaaga & Co."
+        answer: 0
+      - prompt: "Where does a search result's blue link text usually come from?"
+        choices:
+          - "The page's <title>"
+          - "The first <p> on the page"
+          - "The image's alt text"
+          - "The page's CSS"
+        answer: 0
+    explain: "The title is the search result's link and the tab's name. Make it unique per page, lead with what the page is about, and end with the brand."
+    reteach: "### Syntax: the title and the description"
+
+  - id: q04
+    type: predict-output
+    concept: titles-and-descriptions
+    prompt: "A build step writes a title from catalogue data. What does it print?"
+    code: |
+      const product = { id: "DC-1201", name: "Mint keychain", paise: 12000 };
+      const title = `${product.name} (₹${(product.paise / 100).toFixed(2)}) | Dhaaga & Co.`;
+      console.log(title);
+    answer: "Mint keychain (₹120.00) | Dhaaga & Co."
+    explain: "12000 paise is 120 rupees, and toFixed(2) shows two decimals. Writing titles from data means no page is forgotten."
+    reteach: "### Syntax: the title and the description"
+
+  - id: q05
+    type: fill-blank
+    concept: urls-and-canonical
+    goal: "Tell search engines which single address should count for Golu's page, whichever version was shared."
+    prompt: "<link rel=\"___\" href=\"https://dhaaga.in/products/DC-1042\">"
+    answers: ["canonical"]
+    explain: "A canonical link names the one address you want indexed. Versions with ?ref=whatsapp or other paths count towards it instead of splitting the rank."
+    reteach: "### One page, one address"
+
+  - id: q06
+    type: mcq
+    concept: spa-rendering
+    variants:
+      - prompt: "Why is Golu's WhatsApp preview blank on a client-rendered React app?"
+        choices:
+          - "WhatsApp's bot reads only the HTML that arrives and doesn't run JavaScript, so it sees an empty root"
+          - "WhatsApp blocks all online shops"
+          - "The photo is too small"
+          - "React deletes meta tags"
+        answer: 0
+      - prompt: "What does a client-rendered React app's index.html usually contain before JavaScript runs?"
+        choices:
+          - "An almost empty body with a <div id=\"root\"> and a script tag"
+          - "Every product's name and price"
+          - "A copy of the whole database"
+          - "Nothing at all, not even a <head>"
+        answer: 0
+    explain: "A single-page app draws everything with JavaScript. Bots that don't run it, like most link-preview bots, see only the empty shell."
+    reteach: "### The single-page app problem"
+
+  - id: q07
+    type: mcq
+    concept: spa-rendering
+    variants:
+      - prompt: "Dhaaga's product pages change only when the catalogue changes. Which approach fits them best?"
+        choices:
+          - "Static site generation: render each page to HTML at build time"
+          - "Client-side rendering only"
+          - "Server rendering for every request, even though nothing changes"
+          - "One page for all products"
+        answer: 0
+      - prompt: "What is hydration?"
+        choices:
+          - "React taking over HTML that was rendered on the server, and making it interactive"
+          - "Compressing images"
+          - "Sending the database to the browser"
+          - "Refreshing the page every minute"
+        answer: 0
+    explain: "SSG renders once at build time, SSR on every request. In both, the HTML arrives with content, and React hydrates it in the browser."
+    reteach: "### Rendering before the browser"
+
+  - id: q08
+    type: fill-blank
+    concept: open-graph
+    goal: "Tell chat apps which picture to put on the preview card when Golu's link is shared."
+    prompt: "<meta property=\"og:___\" content=\"https://dhaaga.in/img/DC-1042-1200.webp\">"
+    answers: ["image"]
+    explain: "og:image sets the picture on a shared link's card. It must be a full https:// address."
+    reteach: "### Syntax: Open Graph tags"
+
+  - id: q09
+    type: predict-output
+    concept: open-graph
+    prompt: "og:image needs a full address. This turns a path into one. What does it print?"
+    code: |
+      const base = "https://dhaaga.in";
+      const image = "/img/DC-1042-1200.webp";
+      console.log(new URL(image, base).href);
+    answer: "https://dhaaga.in/img/DC-1042-1200.webp"
+    explain: "new URL with a base joins the path onto the site's address. Put that full address in og:image; a bare path gives a card with no photo."
+    reteach: "### Syntax: Open Graph tags"
+
+  - id: q10
+    type: mcq
+    concept: robots-and-sitemaps
+    variants:
+      - prompt: "After launch, dhaaga.in slowly disappears from Google. robots.txt says 'Disallow: /'. What happened?"
+        choices:
+          - "Staging's robots.txt, which blocks everything, was deployed to the live site"
+          - "Google banned the site"
+          - "The sitemap was too long"
+          - "The site is too fast"
+        answer: 0
+      - prompt: "Is robots.txt a safe way to hide the admin pages' data?"
+        choices:
+          - "No: it is only a polite request to crawlers, and anyone can read it"
+          - "Yes: crawlers and people can't open disallowed paths"
+          - "Yes, if the file is long enough"
+          - "Only on weekends"
+        answer: 0
+    explain: "robots.txt asks well-behaved crawlers to skip paths. It doesn't protect anything. A Disallow: / meant for staging hides the whole live store."
+    reteach: "### robots.txt and sitemap.xml"
+
+  - id: q11
+    type: mcq
+    concept: structured-data
+    prompt: "What does a schema.org Product block in <script type=\"application/ld+json\"> do?"
+    choices:
+      - "Describes the product's name, price and stock as data, so search results can show them"
+      - "Runs JavaScript that changes the price"
+      - "Hides the product from search engines"
+      - "Makes the page load faster"
+    answer: 0
+    explain: "Structured data is JSON in a shared vocabulary. The browser never runs it, and search engines can turn it into rich results. It must match what the page shows."
+    reteach: "### Structured data"

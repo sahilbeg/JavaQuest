@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Custom orders | Dhaaga &amp; Co.</title>
+  <meta name="description" content="Ask Dhaaga &amp; Co. for a crochet piece made just for you: your item, your colour, your quantity.">
+  <link rel="icon" href="images/golu-icon.png">
+</head>
+<body>
+  <header>
+    <p class="logo">Dhaaga &amp; Co.</p>
+    <nav>
+      <ul>
+        <li><a href="index.html">Catalogue</a></li>
+        <li><a href="custom.html">Custom orders</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Custom order request</h1>
+    <p>Want Golu in Mint, or six coaster sets for a wedding? Tell us here, and Meera Aunty will reply on WhatsApp within two days.</p>
+
+    <form action="/custom-orders" method="post">
+      <p>
+        <label for="name">Your name</label>
+        <input type="text" id="name" name="name" required>
+      </p>
+      <p>
+        <label for="phone">Phone number</label>
+        <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" required>
+      </p>
+      <p>
+        <label for="item">Item</label>
+        <select id="item" name="item" required>
+          <option value="">Choose an item</option>
+          <option value="CST">Coaster set (4)</option>
+          <option value="KEY">Keychain</option>
+          <option value="AMI">Amigurumi (small toy)</option>
+          <option value="BAG">Tote bag</option>
+          <option value="BTY">Baby booties</option>
+        </select>
+      </p>
+      <fieldset>
+        <legend>Colour</legend>
+        <p><input type="radio" id="colour-marigold" name="colour" value="marigold" required> <label for="colour-marigold">Marigold</label></p>
+        <p><input type="radio" id="colour-indigo" name="colour" value="indigo"> <label for="colour-indigo">Indigo</label></p>
+        <p><input type="radio" id="colour-rani-pink" name="colour" value="rani-pink"> <label for="colour-rani-pink">Rani pink</label></p>
+        <p><input type="radio" id="colour-mint" name="colour" value="mint"> <label for="colour-mint">Mint</label></p>
+        <p><input type="radio" id="colour-off-white" name="colour" value="off-white"> <label for="colour-off-white">Off-white</label></p>
+      </fieldset>
+      <p>
+        <label for="qty">How many?</label>
+        <input type="number" id="qty" name="qty" min="1" max="20" value="1">
+      </p>
+      <p>
+        <label for="notes">Notes</label>
+        <textarea id="notes" name="notes" rows="5"></textarea>
+      </p>
+      <button type="submit">Send request</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>Dhaaga &amp; Co., Aundh, Pune. Shop open Tuesday to Sunday, 11:00 to 21:00.</p>
+  </footer>
+</body>
+</html>

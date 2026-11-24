@@ -1,0 +1,24 @@
+id: web-03-javascript-basics/topic-01-variables
+title: "Variables: let and const"
+order: 1
+minutes: 8
+prerequisites: [web-02-css/boss]
+concepts: [const, let, reassignment, undefined, naming]
+practice:
+  kind: code
+  runner: vitest
+  mainClass: main.js
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0301
+  from: maya
+  title: "The stall counter forgets everything"
+  body: >
+    Raju wants a tiny counter for the FC Road stall. It should know the shop's name and city, and keep count
+    of the coaster sets in the stock box as they sell on Sunday. Right now every value in src/stall.js is empty.
+    Can you give it some memory?
+hints:
+  - "Use const for values that never change, like the shop's name. Use let for values that do, like a count."
+  - "For TODO 1 and 2, only the text inside the quotes changes: export const SHOP_NAME = \"Dhaaga & Co.\";"
+  - "For TODO 3, write let coasters = 12; then coasters = coasters - 3; and so on for each sale or delivery. End with return coasters;"
+review: true

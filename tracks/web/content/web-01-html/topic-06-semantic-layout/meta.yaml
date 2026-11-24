@@ -1,0 +1,24 @@
+id: web-01-html/topic-06-semantic-layout
+title: "Page structure: header, nav, main, section, footer"
+order: 6
+minutes: 9
+prerequisites: [web-01-html/topic-05-tables]
+concepts: [semantic-elements, header-and-footer, nav, main, sections-and-articles]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0106
+  from: maya
+  title: "The page is a pile of divs"
+  body: >
+    Sana grouped the catalogue page into blocks so she can style it, but every block is a div.
+    A screen reader can't jump to the main content or find the menu, and search engines can't tell
+    the parts apart. Please swap the divs for the right page-structure elements before we add CSS.
+hints:
+  - "Each div has a TODO that names the element it should become. The class can go, or stay: the checks don't mind."
+  - "The links block becomes a nav, and its links go in a ul with one li each, like any list."
+  - "The page's three big blocks end up as <header>, <main> and <footer>, straight inside <body>. The three parts inside main become <section> elements, keeping their ids."
+review: true

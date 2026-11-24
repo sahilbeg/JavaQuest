@@ -1,0 +1,141 @@
+topic: react-09-react-in-depth/topic-06-routing
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: client-routing
+    prompt: "Why keep the current page in the address instead of in a useState?"
+    choices: ["So Back, bookmarks, refresh and shared links all open the right page", "Because useState can't hold text", "So the server can build each page", "Because React only renders what is in the address"]
+    answer: 0
+    explain: "The browser already remembers addresses. If the page follows the address, all of its tools work for free."
+    reteach: "### One app, many pages"
+
+  - id: q02
+    type: predict-output
+    concept: url-hash
+    code: |
+      const url = new URL("https://dhaaga.in/#/cart");
+      console.log(url.hash);
+      console.log(url.hash.slice(1) || "/");
+
+      const home = new URL("https://dhaaga.in/");
+      console.log(home.hash.slice(1) || "/");
+    answer: "#/cart\n/cart\n/"
+    explain: "hash includes the # sign. slice(1) drops it. With no hash, hash is an empty string, so || \"/\" gives the home path."
+    reteach: "### The hash: the part after #"
+
+  - id: q03
+    type: mcq
+    concept: url-hash
+    prompt: "A link changes the address from dhaaga.in/#/ to dhaaga.in/#/cart. What does the browser do?"
+    choices: ["It updates the address and fires hashchange, without loading a new page from the server", "It loads a new HTML page called cart from the server", "It reloads the whole app", "Nothing at all, not even an event"]
+    answer: 0
+    explain: "Changing only the hash never asks the server for a page. The React app stays loaded and hears a hashchange event."
+    reteach: "### The hash: the part after #"
+
+  - id: q04
+    type: fill-blank
+    concept: hashchange
+    goal: "Run onChange every time the part of the address after the hash sign changes."
+    prompt: "window.addEventListener(\"___\", onChange);"
+    answers: ["hashchange"]
+    explain: "The browser fires hashchange on window whenever the hash changes, from a link, from Back, or from code."
+    reteach: "### Syntax: listening for hashchange"
+
+  - id: q05
+    type: spot-the-bug
+    concept: hashchange
+    prompt: "Clicking links never changes the page. Which line is wrong?"
+    code: |
+      export function useHashRoute() {
+        const [path, setPath] = useState(currentPath);
+        useEffect(() => {
+          function onChange() {
+            setPath(currentPath());
+          }
+          window.addEventListener("hashchange", onChange());
+          return () => window.removeEventListener("hashchange", onChange);
+        }, []);
+        return path;
+      }
+    bugLine: 7
+    explain: "onChange() calls the function once, right away, and passes its result (undefined) as the listener. Pass the function itself: onChange, without brackets."
+    reteach: "### Syntax: listening for hashchange"
+
+  - id: q06
+    type: predict-output
+    concept: route-matching
+    code: |
+      function matchRoute(path) {
+        if (path === "/") return "home";
+        if (path === "/cart") return "cart";
+        if (path.startsWith("/item/") && path.length > "/item/".length) {
+          return "item " + path.slice("/item/".length);
+        }
+        return "not-found";
+      }
+
+      console.log(matchRoute("/item/DC-1042"));
+      console.log(matchRoute("/item/"));
+      console.log(matchRoute("/Cart"));
+    answer: "item DC-1042\nnot-found\nnot-found"
+    explain: "The item route takes the rest of the path as the id. \"/item/\" has no id, and \"/Cart\" with a capital C is not \"/cart\", so both fall through to not-found."
+    reteach: "### Syntax: matching a route"
+
+  - id: q07
+    type: mcq
+    concept: route-matching
+    prompt: "Why does matchRoute return { page: \"not-found\" } for any address it doesn't know?"
+    choices: ["So a typo in the address shows a Page not found page instead of a blank screen", "Because React crashes on unknown addresses", "So the browser goes back automatically", "To send the customer to the server"]
+    answer: 0
+    explain: "Every address must lead somewhere. A not-found page tells the customer what happened and how to get back."
+    reteach: "### Syntax: matching a route"
+
+  - id: q08
+    type: mcq
+    concept: links
+    prompt: "Why use <a href=\"#/cart\"> instead of <button onClick={() => setPage(\"cart\")}>?"
+    choices: ["A link changes the address, so Back, new tabs, copying and screen readers all work", "Buttons can't have click handlers in React", "Links render faster than buttons", "There is no difference"]
+    answer: 0
+    explain: "The button changes only state. The address stays the same, so the page can't be shared, bookmarked or reached with Back."
+    reteach: "### Syntax: links"
+
+  - id: q09
+    type: fill-blank
+    concept: links
+    goal: "Turn a path like /cart into the address the link should open in this hash router."
+    prompt: "return <a href={\"___\" + to}>{children}</a>;"
+    answers: ["#"]
+    explain: "Putting # in front of the path makes a hash address, so \"/cart\" becomes \"#/cart\"."
+    reteach: "### Syntax: links"
+
+  - id: q10
+    type: mcq
+    concept: client-routing
+    prompt: "In React Router, what does :id mean in <Route path=\"/item/:id\" />?"
+    choices: ["It captures that part of the path, and the page reads it with useParams()", "The id must be the text :id exactly", "The route only matches numbers", "It hides the id from the address bar"]
+    answer: 0
+    explain: "A colon marks a part of the path to capture. /item/DC-1042 gives the page the id DC-1042."
+    reteach: "### What teams use: React Router"
+
+  - id: q11
+    type: order
+    concept: hashchange
+    prompt: "A customer clicks the Cart link. Put the steps in order."
+    items:
+      - "The browser changes the hash to #/cart"
+      - "The browser fires a hashchange event on window"
+      - "The hook's listener puts the new path in state"
+      - "App renders again and matchRoute picks the cart page"
+    explain: "The address changes first. The event tells the hook, the hook's state changes, and React renders the new page."
+    reteach: "### What happens when a link is clicked"
+
+  - id: q12
+    type: mcq
+    concept: hashchange
+    prompt: "App calls matchRoute(currentPath()) directly, with no state and no listener. What happens when a link is clicked?"
+    choices: ["The address bar changes, but the page doesn't, because nothing makes React render again", "The page changes, and Back works too", "React throws an error", "The browser reloads the app"]
+    answer: 0
+    explain: "Reading window.location during render only gives the value at that moment. The hook's state and hashchange listener are what make React render again."
+    reteach: "## Common mistakes"

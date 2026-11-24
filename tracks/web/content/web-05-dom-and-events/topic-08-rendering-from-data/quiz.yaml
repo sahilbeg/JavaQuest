@@ -1,0 +1,137 @@
+topic: web-05-dom-and-events/topic-08-rendering-from-data
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: data-first
+    prompt: "The page is drawn from the catalogue data. Meera Aunty adds a Rakhi keychain to the data. How does it reach the page?"
+    choices: ["Call the render function again with the new data", "Type a new card into index.html", "Edit the old cards one by one", "Reload the CSS"]
+    answer: 0
+    explain: "The data is the truth and the page is a drawing of it. Change the data, then render again."
+    reteach: "### Data first, page second"
+
+  - id: q02
+    type: mcq
+    concept: render-function
+    prompt: "What does a render function such as renderCatalogue(list, products) do?"
+    choices: ["Builds the elements that show the data and puts them on the page", "Saves the data to a file", "Sends the data to a server", "Checks the data for mistakes"]
+    answer: 0
+    explain: "To render is to draw the page, or part of it, from data."
+    reteach: "### Data first, page second"
+
+  - id: q03
+    type: fill-blank
+    concept: map-to-elements
+    goal: "Turn every product into a card element, then put all the cards into the list."
+    prompt: "list.replaceChildren(...products.___(productCard));"
+    answers: ["map"]
+    explain: "map calls productCard for every product and returns an array of cards. The spread passes them to replaceChildren."
+    reteach: "### Syntax: a whole list from an array"
+
+  - id: q04
+    type: spot-the-bug
+    concept: redraw
+    code: |
+      function renderCatalogue(list, products) {
+        list.append(...products.map(productCard));
+      }
+    bugLine: 2
+    explain: "append keeps the old cards, so every redraw adds more. replaceChildren removes the old cards first."
+    reteach: "### Redraw everything"
+
+  - id: q05
+    type: mcq
+    concept: map-to-elements
+    prompt: "After list.replaceChildren(products.map(productCard)), with no spread dots, what does the page show?"
+    choices: ["Text like [object HTMLLIElement],[object HTMLLIElement]", "The cards, as normal", "An empty list", "An error page"]
+    answer: 0
+    explain: "replaceChildren got one array, not elements, so it turned the array into text. Spread it: replaceChildren(...cards)."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: predict-output
+    concept: map-to-elements
+    code: |
+      const products = [
+        { name: "Golu the elephant", paise: 45000 },
+        { name: "Rani pink keychain", paise: 12000 },
+      ];
+      const labels = products.map((product) => `${product.name}: ${product.paise / 100}`);
+      console.log(labels.length);
+      console.log(labels[1]);
+    answer: "2\nRani pink keychain: 120"
+    explain: "map makes one label per product, in order. The second is the keychain, 12000 paise, which is 120 rupees."
+    reteach: "### Syntax: a whole list from an array"
+
+  - id: q07
+    type: predict-output
+    concept: empty-state
+    code: |
+      function countText(count) {
+        if (count === 0) {
+          return "No items";
+        }
+        return count === 1 ? "1 item" : `${count} items`;
+      }
+      console.log(countText(0));
+      console.log(countText(1));
+      console.log(countText(12));
+    answer: "No items\n1 item\n12 items"
+    explain: "0 gets its own message, 1 is singular, and every other count is plural."
+    reteach: "## Try it"
+
+  - id: q08
+    type: mcq
+    concept: empty-state
+    prompt: "The colour filter matches nothing. Why draw a line saying No items match. instead of an empty list?"
+    choices: ["So the customer knows the page works and there are simply no results", "Because replaceChildren can't take zero elements", "Because an empty list crashes the browser", "So the filter resets itself"]
+    answer: 0
+    explain: "An empty list looks broken. An empty state says clearly that nothing matched."
+    reteach: "### Empty states"
+
+  - id: q09
+    type: mcq
+    concept: render-and-listen
+    prompt: "Where should the delegated click listener for the catalogue list be added?"
+    choices: ["Once, outside the render function", "Inside the render function, so new cards get it", "On every card inside productCard", "Nowhere: rendering adds it"]
+    answer: 0
+    explain: "The list element stays while its children are redrawn, so one listener added once hears every card. Inside render, listeners would stack up."
+    reteach: "### Draw in one place, listen in another"
+
+  - id: q10
+    type: mcq
+    concept: redraw
+    prompt: "renderCatalogue uses replaceChildren. It is called twice in a row with the same three products. How many cards are on the page?"
+    choices: ["3", "6", "0", "1"]
+    answer: 0
+    explain: "Each call replaces all the old children, so the second draw swaps three cards for three fresh ones."
+    reteach: "### Syntax: a whole list from an array"
+
+  - id: q11
+    type: predict-output
+    concept: data-first
+    code: |
+      const yarn = [
+        { colour: "Marigold", grams: 420 },
+        { colour: "Mint", grams: 35 },
+      ];
+      const sorted = [...yarn].sort((a, b) => a.grams - b.grams);
+      console.log(sorted[0].colour);
+      console.log(yarn[0].colour);
+    answer: "Mint\nMarigold"
+    explain: "The copy is sorted, lowest grams first. The original data keeps its order, because sort only changed the copy."
+    reteach: "## Worked example"
+
+  - id: q12
+    type: order
+    concept: render-function
+    prompt: "Put the lines in order to write a function that turns one product into one card."
+    items:
+      - "function productCard(product) {"
+      - "  const card = document.createElement(\"li\");"
+      - "  card.textContent = product.name;"
+      - "  return card;"
+      - "}"
+    explain: "Create the element, fill it from the object, then return it, detached, for the caller to place."
+    reteach: "### Syntax: one element from one object"

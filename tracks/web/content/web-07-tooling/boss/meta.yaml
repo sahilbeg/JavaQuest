@@ -1,0 +1,24 @@
+id: web-07-tooling/boss
+title: "INC-07: The build breaks only on deploy"
+order: 99
+minutes: 15
+prerequisites: [web-07-tooling/topic-10-production-builds]
+concepts: [case-sensitive-paths, required-env, portable-paths, works-on-my-machine]
+practice:
+  kind: code
+  runner: vitest
+  mainClass: main.js
+ticket:
+  key: INC-07
+  from: theo
+  title: "The build breaks only on deploy"
+  body: >
+    The Diwali sale starts at 10:00 tomorrow and the deploy of dhaaga.in is red in three places.
+    The server can't find ./Cart.js, the UPI QR code says pa=undefined, and Golu's photo is a broken image.
+    Kavya says npm run build passes on her Mac, and so does our pre-deploy check. Please make the check
+    as strict as the server, so it fails on every laptop before it fails on deploy day.
+hints:
+  - "Bronze: a Mac's disk ignores capital letters, the Linux server's does not. Compare wanted === file exactly. Only when nothing matches, look for a file that matches with toLowerCase() to suggest it."
+  - "Silver: collect every missing name first, then throw one Error that lists them all, joined with \", \". Use the finished read(env, name), so blank values count as missing."
+  - "Gold: path.replaceAll(\"\\\\\", \"/\") turns Windows slashes around. Refuse C:/, /Users/, /home/ and file: paths, strip leading ./ and /, and make sure the base ends in exactly one /."
+review: false

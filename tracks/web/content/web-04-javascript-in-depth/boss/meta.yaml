@@ -1,0 +1,22 @@
+id: web-04-javascript-in-depth/boss
+title: "INC-04: The Diwali discount is applied twice"
+order: 99
+minutes: 12
+prerequisites: [web-04-javascript-in-depth/topic-11-maps-and-sets]
+concepts: [references, shallow-copy, spread, reduce]
+practice:
+  kind: code
+  runner: vitest
+ticket:
+  key: INC-04
+  from: theo
+  title: "The Diwali discount is applied twice"
+  body: >
+    Arjun here, on the first morning of the Diwali sale. Customers with two or more lines in their cart are getting 19% off instead of 10%.
+    Mrs. Rao says her cart total drops every time she opens it, so she's waiting for it to reach zero.
+    We've already given away ₹4,000 too much. Please fix the offer before the evening rush.
+hints:
+  - "Bronze: the offer sits inside the for loop, so a cart with two lines gets it twice. Decide once, outside any loop."
+  - "Silver: the function writes into the cart it was given, so every screen that shares that cart sees the change. Return a new object instead: { ...cart, discountPaise, totalPaise }."
+  - "Gold: on a second call, totalPaise is already discounted. Work from the price before any discount: add up paise * qty over cart.lines with reduce."
+review: false

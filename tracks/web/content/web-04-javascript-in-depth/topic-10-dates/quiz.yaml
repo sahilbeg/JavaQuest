@@ -1,0 +1,147 @@
+topic: web-04-javascript-in-depth/topic-10-dates
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: months-and-weekdays
+    prompt: "Which call makes a Date for 25 December 2026?"
+    choices:
+      - "new Date(2026, 11, 25)"
+      - "new Date(2026, 12, 25)"
+      - "new Date(2026, 25, 12)"
+      - "new Date(2026, 11, 24)"
+    answer: 0
+    explain: "Month indexes start at 0, so December is 11. The day of the month starts at 1 as normal."
+    reteach: "### Months count from 0"
+
+  - id: q02
+    type: predict-output
+    concept: months-and-weekdays
+    code: |
+      const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const d = new Date(2026, 10, 3, 12, 0);
+      console.log(DAYS[d.getDay()], d.getDate());
+    answer: "Tue 3"
+    explain: "3 November 2026 is a Tuesday, weekday 2. getDate gives the day of the month, 3."
+    reteach: "### Syntax: reading the parts"
+
+  - id: q03
+    type: mcq
+    concept: months-and-weekdays
+    prompt: "What does getDay() return for a Sunday?"
+    choices:
+      - "0"
+      - "1"
+      - "7"
+      - "\"Sun\""
+    answer: 0
+    explain: "getDay counts the week from Sunday as 0 to Saturday as 6."
+    reteach: "### Syntax: reading the parts"
+
+  - id: q04
+    type: predict-output
+    concept: date-arithmetic
+    code: |
+      const d = new Date(2026, 11, 31);
+      const next = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1);
+      console.log(next.getFullYear(), next.getMonth(), next.getDate());
+    answer: "2027 0 1"
+    explain: "Day 32 of December rolls over into the next year: 1 January 2027, month index 0."
+    reteach: "### Syntax: adding days"
+
+  - id: q05
+    type: predict-output
+    concept: comparing-dates
+    code: |
+      const a = new Date(2026, 10, 8, 18, 0);
+      const b = new Date(2026, 10, 8, 18, 0);
+      console.log(a === b, a.getTime() === b.getTime(), a < new Date(2026, 10, 9));
+    answer: "false true true"
+    explain: "a and b are two objects, so === is false. Their timestamps match. 8 November is before 9 November."
+    reteach: "### Comparing dates"
+
+  - id: q06
+    type: fill-blank
+    concept: date-objects
+    goal: "Read the day of the month, from 1 to 31, from the order date."
+    prompt: "const day = orderDate.___();"
+    answers: ["getDate"]
+    explain: "getDate gives the day of the month. getDay would give the weekday instead."
+    reteach: "### Syntax: reading the parts"
+
+  - id: q07
+    type: predict-output
+    concept: formatting-dates
+    code: |
+      const t = new Date(2026, 10, 1, 9, 5);
+      const hh = String(t.getHours()).padStart(2, "0");
+      const mm = String(t.getMinutes()).padStart(2, "0");
+      console.log(hh + ":" + mm);
+    answer: "09:05"
+    explain: "padStart adds a 0 in front of single digits, so 9 and 5 become 09 and 05."
+    reteach: "### Showing a date to people"
+
+  - id: q08
+    type: spot-the-bug
+    concept: months-and-weekdays
+    code: |
+      // The stall's special stand: Saturday 31 October 2026, 10:00
+      const stand = new Date(2026, 10, 31, 10, 0);
+      console.log(stand.getDate());
+    bugLine: 2
+    explain: "Month index 10 is November, which has no 31st, so this becomes 1 December. October is month index 9."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: date-objects
+    prompt: "Why should isShopOpen(date) take the date as a parameter, instead of calling new Date() inside?"
+    choices:
+      - "So a test can pass in any day and time, and get the same answer every run"
+      - "Because new Date() doesn't work inside functions"
+      - "Because parameters are faster than the clock"
+      - "So the function can change the computer's clock"
+    answer: 0
+    explain: "Reading the clock inside makes the answer change every time. Passing the date in makes the function testable."
+    reteach: "### Never read the clock inside your logic"
+
+  - id: q10
+    type: predict-output
+    concept: date-arithmetic
+    code: |
+      const opens = new Date(2026, 10, 3, 11, 0);
+      const now = new Date(2026, 10, 3, 10, 20);
+      console.log((opens - now) / 60000);
+    answer: "40"
+    explain: "Subtracting dates gives milliseconds. 40 minutes is 2400000 ms, and dividing by 60000 gives 40."
+    reteach: "### Comparing dates"
+
+  - id: q11
+    type: predict-output
+    concept: comparing-dates
+    code: |
+      function isOpen(date) {
+        const minutes = date.getHours() * 60 + date.getMinutes();
+        return date.getDay() !== 1 && minutes >= 11 * 60 && minutes < 21 * 60;
+      }
+      const monNoon = new Date(2026, 10, 2, 12, 0);
+      const tueNine = new Date(2026, 10, 3, 21, 0);
+      const wedEleven = new Date(2026, 10, 4, 11, 0);
+      console.log(isOpen(monNoon), isOpen(tueNine), isOpen(wedEleven));
+    answer: "false false true"
+    explain: "2 November is a Monday, so closed. 21:00 is not before 21:00, so closed. Wednesday at 11:00 is open."
+    reteach: "### Times of day as minutes"
+
+  - id: q12
+    type: mcq
+    concept: formatting-dates
+    prompt: "Why build date text yourself from getDate, getMonth and so on, rather than use toLocaleDateString()?"
+    choices:
+      - "toLocaleDateString's output depends on the computer's language settings, so it can differ between devices"
+      - "toLocaleDateString doesn't exist in browsers"
+      - "toLocaleDateString always shows the date in UTC"
+      - "Building it yourself makes the Date object smaller"
+    answer: 0
+    explain: "Locale methods follow each device's settings. Building the text from the parts gives the same result everywhere."
+    reteach: "### Showing a date to people"

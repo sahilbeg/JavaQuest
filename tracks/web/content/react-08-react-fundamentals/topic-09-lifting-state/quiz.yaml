@@ -1,0 +1,163 @@
+topic: react-08-react-fundamentals/topic-09-lifting-state
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: shared-state
+    prompt: "Each ProductCard keeps its own count in state. Why can't the CartSummary show the total?"
+    choices:
+      - "State only flows down as props, so the summary cannot read the cards' state"
+      - "CartSummary is not allowed to use useState"
+      - "Numbers cannot be passed as props"
+      - "The cards re-render too slowly"
+    answer: 0
+    explain: "A component's state is private. Siblings and parents cannot read it. Lift it to a shared parent instead."
+    reteach: "### Two components, one piece of data"
+
+  - id: q02
+    type: mcq
+    concept: lifting-state
+    prompt: "The cards and the summary both sit inside Shop, which sits inside App. Where should the cart state live?"
+    choices:
+      - "In Shop, the closest parent of both"
+      - "In App, because the top is always best"
+      - "In every ProductCard"
+      - "In CartSummary"
+    answer: 0
+    explain: "Lift state only as high as the closest common parent. Higher means more re-rendering for no reason."
+    reteach: "### How high to lift"
+
+  - id: q03
+    type: mcq
+    concept: callbacks-up
+    prompt: "The cart lives in Shop. How does a ProductCard add itself to the cart?"
+    choices:
+      - "It calls an onAdd function that Shop passed down as a prop"
+      - "It calls setCart directly, because all state is shared"
+      - "It changes its inCart prop"
+      - "It sends an event to the browser, which tells Shop"
+    answer: 0
+    explain: "Values flow down as props. Events flow up by calling functions the parent passed down."
+    reteach: "### Values down, events up"
+
+  - id: q04
+    type: fill-blank
+    concept: callbacks-up
+    goal: "Report a tap to the parent, passing this product's id."
+    prompt: "<button type=\"button\" onClick={() => ___(product.id)}>Add to cart</button>"
+    answers: ["onAdd"]
+    explain: "onAdd is the function prop from the parent. Calling it with the id lets the parent update the cart."
+    reteach: "### Values down, events up"
+
+  - id: q05
+    type: predict-output
+    concept: immutable-updates
+    code: |
+      const before = { "DC-1042": 2 };
+      const id = "DC-1042";
+      const after = { ...before, [id]: (before[id] ?? 0) + 1 };
+      console.log(before[id], after[id]);
+      console.log(before === after);
+    answer: "2 3\nfalse"
+    explain: "The spread makes a new object with the old entries, then [id] replaces Golu's quantity. The old object keeps 2."
+    reteach: "### Syntax: updating an object in state"
+
+  - id: q06
+    type: spot-the-bug
+    concept: immutable-updates
+    prompt: "Tapping Add does nothing on the page. Which line is the real problem?"
+    code: |
+      function Shop({ products }) {
+        const [cart, setCart] = useState({});
+        function addToCart(id) {
+          cart[id] = (cart[id] ?? 0) + 1;
+          setCart(cart);
+        }
+        return <ProductList products={products} onAdd={addToCart} />;
+      }
+    bugLine: 4
+    explain: "Line 4 changes the existing object, so setCart gets the same object back and React skips the re-render. Make a new object with the spread."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: predict-output
+    concept: immutable-updates
+    code: |
+      const cart = { "DC-1043": 1 };
+      const same = cart;
+      same["DC-1043"] = 5;
+      console.log(Object.is(cart, same));
+      console.log(cart["DC-1043"]);
+    answer: "true\n5"
+    explain: "same points at the very same object, so changing it changes cart too. React would see no change."
+    reteach: "## Try it"
+
+  - id: q08
+    type: fill-blank
+    concept: immutable-updates
+    goal: "Copy every entry of the old cart into the new object before setting this product's quantity."
+    prompt: "setCart((old) => ({ ___, [id]: (old[id] ?? 0) + 1 }));"
+    answers: ["...old"]
+    explain: "The spread copies the old entries into a new object. Then the [id] entry overrides just one."
+    reteach: "### Syntax: updating an object in state"
+
+  - id: q09
+    type: mcq
+    concept: single-source-of-truth
+    prompt: "Shop keeps cart in state. Where should the item count come from?"
+    choices:
+      - "Worked out from cart on every render"
+      - "A second useState that every handler also updates"
+      - "Each card's own state"
+      - "The number of buttons on the page"
+    answer: 0
+    explain: "Keep one source of truth. A count stored separately will drift away from the cart."
+    reteach: "### Work things out in the parent"
+
+  - id: q10
+    type: spot-the-bug
+    concept: single-source-of-truth
+    prompt: "After Clear cart, the card still shows its old number. Which line causes it?"
+    code: |
+      function ProductCard({ product, inCart, onAdd }) {
+        const [count, setCount] = useState(inCart);
+        return (
+          <article>
+            <h3>{product.name}</h3>
+            <p>In cart: {count}</p>
+          </article>
+        );
+      }
+    bugLine: 2
+    explain: "useState uses inCart only on the first render, so the copy never follows the parent. Show the inCart prop directly."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: predict-output
+    concept: single-source-of-truth
+    code: |
+      const cart = { "DC-1042": 2, "DC-1043": 1 };
+      const prices = { "DC-1042": 45000, "DC-1043": 15000 };
+      const count = Object.values(cart).reduce((sum, qty) => sum + qty, 0);
+      let total = 0;
+      for (const id in cart) {
+        total += prices[id] * cart[id];
+      }
+      console.log(count, total);
+    answer: "3 105000"
+    explain: "Two elephants and one coaster set make 3 items. 2 × 45000 + 15000 = 105000 paise, or ₹1,050.00."
+    reteach: "### Work things out in the parent"
+
+  - id: q12
+    type: mcq
+    concept: lifting-state
+    prompt: "In the worked example, PickupButtons gets onChoose={setChosen}. What happens when a button calls onChoose(\"stall\")?"
+    choices:
+      - "The parent's chosen state becomes \"stall\", and both children re-render"
+      - "Only PickupButtons re-renders"
+      - "Nothing, because a child cannot call a setter"
+      - "React throws an error, because setters cannot be props"
+    answer: 0
+    explain: "A setter is just a function, so it can be passed down. Calling it changes the parent's state."
+    reteach: "## Worked example"

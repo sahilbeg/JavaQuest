@@ -1,0 +1,23 @@
+id: web-03-javascript-basics/topic-05-if-else
+title: "Decisions: if, else and logical operators"
+order: 5
+minutes: 10
+prerequisites: [web-03-javascript-basics/topic-04-booleans-and-comparison]
+concepts: [if-else, else-if, logical-operators, short-circuit, truthy-conditions, nullish-default]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0305
+  from: sam
+  title: "Charged ₹60 delivery for a stall pickup"
+  body: >
+    Raju here. Mrs. Deshpande picked up her order at the FC Road stall on Sunday, and the website still charged her
+    ₹60 for delivery. It also says the stall is open on Mondays, and it prints "Note: undefined" when there's no gift
+    note. Can you fix the rules in src/rules.js?
+hints:
+  - "Check the cases in order: a pickup first, then the free-delivery rule, and the ₹60 fee last."
+  - "The stall rule needs both parts: (day === \"Sat\" || day === \"Sun\") && hour >= 10 && hour < 20."
+  - "if (note) is false for \"\", undefined and null. For the bands, an else-if chain checks paise < 20000 first, then paise < 50000."
+review: true

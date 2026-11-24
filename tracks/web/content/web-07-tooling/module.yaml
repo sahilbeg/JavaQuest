@@ -1,0 +1,6 @@
+id: web-07-tooling
+title: Tooling
+project: A real project
+summary: Turn Dhaaga's website into a real project with npm, Vite, ESLint and Prettier, Git branches and pull requests, the debugger, Vitest tests, configuration and production builds.
+unlockAfter: web-06-async-javascript/boss
+mascotIntro: "Shabaash, the stock badges are live! Now let's give the website the tools real teams use, so it builds the same on every laptop."

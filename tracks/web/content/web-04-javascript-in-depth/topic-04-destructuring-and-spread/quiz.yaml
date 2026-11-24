@@ -1,0 +1,139 @@
+topic: web-04-javascript-in-depth/topic-04-destructuring-and-spread
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: object-destructuring
+    code: |
+      const item = { id: "DC-1046", code: "BTY", paise: 35000 };
+      const { code, paise } = item;
+      console.log(code, paise / 100);
+    answer: "BTY 350"
+    explain: "Destructuring makes code and paise from the properties with the same names."
+    reteach: "### Syntax: object destructuring"
+
+  - id: q02
+    type: predict-output
+    concept: default-values
+    code: |
+      const { colour = "Off-white", stock = 0 } = { colour: "Mint" };
+      console.log(colour, stock);
+    answer: "Mint 0"
+    explain: "colour exists, so its default is ignored. stock is missing, so it gets its default 0."
+    reteach: "### Renaming and default values"
+
+  - id: q03
+    type: mcq
+    concept: default-values
+    prompt: "const { colour = \"Off-white\" } = { colour: null }; What is colour?"
+    choices:
+      - "null"
+      - "\"Off-white\""
+      - "undefined"
+      - "It throws a TypeError"
+    answer: 0
+    explain: "A default replaces only undefined. null is a real value, so it is kept."
+    reteach: "### Renaming and default values"
+
+  - id: q04
+    type: predict-output
+    concept: array-destructuring
+    code: |
+      const [first, second] = ["CST", "KEY", "AMI"];
+      console.log(second, first);
+    answer: "KEY CST"
+    explain: "Arrays unpack by position: first gets item 0 and second gets item 1. AMI is left out."
+    reteach: "### Syntax: array destructuring"
+
+  - id: q05
+    type: predict-output
+    concept: spread
+    code: |
+      const golu = { id: "DC-1042", paise: 45000, stock: 3 };
+      const copy = { ...golu, stock: 0 };
+      copy.paise = 40000;
+      console.log(golu.paise, golu.stock, copy.paise, copy.stock);
+    answer: "45000 3 40000 0"
+    explain: "Spread makes a new object, so changing copy never touches golu."
+    reteach: "### Syntax: spread"
+
+  - id: q06
+    type: predict-output
+    concept: spread
+    code: |
+      const golu = { id: "DC-1042", stock: 3 };
+      const a = { ...golu, stock: 0 };
+      const b = { stock: 0, ...golu };
+      console.log(a.stock, b.stock);
+    answer: "0 3"
+    explain: "When a property appears twice, the later one wins. In b, golu's stock comes last."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: fill-blank
+    concept: rest
+    goal: "Gather every price passed to the function into one array called prices."
+    prompt: "function totalOf(___prices) {"
+    answers: ["..."]
+    explain: "Three dots in a parameter list make a rest parameter: all the arguments, as one array."
+    reteach: "### Syntax: rest parameters"
+
+  - id: q08
+    type: predict-output
+    concept: rest
+    code: |
+      const [first, ...others] = [12000, 15000, 45000, 89900];
+      console.log(first, others.length, others[0]);
+    answer: "12000 3 15000"
+    explain: "first takes 12000. others gathers the remaining three prices, starting with 15000."
+    reteach: "### Syntax: rest in destructuring"
+
+  - id: q09
+    type: mcq
+    concept: object-destructuring
+    prompt: "What does const { paise: price } = golu; do?"
+    choices:
+      - "It makes a variable called price holding golu.paise"
+      - "It makes a variable called paise holding golu.price"
+      - "It sets golu.paise to the value of price"
+      - "It makes two variables, paise and price"
+    answer: 0
+    explain: "The name before the colon is the property to read. The name after it is the new variable."
+    reteach: "### Renaming and default values"
+
+  - id: q10
+    type: spot-the-bug
+    concept: rest
+    code: |
+      const ids = ["DC-1042", "DC-1043", "DC-1044"];
+      const [...firstOnes, last] = ids;
+      console.log(last);
+    bugLine: 2
+    explain: "A rest element must be the last thing in the pattern. This line is a SyntaxError."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: spread
+    prompt: "Which expression makes one new array with the stall's codes followed by the shop's codes?"
+    choices:
+      - "[...stall, ...shop]"
+      - "[stall, shop]"
+      - "stall + shop"
+      - "{ ...stall, ...shop }"
+    answer: 0
+    explain: "Spreading both arrays inside [ ] copies their items into one new array. [stall, shop] would be an array of two arrays."
+    reteach: "### Syntax: spread"
+
+  - id: q12
+    type: predict-output
+    concept: default-values
+    code: |
+      function tag({ code, stock = 0 }) {
+        return code + ":" + stock;
+      }
+      console.log(tag({ code: "BAG" }), tag({ code: "CST", stock: 12 }));
+    answer: "BAG:0 CST:12"
+    explain: "The bag has no stock, so the default 0 is used. The coaster set has 12."
+    reteach: "### Destructuring in a parameter list"

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Golu the elephant | Dhaaga &amp; Co.</title>
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <main id="item">
+    <h1>Golu the elephant</h1>
+    <p>₹450.00 each. Crocheted by hand in Pune, modelled on the real Golu.</p>
+
+    <div class="stepper">
+      <button type="button" data-action="dec" aria-label="One less">−</button>
+      <span class="qty">1</span>
+      <button type="button" data-action="inc" aria-label="One more">+</button>
+    </div>
+
+    <p><label><input type="checkbox" id="gift-wrap"> Gift wrap (₹30)</label></p>
+    <p>
+      <label for="stitch">Name to stitch on (₹50 each)</label>
+      <input id="stitch">
+    </p>
+
+    <p id="summary"></p>
+    <p>Total: <strong id="total"></strong></p>
+  </main>
+</body>
+</html>

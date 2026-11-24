@@ -1,0 +1,25 @@
+id: react-09-react-in-depth/topic-04-context
+title: "Context: sharing state without passing props"
+order: 4
+minutes: 9
+prerequisites: [react-09-react-in-depth/topic-03-custom-hooks]
+concepts: [prop-drilling, create-context, provider, use-context, context-scope]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0904
+  from: maya
+  title: "The header says Cart (0) after you add things"
+  body: >
+    The useCart hook works, but the header and the product cards each call it, so they have two different
+    carts. Mrs. Joshi added two keychains and the header still said Cart (0). The cards sit four levels
+    below the header, and I don't want cart props threaded through every layer. Can you share one cart
+    through context?
+hints:
+  - "Create the context once, outside any component. The provider calls useCart() and passes the result as the context's value."
+  - "useCartContext reads the value with useContext(CartContext). If it is null, no provider is above, so throw an Error with a clear message."
+  - "Header, AddButton and CartTotal each call useCartContext() and take what they need: const { count } = useCartContext();"
+review: true

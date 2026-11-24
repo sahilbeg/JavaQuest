@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shop | Dhaaga &amp; Co.</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <main id="app">
+    <header>
+      <h1>Dhaaga &amp; Co.</h1>
+      <button id="cart-toggle" type="button" aria-controls="cart-drawer" aria-expanded="false">Cart (0)</button>
+    </header>
+
+    <ul id="products">
+      <li class="product" data-id="DC-1042">
+        <h3>Golu the elephant</h3>
+        <p class="price">₹450.00</p>
+        <button class="add" type="button">Add to cart</button>
+      </li>
+      <li class="product" data-id="DC-1001">
+        <h3>Marigold coaster set</h3>
+        <p class="price">₹150.00</p>
+        <button class="add" type="button">Add to cart</button>
+      </li>
+      <li class="product" data-id="DC-1013">
+        <h3>Rani pink keychain</h3>
+        <p class="price">₹120.00</p>
+        <button class="add" type="button">Add to cart</button>
+      </li>
+    </ul>
+
+    <aside id="cart-drawer" hidden>
+      <h2>Your cart</h2>
+      <button id="cart-close" type="button">Close</button>
+      <ul id="drawer-lines"></ul>
+      <p id="drawer-empty">Your cart is empty.</p>
+      <p>Total: <strong id="drawer-total">₹0.00</strong></p>
+    </aside>
+  </main>
+</body>
+</html>

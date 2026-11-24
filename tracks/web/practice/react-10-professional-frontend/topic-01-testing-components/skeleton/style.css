@@ -1,0 +1,58 @@
+:root {
+  --marigold: #F2A81D;
+  --indigo: #2E3A8C;
+  --off-white: #FAF7F0;
+}
+
+body {
+  margin: 0;
+  padding: 1rem;
+  font-family: system-ui, sans-serif;
+  background: var(--off-white);
+  color: #1f1f2e;
+}
+
+h1 {
+  color: var(--indigo);
+}
+
+.shelf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.card {
+  width: 14rem;
+  padding: 1rem;
+  border: 2px solid var(--indigo);
+  border-radius: 0.75rem;
+  background: white;
+}
+
+.price {
+  font-weight: bold;
+}
+
+.sold-out {
+  color: #9b1c1c;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: var(--marigold);
+  color: #1f1f2e;
+  font-weight: bold;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+button:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--indigo);
+  outline-offset: 2px;
+}

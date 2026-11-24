@@ -1,0 +1,115 @@
+topic: web-01-html/topic-10-head-and-meta
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: head-and-body
+    prompt: "Which of these belongs in the head, not the body?"
+    choices: ["The page's title", "The h1 heading", "The price table", "The quick order form"]
+    answer: 0
+    explain: "The head holds facts about the page. Everything visitors see on the page goes in the body."
+    reteach: "### What goes where"
+
+  - id: q02
+    type: mcq
+    concept: head-and-body
+    prompt: "You put <p>Hello</p> inside the head. What happens?"
+    choices: ["The browser moves it into the body, so it shows on the page", "It is hidden forever", "The page fails to load", "It becomes the page's title"]
+    answer: 0
+    explain: "Visible content can't live in the head. The browser closes the head and moves it into the body."
+    reteach: "### What goes where"
+
+  - id: q03
+    type: mcq
+    concept: charset
+    prompt: "Where should <meta charset=\"utf-8\"> go?"
+    choices: ["First thing inside the head", "Last thing inside the head", "Anywhere in the body", "After the closing </html>"]
+    answer: 0
+    explain: "Browsers look for it in the first 1024 bytes. Put it first, before anything could be misread."
+    reteach: "### Syntax: the charset"
+
+  - id: q04
+    type: spot-the-bug
+    concept: charset
+    prompt: "Which line does nothing for the page's encoding?"
+    code: |
+      <head>
+        <meta content="utf-8">
+        <title>Catalogue | Dhaaga &amp; Co.</title>
+      </head>
+    bugLine: 2
+    explain: "The charset tag uses its own attribute: <meta charset=\"utf-8\">."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: mcq
+    concept: page-title
+    prompt: "Where does the title show up?"
+    choices: ["On the browser tab, in bookmarks and in search results", "As the biggest heading on the page", "Only in DevTools", "In the footer"]
+    answer: 0
+    explain: "The title is the page's name outside the page. The h1 is its name on the page."
+    reteach: "### Syntax: the title"
+
+  - id: q06
+    type: mcq
+    concept: page-title
+    prompt: "Which title is best for Golu's own page?"
+    choices: ["Golu the elephant | Dhaaga & Co.", "Dhaaga & Co.", "Page 2", "Welcome to our website!"]
+    answer: 0
+    explain: "A good title is short and puts the specific part first, so it stands out among tabs."
+    reteach: "### Syntax: the title"
+
+  - id: q07
+    type: fill-blank
+    concept: viewport
+    goal: "Tell phones to draw the page at their real screen width, not zoomed out."
+    prompt: "<meta name=\"___\" content=\"width=device-width, initial-scale=1\">"
+    answers: ["viewport"]
+    explain: "The viewport tag stops phones pretending to be 980 pixels wide."
+    reteach: "### Syntax: the viewport"
+
+  - id: q08
+    type: mcq
+    concept: viewport
+    prompt: "A page has no viewport tag. How does it look on a phone?"
+    choices: ["Drawn about 980 pixels wide and shrunk, so the text is tiny", "Exactly the same as with the tag", "Blank", "Drawn twice"]
+    answer: 0
+    explain: "Without the tag, phones assume a desktop-sized page and zoom out to fit it."
+    reteach: "### Syntax: the viewport"
+
+  - id: q09
+    type: fill-blank
+    concept: meta-description
+    goal: "Give search engines a short summary to show under the page's title."
+    prompt: "<meta name=\"___\" content=\"Handmade crochet coasters, toys and tote bags from Pune.\">"
+    answers: ["description"]
+    explain: "The description meta tag is the summary search engines often show in results."
+    reteach: "### Syntax: the description"
+
+  - id: q10
+    type: mcq
+    concept: meta-description
+    prompt: "About how long should a meta description be?"
+    choices: ["Under about 160 characters: one or two sentences", "Exactly one word", "The whole page's text", "At least 1,000 characters"]
+    answer: 0
+    explain: "Search results cut off longer descriptions, so keep it short and clear."
+    reteach: "### Syntax: the description"
+
+  - id: q11
+    type: fill-blank
+    concept: link-element
+    goal: "Show Golu's tiny picture on the browser tab, next to the page's title."
+    prompt: "<link rel=\"___\" href=\"images/golu-icon.png\">"
+    answers: ["icon"]
+    explain: "rel=\"icon\" says the file is the page's tab icon, the favicon."
+    reteach: "### Syntax: a link to another file"
+
+  - id: q12
+    type: mcq
+    concept: link-element
+    prompt: "What's the difference between <link> in the head and <a> in the body?"
+    choices: ["link connects a file the browser loads by itself; a is a link people click", "They are the same element", "link is for images and a is for text", "a only works in the head"]
+    answer: 0
+    explain: "link connects stylesheets and icons. a makes a clickable link."
+    reteach: "### Syntax: a link to another file"

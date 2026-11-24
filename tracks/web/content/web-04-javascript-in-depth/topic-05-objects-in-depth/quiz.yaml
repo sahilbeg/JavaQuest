@@ -1,0 +1,159 @@
+topic: web-04-javascript-in-depth/topic-05-objects-in-depth
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: this
+    code: |
+      const stall = {
+        name: "FC Road stall",
+        days: ["Sat", "Sun"],
+        describe() {
+          return this.name + " opens " + this.days.join(" and ");
+        },
+      };
+      console.log(stall.describe());
+    answer: "FC Road stall opens Sat and Sun"
+    explain: "describe is called on stall, so this.name and this.days are stall's own properties."
+    reteach: "### this: the object before the dot"
+
+  - id: q02
+    type: mcq
+    concept: methods
+    prompt: "Which is the short way to write a method called total inside an object literal?"
+    choices:
+      - "total() { return 0; },"
+      - "function total: () { return 0; },"
+      - "method total() { return 0; },"
+      - "total => { return 0; },"
+    answer: 0
+    explain: "Method shorthand is the name, brackets for parameters, then the body: total() { ... }."
+    reteach: "### Syntax: methods"
+
+  - id: q03
+    type: mcq
+    concept: this
+    prompt: "In the call basket.add(\"CST\", 15000), what is this inside add?"
+    choices:
+      - "basket, the object before the dot"
+      - "The add function itself"
+      - "The string \"CST\""
+      - "Always the whole page"
+    answer: 0
+    explain: "In a method call, this is the object the method was called on."
+    reteach: "### this: the object before the dot"
+
+  - id: q04
+    type: predict-output
+    concept: references
+    code: |
+      const golu = { id: "DC-1042", stock: 3 };
+      const item = golu;
+      item.stock = item.stock - 1;
+      console.log(golu.stock);
+    answer: "2"
+    explain: "item and golu point to the same object, so the change shows through both names."
+    reteach: "### Objects are shared by reference"
+
+  - id: q05
+    type: predict-output
+    concept: references
+    code: |
+      const a = { code: "KEY" };
+      const b = { code: "KEY" };
+      const c = b;
+      console.log(a === b, b === c);
+    answer: "false true"
+    explain: "=== on objects checks for the same object. a and b are two objects; b and c are one."
+    reteach: "### Comparing objects with ==="
+
+  - id: q06
+    type: predict-output
+    concept: shallow-copy
+    code: |
+      const order = { id: "order-17", customer: { name: "Asha" } };
+      const copy = { ...order };
+      copy.id = "order-18";
+      copy.customer.name = "Ravi";
+      console.log(order.id, order.customer.name);
+    answer: "order-17 Ravi"
+    explain: "Spread copied id, so changing it is safe. But customer is one shared object, so the name changed in both."
+    reteach: "### Syntax: shallow copy"
+
+  - id: q07
+    type: predict-output
+    concept: deep-copy
+    code: |
+      const order = { id: "order-17", lines: [{ code: "AMI", qty: 2 }] };
+      const copy = structuredClone(order);
+      copy.lines[0].qty = 5;
+      console.log(order.lines[0].qty, copy.lines[0].qty);
+    answer: "2 5"
+    explain: "structuredClone copies every level, so the copy has its own lines and its own line objects."
+    reteach: "### Syntax: deep copy"
+
+  - id: q08
+    type: fill-blank
+    concept: deep-copy
+    goal: "Make a full copy of the order, where every inner object and array is new too."
+    prompt: "const copy = ___(order);"
+    answers: ["structuredClone"]
+    explain: "structuredClone makes a deep copy of plain data."
+    reteach: "### Syntax: deep copy"
+
+  - id: q09
+    type: spot-the-bug
+    concept: this
+    code: |
+      const basket = {
+        lines: [],
+        count: () => this.lines.length,
+      };
+      console.log(basket.count());
+    bugLine: 3
+    explain: "An arrow function has no this of its own, so this is not basket. Write count() { return this.lines.length; }."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: shallow-copy
+    prompt: "What does { ...order } copy?"
+    choices:
+      - "The top-level properties only; objects and arrays inside are still shared"
+      - "Every level, so nothing is shared"
+      - "Nothing: it is the same object"
+      - "Only the properties that hold numbers"
+    answer: 0
+    explain: "Spread makes a shallow copy. Inner objects come across as references to the same objects."
+    reteach: "### Syntax: shallow copy"
+
+  - id: q11
+    type: predict-output
+    concept: methods
+    code: |
+      const basket = {
+        lines: [],
+        add(code) {
+          this.lines.push(code);
+          return this;
+        },
+      };
+      basket.add("CST").add("KEY").add("AMI");
+      console.log(basket.lines.join("+"));
+    answer: "CST+KEY+AMI"
+    explain: "add returns this, the basket, so each .add(...) is called on the same basket."
+    reteach: "### this: the object before the dot"
+
+  - id: q12
+    type: mcq
+    concept: this
+    prompt: "const count = basket.count; count(); throws a TypeError. Why?"
+    choices:
+      - "count was called with nothing before the dot, so this is not basket any more"
+      - "count was deleted from basket"
+      - "Functions can't be stored in variables"
+      - "count needs to be called with new"
+    answer: 0
+    explain: "this is decided by how a function is called. A bare count() call has no object, so this is undefined."
+    reteach: "### When this gets lost"

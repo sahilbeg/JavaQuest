@@ -1,0 +1,23 @@
+id: react-08-react-fundamentals/boss
+title: "INC-08: Removing one item removes another"
+order: 99
+minutes: 12
+prerequisites: [react-08-react-fundamentals/topic-10-styling]
+concepts: [keys, list-identity, component-state, filter-by-id]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: INC-08
+  from: theo
+  title: "Removing one item removes another"
+  body: >
+    Diwali sale, day one, and the cart is eating orders. Mrs. Rao removed the baby booties, and her three
+    Mint keychains turned into two. A Bengaluru customer removed one of her two coaster sets, and both
+    vanished. Customers are checking out with the wrong quantities. Please find it fast.
+hints:
+  - "Bronze: each row keeps its quantity in its own state. Look at the key each row gets. What happens to the keys of the rows below one you remove?"
+  - "Bronze and silver: a key must stay with its item. The position changes when a row above is removed; random keys change every render. Each item already has an id."
+  - "Gold: two different items can share a name, like two coaster sets in different colours. Look at how removeItem decides what to keep, and compare ids instead of names."
+review: false

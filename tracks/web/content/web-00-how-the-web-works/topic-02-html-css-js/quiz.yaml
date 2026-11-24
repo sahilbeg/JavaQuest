@@ -1,0 +1,118 @@
+topic: web-00-how-the-web-works/topic-02-html-css-js
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: html
+    variants:
+      - { prompt: "Which language says what is on a page: its headings, paragraphs and links?", choices: ["HTML", "CSS", "JavaScript", "HTTP"], answer: 0 }
+      - { prompt: "Which language makes the heading Indigo and the button Marigold?", choices: ["CSS", "HTML", "JavaScript", "DNS"], answer: 0 }
+      - { prompt: "Which language makes a button react when someone taps it?", choices: ["JavaScript", "HTML", "CSS", "A URL"], answer: 0 }
+    explain: "HTML is what is on the page, CSS is how it looks, and JavaScript is what it does."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: elements
+    prompt: "In <p>Handmade crochet from Pune.</p>, what is </p>?"
+    choices: ["The closing tag", "The opening tag", "An attribute", "The content"]
+    answer: 0
+    explain: "The slash marks a closing tag. It says the paragraph ends here."
+    reteach: "### Syntax: an HTML element"
+
+  - id: q03
+    type: fill-blank
+    concept: elements
+    goal: "End the paragraph element right after its text."
+    prompt: "<p>Handmade crochet from Pune.___"
+    answers: ["</p>"]
+    explain: "Every paragraph that opens with <p> closes with </p>."
+    reteach: "### Syntax: an HTML element"
+
+  - id: q04
+    type: mcq
+    concept: attributes
+    prompt: "In <a href=\"https://dhaaga.in/prices\">See our prices</a>, what is href=\"https://dhaaga.in/prices\"?"
+    choices: ["An attribute that says where the link goes", "The text people tap", "A closing tag", "A CSS rule"]
+    answer: 0
+    explain: "An attribute is a name and a value inside the opening tag. href holds the link's address."
+    reteach: "### Attributes: extra details on a tag"
+
+  - id: q05
+    type: spot-the-bug
+    concept: elements
+    code: |
+      <h1>Dhaaga & Co.
+      <p>Handmade crochet from Pune.</p>
+      <p>Open Saturday and Sunday.</p>
+    bugLine: 1
+    explain: "The heading never closes, so the paragraphs land inside it and show up huge. Add </h1>."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: mcq
+    concept: css
+    prompt: "In the rule h1 { color: #2E3A8C; }, what is h1?"
+    choices: ["The selector, which picks the elements to style", "The property", "The value", "An HTML attribute"]
+    answer: 0
+    explain: "The selector comes before the braces. h1 picks every main heading."
+    reteach: "### Syntax: a CSS rule"
+
+  - id: q07
+    type: fill-blank
+    concept: css
+    goal: "Make the text of every main heading Indigo."
+    prompt: "h1 { ___: #2E3A8C; }"
+    answers: ["color"]
+    explain: "The color property sets the text colour. CSS uses the American spelling."
+    reteach: "### Syntax: a CSS rule"
+
+  - id: q08
+    type: spot-the-bug
+    concept: css
+    code: |
+      h1 {
+        color: #2E3A8C
+        font-size: 32px;
+      }
+    bugLine: 2
+    explain: "The color line has no semicolon, so the browser reads both lines as one broken value and skips them."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: predict-output
+    concept: javascript
+    code: |
+      console.log("Dhaaga & Co.");
+      console.log("Handmade in Pune");
+    answer: "Dhaaga & Co.\nHandmade in Pune"
+    explain: "Each console.log prints one line, in order from top to bottom."
+    reteach: "## Try it"
+
+  - id: q10
+    type: mcq
+    concept: javascript
+    prompt: "Which is true about Java and JavaScript?"
+    choices: ["They are different languages that just have similar names", "JavaScript is a small part of Java", "They are the same language", "Java runs in every browser, JavaScript does not"]
+    answer: 0
+    explain: "JavaScript is its own language. The names are similar because of an old marketing decision."
+    reteach: "### JavaScript: what it does"
+
+  - id: q11
+    type: mcq
+    concept: linking-files
+    variants:
+      - { prompt: "Which line in index.html pulls in the stylesheet?", choices: ["<link rel=\"stylesheet\" href=\"style.css\">", "<script type=\"module\" src=\"style.css\"></script>", "<p>style.css</p>", "<a href=\"style.css\">Styles</a>"], answer: 0 }
+      - { prompt: "Which line in index.html fetches main.js and runs it?", choices: ["<script type=\"module\" src=\"main.js\"></script>", "<link rel=\"stylesheet\" href=\"main.js\">", "<p>main.js</p>", "<h1>main.js</h1>"], answer: 0 }
+    explain: "<link rel=\"stylesheet\"> fetches CSS, and <script src> fetches JavaScript and runs it."
+    reteach: "### Three files, side by side"
+
+  - id: q12
+    type: mcq
+    concept: linking-files
+    prompt: "The page loads with no colours at all. The file is style.css, but the HTML says href=\"styles.css\". What happened?"
+    choices: ["The request for styles.css got a 404, so no CSS arrived", "The CSS loaded but was too slow", "JavaScript deleted the colours", "The browser only reads CSS on phones"]
+    answer: 0
+    explain: "The browser asked for a file that doesn't exist. Copy file names exactly."
+    reteach: "## Common mistakes"

@@ -1,0 +1,23 @@
+id: web-04-javascript-in-depth/topic-10-dates
+title: "Dates and times: opening hours"
+order: 10
+minutes: 10
+prerequisites: [web-04-javascript-in-depth/topic-09-json]
+concepts: [date-objects, months-and-weekdays, comparing-dates, date-arithmetic, formatting-dates]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0410
+  from: sam
+  title: "The website says the shop is open on Monday"
+  body: >
+    Raju here. A customer drove all the way to the Aundh shop on Monday morning because the website said "Open now".
+    We are closed on Mondays! It also said open on Sunday night at 9:15. The shop opens Tuesday to Sunday, 11:00 to 21:00,
+    and the FC Road stall opens Saturday and Sunday, 10:00 to 20:00.
+hints:
+  - "getDay() gives the weekday: 0 is Sunday, 1 is Monday, 6 is Saturday. Turn the time into minutes after midnight: getHours() * 60 + getMinutes()."
+  - "Open from 11:00 to 21:00 means minutes >= 11 * 60 and minutes < 21 * 60. At exactly 21:00 the shop is closed."
+  - "addDays: return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days, date.getHours(), date.getMinutes()). The Date fixes a day like 32 October for you."
+review: true

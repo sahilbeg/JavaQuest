@@ -1,0 +1,159 @@
+topic: react-08-react-fundamentals/topic-02-components-and-jsx
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: function-components
+    prompt: "Which line starts a component React will treat as yours, not as an HTML tag?"
+    choices:
+      - "function OpeningHours() {"
+      - "function openingHours() {"
+      - "function opening-hours() {"
+      - "const <OpeningHours> = () => {"
+    answer: 0
+    explain: "Component names start with a capital letter. A small first letter makes React treat the tag as HTML."
+    reteach: "### Syntax: a function component"
+
+  - id: q02
+    type: mcq
+    concept: function-components
+    prompt: "What does a function component return?"
+    choices:
+      - "JSX describing what to show"
+      - "A string of HTML that React pastes into the page"
+      - "Nothing: it changes the page with document.querySelector"
+      - "A CSS file"
+    answer: 0
+    explain: "A component returns JSX. React turns it into elements on the page."
+    reteach: "### Syntax: a function component"
+
+  - id: q03
+    type: spot-the-bug
+    concept: jsx-rules
+    prompt: "This component breaks the build. Which line is wrong?"
+    code: |
+      function Hours() {
+        return (
+          <h2>Opening hours</h2>
+          <p>Sat and Sun, 10:00 to 20:00</p>
+        );
+      }
+    bugLine: 4
+    explain: "The second element sits next to the first, so the function would return two things. Wrap both in one parent or a fragment."
+    reteach: "### Rule 1: return one parent"
+
+  - id: q04
+    type: mcq
+    concept: fragments
+    prompt: "You want to return an <h2> and a <p> without adding any extra element to the page. What do you wrap them in?"
+    choices:
+      - "A fragment: <> and </>"
+      - "A <div>"
+      - "Square brackets: [ and ]"
+      - "Nothing: just return both"
+    answer: 0
+    explain: "A fragment groups elements without adding anything to the page. A <div> works too, but it adds an element."
+    reteach: "### Syntax: a fragment"
+
+  - id: q05
+    type: mcq
+    concept: jsx-rules
+    prompt: "Which image tag is valid JSX?"
+    choices:
+      - "<img src=\"golu.png\" alt=\"Golu\" />"
+      - "<img src=\"golu.png\" alt=\"Golu\">"
+      - "<img src=\"golu.png\" alt=\"Golu\"></image>"
+      - "<IMG src=\"golu.png\" alt=\"Golu\">"
+    answer: 0
+    explain: "Every JSX tag must be closed. A tag with nothing inside closes itself with />."
+    reteach: "### Rule 2: close every tag"
+
+  - id: q06
+    type: fill-blank
+    concept: jsx-attributes
+    goal: "Give the paragraph the CSS class called price, spelled the way JSX needs."
+    prompt: "<p ___=\"price\">₹150.00</p>"
+    answers: ["className"]
+    explain: "class is a special word in JavaScript, so JSX uses className."
+    reteach: "### Rule 3: attributes are camelCase"
+
+  - id: q07
+    type: spot-the-bug
+    concept: jsx-attributes
+    prompt: "Which line uses an HTML spelling that JSX does not want?"
+    code: |
+      function PhoneField() {
+        return (
+          <div className="field">
+            <label for="phone">Phone</label>
+            <input id="phone" type="tel" />
+          </div>
+        );
+      }
+    bugLine: 4
+    explain: "for is a special word in JavaScript. JSX spells it htmlFor."
+    reteach: "### Rule 3: attributes are camelCase"
+
+  - id: q08
+    type: fill-blank
+    concept: curly-braces
+    goal: "Show the value of the TAGLINE constant as the paragraph's text."
+    prompt: "<p>___</p>"
+    answers: ["{TAGLINE}", "{ TAGLINE }"]
+    explain: "Curly braces open a window into JavaScript, so the paragraph shows the constant's value."
+    reteach: "### Syntax: curly braces"
+
+  - id: q09
+    type: mcq
+    concept: curly-braces
+    prompt: "const photo = \"golu.png\"; Which tag shows that photo?"
+    choices:
+      - "<img src={photo} alt=\"Golu\" />"
+      - "<img src=\"{photo}\" alt=\"Golu\" />"
+      - "<img src=\"photo\" alt=\"Golu\" />"
+      - "<img src={\"photo\"} alt=\"Golu\" />"
+    answer: 0
+    explain: "Braces use the variable's value. Quotes, even around braces, make the literal text, so the browser looks for a file called {photo} or photo."
+    reteach: "### Syntax: curly braces"
+
+  - id: q10
+    type: mcq
+    concept: curly-braces
+    prompt: "Which of these can go inside curly braces in JSX?"
+    choices:
+      - "item.name.toUpperCase()"
+      - "if (stock > 0) { \"In stock\" }"
+      - "for (const item of items) {}"
+      - "let total = 0;"
+    answer: 0
+    explain: "Only expressions, things that give a value, fit in braces. if, for and let are statements."
+    reteach: "### Syntax: curly braces"
+
+  - id: q11
+    type: predict-output
+    concept: jsx-rules
+    code: |
+      function jsx(type, props) {
+        return { type, props };
+      }
+      const el = jsx("img", { src: "golu.png", alt: "Golu" });
+      console.log(el.type);
+      console.log(el.props.alt);
+      console.log(Object.keys(el.props).length);
+    answer: "img\nGolu\n2"
+    explain: "A JSX tag becomes a call like this. The tag name is the type, and the attributes become one object with two keys."
+    reteach: "### What JSX turns into"
+
+  - id: q12
+    type: mcq
+    concept: composition
+    prompt: "StoreFront returns <main><StoreHeader /><StoreHeader /></main>. How many times is the StoreHeader function called when StoreFront renders?"
+    choices:
+      - "Twice, once for each tag"
+      - "Once, and the result is copied"
+      - "Never: tags are only drawn, not called"
+      - "Three times: once more for main"
+    answer: 0
+    explain: "Each <StoreHeader /> is a separate use of the component, so React calls the function for each one."
+    reteach: "### Syntax: using a component"

@@ -1,0 +1,24 @@
+id: react-08-react-fundamentals/topic-06-conditional-rendering
+title: "Showing things conditionally"
+order: 6
+minutes: 9
+prerequisites: [react-08-react-fundamentals/topic-05-events]
+concepts: [early-return, return-null, ternary, logical-and, zero-trap]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0806
+  from: sam
+  title: "Golu was sold out, but the site still took the order"
+  body: >
+    Raju here. Mr. Pillai paid ₹450 for Golu the elephant on Sunday night, but the last one went at the
+    FC Road stall that afternoon. The card still said Add to cart. Can the card say Sold out, offer a
+    Notify me button instead, and warn people when only a few are left?
+hints:
+  - "In StockBadge, check the cases one by one: if (stock === 0) return the Sold out badge; if (stock <= 3) return the Only N left badge; otherwise return null."
+  - "Pick one of two buttons with a ternary: {stock > 0 ? <button ...>Add to cart</button> : <button ...>Notify me</button>}."
+  - "For the gift wrap line, {giftWrap && <p className=\"gift-wrap\">Gift wrap available</p>} is safe because giftWrap is true or false. Never write {stock && ...}: when stock is 0, React shows the 0."
+review: true

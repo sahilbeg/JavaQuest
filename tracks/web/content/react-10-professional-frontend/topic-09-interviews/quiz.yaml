@@ -1,0 +1,174 @@
+topic: react-10-professional-frontend/topic-09-interviews
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: frontend-loop
+    variants:
+      - prompt: "Which round asks you to build a working component, like tabs or a star rating, in under 90 minutes?"
+        choices: ["The UI coding round", "The behavioural round", "The recruiter screen", "Frontend system design"]
+        answer: 0
+      - prompt: "How can you find out which rounds your loop will have?"
+        choices:
+          - "Ask the recruiter: they are happy to tell you"
+          - "You can't: it's always a surprise"
+          - "Guess from the company's logo"
+          - "Read the company's CSS"
+        answer: 0
+    explain: "Loops mix JavaScript fundamentals, UI coding, problem solving, frontend system design and behavioural rounds. Asking which ones yours has lets you prepare for the right things."
+    reteach: "### The frontend loop"
+
+  - id: q02
+    type: predict-output
+    concept: js-fundamentals
+    prompt: "A closure question. What does this print?"
+    code: |
+      function makeCounter() {
+        let count = 0;
+        return () => ++count;
+      }
+      const orders = makeCounter();
+      orders();
+      orders();
+      console.log(orders());
+    answer: "3"
+    explain: "The arrow function remembers count from makeCounter. Each call adds one to the same count, so the third call returns 3."
+    reteach: "### JavaScript fundamentals"
+
+  - id: q03
+    type: predict-output
+    concept: js-fundamentals
+    prompt: "What does this print?"
+    code: |
+      console.log("5" == 5, "5" === 5);
+    answer: "true false"
+    explain: "== converts the text \"5\" to a number before comparing, so it's true. === also compares types, and a string is not a number, so it's false."
+    reteach: "### JavaScript fundamentals"
+
+  - id: q04
+    type: predict-output
+    concept: event-loop-order
+    prompt: "In what order do the letters arrive? What does this print?"
+    code: |
+      const log = [];
+      setTimeout(() => {
+        log.push("C");
+        console.log(log.join(""));
+      }, 0);
+      Promise.resolve().then(() => log.push("B"));
+      log.push("A");
+    answer: "ABC"
+    explain: "Plain code runs first (A). Then microtasks, like a promise's then (B). Timer tasks wait until all microtasks are done (C), and it prints the whole log."
+    reteach: "### The event loop question"
+
+  - id: q05
+    type: mcq
+    concept: event-loop-order
+    prompt: "Why doesn't setTimeout(callback, 0) run its callback straight away?"
+    choices:
+      - "The callback goes in the task queue and waits until the current code and all microtasks finish"
+      - "0 milliseconds is rounded up to one second"
+      - "setTimeout only works in browsers"
+      - "It does run straight away, before the next line"
+    answer: 0
+    explain: "Timers schedule a task. The engine first finishes the current code, then runs every microtask, and only then takes the next task."
+    reteach: "### The event loop question"
+
+  - id: q06
+    type: mcq
+    concept: ui-coding-round
+    variants:
+      - prompt: "You have 10 minutes left in a UI round. Which is the best use of them?"
+        choices:
+          - "Make it work with the keyboard and test the edges by hand"
+          - "Add gradients and animations"
+          - "Rename every variable"
+          - "Start a second component"
+        answer: 0
+      - prompt: "Why build a star rating from radio buttons?"
+        choices:
+          - "The browser gives focus, arrow keys and screen reader announcements for free"
+          - "Radio buttons are faster to draw"
+          - "Divs can't show stars"
+          - "Interviewers don't allow divs"
+        answer: 0
+    explain: "UI rounds reward a working, accessible component with clean state and clear talking. Native elements bring accessibility for free; styling matters least."
+    reteach: "### The UI coding round"
+
+  - id: q07
+    type: order
+    concept: coding-method
+    prompt: "Put the coding-round method in order."
+    items:
+      - "Clarify the problem and its edge cases"
+      - "Write two or three small examples"
+      - "Say your plan and its cost"
+      - "Write the code, talking as you go"
+      - "Test by hand with the examples and the edges"
+    explain: "Clarifying and examples first stop you solving the wrong problem. Testing by hand before you say done catches the edge cases an interviewer would type."
+    reteach: "### A method for any coding round"
+
+  - id: q08
+    type: mcq
+    concept: coding-method
+    prompt: "You're stuck halfway through a coding round. What should you do?"
+    choices:
+      - "Say what you know, what you're unsure about and what you'll try next"
+      - "Type and delete in silence until it works"
+      - "Ask to end the interview"
+      - "Copy an answer from memory without explaining it"
+    answer: 0
+    explain: "Interviewers can only help a candidate who explains where they are. Talking through it is part of what they assess."
+    reteach: "### A method for any coding round"
+
+  - id: q09
+    type: fill-blank
+    concept: coding-method
+    goal: "Check whether a product with exactly the missing price was already seen earlier on the shelf."
+    prompt: "if (seen.___(need)) return [seen.get(need).name, p.name];"
+    answers: ["has"]
+    explain: "Map.has tells you whether a key is stored. Remembering prices already seen turns two nested loops into one pass."
+    reteach: "## Try it"
+
+  - id: q10
+    type: mcq
+    concept: frontend-system-design
+    variants:
+      - prompt: "In a 'design the store's search box' round, what should you cover first?"
+        choices:
+          - "The requirements: what it must do, for how many products and users, on which devices"
+          - "The exact colours of the suggestion list"
+          - "The variable names"
+          - "Which laptop you use"
+        answer: 0
+      - prompt: "Which network ideas belong in a search-as-you-type design?"
+        choices:
+          - "Debounce typing, cancel stale requests, cache recent answers and handle errors"
+          - "Send a request on every key and show whichever answer comes last"
+          - "Download the whole database on page load"
+          - "No network: search is always offline"
+        answer: 0
+    explain: "Go from requirements to components, data and state, network, performance and accessibility, and say the trade-offs. Interviewers care about the reasons."
+    reteach: "### Frontend system design"
+
+  - id: q11
+    type: mcq
+    concept: behavioural-star
+    variants:
+      - prompt: "What does STAR stand for?"
+        choices:
+          - "Situation, Task, Action, Result"
+          - "Start, Test, Approve, Release"
+          - "Story, Team, Answer, Review"
+          - "State, Type, Array, Return"
+        answer: 0
+      - prompt: "Which answer to 'tell me about a performance problem you fixed' is strongest?"
+        choices:
+          - "\"I measured with Lighthouse, resized and lazy-loaded the photos, and LCP went from 9 s to 2.1 s.\""
+          - "\"We had a problem and we fixed it as a team.\""
+          - "\"I've never had a performance problem.\""
+          - "\"Performance is the backend's job.\""
+        answer: 0
+    explain: "STAR tells a real story with your own actions and a result, ideally with numbers. Say I for your part, and be honest about what you learned."
+    reteach: "### Behavioural questions and STAR"

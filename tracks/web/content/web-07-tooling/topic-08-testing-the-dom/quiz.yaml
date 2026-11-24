@@ -1,0 +1,113 @@
+topic: web-07-tooling/topic-08-testing-the-dom
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: jsdom
+    variants:
+      - { prompt: "What is jsdom?", choices: ["A pretend browser inside Node, with document and elements but no screen", "A browser extension for debugging", "A CSS framework", "Vite's dev server"], answer: 0 }
+      - { prompt: "Why can't a jsdom test check that a card is 200 pixels wide?", choices: ["jsdom has no layout, so every size is 0", "jsdom only supports text", "Tests can't read CSS files", "Pixels are only measured in production"], answer: 0 }
+      - { prompt: "What should a page test check?", choices: ["What is in the page: text, attributes and state like disabled", "How many pixels each element moved", "Which colours the screen shows", "How fast the page scrolls"], answer: 0 }
+    explain: "jsdom gives tests a real DOM in Node, but no screen or layout. Test the page's content and state, not its pixels."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: before-each
+    variants:
+      - { prompt: "What does beforeEach do?", choices: ["Runs its code before every test in the file", "Runs its code once, before the whole file", "Runs only before the first test", "Runs after every test"], answer: 0 }
+      - { prompt: "Why reset document.body in beforeEach?", choices: ["So each test starts from the same clean page and cannot depend on another test", "So the page loads faster", "Because jsdom deletes the body after each test", "So Vitest can find the test file"], answer: 0 }
+      - { prompt: "A test passes alone but fails when run after another test. What is the likely cause?", choices: ["The tests share a page that is not reset before each test", "Vitest runs tests in random order on purpose", "The second test has no message", "jsdom ran out of memory"], answer: 0 }
+    explain: "beforeEach runs before every test. Resetting the page there keeps every test independent."
+    reteach: "### Syntax: beforeEach"
+
+  - id: q03
+    type: fill-blank
+    concept: before-each
+    goal: "Run this setup again before every single test in the file, so each one gets a clean shelf."
+    prompt: "___(() => { document.body.innerHTML = `<section id=\"shelf\"></section>`; });"
+    answers: ["beforeEach"]
+    explain: "beforeEach runs its function before each test. afterEach runs after each one."
+    reteach: "### Syntax: beforeEach"
+
+  - id: q04
+    type: mcq
+    concept: dom-queries
+    variants:
+      - { prompt: "How does a test read the price on the card?", choices: ["document.querySelector(\"#shelf .price\")?.textContent", "card.price.read()", "screen.pixels(\".price\")", "renderProduct.price"], answer: 0 }
+      - { prompt: "Why write querySelector(\"#shelf h3\")?.textContent with ?.", choices: ["If nothing is found, you get undefined and a friendly failure instead of a crash", "?. makes the query faster", "?. finds hidden elements too", "Vitest requires ?. in every test"], answer: 0 }
+      - { prompt: "How does a test check that a sold-out button is disabled?", choices: ["expect(button.disabled).toBe(true)", "expect(button.textContent).toBe(\"disabled\")", "expect(button).toBe(false)", "expect(button.click()).toThrow()"], answer: 0 }
+    explain: "Tests find elements with querySelector and check textContent, attributes and properties like disabled. ?. turns a missing element into undefined."
+    reteach: "### Finding things on the page"
+
+  - id: q05
+    type: mcq
+    concept: simulating-events
+    variants:
+      - { prompt: "How does a test press the Add to cart button?", choices: ["button.click()", "button.press()", "expect(button).toClick()", "button.disabled = false"], answer: 0 }
+      - { prompt: "What happens when a test calls click() on a disabled button?", choices: ["Nothing: a disabled button ignores the click, like in a browser", "The test crashes", "The button enables itself", "The click goes to the next button"], answer: 0 }
+      - { prompt: "A quantity box listens for input events. How does a test type 3 into it?", choices: ["Set input.value = \"3\", then dispatch an input event that bubbles", "Call input.type(\"3\")", "Only set input.value = \"3\"", "Call input.click() three times"], answer: 0 }
+    explain: "click() fires a real click. For typing, set the value, then dispatch the event the page listens for, with bubbles: true."
+    reteach: "### Simulating a customer"
+
+  - id: q06
+    type: predict-output
+    concept: mock-functions
+    code: |
+      const calls = [];
+      const onAdd = (...args) => calls.push(args);
+      onAdd("DC-1042");
+      onAdd("DC-1077", 2);
+      console.log(calls.length);
+      console.log(calls[1][0]);
+    answer: "2\nDC-1077"
+    explain: "A mock remembers every call as a list of its arguments. The second call's first argument is DC-1077. vi.fn() keeps the same list in .mock.calls."
+    reteach: "### Syntax: vi.fn, a mock function"
+
+  - id: q07
+    type: mcq
+    concept: mock-functions
+    variants:
+      - { prompt: "What does vi.fn() make?", choices: ["A mock function that remembers every call", "A real cart", "A new test file", "A fake page"], answer: 0 }
+      - { prompt: "After one click on Golu's card, what is onAdd.mock.calls?", choices: ["[[\"DC-1042\"]]", "[\"DC-1042\"]", "1", "true"], answer: 0 }
+      - { prompt: "Why pass a mock as onAdd instead of the real cart code?", choices: ["The test only needs to know whether, how often and with what onAdd was called", "The real cart is too slow to import", "Real functions can't be passed to renderProduct", "Mocks make the button work"], answer: 0 }
+    explain: "vi.fn() records each call's arguments in .mock.calls: a list of lists. It lets a test check what the card asked for, without a real cart."
+    reteach: "### Syntax: vi.fn, a mock function"
+
+  - id: q08
+    type: spot-the-bug
+    concept: mock-functions
+    prompt: "This test fails with expected 0 to be 1, but the card works. Which line is in the wrong place?"
+    code: |
+      it("calls onAdd once on a click", () => {
+        const onAdd = vi.fn();
+        renderProduct(document.querySelector("#shelf"), golu, onAdd);
+        expect(onAdd.mock.calls.length).toBe(1);
+        document.querySelector("#shelf button").click();
+      });
+    bugLine: 4
+    explain: "The check runs before the click. Arrange, act, then assert: click first, then check the mock."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: order
+    concept: simulating-events
+    prompt: "Put the steps of the sold-out test in order."
+    items:
+      - "beforeEach resets the page to an empty #shelf"
+      - "Make onAdd with vi.fn()"
+      - "renderProduct draws the sold-out booties"
+      - "Click the card's button"
+      - "Expect onAdd.mock.calls.length to be 0"
+    explain: "Clean page, then arrange the mock and the card, act with a click, and assert on the mock."
+    reteach: "### A whole test, step by step"
+
+  - id: q10
+    type: mcq
+    concept: dom-queries
+    variants:
+      - { prompt: "Which test is better?", choices: ["Check that the button says Add to cart and is disabled when sold out", "Check that the code used a variable called btn", "Check that renderProduct has exactly 22 lines", "Check that createElement was called four times"], answer: 0 }
+      - { prompt: "You rewrite renderProduct with different variable names, and the card looks the same. What should happen to good tests?", choices: ["They stay green, because they check what the customer sees", "They all fail, because the code changed", "They must be rewritten line by line", "They are skipped until someone approves them"], answer: 0 }
+    explain: "Test what the customer sees, not how the code builds it. Then the code can change freely while the tests stay green."
+    reteach: "### Test what the customer sees"

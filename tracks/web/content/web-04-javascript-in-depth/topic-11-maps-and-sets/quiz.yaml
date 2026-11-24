@@ -1,0 +1,142 @@
+topic: web-04-javascript-in-depth/topic-11-maps-and-sets
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: map-basics
+    code: |
+      const yarn = new Map();
+      yarn.set("Indigo", 320);
+      yarn.set("Mint", 90);
+      yarn.set("Indigo", 280);
+      console.log(yarn.size, yarn.get("Indigo"));
+    answer: "2 280"
+    explain: "Setting Indigo again replaces its value. There are still only two keys."
+    reteach: "### Syntax: Map"
+
+  - id: q02
+    type: predict-output
+    concept: set-basics
+    code: |
+      const ids = new Set(["DC-1042", "DC-1045", "DC-1042", "DC-1044"]);
+      console.log(ids.size, ids.has("DC-1044"));
+    answer: "3 true"
+    explain: "The second DC-1042 is ignored, so three ids are left, and DC-1044 is one of them."
+    reteach: "### Syntax: Set"
+
+  - id: q03
+    type: predict-output
+    concept: map-iteration
+    code: |
+      const counts = new Map([["KEY", 2], ["CST", 5]]);
+      counts.set("AMI", 1);
+      counts.set("KEY", 4);
+      for (const [code, count] of counts) {
+        console.log(code + "=" + count);
+      }
+    answer: "KEY=4\nCST=5\nAMI=1"
+    explain: "A Map loops in the order keys were first added. Setting KEY again changes its value but keeps its place."
+    reteach: "### Syntax: looping over a Map"
+
+  - id: q04
+    type: fill-blank
+    concept: map-basics
+    goal: "Read the grams stored for Marigold in the yarn register."
+    prompt: "const grams = yarn.___(\"Marigold\");"
+    answers: ["get"]
+    explain: "get reads the value for a key, or gives undefined when the key isn't there."
+    reteach: "### Syntax: Map"
+
+  - id: q05
+    type: fill-blank
+    concept: set-basics
+    goal: "Put Golu's id into the set of picked items. A repeat is ignored."
+    prompt: "picked.___(\"DC-1042\");"
+    answers: ["add"]
+    explain: "A Set's add puts a value in once. Adding it again changes nothing."
+    reteach: "### Syntax: Set"
+
+  - id: q06
+    type: predict-output
+    concept: set-basics
+    code: |
+      const colours = ["Mint", "Indigo", "Mint", "Marigold", "Indigo"];
+      console.log([...new Set(colours)].join(", "));
+    answer: "Mint, Indigo, Marigold"
+    explain: "The Set keeps each colour once, in the order it first arrived. Spreading it gives an array again."
+    reteach: "### Removing duplicates"
+
+  - id: q07
+    type: mcq
+    concept: map-or-object
+    prompt: "Which of these is the best fit for a Map rather than an object?"
+    choices:
+      - "Grams of yarn per colour, where new colours can be added at any time"
+      - "One catalogue item with its id, name and paise"
+      - "The settings of the page: title and theme"
+      - "A customer with a name and a phone number"
+    answer: 0
+    explain: "A Map suits a lookup that grows with keys you don't know in advance. A record with known fields suits an object."
+    reteach: "### Map or object?"
+
+  - id: q08
+    type: predict-output
+    concept: map-basics
+    code: |
+      const counts = new Map();
+      counts.set("BAG", (counts.get("BAG") ?? 0) + 1);
+      counts.set("BAG", (counts.get("BAG") ?? 0) + 1);
+      console.log(counts.get("BAG"), counts.get("KEY"));
+    answer: "2 undefined"
+    explain: "?? 0 starts BAG at 0, and it is counted twice. KEY was never set, so get gives undefined."
+    reteach: "### Counting with a Map"
+
+  - id: q09
+    type: spot-the-bug
+    concept: map-basics
+    code: |
+      const yarn = new Map();
+      yarn["Indigo"] = 320;
+      console.log(yarn.get("Indigo"));
+    bugLine: 2
+    explain: "Square brackets add a plain property, not a Map entry, so get finds nothing. Use yarn.set(\"Indigo\", 320)."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: predict-output
+    concept: map-or-object
+    code: |
+      const yarn = new Map([["Mint", 90]]);
+      console.log(JSON.stringify(yarn), JSON.stringify(Object.fromEntries(yarn)));
+    answer: "{} {\"Mint\":90}"
+    explain: "JSON.stringify can't see a Map's entries and writes {}. Object.fromEntries turns them into properties first."
+    reteach: "### Map or object?"
+
+  - id: q11
+    type: mcq
+    concept: set-basics
+    prompt: "picked.add({ id: \"DC-1042\" }) runs twice, and picked.size is 2. Why?"
+    choices:
+      - "The two objects look alike but are different objects, and a Set compares objects by reference"
+      - "A Set always allows exactly two copies"
+      - "add only checks numbers for repeats"
+      - "The second add replaced the first, and size counts replacements"
+    answer: 0
+    explain: "Like ===, a Set treats two separate objects as different. Store the id text to get one entry."
+    reteach: "## Common mistakes"
+
+  - id: q12
+    type: predict-output
+    concept: map-or-object
+    code: |
+      const m = new Map();
+      m.set(1, "one");
+      m.set("1", "text");
+      const o = {};
+      o[1] = "one";
+      o["1"] = "text";
+      console.log(m.size, Object.keys(o).length);
+    answer: "2 1"
+    explain: "A Map keeps the number 1 and the text \"1\" apart. An object turns 1 into \"1\", so both lines set the same key."
+    reteach: "### Any value can be a key"

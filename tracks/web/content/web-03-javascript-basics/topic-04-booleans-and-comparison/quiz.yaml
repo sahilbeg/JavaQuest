@@ -1,0 +1,121 @@
+topic: web-03-javascript-basics/topic-04-booleans-and-comparison
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: strict-equality
+    code: |
+      console.log("5" === 5);
+      console.log("5" == 5);
+    answer: "false\ntrue"
+    explain: "=== never converts types, so a string and a number differ. == converts \"5\" to 5 first."
+    reteach: "### The == trap"
+
+  - id: q02
+    type: predict-output
+    concept: typeof
+    code: |
+      console.log(typeof 15000);
+      console.log(typeof null);
+    answer: "number\nobject"
+    explain: "15000 is a number. typeof null says object, an old mistake JavaScript keeps so old sites don't break."
+    reteach: "### Syntax: typeof"
+
+  - id: q03
+    type: mcq
+    concept: truthy-falsy
+    prompt: "Which of these values is truthy?"
+    choices: ['"0"', "0", '""', "null"]
+    answer: 0
+    explain: "\"0\" is a string with one character in it, so it's truthy. 0, \"\" and null are all falsy."
+    reteach: "### Truthy and falsy"
+
+  - id: q04
+    type: mcq
+    concept: strict-equality
+    prompt: "Why does Dhaaga's code use === instead of ==?"
+    choices: ["=== never converts types, so \"2\" and 2 stay different", "=== runs faster on phones", "== doesn't work with numbers", "=== also ignores capital letters"]
+    answer: 0
+    explain: "== converts types first, which leads to surprises like 0 == \"\" being true."
+    reteach: "### Syntax: === and !=="
+
+  - id: q05
+    type: predict-output
+    concept: null-and-undefined
+    code: |
+      let note;
+      console.log(note === undefined);
+      console.log(note === null);
+    answer: "true\nfalse"
+    explain: "An empty let holds undefined. null is a different value, so the second check is false."
+    reteach: "### undefined and null"
+
+  - id: q06
+    type: fill-blank
+    concept: strict-equality
+    goal: "Check that subtotal is anything other than exactly ₹999, with no type conversion."
+    prompt: "const notExact = subtotal ___ 99900;"
+    answers: ["!=="]
+    explain: "!== is strict not-equal: true when the values or their types differ."
+    reteach: "### Syntax: === and !=="
+
+  - id: q07
+    type: spot-the-bug
+    concept: comparison
+    code: |
+      const typed = "two";
+      const qty = Number(typed);
+      const bad = qty === NaN;
+      console.log(bad);
+    bugLine: 3
+    explain: "NaN is never equal to anything, even NaN. Use Number.isNaN(qty)."
+    reteach: "### NaN is never equal"
+
+  - id: q08
+    type: predict-output
+    concept: truthy-falsy
+    code: |
+      console.log(Boolean(""));
+      console.log(Boolean(" "));
+    answer: "false\ntrue"
+    explain: "An empty string is falsy. A string with a space in it isn't empty, so it's truthy."
+    reteach: "### Truthy and falsy"
+
+  - id: q09
+    type: predict-output
+    concept: comparison
+    code: |
+      console.log(99900 > 99900);
+      console.log(99900 >= 99900);
+    answer: "false\ntrue"
+    explain: "99900 isn't greater than itself, but it is greater than or equal to itself."
+    reteach: "### Syntax: comparison operators"
+
+  - id: q10
+    type: mcq
+    concept: null-and-undefined
+    prompt: "A customer chose to leave the gift note out, and the code records that choice. Which value means \"empty, on purpose\"?"
+    choices: ["null", "undefined", "0", "false"]
+    answer: 0
+    explain: "null is the value a programmer writes for \"no value, on purpose\". undefined means nothing was set yet."
+    reteach: "### undefined and null"
+
+  - id: q11
+    type: predict-output
+    concept: comparison
+    code: |
+      console.log("Mint" === "mint");
+      console.log("Mint".toLowerCase() === "mint");
+    answer: "false\ntrue"
+    explain: "=== compares strings letter by letter, and capitals count."
+    reteach: "### Comparing text"
+
+  - id: q12
+    type: mcq
+    concept: booleans
+    prompt: "What is the type of true, without quotes?"
+    choices: ["boolean", "string", "number", "undefined"]
+    answer: 0
+    explain: "true and false are the two boolean values. \"true\" in quotes would be a string."
+    reteach: "### Syntax: true and false"

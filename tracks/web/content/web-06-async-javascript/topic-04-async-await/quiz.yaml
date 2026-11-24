@@ -1,0 +1,147 @@
+topic: web-06-async-javascript/topic-04-async-await
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: async-function
+    variants:
+      - { prompt: "What does a call to an async function give back?", choices: ["Always a promise", "The returned value, straight away", "Nothing until it finishes", "A timer id"], answer: 0 }
+      - { prompt: "An async function's body throws an Error. What happens to the caller?", choices: ["It gets a promise that is rejected with that error", "The whole page crashes at once", "It gets undefined", "The error is silently ignored"], answer: 0 }
+    explain: "An async function always returns a promise. A returned value fulfils it, and a thrown error rejects it."
+    reteach: "### Syntax: async function"
+
+  - id: q02
+    type: predict-output
+    concept: async-function
+    code: |
+      async function stock() {
+        return 3;
+      }
+      stock().then((n) => console.log(n + 1));
+      console.log("first");
+    answer: "first\n4"
+    explain: "stock() gives a promise of 3. The then callback runs later, after the plain line, and prints 3 + 1."
+    reteach: "### Syntax: async function"
+
+  - id: q03
+    type: predict-output
+    concept: await
+    code: |
+      async function check() {
+        console.log("B");
+        const n = await Promise.resolve(5);
+        console.log(`D ${n}`);
+      }
+      console.log("A");
+      check();
+      console.log("C");
+    answer: "A\nB\nC\nD 5"
+    explain: "check starts at once and prints B. At await it pauses, so the script prints C. Then check carries on and prints D 5."
+    reteach: "### await pauses the function, not the page"
+
+  - id: q04
+    type: predict-output
+    concept: try-catch-await
+    code: |
+      async function pay() {
+        throw new Error("declined");
+      }
+      async function checkout() {
+        try {
+          await pay();
+          console.log("paid");
+        } catch (error) {
+          console.log(`failed: ${error.message}`);
+        }
+      }
+      checkout();
+    answer: "failed: declined"
+    explain: "pay's promise is rejected, so await throws. The paid line is skipped and catch prints the message."
+    reteach: "### Syntax: try and catch with await"
+
+  - id: q05
+    type: predict-output
+    concept: forgotten-await
+    code: |
+      async function pay() {
+        return { ref: "UPI-5521" };
+      }
+      async function checkout() {
+        const receipt = pay();
+        console.log(receipt.ref);
+      }
+      checkout();
+    answer: "undefined"
+    explain: "Without await, receipt is a promise. A promise has no ref property, so it prints undefined."
+    reteach: "### Forgetting await"
+
+  - id: q06
+    type: fill-blank
+    concept: await
+    goal: "Pause this function until the bank answers, and store the receipt itself, not a promise."
+    prompt: "const receipt = ___ api.pay(45000);"
+    answers: ["await"]
+    explain: "await pauses the async function until the promise settles and gives you its value."
+    reteach: "### Syntax: await"
+
+  - id: q07
+    type: fill-blank
+    concept: async-function
+    goal: "Declare checkout so that you are allowed to pause inside it, and so it returns a promise."
+    prompt: "___ function checkout() {"
+    answers: ["async"]
+    explain: "await only works inside a function marked async, and an async function always returns a promise."
+    reteach: "### Syntax: async function"
+
+  - id: q08
+    type: spot-the-bug
+    concept: forgotten-await
+    code: |
+      async function confirmOrder(api) {
+        const receipt = api.pay(45000);
+        return `Paid, ref ${receipt.ref}`;
+      }
+    bugLine: 2
+    explain: "api.pay returns a promise. Without await, receipt.ref is undefined. Write const receipt = await api.pay(45000);."
+    reteach: "### Forgetting await"
+
+  - id: q09
+    type: mcq
+    concept: await
+    prompt: "A function is paused at await, waiting two seconds for the server. What can the customer do meanwhile?"
+    choices: ["Scroll, tap and use the page as normal", "Nothing: the page is frozen until the answer comes", "Only press the browser's back button", "Only type, but not tap"]
+    answer: 0
+    explain: "await pauses only that one function. The thread is free, so the page keeps working."
+    reteach: "### await pauses the function, not the page"
+
+  - id: q10
+    type: mcq
+    concept: try-catch-await
+    prompt: "You write const receipt = await api.pay(45000); and the payment promise is rejected. What happens on that line?"
+    choices: ["await throws the error, so the code jumps to the nearest catch", "receipt becomes undefined and the code carries on", "receipt becomes the error object", "The function waits forever"]
+    answer: 0
+    explain: "A rejected promise makes await throw its error, right on that line. try...catch handles it."
+    reteach: "### Syntax: try and catch with await"
+
+  - id: q11
+    type: mcq
+    concept: sequential-await
+    prompt: "You want to check stock for each item in a list, one after another, with await. Which loop waits for each round?"
+    choices: ["for (const id of ids) { await getStock(id); }", "ids.forEach(async (id) => { await getStock(id); })", "ids.map((id) => getStock(id)) with no await", "while (true) { getStock(ids[0]); }"]
+    answer: 0
+    explain: "for...of waits at each await before the next round. forEach starts every async callback at once and doesn't wait for any."
+    reteach: "### await inside a loop"
+
+  - id: q12
+    type: order
+    concept: sequential-await
+    prompt: "Put the lines in order so the item is reserved first, then paid for, and the reference is returned."
+    items:
+      - "async function buy(api) {"
+      - "  await api.reserve(\"DC-1042\");"
+      - "  const receipt = await api.pay(45000);"
+      - "  return receipt.ref;"
+      - "}"
+    explain: "Each await finishes before the next line starts, so payment only begins once the reservation is done."
+    reteach: "### Steps that depend on each other"

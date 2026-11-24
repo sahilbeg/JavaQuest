@@ -1,0 +1,23 @@
+id: web-02-css/mini-project
+title: "FEAT-02: A festive Diwali theme"
+order: 100
+minutes: 15
+prerequisites: [web-02-css/topic-10-variables-and-states]
+concepts: [custom-properties, overriding-variables, cascade, theming]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: FEAT-02
+  from: priya
+  title: "Dress the website up for Diwali"
+  body: >
+    Diwali is coming, and the Koregaon Park pop-up opens next week! I'd love the website to feel festive too:
+    warm deep red and gold, like the diyas at home. But after Diwali I want our usual Indigo and Marigold back
+    without anyone rewriting the page. Sana has picked the colours. Can you build it so one switch turns the festival look on and off?
+hints:
+  - "Name the custom properties by their job, not their colour: --brand, --accent, --page and --ink. A property called --marigold can't sensibly hold Diwali gold."
+  - "Set the everyday values on :root. Then a .theme-diwali rule sets the same four properties again. Every element inside <body class=\"theme-diwali\"> reads the Diwali values."
+  - "The switch is the class on <body>. The festive border is one extra rule: .theme-diwali .site-header { border-bottom: 4px dashed var(--accent); }"
+review: false

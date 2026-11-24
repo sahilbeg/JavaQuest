@@ -1,0 +1,24 @@
+id: web-02-css/topic-06-display-and-position
+title: "Display and position"
+order: 6
+minutes: 10
+prerequisites: [web-02-css/topic-05-cascade-and-specificity]
+concepts: [block-inline, inline-block, display-none, position-relative, position-absolute, position-sticky]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0206
+  from: sana
+  title: "A New badge for Golu, and a header that stays put"
+  body: >
+    Golu the elephant is our bestseller, so I want a little Marigold "New" sticker in the top-right corner of his card.
+    The Order links should look like real buttons, and sold-out items shouldn't show one at all.
+    And when a customer scrolls down the catalogue, the Dhaaga header should stay stuck to the top.
+hints:
+  - "An <a> is inline, so its top and bottom padding don't make it taller in the layout. inline-block lets it keep its own size while still sitting in a line."
+  - "position: absolute places an element against its nearest positioned ancestor. Give the card position: relative so the badge pins to the card, not the page."
+  - "Try: .product { position: relative; } .badge { position: absolute; top: 0.5rem; right: 0.5rem; } .site-header { position: sticky; top: 0; }"
+review: true

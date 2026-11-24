@@ -1,0 +1,119 @@
+topic: web-07-tooling/topic-03-eslint-and-prettier
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: linting
+    variants:
+      - { prompt: "What is a linter?", choices: ["A tool that reads code without running it and points at likely bugs", "A tool that runs your tests", "A tool that makes the build smaller", "A tool that downloads packages"], answer: 0 }
+      - { prompt: "Which problem would ESLint find, but Prettier would not?", choices: ["A variable name with a typo that was never defined", "Tabs mixed with spaces", "Single quotes where the team uses double quotes", "A line longer than 100 characters"], answer: 0 }
+      - { prompt: "Does ESLint run your code to find problems?", choices: ["No, it only reads the code", "Yes, it runs every function once", "Only the code in test files", "Only when you add --fix"], answer: 0 }
+    explain: "ESLint is a linter. It reads your code without running it and points at likely bugs and risky habits."
+    reteach: "## Concept"
+
+  - id: q02
+    type: predict-output
+    concept: linting
+    code: |
+      const qty = "";
+      if (qty == 0) {
+        console.log("empty");
+      } else {
+        console.log("has a value");
+      }
+    answer: "empty"
+    explain: "== converts before comparing, and \"\" turns into 0. That surprise is why ESLint's eqeqeq rule asks for ===."
+    reteach: "### Why == is worth a red line"
+
+  - id: q03
+    type: mcq
+    concept: lint-rules
+    variants:
+      - { prompt: "Which file holds ESLint's rules in a modern project?", choices: ["eslint.config.js", ".prettierrc", "package-lock.json", "index.html"], answer: 0 }
+      - { prompt: "A rule is set to \"warn\". What happens when it finds a problem?", choices: ["The problem is shown, but the lint command still passes", "The lint command fails", "ESLint fixes it silently", "The rule is switched off"], answer: 0 }
+      - { prompt: "Why add globals.browser to the ESLint config?", choices: ["So ESLint knows names like document and window exist", "So ESLint runs in the browser", "So Prettier formats HTML", "So the build includes the browser"], answer: 0 }
+      - { prompt: "Why put { ignores: [\"dist/\"] } in eslint.config.js?", choices: ["So ESLint skips the build's output, which you never wrote", "So ESLint deletes dist/", "So the build skips ESLint", "So Git ignores dist/"], answer: 0 }
+    explain: "Rules live in eslint.config.js. Each is off, warn or error, and only errors fail the command. Tell ESLint about browser globals, and ignore dist/."
+    reteach: "### Syntax: eslint.config.js"
+
+  - id: q04
+    type: mcq
+    concept: lint-rules
+    prompt: "ESLint prints: 6:26  error  'qtty' is not defined  no-undef. What does 6:26 mean?"
+    choices: ["Line 6, column 26", "6 errors in 26 files", "Rule number 6 of 26", "The file is 6.26 kB"]
+    answer: 0
+    explain: "Each report line starts with line:column, then the severity, the message and the rule's name."
+    reteach: "### Syntax: running ESLint"
+
+  - id: q05
+    type: fill-blank
+    concept: lint-rules
+    goal: "Name the ESLint rule that reports every == and asks for === instead."
+    prompt: "rules: { ___: \"error\" }"
+    answers: ["eqeqeq"]
+    explain: "eqeqeq stands for \"equal, equal, equal\". It flags == and != so you use === and !==."
+    reteach: "### Syntax: eslint.config.js"
+
+  - id: q06
+    type: mcq
+    concept: formatting
+    variants:
+      - { prompt: "What does Prettier change?", choices: ["How the code looks: spaces, quotes and line breaks", "What the code does", "Which packages are installed", "The names of your variables"], answer: 0 }
+      - { prompt: "What does npx prettier --check . do?", choices: ["Lists files that are not formatted, without changing them", "Formats every file", "Runs the tests", "Fixes ESLint errors"], answer: 0 }
+      - { prompt: "Why does Prettier have so few settings?", choices: ["Fewer choices means fewer arguments about style", "Settings make it slower", "It can only format one language", "The settings live in ESLint"], answer: 0 }
+    explain: "Prettier only rewrites layout, never behaviour. --write formats, --check only reports, and the few settings live in .prettierrc."
+    reteach: "### Syntax: running Prettier"
+
+  - id: q07
+    type: mcq
+    concept: formatting
+    prompt: "What does Prettier do to this line? export function lineTotal( line ){return line.paise*line.qty}"
+    choices: ["Spreads it over three lines with tidy spaces and a semicolon, doing the same thing", "Reports that lineTotal is never used", "Renames line to item", "Deletes it, because it is too long"]
+    answer: 0
+    explain: "Prettier rewrites the layout: one statement per line, spaces around *, and a semicolon. The function still returns paise times qty."
+    reteach: "### Syntax: running Prettier"
+
+  - id: q08
+    type: mcq
+    concept: lint-and-format-together
+    variants:
+      - { prompt: "What does eslint-config-prettier do?", choices: ["Switches off ESLint rules that Prettier already handles", "Runs Prettier inside the build", "Adds Prettier's rules to the lint errors", "Installs both tools at once"], answer: 0 }
+      - { prompt: "Where does eslint-config-prettier go in the ESLint config list?", choices: ["Last, so it wins over earlier entries", "First, before everything", "In .prettierrc", "In package.json's scripts"], answer: 0 }
+      - { prompt: "What goes wrong if ESLint and Prettier both have layout rules?", choices: ["They fight: one adds a change the other removes", "Nothing, they agree on everything", "The build gets bigger", "Git refuses the commit"], answer: 0 }
+    explain: "Let each tool have one job. eslint-config-prettier, placed last, turns off ESLint's layout rules so Prettier owns the look."
+    reteach: "### Using them together"
+
+  - id: q09
+    type: mcq
+    concept: lint-scripts
+    variants:
+      - { prompt: "Why put \"lint\": \"eslint .\" in package.json's scripts?", choices: ["Everyone, and the CI robot, runs the same check with npm run lint", "ESLint only works from a script", "Scripts make ESLint faster", "It stops Prettier running"], answer: 0 }
+      - { prompt: "What does turning on Format On Save in VS Code do?", choices: ["Prettier tidies each file when you save it", "ESLint fixes every bug when you save", "Git commits each file when you save", "Vite builds dist/ when you save"], answer: 0 }
+    explain: "Scripts give the team one shared command. Format on save means style never reaches a review."
+    reteach: "### Scripts and your editor"
+
+  - id: q10
+    type: mcq
+    concept: lint-scripts
+    prompt: "You are about to add Prettier to an old project. What is the best way to commit the first formatting?"
+    choices: ["Format everything once, in its own commit with no other changes", "Format each file only when you next fix a bug in it, together with the fix", "Never commit formatted files", "Format and fix the delivery fee in one big commit"]
+    answer: 0
+    explain: "One formatting-only commit is easy to skip in review. Later commits then show only real changes."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: spot-the-bug
+    concept: lint-rules
+    prompt: "ESLint reports 'document' is not defined on every page script. Which line of eslint.config.js needs to change?"
+    code: |
+      import js from "@eslint/js";
+      import globals from "globals";
+
+      export default [
+        js.configs.recommended,
+        { languageOptions: { globals: globals.node } },
+      ];
+    bugLine: 6
+    explain: "globals.node lists Node's names, not the browser's. Use globals.browser so ESLint knows document and window."
+    reteach: "## Common mistakes"

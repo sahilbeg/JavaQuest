@@ -1,0 +1,125 @@
+topic: react-09-react-in-depth/topic-07-form-validation
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: form-state
+    prompt: "What does [e.target.name] do in setValues({ ...values, [e.target.name]: e.target.value })?"
+    choices: ["It uses the input's name as the key, so the right field is updated", "It makes an array of names", "It reads the field called name, always", "It deletes the field from values"]
+    answer: 0
+    explain: "Square brackets make a computed key. Typing in the input named pincode sets values.pincode."
+    reteach: "### Syntax: one change handler for every field"
+
+  - id: q02
+    type: predict-output
+    concept: form-state
+    code: |
+      const values = { name: "Asha", pincode: "4110" };
+      const target = { name: "pincode", value: "411007" };
+      const next = { ...values, [target.name]: target.value };
+      console.log(next.name, next.pincode);
+      console.log(values.pincode);
+    answer: "Asha 411007\n4110"
+    explain: "The spread keeps name, and the computed key replaces pincode. The old values object is not changed."
+    reteach: "### Syntax: one change handler for every field"
+
+  - id: q03
+    type: mcq
+    concept: validation-function
+    prompt: "validateAddress checks a completely correct address. What does it return?"
+    choices: ["An empty object, {}", "true", "The same values it was given", "null"]
+    answer: 0
+    explain: "It returns one message per bad field. With no bad fields, the object is empty, and Object.keys(errors).length is 0."
+    reteach: "### Syntax: a validation function"
+
+  - id: q04
+    type: predict-output
+    concept: pattern-checks
+    code: |
+      const pin = /^[1-9]\d{5}$/;
+      console.log(pin.test("411007"));
+      console.log(pin.test("011007"));
+      console.log(pin.test("4110071"));
+      console.log(/^\d{10}$/.test("98765 43210".replaceAll(" ", "")));
+    answer: "true\nfalse\nfalse\ntrue"
+    explain: "A PIN code is a digit from 1 to 9, then exactly five more digits. 011007 starts with 0 and 4110071 is too long. The phone has ten digits once the space is gone."
+    reteach: "### Syntax: checking digits with a pattern"
+
+  - id: q05
+    type: fill-blank
+    concept: pattern-checks
+    goal: "Check that the phone, with its spaces removed, is exactly ten digits long."
+    prompt: "if (!/^\\d{___}$/.test(digits)) errors.phone = message;"
+    answers: ["10"]
+    explain: "\\d means one digit, and {10} means exactly ten of them. ^ and $ stop anything else at the start or end."
+    reteach: "### Syntax: checking digits with a pattern"
+
+  - id: q06
+    type: mcq
+    concept: when-to-show-errors
+    prompt: "When should the address form first show its error messages?"
+    choices: ["When the customer first presses Save, and then live as they fix each field", "On the very first render, before anything is typed", "Only after the customer has pressed Save twice", "Never: just refuse to submit"]
+    answer: 0
+    explain: "Messages before typing feel like being told off. After the first submit, live updates show each fix straight away."
+    reteach: "### When to show the errors"
+
+  - id: q07
+    type: spot-the-bug
+    concept: validation-function
+    prompt: "Bad addresses reach onSubmit, and good ones never do. Which line is wrong?"
+    code: |
+      function handleSubmit(e) {
+        e.preventDefault();
+        setTried(true);
+        if (Object.keys(errors).length === 0) return;
+        onSubmit(clean(values));
+      }
+    bugLine: 4
+    explain: "It stops when there are no errors. It should stop when there are some: Object.keys(errors).length > 0."
+    reteach: "### Syntax: blocking a bad submit"
+
+  - id: q08
+    type: mcq
+    concept: when-to-show-errors
+    prompt: "Why work out errors with validateAddress(values) on every render, instead of saving them in state on submit?"
+    choices: ["So the messages always match what is on screen, and vanish as soon as a field is fixed", "Because useState can't hold objects", "Because validation must run before the first render", "So the form submits faster"]
+    answer: 0
+    explain: "Errors saved in state are from the old values. A customer would fix the PIN code and still see its message."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: accessible-errors
+    prompt: "What does aria-describedby=\"pincode-error\" on the PIN input do?"
+    choices: ["It tells screen readers to read the text of the element with id pincode-error along with the field", "It turns the field red", "It stops the form from submitting", "It shows a browser pop-up"]
+    answer: 0
+    explain: "aria-describedby links a field to the element that describes it, so the error message is read out when the customer reaches the box."
+    reteach: "### Errors everyone can find"
+
+  - id: q10
+    type: fill-blank
+    concept: accessible-errors
+    goal: "Tell screen readers this field's value is wrong, but only when there is an error."
+    prompt: "aria-invalid={error ? \"___\" : undefined}"
+    answers: ["true"]
+    explain: "aria-invalid=\"true\" marks the field as wrong. undefined leaves the attribute out for a valid field."
+    reteach: "### Errors everyone can find"
+
+  - id: q11
+    type: mcq
+    concept: accessible-errors
+    prompt: "Why does the form have noValidate?"
+    choices: ["It turns off the browser's own pop-up messages, so only the form's messages show", "It switches off validateAddress", "It lets the form submit without preventDefault", "It hides the labels"]
+    answer: 0
+    explain: "Without it, the browser may show its own pop-ups for some inputs, next to your messages."
+    reteach: "### Errors everyone can find"
+
+  - id: q12
+    type: mcq
+    concept: validation-function
+    prompt: "The customer typed 98765 43210. Why does onSubmit send \"9876543210\"?"
+    choices: ["So the order system always gets the phone in the same shape, digits only", "Because spaces are not allowed in JavaScript strings", "Because the regular expression removes them by itself", "So the courier can't read it"]
+    answer: 0
+    explain: "The check allows a space for the customer's comfort. Cleaning before sending keeps the stored data consistent."
+    reteach: "### Clean the values before you send them"

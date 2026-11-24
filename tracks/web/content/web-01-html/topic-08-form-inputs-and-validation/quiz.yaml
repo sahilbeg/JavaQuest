@@ -1,0 +1,118 @@
+topic: web-01-html/topic-08-form-inputs-and-validation
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: input-types
+    prompt: "Which input type brings up a number keypad on phones for a phone number?"
+    choices: ["tel", "text", "number", "phone"]
+    answer: 0
+    explain: "type=\"tel\" is made for phone numbers. There is no type called phone."
+    reteach: "### Syntax: input types"
+
+  - id: q02
+    type: mcq
+    concept: input-types
+    prompt: "What does type=\"email\" check when the form is sent?"
+    choices: ["That the value looks like an email address, with an @", "That the email address really exists", "That the customer has a Gmail account", "Nothing at all"]
+    answer: 0
+    explain: "The browser only checks the shape. It can't know whether the mailbox exists."
+    reteach: "### Syntax: input types"
+
+  - id: q03
+    type: fill-blank
+    concept: required
+    goal: "Stop the form from being sent while the name box is empty."
+    prompt: "<input type=\"text\" id=\"order-name\" name=\"name\" ___>"
+    answers: ["required"]
+    explain: "required is a boolean attribute: being there switches the check on."
+    reteach: "### Syntax: required"
+
+  - id: q04
+    type: mcq
+    concept: required
+    prompt: "A field has required=\"false\". Can the customer leave it empty?"
+    choices: ["No: the attribute is there, so the field is still required", "Yes: false switches it off", "Only on phones", "Only if the form uses get"]
+    answer: 0
+    explain: "A boolean attribute is on whenever it's present. Delete it to make the field optional."
+    reteach: "### Syntax: required"
+
+  - id: q05
+    type: mcq
+    concept: min-and-max
+    prompt: "A quick order allows 1 to 10 items. Which field fits?"
+    choices: ["<input type=\"number\" min=\"1\" max=\"10\">", "<input type=\"text\" min=\"1\" max=\"10\">", "<input type=\"number\" maxlength=\"10\">", "<input type=\"tel\" pattern=\"10\">"]
+    answer: 0
+    explain: "min and max limit a number field's value. maxlength limits how many characters are typed."
+    reteach: "### Syntax: min, max and step"
+
+  - id: q06
+    type: mcq
+    concept: pattern
+    prompt: "Which value passes pattern=\"[0-9]{10}\"?"
+    choices: ["9876543210", "98765 43210", "98765", "+919876543210"]
+    answer: 0
+    explain: "The pattern means exactly ten digits and nothing else: no spaces, no plus sign."
+    reteach: "### Syntax: pattern"
+
+  - id: q07
+    type: mcq
+    concept: pattern
+    prompt: "Which pattern accepts exactly ten digits, and nothing else?"
+    choices: ["[0-9]{10}", "[0-9]", "{10}[0-9]", "[0-10]"]
+    answer: 0
+    explain: "[0-9] means one digit, and {10} straight after it means exactly ten of them."
+    reteach: "### Syntax: pattern"
+
+  - id: q08
+    type: mcq
+    concept: select
+    prompt: "A customer picks <option value=\"BAG\">Tote bag</option> from a select named item. What does the server get?"
+    choices: ["item=BAG", "item=Tote bag", "BAG=Tote bag", "Tote bag=item"]
+    answer: 0
+    explain: "The server gets the select's name and the chosen option's value."
+    reteach: "### Syntax: a select"
+
+  - id: q09
+    type: spot-the-bug
+    concept: radio-and-checkbox
+    prompt: "A customer can pick both delivery choices at once. Which line causes it?"
+    code: |
+      <fieldset>
+        <legend>Delivery</legend>
+        <input type="radio" id="delivery-pickup" name="delivery" value="pickup">
+        <label for="delivery-pickup">Pick up at the Aundh shop</label>
+        <input type="radio" id="delivery-pune" name="pune" value="pune">
+        <label for="delivery-pune">Deliver in Pune</label>
+      </fieldset>
+    bugLine: 5
+    explain: "Radios form one group only when they share a name. This one should be name=\"delivery\"."
+    reteach: "### Syntax: radio buttons"
+
+  - id: q10
+    type: mcq
+    concept: radio-and-checkbox
+    prompt: "Gift wrap is a yes/no extra that a customer may or may not want. Which field fits?"
+    choices: ["A checkbox", "Two radio buttons in separate fieldsets", "A select with one option", "A required text input"]
+    answer: 0
+    explain: "A checkbox is a stand-alone yes/no choice. Ticked, it sends its value; empty, it sends nothing."
+    reteach: "### Syntax: a checkbox"
+
+  - id: q11
+    type: mcq
+    concept: radio-and-checkbox
+    prompt: "What does legend do in a fieldset of radio buttons?"
+    choices: ["Gives the group a title that screen readers read with each choice", "Picks the first radio", "Sends the group's value", "Hides the group on phones"]
+    answer: 0
+    explain: "The legend is the question the choices answer, like Delivery."
+    reteach: "### Syntax: radio buttons"
+
+  - id: q12
+    type: mcq
+    concept: required
+    prompt: "The form checks every field in the browser. Does the server still need to check them?"
+    choices: ["Yes: anyone can switch off the browser's checks or skip the page", "No: the browser already checked", "Only for email fields", "Only on sale days"]
+    answer: 0
+    explain: "Built-in validation helps honest customers. The server must never trust what it receives."
+    reteach: "### The browser's check is not enough"

@@ -1,0 +1,24 @@
+id: react-09-react-in-depth/mini-project
+title: "FEAT-09: Checkout with a UPI step"
+order: 100
+minutes: 15
+prerequisites: [react-09-react-in-depth/topic-10-error-boundaries]
+concepts: [step-reducer, delivery-totals, address-validation, side-effects-in-handlers]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: FEAT-09
+  from: priya
+  title: "Let customers pay on the website"
+  body: >
+    Beta, today people fill their cart on dhaaga.in and then message me on WhatsApp to pay. I want them
+    to finish on the website: see the cart and the delivery charge, give their address, pay by UPI, and get
+    an order number like order-17 to quote when they call Raju. And please, no going to the payment page
+    with half an address.
+hints:
+  - "Start with the plain functions: checkoutTotals (delivery is ₹60, free when the items come to more than ₹999), validateAddress, and the reducer. Each case in the reducer checks it is on the right step first, and otherwise returns the state unchanged."
+  - "In Checkout, const [state, dispatch] = useReducer(checkoutReducer, startCheckout); then return a different step component for each state.step. Pass state.address to AddressStep as initial, so Back keeps what was typed."
+  - "Call placeOrder in the I've paid click handler, not in the reducer: const orderId = placeOrder({ lines, address: state.address, total: totals.total }); then dispatch({ type: \"paid\", orderId })."
+review: false

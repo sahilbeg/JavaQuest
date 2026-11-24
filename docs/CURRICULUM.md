@@ -256,3 +256,202 @@ Generated from one topic list together with `build_state.json`. Topic IDs are st
 - Modules: 13
 - Lessons: 149
 - Graded units including bosses and mini-projects: 175
+
+# Web courses: the web pool
+
+These modules live in `tracks/web/` and make up the course `frontend-react` in `courses.yaml` (later web courses reuse web-00 to web-07). The world is Dhaaga & Co. (`docs/STORY.md`). The same rules apply as above, except:
+
+- Ticket keys are `WEB-MMTT` (module and topic number). Incidents are `INC-MM` and features `FEAT-MM`, with `MM` the web module number; react-10's feature is `CAPSTONE`.
+- Practice `code` means a Vitest exercise in `tracks/web/practice/` (`runner: vitest`). Pages add `preview: true`.
+- `web-00-how-the-web-works` is open from the start of the Frontend course.
+
+## web-00-how-the-web-works: How the web works (project: A visiting card online)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `web-00-how-the-web-works/topic-01-how-a-page-arrives` | How a page reaches your phone: browsers, servers, URLs | quiz | none |
+| 2 | `web-00-how-the-web-works/topic-02-html-css-js` | HTML, CSS and JavaScript: three languages, three jobs | quiz | `web-00-how-the-web-works/topic-01-how-a-page-arrives` |
+| 3 | `web-00-how-the-web-works/topic-03-devtools` | The browser's DevTools: Elements, Console and Network | quiz | `web-00-how-the-web-works/topic-02-html-css-js` |
+| 4 | `web-00-how-the-web-works/topic-04-editor-and-files` | VS Code, files and folders for a website | quiz | `web-00-how-the-web-works/topic-03-devtools` |
+| 5 | `web-00-how-the-web-works/topic-05-first-page` | Your first web page | code | `web-00-how-the-web-works/topic-04-editor-and-files` |
+| 6 | `web-00-how-the-web-works/topic-06-first-javascript` | Your first JavaScript: console.log | code | `web-00-how-the-web-works/topic-05-first-page` |
+| 7 | `web-00-how-the-web-works/topic-07-git-basics` | Git basics: save points for your code | quiz | `web-00-how-the-web-works/topic-06-first-javascript` |
+| boss | `web-00-how-the-web-works/boss` | INC-00: The ₹ sign shows as garbage on Raju's phone | code | `web-00-how-the-web-works/topic-07-git-basics` |
+| mini-project | `web-00-how-the-web-works/mini-project` | FEAT-00: A one-page visiting card with the UPI QR | code | `web-00-how-the-web-works/topic-07-git-basics` |
+
+## web-01-html: HTML (project: The catalogue page)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `web-01-html/topic-01-elements-and-tags` | Elements, tags and attributes | code | `web-00-how-the-web-works/boss` |
+| 2 | `web-01-html/topic-02-text-and-headings` | Headings, paragraphs and text | code | `web-01-html/topic-01-elements-and-tags` |
+| 3 | `web-01-html/topic-03-links-and-images` | Links and images | code | `web-01-html/topic-02-text-and-headings` |
+| 4 | `web-01-html/topic-04-lists` | Lists | code | `web-01-html/topic-03-links-and-images` |
+| 5 | `web-01-html/topic-05-tables` | Tables for the price list | code | `web-01-html/topic-04-lists` |
+| 6 | `web-01-html/topic-06-semantic-layout` | Page structure: header, nav, main, section, footer | code | `web-01-html/topic-05-tables` |
+| 7 | `web-01-html/topic-07-forms` | Forms: sending what the customer types | code | `web-01-html/topic-06-semantic-layout` |
+| 8 | `web-01-html/topic-08-form-inputs-and-validation` | Input types and built-in validation | code | `web-01-html/topic-07-forms` |
+| 9 | `web-01-html/topic-09-accessibility` | Accessibility: pages everyone can use | code | `web-01-html/topic-08-form-inputs-and-validation` |
+| 10 | `web-01-html/topic-10-head-and-meta` | The head: title, meta tags and the viewport | code | `web-01-html/topic-09-accessibility` |
+| boss | `web-01-html/boss` | INC-01: A blind customer can't place an order | code | `web-01-html/topic-10-head-and-meta` |
+| mini-project | `web-01-html/mini-project` | FEAT-01: The custom-order request form | code | `web-01-html/topic-10-head-and-meta` |
+
+## web-02-css: CSS (project: Making it ours)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `web-02-css/topic-01-selectors-and-rules` | CSS rules and selectors | code | `web-01-html/boss` |
+| 2 | `web-02-css/topic-02-colours-and-units` | Colours and units | code | `web-02-css/topic-01-selectors-and-rules` |
+| 3 | `web-02-css/topic-03-box-model` | The box model: margin, border, padding | code | `web-02-css/topic-02-colours-and-units` |
+| 4 | `web-02-css/topic-04-typography` | Fonts and text | code | `web-02-css/topic-03-box-model` |
+| 5 | `web-02-css/topic-05-cascade-and-specificity` | The cascade and specificity: which rule wins | code | `web-02-css/topic-04-typography` |
+| 6 | `web-02-css/topic-06-display-and-position` | Display and position | code | `web-02-css/topic-05-cascade-and-specificity` |
+| 7 | `web-02-css/topic-07-flexbox` | Flexbox: rows and columns | code | `web-02-css/topic-06-display-and-position` |
+| 8 | `web-02-css/topic-08-grid` | Grid: the product grid | code | `web-02-css/topic-07-flexbox` |
+| 9 | `web-02-css/topic-09-responsive-design` | Responsive design: phone first | code | `web-02-css/topic-08-grid` |
+| 10 | `web-02-css/topic-10-variables-and-states` | Custom properties, hover and focus | code | `web-02-css/topic-09-responsive-design` |
+| boss | `web-02-css/boss` | INC-02: The catalogue breaks on small Android phones | code | `web-02-css/topic-10-variables-and-states` |
+| mini-project | `web-02-css/mini-project` | FEAT-02: A festive Diwali theme | code | `web-02-css/topic-10-variables-and-states` |
+
+## web-03-javascript-basics: JavaScript basics (project: The price calculator)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `web-03-javascript-basics/topic-01-variables` | Variables: let and const | code | `web-02-css/boss` |
+| 2 | `web-03-javascript-basics/topic-02-numbers-and-paise` | Numbers, maths and why prices are in paise | code | `web-03-javascript-basics/topic-01-variables` |
+| 3 | `web-03-javascript-basics/topic-03-strings` | Strings and template literals | code | `web-03-javascript-basics/topic-02-numbers-and-paise` |
+| 4 | `web-03-javascript-basics/topic-04-booleans-and-comparison` | Booleans and comparison: === and its friends | code | `web-03-javascript-basics/topic-03-strings` |
+| 5 | `web-03-javascript-basics/topic-05-if-else` | Decisions: if, else and logical operators | code | `web-03-javascript-basics/topic-04-booleans-and-comparison` |
+| 6 | `web-03-javascript-basics/topic-06-switch-and-ternary` | switch and the ternary operator | code | `web-03-javascript-basics/topic-05-if-else` |
+| 7 | `web-03-javascript-basics/topic-07-loops` | Loops: for, while and for...of | code | `web-03-javascript-basics/topic-06-switch-and-ternary` |
+| 8 | `web-03-javascript-basics/topic-08-functions` | Functions: parameters and return values | code | `web-03-javascript-basics/topic-07-loops` |
+| 9 | `web-03-javascript-basics/topic-09-arrays` | Arrays | code | `web-03-javascript-basics/topic-08-functions` |
+| 10 | `web-03-javascript-basics/topic-10-objects` | Objects | code | `web-03-javascript-basics/topic-09-arrays` |
+| 11 | `web-03-javascript-basics/topic-11-formatting-money` | Showing rupees: toFixed and Intl.NumberFormat | code | `web-03-javascript-basics/topic-10-objects` |
+| boss | `web-03-javascript-basics/boss` | INC-03: The cart total is off by a few paise | code | `web-03-javascript-basics/topic-11-formatting-money` |
+| mini-project | `web-03-javascript-basics/mini-project` | FEAT-03: The price and delivery calculator | code | `web-03-javascript-basics/topic-11-formatting-money` |
+
+## web-04-javascript-in-depth: JavaScript in depth (project: The catalogue engine)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `web-04-javascript-in-depth/topic-01-scope-and-closures` | Scope and closures | code | `web-03-javascript-basics/boss` |
+| 2 | `web-04-javascript-in-depth/topic-02-functions-as-values` | Functions as values: callbacks and arrow functions | code | `web-04-javascript-in-depth/topic-01-scope-and-closures` |
+| 3 | `web-04-javascript-in-depth/topic-03-array-methods` | Array methods: map, filter, reduce, find and sort | code | `web-04-javascript-in-depth/topic-02-functions-as-values` |
+| 4 | `web-04-javascript-in-depth/topic-04-destructuring-and-spread` | Destructuring, spread and rest | code | `web-04-javascript-in-depth/topic-03-array-methods` |
+| 5 | `web-04-javascript-in-depth/topic-05-objects-in-depth` | Objects in depth: methods, this and copying | code | `web-04-javascript-in-depth/topic-04-destructuring-and-spread` |
+| 6 | `web-04-javascript-in-depth/topic-06-classes` | Classes: a Cart with methods | code | `web-04-javascript-in-depth/topic-05-objects-in-depth` |
+| 7 | `web-04-javascript-in-depth/topic-07-modules` | Modules: import and export | code | `web-04-javascript-in-depth/topic-06-classes` |
+| 8 | `web-04-javascript-in-depth/topic-08-errors` | Errors: throw, try and catch | code | `web-04-javascript-in-depth/topic-07-modules` |
+| 9 | `web-04-javascript-in-depth/topic-09-json` | JSON: the catalogue as data | code | `web-04-javascript-in-depth/topic-08-errors` |
+| 10 | `web-04-javascript-in-depth/topic-10-dates` | Dates and times: opening hours | code | `web-04-javascript-in-depth/topic-09-json` |
+| 11 | `web-04-javascript-in-depth/topic-11-maps-and-sets` | Map and Set | code | `web-04-javascript-in-depth/topic-10-dates` |
+| boss | `web-04-javascript-in-depth/boss` | INC-04: The Diwali discount is applied twice | code | `web-04-javascript-in-depth/topic-11-maps-and-sets` |
+| mini-project | `web-04-javascript-in-depth/mini-project` | FEAT-04: The catalogue filter engine | code | `web-04-javascript-in-depth/topic-11-maps-and-sets` |
+
+## web-05-dom-and-events: The DOM and events (project: A working cart)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `web-05-dom-and-events/topic-01-the-dom` | The DOM: the page as a tree of objects | code | `web-04-javascript-in-depth/boss` |
+| 2 | `web-05-dom-and-events/topic-02-selecting-elements` | Finding elements: querySelector | code | `web-05-dom-and-events/topic-01-the-dom` |
+| 3 | `web-05-dom-and-events/topic-03-changing-the-page` | Changing text, attributes and classes | code | `web-05-dom-and-events/topic-02-selecting-elements` |
+| 4 | `web-05-dom-and-events/topic-04-creating-elements` | Creating and removing elements | code | `web-05-dom-and-events/topic-03-changing-the-page` |
+| 5 | `web-05-dom-and-events/topic-05-events` | Events: click and friends | code | `web-05-dom-and-events/topic-04-creating-elements` |
+| 6 | `web-05-dom-and-events/topic-06-event-delegation` | Event delegation: one listener for many buttons | code | `web-05-dom-and-events/topic-05-events` |
+| 7 | `web-05-dom-and-events/topic-07-forms-and-input` | Forms and input events | code | `web-05-dom-and-events/topic-06-event-delegation` |
+| 8 | `web-05-dom-and-events/topic-08-rendering-from-data` | Drawing the page from data | code | `web-05-dom-and-events/topic-07-forms-and-input` |
+| 9 | `web-05-dom-and-events/topic-09-local-storage` | Remembering things: localStorage | code | `web-05-dom-and-events/topic-08-rendering-from-data` |
+| 10 | `web-05-dom-and-events/topic-10-state-and-render` | State and render: keeping the page in sync | code | `web-05-dom-and-events/topic-09-local-storage` |
+| boss | `web-05-dom-and-events/boss` | INC-05: The cart empties on refresh | code | `web-05-dom-and-events/topic-10-state-and-render` |
+| mini-project | `web-05-dom-and-events/mini-project` | FEAT-05: The cart drawer | code | `web-05-dom-and-events/topic-10-state-and-render` |
+
+## web-06-async-javascript: Async JavaScript (project: Live stock)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `web-06-async-javascript/topic-01-sync-and-async` | Waiting without freezing: the event loop | quiz | `web-05-dom-and-events/boss` |
+| 2 | `web-06-async-javascript/topic-02-timers-and-callbacks` | Timers and callbacks | code | `web-06-async-javascript/topic-01-sync-and-async` |
+| 3 | `web-06-async-javascript/topic-03-promises` | Promises | code | `web-06-async-javascript/topic-02-timers-and-callbacks` |
+| 4 | `web-06-async-javascript/topic-04-async-await` | async and await | code | `web-06-async-javascript/topic-03-promises` |
+| 5 | `web-06-async-javascript/topic-05-http-and-fetch` | HTTP and fetch | code | `web-06-async-javascript/topic-04-async-await` |
+| 6 | `web-06-async-javascript/topic-06-json-apis` | Talking to a JSON API | code | `web-06-async-javascript/topic-05-http-and-fetch` |
+| 7 | `web-06-async-javascript/topic-07-loading-and-errors` | Loading and error states | code | `web-06-async-javascript/topic-06-json-apis` |
+| 8 | `web-06-async-javascript/topic-08-parallel-requests` | Many requests at once: Promise.all | code | `web-06-async-javascript/topic-07-loading-and-errors` |
+| 9 | `web-06-async-javascript/topic-09-races-and-abort` | Race conditions and AbortController | code | `web-06-async-javascript/topic-08-parallel-requests` |
+| 10 | `web-06-async-javascript/topic-10-debounce` | Debounce: searching as you type | code | `web-06-async-javascript/topic-09-races-and-abort` |
+| boss | `web-06-async-javascript/boss` | INC-06: Slow 3G shows the wrong stock | code | `web-06-async-javascript/topic-10-debounce` |
+| mini-project | `web-06-async-javascript/mini-project` | FEAT-06: Live stock badges | code | `web-06-async-javascript/topic-10-debounce` |
+
+## web-07-tooling: Tooling (project: A real project)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `web-07-tooling/topic-01-npm-and-packages` | npm and packages | quiz | `web-06-async-javascript/boss` |
+| 2 | `web-07-tooling/topic-02-vite` | Vite: a dev server and a build | quiz | `web-07-tooling/topic-01-npm-and-packages` |
+| 3 | `web-07-tooling/topic-03-eslint-and-prettier` | ESLint and Prettier | quiz | `web-07-tooling/topic-02-vite` |
+| 4 | `web-07-tooling/topic-04-git-branches` | Git branches and merging | quiz | `web-07-tooling/topic-03-eslint-and-prettier` |
+| 5 | `web-07-tooling/topic-05-github-pull-requests` | GitHub and pull requests | quiz | `web-07-tooling/topic-04-git-branches` |
+| 6 | `web-07-tooling/topic-06-debugging` | Debugging with breakpoints | quiz | `web-07-tooling/topic-05-github-pull-requests` |
+| 7 | `web-07-tooling/topic-07-unit-tests` | Writing tests with Vitest | code | `web-07-tooling/topic-06-debugging` |
+| 8 | `web-07-tooling/topic-08-testing-the-dom` | Testing the page | code | `web-07-tooling/topic-07-unit-tests` |
+| 9 | `web-07-tooling/topic-09-environment-config` | Configuration and environment variables | code | `web-07-tooling/topic-08-testing-the-dom` |
+| 10 | `web-07-tooling/topic-10-production-builds` | Production builds and caching | quiz | `web-07-tooling/topic-09-environment-config` |
+| boss | `web-07-tooling/boss` | INC-07: The build breaks only on deploy | code | `web-07-tooling/topic-10-production-builds` |
+| mini-project | `web-07-tooling/mini-project` | FEAT-07: A tested utilities package | code | `web-07-tooling/topic-10-production-builds` |
+
+## react-08-react-fundamentals: React fundamentals (project: The store in React)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `react-08-react-fundamentals/topic-01-why-react` | Why React: components and the virtual DOM | quiz | `web-07-tooling/boss` |
+| 2 | `react-08-react-fundamentals/topic-02-components-and-jsx` | Components and JSX | code | `react-08-react-fundamentals/topic-01-why-react` |
+| 3 | `react-08-react-fundamentals/topic-03-props` | Props: passing data down | code | `react-08-react-fundamentals/topic-02-components-and-jsx` |
+| 4 | `react-08-react-fundamentals/topic-04-state` | State with useState | code | `react-08-react-fundamentals/topic-03-props` |
+| 5 | `react-08-react-fundamentals/topic-05-events` | Handling events | code | `react-08-react-fundamentals/topic-04-state` |
+| 6 | `react-08-react-fundamentals/topic-06-conditional-rendering` | Showing things conditionally | code | `react-08-react-fundamentals/topic-05-events` |
+| 7 | `react-08-react-fundamentals/topic-07-lists-and-keys` | Lists and keys | code | `react-08-react-fundamentals/topic-06-conditional-rendering` |
+| 8 | `react-08-react-fundamentals/topic-08-forms` | Forms in React | code | `react-08-react-fundamentals/topic-07-lists-and-keys` |
+| 9 | `react-08-react-fundamentals/topic-09-lifting-state` | Lifting state up | code | `react-08-react-fundamentals/topic-08-forms` |
+| 10 | `react-08-react-fundamentals/topic-10-styling` | Styling components | code | `react-08-react-fundamentals/topic-09-lifting-state` |
+| boss | `react-08-react-fundamentals/boss` | INC-08: Removing one item removes another | code | `react-08-react-fundamentals/topic-10-styling` |
+| mini-project | `react-08-react-fundamentals/mini-project` | FEAT-08: The React catalogue | code | `react-08-react-fundamentals/topic-10-styling` |
+
+## react-09-react-in-depth: React in depth (project: Checkout)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `react-09-react-in-depth/topic-01-effects` | Effects with useEffect | code | `react-08-react-fundamentals/boss` |
+| 2 | `react-09-react-in-depth/topic-02-fetching-data` | Fetching data in a component | code | `react-09-react-in-depth/topic-01-effects` |
+| 3 | `react-09-react-in-depth/topic-03-custom-hooks` | Custom hooks: useCart | code | `react-09-react-in-depth/topic-02-fetching-data` |
+| 4 | `react-09-react-in-depth/topic-04-context` | Context: sharing state without passing props | code | `react-09-react-in-depth/topic-03-custom-hooks` |
+| 5 | `react-09-react-in-depth/topic-05-reducers` | useReducer for the cart | code | `react-09-react-in-depth/topic-04-context` |
+| 6 | `react-09-react-in-depth/topic-06-routing` | Pages and routing: one app, many pages | code | `react-09-react-in-depth/topic-05-reducers` |
+| 7 | `react-09-react-in-depth/topic-07-form-validation` | Forms with validation | code | `react-09-react-in-depth/topic-06-routing` |
+| 8 | `react-09-react-in-depth/topic-08-refs` | Refs: focus and measuring | code | `react-09-react-in-depth/topic-07-form-validation` |
+| 9 | `react-09-react-in-depth/topic-09-performance` | Performance: memo, useMemo and useCallback | code | `react-09-react-in-depth/topic-08-refs` |
+| 10 | `react-09-react-in-depth/topic-10-error-boundaries` | When things break: error boundaries | code | `react-09-react-in-depth/topic-09-performance` |
+| boss | `react-09-react-in-depth/boss` | INC-09: A render loop floods the API during the sale | code | `react-09-react-in-depth/topic-10-error-boundaries` |
+| mini-project | `react-09-react-in-depth/mini-project` | FEAT-09: Checkout with a UPI step | code | `react-09-react-in-depth/topic-10-error-boundaries` |
+
+## react-10-professional-frontend: Professional frontend (project: Launch day)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `react-10-professional-frontend/topic-01-testing-components` | Testing components like a user | code | `react-09-react-in-depth/boss` |
+| 2 | `react-10-professional-frontend/topic-02-accessibility-in-depth` | Accessibility in depth: keyboard, focus and ARIA | code | `react-10-professional-frontend/topic-01-testing-components` |
+| 3 | `react-10-professional-frontend/topic-03-performance` | Fast pages: images, lazy loading and Web Vitals | code | `react-10-professional-frontend/topic-02-accessibility-in-depth` |
+| 4 | `react-10-professional-frontend/topic-04-security` | Security: XSS and safe rendering | code | `react-10-professional-frontend/topic-03-performance` |
+| 5 | `react-10-professional-frontend/topic-05-seo-and-sharing` | Search engines and sharing links | quiz | `react-10-professional-frontend/topic-04-security` |
+| 6 | `react-10-professional-frontend/topic-06-deployment` | Deploying a frontend | quiz | `react-10-professional-frontend/topic-05-seo-and-sharing` |
+| 7 | `react-10-professional-frontend/topic-07-code-reviews` | Code reviews for frontend work | quiz | `react-10-professional-frontend/topic-06-deployment` |
+| 8 | `react-10-professional-frontend/topic-08-big-codebases` | Finding your way in a big frontend codebase | quiz | `react-10-professional-frontend/topic-07-code-reviews` |
+| 9 | `react-10-professional-frontend/topic-09-interviews` | Frontend interviews | quiz | `react-10-professional-frontend/topic-08-big-codebases` |
+| boss | `react-10-professional-frontend/boss` | INC-10: The mock frontend interview loop | code | `react-10-professional-frontend/topic-09-interviews` |
+| mini-project | `react-10-professional-frontend/mini-project` | CAPSTONE: Launch the dhaaga.in online store | code | `react-10-professional-frontend/topic-09-interviews` |
+
+## Web totals
+
+- Modules: 11
+- Lessons: 108
+- Graded units including incidents and features: 130

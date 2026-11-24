@@ -1,0 +1,24 @@
+id: web-01-html/topic-08-form-inputs-and-validation
+title: "Input types and built-in validation"
+order: 8
+minutes: 10
+prerequisites: [web-01-html/topic-07-forms]
+concepts: [input-types, required, min-and-max, pattern, select, radio-and-checkbox]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0108
+  from: sam
+  title: "Orders arrive with no phone number, or a five-digit one"
+  body: >
+    Raju here. The quick order form works, but yesterday three orders came in with no name, one
+    phone number was "98765", and someone typed "lots" as the item. I can't call them back! Can the
+    form stop bad orders before they're sent, and let people pick the item and delivery instead?
+hints:
+  - "The browser checks fields for you. required means it can't be empty, type=\"tel\" brings up the phone keypad, and pattern sets the exact shape."
+  - "A select needs one option per item, with the code as its value: <option value=\"CST\">Coaster set (4)</option>."
+  - "Radio buttons in one group share the same name: <input type=\"radio\" id=\"delivery-pickup\" name=\"delivery\" value=\"pickup\">, plus a label for each. The phone pattern can be [0-9]{10}."
+review: true

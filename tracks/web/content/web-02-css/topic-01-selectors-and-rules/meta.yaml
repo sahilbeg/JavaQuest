@@ -1,0 +1,24 @@
+id: web-02-css/topic-01-selectors-and-rules
+title: "CSS rules and selectors"
+order: 1
+minutes: 9
+prerequisites: [web-01-html/boss]
+concepts: [rule-syntax, linking-css, type-selectors, class-selectors, id-selectors, grouping-selectors, descendant-selectors]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0201
+  from: sana
+  title: "The catalogue looks like a school notice"
+  body: >
+    Sana here. I showed the catalogue page to Meera Aunty and she said it looks like a circular from her old school.
+    Black text, white page, nothing that says Dhaaga. Before I hand over the brand colours, can you wire up a stylesheet
+    and give the headings, prices, nav links and the Visit us footer their first styles?
+hints:
+  - "First make the page load your CSS: a <link> in the <head> that points at style.css. Then fill in one rule per TODO."
+  - "A class selector starts with a dot (.price), an id selector with a hash (#visit), and a type selector is just the tag name (h1)."
+  - "Try: .price { font-weight: bold; } and h2, h3 { color: darkblue; } and nav a { color: darkred; }"
+review: true

@@ -1,0 +1,114 @@
+topic: web-00-how-the-web-works/topic-07-git-basics
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: version-control
+    prompt: "What does version control, like Git, do for a website's files?"
+    choices: ["Records every change, so you can see the history and undo mistakes", "Makes the page load faster on phones", "Sends the page to customers", "Checks the HTML for typos"]
+    answer: 0
+    explain: "Version control is an order book for your files: every change is recorded and can be undone."
+    reteach: "## Concept"
+
+  - id: q02
+    type: mcq
+    concept: repository
+    variants:
+      - { prompt: "Which command turns the folder you're in into a Git repository?", choices: ["git init", "git add", "git commit", "git log"], answer: 0 }
+      - { prompt: "Where does Git keep a repository's history?", choices: ["In a hidden .git folder inside the project", "In index.html", "On the customer's phone", "In the .gitignore file"], answer: 0 }
+    explain: "git init creates the repository. Git keeps its history in the hidden .git folder."
+    reteach: "### Syntax: git init"
+
+  - id: q03
+    type: mcq
+    concept: staging
+    prompt: "What does git add index.html do?"
+    choices: ["Puts the changes in index.html on the tray for the next commit", "Saves a commit with a message", "Deletes index.html", "Sends index.html to the server"]
+    answer: 0
+    explain: "git add moves changes to the staging area. Nothing is saved in the history until you commit."
+    reteach: "### Syntax: git add"
+
+  - id: q04
+    type: fill-blank
+    concept: commit
+    goal: "Save everything in the staging area as one snapshot, with a message."
+    prompt: "git ___ -m \"Add opening days\""
+    answers: ["commit"]
+    explain: "git commit saves what's staged. -m adds the message on the same line."
+    reteach: "### Syntax: git commit"
+
+  - id: q05
+    type: order
+    concept: commit
+    prompt: "Put the commands in order to start a repo and save a first page."
+    items:
+      - "git init"
+      - "git add index.html"
+      - "git commit -m \"Add first page\""
+      - "git log --oneline"
+    explain: "Create the repo, stage the file, commit it, then look at the history."
+    reteach: "## Worked example"
+
+  - id: q06
+    type: mcq
+    concept: commit
+    variants:
+      - { prompt: "Which is the best commit message?", choices: ["Fix heading typo", "stuff", "changes", "asdf"], answer: 0 }
+      - { prompt: "Which commit message tells the team the most?", choices: ["Add WhatsApp link", "update", "more work", "final final"], answer: 0 }
+    explain: "A good message is short and starts with a command word that says what the commit does."
+    reteach: "### Syntax: git commit"
+
+  - id: q07
+    type: mcq
+    concept: history-and-diff
+    prompt: "Which command lists your commits, newest first, one per line?"
+    choices: ["git log --oneline", "git status", "git diff", "git init"]
+    answer: 0
+    explain: "git log lists the history, and --oneline shows each commit as a short id and its message."
+    reteach: "### Syntax: git log"
+
+  - id: q08
+    type: mcq
+    concept: history-and-diff
+    prompt: "In the output of git diff, what does a line starting with + mean?"
+    choices: ["That line was added", "That line was removed", "That line has an error", "That line is a comment"]
+    answer: 0
+    explain: "+ marks an added line, - marks a removed line, and a space marks a line that didn't change."
+    reteach: "### See before you save: git diff"
+
+  - id: q09
+    type: mcq
+    concept: history-and-diff
+    prompt: "You run git commit and Git says the tray is empty: nothing added to commit. What did you forget?"
+    choices: ["git add", "git init", "git log", "git restore"]
+    answer: 0
+    explain: "A commit saves only what's staged. Run git add first."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: repository
+    prompt: "Git says: fatal: not a git repository. What's the most likely reason?"
+    choices: ["You're in a folder Git doesn't watch", "Your HTML has a typo", "Your commit message is too long", "The server is down"]
+    answer: 0
+    explain: "Git commands only work inside a repository. cd into the project folder, or run git init."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: gitignore
+    variants:
+      - { prompt: "Which file should be listed in .gitignore?", choices: [".env, with passwords and keys", "index.html", "style.css", "main.js"], answer: 0 }
+      - { prompt: "What does a .gitignore file do?", choices: ["Lists files and folders Git should not record", "Lists every commit", "Undoes the last change", "Deletes secret files"], answer: 0 }
+    explain: ".gitignore keeps tools like node_modules/, system files like .DS_Store, and secrets like .env out of the history."
+    reteach: "### What never goes in Git: .gitignore"
+
+  - id: q12
+    type: mcq
+    concept: staging
+    prompt: "You ruined index.html and haven't staged it. The last commit is fine. Which command brings that version back?"
+    choices: ["git restore index.html", "git add index.html", "git commit -m \"undo\"", "git log --oneline"]
+    answer: 0
+    explain: "git restore puts the file back as it was at the last commit. Your unsaved edits are thrown away."
+    reteach: "### Undo: git restore"

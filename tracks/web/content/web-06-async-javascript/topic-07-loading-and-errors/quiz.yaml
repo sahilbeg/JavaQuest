@@ -1,0 +1,137 @@
+topic: web-06-async-javascript/topic-07-loading-and-errors
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: request-states
+    variants:
+      - { prompt: "Which list names the usual UI states of a request?", choices: ["Loading, ready, empty and error", "Start, middle and end", "GET, POST and DELETE", "200, 404 and 500"], answer: 0 }
+      - { prompt: "Why should a page show something for every state of a request?", choices: ["So the customer can always tell loading from broken from nothing to show", "Because fetch fails without it", "To make the request faster", "Because the server asks for it"], answer: 0 }
+    explain: "A request starts loading and ends ready, empty or error. Showing each one means the page is never a confusing blank."
+    reteach: "### Every request goes through states"
+
+  - id: q02
+    type: mcq
+    concept: loading-state
+    prompt: "In an async function that fetches the catalogue, where should you set the loading message?"
+    choices: ["Before the first await, so it shows at once", "Right after await fetch(...)", "In the catch block", "In finally"]
+    answer: 0
+    explain: "Code before the first await runs straight away. After the await, the waiting is already over."
+    reteach: "### Show loading straight away"
+
+  - id: q03
+    type: predict-output
+    concept: try-catch-finally
+    code: |
+      async function load(works) {
+        try {
+          if (!works) throw new Error("down");
+          console.log("ready");
+        } catch (error) {
+          console.log("error");
+        } finally {
+          console.log("enable button");
+        }
+      }
+      load(false);
+    answer: "error\nenable button"
+    explain: "The throw skips the rest of try and jumps to catch. finally runs after either path."
+    reteach: "### Syntax: try, catch and finally for a request"
+
+  - id: q04
+    type: mcq
+    concept: network-vs-http-errors
+    prompt: "Your code does const response = await fetch(url) inside try, and the server answers 500. You don't check response.ok. What happens?"
+    choices: ["Nothing throws, so the catch block doesn't run", "fetch rejects and catch runs", "The browser shows its own error page", "The function stops forever"]
+    answer: 0
+    explain: "A 500 is still an answer, so fetch succeeds. Throw yourself when response.ok is false, so catch handles it."
+    reteach: "### Two kinds of failure, one catch"
+
+  - id: q05
+    type: mcq
+    concept: empty-state
+    prompt: "GET /api/catalogue answers 200 with an empty list []. Which state should the page show?"
+    choices: ["Empty: a kind sentence such as \"No items yet. Check back soon!\"", "Error: \"Couldn't load the catalogue\"", "Loading, until items arrive", "Nothing at all"]
+    answer: 0
+    explain: "The request worked, it just has nothing in it. That is the empty state, not an error."
+    reteach: "### Empty is not an error"
+
+  - id: q06
+    type: mcq
+    concept: error-state
+    variants:
+      - { prompt: "Which error message is best to show a customer?", choices: ["Couldn't load the catalogue. Check your connection and try again.", "TypeError: Failed to fetch", "Error 500", "undefined"], answer: 0 }
+      - { prompt: "Where should the technical details of an error go?", choices: ["console.error, for developers", "In big red text on the page", "In the page's title", "Nowhere: throw them away"], answer: 0 }
+    explain: "Customers need what happened and what to do next. Developers read the technical details in the console."
+    reteach: "### Friendly error messages"
+
+  - id: q07
+    type: spot-the-bug
+    concept: loading-state
+    code: |
+      async function loadCatalogue(status) {
+        const response = await fetch("/api/catalogue");
+        status.textContent = "Loading the catalogue...";
+        const items = await response.json();
+        status.textContent = `${items.length} items`;
+      }
+    bugLine: 3
+    explain: "The loading message is set after the wait for fetch, so the page is blank while the customer waits. Move it above the fetch line."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: fill-blank
+    concept: try-catch-finally
+    goal: "Start the block that re-enables the button after the request, whether it worked or failed."
+    prompt: "} ___ {"
+    answers: ["finally"]
+    explain: "finally runs after try or catch, so it is the place to undo loading things."
+    reteach: "### Syntax: try, catch and finally for a request"
+
+  - id: q09
+    type: predict-output
+    concept: network-vs-http-errors
+    code: |
+      async function pretendFetch() {
+        return { ok: false, status: 500, json: async () => ({}) };
+      }
+      async function load() {
+        try {
+          const response = await pretendFetch();
+          console.log(`status ${response.status}`);
+        } catch (error) {
+          console.log("caught");
+        }
+      }
+      load();
+    answer: "status 500"
+    explain: "The pretend fetch answers, so nothing throws. Without a check of response.ok, the 500 goes unnoticed by catch."
+    reteach: "### Two kinds of failure, one catch"
+
+  - id: q10
+    type: mcq
+    concept: error-state
+    prompt: "Which line writes data-state=\"error\" onto the status element, so CSS can style it?"
+    choices: ["status.dataset.state = \"error\";", "status.state = \"error\";", "status.data = \"state-error\";", "status.dataset[\"data-state\"] = \"error\";"]
+    answer: 0
+    explain: "element.dataset.state reads and writes the data-state attribute."
+    reteach: "### Styling each state with data-state"
+
+  - id: q11
+    type: mcq
+    concept: network-vs-http-errors
+    prompt: "The customer's phone is in flight mode when the page calls fetch. What happens?"
+    choices: ["fetch rejects, often with TypeError: Failed to fetch", "fetch is fulfilled with status 404", "fetch is fulfilled with status 500", "fetch waits until flight mode is turned off"]
+    answer: 0
+    explain: "No answer arrives at all, so fetch's promise rejects. That is a network failure."
+    reteach: "### Two kinds of failure, one catch"
+
+  - id: q12
+    type: mcq
+    concept: loading-state
+    prompt: "On a slow phone, a customer taps Check PIN five times. How do you stop five requests going out?"
+    choices: ["Disable the button when the request starts, and enable it again in finally", "Hide the page until the answer arrives", "Call fetch five times and keep the last answer", "Make the button bigger"]
+    answer: 0
+    explain: "A disabled button can't be tapped. finally turns it back on whether the request worked or failed."
+    reteach: "### Disable the button while loading"

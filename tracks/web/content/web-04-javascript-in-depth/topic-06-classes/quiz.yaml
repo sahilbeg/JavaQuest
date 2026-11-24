@@ -1,0 +1,188 @@
+topic: web-04-javascript-in-depth/topic-06-classes
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: class-syntax
+    prompt: "Which expression builds a new Cart instance for Asha?"
+    choices:
+      - "new Cart(\"Asha\")"
+      - "Cart(\"Asha\")"
+      - "Cart.new(\"Asha\")"
+      - "class Cart(\"Asha\")"
+    answer: 0
+    explain: "new builds an instance from a class and runs its constructor with the arguments in brackets."
+    reteach: "### Syntax: class"
+
+  - id: q02
+    type: predict-output
+    concept: constructor
+    code: |
+      class Customer {
+        constructor(name, phone) {
+          this.name = name;
+          this.phone = phone;
+        }
+      }
+      const c = new Customer("Asha", "98765 43210");
+      console.log(c.name + " / " + c.phone);
+    answer: "Asha / 98765 43210"
+    explain: "The constructor stores both arguments on this, the new object."
+    reteach: "### Syntax: constructor"
+
+  - id: q03
+    type: fill-blank
+    concept: constructor
+    goal: "Start the special method that runs once, when new builds a cart, and receives the customer's name."
+    prompt: "  ___(customer) {"
+    answers: ["constructor"]
+    explain: "The method named constructor sets up each new instance."
+    reteach: "### Syntax: constructor"
+
+  - id: q04
+    type: predict-output
+    concept: instance-methods
+    code: |
+      class Counter {
+        constructor() {
+          this.count = 0;
+        }
+        add() {
+          this.count = this.count + 1;
+          return this;
+        }
+      }
+      const a = new Counter();
+      const b = new Counter();
+      a.add().add();
+      b.add();
+      console.log(a.count, b.count);
+    answer: "2 1"
+    explain: "Each instance has its own count. a.add() ran twice, b.add() once."
+    reteach: "### Methods in a class"
+
+  - id: q05
+    type: predict-output
+    concept: getters
+    code: |
+      class Line {
+        constructor(paise, qty) {
+          this.paise = paise;
+          this.qty = qty;
+        }
+        get total() {
+          return this.paise * this.qty;
+        }
+      }
+      const line = new Line(12000, 2);
+      line.qty = 4;
+      console.log(line.total);
+    answer: "48000"
+    explain: "The getter works the total out when it is read, after qty became 4: 12000 x 4."
+    reteach: "### Syntax: getters"
+
+  - id: q06
+    type: mcq
+    concept: getters
+    prompt: "A Cart class has get total() { ... }. How do you read the total?"
+    choices:
+      - "cart.total"
+      - "cart.total()"
+      - "cart.get(total)"
+      - "Cart.total"
+    answer: 0
+    explain: "A getter is read like a property, with no brackets. cart.total() would throw a TypeError."
+    reteach: "### Syntax: getters"
+
+  - id: q07
+    type: mcq
+    concept: private-fields
+    prompt: "Code outside the Cart class writes console.log(cart.#lines). What happens?"
+    choices:
+      - "A SyntaxError, before any of the file runs"
+      - "It prints the lines"
+      - "It prints undefined"
+      - "It prints an empty array"
+    answer: 0
+    explain: "A # name can only be used inside its class. Using it elsewhere stops the file from being read at all."
+    reteach: "### Syntax: private fields"
+
+  - id: q08
+    type: predict-output
+    concept: private-fields
+    code: |
+      class Wallet {
+        #paise = 0;
+        add(p) {
+          this.#paise = this.#paise + p;
+        }
+        get paise() {
+          return this.#paise;
+        }
+      }
+      const w = new Wallet();
+      w.add(15000);
+      w.add(3000);
+      console.log(w.paise, Object.keys(w).length);
+    answer: "18000 0"
+    explain: "The getter reads the private total, 18000. Private fields don't show up in Object.keys, so it has 0 keys."
+    reteach: "### Syntax: private fields"
+
+  - id: q09
+    type: spot-the-bug
+    concept: instance-methods
+    code: |
+      class Cart {
+        constructor() {
+          this.lines = [];
+        }
+        add(code) {
+          lines.push(code);
+        }
+      }
+    bugLine: 6
+    explain: "lines on its own is a variable that doesn't exist. The field is this.lines."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: spot-the-bug
+    concept: class-syntax
+    code: |
+      class Cart {
+        constructor(customer) {
+          this.customer = customer;
+        }
+      }
+      const cart = Cart("Ravi");
+      console.log(cart.customer);
+    bugLine: 6
+    explain: "A class can't be called like a function. It needs new: new Cart(\"Ravi\")."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: order
+    concept: class-syntax
+    prompt: "Put the lines in order so the program prints Asha."
+    items:
+      - "class Cart {"
+      - "  constructor(customer) {"
+      - "    this.customer = customer;"
+      - "  }"
+      - "}"
+      - "console.log(new Cart(\"Asha\").customer);"
+    explain: "The class is declared first, with the constructor inside it. A class must exist before new can use it."
+    reteach: "### Syntax: constructor"
+
+  - id: q12
+    type: mcq
+    concept: private-fields
+    prompt: "Why keep a cart's lines in a private field #lines?"
+    choices:
+      - "So only Cart's own methods can change them, and no page can leave them in a broken state"
+      - "Because private fields are faster to add up"
+      - "So the lines are saved when the page reloads"
+      - "Because arrays can't be public fields"
+    answer: 0
+    explain: "Private fields protect the data. Pages must go through methods like add and remove, which keep the lines correct."
+    reteach: "### Syntax: private fields"

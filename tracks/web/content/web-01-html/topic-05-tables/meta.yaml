@@ -1,0 +1,24 @@
+id: web-01-html/topic-05-tables
+title: "Tables for the price list"
+order: 5
+minutes: 9
+prerequisites: [web-01-html/topic-04-lists]
+concepts: [rows-and-cells, header-cells, caption, table-sections, tables-for-data]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0105
+  from: sam
+  title: "Everyone asks the price, and the page doesn't say"
+  body: >
+    Raju here. Half my WhatsApp messages are "how much is the tote bag?" Kavya started a price table,
+    but it only has two rows and no column titles, and my screen reader friend says the KEY row reads
+    oddly. Can you finish it so people stop asking?
+hints:
+  - "A table is rows (tr) of cells. Header cells are th, and data cells are td."
+  - "Column titles go in a thead with th scope=\"col\". Each row's code is a th with scope=\"row\". The caption is the table's first child."
+  - "One row looks like: <tr><th scope=\"row\">BAG</th><td>Tote bag</td><td>₹899.00</td></tr>"
+review: true

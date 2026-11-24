@@ -1,0 +1,120 @@
+topic: web-05-dom-and-events/topic-02-selecting-elements
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: query-selector
+    prompt: "The page shows five products, each with a .price element. What does document.querySelector(\".price\") return?"
+    choices: ["The first .price element on the page", "All five .price elements", "The last .price element", "null, because there is more than one"]
+    answer: 0
+    explain: "querySelector always returns the first match, searching from the top of the page."
+    reteach: "### Syntax: querySelector"
+
+  - id: q02
+    type: fill-blank
+    concept: query-selector-all
+    goal: "Find every element with class product on the page, in page order, as a list."
+    prompt: "const cards = document.___(\".product\");"
+    answers: ["querySelectorAll"]
+    explain: "querySelectorAll returns every match as a NodeList. querySelector would return only the first."
+    reteach: "### Syntax: querySelectorAll"
+
+  - id: q03
+    type: mcq
+    concept: selectors
+    variants:
+      - { prompt: "Which selector finds the element with id=\"cart\"?", choices: ["\"#cart\"", "\".cart\"", "\"cart\"", "\"[cart]\""], answer: 0 }
+      - { prompt: "Which selector finds elements with class=\"price\"?", choices: ["\".price\"", "\"#price\"", "\"price\"", "\"<price>\""], answer: 0 }
+    explain: "A # means an id, a dot means a class, and a bare word means a tag name."
+    reteach: "### Selectors you already know"
+
+  - id: q04
+    type: mcq
+    concept: selectors
+    prompt: "Which selector finds elements that have both the product class and the sold-out class?"
+    choices: ["\".product.sold-out\"", "\".product .sold-out\"", "\".product, .sold-out\"", "\"product.sold-out\""]
+    answer: 0
+    explain: "Two classes with no space between them mean both on the same element. A space means one inside the other."
+    reteach: "### Selectors you already know"
+
+  - id: q05
+    type: mcq
+    concept: not-found
+    variants:
+      - { prompt: "Nothing on the page has class nope. What does document.querySelector(\".nope\") return?", choices: ["null", "An empty NodeList", "undefined", "It throws an error"], answer: 0 }
+      - { prompt: "Nothing on the page has class nope. What is document.querySelectorAll(\".nope\").length?", choices: ["0", "null", "undefined", "It throws an error"], answer: 0 }
+    explain: "querySelector gives null when nothing matches. querySelectorAll gives an empty NodeList, whose length is 0."
+    reteach: "### When nothing is found"
+
+  - id: q06
+    type: spot-the-bug
+    concept: scoped-search
+    code: |
+      function priceOf(id) {
+        const card = document.querySelector(`.product[data-id="${id}"]`);
+        const price = document.querySelector(".price");
+        return price.textContent;
+      }
+    bugLine: 3
+    explain: "It searches the whole page, so it always finds the first price. Search inside the card: card.querySelector(\".price\")."
+    reteach: "### Syntax: searching inside an element"
+
+  - id: q07
+    type: mcq
+    concept: scoped-search
+    prompt: "card holds the keychain's li element. Which line finds the keychain's own price?"
+    choices: ["card.querySelector(\".price\")", "document.querySelector(\".price\")", "card.querySelector(\"price\")", "document.getElementById(\"price\")"]
+    answer: 0
+    explain: "Calling querySelector on the card keeps the search inside the card, and .price needs its dot."
+    reteach: "### Syntax: searching inside an element"
+
+  - id: q08
+    type: mcq
+    concept: attribute-selectors
+    prompt: "Which selector finds the .product card whose data-id is DC-1042?"
+    choices: ['.product[data-id="DC-1042"]', '.product [data-id="DC-1042"]', '#DC-1042', '.product.data-id=DC-1042']
+    answer: 0
+    explain: "Square brackets match an attribute. With no space, both parts must be true of the same element. A space would search inside the card."
+    reteach: "### Syntax: attribute selectors"
+
+  - id: q09
+    type: predict-output
+    concept: attribute-selectors
+    code: |
+      const id = "DC-1013";
+      const selector = `.product[data-id="${id}"] .price`;
+      console.log(selector);
+    answer: ".product[data-id=\"DC-1013\"] .price"
+    explain: "The template literal puts the id between the double quotes, giving a selector for the price inside that card."
+    reteach: "### Syntax: a selector built from a variable"
+
+  - id: q10
+    type: mcq
+    concept: query-selector-all
+    prompt: "Which method can you call straight on the NodeList that querySelectorAll returns?"
+    choices: ["forEach", "map", "filter", "reduce"]
+    answer: 0
+    explain: "A NodeList has forEach and length, but not map, filter or reduce. Spread it into an array for those."
+    reteach: "### Syntax: querySelectorAll"
+
+  - id: q11
+    type: mcq
+    concept: query-selector
+    prompt: "Which line finds the element with id=\"products\"?"
+    choices: ["document.getElementById(\"products\")", "document.getElementById(\"#products\")", "document.querySelector(\"products\")", "document.querySelector(\".products\")"]
+    answer: 0
+    explain: "getElementById takes the id alone, with no #. querySelector would need \"#products\"."
+    reteach: "### getElementById, the older way"
+
+  - id: q12
+    type: order
+    concept: scoped-search
+    prompt: "Put the lines in order to print the price of item DC-1013."
+    items:
+      - "const id = \"DC-1013\";"
+      - "const card = document.querySelector(`.product[data-id=\"${id}\"]`);"
+      - "const price = card.querySelector(\".price\");"
+      - "console.log(price.textContent);"
+    explain: "Set the id, find its card, search inside the card for the price, then print it."
+    reteach: "## Worked example"

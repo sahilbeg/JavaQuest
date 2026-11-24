@@ -1,0 +1,24 @@
+id: web-01-html/topic-10-head-and-meta
+title: "The head: title, meta tags and the viewport"
+order: 10
+minutes: 9
+prerequisites: [web-01-html/topic-09-accessibility]
+concepts: [head-and-body, page-title, charset, viewport, meta-description, link-element]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0110
+  from: maya
+  title: "Tiny text on phones, and a dull search result"
+  body: >
+    On my phone the catalogue page shows up zoomed right out, with tiny text. When Meera Aunty
+    searched for us, the result said only "Dhaaga & Co." with a random line from the page under it.
+    The tab has no icon either. Everything to fix is in the head. Can you sort it out?
+hints:
+  - "The head holds facts about the page. The charset line comes first, then the title, then the other meta tags and links."
+  - "The viewport tag is always the same line: <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+  - "A description is <meta name=\"description\" content=\"...\">, one or two sentences under 160 characters. The tab icon is <link rel=\"icon\" href=\"images/golu-icon.png\">."
+review: true

@@ -1,0 +1,24 @@
+id: web-01-html/topic-02-text-and-headings
+title: "Headings, paragraphs and text"
+order: 2
+minutes: 8
+prerequisites: [web-01-html/topic-01-elements-and-tags]
+concepts: [headings, heading-order, paragraphs, emphasis, entities]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0102
+  from: sana
+  title: "The page has no headings, and a tip has vanished"
+  body: >
+    The catalogue page reads like one long letter: there's no big name at the top and no titles
+    for the parts. Raju's screen reader also jumps straight from Catalogue to New this week as if a
+    level were missing. And my stitching tip shows "write in the notes", with the important words gone!
+hints:
+  - "A page has one h1 for its name. Each part gets an h2, and a part inside a part gets an h3."
+  - "Headings go one level at a time: h1, then h2, then h3. An h4 straight under an h2 skips h3."
+  - "The browser reads <your name> as a tag. Write it as &lt;your name&gt; so it shows as text."
+review: true

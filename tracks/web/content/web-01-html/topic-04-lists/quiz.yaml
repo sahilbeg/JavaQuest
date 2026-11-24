@@ -1,0 +1,108 @@
+topic: web-01-html/topic-04-lists
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: unordered-lists
+    prompt: "Which element fits Dhaaga's five products, which can be listed in any order?"
+    choices: ["ul", "ol", "li", "p with br"]
+    answer: 0
+    explain: "Order doesn't matter, so it's an unordered list: ul."
+    reteach: "### ul or ol?"
+
+  - id: q02
+    type: mcq
+    concept: ordered-lists
+    prompt: "Which element fits the steps for placing an order: pick, message, pay?"
+    choices: ["ol", "ul", "dl", "h3"]
+    answer: 0
+    explain: "Shuffling the steps would make them wrong, so the order matters: ol."
+    reteach: "### ul or ol?"
+
+  - id: q03
+    type: fill-blank
+    concept: list-items
+    goal: "Add the keychain as one entry of the product list."
+    prompt: "<___>Keychain</li>"
+    answers: ["li"]
+    explain: "Every entry in a ul or ol is a list item, li."
+    reteach: "### Syntax: an unordered list"
+
+  - id: q04
+    type: mcq
+    concept: ordered-lists
+    prompt: "An ol has three li elements. You add a new li as the first item. What happens to the numbers?"
+    choices: ["The browser renumbers them all: 1, 2, 3, 4", "You must change every number by hand", "The new item gets number 4", "Two items both show number 1"]
+    answer: 0
+    explain: "The browser counts the li elements, so the numbers always follow the order in the HTML."
+    reteach: "### Syntax: an ordered list"
+
+  - id: q05
+    type: spot-the-bug
+    concept: ordered-lists
+    prompt: "The page shows \"1. 1. Pick an item.\" Which line causes it?"
+    code: |
+      <ol>
+        <li>1. Pick an item.</li>
+        <li>Send us its name on WhatsApp.</li>
+      </ol>
+    bugLine: 2
+    explain: "The browser already numbers an ol. Typing the number too shows it twice."
+    reteach: "### Syntax: an ordered list"
+
+  - id: q06
+    type: spot-the-bug
+    concept: nested-lists
+    prompt: "Which line puts the nested list in the wrong place?"
+    code: |
+      <ul>
+        <li>Amigurumi (small toy)</li>
+        <ul>
+          <li>Marigold</li>
+          <li>Indigo</li>
+        </ul>
+      </ul>
+    bugLine: 3
+    explain: "The inner ul must sit inside the amigurumi's li, before </li>. A ul may only hold li elements."
+    reteach: "### Syntax: a nested list"
+
+  - id: q07
+    type: order
+    concept: nested-lists
+    prompt: "Put the lines in order to nest two colours under the amigurumi."
+    items:
+      - "<ul>"
+      - "<li>Amigurumi (small toy)"
+      - "<ul><li>Marigold</li><li>Mint</li></ul>"
+      - "</li>"
+      - "</ul>"
+    explain: "The inner list sits inside the amigurumi's li, after its text and before its </li>."
+    reteach: "### Syntax: a nested list"
+
+  - id: q08
+    type: mcq
+    concept: list-items
+    prompt: "Which of these may sit directly inside a ul?"
+    choices: ["Only li elements", "Any text", "p elements and headings", "Other ul elements"]
+    answer: 0
+    explain: "A ul holds only li elements. Text, links or nested lists go inside an li."
+    reteach: "### Syntax: an unordered list"
+
+  - id: q09
+    type: mcq
+    concept: unordered-lists
+    prompt: "Why is a real ul better than lines split with br?"
+    choices: ["A screen reader can say \"list, 5 items\" and CSS can style each item", "It loads faster", "br is not allowed in HTML", "It makes the text bigger"]
+    answer: 0
+    explain: "Marking it as a list tells everyone it is a list, and gives each item its own element."
+    reteach: "## Concept"
+
+  - id: q10
+    type: mcq
+    concept: list-items
+    prompt: "Which list holds pairs of a term and its description, like CST and \"Coaster set (4)\"?"
+    choices: ["dl", "ol", "ul", "li"]
+    answer: 0
+    explain: "A description list, dl, holds dt terms and dd descriptions."
+    reteach: "### Lists of pairs"

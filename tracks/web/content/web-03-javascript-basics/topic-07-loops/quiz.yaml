@@ -1,0 +1,142 @@
+topic: web-03-javascript-basics/topic-07-loops
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: accumulator
+    code: |
+      const prices = [100, 200, 300];
+      let total = 0;
+      for (const price of prices) {
+        total = total + price;
+      }
+      console.log(total);
+    answer: "600"
+    explain: "Each round adds one price to total: 0 + 100 + 200 + 300 is 600."
+    reteach: "### Syntax: an accumulator"
+
+  - id: q02
+    type: predict-output
+    concept: for-loop
+    code: |
+      for (let i = 0; i < 3; i++) {
+        console.log(i);
+      }
+    answer: "0\n1\n2"
+    explain: "i starts at 0 and stops before 3, so the loop prints 0, 1 and 2."
+    reteach: "### Syntax: the counting for loop"
+
+  - id: q03
+    type: predict-output
+    concept: while-loop
+    code: |
+      let coasters = 10;
+      let days = 0;
+      while (coasters > 0) {
+        coasters = coasters - 3;
+        days = days + 1;
+      }
+      console.log(days);
+      console.log(coasters);
+    answer: "4\n-2"
+    explain: "10, 7, 4, 1: still above 0, so a fourth round takes it to -2. Only then is the condition false."
+    reteach: "### Syntax: while"
+
+  - id: q04
+    type: predict-output
+    concept: for-loop
+    code: |
+      const prices = [15000, 12000];
+      let total = 0;
+      for (let i = 0; i <= prices.length; i++) {
+        total = total + prices[i];
+      }
+      console.log(total);
+    answer: "NaN"
+    explain: "With <=, i reaches 2. prices[2] is undefined, and adding undefined gives NaN."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: predict-output
+    concept: break-continue
+    code: |
+      const codes = ["CST", "KEY", "BAG", "AMI"];
+      for (const code of codes) {
+        if (code === "BAG") {
+          break;
+        }
+        console.log(code);
+      }
+    answer: "CST\nKEY"
+    explain: "break leaves the loop as soon as it reaches BAG, so BAG and AMI are never printed."
+    reteach: "### Syntax: break and continue"
+
+  - id: q06
+    type: predict-output
+    concept: break-continue
+    code: |
+      const codes = ["CST", "KEY", "BAG"];
+      for (const code of codes) {
+        if (code === "KEY") {
+          continue;
+        }
+        console.log(code);
+      }
+    answer: "CST\nBAG"
+    explain: "continue skips the rest of the KEY round, and the loop goes on with BAG."
+    reteach: "### Syntax: break and continue"
+
+  - id: q07
+    type: fill-blank
+    concept: for-of
+    goal: "Take each value from the prices array in turn, putting it in price."
+    prompt: "for (const price ___ prices) {"
+    answers: ["of"]
+    explain: "for...of hands you each value of a list in turn."
+    reteach: "### Syntax: for...of"
+
+  - id: q08
+    type: spot-the-bug
+    concept: accumulator
+    code: |
+      const prices = [15000, 12000, 45000];
+      for (const price of prices) {
+        let total = 0;
+        total = total + price;
+        console.log(total);
+      }
+    bugLine: 3
+    explain: "total starts again at 0 in every round. Make it once, before the loop."
+    reteach: "### Syntax: an accumulator"
+
+  - id: q09
+    type: mcq
+    concept: while-loop
+    prompt: "You want to keep crocheting toys until the yarn runs out, and you don't know in advance how many rounds that takes. Which loop fits best?"
+    choices: ["while", "for...of", "switch", "if"]
+    answer: 0
+    explain: "while repeats until its condition is false, which suits an unknown number of rounds. switch and if don't repeat at all."
+    reteach: "### Which loop to use"
+
+  - id: q10
+    type: mcq
+    concept: while-loop
+    prompt: "let grams = 100; while (grams > 0) { console.log(\"Crocheting...\"); } What happens?"
+    choices: ["It never stops, because nothing changes grams", "It prints once and stops", "It prints 100 times", "It doesn't run, because grams is a number"]
+    answer: 0
+    explain: "The condition stays true forever, so this is an infinite loop."
+    reteach: "### Syntax: while"
+
+  - id: q11
+    type: order
+    concept: accumulator
+    prompt: "Put the lines in order so the program prints 300."
+    items:
+      - "let total = 0;"
+      - "for (const price of [100, 200]) {"
+      - "  total = total + price;"
+      - "}"
+      - "console.log(total);"
+    explain: "Make the accumulator first, add inside the loop, then print after the loop ends."
+    reteach: "### Syntax: an accumulator"

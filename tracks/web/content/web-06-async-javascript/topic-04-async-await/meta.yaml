@@ -1,0 +1,23 @@
+id: web-06-async-javascript/topic-04-async-await
+title: "async and await"
+order: 4
+minutes: 10
+prerequisites: [web-06-async-javascript/topic-03-promises]
+concepts: [async-function, await, try-catch-await, sequential-await, forgotten-await]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0604
+  from: sam
+  title: "The receipt says UPI ref undefined"
+  body: >
+    Raju again. Mrs. Joshi bought a tote bag yesterday, and her receipt said "UPI ref undefined".
+    Worse, when Mr. Pillai's bank declined his payment, the website still held the last Golu for him,
+    so nobody else could buy it. Kavya says placeOrder in order.js doesn't wait for anything.
+hints:
+  - "A call to an async function gives back a promise straight away. Put await in front of it to get the real value."
+  - "Wrap each step that can fail in its own try...catch. If reserving throws, return the sold-out message before you ever call pay."
+  - "Inside the second try: const receipt = await api.pay(order.paise); return the confirmed text. In its catch: await api.release(order.itemId); then return the failed text. For totalStock, loop with for...of and add await getStock(id) to a running total."
+review: true

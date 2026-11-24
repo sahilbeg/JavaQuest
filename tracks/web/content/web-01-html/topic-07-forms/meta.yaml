@@ -1,0 +1,24 @@
+id: web-01-html/topic-07-forms
+title: "Forms: sending what the customer types"
+order: 7
+minutes: 10
+prerequisites: [web-01-html/topic-06-semantic-layout]
+concepts: [form-action-method, inputs-and-names, labels, textarea, submit-button]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0107
+  from: maya
+  title: "A quick order form on the catalogue page"
+  body: >
+    Not everyone uses WhatsApp. Mr. Kulkarni from Baner wanted two tote bags last week and had to
+    phone the shop. I've added an empty Quick order section. Please build the form in it, so a
+    customer can leave a name, a phone number and a message, and send it to our /orders address.
+hints:
+  - "A form needs action (where it sends) and method (how). Every field needs a name, or its value is never sent."
+  - "A label is joined to its field when the label's for matches the field's id: <label for=\"order-name\">."
+  - "Try: <label for=\"order-name\">Your name</label> <input type=\"text\" id=\"order-name\" name=\"name\">"
+review: true

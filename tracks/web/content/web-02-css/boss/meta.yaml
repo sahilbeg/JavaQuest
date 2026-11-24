@@ -1,0 +1,23 @@
+id: web-02-css/boss
+title: "INC-02: The catalogue breaks on small Android phones"
+order: 99
+minutes: 12
+prerequisites: [web-02-css/topic-10-variables-and-states]
+concepts: [box-model, grid, media-queries, responsive-images]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: INC-02
+  from: theo
+  title: "The catalogue breaks on small Android phones"
+  body: >
+    Arjun here. We sent the catalogue link to 400 customers on WhatsApp this morning, with the new product photos.
+    Most of them are on small Android phones, and they say the page is cut off on the right and the Order buttons have vanished.
+    Someone added a quick "fix" last week that hides the overflow, and orders have stopped since. Please fix it before the stall opens on Sunday.
+hints:
+  - "Bronze: main is set to width: 1200px, five times wider than a small phone. A max-width lets it shrink on small screens and still stop at 1200px on big ones."
+  - "Silver: four columns can't fit on a phone. Give .products no columns in the base rule, then add them inside @media (min-width: 40rem)."
+  - "Gold: each photo is 600px wide. .product img { max-width: 100%; height: auto; } shrinks it to fit its card. Then delete overflow-x: hidden from body: it hides the problem instead of fixing it."
+review: false

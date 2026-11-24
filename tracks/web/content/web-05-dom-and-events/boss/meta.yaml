@@ -1,0 +1,24 @@
+id: web-05-dom-and-events/boss
+title: "INC-05: The cart empties on refresh"
+order: 99
+minutes: 15
+prerequisites: [web-05-dom-and-events/topic-10-state-and-render]
+concepts: [save-on-change, load-on-start, safe-defaults, validating-saved-data]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: INC-05
+  from: theo
+  title: "The cart empties on refresh"
+  body: >
+    Arjun here, on the first day of the Diwali sale. Forty-one people added items to the cart this morning and then
+    lost everything when their phone reloaded the page. One lady had four Golus in her cart for her grandchildren; after
+    a refresh she had none, and she gave up. The cart is meant to be saved in the browser. Please find out why it
+    isn't, today.
+hints:
+  - "Bronze: open the Application panel in DevTools, add an item, and look at dhaaga:cart. Compare the moment the cart is saved with the moment it changes."
+  - "Silver: compare the key that saveCart writes with the key that loadCart reads. Then give loadCart a safe default: [] when nothing is saved, and [] (not a crash) when JSON.parse throws."
+  - "Gold: saveCart throws the quantities away. Save the whole lines with JSON.stringify(lines). On load, keep only lines that are objects with a string id and a qty that is a whole number above 0, and drop ids that aren't in the catalogue."
+review: false

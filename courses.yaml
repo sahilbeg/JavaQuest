@@ -39,7 +39,7 @@ courses:
     title: "Frontend with JavaScript and React"
     summary: "HTML, CSS and JavaScript, then React, until you launch Dhaaga's online store."
     stack: [HTML, CSS, JavaScript, React]
-    status: building
+    status: ready
     modules:
       - { id: web-00-how-the-web-works, title: How the web works }
       - { id: web-01-html, title: HTML }

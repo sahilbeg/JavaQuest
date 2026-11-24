@@ -1,0 +1,22 @@
+id: web-06-async-javascript/boss
+title: "INC-06: Slow 3G shows the wrong stock"
+order: 99
+minutes: 15
+prerequisites: [web-06-async-javascript/topic-10-debounce]
+concepts: [race-condition, latest-request-wins, abort-controller, loading-state, error-state]
+practice:
+  kind: code
+  runner: vitest
+ticket:
+  key: INC-06
+  from: theo
+  title: "Slow 3G shows the wrong stock"
+  body: >
+    Diwali sale, Saturday night. A customer on 3G opened the quick view for Golu (sold out), then tapped the Marigold coaster set.
+    The coaster set's panel said "Sold out", though we had 12, so she left. Another customer saw "3 in stock" on an item that was gone.
+    It only happens on slow connections, and when the API hiccups the panel goes blank or shows nonsense. Please fix stockView.js tonight.
+hints:
+  - "Bronze: two answers race for the same panel. Number every request in a counter kept inside createStockView, and after the await, return without touching the panel unless this is still the newest request."
+  - "Silver: keep the current AbortController next to the counter. At the start of show, call controller?.abort(), make a new controller, and pass { signal: controller.signal } to fetch. An AbortError is expected, so catch it and return quietly."
+  - "Gold: set LOADING and data-state \"loading\" before the fetch. Wrap the request in try...catch, throw when response.ok is false, and in catch return early if this request is old or was aborted. Only then show FAILED with data-state \"error\"."
+review: false

@@ -1,0 +1,23 @@
+id: web-03-javascript-basics/topic-09-arrays
+title: "Arrays"
+order: 9
+minutes: 9
+prerequisites: [web-03-javascript-basics/topic-08-functions]
+concepts: [array-literals, index-and-length, push-and-pop, includes-and-indexof, join-and-slice, references]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0309
+  from: sam
+  title: "The WhatsApp basket loses repeated items"
+  body: >
+    Raju here. Mrs. D'Souza ordered three keychains on WhatsApp, and the basket said she had one. When a basket is
+    empty, the order screen shows a blank line instead of saying so. The basket is a list of item codes, like
+    ["KEY", "CST", "KEY"]. Can you fix it in src/basket.js?
+hints:
+  - "basket.includes(code) is true when the code is anywhere in the array."
+  - "For countOf, loop with for...of and add 1 each time an item === code. For addItem, call basket.push(code); then return basket;"
+  - "For codesLine, check basket.length === 0 first and return \"Basket is empty\". Otherwise return basket.join(\", \")."
+review: true

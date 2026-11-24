@@ -1,0 +1,134 @@
+topic: web-06-async-javascript/topic-06-json-apis
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: endpoints
+    variants:
+      - { prompt: "Which request places a new order on Dhaaga's API?", choices: ["POST /api/orders", "GET /api/orders", "GET /api/stock/DC-1042", "POST /api/catalogue"], answer: 0 }
+      - { prompt: "Which request asks whether Dhaaga delivers to PIN 411001?", choices: ["GET /api/delivery?pin=411001", "POST /api/delivery", "GET /api/stock/411001", "GET /api/orders?pin"], answer: 0 }
+    explain: "Each endpoint is a method plus a URL. GET reads, POST adds something new. Details for a GET go in the query string."
+    reteach: "### Dhaaga's endpoints"
+
+  - id: q02
+    type: predict-output
+    concept: query-strings
+    code: |
+      const params = new URLSearchParams({ pin: "411038" });
+      console.log(`/api/delivery?${params}`);
+    answer: "/api/delivery?pin=411038"
+    explain: "URLSearchParams turns the object into name=value text, which goes after the ?."
+    reteach: "### Syntax: query strings with URLSearchParams"
+
+  - id: q03
+    type: predict-output
+    concept: query-strings
+    code: |
+      const params = new URLSearchParams({ q: "golu", sort: "price" });
+      console.log(params.toString());
+    answer: "q=golu&sort=price"
+    explain: "Each field becomes a name=value pair, and the pairs are joined with &."
+    reteach: "### Syntax: query strings with URLSearchParams"
+
+  - id: q04
+    type: fill-blank
+    concept: json-body
+    goal: "Turn the order object into one string of text so it can travel in the request body."
+    prompt: "body: JSON.___(order),"
+    answers: ["stringify"]
+    explain: "JSON.stringify turns an object into JSON text. The network carries text, not objects."
+    reteach: "### JSON in the body"
+
+  - id: q05
+    type: fill-blank
+    concept: post-requests
+    goal: "In fetch's options, say that this request sends a new order to the server rather than reading data."
+    prompt: "method: \"___\","
+    answers: ["POST"]
+    explain: "POST sends new data. Leaving method out means GET."
+    reteach: "### Syntax: fetch with options"
+
+  - id: q06
+    type: mcq
+    concept: content-type
+    prompt: "What does the header Content-Type: application/json tell the server?"
+    choices: ["The body is JSON text, so parse it as JSON", "The answer must be sent as HTML", "The request is a GET", "The customer is logged in"]
+    answer: 0
+    explain: "Content-Type labels the body. Without it, many servers treat a JSON body as plain text and refuse it."
+    reteach: "### The Content-Type header"
+
+  - id: q07
+    type: predict-output
+    concept: json-body
+    code: |
+      const body = JSON.stringify({ itemId: "DC-1042", qty: 2 });
+      console.log(body);
+    answer: "{\"itemId\":\"DC-1042\",\"qty\":2}"
+    explain: "JSON.stringify writes every key in double quotes, with no spaces. Numbers stay as numbers."
+    reteach: "### JSON in the body"
+
+  - id: q08
+    type: spot-the-bug
+    concept: json-body
+    code: |
+      async function sendOrder(order) {
+        return fetch("/api/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: order,
+        });
+      }
+    bugLine: 5
+    explain: "The body must be text. An object becomes [object Object]. Write body: JSON.stringify(order)."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: error-body
+    prompt: "Placing an order gets status 400 with the body { \"error\": \"PIN must be 6 digits\" }. What should the page show?"
+    choices: ["PIN must be 6 digits", "Something went wrong", "Order placed", "Nothing: a 400 is not an error"]
+    answer: 0
+    explain: "The server wrote that message for people. Read the error body and show it, so the customer knows what to fix."
+    reteach: "### When the server says no"
+
+  - id: q10
+    type: mcq
+    concept: query-strings
+    prompt: "Why build a search URL with URLSearchParams instead of writing `?q=${text}`?"
+    choices: ["It encodes spaces and characters like & so the URL doesn't break", "It makes the request a POST", "It makes the request faster", "It adds the Content-Type header"]
+    answer: 0
+    explain: "A raw & would start a new pair. URLSearchParams turns awkward characters into safe text, such as %26."
+    reteach: "### Syntax: query strings with URLSearchParams"
+
+  - id: q11
+    type: predict-output
+    concept: error-body
+    code: |
+      async function pretendFetch() {
+        return { ok: false, status: 400, json: async () => ({ error: "PIN must be 6 digits" }) };
+      }
+      async function main() {
+        const response = await pretendFetch();
+        const data = await response.json();
+        if (!response.ok) {
+          console.log(`Error: ${data.error}`);
+        }
+      }
+      main();
+    answer: "Error: PIN must be 6 digits"
+    explain: "The body is read first, then ok is checked. The answer isn't ok, so the server's own message is printed."
+    reteach: "### When the server says no"
+
+  - id: q12
+    type: mcq
+    concept: post-requests
+    prompt: "Which call sends order to the server as a new order, in JSON?"
+    choices:
+      - "fetch(\"/api/orders\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify(order) })"
+      - "fetch(\"/api/orders\", { body: order })"
+      - "fetch(\"/api/orders?\" + order)"
+      - "fetch(\"/api/orders\", { method: \"GET\", body: JSON.stringify(order) })"
+    answer: 0
+    explain: "A new order needs POST, a JSON Content-Type header and the order as JSON text. A GET can't carry a body."
+    reteach: "### Syntax: fetch with options"

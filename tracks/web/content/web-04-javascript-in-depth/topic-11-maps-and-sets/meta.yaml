@@ -1,0 +1,23 @@
+id: web-04-javascript-in-depth/topic-11-maps-and-sets
+title: "Map and Set"
+order: 11
+minutes: 9
+prerequisites: [web-04-javascript-in-depth/topic-10-dates]
+concepts: [map-basics, map-iteration, set-basics, map-or-object]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: WEB-0411
+  from: sana
+  title: "The colour filter lists Indigo twice"
+  body: >
+    Sana here. The colour buttons above the catalogue show one button per item, so Indigo appears twice and the row keeps growing.
+    I'd also like to grey out colours that are completely sold out, which means knowing the total stock per colour.
+    And Meera Aunty wants the yarn restock form to add to the grams we already have.
+hints:
+  - "A Set keeps each value once, in the order it first arrived. [...new Set(items.map((item) => item.colour))] turns it back into an array."
+  - "For stock per colour, start with new Map(). For each item: totals.set(item.colour, (totals.get(item.colour) ?? 0) + item.stock)."
+  - "soldOutColours: loop with for (const [colour, stock] of stockByColour(items)) and keep the colours whose stock is 0. restock uses the same get-then-set pattern, then returns the map."
+review: true

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Place an order | Dhaaga &amp; Co.</title>
+  <meta name="description" content="Order handmade crochet from Dhaaga &amp; Co. in Pune: coasters, keychains, toys, tote bags and baby booties.">
+</head>
+<body>
+  <header>
+    <p class="logo">Dhaaga &amp; Co.</p>
+    <nav>
+      <ul>
+        <li><a href="index.html">Catalogue</a></li>
+        <li><a href="order.html">Order</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Place an order</h1>
+
+    <div class="photos">
+      <img src="images/coasters.jpg" alt="A set of four round crocheted coasters in Marigold and Indigo" width="200" height="200">
+      <img src="images/golu.jpg" alt="Golu, a small crocheted elephant in Rani pink yarn" width="200" height="200">
+      <img src="images/tote-bag.jpg" alt="An Off-white crocheted tote bag with Mint stripes" width="200" height="200">
+    </div>
+    <img src="images/stitch-line.png" alt="" width="600" height="20">
+
+    <h2>Your details</h2>
+    <form action="/orders" method="post">
+      <p>
+        <label for="name">Your name</label>
+        <input type="text" id="name" name="name" placeholder="Your name" required>
+      </p>
+      <p>
+        <label for="phone">Phone number</label>
+        <input type="tel" id="phone" name="phone" placeholder="Phone number (10 digits)" pattern="[0-9]{10}" required>
+      </p>
+      <p>
+        <label for="item">Item</label>
+        <select id="item" name="item" required>
+          <option value="">Choose an item</option>
+          <option value="CST">Coaster set (4)</option>
+          <option value="KEY">Keychain</option>
+          <option value="AMI">Amigurumi (small toy)</option>
+          <option value="BAG">Tote bag</option>
+          <option value="BTY">Baby booties</option>
+        </select>
+      </p>
+      <p>
+        <label for="qty">How many?</label>
+        <input type="number" id="qty" name="qty" placeholder="How many?" min="1" max="10" value="1">
+      </p>
+
+      <button type="submit">Place order</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>Dhaaga &amp; Co., Aundh, Pune. Shop open Tuesday to Sunday, 11:00 to 21:00.</p>
+  </footer>
+</body>
+</html>

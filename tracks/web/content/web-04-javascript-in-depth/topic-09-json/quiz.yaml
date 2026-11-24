@@ -1,0 +1,139 @@
+topic: web-04-javascript-in-depth/topic-09-json
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: json-format
+    prompt: "Which of these is valid JSON?"
+    choices:
+      - "{\"id\": \"DC-1042\", \"stock\": 3}"
+      - "{'id': 'DC-1042', 'stock': 3}"
+      - "{id: \"DC-1042\", stock: 3}"
+      - "{\"id\": \"DC-1042\", \"stock\": 3,}"
+    answer: 0
+    explain: "JSON needs double quotes around every key and every text value, and allows no trailing comma."
+    reteach: "### Syntax: the rules of JSON"
+
+  - id: q02
+    type: predict-output
+    concept: json-parse
+    code: |
+      const text = '{"code":"BAG","paise":89900}';
+      const item = JSON.parse(text);
+      console.log(item.paise / 100, typeof item.paise);
+    answer: "899 number"
+    explain: "JSON.parse builds a real object. paise comes back as a number, so the maths works."
+    reteach: "### Syntax: JSON.parse"
+
+  - id: q03
+    type: predict-output
+    concept: json-stringify
+    code: |
+      const line = { code: "CST", qty: 2 };
+      console.log(JSON.stringify(line));
+    answer: "{\"code\":\"CST\",\"qty\":2}"
+    explain: "Without an indent, JSON.stringify writes compact text: double-quoted keys and no spaces."
+    reteach: "### Syntax: JSON.stringify"
+
+  - id: q04
+    type: predict-output
+    concept: json-stringify
+    code: |
+      const item = { id: "DC-1048", colour: undefined, stock: 0 };
+      console.log(JSON.stringify(item));
+    answer: "{\"id\":\"DC-1048\",\"stock\":0}"
+    explain: "JSON has no undefined, so JSON.stringify leaves that property out."
+    reteach: "### What JSON leaves out"
+
+  - id: q05
+    type: predict-output
+    concept: invalid-json
+    code: |
+      try {
+        JSON.parse('{"id":"DC-1042",}');
+        console.log("parsed");
+      } catch (error) {
+        console.log(error.name);
+      }
+    answer: "SyntaxError"
+    explain: "The trailing comma breaks a JSON rule, so JSON.parse throws a SyntaxError before anything prints."
+    reteach: "### When the text is broken"
+
+  - id: q06
+    type: fill-blank
+    concept: json-parse
+    goal: "Turn the JSON text read from the file into real arrays and objects you can use."
+    prompt: "const items = JSON.___(text);"
+    answers: ["parse"]
+    explain: "JSON.parse reads JSON text and builds the values it describes."
+    reteach: "### Syntax: JSON.parse"
+
+  - id: q07
+    type: fill-blank
+    concept: json-stringify
+    goal: "Turn the cart object into JSON text, ready to save or send."
+    prompt: "const saved = JSON.___(cart);"
+    answers: ["stringify"]
+    explain: "JSON.stringify turns values into JSON text."
+    reteach: "### Syntax: JSON.stringify"
+
+  - id: q08
+    type: mcq
+    concept: json-format
+    prompt: "Which of these values can be written in JSON?"
+    choices:
+      - "null"
+      - "undefined"
+      - "A function"
+      - "A comment"
+    answer: 0
+    explain: "JSON allows text, numbers, true, false, null, arrays and objects. Nothing else."
+    reteach: "### Syntax: the rules of JSON"
+
+  - id: q09
+    type: predict-output
+    concept: json-stringify
+    code: |
+      const original = { id: "DC-1042", stock: 3 };
+      const copy = JSON.parse(JSON.stringify(original));
+      copy.stock = 0;
+      console.log(original.stock, copy.stock, original === copy);
+    answer: "3 0 false"
+    explain: "Stringify then parse builds a brand new object, so changing the copy leaves the original alone."
+    reteach: "### Round trip: text, values, text"
+
+  - id: q10
+    type: spot-the-bug
+    concept: json-parse
+    code: |
+      const text = '{"id":"DC-1042","stock":3}';
+      const stock = text.stock;
+      console.log(stock - 1);
+    bugLine: 2
+    explain: "text is still a string, so text.stock is undefined. Parse it first: JSON.parse(text).stock."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: invalid-json
+    prompt: "Why should code parse the catalogue file inside try?"
+    choices:
+      - "Broken text makes JSON.parse throw a SyntaxError, which would otherwise stop the page"
+      - "JSON.parse only works inside try"
+      - "try makes parsing faster"
+      - "try fixes the broken comma for you"
+    answer: 0
+    explain: "Files and servers can send broken text. Catching the SyntaxError lets the page show a clear message instead of crashing."
+    reteach: "### When the text is broken"
+
+  - id: q12
+    type: predict-output
+    concept: json-format
+    code: |
+      const order = { id: "order-17", placed: new Date(Date.UTC(2026, 10, 1)) };
+      const back = JSON.parse(JSON.stringify(order));
+      console.log(typeof back.placed, back.placed);
+    answer: "string 2026-11-01T00:00:00.000Z"
+    explain: "JSON has no dates. Stringify writes the date as text, and parse gives that text back, not a Date."
+    reteach: "### What JSON leaves out"

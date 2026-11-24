@@ -1,0 +1,50 @@
+/* The catalogue's stylesheet. The colours are done; now the spacing. */
+
+/* TODO 1: make every element measure its width with border-box: the selector * and box-sizing: border-box */
+
+body {
+  background-color: #faf7f0;
+  color: #2e3a8c;
+  /* TODO 2: remove the browser's gap around the page: margin: 0 */
+}
+
+.site-header {
+  background-color: #2e3a8c;
+  color: #faf7f0;
+  /* TODO 3: give the header 1rem of padding top and bottom, and 2rem left and right, in one shorthand */
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2, h3 {
+  color: #2e3a8c;
+}
+
+nav a {
+  color: #faf7f0;
+}
+
+.products {
+  list-style: none;
+  /* TODO 4: remove the room the browser left for bullets: padding: 0 */
+}
+
+.product {
+  /* TODO 5: make each product a card: padding: 1rem, border: 2px solid #2e3a8c, border-radius: 8px, margin-bottom: 1rem */
+}
+
+.price {
+  font-weight: bold;
+}
+
+.buy {
+  background-color: #f2a81d;
+  color: #2e3a8c;
+}
+
+.code {
+  font-size: 0.875rem;
+  color: rgb(90, 90, 90);
+}

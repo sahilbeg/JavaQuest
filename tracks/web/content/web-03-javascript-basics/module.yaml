@@ -1,0 +1,6 @@
+id: web-03-javascript-basics
+title: JavaScript basics
+project: The price calculator
+summary: Store values, do paise maths, make decisions, loop over a cart and show rupees, while you build the calculator that prices every Dhaaga order.
+unlockAfter: web-02-css/boss
+mascotIntro: "Shabaash, the website looks like Dhaaga now! Next, it learns to count. Every ticket here teaches one JavaScript tool, and together they price an order to the last paisa."

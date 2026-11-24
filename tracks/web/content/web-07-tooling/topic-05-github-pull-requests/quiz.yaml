@@ -1,0 +1,123 @@
+topic: web-07-tooling/topic-05-github-pull-requests
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: remotes
+    variants:
+      - { prompt: "What is a remote?", choices: ["A copy of the repository on a server like GitHub", "A branch that only one person can use", "A file that lists ignored folders", "A test that runs on GitHub"], answer: 0 }
+      - { prompt: "What is origin?", choices: ["The usual name of the remote your project came from", "The first commit in the project", "The main branch on your laptop", "The person who made the repository"], answer: 0 }
+      - { prompt: "What does git clone do?", choices: ["Copies a whole repository, with every commit, onto your laptop", "Makes a copy of one branch inside the project", "Uploads your project to GitHub", "Creates a pull request"], answer: 0 }
+    explain: "A remote is a server copy of the repository, usually called origin. git clone copies it to your laptop and sets origin for you."
+    reteach: "### Syntax: cloning"
+
+  - id: q02
+    type: mcq
+    concept: push-and-pull
+    variants:
+      - { prompt: "What does git fetch do?", choices: ["Downloads new commits from GitHub without changing your files", "Downloads new commits and merges them into your branch", "Uploads your branch", "Opens a pull request"], answer: 0 }
+      - { prompt: "What does git pull do?", choices: ["Downloads new commits and brings them into the branch you are on", "Uploads your commits to GitHub", "Downloads commits but never changes your files", "Deletes merged branches"], answer: 0 }
+      - { prompt: "What is origin/main?", choices: ["Your laptop's last snapshot of main on GitHub", "A branch only GitHub Actions can use", "The main branch on your laptop", "A file inside node_modules"], answer: 0 }
+    explain: "git fetch only downloads and updates origin/main. git pull fetches, then brings the new commits into your branch."
+    reteach: "### Syntax: pushing and pulling"
+
+  - id: q03
+    type: fill-blank
+    concept: push-and-pull
+    goal: "Upload the branch feat/gift-wrap to GitHub for the first time, and link it so a plain git push works later."
+    prompt: "git push ___ origin feat/gift-wrap"
+    answers: ["-u", "--set-upstream"]
+    explain: "-u (short for --set-upstream) links your branch to the one on GitHub, so later pushes need no names."
+    reteach: "### Syntax: pushing and pulling"
+
+  - id: q04
+    type: mcq
+    concept: push-and-pull
+    prompt: "Your first git push on a new branch says: fatal: The current branch feat/gift-wrap has no upstream branch. What do you run?"
+    choices: ["git push -u origin feat/gift-wrap", "git pull --force", "git clone again", "git branch -d feat/gift-wrap"]
+    answer: 0
+    explain: "A branch's first push needs -u origin and its name, which links it to GitHub. After that, git push alone works."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: mcq
+    concept: pull-requests
+    variants:
+      - { prompt: "What is a pull request?", choices: ["A page asking to merge your branch, with the diff, comments and checks", "A command that downloads the newest main", "A branch only the lead engineer can push to", "A way to undo a merge"], answer: 0 }
+      - { prompt: "What is the diff in a pull request?", choices: ["Every line you added or removed", "The list of reviewers", "The time the robot took", "The difference between two package versions"], answer: 0 }
+      - { prompt: "What belongs in a pull request's description?", choices: ["Why the change is needed and how to check it", "Your GitHub password", "The whole node_modules folder", "Nothing: descriptions are not allowed"], answer: 0 }
+    explain: "A pull request asks to merge a branch. It shows the diff, collects review comments and the CI checks, and its description says why and how to test."
+    reteach: "### Pull requests"
+
+  - id: q06
+    type: mcq
+    concept: code-review
+    variants:
+      - { prompt: "Kavya asks for a change on your open PR. What do you do?", choices: ["Commit the fix on the same branch and push; the PR updates", "Open a second PR on a new branch", "Close the PR and email the code", "Merge first, fix later"], answer: 0 }
+      - { prompt: "Which review comment is most useful?", choices: ["\"What happens when the cart is empty?\"", "\"Use double quotes here.\"", "\"Add a space after the comma.\"", "\"LGTM\" on a 3,000-line PR you skimmed"], answer: 0 }
+      - { prompt: "Why keep pull requests small?", choices: ["Reviewers can read them carefully, and they merge sooner", "GitHub refuses PRs over 100 lines", "Small PRs skip the checks", "Big PRs delete the branch"], answer: 0 }
+    explain: "Reviews are about behaviour, since tools handle style. Fixes go on the same branch. Small PRs get real reviews."
+    reteach: "### Code review"
+
+  - id: q07
+    type: mcq
+    concept: ci-checks
+    variants:
+      - { prompt: "What is CI?", choices: ["A robot that builds and tests every push", "A person who approves pull requests", "A Git command for merging", "A folder on GitHub"], answer: 0 }
+      - { prompt: "Where does a GitHub Actions workflow file live?", choices: [".github/workflows/ci.yml", "package.json", "src/ci.js", "node_modules/.github"], answer: 0 }
+      - { prompt: "One step of the workflow fails. What does the pull request show?", choices: ["A red cross on its checks", "Nothing: failures are hidden", "An automatic merge", "A new branch with the fix"], answer: 0 }
+    explain: "CI runs your scripts on a fresh machine for every push. On GitHub the workflow lives in .github/workflows, and a failing step turns the check red."
+    reteach: "### Checks: a robot that runs your scripts"
+
+  - id: q08
+    type: spot-the-bug
+    concept: ci-checks
+    prompt: "This workflow sometimes passes on Monday and fails on Tuesday with no code change. Which line is to blame?"
+    code: |
+      name: CI
+      on: [pull_request]
+      jobs:
+        check:
+          runs-on: ubuntu-latest
+          steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+            - run: npm install
+            - run: npm test
+    bugLine: 9
+    explain: "npm install may pick newer versions than the lock file. npm ci installs exactly what the lock file lists, so every run matches."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: ci-checks
+    variants:
+      - { prompt: "What does branch protection on main do?", choices: ["Refuses merges into main unless the rules, like green checks and an approval, are met", "Hides main from other people", "Deletes branches after a week", "Stops anyone cloning the repository"], answer: 0 }
+      - { prompt: "A PR has a red check. What should you do?", choices: ["Read the failing step's log, fix it on the branch, and push", "Merge anyway and fix it later", "Delete the workflow file", "Open a new repository"], answer: 0 }
+    explain: "Never merge on red. Branch protection makes GitHub enforce green checks and reviews before anything reaches main."
+    reteach: "### Protecting main"
+
+  - id: q10
+    type: mcq
+    concept: pull-requests
+    variants:
+      - { prompt: "What does Squash and merge put on main?", choices: ["One new commit holding all the branch's changes", "Every branch commit plus a merge commit", "Every branch commit with no merge commit", "Nothing until someone pulls"], answer: 0 }
+      - { prompt: "The PR is merged. What do you do with the branch?", choices: ["Delete it on GitHub and on your laptop", "Keep pushing new work to it", "Rename it to main", "Merge it again tomorrow"], answer: 0 }
+    explain: "Squash and merge gives main one tidy commit per PR. After merging, the branch's work is in main, so delete the branch."
+    reteach: "### Syntax: the merge buttons"
+
+  - id: q11
+    type: order
+    concept: pull-requests
+    prompt: "Put the steps of the gift-wrap change in order."
+    items:
+      - "git switch main, then git pull"
+      - "git switch -c feat/gift-wrap"
+      - "Code, git add and git commit"
+      - "git push -u origin feat/gift-wrap"
+      - "Open a pull request"
+      - "Wait for green checks and an approval"
+      - "Squash and merge, then delete the branch"
+    explain: "Start from the newest main, work on a branch, push it, and let checks and a review clear it before it merges."
+    reteach: "## Worked example"

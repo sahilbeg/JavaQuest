@@ -1,0 +1,24 @@
+id: web-01-html/boss
+title: "INC-01: A blind customer can't place an order"
+order: 99
+minutes: 15
+prerequisites: [web-01-html/topic-10-head-and-meta]
+concepts: [labels, native-controls, alt-text, heading-order, landmarks]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: INC-01
+  from: theo
+  title: "A blind customer can't place an order"
+  body: >
+    Mrs. Desai has ordered from us at the stall for years. She's blind, and today she tried our new
+    order page with her screen reader. It said "edit text, edit text, edit text" with no clue which box
+    was which, and she couldn't find the Place order button at all. She had to phone Raju. Please fix
+    the order page today, before the weekend rush.
+hints:
+  - "Bronze: every input and the select need a label joined with for and id. A placeholder is not a label."
+  - "Silver: replace the clickable div with a real <button type=\"submit\">. Product photos get alt text that describes them; the stitched line is decoration, so alt=\"\"."
+  - "Gold: one h1, Place an order, then an h2 for Your details. Swap the outer divs for header (with a nav inside), main and footer."
+review: false
