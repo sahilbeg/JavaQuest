@@ -113,6 +113,12 @@ function splitLesson(html) {
       }
     }
     if (group.h3 || group.nodes.length) groups.push(group);
+    // A lead-in with no paragraph (only a "New word" box, say) is too thin for a card of its own,
+    // so it opens the first subsection's card instead.
+    if (groups.length > 1 && !groups[0].h3 && !groups[0].nodes.some((n) => n.nodeName === "P")) {
+      const [lead, next] = groups.splice(0, 2);
+      groups.unshift({ h3: next.h3, nodes: [...lead.nodes, next.h3, ...next.nodes].filter(Boolean), merged: true });
+    }
     if (groups.length <= 1) {
       cards.push({ key: "learn", label: title, eyebrow: null, nodes: [section.h2, ...section.nodes].filter(Boolean) });
       continue;
@@ -120,7 +126,7 @@ function splitLesson(html) {
     groups.forEach((g, i) => {
       const head = i === 0 ? [section.h2] : [];
       cards.push({ key: "learn", label: g.h3?.textContent ?? title, eyebrow: i === 0 ? null : title,
-        nodes: [...head, g.h3, ...g.nodes].filter(Boolean) });
+        nodes: [...head, ...(g.merged ? [] : [g.h3]), ...g.nodes].filter(Boolean) });
     });
   }
   return { cards, recap };
