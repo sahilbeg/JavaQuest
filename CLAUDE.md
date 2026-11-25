@@ -1,18 +1,18 @@
 # Cadence: build guide for Claude
 
-Cadence teaches software engineering, in Java, from zero to professional (SDE 2) through a story: the learner is an intern at Spoke, a bike-sharing startup. A Spring Boot app (`app/`) renders lessons and quizzes from `content/` and grades code in `practice/` with real JUnit tests.
+Cadence teaches software engineering through a story, in several courses: Java (`content/`, `practice/`, graded with JUnit) and four Frontend courses (`tracks/web/`, graded with Node and Vitest), listed in `courses.yaml`. A Spring Boot app (`app/`) renders lessons and quizzes and grades the learner's code with real tests. Contributors read `CONTRIBUTING.md`; `AGENTS.md` has the same safety rules for every AI assistant.
 
 The app is being built milestone by milestone. To continue the build, run `/continue-build`, or follow "Resuming the build" below.
 
 ## The user is also learning with this app
 
-The user learns Java with Cadence while the build goes on. Their learning must never be disturbed:
+Whoever runs this repository learns with Cadence while they build it. Their learning must never be disturbed:
 
-- **Their progress** lives in `~/.javaquest/progress.mv.db` (H2, outside the repo; daily copies in `~/.javaquest/backups/`). That is the folder from before the project was renamed to Cadence; `run.sh` keeps using it because it exists, and a new learner gets `~/.cadence`. Never delete, reset, import into or write to it. Never take checks, submit code or open lessons against it for testing.
-- **Preview and test with `./run.sh --author`.** It opens every ticket on http://localhost:2027 with its own database in `~/.javaquest-author` here (`~/.cadence-author` on a new laptop). The learner's app on 2026 can keep running at the same time. For a throwaway run, add `--cadence.data-dir=<scratch folder>`. Do not use `./run.sh --unlock-all`: it opens everything against the learner's real progress.
-- **Their code** lives in `practice/<module>/<topic>/src/`: that is where they write each fix, in the app or their IDE. Never edit, overwrite, reset, `git checkout`, `git restore` or `git stash` an existing ticket's `src/`. Fixes to an existing topic go in its `skeleton/` and `solution/` only; `src/` is created only for a new topic, as a copy of its skeleton. A pre-commit hook (`.githooks/pre-commit`) refuses commits that change an existing `src/`. Never bypass it with `--no-verify` or `ALLOW_SRC_CHANGES=1`.
+- **Their progress** lives in `~/.cadence/progress.mv.db` (H2, outside the repo; daily copies in `backups/`). A copy made before the rename to Cadence keeps using `~/.javaquest`, because it exists. Never delete, reset, import into or write to either. Never take checks, submit code or open lessons against it for testing.
+- **Preview and test with `./run.sh --tester`** (every ticket of every course on http://localhost:3004, its own progress and code in `~/.cadence-tester`) or **`./run.sh --author`** (http://localhost:2027, `~/.cadence-author`, or an existing `~/.javaquest-author`). Both keep ticket code in their own `code/` folder, copied from each skeleton, so they never touch the learner's `src/`; after changing a skeleton, press Reset on that ticket there. The learner's app on 2026 can keep running at the same time. For a throwaway run, add `--cadence.data-dir=<scratch folder>`. Do not use `./run.sh --unlock-all`: it opens everything against the learner's real progress and code.
+- **Their code** lives in `practice/<module>/<topic>/src/` (Java) and `tracks/<track>/practice/<module>/<topic>/src/` (web): that is where they write each fix, in the app or their IDE. Never edit, overwrite, reset, `git checkout`, `git restore` or `git stash` an existing ticket's `src/`. Fixes to an existing topic go in its `skeleton/` and `solution/` only; `src/` is created only for a new topic, as a copy of its skeleton. A pre-commit hook (`.githooks/pre-commit`) refuses commits that change an existing `src/`. Never bypass it with `--no-verify` or `ALLOW_SRC_CHANGES=1`.
 - **Stage files by explicit path** (`git add content/module-09-architecture practice/module-09-architecture ...`), never `git add -A` or `git add .`. The learner's edits show up as modified `src/` files in `git status`; leave them alone.
-- **Team pictures** in `avatars/` are the user's own (git ignores them). Never add, replace, delete or commit pictures there, and never download character art.
+- **Team pictures** in `avatars/` are the learner's own (git ignores them). Never add, replace, delete or commit pictures there, and never download character art.
 - **Ticket ids never change**: progress is keyed by them. Never rename or delete an existing topic folder.
 - **Never stop or restart the learner's app** (the `java` process on port 2026) unless the user asks. Rebuilding while it runs is safe: `run.sh` runs a copy of the jar.
 
@@ -70,6 +70,7 @@ Large modules can be written in parallel by subagents, one or two topics each. G
 ```bash
 ./run.sh                                                             # the learner's app: http://localhost:2026, progress in ~/.javaquest here (~/.cadence on a new laptop)
 ./run.sh --author                                                    # for building: every ticket open, http://localhost:2027, separate database
+./run.sh --tester                                                    # for testing changes: every course open, http://localhost:3004, own progress and code
 ./mvnw -q install                                                    # build and run all platform tests
 ./mvnw -q -pl tools dependency:properties exec:java@check-content    # check every lesson and quiz (about 2 min)
 ./mvnw -q -pl tools dependency:properties exec:java@check-content -Djq.only=module-01-basics/topic-03   # only topics whose id starts with this
