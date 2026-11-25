@@ -32,6 +32,24 @@ class CourseLibraryTest {
     }
 
     @Test
+    void aTesterKeepsTicketCodeInItsOwnFolderStartingFromTheSkeleton(@TempDir Path code) throws Exception {
+        var library = CourseLibrary.load(REPO, code);
+        Topic java = library.library().topic("module-01-basics/topic-04-console-io").orElseThrow();
+        Topic web = library.library().topic("web-03-javascript-basics/topic-01-variables").orElseThrow();
+
+        assertEquals(code.resolve("java/module-01-basics/topic-04-console-io/src"), java.practiceSources());
+        assertEquals(code.resolve("web/web-03-javascript-basics/topic-01-variables/src"), web.practiceSources());
+        assertEquals(REPO.resolve("practice/module-01-basics/topic-04-console-io/skeleton"), java.practiceSkeleton());
+        Path copied = java.practiceSources().resolve("jq/m01/consoleio/KioskPrompt.java");
+        assertEquals(Files.readString(java.practiceSkeleton().resolve("jq/m01/consoleio/KioskPrompt.java")), Files.readString(copied));
+
+        // A second start keeps the tester's edits.
+        Files.writeString(copied, "// edited by the tester");
+        CourseLibrary.load(REPO, code);
+        assertEquals("// edited by the tester", Files.readString(copied));
+    }
+
+    @Test
     void everyTopicCanBeFoundInTheLibrary() throws Exception {
         var library = CourseLibrary.load(REPO);
         assertTrue(library.library().topic("module-01-basics/topic-04-console-io").isPresent());

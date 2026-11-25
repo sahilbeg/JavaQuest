@@ -1,0 +1,51 @@
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #faf7f0;
+  color: #2e3a8c;
+}
+
+main {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+label {
+  display: block;
+  margin-top: 0.75rem;
+  font-weight: 600;
+}
+
+input,
+textarea {
+  font: inherit;
+  padding: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card {
+  border: 3px double #f2a81d;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: white;
+}
+
+.message {
+  font-style: italic;
+}
+
+.warning {
+  background: #c0262d;
+  color: white;
+  padding: 0.75rem;
+  font-weight: 700;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-break: break-all;
+  background: white;
+  padding: 0.75rem;
+}

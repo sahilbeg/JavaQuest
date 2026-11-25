@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout | Dhaaga &amp; Co.</title>
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <h1>Checkout</h1>
+  <form id="checkout" novalidate>
+    <p>
+      <label for="name">Your name</label>
+      <input id="name" name="name" autocomplete="name" aria-describedby="name-error">
+      <span id="name-error"></span>
+    </p>
+    <p>
+      <label for="phone">Phone number</label>
+      <input id="phone" name="phone" inputmode="tel" autocomplete="tel" aria-describedby="phone-error">
+      <span id="phone-error"></span>
+    </p>
+    <p>
+      <label for="pin">PIN code</label>
+      <input id="pin" name="pin" inputmode="numeric" autocomplete="postal-code" aria-describedby="pin-error">
+      <span id="pin-error"></span>
+    </p>
+    <p>
+      <label for="address">Address</label>
+      <textarea id="address" name="address" autocomplete="street-address" aria-describedby="address-error"></textarea>
+      <span id="address-error"></span>
+    </p>
+    <button type="submit">Place order</button>
+  </form>
+  <p id="done" role="status"></p>
+</body>
+</html>

@@ -22,7 +22,7 @@ export function enhanceContent(container, chat) {
   });
   const disposers = [enhanceAnimations(container)];
   loadMonaco().then(async (monaco) => {
-    const LANGS = { java: "java", js: "javascript", jsx: "javascript", javascript: "javascript", html: "html", css: "css" };
+    const LANGS = { java: "java", js: "javascript", jsx: "javascript", javascript: "javascript", ts: "typescript", tsx: "typescript", html: "html", css: "css" };
     for (const code of container.querySelectorAll(Object.keys(LANGS).map((l) => `pre > code.language-${l}`).join(", "))) {
       code.dataset.source ??= code.textContent;
       const html = await colorize(monaco, code.dataset.source, LANGS[code.dataset.lang] ?? "java");
@@ -83,7 +83,7 @@ function renderDiagrams(container) {
 function enhanceSnippet(snippet, chat) {
   const code = snippet.querySelector("code");
   const original = code.textContent;
-  const lang = code.dataset.lang === "js" ? "js" : "java";
+  const lang = ["js", "ts"].includes(code.dataset.lang) ? code.dataset.lang : "java";
   const output = h("pre", { class: "snippet-output", hidden: true, "aria-live": "polite" });
   let editor;
 
@@ -96,8 +96,8 @@ function enhanceSnippet(snippet, chat) {
     snippet.dataset.open = "true";
     const host = h("div", { class: "snippet-editor" });
     snippet.querySelector("pre").replaceWith(host);
-    editor = monaco.editor.create(host, { ...EDITOR_OPTIONS, language: lang === "js" ? "javascript" : "java",
-      tabSize: lang === "js" ? 2 : 4, value: original, theme: editorTheme() });
+    editor = monaco.editor.create(host, { ...EDITOR_OPTIONS, language: { js: "javascript", ts: "typescript" }[lang] ?? "java",
+      tabSize: lang === "java" ? 4 : 2, value: original, theme: editorTheme() });
     tryButton.hidden = true;
     resetButton.hidden = false;
     editor.focus();

@@ -1,0 +1,118 @@
+topic: next-10-nextjs-fundamentals/topic-01-why-nextjs
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: server-rendering
+    prompt: "Why does a WhatsApp preview of the React store show no item name?"
+    choices: ["WhatsApp's preview program reads the HTML without running JavaScript, and that HTML is only an empty div", "WhatsApp blocks every link to a shop", "React deletes the title when the page loads", "The item name is too long for a preview"]
+    answer: 0
+    explain: "A client-rendered app sends an empty <div id=\"root\">. Programs that don't run JavaScript, like link previews, never see what React would draw."
+    reteach: "### Who can't wait for JavaScript"
+
+  - id: q02
+    type: mcq
+    concept: server-rendering
+    prompt: "A phone asks a Next.js server for Golu's page. What arrives first?"
+    choices: ["HTML that already contains Golu's name and price", "An empty <div id=\"root\"> and a JavaScript bundle", "A JSON file with Golu's details", "A picture of the finished page"]
+    answer: 0
+    explain: "Next.js runs the React components on the server, so the HTML is filled in before it leaves the server."
+    reteach: "### Rendering on the server"
+
+  - id: q03
+    type: mcq
+    concept: hydration
+    prompt: "What is hydration?"
+    choices: ["React attaching itself to HTML the server built, adding event handlers without drawing the page again", "The server sending a page a second time", "Reloading the page when a button is pressed", "Turning JSX into HTML during the build"]
+    answer: 0
+    explain: "The HTML is already on screen. Hydration reuses those elements and wires up onClick and friends, so the page becomes interactive."
+    reteach: "### Hydration: making the page work"
+
+  - id: q04
+    type: mcq
+    concept: hydration
+    prompt: "The server's HTML for Golu's page has an Add to cart button. A customer taps it before the page's JavaScript has arrived. What happens?"
+    choices: ["Nothing yet; the button starts working once hydration has finished", "The item is added to the cart on the server", "The page crashes", "The browser reloads the page"]
+    answer: 0
+    explain: "HTML can't hold an onClick function. The handler is attached during hydration, after the JavaScript arrives."
+    reteach: "### Hydration: making the page work"
+
+  - id: q05
+    type: mcq
+    concept: framework
+    prompt: "Which sentence about React and Next.js is right?"
+    choices: ["Next.js is a framework built around React; you still write React components with props, state and hooks", "Next.js replaces React, so useState no longer exists", "React is a framework and Next.js is a library inside it", "Next.js only works without React"]
+    answer: 0
+    explain: "React draws the UI. Next.js adds routing, server rendering, metadata and a build around it."
+    reteach: "### A framework around React"
+
+  - id: q06
+    type: mcq
+    concept: framework
+    prompt: "Which of these does Next.js add on top of React?"
+    choices: ["Routing from folders, so you don't write a router", "A new kind of state that replaces useState", "A different JSX syntax", "Its own language instead of HTML"]
+    answer: 0
+    explain: "Folders inside app/ become addresses. State, JSX and HTML stay the same as in React."
+    reteach: "### A framework around React"
+
+  - id: q07
+    type: predict-output
+    concept: file-routing
+    code: |
+      const files = ["app/page.jsx", "app/about/page.jsx", "app/items/page.jsx"];
+      for (const file of files) {
+        const folders = file.split("/").slice(1, -1);
+        console.log("/" + folders.join("/"));
+      }
+    answer: "/\n/about\n/items"
+    explain: "slice(1, -1) keeps the folders between app and page.jsx. app/page.jsx has none, so its address is just /."
+    reteach: "### The app router: folders are addresses"
+
+  - id: q08
+    type: fill-blank
+    concept: file-routing
+    goal: "Name the file that Next.js shows at the address dhaaga.in/about."
+    prompt: "src/app/about/___.jsx"
+    answers: ["page"]
+    explain: "In the app router, the folder gives the address and a file called page.jsx is what shows there."
+    reteach: "### The app router: folders are addresses"
+
+  - id: q09
+    type: mcq
+    concept: file-routing
+    prompt: "Which address shows the page in src/app/items/page.jsx?"
+    choices: ["dhaaga.in/items", "dhaaga.in/app/items", "dhaaga.in/items/page", "dhaaga.in/src/app/items"]
+    answer: 0
+    explain: "The app folder itself is not part of the address, and neither is the file name page.jsx. Only the folders in between are."
+    reteach: "### The app router: folders are addresses"
+
+  - id: q10
+    type: fill-blank
+    concept: nextjs-project
+    goal: "Start the local server that rebuilds the site each time you save a file."
+    prompt: "npm run ___"
+    answers: ["dev"]
+    explain: "npm run dev starts next dev at http://localhost:3000. It rebuilds as you save."
+    reteach: "### Syntax: starting a project"
+
+  - id: q11
+    type: order
+    concept: hydration
+    prompt: "A customer taps a link to dhaaga.in/items/DC-1042. Put the steps in order."
+    items:
+      - "Next.js matches the address to a folder in app/"
+      - "The server runs the page component and builds the HTML"
+      - "The phone shows the HTML with Golu's name and price"
+      - "Hydration attaches React, and the Add to cart button starts working"
+    explain: "The server does its work first and sends finished HTML. Interactivity comes last, once the JavaScript has arrived."
+    reteach: "## Worked example"
+
+  - id: q12
+    type: mcq
+    concept: nextjs-project
+    prompt: "Why shouldn't the real website run with npm run dev?"
+    choices: ["The development server is slower, rebuilds on requests and shows developer error screens", "npm run dev only works offline", "It deletes the build folder", "Customers would need Node.js installed"]
+    answer: 0
+    explain: "For production, run npm run build once, then npm start, or use a host that does both."
+    reteach: "## Common mistakes"

@@ -1,0 +1,6 @@
+id: ts-09-typescript-in-depth
+title: TypeScript in depth
+project: A typed catalogue engine
+summary: Write one function for many types with generics, model every order and payment state with unions, check data from servers before you trust it, and type the page itself.
+unlockAfter: ts-08-typescript-basics/boss
+mascotIntro: "Our types caught the small mistakes. Now let's make them do the big jobs: whole catalogues, every order status, and data we can't trust yet!"

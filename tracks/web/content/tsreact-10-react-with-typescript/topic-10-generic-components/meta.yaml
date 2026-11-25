@@ -1,0 +1,24 @@
+id: tsreact-10-react-with-typescript/topic-10-generic-components
+title: "Generic components"
+order: 10
+minutes: 10
+prerequisites: [tsreact-10-react-with-typescript/topic-09-typed-styling]
+concepts: [generic-props, type-inference, render-props, key-functions, generic-constraints]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1010
+  from: sana
+  title: "Three pickers, three copies of the same code"
+  body: >
+    Sana here. The yarn colour picker, the gift-box picker and the delivery-slot picker all look the same, but
+    each one is a copy-pasted component, and they've started to drift apart. Kavya wrote the props for one generic
+    PickList. Could you build it, so all three pickers share it?
+hints:
+  - "Map options to buttons: options.map((option) => <button key={getKey(option)} ...>). The caller decides the key, because PickList doesn't know what T is."
+  - "Inside each button, show renderOption(option). On click, call onPick(option) with the option itself."
+  - "aria-pressed is true when something is selected and its key matches: selected !== null && getKey(selected) === getKey(option)."
+review: true

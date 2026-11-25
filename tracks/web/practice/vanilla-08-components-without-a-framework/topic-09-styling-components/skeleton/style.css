@@ -1,0 +1,33 @@
+/* The product card's stylesheet. */
+
+/* TODO 1: a :root rule with --dhaaga-marigold: #F2A81D, --dhaaga-indigo: #2E3A8C and --dhaaga-off-white: #FAF7F0 */
+/* TODO 2: rename each selector to the card's BEM names: .product-card, __name, __price, __add and --sold-out */
+/* TODO 3: replace each hex colour below with var(...) of its token */
+
+.card {
+  background: #FAF7F0;
+  border: 2px solid #2E3A8C;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+h3 {
+  margin: 0 0 0.25rem;
+  color: #2E3A8C;
+}
+
+.price {
+  font-weight: 700;
+}
+
+button {
+  background: #F2A81D;
+  border: 0;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font: inherit;
+}
+
+.sold-out {
+  opacity: 0.5;
+}

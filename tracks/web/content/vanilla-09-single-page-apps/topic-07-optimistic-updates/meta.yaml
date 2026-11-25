@@ -1,0 +1,23 @@
+id: vanilla-09-single-page-apps/topic-07-optimistic-updates
+title: "Optimistic updates and undo"
+order: 7
+minutes: 10
+prerequisites: [vanilla-09-single-page-apps/topic-06-validation-at-scale]
+concepts: [optimistic-update, rollback, targeted-rollback, undo-instead-of-confirm, delayed-commit]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0907
+  from: sam
+  title: "The cart takes three seconds to change a number"
+  body: >
+    Raju here. On the stall's slow connection, tapping + on the cart takes three seconds to show the new number,
+    so customers tap again and end up with four Golus. And Mrs. Kapoor removed her tote bag by mistake yesterday,
+    with no way to get it back except finding it again. Can the cart change at once, and let people undo a removal?
+hints:
+  - "Optimistic means: change the store first, then ask the server. Only if the server says no do you put things back."
+  - "Roll back just the line you changed, with setQty(before.qty), not the whole old state. Other changes may have happened while you waited."
+  - "insertAt is [...lines.slice(0, index), line, ...lines.slice(index)]. In the timer: clear undo, then try { const response = await fetch(url, { method: \"DELETE\" }); if (!response.ok) throw ... } catch { put the line back with insertAt and set error }."
+review: true

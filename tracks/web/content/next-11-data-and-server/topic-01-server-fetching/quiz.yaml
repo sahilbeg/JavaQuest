@@ -1,0 +1,139 @@
+topic: next-11-data-and-server/topic-01-server-fetching
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: async-server-components
+    prompt: "How does a server component get its data before it returns JSX?"
+    choices: ["It is an async function and awaits the data in its body", "It calls fetch inside useEffect", "It keeps the data in useState and waits for a second render", "It can't. Only client components can fetch"]
+    answer: 0
+    explain: "Server components run on the server, once per request. They may be async, so they can await the data and then build the JSX with it."
+    reteach: "### A server component can wait"
+
+  - id: q02
+    type: mcq
+    concept: fetch-on-the-server
+    prompt: "Why does the server-rendered catalogue never show Loading... first?"
+    choices: ["The server waits for the data before it sends the HTML, so the page arrives with the list in it", "The browser hides the loading message", "Next.js caches every page forever", "The phone downloads the data before it asks for the page"]
+    answer: 0
+    explain: "The fetching happens on the server, before the answer leaves. The browser gets one finished page."
+    reteach: "### What happens when a customer opens the page"
+
+  - id: q03
+    type: fill-blank
+    concept: async-server-components
+    goal: "Declare the page component so that it may wait for data inside its body."
+    prompt: "export default ___ function ItemsPage() {"
+    answers: ["async"]
+    explain: "Only an async function may use await. Server components are allowed to be async."
+    reteach: "### Syntax: an async page"
+
+  - id: q04
+    type: predict-output
+    concept: check-res-ok
+    code: |
+      const res = { ok: false, status: 503 };
+      try {
+        if (!res.ok) throw new Error(`Items API answered ${res.status}`);
+        console.log("items loaded");
+      } catch (e) {
+        console.log(e.message);
+      }
+    answer: "Items API answered 503"
+    explain: "res.ok is false, so the code throws before it prints items loaded. The catch prints the error's message."
+    reteach: "### Syntax: checking the answer"
+
+  - id: q05
+    type: mcq
+    concept: check-res-ok
+    prompt: "The items API answers 404. What does await fetch(url) do on the server?"
+    choices: ["It gives back a response with ok set to false. It does not throw", "It throws straight away", "It returns null", "It shows the 404 page by itself"]
+    answer: 0
+    explain: "fetch only throws when there is no answer at all. An error status is still an answer, so you check res.ok."
+    reteach: "### Syntax: checking the answer"
+
+  - id: q06
+    type: mcq
+    concept: check-res-ok
+    prompt: "getItems throws while ItemsPage renders on the server. What does the customer see?"
+    choices: ["The nearest error.jsx page", "An empty list", "The words Loading... forever", "The old page from yesterday"]
+    answer: 0
+    explain: "A server component doesn't draw its own error message. It throws, and Next.js shows the nearest error page."
+    reteach: "### Syntax: checking the answer"
+
+  - id: q07
+    type: predict-output
+    concept: parallel-requests
+    code: |
+      const log = [];
+      function slow(name, ms) {
+        log.push(`start ${name}`);
+        return new Promise((resolve) =>
+          setTimeout(() => {
+            log.push(`end ${name}`);
+            resolve();
+          }, ms),
+        );
+      }
+      Promise.all([slow("items", 20), slow("stock", 5)]).then(() => console.log(log.join(", ")));
+    answer: "start items, start stock, end stock, end items"
+    explain: "Both calls run straight away, so both start before either ends. The 5 ms one finishes first."
+    reteach: "### Syntax: Promise.all for requests that don't need each other"
+
+  - id: q08
+    type: spot-the-bug
+    concept: async-server-components
+    prompt: "The page crashes with TypeError: items.map is not a function. Which line is wrong?"
+    code: |
+      export default async function ItemsPage() {
+        const items = getItems();
+        return (
+          <ul>
+            {items.map((item) => <li key={item.id}>{item.name}</li>)}
+          </ul>
+        );
+      }
+    bugLine: 2
+    explain: "Without await, items is a promise, not a list. Write const items = await getItems();."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: parallel-requests
+    prompt: "When is it right to await one request before starting the next?"
+    choices: ["When the second request needs the first request's answer", "Always, because servers can only do one thing at a time", "Never, Promise.all is always required", "Only when both go to the same API"]
+    answer: 0
+    explain: "If the second request doesn't need the first answer, waiting just adds time. Start both together with Promise.all."
+    reteach: "### Syntax: Promise.all for requests that don't need each other"
+
+  - id: q10
+    type: mcq
+    concept: server-only-data
+    prompt: "Why may a server component use a secret API key, when a client component must not?"
+    choices: ["A server component's code never reaches the browser", "Server components encrypt everything they print", "Client components can't read strings", "Browsers delete secret keys automatically"]
+    answer: 0
+    explain: "Client component code is sent to every visitor's browser, where anyone can read it. Server component code stays on the server."
+    reteach: "### Server code can reach what the browser can't"
+
+  - id: q11
+    type: mcq
+    concept: server-only-data
+    prompt: "ItemsPage passes a prop to a client component. Which one can travel to the browser?"
+    choices: ["{ id: \"DC-1042\", left: 7 }", "An open database connection", "A function that reads the database", "The server's secret key object with its methods"]
+    answer: 0
+    explain: "Props from a server component to a client component must be plain data, like strings, numbers, arrays and objects."
+    reteach: "### Server code can reach what the browser can't"
+
+  - id: q12
+    type: order
+    concept: fetch-on-the-server
+    prompt: "A customer opens dhaaga.in/items. Put the steps in order."
+    items:
+      - "The phone asks the Next.js server for /items"
+      - "ItemsPage runs and reaches await getItems()"
+      - "The Dhaaga API answers with the items"
+      - "ItemsPage returns JSX and Next.js turns it into HTML"
+      - "The phone gets a page with the list already in it"
+    explain: "All the waiting happens on the server, before the answer leaves for the phone."
+    reteach: "### What happens when a customer opens the page"

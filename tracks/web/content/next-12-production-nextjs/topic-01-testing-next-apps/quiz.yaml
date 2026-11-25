@@ -1,0 +1,170 @@
+topic: next-12-production-nextjs/topic-01-testing-next-apps
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: testing-server-components
+    variants:
+      - prompt: "How do you test the async server component ItemPage with React Testing Library?"
+        choices:
+          - "render(await ItemPage({ params: Promise.resolve({ id: \"DC-1042\" }) }))"
+          - "render(<ItemPage params={{ id: \"DC-1042\" }} />)"
+          - "Start next dev and open the page in a browser inside the test"
+          - "It can't be tested at all"
+        answer: 0
+      - prompt: "Why do you await a server component yourself before rendering it?"
+        choices:
+          - "It is an async function, and RTL can't wait for a component while it draws"
+          - "await makes the component run in the browser"
+          - "RTL only renders strings"
+          - "Server components must be awaited twice"
+        answer: 0
+    explain: "A server component is an async function that returns JSX. Call it with its props, await the JSX, and render that."
+    reteach: "### Syntax: testing a server component"
+
+  - id: q02
+    type: fill-blank
+    concept: params-as-promises
+    goal: "Wait for the page's route values to arrive, then take the item id out of them."
+    prompt: "const { id } = ___ params;"
+    answers: ["await"]
+    explain: "In Next.js 16, params is a Promise. The page must wait for it before reading id."
+    reteach: "### params is a Promise"
+
+  - id: q03
+    type: predict-output
+    concept: params-as-promises
+    prompt: "A page forgot to wait for its params. What does this print?"
+    code: |
+      const params = Promise.resolve({ id: "DC-1042" });
+      console.log(String(params.id));
+    answer: "undefined"
+    explain: "A Promise has no id property. Code that reads params.id gets undefined, finds no item, and shows a 404 for Golu."
+    reteach: "### params is a Promise"
+
+  - id: q04
+    type: mcq
+    concept: params-as-promises
+    prompt: "A test passes params: { id: \"DC-1042\" } as a plain object. Which bug can it miss?"
+    choices:
+      - "A page that reads params.id without awaiting params"
+      - "A page that shows the wrong price"
+      - "A page with no h1"
+      - "A page that calls notFound for Golu"
+    answer: 0
+    explain: "With a plain object, params.id works in the test. In Next.js 16, params is a Promise, so that page breaks for real customers. Pass Promise.resolve(...)."
+    reteach: "### params is a Promise"
+
+  - id: q05
+    type: mcq
+    concept: testing-route-handlers
+    variants:
+      - prompt: "How does a test call the route handler GET in app/api/stock/route.js?"
+        choices:
+          - "await GET(new Request(\"http://localhost/api/stock?id=DC-1042\"))"
+          - "await fetch(\"/api/stock?id=DC-1042\") with no server running"
+          - "GET(\"DC-1042\")"
+          - "render(<GET id=\"DC-1042\" />)"
+        answer: 0
+      - prompt: "A stock handler answers status 200 with { error: \"No item DC-9999\" }. Which check catches it?"
+        choices:
+          - "expect(response.status, \"unknown item\").toBe(404)"
+          - "expect(typeof response, \"a response\").toBe(\"object\")"
+          - "expect(await response.json(), \"has a body\").toBeDefined()"
+          - "expect(response, \"exists\").not.toBeNull()"
+        answer: 0
+    explain: "A route handler takes a real Request and returns a real Response. Check the status as well as the JSON body."
+    reteach: "### Syntax: testing a route handler"
+
+  - id: q06
+    type: predict-output
+    concept: testing-route-handlers
+    prompt: "Node has Response built in, like the one a route handler returns. What does this print?"
+    code: |
+      const response = Response.json({ error: "No item DC-9999" }, { status: 404 });
+      console.log(response.status);
+    answer: "404"
+    explain: "Response.json makes a JSON response. The second argument sets its status, which a test reads from response.status."
+    reteach: "### Syntax: testing a route handler"
+
+  - id: q07
+    type: predict-output
+    concept: testing-server-actions
+    prompt: "A server action reads qty from a FormData. What does this print?"
+    code: |
+      const form = new FormData();
+      form.set("qty", "2");
+      console.log(form.get("qty") + 1);
+    answer: "21"
+    explain: "Every FormData value is text. \"2\" + 1 joins the text and gives \"21\". The action must turn it into a number with Number(...)."
+    reteach: "### Syntax: testing a server action"
+
+  - id: q08
+    type: mcq
+    concept: testing-server-actions
+    prompt: "What does the \"use server\" line at the top of actions.js change in a Vitest test?"
+    choices:
+      - "Nothing: in a test it's just a string, and the action is a normal async function you can call"
+      - "The test must start a Next.js server first"
+      - "The action can only be called from a form"
+      - "The action runs twice"
+    answer: 0
+    explain: "Next.js reads the directive when it builds the app. A test imports the file and calls the function with a FormData, like any async function."
+    reteach: "### Syntax: testing a server action"
+
+  - id: q09
+    type: fill-blank
+    concept: mocking-next-navigation
+    goal: "Swap the next/navigation module for a fake one, for every file this test imports."
+    prompt: "vi.___(\"next/navigation\", () => ({ notFound: vi.fn(() => { throw new Error(\"NEXT_NOT_FOUND\"); }) }));"
+    answers: ["mock"]
+    explain: "vi.mock replaces a module with what the factory returns. The fake notFound throws an error the test can expect."
+    reteach: "### Syntax: mocking next/navigation"
+
+  - id: q10
+    type: spot-the-bug
+    concept: mocking-next-navigation
+    prompt: "This check finishes without waiting to see whether the page called notFound. Which line is the bug?"
+    code: |
+      it("shows a 404 for an unknown item", async () => {
+        const page = ItemPage({ params: Promise.resolve({ id: "DC-9999" }) });
+        expect(page, "unknown item").rejects.toThrow("NEXT_NOT_FOUND");
+      });
+    bugLine: 3
+    explain: "Without await, the check doesn't wait for the promise to settle, so it can't be trusted. Write await expect(page, ...).rejects.toThrow(...)."
+    reteach: "### Syntax: mocking next/navigation"
+
+  - id: q11
+    type: mcq
+    concept: resetting-data
+    prompt: "A check expects order-1. It passes alone, but fails after another test placed an order. What is the fix?"
+    choices:
+      - "Call the data layer's resetOrders() in a beforeEach"
+      - "Run the tests in a random order"
+      - "Expect any order id"
+      - "Delete the other test"
+    answer: 0
+    explain: "The in-memory data layer keeps orders between tests. Resetting it before each test means every test starts from the same empty shop."
+    reteach: "### A data layer you can reset"
+
+  - id: q12
+    type: mcq
+    concept: end-to-end-tests
+    variants:
+      - prompt: "Every unit test passes, but /items/DC-1042 shows a 404 because the folder is named [Id] instead of [id]. Which kind of test would catch it?"
+        choices:
+          - "An end-to-end test that opens the built app in a real browser"
+          - "Another unit test that calls ItemPage directly"
+          - "A test of the stock route handler"
+          - "No test can catch it"
+        answer: 0
+      - prompt: "Why keep end-to-end tests few?"
+        choices:
+          - "They start the whole app and a browser, so they are slow; quick unit tests cover the details"
+          - "They can't find bugs"
+          - "Next.js forbids more than three"
+          - "They only work in development"
+        answer: 0
+    explain: "Unit tests call parts directly and skip routing, caching and the browser. A few end-to-end journeys check that everything works together."
+    reteach: "### What unit tests can't see"

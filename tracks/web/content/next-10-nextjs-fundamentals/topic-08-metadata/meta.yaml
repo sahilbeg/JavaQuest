@@ -1,0 +1,24 @@
+id: next-10-nextjs-fundamentals/topic-08-metadata
+title: "Metadata: titles and sharing"
+order: 8
+minutes: 10
+prerequisites: [next-10-nextjs-fundamentals/topic-07-loading-and-error]
+concepts: [metadata-object, title-template, generate-metadata, open-graph, metadata-base]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1008
+  from: sana
+  title: "WhatsApp previews say only \"dhaaga.in\""
+  body: >
+    When I share the Indigo page on WhatsApp, the preview just says "dhaaga.in", with no title and no line about
+    what's on it. Every browser tab says the same, so with five tabs open I can't tell them apart. Each colour
+    page should have its own title, like "Indigo crochet | Dhaaga & Co.", and a line about what's in it.
+hints:
+  - "In layout.jsx, export const metadata = { metadataBase: new URL(\"https://dhaaga.in\"), title: { default: ..., template: \"%s | Dhaaga & Co.\" }, description: ... }."
+  - "describeColour counts the items: none gives \"No pieces in Off-white right now.\", one gives \"1 handmade piece in ...\", more give \"2 handmade pieces in ...\", each followed by \", from \" and the cheapest price."
+  - "generateMetadata awaits params like the page does. For an unknown colour, return { title: \"Colour not found\" }. Otherwise the title is just \"Indigo crochet\": the layout's template adds the rest."
+review: true

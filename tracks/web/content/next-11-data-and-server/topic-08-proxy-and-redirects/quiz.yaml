@@ -1,0 +1,120 @@
+topic: next-11-data-and-server/topic-08-proxy-and-redirects
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: proxy-file
+    prompt: "In Next.js 16, what is src/proxy.js?"
+    choices: ["A function that runs before the routes it matches, and can redirect, answer or let the request through. It used to be called middleware", "A list of pages to build ahead of time", "A server that forwards requests to another company", "A client component that wraps every page"]
+    answer: 0
+    explain: "The proxy is the gate guard: it sees each matching request before any page code runs."
+    reteach: "### Proxy: code that runs before every route"
+
+  - id: q02
+    type: mcq
+    concept: proxy-file
+    prompt: "The proxy function returns nothing for a request. What happens next?"
+    choices: ["The request carries on to the page or route handler", "The browser gets an empty page", "Next.js answers 404", "The request waits forever"]
+    answer: 0
+    explain: "Returning a response stops the request in the proxy. Returning nothing lets it through."
+    reteach: "### Syntax: a proxy file"
+
+  - id: q03
+    type: fill-blank
+    concept: proxy-matcher
+    goal: "Run the proxy for the account page and for every page under it."
+    prompt: "matcher: [\"/account/___\"],"
+    answers: [":path*"]
+    explain: "The * means zero or more parts, so it matches /account, /account/orders and deeper paths."
+    reteach: "### Syntax: matcher paths"
+
+  - id: q04
+    type: mcq
+    concept: proxy-matcher
+    prompt: "What happens when proxy.js has no config.matcher?"
+    choices: ["It runs for every request, even images, CSS and the login page", "It never runs", "It only runs for the home page", "Next.js refuses to start"]
+    answer: 0
+    explain: "Without a matcher, a login check can redirect the login page itself, and visitors bounce forever."
+    reteach: "### Syntax: matcher paths"
+
+  - id: q05
+    type: mcq
+    concept: redirect-statuses
+    prompt: "/catalogue has moved to /items for good. Which redirect status fits?"
+    choices: ["308 Permanent Redirect", "307 Temporary Redirect", "404 Not Found", "200 OK"]
+    answer: 0
+    explain: "A permanent move uses 308, so browsers and search engines can remember the new address."
+    reteach: "### Redirects: temporary or permanent"
+
+  - id: q06
+    type: mcq
+    concept: redirect-statuses
+    prompt: "A logged-out visitor opens /account/orders. Which status should send them to the login page?"
+    choices: ["307, because it depends on who is asking and must not be remembered", "308, because it's faster", "301, because it's permanent", "500, because something is wrong"]
+    answer: 0
+    explain: "A permanent redirect would be remembered, and the customer would be sent to login even after logging in."
+    reteach: "### Redirects: temporary or permanent"
+
+  - id: q07
+    type: predict-output
+    concept: redirect-statuses
+    code: |
+      const res = Response.redirect(new URL("/items/DC-1042", "http://localhost/catalogue/DC-1042"), 308);
+      console.log(res.status, res.headers.get("location"));
+    answer: "308 http://localhost/items/DC-1042"
+    explain: "new URL turns the path into a full address on the same site, and the redirect puts it in the Location header."
+    reteach: "### Redirects: temporary or permanent"
+
+  - id: q08
+    type: predict-output
+    concept: proxy-file
+    code: |
+      const pathname = "/catalogue/DC-1042";
+      const rest = pathname.slice("/catalogue".length);
+      console.log(`/items${rest}`);
+    answer: "/items/DC-1042"
+    explain: "slice drops the first 10 characters, /catalogue, and keeps the rest of the path."
+    reteach: "## Worked example"
+
+  - id: q09
+    type: mcq
+    concept: navigation-functions
+    prompt: "What does notFound() from next/navigation do in a server component?"
+    choices: ["It throws, so the page stops and the nearest not-found page shows with status 404", "It returns null, and the page keeps going", "It reloads the page", "It logs a warning and shows the page anyway"]
+    answer: 0
+    explain: "Like redirect, notFound works by throwing. Nothing after it runs."
+    reteach: "### Syntax: redirect and notFound in server code"
+
+  - id: q10
+    type: spot-the-bug
+    concept: not-found-for-others
+    prompt: "Ravi, who is logged in, can open Asha's order-17 by typing its number. Which line is wrong?"
+    code: |
+      export function getOwnOrder(cookieStore, orderId) {
+        const customer = requireCustomer(cookieStore, `/account/orders/${orderId}`);
+        const order = findOrder(orderId);
+        if (!order) notFound();
+        return order;
+      }
+    bugLine: 4
+    explain: "The guard checks the order exists, but not whose it is. It should be: if (!order || order.phone !== customer.phone) notFound();"
+    reteach: "### Someone else's order is not found"
+
+  - id: q11
+    type: mcq
+    concept: guards-in-the-server
+    prompt: "The proxy already sends visitors without a session cookie to the login page. Why does the page check again with a guard?"
+    choices: ["A cookie can be old or made up, and a matcher can miss a path. The real check belongs next to the data", "Because the proxy only runs on Sundays", "To make the page slower on purpose", "It doesn't need to"]
+    answer: 0
+    explain: "The proxy is a quick first check. Guards in the page, action or data layer are the real gate."
+    reteach: "### The proxy is only the gate"
+
+  - id: q12
+    type: mcq
+    concept: not-found-for-others
+    prompt: "Ravi opens /account/orders/order-17, which is Asha's. What should he see?"
+    choices: ["The same not-found page as for an order that doesn't exist", "A message saying the order belongs to Asha Rao", "Asha's order, because he is logged in", "An error page with the server's error text"]
+    answer: 0
+    explain: "If others' orders look exactly like missing ones, nobody can find out which orders exist."
+    reteach: "### Someone else's order is not found"

@@ -1,0 +1,22 @@
+id: tsreact-12-professional-typescript/topic-07-big-codebases
+title: "Finding your way in a big typed codebase"
+order: 7
+minutes: 9
+prerequisites: [tsreact-12-professional-typescript/topic-06-code-reviews]
+concepts: [types-as-map, editor-navigation, find-references, change-the-type, imports-and-aliases, declaration-files]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: TSX-1207
+  from: maya
+  title: "Orders need a delivery slot"
+  body: >
+    From next month, every delivery inside Pune gets a slot: morning or evening.
+    The store is 400 files now, and you've seen maybe 30 of them. Nobody knows every place an Order goes.
+    Find where Order lives, every place that uses it, and what breaks if it gets a slot. Then tell me how big the change is.
+hints:
+  - "Start from the type, not the screens. Go to Definition on Order shows where it lives, and hovering shows its shape."
+  - "Find All References lists every real use of Order. Text search also finds comments and other things with the same name."
+  - "Add slot to the Order type and run tsc --noEmit. The error list is the list of places to change."
+review: true

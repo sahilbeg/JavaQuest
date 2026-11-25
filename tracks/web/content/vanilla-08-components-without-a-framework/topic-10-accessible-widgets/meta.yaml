@@ -1,0 +1,24 @@
+id: vanilla-08-components-without-a-framework/topic-10-accessible-widgets
+title: "Accessible widgets: a tab list with ARIA"
+order: 10
+minutes: 10
+prerequisites: [vanilla-08-components-without-a-framework/topic-09-styling-components]
+concepts: [aria-roles, aria-states, roving-tabindex, arrow-keys, wrap-around, native-first]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0810
+  from: sam
+  title: "A customer can't reach the Delivery tab with her keyboard"
+  body: >
+    Raju here. Mrs. Fernandes uses a screen reader and only her keyboard. On Golu's item page she hears "Details,
+    button. Care, button. Delivery, button", with no idea they are tabs, and the arrow keys do nothing. She called the
+    shop to ask about delivery. Can the tabs work for her like they do for everyone else?
+hints:
+  - "Roles first: role=\"tablist\" on .tabs__list, role=\"tab\" plus aria-controls on each button, and role=\"tabpanel\", aria-labelledby and tabindex=\"0\" on each panel."
+  - "select(index) sets, for every tab, aria-selected to \"true\" or \"false\", tabIndex to 0 or -1, and its panel's hidden. Only the selected tab is in the Tab order: that's the roving tabindex."
+  - "On keydown in the list: find the current tab with tabs.indexOf(event.target). ArrowRight is (current + 1) % tabs.length, ArrowLeft is (current - 1 + tabs.length) % tabs.length, Home is 0 and End is tabs.length - 1. For those keys only, call preventDefault, select that tab and focus it."
+review: true

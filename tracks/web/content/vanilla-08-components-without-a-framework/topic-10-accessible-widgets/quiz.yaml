@@ -1,0 +1,136 @@
+topic: vanilla-08-components-without-a-framework/topic-10-accessible-widgets
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: aria-roles
+    prompt: "Which role goes on the element that holds the tab buttons?"
+    choices: ["tablist", "tab", "tabpanel", "group"]
+    answer: 0
+    explain: "The container is the tablist, each button is a tab, and each panel is a tabpanel."
+    reteach: "### Syntax: ARIA roles"
+
+  - id: q02
+    type: mcq
+    concept: aria-roles
+    prompt: "You add role=\"tab\" to three buttons and nothing else. What changes?"
+    choices: ["Only what a screen reader announces: the arrow keys still do nothing", "The arrow keys start working", "The buttons look like tabs", "The panels show and hide on their own"]
+    answer: 0
+    explain: "A role changes the announcement, not the behaviour. The keyboard handling is your code's job."
+    reteach: "### Syntax: ARIA roles"
+
+  - id: q03
+    type: fill-blank
+    concept: aria-states
+    goal: "Tell assistive technology that this tab is the one currently chosen."
+    prompt: "tab.setAttribute(\"___\", \"true\");"
+    answers: ["aria-selected"]
+    explain: "aria-selected is \"true\" on the selected tab and \"false\" on the others."
+    reteach: "### Syntax: ARIA states and links"
+
+  - id: q04
+    type: mcq
+    concept: aria-states
+    prompt: "Which attribute on a tabpanel names the tab it belongs to, so the panel is announced as Care?"
+    choices: ["aria-labelledby=\"tab-care\"", "aria-controls=\"tab-care\"", "aria-selected=\"tab-care\"", "for=\"tab-care\""]
+    answer: 0
+    explain: "aria-labelledby takes its label from the tab. aria-controls goes the other way, on the tab, naming its panel."
+    reteach: "### Syntax: ARIA states and links"
+
+  - id: q05
+    type: mcq
+    concept: roving-tabindex
+    prompt: "Care is the selected tab of three. Which tabindex values are right?"
+    choices: ["Details -1, Care 0, Delivery -1", "All three 0", "All three -1", "Details 0, Care 1, Delivery 2"]
+    answer: 0
+    explain: "Only the selected tab is in the Tab order. The others can still be focused from code with tabindex -1."
+    reteach: "### Syntax: roving tabindex"
+
+  - id: q06
+    type: mcq
+    concept: roving-tabindex
+    prompt: "With a roving tabindex, focus is on the selected tab and the customer presses Tab. Where does focus go?"
+    choices: ["Out of the tab list, to the panel", "To the next tab", "Back to the first tab", "Nowhere"]
+    answer: 0
+    explain: "Only one tab is in the Tab order, so Tab leaves the list. The arrow keys move between tabs."
+    reteach: "### Syntax: roving tabindex"
+
+  - id: q07
+    type: predict-output
+    concept: wrap-around
+    prompt: "There are 3 tabs. What does this print?"
+    code: |
+      const length = 3;
+      let current = 2;
+      current = (current + 1) % length;
+      console.log(current);
+      current = (current - 1 + length) % length;
+      console.log(current);
+    answer: "0\n2"
+    explain: "Right from the last tab, (2 + 1) % 3, wraps to 0. Left from 0, (0 - 1 + 3) % 3, wraps to 2."
+    reteach: "### Syntax: wrapping with %"
+
+  - id: q08
+    type: predict-output
+    concept: arrow-keys
+    prompt: "What does this print?"
+    code: |
+      const tabs = ["Details", "Care", "Delivery"];
+      const moves = { Home: () => 0, End: () => tabs.length - 1 };
+      let current = 1;
+      for (const key of ["End", "Enter", "Home"]) {
+        const move = moves[key];
+        if (move !== undefined) {
+          current = move();
+        }
+        console.log(tabs[current]);
+      }
+    answer: "Delivery\nDelivery\nDetails"
+    explain: "End jumps to the last tab. Enter isn't handled, so nothing changes. Home jumps to the first."
+    reteach: "### The keys"
+
+  - id: q09
+    type: mcq
+    concept: arrow-keys
+    prompt: "The right-arrow handler selects the next tab but doesn't call focus(). What goes wrong?"
+    choices: ["Focus stays on the old tab, so the next arrow press starts from the wrong place", "Nothing", "The panel doesn't change", "The page reloads"]
+    answer: 0
+    explain: "Moving with the arrows must move focus too: call tabs[next].focus() after selecting."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: spot-the-bug
+    concept: arrow-keys
+    prompt: "Pressing the right arrow selects the next tab, but the page also scrolls sideways. Which line is wrong?"
+    code: |
+      list.addEventListener("keydown", (event) => {
+        const current = tabs.indexOf(event.target);
+        if (event.key === "ArrowRight") {
+          event.stopPropagation();
+          const next = (current + 1) % tabs.length;
+          select(next);
+          tabs[next].focus();
+        }
+      });
+    bugLine: 4
+    explain: "stopPropagation only stops other listeners hearing the key. To stop the browser scrolling, call event.preventDefault()."
+    reteach: "### The keys"
+
+  - id: q11
+    type: mcq
+    concept: native-first
+    prompt: "You need a control that does something when clicked. Which is the better choice?"
+    choices: ["A <button>: it is focusable and works with Enter and Space for free", "A <div role=\"button\">", "A <span> with a click listener", "An <a> with no href"]
+    answer: 0
+    explain: "The first rule of ARIA: use the native element when one does the job. A role adds no behaviour."
+    reteach: "### Native first"
+
+  - id: q12
+    type: mcq
+    concept: aria-states
+    prompt: "Which CSS selector best styles the selected tab?"
+    choices: ["[role=\"tab\"][aria-selected=\"true\"]", ".tab.is-active", "button:focus", "button:first-child"]
+    answer: 0
+    explain: "Styling from aria-selected means the look and the announcement can never disagree."
+    reteach: "### Style from the ARIA state"

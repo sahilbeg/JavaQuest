@@ -1,0 +1,24 @@
+id: tsreact-10-react-with-typescript/topic-09-typed-styling
+title: "Typed styling props"
+order: 9
+minutes: 10
+prerequisites: [tsreact-10-react-with-typescript/topic-08-lifting-typed-state]
+concepts: [class-names, variant-unions, css-properties, native-props, record-of-colours]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1009
+  from: sana
+  title: "Every button on the site is styled by hand"
+  body: >
+    Sana here. I count eleven different blues on dhaaga.in buttons, and someone typed "btn--primay" last week. I'd
+    like one Button with a small set of variants and sizes, and the yarn swatches drawn in our exact colours. If
+    TypeScript can refuse a variant I never designed, even better.
+hints:
+  - 'Destructure with defaults: { variant = "primary", size = "md", className, type = "button", ...rest }. rest holds children, onClick, disabled and everything else.'
+  - 'Build the classes as ["btn", `btn--${variant}`, `btn--${size}`, className].filter(Boolean).join(" "), then return <button type={type} className={classes} {...rest} />.'
+  - "For the swatch, write const style: CSSProperties = { backgroundColor: SWATCH_HEX[colour], width: size, height: size }; and pass style={style}. React adds px to the numbers."
+review: true

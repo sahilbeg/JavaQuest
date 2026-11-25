@@ -1,0 +1,23 @@
+id: vanilla-08-components-without-a-framework/mini-project
+title: "FEAT-08: The catalogue as web components"
+order: 100
+minutes: 15
+prerequisites: [vanilla-08-components-without-a-framework/topic-10-accessible-widgets]
+concepts: [custom-elements, shadow-dom, custom-events, store, keyed-updates, cleanup]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: FEAT-08
+  from: priya
+  title: "One catalogue we can drop onto any page"
+  body: >
+    Beta, Sana wants the same Golu card on the home page, the gift guide and the Diwali page, and each time someone
+    copies the code, it comes out a little different. Can we have proper pieces, a product card and a cart count,
+    that we just place on a page and they work? When stock changes, the cards should follow. Details are in the KB.
+hints:
+  - "Start with <product-card>: attach the shadow root in the constructor, and let the product setter store the product and draw the name, price, stock text and button. Add dispatches add-to-cart with detail { id }, bubbling and composed."
+  - "<cart-count> is the one from the store ticket: subscribe in connectedCallback (and draw once), unsubscribe in disconnectedCallback. addLine returns a new array: one more on a line, or a new line with qty 1."
+  - "createCatalogue adds one add-to-cart listener on root, outside everything else. A sync function reuses the <product-card> of each id (by data-id), makes new ones, removes old ones and keeps the order. Run it once, and from a store subscription."
+review: false

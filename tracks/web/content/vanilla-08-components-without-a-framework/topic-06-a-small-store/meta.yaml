@@ -1,0 +1,24 @@
+id: vanilla-08-components-without-a-framework/topic-06-a-small-store
+title: "A small store with subscribers"
+order: 6
+minutes: 9
+prerequisites: [vanilla-08-components-without-a-framework/topic-05-component-events]
+concepts: [store, set-state, subscribe, unsubscribe, subscribe-on-connect, memory-leak]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0806
+  from: maya
+  title: "The header says Cart (2) while the drawer has 3"
+  body: >
+    Kavya here. The header badge, the cart drawer and the checkout button each keep their own copy of the cart,
+    and they drift apart. A customer with three coaster sets saw "Cart (2)" on top. Let's keep the cart in one small
+    store that tells every part when it changes, and make <cart-count> follow it.
+hints:
+  - "Keep the listeners in a Set. setState works out the changes (call change(state) when it is a function), makes a NEW state with { ...state, ...changes }, then calls every listener with it."
+  - "subscribe adds the listener and returns a small function that deletes it again: return () => listeners.delete(listener)."
+  - "In <cart-count>: connectedCallback keeps the unsubscribe that this.store.subscribe(...) returns, then draws once from this.store.getState(); disconnectedCallback calls it. countItems is lines.reduce((sum, line) => sum + line.qty, 0)."
+review: true

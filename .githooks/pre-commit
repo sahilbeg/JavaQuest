@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Guards the learner's own code. practice/<module>/<topic>/src/ is where the learner writes their fix, so a
+# Guards the learner's own code. practice/<module>/<topic>/src/ (Java) and tracks/<track>/practice/<module>/<topic>/src/
+# (web) are where the learner writes their fix, so a
 # commit must not change or delete an existing ticket's src/ files. New tickets may add their src/ folder.
 # To commit such a change on purpose (for example your own solutions), run: ALLOW_SRC_CHANGES=1 git commit ...
 # Enable once per clone: git config core.hooksPath .githooks
@@ -9,7 +10,7 @@ if [[ "${ALLOW_SRC_CHANGES:-0}" == "1" ]]; then
   exit 0
 fi
 
-changed="$(git diff --cached --name-only --diff-filter=MDR -- ':(glob)practice/*/*/src/**')"
+changed="$(git diff --cached --name-only --diff-filter=MDR -- ':(glob)practice/*/*/src/**' ':(glob)tracks/*/practice/*/*/src/**')"
 if [[ -n "$changed" ]]; then
   echo "Commit blocked: it changes code in an existing ticket's src/ folder, which is the learner's own work:" >&2
   echo "$changed" | sed 's/^/  /' >&2

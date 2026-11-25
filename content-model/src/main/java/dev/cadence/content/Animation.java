@@ -73,7 +73,7 @@ public record Animation(String title, Kind kind, String code, List<Node> nodes, 
         require(title != null && !title.isBlank(), "title is required");
         require(kind != null, "kind is required: code or scene");
         language = language == null ? "java" : language;
-        require(language.equals("java") || language.equals("js"), "language must be java or js, got: " + language);
+        require(language.equals("java") || language.equals("js") || language.equals("ts"), "language must be java, js or ts, got: " + language);
         require(steps != null && steps.size() >= 2 && steps.size() <= MAX_STEPS,
                 "steps needs 2 to " + MAX_STEPS + " entries");
         steps = List.copyOf(steps);

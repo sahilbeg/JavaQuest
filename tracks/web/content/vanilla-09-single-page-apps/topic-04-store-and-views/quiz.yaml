@@ -1,0 +1,133 @@
+topic: vanilla-09-single-page-apps/topic-04-store-and-views
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: app-store
+    variants:
+      - { prompt: "Why keep the cart in one store instead of inside each screen?", choices: ["Screens come and go, but the store lives as long as the page, so every screen sees the same cart", "Stores are faster than variables", "The router can't draw screens that hold data", "The server asks for a store"], answer: 0 }
+      - { prompt: "What does store.setState(update) do with update?", choices: ["Calls it with the old state and keeps what it returns as the new state", "Saves the function itself as the state", "Sends it to the server", "Runs it once for each subscriber"], answer: 0 }
+    explain: "The store outlives the screens. setState calls your update function with the old state, keeps the result, and tells every subscriber."
+    reteach: "### One store for the whole app"
+
+  - id: q02
+    type: predict-output
+    concept: immutable-updates
+    code: |
+      const before = { lines: [] };
+      const after = { ...before, lines: [...before.lines, { id: "DC-1042", qty: 1 }] };
+      console.log(after === before);
+      console.log(before.lines.length, after.lines.length);
+    answer: "false\n0 1"
+    explain: "Spread builds new objects, so after is a different object and before.lines is untouched."
+    reteach: "### Syntax: copying with spread, map and filter"
+
+  - id: q03
+    type: predict-output
+    concept: immutable-updates
+    code: |
+      const before = { lines: [{ id: "DC-1042", qty: 1 }] };
+      const after = before;
+      after.lines.push({ id: "DC-2001", qty: 1 });
+      console.log(after === before);
+      console.log(before.lines.length);
+    answer: "true\n2"
+    explain: "after is the same object as before, so push changed both. A !== check would see no change at all."
+    reteach: "### Never change the old state"
+
+  - id: q04
+    type: spot-the-bug
+    concept: immutable-updates
+    code: |
+      function addGolu(store) {
+        store.setState((state) => {
+          state.lines.push({ id: "DC-1042", qty: 1 });
+          return state;
+        });
+      }
+    bugLine: 3
+    explain: "push changes the old state in place, and the same object is returned. Return { ...state, lines: [...state.lines, newLine] } instead."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: mcq
+    concept: immutable-updates
+    prompt: "Which update raises Golu's qty by one without changing the old state?"
+    choices: ["{ ...state, lines: state.lines.map((l) => (l.id === \"DC-1042\" ? { ...l, qty: l.qty + 1 } : l)) }", "state.lines.find((l) => l.id === \"DC-1042\").qty++", "state.lines.forEach((l) => { l.qty += 1; })", "{ ...state, lines: state.lines }"]
+    answer: 0
+    explain: "map makes a new array, and the changed line is a new object built with spread. The other lines are reused unchanged."
+    reteach: "### Syntax: copying with spread, map and filter"
+
+  - id: q06
+    type: fill-blank
+    concept: immutable-updates
+    goal: "Make a new list of cart lines that leaves out the coaster set, without changing the old list."
+    prompt: "const lines = state.lines.___((line) => line.id !== \"DC-2001\");"
+    answers: ["filter"]
+    explain: "filter returns a new array holding only the items the test keeps."
+    reteach: "### Syntax: copying with spread, map and filter"
+
+  - id: q07
+    type: mcq
+    concept: selectors
+    prompt: "What is a selector?"
+    choices: ["A small function that takes the state and returns one answer from it", "A CSS rule that picks elements", "The router's list of routes", "A button that picks an item"]
+    answer: 0
+    explain: "A selector asks the state one question, such as how many items are in the cart."
+    reteach: "### Selectors: asking the store one question"
+
+  - id: q08
+    type: predict-output
+    concept: selectors
+    code: |
+      const itemCount = (state) => state.lines.reduce((sum, line) => sum + line.qty, 0);
+      const state = { lines: [{ id: "DC-1042", qty: 2 }, { id: "DC-3001", qty: 1 }], route: "/cart" };
+      console.log(itemCount(state));
+    answer: "3"
+    explain: "reduce adds every line's qty: 2 + 1 = 3."
+    reteach: "### Selectors: asking the store one question"
+
+  - id: q09
+    type: predict-output
+    concept: watching-a-slice
+    code: |
+      let last = 0;
+      function onCount(count) {
+        if (count === last) return;
+        last = count;
+        console.log(`badge ${count}`);
+      }
+      onCount(1);
+      onCount(1);
+      onCount(0);
+    answer: "badge 1\nbadge 0"
+    explain: "The second call has the same count, so it returns early. The third is new again."
+    reteach: "### Redraw only when your answer changes"
+
+  - id: q10
+    type: mcq
+    concept: watching-a-slice
+    prompt: "A view's selector is (state) => state.lines.filter((l) => l.gift). The view redraws only when the answer is !== the last one. What happens?"
+    choices: ["It redraws on every change, because filter always makes a new array", "It never redraws", "It redraws only when gift lines change", "It throws an error"]
+    answer: 0
+    explain: "A new array is never === the old one, even with the same contents. Select something stable, such as a count."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: mount-and-unmount
+    variants:
+      - { prompt: "The router swaps out the cart screen, but the screen never unsubscribed. What happens?", choices: ["The store keeps calling the hidden screen on every change, wasting memory and time", "The screen comes back on its own", "The store deletes the cart", "Nothing at all"], answer: 0 }
+      - { prompt: "What should a view's mount function return?", choices: ["The function that unsubscribes it, so it can be unmounted", "The new state", "The number of listeners", "Nothing"], answer: 0 }
+    explain: "Unmounting must unsubscribe. Otherwise hidden screens keep listening, and each visit adds another: a memory leak."
+    reteach: "### Mounting and unmounting views"
+
+  - id: q12
+    type: mcq
+    concept: app-store
+    prompt: "store.subscribe(listener) returns something. What is it for?"
+    choices: ["It is a function that removes the listener again", "It is the current state", "It is the listener's id number", "It is a promise for the next change"]
+    answer: 0
+    explain: "Calling the returned function unsubscribes. Keep it, and call it when the view goes away."
+    reteach: "### Syntax: a store with update functions"

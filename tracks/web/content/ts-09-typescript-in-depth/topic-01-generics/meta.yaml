@@ -1,0 +1,23 @@
+id: ts-09-typescript-in-depth/topic-01-generics
+title: "Generics: one function, many types"
+order: 1
+minutes: 9
+prerequisites: [ts-08-typescript-basics/boss]
+concepts: [generic-functions, type-parameters, inference, generic-types, any-vs-generics]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0901
+  from: maya
+  title: "Three copies of the same helper, and one of them uses any"
+  body: >
+    Kavya here. Our catalogue code has firstItem, firstOrder and firstColour: the same function written three times.
+    Last week someone merged them into one that takes any[], and a typo in a field name went live on dhaaga.in without a single warning.
+    Please write our shared list helpers once, in collections.ts, so they work for items, orders and colours and still keep their types.
+hints:
+  - "Each helper already says <T> after its name. T stands for whatever the list holds, so you write the body as if T were any one type."
+  - "last can be list.at(-1). For uniqueBy, a Set<string> remembers the keys you've seen; keep an element only when its key is new. For groupBy, make new Map<string, T[]>() and push each element into the array for its key."
+  - "paginate: const start = (page - 1) * size; items is list.slice(start, start + size), and totalPages is Math.max(1, Math.ceil(list.length / size))."
+review: true

@@ -1,0 +1,14 @@
+:root {
+  --marigold: #f2a81d;
+  --indigo: #2e3a8c;
+  --off-white: #faf7f0;
+}
+
+body {
+  background: var(--off-white);
+  color: var(--indigo);
+}
+
+a {
+  color: var(--indigo);
+}

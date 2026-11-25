@@ -18,7 +18,7 @@ public class PracticeConfiguration {
 
     @Bean
     dev.cadence.content.CourseLibrary courseLibrary(CadenceProperties properties) throws IOException {
-        return dev.cadence.content.CourseLibrary.load(properties.root());
+        return dev.cadence.content.CourseLibrary.load(properties.root(), properties.codeDir());
     }
 
     /** Every topic of every course, for finding a topic by id. Course order and progress use {@code Courses}. */

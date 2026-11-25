@@ -1,0 +1,24 @@
+id: tsreact-11-typed-react-in-depth/mini-project
+title: "FEAT-11: Typed checkout with a UPI step"
+order: 100
+minutes: 15
+prerequisites: [tsreact-11-typed-react-in-depth/topic-10-typed-error-boundaries]
+concepts: [state-union-machine, delivery-totals, address-validation, side-effects-in-handlers]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: FEAT-11
+  from: priya
+  title: "Let customers pay on the website, safely"
+  body: >
+    Beta, customers fill their cart on dhaaga.in and then message me on WhatsApp to pay. I want them to finish
+    on the website: see the cart and the delivery charge, give their address, pay by UPI, and get an order
+    number like order-17 to quote when they call Raju. Kavya says with TypeScript we can make "paying with
+    no address" impossible, not just unlikely. I like the sound of that.
+hints:
+  - "Start with the plain functions: checkoutTotals (₹60 delivery, free when items are above ₹999, nothing for an empty cart) and validateAddress. Then the reducer: each case first checks state.step, and returns state unchanged on the wrong step."
+  - "In the reducer, after if (state.step !== \"upi\") return state;, TypeScript knows state.address exists, so paid can build { step: \"done\", address: state.address, orderId: action.orderId }."
+  - "In Checkout: const [state, dispatch] = useReducer(checkoutReducer, START); then switch (state.step) and return one step component per case. Call placeOrder in the UpiStep's onPaid handler, then dispatch({ type: \"paid\", orderId })."
+review: false

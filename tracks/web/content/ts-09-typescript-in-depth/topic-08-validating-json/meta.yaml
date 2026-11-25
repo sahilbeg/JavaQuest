@@ -1,0 +1,23 @@
+id: ts-09-typescript-in-depth/topic-08-validating-json
+title: "unknown and validating JSON"
+order: 8
+minutes: 10
+prerequisites: [ts-09-typescript-in-depth/topic-07-async-types]
+concepts: [unknown-vs-any, validating-unknown, checking-objects, result-types, parse-at-the-edge]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0908
+  from: sam
+  title: "Golu plus gift wrap came to ₹45,00,030.00"
+  body: >
+    Raju here. Mrs. Joshi from Kothrud added Golu with gift wrap to her cart, and the total said ₹45,00,030.00. She thought we'd gone mad.
+    Kavya found it: the catalogue file from the WhatsApp import had "paise": "45000" as text, and our code believed the types.
+    Please check every item from the file in parseItem.ts before the store uses it, and say clearly what's wrong when it isn't right.
+hints:
+  - "Start with unknown, never any. isRecord(value) is typeof value === \"object\" && value !== null && !Array.isArray(value). Its return type, value is Record<string, unknown>, lets you read fields afterwards."
+  - "In parseItem, take const { id, name, paise, stock } = value; each one is unknown. Check them in order: typeof id === \"string\" && /^DC-\\d+$/.test(id), then name is a non-empty string, then Number.isInteger(paise) && paise >= 0 (the same for stock). Return { ok: false, error } at the first problem."
+  - "parseItems: wrap JSON.parse in try/catch for \"not valid JSON\", check Array.isArray for \"expected a list of items\", then parse each element. On the first failure return { ok: false, error: `item ${i + 1}: ${result.error}` }."
+review: true

@@ -1,0 +1,22 @@
+id: vanilla-09-single-page-apps/mini-project
+title: "FEAT-09: Checkout as a single-page app"
+order: 100
+minutes: 15
+prerequisites: [vanilla-09-single-page-apps/topic-10-testing-an-spa]
+concepts: [step-routes, route-guards, guard-redirects, order-total, titles-per-step]
+practice:
+  kind: code
+  runner: vitest
+ticket:
+  key: FEAT-09
+  from: priya
+  title: "Checkout in steps, without losing anything"
+  body: >
+    Beta, our checkout is one long page, and on a phone people get lost halfway down it. Can it be small steps instead:
+    the cart, your details, pay by UPI, and a thank-you? People should be able to go back a step without losing what they typed,
+    nobody should reach the payment without an address, and nobody should ever pay twice.
+hints:
+  - "Start with the small pure pieces: subtotal, deliveryFee, orderTotal and detailsErrors. Then furthestStep, which checks paid, then an empty cart, then the details errors, in that order."
+  - "canVisit compares positions: STEPS.indexOf(step) <= STEPS.indexOf(furthestStep(state)). Handle the two special cases first: an unknown step is never open, and once paid only \"done\" is."
+  - "In show(): if (!canVisit(state, step)) { step = furthestStep(state); history.replaceState(null, \"\", `/checkout/${step}`); } then draw STEP_VIEWS[step](context) and set the title. go pushes only when `/checkout/${step}` !== location.pathname."
+review: false

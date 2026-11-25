@@ -1,0 +1,135 @@
+topic: vanilla-08-components-without-a-framework/topic-06-a-small-store
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: store
+    prompt: "The header badge, the drawer and the checkout button each kept their own cart count. What does a store change?"
+    choices: ["There is one shared state, and every part draws from it, so they can't disagree", "Each part gets a faster copy", "The cart is saved on the server", "Each part checks the others every second"]
+    answer: 0
+    explain: "A store is the single source of truth for many components. Nothing is copied, so nothing drifts."
+    reteach: "### Three copies drift apart"
+
+  - id: q02
+    type: predict-output
+    concept: subscribe
+    prompt: "What does this print?"
+    code: |
+      const listeners = new Set();
+      let state = { count: 0 };
+      function setState(changes) {
+        state = { ...state, ...changes };
+        for (const listener of listeners) {
+          listener(state);
+        }
+      }
+      listeners.add((s) => console.log(`badge ${s.count}`));
+      setState({ count: 1 });
+      listeners.add((s) => console.log(`drawer ${s.count}`));
+      setState({ count: 2 });
+    answer: "badge 1\nbadge 2\ndrawer 2"
+    explain: "The drawer joined after the first change, so it only hears the second. Subscribers are told in the order they joined."
+    reteach: "### One change, every subscriber"
+
+  - id: q03
+    type: predict-output
+    concept: unsubscribe
+    prompt: "What does this print?"
+    code: |
+      const listeners = new Set();
+      function subscribe(listener) {
+        listeners.add(listener);
+        return () => listeners.delete(listener);
+      }
+      function notify(count) {
+        for (const listener of listeners) {
+          listener(count);
+        }
+      }
+      const stop = subscribe((count) => console.log(`badge ${count}`));
+      notify(3);
+      stop();
+      notify(4);
+      console.log(listeners.size);
+    answer: "badge 3\n0"
+    explain: "stop() removed the badge, so notify(4) calls nobody, and the Set is empty."
+    reteach: "### Syntax: unsubscribe"
+
+  - id: q04
+    type: fill-blank
+    concept: set-state
+    goal: "Ask the store for one more item, working the new count out from the current state."
+    prompt: "cart.___((state) => ({ count: state.count + 1 }));"
+    answers: ["setState"]
+    explain: "setState accepts a function of the current state, and uses what it returns as the changes."
+    reteach: "### Syntax: setState with a function"
+
+  - id: q05
+    type: mcq
+    concept: set-state
+    prompt: "Code runs cart.getState().count += 1. What happens on the page?"
+    choices: ["Nothing redraws: no subscriber is told, so the badge shows the old count", "Every subscriber redraws", "The store throws an error", "Only the badge redraws"]
+    answer: 0
+    explain: "Only setState tells subscribers. Changing the object in place skips them."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: spot-the-bug
+    concept: set-state
+    prompt: "Every subscriber draws the cart as it was before the change. Which line is in the wrong place?"
+    code: |
+      function setState(changes) {
+        for (const listener of listeners) {
+          listener(state);
+        }
+        state = { ...state, ...changes };
+      }
+    bugLine: 5
+    explain: "The state must change first, then the subscribers are told. Move the new state above the loop."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: mcq
+    concept: subscribe
+    prompt: "What does subscribe(listener) give back?"
+    choices: ["A function that removes the listener again", "The current state", "A copy of the store", "Nothing"]
+    answer: 0
+    explain: "The returned function unsubscribes. Keep it, because it's the only way to stop."
+    reteach: "### Syntax: unsubscribe"
+
+  - id: q08
+    type: mcq
+    concept: subscribe-on-connect
+    prompt: "In which callbacks should <cart-count> subscribe and unsubscribe?"
+    choices: ["Subscribe in connectedCallback, unsubscribe in disconnectedCallback", "Both in the constructor", "Subscribe in attributeChangedCallback, never unsubscribe", "Subscribe in disconnectedCallback, unsubscribe in connectedCallback"]
+    answer: 0
+    explain: "It listens while it is on the page, and stops when it leaves, even if it comes back later."
+    reteach: "### Components subscribe while they are on the page"
+
+  - id: q09
+    type: mcq
+    concept: subscribe-on-connect
+    prompt: "<cart-count> subscribes in connectedCallback but doesn't draw. A customer arrives with 3 items already in the cart. What does the badge show?"
+    choices: ["Nothing, until the cart changes again", "Cart (3)", "Cart (0)", "An error"]
+    answer: 0
+    explain: "Subscribers run only on changes. Draw once from getState() straight after subscribing."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: memory-leak
+    prompt: "A cart drawer subscribes when opened and never unsubscribes. It is opened and closed 50 times. What is the problem?"
+    choices: ["50 removed drawers stay subscribed: they redraw on every change and can never be freed", "Nothing: the browser removes subscribers on its own", "The store forgets the cart", "Only the last drawer works"]
+    answer: 0
+    explain: "The store's list still points to every old drawer, so they keep running and keep their memory. That's a memory leak."
+    reteach: "### Why unsubscribing matters"
+
+  - id: q11
+    type: mcq
+    concept: store
+    prompt: "In createStore, why can no other code change state directly?"
+    choices: ["state lives inside the function, and only the returned methods can reach it", "state is a const", "state is frozen with Object.freeze", "JavaScript has no way to change objects"]
+    answer: 0
+    explain: "A closure keeps state private. getState, setState and subscribe are the only doors in."
+    reteach: "### Syntax: createStore"

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Search | Dhaaga &amp; Co.</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <main>
+    <h1>Dhaaga &amp; Co.</h1>
+    <div class="search">
+      <label for="search">Search the shop</label>
+      <input id="search" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="suggestions" autocomplete="off">
+      <ul id="suggestions" role="listbox" aria-label="Suggestions" hidden></ul>
+      <p id="search-status" role="status"></p>
+    </div>
+    <p id="picked"></p>
+  </main>
+</body>
+</html>

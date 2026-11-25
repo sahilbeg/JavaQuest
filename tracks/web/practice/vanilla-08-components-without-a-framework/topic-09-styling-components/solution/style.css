@@ -1,0 +1,35 @@
+/* The product card's stylesheet. */
+
+:root {
+  --dhaaga-marigold: #F2A81D;
+  --dhaaga-indigo: #2E3A8C;
+  --dhaaga-off-white: #FAF7F0;
+}
+
+.product-card {
+  background: var(--dhaaga-off-white);
+  border: 2px solid var(--dhaaga-indigo);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.product-card__name {
+  margin: 0 0 0.25rem;
+  color: var(--dhaaga-indigo);
+}
+
+.product-card__price {
+  font-weight: 700;
+}
+
+.product-card__add {
+  background: var(--dhaaga-marigold);
+  border: 0;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font: inherit;
+}
+
+.product-card--sold-out {
+  opacity: 0.5;
+}

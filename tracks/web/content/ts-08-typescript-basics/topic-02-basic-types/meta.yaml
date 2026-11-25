@@ -1,0 +1,23 @@
+id: ts-08-typescript-basics/topic-02-basic-types
+title: "Basic types and inference"
+order: 2
+minutes: 9
+prerequisites: [ts-08-typescript-basics/topic-01-why-typescript]
+concepts: [primitive-types, annotations, inference, any-type, conversions]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0802
+  from: maya
+  title: "The calculator's first TypeScript file"
+  body: >
+    We're moving the price calculator to TypeScript, one file at a time. I've started src/basics.ts: the types
+    are in and it type-checks, but every function still returns a placeholder. Fill them in without changing
+    the types. Raju needs parseQty most, because customers type all sorts of things in the quantity box.
+hints:
+  - "The types tell you what to return. toPaise and parseQty give a number, rupeesText and stockLabel give a string, canMakeToys gives a boolean."
+  - "Number(typed.trim()) turns text into a number. Number.isInteger(qty) && qty >= 0 tells you if it's a usable quantity."
+  - "rupeesText is \"₹\" + (paise / 100).toFixed(2). canMakeToys is grams >= toys * TOY_GRAMS."
+review: true

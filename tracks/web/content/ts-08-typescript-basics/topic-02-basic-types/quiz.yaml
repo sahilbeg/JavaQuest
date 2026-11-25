@@ -1,0 +1,121 @@
+topic: ts-08-typescript-basics/topic-02-basic-types
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: primitive-types
+    prompt: "Which type fits the item id \"DC-1042\"?"
+    choices: ["string", "number", "boolean", "String"]
+    answer: 0
+    explain: "Anything in quotes is text, and text is a string. Use the lower-case name."
+    reteach: "### The three everyday types"
+
+  - id: q02
+    type: predict-output
+    concept: inference
+    code: |
+      let qty = 2;
+      qty = qty + 1;
+      console.log(typeof qty, qty);
+    answer: "number 3"
+    explain: "TypeScript infers number from 2. Adding 1 keeps it a number: 3."
+    reteach: "### Inference: TypeScript reads the label off the value"
+
+  - id: q03
+    type: mcq
+    concept: inference
+    prompt: "A file says let qty = 2; and later qty = \"3\";. There is no annotation. What does tsc say?"
+    choices: ["Type 'string' is not assignable to type 'number', because qty was inferred as a number", "Nothing, because qty has no annotation", "Nothing, because \"3\" looks like a number", "It changes qty's type to string"]
+    answer: 0
+    explain: "Inference gives qty the type number from its first value. The type stays for good, so text can't go in later."
+    reteach: "### Inference: TypeScript reads the label off the value"
+
+  - id: q04
+    type: fill-blank
+    concept: annotations
+    goal: "Declare a box for whether the stall is open today. It may only hold true or false."
+    prompt: "let openToday: ___ = true;"
+    answers: ["boolean"]
+    explain: "true and false are the two values of the boolean type."
+    reteach: "### The three everyday types"
+
+  - id: q05
+    type: predict-output
+    concept: any-type
+    code: |
+      let price: any = "450";
+      console.log(price + 30);
+    answer: "45030"
+    explain: "any switches the checker off, so nobody warns that price is text. + glues text: \"450\" and 30 make \"45030\"."
+    reteach: "### Syntax: any"
+
+  - id: q06
+    type: mcq
+    concept: any-type
+    prompt: "Why do Dhaaga's projects avoid the any type?"
+    choices: ["It switches type checking off, so mistakes with that value go unreported", "It makes the code run slower in the browser", "It only works with numbers", "The browser refuses to run code that uses it"]
+    answer: 0
+    explain: "any accepts everything and allows everything. The types are erased before running, so it changes nothing at run time. It only hides mistakes."
+    reteach: "### Syntax: any"
+
+  - id: q07
+    type: predict-output
+    concept: conversions
+    code: |
+      const typed: string = " 7 ";
+      const qty: number = Number(typed.trim());
+      console.log(qty * 2);
+    answer: "14"
+    explain: "trim removes the spaces, Number turns \"7\" into 7, and 7 times 2 is 14."
+    reteach: "### Converting between types"
+
+  - id: q08
+    type: mcq
+    concept: conversions
+    prompt: "What type does (45000 / 100).toFixed(2) give back?"
+    choices: ["string", "number", "boolean", "any"]
+    answer: 0
+    explain: "toFixed gives text, \"450.00\", ready to show. It can't go into a number box."
+    reteach: "### Converting between types"
+
+  - id: q09
+    type: spot-the-bug
+    concept: conversions
+    code: |
+      const typed: string = "2";
+      const keychainPaise: number = 12000;
+      const qty: number = typed;
+      console.log(qty * keychainPaise);
+    bugLine: 3
+    explain: "typed is a string, and qty is labelled number. Convert it first: Number(typed)."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: annotations
+    prompt: "When should you write a variable's type yourself, instead of letting TypeScript infer it?"
+    choices: ["When the box is declared before it gets a value, like let total;", "On every const, always", "Whenever the value is a number", "Never: TypeScript can always work it out"]
+    answer: 0
+    explain: "With no value yet, there's nothing to infer from. Write let total: number; instead."
+    reteach: "### When to write the type yourself"
+
+  - id: q11
+    type: predict-output
+    concept: primitive-types
+    code: |
+      const shopName: string = "Dhaaga & Co.";
+      const handmade: boolean = true;
+      console.log(typeof shopName, typeof handmade);
+    answer: "string boolean"
+    explain: "The annotations are stripped before running. typeof reports the kind of each value."
+    reteach: "### The three everyday types"
+
+  - id: q12
+    type: mcq
+    concept: primitive-types
+    prompt: "Which annotation should you use for the name of a customer?"
+    choices: ["name: string", "name: String", "name: text", "name: str"]
+    answer: 0
+    explain: "The primitive type is string, in lower case. String with a capital S is a wrapper object, and TypeScript warns when you mix them."
+    reteach: "## Common mistakes"

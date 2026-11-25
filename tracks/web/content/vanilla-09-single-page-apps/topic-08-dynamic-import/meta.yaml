@@ -1,0 +1,23 @@
+id: vanilla-09-single-page-apps/topic-08-dynamic-import
+title: "Loading code when it is needed: dynamic import"
+order: 8
+minutes: 10
+prerequisites: [vanilla-09-single-page-apps/topic-07-optimistic-updates]
+concepts: [bundle-size, dynamic-import, code-splitting, load-once, lazy-loading-states]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0908
+  from: maya
+  title: "Everyone downloads the checkout, even people who only browse"
+  body: >
+    I checked the build: main.js is 400 KB, and more than half of it is the checkout, with its PIN code list and the UPI step.
+    Most visitors only look at the catalogue, and on 3G that half takes ten seconds.
+    Let's load the checkout's code only when someone actually opens the checkout.
+hints:
+  - "import(\"./checkout.js\") is a function-like call that returns a promise for the module. Put it in an arrow function so it runs only when called: () => import(\"./checkout.js\")."
+  - "lazy keeps one promise in a variable. If it is null, call loader() and keep the promise; either way, return it. In .catch, set it back to null and throw the error again."
+  - "showLazyView: outlet.textContent = LOADING; then in try, const module = await load(); outlet.replaceChildren(module.default(params)); and in catch, outlet.textContent = FAILED."
+review: true

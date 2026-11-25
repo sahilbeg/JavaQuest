@@ -1,0 +1,23 @@
+id: tsreact-12-professional-typescript/topic-03-typed-apis-end-to-end
+title: "Typed APIs end to end"
+order: 3
+minutes: 10
+prerequisites: [tsreact-12-professional-typescript/topic-02-strictness]
+concepts: [api-contract, trust-boundary, runtime-validation, dto-mapping, result-type, shared-and-generated-types]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1203
+  from: maya
+  title: "The API sent prices as text and the types believed it"
+  body: >
+    Yesterday afternoon the stock API sent price_paise as text for two hours, after a backend deploy.
+    Our code said "as Item[]", so TypeScript was happy, and Mrs. Joshi's cart showed a total of ₹4,50,00,120.00.
+    Please check every item where it enters the app, give the screens a Result they can't ignore, and write the order body in the server's names.
+hints:
+  - "Start parseItem with if (!isRecord(data)) return null; then take id, name, price_paise and stock out of data. Each one is unknown until you check it."
+  - "After the checks, return { id, name, paise: price_paise, stock }. parseItems is Array.isArray, then a loop that returns null as soon as one item fails."
+  - "In fetchItems, wrap everything in try/catch. const data: unknown = await response.json(); then const items = parseItems(data); and return the right Result for null or a list."
+review: true

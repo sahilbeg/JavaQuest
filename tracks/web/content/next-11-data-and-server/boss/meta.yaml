@@ -1,0 +1,24 @@
+id: next-11-data-and-server/boss
+title: "INC-11: Two customers get the same order number"
+order: 99
+minutes: 14
+prerequisites: [next-11-data-and-server/topic-10-environment-and-secrets]
+concepts: [concurrent-requests, read-then-write-race, unique-ids, idempotent-actions]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+ticket:
+  key: INC-11
+  from: theo
+  title: "order-20, twice"
+  body: >
+    Arjun here. At last night's 9 pm flash sale, Asha Rao and Ravi Joshi both got "Your order is order-20".
+    Only Ravi's order is in the system, and Asha paid ₹510 for a Golu we have no record of. This morning Raju deleted a
+    test order, and the next customer's order wiped out Neha Desai's order-19. And a few people who double-tapped Place
+    order now have two orders. The Rakhi sale starts tomorrow at 9. Please fix it before then.
+hints:
+  - "Bronze: two createOrder calls run at the same time. Both await countOrders() before either has saved, so both see the same count. The database has nextOrderNumber(), which never gives the same number twice."
+  - "Silver: counting orders can never give a safe id, because the count goes down when an order is deleted. const id = `order-${await nextOrderNumber()}`; fixes both."
+  - "Gold: keep a Map from requestId to the promise of its order, outside placeOrder. Look it up first; only when there's none, start createOrder and put its promise in the Map straight away, before any await. Then await it and redirect."
+review: false

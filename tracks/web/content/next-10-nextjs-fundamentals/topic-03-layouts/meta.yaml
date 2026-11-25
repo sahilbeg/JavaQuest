@@ -1,0 +1,24 @@
+id: next-10-nextjs-fundamentals/topic-03-layouts
+title: "Layouts shared by pages"
+order: 3
+minutes: 9
+prerequisites: [next-10-nextjs-fundamentals/topic-02-app-router-pages]
+concepts: [root-layout, children-prop, nested-layouts, layout-state, html-and-body]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1003
+  from: sana
+  title: "The free-delivery banner is missing on half the pages"
+  body: >
+    I put our "Free delivery in Pune above ₹999" banner on the home page, but customers on the About and Visit
+    pages never see it, and the footer is different on every page. Can every page share one header, banner and
+    footer? The Help pages also need their own heading and our WhatsApp number at the bottom.
+hints:
+  - "A layout is a component that gets the page as its children prop. Whatever it returns around {children} is shared by every page in its folder and below."
+  - "Inside the root layout's <body>: a <header> with two <p>s, then <main>{children}</main>, then <footer>Handmade in Pune</footer>."
+  - "HelpLayout returns <h2>Help centre</h2> before {children} and the WhatsApp <p> after it, all inside its <div>."
+review: true

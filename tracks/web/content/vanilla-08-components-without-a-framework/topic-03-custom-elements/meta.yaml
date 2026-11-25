@@ -1,0 +1,24 @@
+id: vanilla-08-components-without-a-framework/topic-03-custom-elements
+title: "Custom elements: your own HTML tags"
+order: 3
+minutes: 9
+prerequisites: [vanilla-08-components-without-a-framework/topic-02-templates-and-cloning]
+concepts: [custom-element-class, define, lifecycle-callbacks, observed-attributes, attributes-and-properties]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0803
+  from: maya
+  title: "Three copies of the stock badge, all slightly different"
+  body: >
+    Kavya here. The "Only 3 left" badge is copied into the catalogue, the item page and the cart, and each copy has
+    drifted. Yesterday the item page said "In stock" for the last Golu. Let's make it one real tag,
+    <stock-badge count="3">, that draws itself and follows its count.
+hints:
+  - "A custom element is a class that extends HTMLElement, registered once with customElements.define(\"stock-badge\", StockBadge). Without define, the tag is just an empty unknown element."
+  - "static observedAttributes = [\"count\"] makes the browser call attributeChangedCallback whenever count changes. connectedCallback runs when the badge joins the page. Both should call render()."
+  - "The getter is Number(this.getAttribute(\"count\") ?? 0) and the setter is this.setAttribute(\"count\", String(value)). render() sets textContent and toggles the classes out and low with classList.toggle(name, condition)."
+review: true

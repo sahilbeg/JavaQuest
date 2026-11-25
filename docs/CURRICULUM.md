@@ -455,3 +455,194 @@ These modules live in `tracks/web/` and make up the course `frontend-react` in `
 - Modules: 11
 - Lessons: 108
 - Graded units including incidents and features: 130
+
+# More Frontend stacks
+
+These modules also live in the web pool and reuse web-00 to web-07 (and, for Next.js, react-08 and react-09). Ticket keys carry the stack: `VAN-MMTT` (plain JavaScript), `TSX-MMTT` (TypeScript and React), `NXT-MMTT` (Next.js). Practice `code` means a Vitest exercise; TypeScript tickets are also type-checked with `tsc` (strict) before their checks run.
+
+## vanilla-08-components-without-a-framework: Components without a framework (project: A store without a framework, course: `frontend-vanilla`)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `vanilla-08-components-without-a-framework/topic-01-render-functions` | Render functions: building elements from data | code | `web-07-tooling/boss` |
+| 2 | `vanilla-08-components-without-a-framework/topic-02-templates-and-cloning` | The template element and cloning | code | `vanilla-08-components-without-a-framework/topic-01-render-functions` |
+| 3 | `vanilla-08-components-without-a-framework/topic-03-custom-elements` | Custom elements: your own HTML tags | code | `vanilla-08-components-without-a-framework/topic-02-templates-and-cloning` |
+| 4 | `vanilla-08-components-without-a-framework/topic-04-shadow-dom-and-slots` | Shadow DOM and slots | code | `vanilla-08-components-without-a-framework/topic-03-custom-elements` |
+| 5 | `vanilla-08-components-without-a-framework/topic-05-component-events` | Components talking: CustomEvent | code | `vanilla-08-components-without-a-framework/topic-04-shadow-dom-and-slots` |
+| 6 | `vanilla-08-components-without-a-framework/topic-06-a-small-store` | A small store with subscribers | code | `vanilla-08-components-without-a-framework/topic-05-component-events` |
+| 7 | `vanilla-08-components-without-a-framework/topic-07-forms-as-components` | Forms as components | code | `vanilla-08-components-without-a-framework/topic-06-a-small-store` |
+| 8 | `vanilla-08-components-without-a-framework/topic-08-keyed-list-updates` | Updating lists without redrawing everything | code | `vanilla-08-components-without-a-framework/topic-07-forms-as-components` |
+| 9 | `vanilla-08-components-without-a-framework/topic-09-styling-components` | Styling components: scoping and naming | code | `vanilla-08-components-without-a-framework/topic-08-keyed-list-updates` |
+| 10 | `vanilla-08-components-without-a-framework/topic-10-accessible-widgets` | Accessible widgets: a tab list with ARIA | code | `vanilla-08-components-without-a-framework/topic-09-styling-components` |
+| boss | `vanilla-08-components-without-a-framework/boss` | INC-08: The product grid redraws and loses what customers typed | code | `vanilla-08-components-without-a-framework/topic-10-accessible-widgets` |
+| mini-project | `vanilla-08-components-without-a-framework/mini-project` | FEAT-08: The catalogue as web components | code | `vanilla-08-components-without-a-framework/topic-10-accessible-widgets` |
+
+## vanilla-09-single-page-apps: Single-page apps (project: One page, many screens, course: `frontend-vanilla`)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `vanilla-09-single-page-apps/topic-01-what-is-an-spa` | What a single-page app is | quiz | `vanilla-08-components-without-a-framework/boss` |
+| 2 | `vanilla-09-single-page-apps/topic-02-hash-routing` | Routing with the hash | code | `vanilla-09-single-page-apps/topic-01-what-is-an-spa` |
+| 3 | `vanilla-09-single-page-apps/topic-03-history-routing` | Routing with the History API | code | `vanilla-09-single-page-apps/topic-02-hash-routing` |
+| 4 | `vanilla-09-single-page-apps/topic-04-store-and-views` | A store and views that follow it | code | `vanilla-09-single-page-apps/topic-03-history-routing` |
+| 5 | `vanilla-09-single-page-apps/topic-05-fetching-into-the-store` | Fetching data into the store | code | `vanilla-09-single-page-apps/topic-04-store-and-views` |
+| 6 | `vanilla-09-single-page-apps/topic-06-validation-at-scale` | Form validation at scale | code | `vanilla-09-single-page-apps/topic-05-fetching-into-the-store` |
+| 7 | `vanilla-09-single-page-apps/topic-07-optimistic-updates` | Optimistic updates and undo | code | `vanilla-09-single-page-apps/topic-06-validation-at-scale` |
+| 8 | `vanilla-09-single-page-apps/topic-08-dynamic-import` | Loading code when it is needed: dynamic import | code | `vanilla-09-single-page-apps/topic-07-optimistic-updates` |
+| 9 | `vanilla-09-single-page-apps/topic-09-offline-caching` | Offline: caching with a service worker | code | `vanilla-09-single-page-apps/topic-08-dynamic-import` |
+| 10 | `vanilla-09-single-page-apps/topic-10-testing-an-spa` | Testing a single-page app | code | `vanilla-09-single-page-apps/topic-09-offline-caching` |
+| boss | `vanilla-09-single-page-apps/boss` | INC-09: The back button shows the wrong page | code | `vanilla-09-single-page-apps/topic-10-testing-an-spa` |
+| mini-project | `vanilla-09-single-page-apps/mini-project` | FEAT-09: Checkout as a single-page app | code | `vanilla-09-single-page-apps/topic-10-testing-an-spa` |
+
+## vanilla-10-professional-vanilla: Professional frontend without a framework (project: Launch day, no framework, course: `frontend-vanilla`)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `vanilla-10-professional-vanilla/topic-01-rendering-performance` | Fast rendering: fragments, batching and requestAnimationFrame | code | `vanilla-09-single-page-apps/boss` |
+| 2 | `vanilla-10-professional-vanilla/topic-02-accessibility-in-depth` | Accessibility in depth: focus and keyboards | code | `vanilla-10-professional-vanilla/topic-01-rendering-performance` |
+| 3 | `vanilla-10-professional-vanilla/topic-03-security` | Security: XSS and safe rendering | code | `vanilla-10-professional-vanilla/topic-02-accessibility-in-depth` |
+| 4 | `vanilla-10-professional-vanilla/topic-04-progressive-enhancement` | Progressive enhancement: works without JavaScript | code | `vanilla-10-professional-vanilla/topic-03-security` |
+| 5 | `vanilla-10-professional-vanilla/topic-05-seo-and-sharing` | Search engines and sharing links | quiz | `vanilla-10-professional-vanilla/topic-04-progressive-enhancement` |
+| 6 | `vanilla-10-professional-vanilla/topic-06-deployment` | Deploying a static site | quiz | `vanilla-10-professional-vanilla/topic-05-seo-and-sharing` |
+| 7 | `vanilla-10-professional-vanilla/topic-07-code-reviews` | Code reviews for frontend work | quiz | `vanilla-10-professional-vanilla/topic-06-deployment` |
+| 8 | `vanilla-10-professional-vanilla/topic-08-interviews` | Frontend interviews without a framework | quiz | `vanilla-10-professional-vanilla/topic-07-code-reviews` |
+| boss | `vanilla-10-professional-vanilla/boss` | INC-10: The mock interview loop, no framework allowed | code | `vanilla-10-professional-vanilla/topic-08-interviews` |
+| mini-project | `vanilla-10-professional-vanilla/mini-project` | CAPSTONE: Launch the dhaaga.in store with plain JavaScript | code | `vanilla-10-professional-vanilla/topic-08-interviews` |
+
+## ts-08-typescript-basics: TypeScript basics (project: Typed prices, course: `frontend-react-ts`)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `ts-08-typescript-basics/topic-01-why-typescript` | Why TypeScript: catching mistakes before they run | quiz | `web-07-tooling/boss` |
+| 2 | `ts-08-typescript-basics/topic-02-basic-types` | Basic types and inference | code | `ts-08-typescript-basics/topic-01-why-typescript` |
+| 3 | `ts-08-typescript-basics/topic-03-typed-functions` | Typed functions | code | `ts-08-typescript-basics/topic-02-basic-types` |
+| 4 | `ts-08-typescript-basics/topic-04-arrays-and-tuples` | Arrays and tuples | code | `ts-08-typescript-basics/topic-03-typed-functions` |
+| 5 | `ts-08-typescript-basics/topic-05-object-types` | Object types and interfaces | code | `ts-08-typescript-basics/topic-04-arrays-and-tuples` |
+| 6 | `ts-08-typescript-basics/topic-06-unions-and-literals` | Union and literal types | code | `ts-08-typescript-basics/topic-05-object-types` |
+| 7 | `ts-08-typescript-basics/topic-07-narrowing` | Narrowing: checking before you use | code | `ts-08-typescript-basics/topic-06-unions-and-literals` |
+| 8 | `ts-08-typescript-basics/topic-08-aliases-and-optional` | Type aliases and optional values | code | `ts-08-typescript-basics/topic-07-narrowing` |
+| 9 | `ts-08-typescript-basics/topic-09-const-objects` | Fixed choices: as const and literal unions | code | `ts-08-typescript-basics/topic-08-aliases-and-optional` |
+| 10 | `ts-08-typescript-basics/topic-10-modules-and-tsconfig` | Typed modules and tsconfig | code | `ts-08-typescript-basics/topic-09-const-objects` |
+| boss | `ts-08-typescript-basics/boss` | INC-08: A price arrives as text and the total breaks | code | `ts-08-typescript-basics/topic-10-modules-and-tsconfig` |
+| mini-project | `ts-08-typescript-basics/mini-project` | FEAT-08: The typed price calculator | code | `ts-08-typescript-basics/topic-10-modules-and-tsconfig` |
+
+## ts-09-typescript-in-depth: TypeScript in depth (project: A typed catalogue engine, course: `frontend-react-ts`)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `ts-09-typescript-in-depth/topic-01-generics` | Generics: one function, many types | code | `ts-08-typescript-basics/boss` |
+| 2 | `ts-09-typescript-in-depth/topic-02-generic-constraints` | Generic constraints | code | `ts-09-typescript-in-depth/topic-01-generics` |
+| 3 | `ts-09-typescript-in-depth/topic-03-utility-types` | Utility types: Partial, Pick, Omit and Record | code | `ts-09-typescript-in-depth/topic-02-generic-constraints` |
+| 4 | `ts-09-typescript-in-depth/topic-04-discriminated-unions` | Discriminated unions | code | `ts-09-typescript-in-depth/topic-03-utility-types` |
+| 5 | `ts-09-typescript-in-depth/topic-05-type-guards` | Type guards | code | `ts-09-typescript-in-depth/topic-04-discriminated-unions` |
+| 6 | `ts-09-typescript-in-depth/topic-06-typed-classes` | Classes in TypeScript | code | `ts-09-typescript-in-depth/topic-05-type-guards` |
+| 7 | `ts-09-typescript-in-depth/topic-07-async-types` | Typing async code | code | `ts-09-typescript-in-depth/topic-06-typed-classes` |
+| 8 | `ts-09-typescript-in-depth/topic-08-validating-json` | unknown and validating JSON | code | `ts-09-typescript-in-depth/topic-07-async-types` |
+| 9 | `ts-09-typescript-in-depth/topic-09-mapped-types` | Mapped and template literal types | code | `ts-09-typescript-in-depth/topic-08-validating-json` |
+| 10 | `ts-09-typescript-in-depth/topic-10-typing-the-dom` | Typing the DOM | code | `ts-09-typescript-in-depth/topic-09-mapped-types` |
+| boss | `ts-09-typescript-in-depth/boss` | INC-09: An order status nobody handled | code | `ts-09-typescript-in-depth/topic-10-typing-the-dom` |
+| mini-project | `ts-09-typescript-in-depth/mini-project` | FEAT-09: The typed catalogue engine | code | `ts-09-typescript-in-depth/topic-10-typing-the-dom` |
+
+## tsreact-10-react-with-typescript: React with TypeScript (project: The typed store, course: `frontend-react-ts`)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `tsreact-10-react-with-typescript/topic-01-typed-components` | Typed components and props | code | `ts-09-typescript-in-depth/boss` |
+| 2 | `tsreact-10-react-with-typescript/topic-02-children-and-composition` | Children and composition | code | `tsreact-10-react-with-typescript/topic-01-typed-components` |
+| 3 | `tsreact-10-react-with-typescript/topic-03-typed-state` | Typed state | code | `tsreact-10-react-with-typescript/topic-02-children-and-composition` |
+| 4 | `tsreact-10-react-with-typescript/topic-04-typed-events` | Typed events | code | `tsreact-10-react-with-typescript/topic-03-typed-state` |
+| 5 | `tsreact-10-react-with-typescript/topic-05-typed-forms` | Typed forms | code | `tsreact-10-react-with-typescript/topic-04-typed-events` |
+| 6 | `tsreact-10-react-with-typescript/topic-06-typed-lists` | Typed lists and keys | code | `tsreact-10-react-with-typescript/topic-05-typed-forms` |
+| 7 | `tsreact-10-react-with-typescript/topic-07-unions-in-ui` | Showing states with unions | code | `tsreact-10-react-with-typescript/topic-06-typed-lists` |
+| 8 | `tsreact-10-react-with-typescript/topic-08-lifting-typed-state` | Lifting typed state | code | `tsreact-10-react-with-typescript/topic-07-unions-in-ui` |
+| 9 | `tsreact-10-react-with-typescript/topic-09-typed-styling` | Typed styling props | code | `tsreact-10-react-with-typescript/topic-08-lifting-typed-state` |
+| 10 | `tsreact-10-react-with-typescript/topic-10-generic-components` | Generic components | code | `tsreact-10-react-with-typescript/topic-09-typed-styling` |
+| boss | `tsreact-10-react-with-typescript/boss` | INC-10: The cart shows undefined for a missing item | code | `tsreact-10-react-with-typescript/topic-10-generic-components` |
+| mini-project | `tsreact-10-react-with-typescript/mini-project` | FEAT-10: The typed React catalogue | code | `tsreact-10-react-with-typescript/topic-10-generic-components` |
+
+## tsreact-11-typed-react-in-depth: Typed React in depth (project: Typed checkout, course: `frontend-react-ts`)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `tsreact-11-typed-react-in-depth/topic-01-typed-effects` | Typed effects | code | `tsreact-10-react-with-typescript/boss` |
+| 2 | `tsreact-11-typed-react-in-depth/topic-02-typed-fetching` | Typed data fetching | code | `tsreact-11-typed-react-in-depth/topic-01-typed-effects` |
+| 3 | `tsreact-11-typed-react-in-depth/topic-03-typed-custom-hooks` | Typed custom hooks | code | `tsreact-11-typed-react-in-depth/topic-02-typed-fetching` |
+| 4 | `tsreact-11-typed-react-in-depth/topic-04-typed-context` | Typed context | code | `tsreact-11-typed-react-in-depth/topic-03-typed-custom-hooks` |
+| 5 | `tsreact-11-typed-react-in-depth/topic-05-typed-reducers` | Typed reducers with action unions | code | `tsreact-11-typed-react-in-depth/topic-04-typed-context` |
+| 6 | `tsreact-11-typed-react-in-depth/topic-06-typed-routing` | Typed routing | code | `tsreact-11-typed-react-in-depth/topic-05-typed-reducers` |
+| 7 | `tsreact-11-typed-react-in-depth/topic-07-typed-validation` | Typed form validation | code | `tsreact-11-typed-react-in-depth/topic-06-typed-routing` |
+| 8 | `tsreact-11-typed-react-in-depth/topic-08-typed-refs` | Typed refs | code | `tsreact-11-typed-react-in-depth/topic-07-typed-validation` |
+| 9 | `tsreact-11-typed-react-in-depth/topic-09-typed-performance` | Performance with types | code | `tsreact-11-typed-react-in-depth/topic-08-typed-refs` |
+| 10 | `tsreact-11-typed-react-in-depth/topic-10-typed-error-boundaries` | Typed error boundaries | code | `tsreact-11-typed-react-in-depth/topic-09-typed-performance` |
+| boss | `tsreact-11-typed-react-in-depth/boss` | INC-11: A checkout step nobody can reach | code | `tsreact-11-typed-react-in-depth/topic-10-typed-error-boundaries` |
+| mini-project | `tsreact-11-typed-react-in-depth/mini-project` | FEAT-11: Typed checkout with a UPI step | code | `tsreact-11-typed-react-in-depth/topic-10-typed-error-boundaries` |
+
+## tsreact-12-professional-typescript: Professional TypeScript (project: Launch day, typed, course: `frontend-react-ts`)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `tsreact-12-professional-typescript/topic-01-testing-typed-components` | Testing typed components | code | `tsreact-11-typed-react-in-depth/boss` |
+| 2 | `tsreact-12-professional-typescript/topic-02-strictness` | Strict mode and tsconfig in depth | code | `tsreact-12-professional-typescript/topic-01-testing-typed-components` |
+| 3 | `tsreact-12-professional-typescript/topic-03-typed-apis-end-to-end` | Typed APIs end to end | code | `tsreact-12-professional-typescript/topic-02-strictness` |
+| 4 | `tsreact-12-professional-typescript/topic-04-migrating-to-typescript` | Moving a JavaScript file to TypeScript | code | `tsreact-12-professional-typescript/topic-03-typed-apis-end-to-end` |
+| 5 | `tsreact-12-professional-typescript/topic-05-deployment-and-ci` | Type checks in CI and deployment | quiz | `tsreact-12-professional-typescript/topic-04-migrating-to-typescript` |
+| 6 | `tsreact-12-professional-typescript/topic-06-code-reviews` | Code reviews for TypeScript | quiz | `tsreact-12-professional-typescript/topic-05-deployment-and-ci` |
+| 7 | `tsreact-12-professional-typescript/topic-07-big-codebases` | Finding your way in a big typed codebase | quiz | `tsreact-12-professional-typescript/topic-06-code-reviews` |
+| 8 | `tsreact-12-professional-typescript/topic-08-interviews` | TypeScript interviews | quiz | `tsreact-12-professional-typescript/topic-07-big-codebases` |
+| boss | `tsreact-12-professional-typescript/boss` | INC-12: The mock TypeScript interview loop | code | `tsreact-12-professional-typescript/topic-08-interviews` |
+| mini-project | `tsreact-12-professional-typescript/mini-project` | CAPSTONE: Launch the dhaaga.in store in TypeScript | code | `tsreact-12-professional-typescript/topic-08-interviews` |
+
+## next-10-nextjs-fundamentals: Next.js fundamentals (project: dhaaga.in on Next.js, course: `frontend-next`)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `next-10-nextjs-fundamentals/topic-01-why-nextjs` | Why Next.js: pages, servers and React together | quiz | `react-09-react-in-depth/boss` |
+| 2 | `next-10-nextjs-fundamentals/topic-02-app-router-pages` | The app router: pages from folders | code | `next-10-nextjs-fundamentals/topic-01-why-nextjs` |
+| 3 | `next-10-nextjs-fundamentals/topic-03-layouts` | Layouts shared by pages | code | `next-10-nextjs-fundamentals/topic-02-app-router-pages` |
+| 4 | `next-10-nextjs-fundamentals/topic-04-links-and-navigation` | Links and navigation | code | `next-10-nextjs-fundamentals/topic-03-layouts` |
+| 5 | `next-10-nextjs-fundamentals/topic-05-server-and-client-components` | Server and client components | code | `next-10-nextjs-fundamentals/topic-04-links-and-navigation` |
+| 6 | `next-10-nextjs-fundamentals/topic-06-dynamic-routes` | Dynamic routes: one page per item | code | `next-10-nextjs-fundamentals/topic-05-server-and-client-components` |
+| 7 | `next-10-nextjs-fundamentals/topic-07-loading-and-error` | Loading and error pages | code | `next-10-nextjs-fundamentals/topic-06-dynamic-routes` |
+| 8 | `next-10-nextjs-fundamentals/topic-08-metadata` | Metadata: titles and sharing | code | `next-10-nextjs-fundamentals/topic-07-loading-and-error` |
+| 9 | `next-10-nextjs-fundamentals/topic-09-images-and-fonts` | Images and fonts in Next.js | quiz | `next-10-nextjs-fundamentals/topic-08-metadata` |
+| 10 | `next-10-nextjs-fundamentals/topic-10-styling-in-next` | Styling in Next.js | code | `next-10-nextjs-fundamentals/topic-09-images-and-fonts` |
+| boss | `next-10-nextjs-fundamentals/boss` | INC-10: The item page shows the wrong elephant | code | `next-10-nextjs-fundamentals/topic-10-styling-in-next` |
+| mini-project | `next-10-nextjs-fundamentals/mini-project` | FEAT-10: The catalogue on Next.js | code | `next-10-nextjs-fundamentals/topic-10-styling-in-next` |
+
+## next-11-data-and-server: Data and the server (project: Orders on the server, course: `frontend-next`)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `next-11-data-and-server/topic-01-server-fetching` | Fetching data in server components | code | `next-10-nextjs-fundamentals/boss` |
+| 2 | `next-11-data-and-server/topic-02-caching-and-revalidation` | Caching and revalidation | code | `next-11-data-and-server/topic-01-server-fetching` |
+| 3 | `next-11-data-and-server/topic-03-route-handlers` | Route handlers: your own API | code | `next-11-data-and-server/topic-02-caching-and-revalidation` |
+| 4 | `next-11-data-and-server/topic-04-server-actions` | Server actions | code | `next-11-data-and-server/topic-03-route-handlers` |
+| 5 | `next-11-data-and-server/topic-05-forms-with-actions` | Forms with server actions | code | `next-11-data-and-server/topic-04-server-actions` |
+| 6 | `next-11-data-and-server/topic-06-data-layer` | A data layer for orders | code | `next-11-data-and-server/topic-05-forms-with-actions` |
+| 7 | `next-11-data-and-server/topic-07-sessions-and-cookies` | Sessions and cookies | code | `next-11-data-and-server/topic-06-data-layer` |
+| 8 | `next-11-data-and-server/topic-08-proxy-and-redirects` | Proxy, redirects and guards | code | `next-11-data-and-server/topic-07-sessions-and-cookies` |
+| 9 | `next-11-data-and-server/topic-09-streaming-and-suspense` | Streaming with Suspense | code | `next-11-data-and-server/topic-08-proxy-and-redirects` |
+| 10 | `next-11-data-and-server/topic-10-environment-and-secrets` | Environment variables and secrets | code | `next-11-data-and-server/topic-09-streaming-and-suspense` |
+| boss | `next-11-data-and-server/boss` | INC-11: Two customers get the same order number | code | `next-11-data-and-server/topic-10-environment-and-secrets` |
+| mini-project | `next-11-data-and-server/mini-project` | FEAT-11: Orders with server actions | code | `next-11-data-and-server/topic-10-environment-and-secrets` |
+
+## next-12-production-nextjs: Production Next.js (project: Launch on Next.js, course: `frontend-next`)
+
+| # | Topic ID | Title | Practice | Prerequisites |
+|---|---|---|---|---|
+| 1 | `next-12-production-nextjs/topic-01-testing-next-apps` | Testing a Next.js app | code | `next-11-data-and-server/boss` |
+| 2 | `next-12-production-nextjs/topic-02-performance` | Performance in Next.js | code | `next-12-production-nextjs/topic-01-testing-next-apps` |
+| 3 | `next-12-production-nextjs/topic-03-accessibility-and-seo` | Accessibility and SEO | code | `next-12-production-nextjs/topic-02-performance` |
+| 4 | `next-12-production-nextjs/topic-04-security` | Security: secrets, headers and input | code | `next-12-production-nextjs/topic-03-accessibility-and-seo` |
+| 5 | `next-12-production-nextjs/topic-05-deploying-next` | Deploying Next.js | quiz | `next-12-production-nextjs/topic-04-security` |
+| 6 | `next-12-production-nextjs/topic-06-observability` | Logs and errors in production | quiz | `next-12-production-nextjs/topic-05-deploying-next` |
+| 7 | `next-12-production-nextjs/topic-07-code-reviews` | Code reviews for Next.js | quiz | `next-12-production-nextjs/topic-06-observability` |
+| 8 | `next-12-production-nextjs/topic-08-interviews` | Next.js interviews | quiz | `next-12-production-nextjs/topic-07-code-reviews` |
+| boss | `next-12-production-nextjs/boss` | INC-12: The mock Next.js interview loop | code | `next-12-production-nextjs/topic-08-interviews` |
+| mini-project | `next-12-production-nextjs/mini-project` | CAPSTONE: Launch dhaaga.in on Next.js | code | `next-12-production-nextjs/topic-08-interviews` |
+
+## More stacks totals
+
+- Modules: 11
+- Lessons: 104
+- Graded units including incidents and features: 126

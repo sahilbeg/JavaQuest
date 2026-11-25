@@ -1,0 +1,22 @@
+id: tsreact-12-professional-typescript/topic-06-code-reviews
+title: "Code reviews for TypeScript"
+order: 6
+minutes: 10
+prerequisites: [tsreact-12-professional-typescript/topic-05-deployment-and-ci]
+concepts: [review-order, unsafe-escapes, honest-types, exhaustive-unions, simple-types, review-comments]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: TSX-1206
+  from: maya
+  title: "Your first TypeScript review"
+  body: >
+    You're on the review rota for TypeScript pull requests from today.
+    The first one adds a WALLET payment mode for the Diwali sale. CI is green, and the author says "the types all pass".
+    Green types can still lie. Review it properly, label your comments, and tell me what you'd block and what you'd let go.
+hints:
+  - "Search the diff for the places where checking is switched off: any, as, !, @ts-ignore and @ts-expect-error. Each one needs a reason."
+  - "A new member in a union is a hunt: find every switch on it. A default branch can swallow the new case without a word."
+  - "Label each comment: issue (blocking), suggestion, question, nitpick (non-blocking), praise. Block for wrong behaviour and lying types, never for taste."
+review: true

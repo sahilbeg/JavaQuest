@@ -1,0 +1,142 @@
+topic: ts-09-typescript-in-depth/topic-03-utility-types
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: partial
+    prompt: "What does Partial<Item> do to Item's fields?"
+    choices:
+      - "Makes every field optional"
+      - "Removes every field"
+      - "Makes every field read-only"
+      - "Keeps only the first half of the fields"
+    answer: 0
+    explain: "Partial<T> keeps every field but adds a question mark to each, which is what an edit form needs."
+    reteach: "### Syntax: Partial"
+
+  - id: q02
+    type: mcq
+    concept: pick-and-omit
+    variants:
+      - { prompt: "Item has id, name, colour, paise and stock. Which fields does Pick<Item, \"id\" | \"paise\"> have?", choices: ["id and paise", "name, colour and stock", "All five, with id and paise optional", "None"], answer: 0 }
+      - { prompt: "Item has id, name, colour, paise and stock. Which fields does Omit<Item, \"id\" | \"paise\"> have?", choices: ["name, colour and stock", "id and paise", "All five, with id and paise optional", "None"], answer: 0 }
+    explain: "Pick keeps only the keys you name. Omit keeps every key except the ones you name."
+    reteach: "### Syntax: Pick and Omit"
+
+  - id: q03
+    type: fill-blank
+    concept: pick-and-omit
+    goal: "Make a type for a brand new item: every field of Item except its id."
+    prompt: 'type NewItem = ___<Item, "id">;'
+    answers: ["Omit"]
+    explain: "Omit<T, Keys> keeps everything except the keys you name."
+    reteach: "### Syntax: Pick and Omit"
+
+  - id: q04
+    type: predict-output
+    concept: partial
+    code: |
+      interface Item {
+        name: string;
+        paise: number;
+      }
+      const golu: Item = { name: "Golu the elephant", paise: 45000 };
+      const changes: Partial<Item> = { paise: 42000 };
+      const updated: Item = { ...golu, ...changes };
+      console.log(updated.paise, changes.name);
+    answer: "42000 undefined"
+    explain: "The spread puts the new price over golu. changes itself only holds paise, so changes.name is undefined."
+    reteach: "### Syntax: Partial"
+
+  - id: q05
+    type: mcq
+    concept: record
+    prompt: 'type Code = "CST" | "KEY" | "AMI". What does TypeScript say about const prices: Record<Code, number> = { CST: 15000, KEY: 12000 }?'
+    choices:
+      - "An error: the AMI key is missing"
+      - "Nothing: Record keys are optional"
+      - "An error: Record only allows string values"
+      - "Nothing, and prices.AMI is 0"
+    answer: 0
+    explain: "With a union of literal keys, Record needs every key. That is how a new code can never be forgotten."
+    reteach: "### Syntax: Record"
+
+  - id: q06
+    type: fill-blank
+    concept: record
+    goal: "Type an object that holds one grams count for each yarn colour name."
+    prompt: "const yarn: ___<Colour, number> = { Mint: 200, Indigo: 150 };"
+    answers: ["Record"]
+    explain: "Record<Keys, Value> is an object whose keys are Keys and whose values are all Value."
+    reteach: "### Syntax: Record"
+
+  - id: q07
+    type: predict-output
+    concept: record
+    code: |
+      type Code = "CST" | "KEY" | "AMI";
+      const prices: Record<Code, number> = { CST: 15000, KEY: 12000, AMI: 45000 };
+      const cart: Code[] = ["KEY", "KEY", "AMI"];
+      let total = 0;
+      for (const code of cart) {
+        total += prices[code];
+      }
+      console.log(total);
+    answer: "69000"
+    explain: "Two keychains at 12000 and one amigurumi at 45000 make 69000 paise."
+    reteach: "### Syntax: Record"
+
+  - id: q08
+    type: spot-the-bug
+    concept: readonly-and-required
+    code: |
+      interface Item {
+        id: string;
+        paise: number;
+      }
+      const golu: Readonly<Item> = { id: "DC-1042", paise: 45000 };
+      console.log(golu.paise);
+      golu.paise = 42000;
+    bugLine: 7
+    explain: "Readonly<Item> makes every field read-only, so TypeScript refuses the assignment. Make a new object with a spread instead."
+    reteach: "### Syntax: Readonly and Required"
+
+  - id: q09
+    type: mcq
+    concept: readonly-and-required
+    prompt: "type Draft = Partial<Item>. What is Required<Draft>?"
+    choices:
+      - "A type where every field of Item is required again"
+      - "A type with no fields"
+      - "The same as Partial<Item>"
+      - "A type where every field is read-only"
+    answer: 0
+    explain: "Required<T> removes the question marks that Partial added."
+    reteach: "### Syntax: Readonly and Required"
+
+  - id: q10
+    type: mcq
+    concept: combining-utilities
+    prompt: 'What does Partial<Omit<Item, "id">> describe?'
+    choices:
+      - "Any of Item's fields except id, each one optional"
+      - "Only the id field, optional"
+      - "Every field of Item, all required"
+      - "Item's fields with id required and the rest removed"
+    answer: 0
+    explain: "Read from the inside out: Omit drops id, then Partial makes what is left optional. That fits an edit form that can't change the id."
+    reteach: "### Combining utility types"
+
+  - id: q11
+    type: mcq
+    concept: pick-and-omit
+    prompt: 'What does TypeScript say about type Card = Pick<Item, "id" | "price"> when Item has no price field?'
+    choices:
+      - "An error: \"price\" doesn't satisfy the constraint keyof Item"
+      - "Nothing, and Card has only id"
+      - "Nothing, and price has the type any"
+      - "Nothing until the code runs"
+    answer: 0
+    explain: "Pick only accepts real keys of the type, so a typo or an old field name is caught straight away."
+    reteach: "## Common mistakes"

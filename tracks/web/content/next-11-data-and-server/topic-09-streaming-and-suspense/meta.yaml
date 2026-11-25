@@ -1,0 +1,24 @@
+id: next-11-data-and-server/topic-09-streaming-and-suspense
+title: "Streaming with Suspense"
+order: 9
+minutes: 9
+prerequisites: [next-11-data-and-server/topic-08-proxy-and-redirects]
+concepts: [streaming, suspense-boundaries, loading-file, use-a-promise, start-requests-early]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1109
+  from: maya
+  title: "Meera Aunty's dashboard is white for eight seconds"
+  body: >
+    Kavya here. Meera Aunty opens the staff dashboard with her chai every morning, and it stays completely white
+    for eight seconds. The sales report is slow, and the page waits for it before showing anything at all, even
+    the heading. Let's show the page at once, and let each slow card fill in when its data is ready.
+hints:
+  - "In each card, read the data with const sales = use(salesPromise); React waits for the promise, and the nearest Suspense shows its fallback meanwhile."
+  - "In the page, start both requests without await: const salesPromise = getTodaySales(); and pass the promises to the cards as props. The page itself must not be async or await anything."
+  - "Wrap each card in its own boundary: <Suspense fallback={<p>Loading today's sales...</p>}> and <Suspense fallback={<p>Loading low stock...</p>}>, so each one fills in on its own."
+review: true

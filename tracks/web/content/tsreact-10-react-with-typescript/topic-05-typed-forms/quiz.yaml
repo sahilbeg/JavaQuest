@@ -1,0 +1,135 @@
+topic: tsreact-10-react-with-typescript/topic-05-typed-forms
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: controlled-inputs
+    prompt: "What makes an input controlled?"
+    choices:
+      - "Its value comes from state, and its onChange updates that state."
+      - "It has an id and a label."
+      - "It is inside a <form>."
+      - "It has type=\"text\"."
+    answer: 0
+    explain: "A controlled input shows state and changes it on every keystroke. State is the source of truth."
+    reteach: "### Syntax: a controlled input"
+
+  - id: q02
+    type: mcq
+    concept: controlled-inputs
+    prompt: "An input has value={name} but no onChange. What happens when a customer types?"
+    choices:
+      - "Nothing changes in the box, and React warns in the console."
+      - "The text appears, and name updates by itself."
+      - "The page reloads."
+      - "tsc refuses to compile any input without onChange."
+    answer: 0
+    explain: "The box always shows name, and nothing ever changes name. Add onChange={(e) => setName(e.target.value)}."
+    reteach: "### Syntax: a controlled input"
+
+  - id: q03
+    type: mcq
+    concept: form-state-object
+    prompt: "Why keep the form in one useState<OrderRequest> object?"
+    choices:
+      - "The interface describes the whole request, and that same object can be sent on."
+      - "React allows only one useState per component."
+      - "Objects in state never need to be copied."
+      - "It makes every field optional."
+    answer: 0
+    explain: "One typed object keeps the fields together, and tsc checks every one of them."
+    reteach: "### One typed object for the whole form"
+
+  - id: q04
+    type: mcq
+    concept: keyof-updates
+    prompt: "OrderRequest is { name: string; qty: number; giftWrap: boolean }. What is keyof OrderRequest?"
+    choices:
+      - "\"name\" | \"qty\" | \"giftWrap\""
+      - "string | number | boolean"
+      - "OrderRequest[]"
+      - "\"OrderRequest\""
+    answer: 0
+    explain: "keyof gives the union of the property names, not their types."
+    reteach: "### Syntax: one update function for every field"
+
+  - id: q05
+    type: mcq
+    concept: keyof-updates
+    prompt: "With update<K extends keyof OrderRequest>(key: K, value: OrderRequest[K]), which call is a type error?"
+    choices: ["update(\"qty\", \"3\")", "update(\"qty\", 3)", "update(\"giftWrap\", false)", "update(\"name\", \"Asha\")"]
+    answer: 0
+    explain: "For key \"qty\", value must be OrderRequest[\"qty\"], which is number. \"3\" is a string."
+    reteach: "### Syntax: one update function for every field"
+
+  - id: q06
+    type: fill-blank
+    concept: keyof-updates
+    goal: "Make a copy of the form with only the named field changed to the new value."
+    prompt: "setForm({ ...form, ___: value });"
+    answers: ["[key]"]
+    explain: "Square brackets make a computed property name: the field named by key."
+    reteach: "### Syntax: one update function for every field"
+
+  - id: q07
+    type: predict-output
+    concept: select-and-checkbox
+    code: |
+      const fromSelect: string = "3";
+      const qty: number = Number(fromSelect);
+      console.log(fromSelect + 1);
+      console.log(qty + 1);
+    answer: "31\n4"
+    explain: "Form values are text, so \"3\" + 1 joins strings. After Number, it adds."
+    reteach: "### Syntax: selects and checkboxes"
+
+  - id: q08
+    type: spot-the-bug
+    concept: select-and-checkbox
+    prompt: "The gift-wrap checkbox fails to type-check, because giftWrap is a boolean. Which line?"
+    code: |
+      <input
+        id="gift"
+        type="checkbox"
+        checked={form.giftWrap}
+        onChange={(e) => update("giftWrap", e.target.value)}
+      />
+    bugLine: 5
+    explain: "A checkbox reports its state in e.target.checked, a boolean. Its value is the text \"on\"."
+    reteach: "### Syntax: selects and checkboxes"
+
+  - id: q09
+    type: mcq
+    concept: select-and-checkbox
+    prompt: "The item select gives e.target.value, a string, but item must be an ItemCode. What is the safest fix?"
+    choices:
+      - "Check it with a type guard: if (isItemCode(value)) update(\"item\", value);"
+      - "Write update(\"item\", value as ItemCode);"
+      - "Change item's type to any."
+      - "Use Number(value)."
+    answer: 0
+    explain: "A guard really checks the value. as only tells tsc to stop checking."
+    reteach: "### Text that should be a union"
+
+  - id: q10
+    type: fill-blank
+    concept: submit-events
+    goal: "Stop the browser from reloading the page when the order form is sent."
+    prompt: "  e.___();"
+    answers: ["preventDefault"]
+    explain: "preventDefault cancels the browser's default action for the event."
+    reteach: "### Syntax: submitting the form"
+
+  - id: q11
+    type: mcq
+    concept: submit-events
+    prompt: "Where does the submit handler go?"
+    choices:
+      - "On the form: <form onSubmit={handleSubmit}>"
+      - "On every input: <input onSubmit={handleSubmit} />"
+      - "On the page: document.onsubmit = handleSubmit"
+      - "On the label of the first field"
+    answer: 0
+    explain: "The form fires submit, from the submit button or from Enter in a text box."
+    reteach: "### Syntax: submitting the form"

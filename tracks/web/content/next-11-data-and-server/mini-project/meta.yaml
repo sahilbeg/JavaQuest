@@ -1,0 +1,24 @@
+id: next-11-data-and-server/mini-project
+title: "FEAT-11: Orders with server actions"
+order: 100
+minutes: 15
+prerequisites: [next-11-data-and-server/topic-10-environment-and-secrets]
+concepts: [data-layer-orders, order-form-action, status-action, order-status-api, staff-orders-page]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+ticket:
+  key: FEAT-11
+  from: priya
+  title: "Take orders on the website, and let us follow them"
+  body: >
+    Beta, I want the whole order story on dhaaga.in. A customer picks an item and gives her name and phone, and the
+    order is saved with a proper number. In the shop, Raju moves each order along, new to packed to shipped to
+    delivered, with one button. And when a customer messages "where is order-20?", the WhatsApp bot should be able
+    to ask the website, without ever seeing anybody's phone number.
+hints:
+  - "Start with createOrder in the data layer: price each line from findItem, throw for an unknown item, add ₹60 delivery unless the items come to more than ₹999, then save { id, name, phone, lines, totalPaise, status: \"NEW\" } with the next number."
+  - "placeOrder checks the four fields like topic 5 and returns { errors, values }; on success it creates the order, calls revalidatePath(\"/orders\"), then redirect(`/order/${order.id}`) last. advanceOrder looks up NEXT_STATUS[order.status] and refuses when there is none."
+  - "The route answers only { id, status, total } with total from rupees(). The page lists listOrders() and gives every order that has a next status a form with a hidden orderId and a Move to PACKED (or SHIPPED, DELIVERED) button."
+review: false

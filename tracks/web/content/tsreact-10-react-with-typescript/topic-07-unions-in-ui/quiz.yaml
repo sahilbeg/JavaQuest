@@ -1,0 +1,144 @@
+topic: tsreact-10-react-with-typescript/topic-07-unions-in-ui
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: conditional-rendering
+    prompt: "Which way shows a Notify me button only when the item is sold out, and nothing otherwise?"
+    choices:
+      - "{soldOut && <button type=\"button\">Notify me</button>}"
+      - "{if (soldOut) <button type=\"button\">Notify me</button>}"
+      - "<button type=\"button\" if={soldOut}>Notify me</button>"
+      - "{soldOut || <button type=\"button\">Notify me</button>}"
+    answer: 0
+    explain: "&& gives the button when soldOut is true, and false (drawn as nothing) when it isn't. An if statement cannot go inside braces."
+    reteach: "### Syntax: choosing what to show"
+
+  - id: q02
+    type: mcq
+    concept: conditional-rendering
+    prompt: "A component should draw nothing at all when the bag is empty. What can it return?"
+    choices: ["null", "\"\" inside a <div>", "undefined.toString()", "<></> with a space inside"]
+    answer: 0
+    explain: "Returning null draws nothing. The other choices draw an element, crash, or draw a space."
+    reteach: "### Syntax: choosing what to show"
+
+  - id: q03
+    type: fill-blank
+    concept: ternary-and-and
+    goal: "Pick between two labels: Sold out when soldOut is true, In stock otherwise."
+    prompt: "<p>{soldOut ___ \"Sold out\" : \"In stock\"}</p>"
+    answers: ["?"]
+    explain: "The ternary is condition ? valueIfTrue : valueIfFalse."
+    reteach: "### Syntax: choosing what to show"
+
+  - id: q04
+    type: predict-output
+    concept: ternary-and-and
+    code: |
+      const count: number = 0;
+      const shown = count && `${count} left`;
+      console.log(shown);
+      console.log(count > 0 && `${count} left`);
+    answer: "0\nfalse"
+    explain: "0 && ... gives 0, which React would draw. The comparison gives false, which React draws as nothing."
+    reteach: "### When && shows a 0"
+
+  - id: q05
+    type: mcq
+    concept: union-props
+    prompt: "Why is a union with a kind field better than soldOut: boolean plus optional count and days?"
+    choices:
+      - "Each state carries only its own fields, so impossible mixes are type errors."
+      - "Unions draw faster in React."
+      - "Booleans cannot be props."
+      - "Optional fields are not allowed in strict mode."
+    answer: 0
+    explain: "Flags allow nonsense like a sold-out item with a count. A union lists exactly the valid states."
+    reteach: "### The trouble with flags"
+
+  - id: q06
+    type: spot-the-bug
+    concept: union-props
+    prompt: "Stock is { kind: \"in-stock\"; count: number } | { kind: \"sold-out\"; backOn: string | null }. Which line fails to type-check?"
+    code: |
+      const golu: Stock = { kind: "in-stock", count: 2 };
+      const booties: Stock = { kind: "sold-out", backOn: null };
+      const bag: Stock = { kind: "sold-out", count: 0 };
+      const mint: Stock = { kind: "sold-out", backOn: "14 Dec" };
+    bugLine: 3
+    explain: "The sold-out state has backOn and no count, so line 3 is not a valid Stock."
+    reteach: "### Syntax: a union for the states"
+
+  - id: q07
+    type: mcq
+    concept: switch-rendering
+    prompt: "Inside case \"made-to-order\": of switch (stock.kind), what can you use?"
+    choices:
+      - "stock.days, because TypeScript has narrowed stock to the made-to-order state"
+      - "stock.count, because every state has a count"
+      - "Only stock.kind; other fields need a cast"
+      - "Nothing; switch does not narrow types"
+    answer: 0
+    explain: "Checking the shared kind field narrows the union to one state with its own fields."
+    reteach: "### Syntax: a switch that returns JSX"
+
+  - id: q08
+    type: predict-output
+    concept: switch-rendering
+    code: |
+      type Delivery =
+        | { kind: "packing" }
+        | { kind: "on-the-way"; rider: string };
+      function status(d: Delivery): string {
+        switch (d.kind) {
+          case "packing":
+            return "Packing";
+          case "on-the-way":
+            return `With ${d.rider}`;
+        }
+      }
+      console.log(status({ kind: "on-the-way", rider: "Sunil" }));
+      console.log(status({ kind: "packing" }));
+    answer: "With Sunil\nPacking"
+    explain: "Each call takes the case matching its kind."
+    reteach: "### Syntax: a switch that returns JSX"
+
+  - id: q09
+    type: fill-blank
+    concept: exhaustive-check
+    goal: "Make tsc fail here if a new kind of stock is ever added without its own case."
+    prompt: "const unhandled: ___ = stock;"
+    answers: ["never"]
+    explain: "After every known case, stock is never. A new, unhandled kind is not, so the assignment fails."
+    reteach: "### Syntax: the exhaustive check"
+
+  - id: q10
+    type: mcq
+    concept: exhaustive-check
+    prompt: "A teammate adds { kind: \"pre-order\"; month: string } to Stock. The badge switch has the never check in default. What happens?"
+    choices:
+      - "tsc reports an error at the never line until a pre-order case is added."
+      - "The badge shows pre-order automatically."
+      - "Nothing; the page quietly shows no badge for pre-orders."
+      - "React throws when it renders a pre-order."
+    answer: 0
+    explain: "The new kind reaches default with a real type, which can't be assigned to never."
+    reteach: "### Syntax: the exhaustive check"
+
+  - id: q11
+    type: spot-the-bug
+    concept: ternary-and-and
+    prompt: "When no Golus are left, a stray 0 appears on the page. Which line?"
+    code: |
+      function Left({ count }: { count: number }) {
+        return (
+          <div className="left">
+            {count && <p>{count} left</p>}
+          </div>
+        );
+      }
+    bugLine: 4
+    explain: "0 && ... gives 0, and React draws numbers. Write {count > 0 && <p>{count} left</p>}."
+    reteach: "### When && shows a 0"

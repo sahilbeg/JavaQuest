@@ -1,0 +1,135 @@
+topic: ts-09-typescript-in-depth/topic-07-async-types
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: promise-type
+    variants:
+      - { prompt: "What does the type Promise<number> describe?", choices: ["A promise that will be fulfilled with a number", "A number that is ready now", "A function that returns a number", "An array of numbers"], answer: 0 }
+      - { prompt: "A promise is fulfilled when a timer ends, with no useful value. What is its type?", choices: ["Promise<void>", "Promise<undefined[]>", "void", "Promise<never>"], answer: 0 }
+    explain: "Promise<T> is a promise of a T. void means there is no useful value, so Promise<void> only says when something finished."
+    reteach: "### Syntax: the Promise type"
+
+  - id: q02
+    type: fill-blank
+    concept: async-return-types
+    goal: "Give this async function a return type for a stock count that arrives later."
+    prompt: "async function stockOf(id: string): ___ {"
+    answers: ["Promise<number>"]
+    explain: "An async function always returns a promise, so its return type wraps the plain type: Promise<number>."
+    reteach: "### Syntax: typing an async function"
+
+  - id: q03
+    type: mcq
+    concept: async-return-types
+    prompt: "What does TypeScript say about async function stockOf(id: string): number { return 3; }?"
+    choices:
+      - "An error: an async function's return type must be a Promise, such as Promise<number>"
+      - "Nothing: it returns 3"
+      - "Nothing, but the result is any"
+      - "An error: async functions can't return numbers"
+    answer: 0
+    explain: "async functions always return a promise. You return 3 inside, and the type is Promise<number>."
+    reteach: "### Syntax: typing an async function"
+
+  - id: q04
+    type: spot-the-bug
+    concept: forgetting-await
+    code: |
+      async function stockOf(id: string): Promise<number> {
+        return id === "DC-1042" ? 3 : 0;
+      }
+      async function badge(id: string): Promise<string> {
+        const stock = stockOf(id);
+        return stock > 0 ? "In stock" : "Sold out";
+      }
+    bugLine: 5
+    explain: "Without await, stock is a Promise<number>, so comparing it with 0 is a type error. Write const stock = await stockOf(id);."
+    reteach: "### Forgetting await is caught"
+
+  - id: q05
+    type: predict-output
+    concept: promise-all-types
+    code: |
+      function later<T>(value: T): Promise<T> {
+        return new Promise((resolve) => setTimeout(() => resolve(value), 5));
+      }
+      async function line(): Promise<string> {
+        const [name, paise] = await Promise.all([later("Mint keychain"), later(12000)]);
+        return `${name} costs ${paise / 100}`;
+      }
+      line().then((text) => console.log(text));
+    answer: "Mint keychain costs 120"
+    explain: "Promise.all keeps the order and each value's type: name is a string, and paise is a number."
+    reteach: "### Promise.all keeps each type"
+
+  - id: q06
+    type: mcq
+    concept: unknown-in-catch
+    prompt: "In strict mode, what type does error have in catch (error) { ... }?"
+    choices: ["unknown", "Error", "any", "string"]
+    answer: 0
+    explain: "Anything can be thrown, so TypeScript makes it unknown. Narrow it with instanceof Error before reading message."
+    reteach: "### Syntax: errors in catch are unknown"
+
+  - id: q07
+    type: fill-blank
+    concept: unknown-in-catch
+    goal: "Show the error's message when it's a real Error object, and turn anything else into text."
+    prompt: "const message = error ___ Error ? error.message : String(error);"
+    answers: ["instanceof"]
+    explain: "instanceof Error narrows the unknown error, so error.message is allowed on that side."
+    reteach: "### Syntax: errors in catch are unknown"
+
+  - id: q08
+    type: mcq
+    concept: typing-json
+    prompt: "const reply = (await response.json()) as StockReply;. The server sends { \"stock\": \"3\" }. What does TypeScript do?"
+    choices:
+      - "Nothing: as is a promise you make, and the data isn't checked"
+      - "It throws, because stock should be a number"
+      - "It turns \"3\" into 3"
+      - "It refuses to compile the line"
+    answer: 0
+    explain: "response.json() is any. as tells TypeScript what to expect, but nothing checks it when the code runs."
+    reteach: "### Syntax: typing JSON from fetch"
+
+  - id: q09
+    type: predict-output
+    concept: unknown-in-catch
+    code: |
+      async function check(): Promise<string> {
+        try {
+          throw "timeout";
+        } catch (error) {
+          return error instanceof Error ? error.message : `not an Error: ${String(error)}`;
+        }
+      }
+      check().then((text) => console.log(text));
+    answer: "not an Error: timeout"
+    explain: "A plain string was thrown, not an Error, so the instanceof check is false and String(error) is used."
+    reteach: "### Syntax: errors in catch are unknown"
+
+  - id: q10
+    type: mcq
+    concept: promise-all-types
+    prompt: "What type does await Promise.all([later(3), later(\"Golu\")]) have, when later<T> returns Promise<T>?"
+    choices: ["[number, string]", "(number | string)[]", "Promise<number | string>", "any[]"]
+    answer: 0
+    explain: "Promise.all keeps each position's own type, so you get a pair: a number, then a string."
+    reteach: "### Promise.all keeps each type"
+
+  - id: q11
+    type: predict-output
+    concept: async-return-types
+    code: |
+      async function double(paise: number): Promise<number> {
+        return paise * 2;
+      }
+      const result = double(15000);
+      console.log(result instanceof Promise);
+      result.then((total) => console.log(total));
+    answer: "true\n30000"
+    explain: "An async function always hands back a promise straight away. The number arrives later, in then."
+    reteach: "### Syntax: typing an async function"

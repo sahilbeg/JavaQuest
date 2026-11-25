@@ -1,0 +1,23 @@
+id: ts-09-typescript-in-depth/topic-09-mapped-types
+title: "Mapped and template literal types"
+order: 9
+minutes: 10
+prerequisites: [ts-09-typescript-in-depth/topic-08-validating-json]
+concepts: [mapped-types, mapping-modifiers, template-literal-types, keys-at-run-time]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0909
+  from: sana
+  title: "The order form forgets to check the PIN code"
+  body: >
+    Sana here. We added a PIN code box to the custom-order form, and nobody noticed that its error message never shows.
+    The errors type was written by hand and didn't have a pincode field. Kavya says the types should follow the form by themselves.
+    The new types are in orderForm.ts; can you write the checks that go with them?
+hints:
+  - "FormErrors<T> is { [K in keyof T]?: string }: every field of the form, each one optional. Set errors.pincode only when the PIN code is wrong."
+  - "isItemId is /^DC-\\d+$/.test(text). For mapValues, start with const result = {} as { [K in keyof T]: R }, then loop over Object.keys(obj) as (keyof T)[] and set result[key] = fn(obj[key], key)."
+  - "validateOrder: name.trim() === \"\", phone with spaces removed (.replace(/\\s/g, \"\")) must match /^\\d{10}$/, pincode must match /^\\d{6}$/, and qty must be Number.isInteger and between 1 and 10. hasErrors checks whether any value in errors is a string."
+review: true

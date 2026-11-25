@@ -1,0 +1,129 @@
+topic: next-11-data-and-server/topic-03-route-handlers
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: route-files
+    prompt: "Which file answers requests to /api/stock?"
+    choices: ["src/app/api/stock/route.js", "src/app/api/stock/page.jsx", "src/api/stock.js", "src/app/api/stock/handler.jsx"]
+    answer: 0
+    explain: "A route.js file inside app/ makes an endpoint, and its folders give the URL. A page.jsx would make a web page instead."
+    reteach: "### A route file answers requests"
+
+  - id: q02
+    type: mcq
+    concept: http-method-functions
+    prompt: "api/stock/route.js exports only GET. Arjun's scanner sends a POST to /api/stock. What happens?"
+    choices: ["Next.js answers 405 Method Not Allowed", "The GET function runs instead", "The request waits forever", "Next.js shows the home page"]
+    answer: 0
+    explain: "Each method needs its own exported function. Without a POST function, Next.js refuses the method."
+    reteach: "### Syntax: a route handler"
+
+  - id: q03
+    type: fill-blank
+    concept: http-method-functions
+    goal: "Start the function that answers requests which only read data from /api/stock."
+    prompt: "export async function ___(request) {"
+    answers: ["GET"]
+    explain: "The function's name is the HTTP method it answers. Reading data is a GET."
+    reteach: "### Syntax: a route handler"
+
+  - id: q04
+    type: predict-output
+    concept: reading-the-request
+    code: |
+      const request = new Request("http://localhost/api/stock?id=DC-4410&add=5");
+      const params = new URL(request.url).searchParams;
+      console.log(params.get("id"));
+      console.log(params.get("colour"));
+    answer: "DC-4410\nnull"
+    explain: "searchParams.get reads one value after the ?. A name that isn't there gives null."
+    reteach: "### Syntax: reading the query string"
+
+  - id: q05
+    type: fill-blank
+    concept: reading-the-request
+    goal: "Read the body the scanner sent and turn it into a JavaScript object."
+    prompt: "const body = await request.___();"
+    answers: ["json"]
+    explain: "request.json() reads and parses the body. It's async, and it throws if the body isn't valid JSON."
+    reteach: "### Syntax: reading a JSON body"
+
+  - id: q06
+    type: mcq
+    concept: status-codes
+    prompt: "The bot asks GET /api/stock?id=DC-9999, and there is no such item. Which status fits?"
+    choices: ["404", "200", "201", "500"]
+    answer: 0
+    explain: "404 Not Found means the thing asked about doesn't exist. Send an error message in the body too."
+    reteach: "### Syntax: answering with a status"
+
+  - id: q07
+    type: mcq
+    concept: status-codes
+    prompt: "The scanner sends { \"id\": \"DC-4410\", \"add\": -3 }. What should the POST handler do?"
+    choices: ["Answer 400 with an error message, and change nothing", "Subtract 3 from the stock", "Answer 200 and ignore it", "Answer 404, because -3 is not an item"]
+    answer: 0
+    explain: "The caller sent something wrong, which is a 400 Bad Request. Check input before changing anything."
+    reteach: "### Never trust what arrives"
+
+  - id: q08
+    type: predict-output
+    concept: status-codes
+    code: |
+      const res = Response.json({ error: "Add ?id= with an item id." }, { status: 400 });
+      console.log(res.status, res.ok);
+    answer: "400 false"
+    explain: "The second argument sets the status. ok is true only for statuses from 200 to 299."
+    reteach: "### Syntax: answering with a status"
+
+  - id: q09
+    type: spot-the-bug
+    concept: status-codes
+    prompt: "The bot says the coaster set doesn't exist, but it's only sold out, with 0 left. Which line is wrong?"
+    code: |
+      export async function GET(request) {
+        const id = new URL(request.url).searchParams.get("id");
+        const left = getLeft(id);
+        if (!left) {
+          return Response.json({ error: `No item ${id}.` }, { status: 404 });
+        }
+        return Response.json({ id, left });
+      }
+    bugLine: 4
+    explain: "!left is true for 0 as well as undefined. Check left === undefined, so 0 left is a real answer."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: dynamic-route-params
+    prompt: "In src/app/api/items/[id]/route.js, how does GET read the id in Next.js 16?"
+    choices: ["From its second argument: const { id } = await params;", "From request.id", "From a global called params", "It can't: route handlers have no dynamic segments"]
+    answer: 0
+    explain: "The second argument holds params, and in Next.js 16 params is a Promise, so you await it."
+    reteach: "### Syntax: a dynamic route handler"
+
+  - id: q11
+    type: spot-the-bug
+    concept: dynamic-route-params
+    prompt: "Every item answers 404, even DC-1042. Which line is wrong?"
+    code: |
+      export async function GET(request, { params }) {
+        const id = params.id;
+        const item = findItem(id);
+        if (!item) return Response.json({ error: `No item ${id}.` }, { status: 404 });
+        return Response.json(item);
+      }
+    bugLine: 2
+    explain: "params is a Promise, so params.id is undefined. Write const { id } = await params;."
+    reteach: "### Syntax: a dynamic route handler"
+
+  - id: q12
+    type: mcq
+    concept: route-files
+    prompt: "Which of these should call a route handler rather than a server action?"
+    choices: ["Raju's WhatsApp bot, a separate program", "The order form on dhaaga.in", "The Mark packed button on the staff orders page", "A server component reading data"]
+    answer: 0
+    explain: "Route handlers are the back door for other programs. Your own forms and buttons use server actions, the next topic."
+    reteach: "### Route handler or server action?"

@@ -1,0 +1,24 @@
+id: ts-08-typescript-basics/topic-03-typed-functions
+title: "Typed functions"
+order: 3
+minutes: 9
+prerequisites: [ts-08-typescript-basics/topic-02-basic-types]
+concepts: [parameter-types, return-types, optional-parameters, default-parameters, rest-parameters, function-types]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0803
+  from: maya
+  title: "Baby booties were billed at ₹30.01"
+  body: >
+    The WhatsApp quote, the checkout and the shop's tablet all share our pricing helpers. Yesterday someone called
+    withExtras(true, 35000), with the arguments swapped, and a customer's booties came out at ₹30.01. JavaScript
+    didn't blink. I've written src/pricing.ts with typed parameters so that can't happen again. Please fill in
+    the bodies.
+hints:
+  - "Optional parameters like giftWrap? and name? are undefined when left out, and undefined is falsy. So if (giftWrap) and if (name) are enough."
+  - "A rest parameter ...amounts is an array of every argument, so a for...of loop adds them up. splitBill already has its default, so just use people."
+  - "offer is a function: call it as offer(paise) to get the paise that come off. Math.max(0, paise - offer(paise)) stops at zero."
+review: true

@@ -1,0 +1,140 @@
+topic: vanilla-08-components-without-a-framework/topic-03-custom-elements
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: define
+    prompt: "Which of these is a valid custom element name?"
+    choices: ["stock-badge", "stockbadge", "StockBadge", "badge"]
+    answer: 0
+    explain: "A custom element name must contain a dash, so it can never clash with a built-in tag."
+    reteach: "### Syntax: customElements.define"
+
+  - id: q02
+    type: fill-blank
+    concept: define
+    goal: "Register the StockBadge class as the tag <stock-badge> for the whole page."
+    prompt: "customElements.___(\"stock-badge\", StockBadge);"
+    answers: ["define"]
+    explain: "customElements.define links a tag name to its class in the browser's registry."
+    reteach: "### Syntax: customElements.define"
+
+  - id: q03
+    type: mcq
+    concept: define
+    prompt: "A module runs customElements.define(\"stock-badge\", StockBadge) and is then loaded a second time. What happens?"
+    choices: ["The second define throws, because the name is already taken", "The second class replaces the first", "Nothing: define ignores repeats", "Every badge on the page is drawn twice"]
+    answer: 0
+    explain: "A name can be defined only once. Guard it with if (!customElements.get(\"stock-badge\"))."
+    reteach: "### Syntax: customElements.define"
+
+  - id: q04
+    type: mcq
+    concept: custom-element-class
+    prompt: "Inside a method of class StockBadge extends HTMLElement, what is this?"
+    choices: ["The <stock-badge> element itself", "The class StockBadge", "The whole document", "The custom element registry"]
+    answer: 0
+    explain: "Each badge on the page is an instance of the class, so this is that element, with textContent, classList and the rest."
+    reteach: "### Syntax: a custom element class"
+
+  - id: q05
+    type: mcq
+    concept: lifecycle-callbacks
+    prompt: "A badge is made with createElement, then appended to the page. Which callback runs when it is appended?"
+    choices: ["connectedCallback", "constructor", "disconnectedCallback", "attributeChangedCallback"]
+    answer: 0
+    explain: "connectedCallback runs when the element joins the page. The constructor already ran at createElement."
+    reteach: "### Lifecycle callbacks"
+
+  - id: q06
+    type: mcq
+    concept: lifecycle-callbacks
+    prompt: "A component starts a timer that refreshes stock. Where should it stop that timer?"
+    choices: ["In disconnectedCallback, when the element leaves the page", "In the constructor", "In attributeChangedCallback", "Nowhere: timers stop on their own"]
+    answer: 0
+    explain: "disconnectedCallback runs when the element is removed, the moment to clean up timers and listeners."
+    reteach: "### Lifecycle callbacks"
+
+  - id: q07
+    type: spot-the-bug
+    concept: observed-attributes
+    prompt: "The badge draws once but never changes when its count attribute does. Which line is wrong?"
+    code: |
+      class StockBadge extends HTMLElement {
+        static observedAttributes = ["counts"];
+        connectedCallback() {
+          this.render();
+        }
+        attributeChangedCallback() {
+          this.render();
+        }
+      }
+    bugLine: 2
+    explain: "The attribute is count, but the list watches counts. The browser only calls attributeChangedCallback for listed names."
+    reteach: "### Syntax: observedAttributes"
+
+  - id: q08
+    type: predict-output
+    concept: observed-attributes
+    prompt: "FakeElement copies how the browser calls attributeChangedCallback. What does this print?"
+    code: |
+      class FakeElement {
+        setAttribute(name, value) {
+          if (this.constructor.observedAttributes.includes(name)) {
+            this.attributeChangedCallback(name, value);
+          }
+        }
+      }
+      class ShopStatus extends FakeElement {
+        static observedAttributes = ["day"];
+        attributeChangedCallback(name, value) {
+          console.log(`${name} = ${value}`);
+        }
+      }
+      const status = new ShopStatus();
+      status.setAttribute("day", "Mon");
+      status.setAttribute("lang", "mr");
+      status.setAttribute("day", "Tue");
+    answer: "day = Mon\nday = Tue"
+    explain: "Only day is in observedAttributes, so the lang change never reaches attributeChangedCallback."
+    reteach: "### Syntax: observedAttributes"
+
+  - id: q09
+    type: mcq
+    concept: attributes-and-properties
+    prompt: "A badge is written <stock-badge count=\"0\">. What does this.getAttribute(\"count\") === 0 give?"
+    choices: ["false, because attributes are strings: it returns \"0\"", "true", "null", "An error"]
+    answer: 0
+    explain: "Attribute values are always strings or null. Convert with Number before comparing with a number."
+    reteach: "### Syntax: observedAttributes"
+
+  - id: q10
+    type: mcq
+    concept: attributes-and-properties
+    prompt: "The badge has a count setter that calls this.setAttribute(\"count\", String(value)), and count is observed. What happens after badge.count = 2?"
+    choices: ["The attribute becomes \"2\", attributeChangedCallback runs, and the badge draws Only 2 left", "Only the property changes; the attribute stays", "Nothing until the page reloads", "An error, because properties can't be numbers"]
+    answer: 0
+    explain: "The setter reflects the property into the attribute, which calls attributeChangedCallback, which draws again."
+    reteach: "### Attributes and properties"
+
+  - id: q11
+    type: mcq
+    concept: lifecycle-callbacks
+    prompt: "The page's HTML has <stock-badge count=\"2\"> before the script that defines stock-badge has run. What happens when define runs?"
+    choices: ["The browser upgrades the badge: its constructor and callbacks run and it draws itself", "The badge stays empty for ever", "The browser throws an error", "The badge is removed from the page"]
+    answer: 0
+    explain: "Elements written before define are upgraded as soon as their class is registered."
+    reteach: "### Upgrades: tags written before define"
+
+  - id: q12
+    type: order
+    concept: lifecycle-callbacks
+    prompt: "A script makes a badge, sets its count, appends it, then removes it. Put the callbacks in the order they run."
+    items:
+      - "constructor"
+      - "attributeChangedCallback"
+      - "connectedCallback"
+      - "disconnectedCallback"
+    explain: "Made, then the watched attribute set, then added to the page, then removed."
+    reteach: "### Lifecycle callbacks"

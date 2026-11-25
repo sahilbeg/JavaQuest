@@ -1,0 +1,24 @@
+id: next-10-nextjs-fundamentals/topic-02-app-router-pages
+title: "The app router: pages from folders"
+order: 2
+minutes: 9
+prerequisites: [next-10-nextjs-fundamentals/topic-01-why-nextjs]
+concepts: [page-file, folder-routes, default-export, route-groups, private-folders]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1002
+  from: sana
+  title: "An About page and a Visit us page"
+  body: >
+    Customers keep asking Raju where the stall is and when the shop opens. I've written the words for an
+    About page and a Visit us page. Can they live at dhaaga.in/about and dhaaga.in/visit on the new site?
+    Kavya also wants a small helper that tells us which address each file in app/ becomes.
+hints:
+  - "A page is the default export of a file called page.jsx. The folder it sits in gives the address: app/about/page.jsx is /about."
+  - "For routeFor, split the path on \"/\". If the last part isn't page.js or page.jsx, return null. The folders are everything between \"app\" and the file name."
+  - "A folder starting with _ hides everything inside it, so return null. A folder in brackets, like (shop), is left out of the address. Then return \"/\" + kept.join(\"/\")."
+review: true

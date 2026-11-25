@@ -1,0 +1,24 @@
+id: tsreact-11-typed-react-in-depth/topic-07-typed-validation
+title: "Typed form validation"
+order: 7
+minutes: 10
+prerequisites: [tsreact-11-typed-react-in-depth/topic-06-typed-routing]
+concepts: [form-values-type, errors-per-field, generic-field-update, form-to-clean-data, show-errors-after-submit]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1107
+  from: sana
+  title: "The custom-order form sends anything, even a 4-digit phone"
+  body: >
+    Meera Aunty got a custom elephant request with the phone "9876" and a name to stitch on that was a whole
+    sentence. I've drawn the messages for each field, in red under the box, but only after the customer
+    presses Send the first time. Nobody likes being shouted at while they type.
+hints:
+  - "validateRequest builds an empty RequestErrors object and adds one message per bad field: trim the name, remove spaces from the phone and test /^\\d{10}$/, check qty with /^\\d+$/ and 1 to 20, and the stitched name's trimmed length."
+  - "toRequest returns the clean shape: trimmed name, phone without spaces, Number(qty), and the stitched name trimmed, or null when it is empty. update is setForm({ ...form, [field]: value });"
+  - "In handleSubmit, after preventDefault: setTried(true); then if (Object.keys(errors).length === 0) onSubmit(toRequest(form));"
+review: true

@@ -1,0 +1,133 @@
+topic: vanilla-09-single-page-apps/topic-02-hash-routing
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: url-hash
+    variants:
+      - { prompt: "In dhaaga.in/#/items/DC-1042, what is the hash?", choices: ["#/items/DC-1042", "dhaaga.in", "/items", "DC-1042"], answer: 0 }
+      - { prompt: "What does the browser send to the server when the customer opens dhaaga.in/#/cart?", choices: ["A request for the page, without the #/cart part", "A request for /cart", "Two requests, one for the page and one for #/cart", "Nothing at all"], answer: 0 }
+    explain: "The hash is everything from the # sign on. It stays in the browser and is never sent to the server."
+    reteach: "### The hash: the part after #"
+
+  - id: q02
+    type: mcq
+    concept: url-hash
+    prompt: "A script sets location.hash = \"#/cart\". What happens?"
+    choices: ["The address bar changes and an entry joins the visited list, with no reload", "The page reloads from the server", "Nothing until the customer presses Enter", "The browser opens a new tab"]
+    answer: 0
+    explain: "Changing the hash never reloads the page. It updates the address and the history, and fires hashchange."
+    reteach: "### Syntax: location.hash"
+
+  - id: q03
+    type: predict-output
+    concept: url-hash
+    code: |
+      const hash = "#/items/DC-1042";
+      const path = hash.slice(1);
+      console.log(path);
+      console.log(path.split("/").length);
+    answer: "/items/DC-1042\n3"
+    explain: "slice(1) drops the #. Splitting \"/items/DC-1042\" on \"/\" gives \"\", \"items\" and \"DC-1042\": three parts."
+    reteach: "### Route patterns and params"
+
+  - id: q04
+    type: mcq
+    concept: hashchange-event
+    variants:
+      - { prompt: "Which of these does NOT fire a hashchange event?", choices: ["Opening the page with the hash already set", "Tapping a link to #/cart", "Pressing Back after a hash change", "A script setting location.hash"], answer: 0 }
+      - { prompt: "A router only listens for hashchange. What does a customer see when she opens a WhatsApp link to dhaaga.in/#/items/DC-1042?", choices: ["A blank outlet, because no hash changed", "Golu's screen", "The home page", "A browser error"], answer: 0 }
+    explain: "hashchange fires only when the hash changes. A page that opens with a hash needs the router to draw once at the start."
+    reteach: "### Draw once at the start, too"
+
+  - id: q05
+    type: fill-blank
+    concept: hashchange-event
+    goal: "Run render every time the part of the URL after the # sign changes, including on Back."
+    prompt: "window.addEventListener(\"___\", render);"
+    answers: ["hashchange"]
+    explain: "The browser fires hashchange on window whenever the hash changes."
+    reteach: "### Syntax: the hashchange event"
+
+  - id: q06
+    type: mcq
+    concept: route-patterns
+    prompt: "Which path does the pattern /items/:id match?"
+    choices: ["/items/DC-2001", "/items", "/items/DC-2001/reviews", "/cart/DC-2001"]
+    answer: 0
+    explain: "The pattern has three parts: \"\", \"items\" and a param. Only /items/DC-2001 has three parts with \"items\" in the middle."
+    reteach: "### Route patterns and params"
+
+  - id: q07
+    type: predict-output
+    concept: route-params
+    code: |
+      const pattern = "/orders/:orderId".split("/");
+      const parts = "/orders/order-17".split("/");
+      const params = {};
+      for (let i = 1; i < pattern.length; i++) {
+        if (pattern[i].startsWith(":")) {
+          params[pattern[i].slice(1)] = parts[i];
+        }
+      }
+      console.log(params.orderId);
+    answer: "order-17"
+    explain: "\":orderId\" starts with a colon, so the matching part, order-17, is saved under the name orderId."
+    reteach: "### Route patterns and params"
+
+  - id: q08
+    type: mcq
+    concept: route-patterns
+    prompt: "The routes are listed as /items/:id first, then /items/new. What happens at /items/new?"
+    choices: ["The item route wins and looks for an item called new", "The /items/new route wins because it is more exact", "Both views are drawn", "Neither route matches"]
+    answer: 0
+    explain: "The router stops at the first route that matches. List specific routes before general ones."
+    reteach: "### First match wins"
+
+  - id: q09
+    type: mcq
+    concept: not-found-route
+    prompt: "A customer opens an old link, dhaaga.in/#/hats. No route matches. What should the router do?"
+    choices: ["Show a not found screen with a link home", "Leave the outlet empty", "Throw an error", "Reload the page"]
+    answer: 0
+    explain: "Never leave the outlet blank. A not found screen tells the customer what happened and how to carry on."
+    reteach: "### The not found screen"
+
+  - id: q10
+    type: spot-the-bug
+    concept: outlet-rendering
+    code: |
+      function render(outlet) {
+        const path = location.hash.slice(1) || "/";
+        const match = matchRoute(routes, path);
+        const screen = match ? match.route.view(match.params) : notFound(path);
+        outlet.append(screen);
+      }
+    bugLine: 5
+    explain: "append adds the new screen under the old ones, so screens pile up. Use outlet.replaceChildren(screen)."
+    reteach: "### Syntax: replaceChildren for the outlet"
+
+  - id: q11
+    type: spot-the-bug
+    concept: url-hash
+    code: |
+      function render() {
+        if (location.hash === "/cart") {
+          showCart();
+        } else {
+          showHome();
+        }
+      }
+    bugLine: 2
+    explain: "location.hash includes the # sign, so it is \"#/cart\", never \"/cart\". Drop the # with slice(1) first."
+    reteach: "## Common mistakes"
+
+  - id: q12
+    type: mcq
+    concept: url-hash
+    prompt: "Which is a real downside of hash routing?"
+    choices: ["The server never sees the path, so it can't send a ready page for search engines", "Back and Forward stop working", "It reloads the page on every tap", "It only works in one browser"]
+    answer: 0
+    explain: "Hash routing needs no server setup and Back works, but the path stays in the browser. The History API gives clean URLs the server can see."
+    reteach: "### Why teams moved on from the hash"

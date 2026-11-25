@@ -1,0 +1,119 @@
+topic: tsreact-11-typed-react-in-depth/topic-07-typed-validation
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: form-values-type
+    prompt: "Why is qty a string in RequestForm but a number in CustomRequest?"
+    choices: ["Input boxes always hold text; the clean request needs a real number", "TypeScript can't store numbers in state", "Numbers can't be validated", "React turns numbers into strings when rendering"]
+    answer: 0
+    explain: "The form type matches what the boxes hold. toRequest turns the text into the number the app needs, after validation."
+    reteach: "### Two shapes: what is typed, and what is sent"
+
+  - id: q02
+    type: mcq
+    concept: errors-per-field
+    prompt: "RequestErrors is Partial<Record<keyof RequestForm, string>>. Which is NOT a valid RequestErrors value?"
+    choices: ["{ phon: \"Phone needs 10 digits, like 98765 43210.\" }", "{}", "{ name: \"Please enter your name.\" }", "{ qty: \"Order between 1 and 20.\", phone: \"Phone needs 10 digits, like 98765 43210.\" }"]
+    answer: 0
+    explain: "Keys must be field names of RequestForm. phon is a typo, so TypeScript refuses it. Partial lets any field be left out."
+    reteach: "### Errors, one per field"
+
+  - id: q03
+    type: fill-blank
+    concept: errors-per-field
+    goal: "Make every field of the message object optional, so a field with no problem has no message."
+    prompt: "type RequestErrors = ___<Record<keyof RequestForm, string>>;"
+    answers: ["Partial"]
+    explain: "Partial makes each key optional. Record alone would demand a message for every field."
+    reteach: "### Errors, one per field"
+
+  - id: q04
+    type: predict-output
+    concept: errors-per-field
+    code: |
+      type Form = { name: string; phone: string; qty: string };
+      type Errors = Partial<Record<keyof Form, string>>;
+      function validate(form: Form): Errors {
+        const errors: Errors = {};
+        if (form.name.trim() === "") errors.name = "Please enter your name.";
+        if (!/^\d{10}$/.test(form.phone.replace(/ /g, ""))) errors.phone = "Phone needs 10 digits, like 98765 43210.";
+        const n = Number(form.qty);
+        if (!/^\d+$/.test(form.qty) || n < 1 || n > 20) errors.qty = "Order between 1 and 20.";
+        return errors;
+      }
+      console.log(Object.keys(validate({ name: "Asha", phone: "98765 43210", qty: "2" })).length);
+      console.log(Object.keys(validate({ name: "", phone: "98765 43210", qty: "25" })).join(","));
+      console.log(Object.keys(validate({ name: "Ravi", phone: "9876", qty: "1.5" })).join(","));
+    answer: "0\nname,qty\nphone,qty"
+    explain: "The first form is fine. The second has no name and 25 is over 20. The third has a 4-digit phone, and 1.5 is not whole digits."
+    reteach: "### Syntax: a validation function"
+
+  - id: q05
+    type: mcq
+    concept: generic-field-update
+    prompt: "update is <K extends keyof RequestForm>(field: K, value: RequestForm[K]) => void, and qty is a string. Which call is a type error?"
+    choices: ["update(\"qty\", 3)", "update(\"qty\", \"3\")", "update(\"name\", \"Asha Rao\")", "update(\"colour\", \"Mint\")"]
+    answer: 0
+    explain: "RequestForm[\"qty\"] is string, so the number 3 is refused."
+    reteach: "### Syntax: one update function for every field"
+
+  - id: q06
+    type: mcq
+    concept: generic-field-update
+    prompt: "What does RequestForm[K] mean when K is \"colour\"?"
+    choices: ["The type of the colour field, Colour", "The string \"colour\"", "An array of RequestForm", "Any field's type"]
+    answer: 0
+    explain: "An indexed access type looks up the type of the field with that name."
+    reteach: "### Syntax: one update function for every field"
+
+  - id: q07
+    type: mcq
+    concept: form-values-type
+    prompt: "In onChange on a <select>, event.currentTarget.value is a string. How should you store it in a field typed Colour?"
+    choices: ["Check it with a type guard like isColour(value) first", "Cast it: value as Colour", "Use any", "Store it as it is: TypeScript allows it"]
+    answer: 0
+    explain: "A guard checks the value at runtime and narrows it to Colour. A cast checks nothing."
+    reteach: "### Syntax: typed change and submit events"
+
+  - id: q08
+    type: mcq
+    concept: show-errors-after-submit
+    prompt: "Why compute const errors = validateRequest(form); on every render instead of keeping errors in state?"
+    choices: ["It can never get out of date with the form", "State is slower", "React forbids objects in state", "So the messages show while typing"]
+    answer: 0
+    explain: "Errors come from the form. Working them out each render means a fixed field loses its message at once."
+    reteach: "### Show messages after the first try"
+
+  - id: q09
+    type: spot-the-bug
+    concept: show-errors-after-submit
+    prompt: "Pressing Send with a bad phone sends the request anyway. Which line is wrong?"
+    code: |
+      function handleSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        setTried(true);
+        if (Object.keys(errors).length > 0) onSubmit(toRequest(form));
+      }
+    bugLine: 4
+    explain: "The check is backwards: it sends only when there ARE errors. Send when Object.keys(errors).length === 0."
+    reteach: "### Show messages after the first try"
+
+  - id: q10
+    type: mcq
+    concept: form-to-clean-data
+    prompt: "The stitched-name box is left empty. What should toRequest put in stitchedName?"
+    choices: ["null", "\"\"", "undefined, by leaving the field out", "\"none\""]
+    answer: 0
+    explain: "CustomRequest types it string | null. null says clearly \"no name\", while the empty text is just what the box held."
+    reteach: "### Syntax: from form to clean request"
+
+  - id: q11
+    type: mcq
+    concept: form-to-clean-data
+    prompt: "A component calls onSubmit(form) where onSubmit expects a CustomRequest. What happens?"
+    choices: ["A type error: RequestForm is not a CustomRequest, because qty is a string", "It works: the shapes are close enough", "React converts the types", "It throws when the button is pressed"]
+    answer: 0
+    explain: "TypeScript catches the text qty heading for code that expects a number. Call onSubmit(toRequest(form))."
+    reteach: "## Common mistakes"

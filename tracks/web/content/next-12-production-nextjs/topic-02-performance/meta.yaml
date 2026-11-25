@@ -1,0 +1,24 @@
+id: next-12-production-nextjs/topic-02-performance
+title: "Performance in Next.js"
+order: 2
+minutes: 10
+prerequisites: [next-12-production-nextjs/topic-01-testing-next-apps]
+concepts: [server-components-ship-no-js, client-islands, serialized-props, static-and-dynamic-rendering, waterfalls-and-promise-all, streaming, images-and-fonts]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1202
+  from: sam
+  title: "Golu's page is slow on mobile data"
+  body: >
+    Raju here. Mrs. Deshpande opened Golu's page from our Instagram post on her bus ride, and stared at a white screen for two seconds.
+    Three more customers said the same on WhatsApp this week. On the shop Wi-Fi it feels fine, so we never noticed.
+    Kavya says the page waits for things one at a time and sends too much to the phone. Can you make it quick?
+hints:
+  - "generateStaticParams is an async function: const items = await listItems(); return items.map((item) => ({ id: item.id }));"
+  - "Start the three calls before awaiting any of them: const [item, reviews, stock] = await Promise.all([getItem(id), getReviews(id), getStock(id)]);"
+  - "The client button needs only two things: <AddToCartButton id={item.id} stock={stock} />. Remove item={item} and reviews={reviews}."
+review: true

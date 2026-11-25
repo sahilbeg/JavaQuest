@@ -1,0 +1,156 @@
+topic: vanilla-10-professional-vanilla/topic-03-security
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: xss
+    prompt: "An attacker's script runs on dhaaga.in through an XSS bug. What can it do?"
+    choices:
+      - "Anything the site's own code can do on that page, like reading localStorage and changing the UPI ID shown"
+      - "Nothing, because it came from another website"
+      - "Only show an alert box"
+      - "Only change the page in the attacker's own browser"
+    answer: 0
+    explain: "Injected script runs as dhaaga.in, in the victim's browser. It can read and change everything the page can, and send it away."
+    reteach: "### What XSS is"
+
+  - id: q02
+    type: mcq
+    concept: xss
+    prompt: "Which gift note runs code when a page puts it in with innerHTML?"
+    choices:
+      - "<img src=\"x\" onerror=\"alert(1)\">"
+      - "Happy Diwali, Aai!"
+      - "5 < 6 & 7 > 3"
+      - "Golu says hi :)"
+    answer: 0
+    explain: "innerHTML builds a real img element. The image fails to load, so the browser runs its onerror handler."
+    reteach: "### How customer text becomes code"
+
+  - id: q03
+    type: fill-blank
+    concept: text-not-html
+    goal: "Show the customer's gift note on the card as plain characters, so no tag inside it ever becomes an element."
+    prompt: "message.___ = note.message;"
+    answers: ["textContent"]
+    explain: "textContent sets text, never HTML. Angle brackets show as characters, and nothing is built or run."
+    reteach: "### Syntax: textContent"
+
+  - id: q04
+    type: spot-the-bug
+    concept: text-not-html
+    prompt: "This shows a customer review. Which line lets a review run a script?"
+    code: |
+      function showReview(list, review) {
+        const item = document.createElement("li");
+        const author = document.createElement("strong");
+        author.textContent = review.author;
+        item.append(author);
+        item.insertAdjacentHTML("beforeend", `<p>${review.text}</p>`);
+        list.append(item);
+      }
+    bugLine: 6
+    explain: "insertAdjacentHTML turns the review's text into HTML. Make the <p> with createElement and set its textContent, like the author line."
+    reteach: "### Dangerous sinks"
+
+  - id: q05
+    type: predict-output
+    concept: escaping-html
+    prompt: "What does this print?"
+    code: |
+      function escapeHtml(text) {
+        return text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+      }
+      console.log(escapeHtml("<b>Asha & Ravi</b>"));
+    answer: "&lt;b&gt;Asha &amp; Ravi&lt;/b&gt;"
+    explain: "The & becomes &amp; first. Then every < becomes &lt; and every > becomes &gt;. In a page, it shows as the original characters."
+    reteach: "### Syntax: escaping HTML"
+
+  - id: q06
+    type: mcq
+    concept: escaping-html
+    prompt: "Why must escapeHtml replace & before it replaces <?"
+    choices:
+      - "Otherwise the & inside a new &lt; is escaped again, and the customer sees &lt; on the page"
+      - "Because & is the most dangerous character"
+      - "Because replaceAll only works on the first character"
+      - "It doesn't matter: any order gives the same result"
+    answer: 0
+    explain: "Replacing < first makes &lt;. Replacing & afterwards turns that into &amp;lt;, which shows as &lt;."
+    reteach: "### Syntax: escaping HTML"
+
+  - id: q07
+    type: mcq
+    concept: dangerous-sinks
+    prompt: "customerText came from a form. Which line is safe?"
+    choices:
+      - "label.textContent = customerText;"
+      - "label.innerHTML = customerText;"
+      - "label.insertAdjacentHTML(\"beforeend\", customerText);"
+      - "setTimeout(customerText, 0);"
+    answer: 0
+    explain: "innerHTML and insertAdjacentHTML turn strings into HTML, and setTimeout with a string runs it as code. textContent only ever sets text."
+    reteach: "### Dangerous sinks"
+
+  - id: q08
+    type: mcq
+    concept: dangerous-sinks
+    prompt: "A reviewer flags list.innerHTML = \"\"; as an XSS risk. Are they right?"
+    choices:
+      - "No: the string is fixed and written by you, so no customer text reaches the sink"
+      - "Yes: innerHTML is never allowed"
+      - "Yes: an empty string can hold a hidden script"
+      - "No, because innerHTML is always safe"
+    answer: 0
+    explain: "A sink is dangerous only when a string with outside text reaches it. Clearing a list with a fixed empty string is fine, though replaceChildren() says it more clearly."
+    reteach: "### Dangerous sinks"
+
+  - id: q09
+    type: mcq
+    concept: safe-redirects
+    prompt: "After sign-in, the page goes to the next= address. Which value is safe to follow?"
+    choices: ["/orders/order-17", "//dhaaga-offers.example/login", "javascript:alert(1)", "https://dhaaga-offers.example"]
+    answer: 0
+    explain: "Only a path on your own site is safe: it starts with / but not // (or /\\). The others leave dhaaga.in or run code."
+    reteach: "### Links from outside: javascript: and open redirects"
+
+  - id: q10
+    type: predict-output
+    concept: safe-redirects
+    prompt: "What does this print?"
+    code: |
+      function nextPage(next) {
+        if (!next.startsWith("/") || next.startsWith("//")) return "/";
+        return next;
+      }
+      console.log([nextPage("/cart"), nextPage("//fake.example"), nextPage("javascript:alert(1)")].join(" "));
+    answer: "/cart / /"
+    explain: "/cart is your own path, so it stays. //fake.example is another website, and javascript: doesn't start with /, so both become the home page /."
+    reteach: "### Links from outside: javascript: and open redirects"
+
+  - id: q11
+    type: mcq
+    concept: content-security-policy
+    prompt: "The host sends Content-Security-Policy: script-src 'self'. What happens to an injected <img src=\"x\" onerror=\"...\">?"
+    choices:
+      - "The image may appear, but the browser refuses to run its inline onerror script"
+      - "The script runs, because it is inside an image"
+      - "The whole page refuses to load"
+      - "The browser escapes it into text"
+    answer: 0
+    explain: "script-src 'self' allows only script files from your own site. Inline handlers like onerror are blocked."
+    reteach: "### Content Security Policy"
+
+  - id: q12
+    type: mcq
+    concept: content-security-policy
+    prompt: "The site has a strict CSP. Do you still need textContent for customer text?"
+    choices:
+      - "Yes: CSP is a second wall, and safe rendering is the first"
+      - "No: CSP blocks every kind of attack"
+      - "No: with CSP, innerHTML becomes the same as textContent"
+      - "Only on pages without a form"
+    answer: 0
+    explain: "A CSP can be loosened by mistake, missing on one page, or limited in old browsers. Rendering customer text as text keeps customers safe either way."
+    reteach: "### Content Security Policy"

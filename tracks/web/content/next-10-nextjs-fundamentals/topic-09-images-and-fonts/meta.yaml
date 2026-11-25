@@ -1,0 +1,22 @@
+id: next-10-nextjs-fundamentals/topic-09-images-and-fonts
+title: "Images and fonts in Next.js"
+order: 9
+minutes: 9
+prerequisites: [next-10-nextjs-fundamentals/topic-08-metadata]
+concepts: [next-image, layout-shift, lazy-loading, image-preload, next-font]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1009
+  from: sana
+  title: "The new photos make the shop slow and jumpy"
+  body: >
+    I uploaded big new photos of every piece, 4 MB each, straight from my camera. Now the shop takes ages on
+    mobile data, and the text jumps down every time a photo appears. Our Nunito font also flashes in late,
+    after the page shows in a plain font. Can you read up on how Next.js handles images and fonts before we fix it?
+hints:
+  - "The Image component from next/image resizes and compresses photos for each screen, and only loads them when they're about to scroll into view."
+  - "Giving an image its width and height lets the browser save the right space before it loads, so the text doesn't jump."
+  - "next/font downloads the font files at build time and serves them from your own site, so there's no late swap and no request to Google."
+review: true

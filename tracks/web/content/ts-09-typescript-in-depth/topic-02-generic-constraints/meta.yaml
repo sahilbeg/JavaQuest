@@ -1,0 +1,23 @@
+id: ts-09-typescript-in-depth/topic-02-generic-constraints
+title: "Generic constraints"
+order: 2
+minutes: 9
+prerequisites: [ts-09-typescript-in-depth/topic-01-generics]
+concepts: [extends-constraint, keeping-the-type, keyof, indexed-access, key-constraint]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0902
+  from: maya
+  title: "The cheapest-item badge only works for items"
+  body: >
+    Sana wants a "Cheapest today" badge on items, on gift bundles and on cart lines. Our cheapest helper takes Item[], so bundles and lines don't fit,
+    and the copy someone made with plain T can't even read paise. We also have pickIds, pickNames and pickPrices that all do the same thing.
+    Please write the generic versions in catalogue.ts, with constraints, so each one works for anything that has the right fields.
+hints:
+  - "A constraint says what T must have: <T extends { paise: number }> lets you read item.paise, and the function still returns the full T."
+  - "pluck and findBy use K extends keyof T, so key must be one of T's field names. item[key] then has the type T[K]: list.map((item) => item[key]) and list.find((item) => item[key] === value)."
+  - "cheapest: keep a best variable of type T | undefined and replace it when best is undefined or item.paise < best.paise. linesTotal is lines.reduce((sum, line) => sum + line.paise * line.qty, 0)."
+review: true

@@ -1,0 +1,121 @@
+topic: next-10-nextjs-fundamentals/topic-05-server-and-client-components
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: server-components
+    prompt: "In the app router, what kind of component is a page if its file has no directive at the top?"
+    choices: ["A server component", "A client component", "Neither until it is imported", "Both at once, with its code sent to the browser"]
+    answer: 0
+    explain: "Every component is a server component unless its file, or a file that imports it, says \"use client\"."
+    reteach: "### Two kinds of components"
+
+  - id: q02
+    type: mcq
+    concept: server-components
+    prompt: "Why is a server component a safe place to use the database password?"
+    choices: ["Its code runs only on the server and is never sent to the browser", "Next.js encrypts every string in a page", "Browsers refuse to show passwords", "It isn't safe; passwords always leak"]
+    answer: 0
+    explain: "Only the HTML a server component produces reaches the phone. Its code, and anything it reads, stay on the server."
+    reteach: "### Syntax: an async server component"
+
+  - id: q03
+    type: fill-blank
+    concept: async-components
+    goal: "Let this page wait for the catalogue before it returns its HTML."
+    prompt: "export default ___ function HomePage() {"
+    answers: ["async"]
+    explain: "Server components can be async functions, so they can await data right in their body."
+    reteach: "### Syntax: an async server component"
+
+  - id: q04
+    type: mcq
+    concept: async-components
+    prompt: "Compared with fetching in a useEffect, what does an async server component save you?"
+    choices: ["The data is ready before the HTML is sent, so there's no empty first render and no loading flag to manage", "Nothing; it still renders empty first", "It makes the request from the customer's phone instead", "It caches the data in localStorage"]
+    answer: 0
+    explain: "In react-09, the effect ran after the first render. A server component awaits the data first, then renders once with it."
+    reteach: "### Syntax: an async server component"
+
+  - id: q05
+    type: mcq
+    concept: client-components
+    prompt: "Which of these needs a client component?"
+    choices: ["A button that counts clicks with useState", "A list of item names and prices", "A heading that says Handmade in Pune", "A page that awaits the catalogue"]
+    answer: 0
+    explain: "State and event handlers only work in the browser, so the button must be a client component. The others are plain output."
+    reteach: "### Which kind should it be?"
+
+  - id: q06
+    type: fill-blank
+    concept: use-client
+    goal: "The first line of a file whose components need state and click handlers in the browser."
+    prompt: "\"___\";"
+    answers: ["use client"]
+    explain: "The \"use client\" directive, above every import, makes the file's components client components."
+    reteach: '### Syntax: "use client"'
+
+  - id: q07
+    type: spot-the-bug
+    concept: use-client
+    prompt: "This file should hold a client component, but Next.js refuses to build it. Which line is wrong?"
+    code: |
+      import { useState } from "react";
+      "use client";
+
+      export function AddToCartButton() {
+        const [count, setCount] = useState(0);
+        return <button onClick={() => setCount(count + 1)}>Add to cart</button>;
+      }
+    bugLine: 2
+    explain: "The directive must be the first statement in the file, above every import. After an import, it no longer counts as a directive."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: use-client
+    prompt: "A file starts with \"use client\" and imports a Price component. Where does Price's code go?"
+    choices: ["To the browser too: everything a client file imports becomes part of the client bundle", "It stays on the server", "Nowhere; imports are ignored in client files", "Only to the database"]
+    answer: 0
+    explain: "\"use client\" marks a boundary. The file and everything it imports are sent to the browser."
+    reteach: "### The boundary"
+
+  - id: q09
+    type: mcq
+    concept: serializable-props
+    prompt: "A server page renders <AddToCartButton ... />, a client component. Which prop works?"
+    choices: ["itemId=\"DC-1042\"", "onAdd={() => addToCart(\"DC-1042\")}", "db={database}", "onClick={handleClick}"]
+    answer: 0
+    explain: "Props crossing from server to client must be serializable data like strings. Functions and live objects like a database connection can't be sent."
+    reteach: "### Props across the boundary"
+
+  - id: q10
+    type: mcq
+    concept: serializable-props
+    prompt: "Which value is serializable?"
+    choices: ["{ id: \"DC-1042\", paise: 45000, tags: [\"elephant\"] }", "() => alert(\"Added\")", "A database connection object", "A class instance with methods"]
+    answer: 0
+    explain: "Plain objects of strings, numbers, booleans and arrays can be turned into text and back. Functions and objects with behaviour can't."
+    reteach: "### Props across the boundary"
+
+  - id: q11
+    type: mcq
+    concept: client-components
+    prompt: "Why put \"use client\" on the small button file instead of on the whole page?"
+    choices: ["So only the button's code goes to the phone, and the page can stay async on the server", "Because a page file may not contain directives", "So the button runs on the server", "It makes no difference"]
+    answer: 0
+    explain: "Push the boundary down: the page keeps its server powers, and the phone downloads only what it needs to be interactive."
+    reteach: "### Which kind should it be?"
+
+  - id: q12
+    type: order
+    concept: server-components
+    prompt: "A phone opens the home page. Put the steps in order."
+    items:
+      - "HomePage runs on the server and awaits the catalogue"
+      - "The server sends HTML with the list, plus the button's JavaScript"
+      - "Hydration makes the Add to cart buttons work"
+      - "A tap changes the button's state in the browser"
+    explain: "The server does its part first and sends finished HTML. The client part wakes up after, and taps are handled in the browser."
+    reteach: "### The boundary"

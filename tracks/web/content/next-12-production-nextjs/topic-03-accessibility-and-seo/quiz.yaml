@@ -1,0 +1,164 @@
+topic: next-12-production-nextjs/topic-03-accessibility-and-seo
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: html-lang-and-landmarks
+    variants:
+      - prompt: "Where does a Next.js app say that its pages are in Indian English?"
+        choices:
+          - "lang=\"en-IN\" on the <html> element in the root layout"
+          - "A comment at the top of every page"
+          - "In robots.js"
+          - "In the sitemap"
+        answer: 0
+      - prompt: "Why do screen reader users need <main>, <nav> and <header> instead of only <div>s?"
+        choices:
+          - "They are landmarks the screen reader can jump straight to"
+          - "They make the page load faster"
+          - "Divs can't hold text"
+          - "Search engines refuse pages with divs"
+        answer: 0
+    explain: "lang sets the voice and tells search engines the audience. Landmarks let people jump around the page instead of listening from the top."
+    reteach: "### The page language and landmarks"
+
+  - id: q02
+    type: fill-blank
+    concept: html-lang-and-landmarks
+    goal: "Name the navigation region so a screen reader announces it as the Main navigation."
+    prompt: "<nav ___=\"Main\">"
+    answers: ["aria-label"]
+    explain: "aria-label gives an element an accessible name. A page can have several navigation landmarks, and names tell them apart."
+    reteach: "### The page language and landmarks"
+
+  - id: q03
+    type: mcq
+    concept: skip-links
+    prompt: "What does a skip link do for a keyboard user?"
+    choices:
+      - "As the first link on the page, it jumps past the header and menu straight to the main content"
+      - "It skips the page's images to save data"
+      - "It hides the page from search engines"
+      - "It skips to the next product"
+    answer: 0
+    explain: "Without one, a keyboard user presses Tab through every menu link on every page. The skip link points at <main id=\"main\">."
+    reteach: "### Skip links"
+
+  - id: q04
+    type: predict-output
+    concept: metadata-and-titles
+    prompt: "This works like the layout's title template. What does it print?"
+    code: |
+      const template = "%s | Dhaaga & Co.";
+      console.log(template.replace("%s", "Tote bag"));
+    answer: "Tote bag | Dhaaga & Co."
+    explain: "Next.js puts each page's own title where %s is, so every page gets a unique title ending with the shop's name."
+    reteach: "### Syntax: the metadata object"
+
+  - id: q05
+    type: mcq
+    concept: metadata-and-titles
+    prompt: "Golu's openGraph image is \"/images/DC-1042.jpg\", but WhatsApp shows no picture. What is most likely missing from the root layout's metadata?"
+    choices:
+      - "metadataBase: new URL(\"https://dhaaga.in\")"
+      - "title.template"
+      - "lang=\"en-IN\""
+      - "robots: { index: false }"
+    answer: 0
+    explain: "metadataBase turns relative addresses in metadata into full ones. Apps reading a shared link need the full address of the image."
+    reteach: "### Syntax: the metadata object"
+
+  - id: q06
+    type: mcq
+    concept: route-announcer
+    prompt: "A blind customer clicks a Link to Golu's page. How do they learn which page they reached?"
+    choices:
+      - "Next.js's route announcer reads out the new page's title, so each page needs a unique one"
+      - "The browser reloads and reads the whole page aloud from the top"
+      - "They can't: client navigation is silent"
+      - "The skip link reads the URL"
+    answer: 0
+    explain: "Client navigation doesn't reload the page. The route announcer is a live region that reads the new title, or the h1 when there is no title."
+    reteach: "### Titles matter for screen readers too"
+
+  - id: q07
+    type: mcq
+    concept: generate-metadata
+    variants:
+      - prompt: "Why does /items/[id]/page.jsx use generateMetadata instead of a fixed metadata object?"
+        choices:
+          - "The title and description depend on which item the page shows"
+          - "Fixed metadata objects are not allowed in pages"
+          - "generateMetadata runs in the browser"
+          - "It makes the page a client component"
+        answer: 0
+      - prompt: "What should generateMetadata return for an id with no item?"
+        choices:
+          - "{ title: \"Item not found\", robots: { index: false } }"
+          - "The metadata of Golu's page"
+          - "Nothing: let it throw"
+          - "{ robots: { index: true } }"
+        answer: 0
+    explain: "generateMetadata gets the page's params and returns metadata for that one item. A not-found page shouldn't be listed in search results."
+    reteach: "### Syntax: generateMetadata"
+
+  - id: q08
+    type: spot-the-bug
+    concept: generate-metadata
+    prompt: "Every item page ends up titled \"Item not found\". Which line is the bug?"
+    code: |
+      export async function generateMetadata({ params }) {
+        const item = await getItem(params.id);
+        if (!item) return { title: "Item not found", robots: { index: false } };
+        return { title: item.name, description: item.description };
+      }
+    bugLine: 2
+    explain: "In Next.js 16, params is a Promise, so params.id is undefined and no item is found. Write const { id } = await params; first."
+    reteach: "### Syntax: generateMetadata"
+
+  - id: q09
+    type: mcq
+    concept: canonical-and-open-graph
+    variants:
+      - prompt: "Golu's page is shared as /items/DC-1042?ref=instagram and /items/DC-1042?ref=whatsapp. What tells Google they are one page?"
+        choices:
+          - "alternates: { canonical: \"/items/DC-1042\" }"
+          - "openGraph.images"
+          - "title.template"
+          - "A skip link"
+        answer: 0
+      - prompt: "What do Open Graph tags control?"
+        choices:
+          - "The title, text and picture in a shared link's preview on WhatsApp or Instagram"
+          - "The order of links in the menu"
+          - "Which pages crawlers may visit"
+          - "The page language"
+        answer: 0
+    explain: "The canonical names the one official address. Open Graph tags give apps a title, a description and a 1200 by 630 image for link previews."
+    reteach: "### Canonical addresses and sharing previews"
+
+  - id: q10
+    type: mcq
+    concept: sitemap-and-robots
+    prompt: "A month after launch, dhaaga.in is still not on Google. robots.js returns { rules: { userAgent: \"*\", disallow: \"/\" } }. What happened?"
+    choices:
+      - "The preview site's rule was copied: it tells every crawler to stay away from every page"
+      - "The sitemap is too long"
+      - "Google needs a month for every site"
+      - "The rule only blocks the home page"
+    answer: 0
+    explain: "Disallow / blocks the whole site. The live site should allow /, block only private pages like /cart, and name the sitemap."
+    reteach: "### robots.txt and the sitemap"
+
+  - id: q11
+    type: predict-output
+    concept: sitemap-and-robots
+    prompt: "This builds sitemap entries like app/sitemap.js does. What does it print?"
+    code: |
+      const items = [{ id: "DC-1042" }, { id: "DC-1301" }];
+      const urls = items.map((item) => "https://dhaaga.in/items/" + item.id);
+      console.log(urls.length + " " + urls[1]);
+    answer: "2 https://dhaaga.in/items/DC-1301"
+    explain: "The sitemap is built from the catalogue, one full address per item, so new items appear in it without anyone editing a file."
+    reteach: "### robots.txt and the sitemap"

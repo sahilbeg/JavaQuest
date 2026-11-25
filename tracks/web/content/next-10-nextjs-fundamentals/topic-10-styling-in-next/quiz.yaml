@@ -1,0 +1,114 @@
+topic: next-10-nextjs-fundamentals/topic-10-styling-in-next
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: global-css
+    prompt: "Where should globals.css be imported?"
+    choices: ["Once, in the root layout", "In every component", "In next.config.js", "In public/index.html"]
+    answer: 0
+    explain: "The root layout wraps every page, so one import there applies the rules everywhere."
+    reteach: "### Syntax: global CSS"
+
+  - id: q02
+    type: mcq
+    concept: global-css
+    prompt: "Which rule belongs in globals.css rather than a CSS Module?"
+    choices: ["body { background: var(--off-white); }", ".price { font-weight: 700; } used only by ItemCard", ".chip { border-radius: 999px; } used only by Filters", ".soldOut { opacity: 0.5; } used only by ItemCard"]
+    answer: 0
+    explain: "Site-wide things like body go in global CSS. Styles for one component go in its module."
+    reteach: "### Syntax: global CSS"
+
+  - id: q03
+    type: mcq
+    concept: scoped-class-names
+    prompt: "help.css and the item cards both use a global class called .card. What happens?"
+    choices: ["Both rules apply to both, so the item cards pick up the help page's styles", "Next.js renames them automatically", "The page crashes", "Only the first rule ever applies"]
+    answer: 0
+    explain: "Global class names share one space. That's the clash CSS Modules prevent."
+    reteach: "### Why global class names clash"
+
+  - id: q04
+    type: fill-blank
+    concept: css-modules
+    goal: "Name the stylesheet so its classes are scoped to ItemCard alone."
+    prompt: "import styles from \"./ItemCard.___.css\";"
+    answers: ["module"]
+    explain: "Files ending in .module.css are CSS Modules. Their class names are made unique at build time."
+    reteach: "### Syntax: a CSS Module"
+
+  - id: q05
+    type: spot-the-bug
+    concept: css-modules
+    prompt: "The card shows no border, though ItemCard.module.css has a .card rule. Which line is wrong?"
+    code: |
+      import styles from "./ItemCard.module.css";
+
+      export function ItemCard({ item }) {
+        return (
+          <article className="card">
+            <h2>{item.name}</h2>
+          </article>
+        );
+      }
+    bugLine: 5
+    explain: "The real class name is made at build time. Use className={styles.card}, never the plain text \"card\"."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: mcq
+    concept: scoped-class-names
+    prompt: "In ItemCard.jsx, what does styles.card hold?"
+    choices: ["A unique class name made at build time, like \"ItemCard_card__x7y8\"", "The text \"card\"", "The CSS rules themselves", "A React component"]
+    answer: 0
+    explain: "Next.js renames each module class with the file name and a short code, so it can't clash with any other."
+    reteach: "### How the names become unique"
+
+  - id: q07
+    type: predict-output
+    concept: conditional-classes
+    code: |
+      const styles = { card: "Card_card__a1", soldOut: "Card_soldOut__b2" };
+      for (const stock of [3, 0]) {
+        console.log(stock === 0 ? `${styles.card} ${styles.soldOut}` : styles.card);
+      }
+    answer: "Card_card__a1\nCard_card__a1 Card_soldOut__b2"
+    explain: "With stock, the card gets one class. Sold out, it gets both, separated by a space."
+    reteach: "### Syntax: combining classes"
+
+  - id: q08
+    type: mcq
+    concept: conditional-classes
+    prompt: "A module has a class written .sold-out. How do you read it in JavaScript?"
+    choices: ["styles[\"sold-out\"]", "styles.sold-out", "styles.soldout", "styles(\"sold-out\")"]
+    answer: 0
+    explain: "styles.sold-out would mean styles.sold minus out. Square brackets work for any name; camelCase like .soldOut avoids the problem."
+    reteach: "### Syntax: combining classes"
+
+  - id: q09
+    type: fill-blank
+    concept: css-variables
+    goal: "Make the card's border use Sana's Marigold, defined once for the whole site."
+    prompt: "border: 2px solid ___(--marigold);"
+    answers: ["var"]
+    explain: "var(--marigold) reads the custom property set on :root in globals.css."
+    reteach: "### Syntax: global CSS"
+
+  - id: q10
+    type: mcq
+    concept: css-modules
+    prompt: "ItemCard.module.css contains a :root rule. What happens?"
+    choices: ["Next.js stops with an error: a module's rules must target its own classes", "It sets the variables for the whole site", "It is silently scoped to the card", "It works only in development"]
+    answer: 0
+    explain: "Global selectors like :root and body aren't allowed in a module. Put them in globals.css."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: global-css
+    prompt: "Which of these works in a server component?"
+    choices: ["Global CSS, CSS Modules and Tailwind, because they are CSS files read at build time", "Only inline style objects", "No CSS at all", "Only CSS-in-JS libraries that run in the browser"]
+    answer: 0
+    explain: "Plain CSS files don't need JavaScript to run in the browser, so server components can use them."
+    reteach: "### Styles and server components"

@@ -1,0 +1,24 @@
+id: next-11-data-and-server/topic-02-caching-and-revalidation
+title: "Caching and revalidation"
+order: 2
+minutes: 10
+prerequisites: [next-11-data-and-server/topic-01-server-fetching]
+concepts: [fetch-cache-options, time-based-revalidation, cache-tags, on-demand-revalidation, use-cache-directive, request-memoization]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1102
+  from: sam
+  title: "The website sold Golu after the last one was gone"
+  body: >
+    Raju here. A lady came to the Aundh shop upset today. The website said Golu had 3 left, but we sold the last one
+    at 11 o'clock. And when Meera Aunty changed the tote bag price on Monday, the website kept the old price all day.
+    Can the site show stock that's true right now, and pick up new prices as soon as she changes them?
+hints:
+  - "Each fetch takes a second argument with its caching rules. Stock must never be cached: { cache: \"no-store\" }. The catalogue is cached for an hour and tagged: { next: { revalidate: 3600, tags: [\"catalogue\"] } }."
+  - "The hours stay cached until someone says they changed: { cache: \"force-cache\", next: { tags: [\"hours\"] } }."
+  - "In refresh.js: revalidateTag(\"catalogue\", \"max\"); revalidatePath(`/items/${itemId}`); and for the hours, revalidateTag(\"hours\", \"max\")."
+review: true

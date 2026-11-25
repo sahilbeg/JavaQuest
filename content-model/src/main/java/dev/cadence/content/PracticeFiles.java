@@ -6,7 +6,7 @@ import java.util.Set;
 /** Which files in a ticket's practice folders are the learner's code: Java for the Java course, web files for the web courses. */
 public final class PracticeFiles {
 
-    public static final Set<String> SOURCE_EXTENSIONS = Set.of(".java", ".js", ".jsx", ".mjs", ".css", ".html");
+    public static final Set<String> SOURCE_EXTENSIONS = Set.of(".java", ".js", ".jsx", ".mjs", ".ts", ".tsx", ".css", ".html");
 
     private PracticeFiles() {}
 

@@ -1,0 +1,22 @@
+id: ts-09-typescript-in-depth/boss
+title: "INC-09: An order status nobody handled"
+order: 99
+minutes: 12
+prerequisites: [ts-09-typescript-in-depth/topic-10-typing-the-dom]
+concepts: [discriminated-unions, exhaustive-check, never, narrowing]
+practice:
+  kind: code
+  runner: vitest
+ticket:
+  key: INC-09
+  from: theo
+  title: "Returned orders say Cancelled: undefined"
+  body: >
+    Arjun here. Since we started taking returns on Monday, the order tracker shows "Cancelled: undefined" for every returned order,
+    and twenty customers have phoned Raju asking whether their refund is coming. Worse, the Cancel button is showing on orders
+    that were already returned or cancelled, and two people pressed it. Please fix orderStatus.ts before the weekend rush.
+hints:
+  - "Bronze: statusLabel ends with a line that assumes anything left must be a cancellation. RETURNED falls through to it. Give every kind its own case in a switch on status.kind."
+  - "Silver: canCancel says yes to everything except SHIPPED and DELIVERED, so CANCELLED and RETURNED slip through. Say yes only for PLACED and PACKED, and list every other kind with false."
+  - "Gold: end both switches with default: return assertNever(status);. A status the code doesn't know, like LOST from an old server, then throws \"Unknown order status: LOST\" instead of showing a wrong label, and a forgotten kind becomes a type error."
+review: false

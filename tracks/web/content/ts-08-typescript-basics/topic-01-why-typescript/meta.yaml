@@ -1,0 +1,22 @@
+id: ts-08-typescript-basics/topic-01-why-typescript
+title: "Why TypeScript: catching mistakes before they run"
+order: 1
+minutes: 9
+prerequisites: [web-07-tooling/boss]
+concepts: [static-types, type-checker, type-errors, type-erasure, adopting-typescript]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: TSX-0801
+  from: maya
+  title: "A typo in the cart reached a customer"
+  body: >
+    Last week someone typed line.qyt instead of line.qty in the cart code. The tests we had didn't touch that
+    line, the build passed, and a student's cart showed ₹NaN at checkout. I want the computer to catch typos like
+    that before we ship. Read up on TypeScript and tell me what it would have caught.
+hints:
+  - "TypeScript is JavaScript plus types. A type says what kind of value a box may hold."
+  - "The type checker, tsc, reads the code without running it, so it finds the typo before any customer does."
+  - "Types are removed before the code runs. They can't check what a customer types or what a server sends."
+review: true

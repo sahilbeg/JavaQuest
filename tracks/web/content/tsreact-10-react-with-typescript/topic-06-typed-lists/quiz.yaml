@@ -1,0 +1,132 @@
+topic: tsreact-10-react-with-typescript/topic-06-typed-lists
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: rendering-lists
+    prompt: "Which expression draws one <li> per yarn?"
+    choices:
+      - "{yarns.map((yarn) => <li key={yarn.id}>{yarn.colour}</li>)}"
+      - "{for (const yarn of yarns) <li>{yarn.colour}</li>}"
+      - "{yarns.forEach((yarn) => <li key={yarn.id}>{yarn.colour}</li>)}"
+      - "{<li>{yarns.colour}</li>}"
+    answer: 0
+    explain: "map returns a new array of elements, which JSX can show. A for loop is a statement, and forEach returns undefined."
+    reteach: "### Syntax: a list from an array"
+
+  - id: q02
+    type: mcq
+    concept: rendering-lists
+    prompt: "yarns is a Yarn[]. In yarns.map((yarn) => ...), what type does TypeScript give yarn?"
+    choices: ["Yarn", "any", "Yarn[]", "unknown"]
+    answer: 0
+    explain: "map passes each element, so yarn is a Yarn, and a typo in a property name is caught."
+    reteach: "### Syntax: a list from an array"
+
+  - id: q03
+    type: mcq
+    concept: keys
+    prompt: "Two yarn cones are both Mint. Which key should their rows use?"
+    choices: ["key={yarn.id}", "key={yarn.colour}", "key={Math.random()}", "No key; React works it out"]
+    answer: 0
+    explain: "A key must be unique among the rows and belong to its item. Only the id is both."
+    reteach: "### Syntax: keys"
+
+  - id: q04
+    type: fill-blank
+    concept: keys
+    goal: "Label each row with its cone's id, so React can follow it when the list changes."
+    prompt: "<li ___={yarn.id}>{yarn.colour}</li>"
+    answers: ["key"]
+    explain: "The key prop is how React matches rows between renders."
+    reteach: "### Syntax: keys"
+
+  - id: q05
+    type: spot-the-bug
+    concept: keys
+    prompt: "React still warns that each child in a list needs a unique key. Which line should carry it?"
+    code: |
+      {yarns.map((yarn) => (
+        <li>
+          <span key={yarn.id}>{yarn.colour}</span>
+        </li>
+      ))}
+    bugLine: 2
+    explain: "The key goes on the outermost element returned from map, the <li>."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: mcq
+    concept: readonly-arrays
+    prompt: "The prop is yarns: readonly Yarn[]. Which call is a type error?"
+    choices: ["yarns.sort((a, b) => a.grams - b.grams)", "yarns.map((y) => y.id)", "yarns.filter((y) => y.grams < 40)", "[...yarns]"]
+    answer: 0
+    explain: "A readonly array has no methods that change it, so sort is missing. map, filter and spreading make new arrays."
+    reteach: "### Syntax: readonly arrays"
+
+  - id: q07
+    type: mcq
+    concept: readonly-arrays
+    prompt: "Why type an array prop as readonly?"
+    choices:
+      - "Props belong to the parent, and readonly makes tsc refuse code that would change them."
+      - "React draws readonly arrays faster."
+      - "readonly arrays can hold any type."
+      - "It lets the child add items for the parent."
+    answer: 0
+    explain: "A component must not change its props. readonly turns that rule into a type check."
+    reteach: "### Syntax: readonly arrays"
+
+  - id: q08
+    type: fill-blank
+    concept: sorting-copies
+    goal: "Use spread syntax to make a fresh array with the same yarns, so it can be sorted safely."
+    prompt: "const sorted = ___.sort((a, b) => a.grams - b.grams);"
+    answers: ["[...yarns]"]
+    explain: "Spreading into a new array makes a copy. Sorting the copy leaves the props alone."
+    reteach: "### Syntax: sorting a copy"
+
+  - id: q09
+    type: predict-output
+    concept: sorting-copies
+    code: |
+      const grams: number[] = [120, 30, 75];
+      const copy = [...grams].sort((a, b) => a - b);
+      const same = grams.sort((a, b) => b - a);
+      console.log(copy.join(","));
+      console.log(grams.join(","));
+      console.log(same === grams);
+    answer: "30,75,120\n120,75,30\ntrue"
+    explain: "The copy is sorted fewest first. sort without a copy reorders grams itself and returns that same array."
+    reteach: "### Syntax: sorting a copy"
+
+  - id: q10
+    type: mcq
+    concept: derived-values
+    prompt: "The shelf shows the total grams of yarn. Where should the total come from?"
+    choices:
+      - "Work it out with reduce on every render."
+      - "Keep it in its own useState and update it whenever yarns change."
+      - "Store it in a global variable."
+      - "Ask the parent to pass it in as text."
+    answer: 0
+    explain: "A derived value worked out during render can never be out of date."
+    reteach: "### Derived values"
+
+  - id: q11
+    type: predict-output
+    concept: derived-values
+    code: |
+      interface Yarn { colour: string; grams: number }
+      const yarns: readonly Yarn[] = [
+        { colour: "Mint", grams: 30 },
+        { colour: "Indigo", grams: 200 },
+        { colour: "Mint", grams: 75 },
+      ];
+      const low = yarns.filter((y) => y.grams < 40).length;
+      const total = yarns.reduce((sum, y) => sum + y.grams, 0);
+      console.log(`${low} low, ${total} g`);
+    answer: "1 low, 305 g"
+    explain: "Only the 30 g cone is under 40 g. The grams add up to 305."
+    reteach: "### Derived values"

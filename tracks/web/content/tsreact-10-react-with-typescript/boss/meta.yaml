@@ -1,0 +1,23 @@
+id: tsreact-10-react-with-typescript/boss
+title: "INC-10: The cart shows undefined for a missing item"
+order: 99
+minutes: 14
+prerequisites: [tsreact-10-react-with-typescript/topic-10-generic-components]
+concepts: [record-index-lies, undefined-checks, narrowing, own-keys, derived-totals]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: INC-10
+  from: theo
+  title: "The cart shows undefined for a missing item"
+  body: >
+    Arjun here, and it's urgent. We retired the Diwali lantern keychain this morning, and every cart that still had
+    one now says "undefined × 2" with a total of ₹NaN. People are screenshotting it on WhatsApp. One cart from a
+    broken share link even has an item called "toString". The code type-checks, so how is this happening?
+hints:
+  - "Bronze: Record<string, number> promises a number for every string key, but PRICES[\"DC-1031\"] is really undefined. Write a lookup that returns the item, or undefined when the id is not in the catalogue."
+  - "Bronze and silver: when the lookup gives undefined, draw the line as \"DC-1031 is no longer available\" with a Remove button labelled Remove DC-1031, and leave it out of the count and the subtotal."
+  - "Gold: \"toString\" in a plain object finds Object.prototype.toString, which is not undefined. Check Object.hasOwn(NAMES, id) && Object.hasOwn(PRICES, id) before you read either one."
+review: false

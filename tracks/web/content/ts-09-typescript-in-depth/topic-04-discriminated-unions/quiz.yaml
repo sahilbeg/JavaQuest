@@ -1,0 +1,152 @@
+topic: ts-09-typescript-in-depth/topic-04-discriminated-unions
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: discriminant
+    prompt: "In a discriminated union, what is the discriminant?"
+    choices:
+      - "A field every member shares, with a different literal type in each member"
+      - "The first member of the union"
+      - "An optional field that only some members have"
+      - "The function that checks the union"
+    answer: 0
+    explain: "The tag, like mode or kind, is shared, and its literal value tells you which member you have."
+    reteach: "### Syntax: a discriminated union"
+
+  - id: q02
+    type: predict-output
+    concept: switch-narrowing
+    code: |
+      type Payment =
+        | { mode: "CASH"; paise: number; tenderedPaise: number }
+        | { mode: "CARD"; paise: number; last4: string };
+      function slip(p: Payment): string {
+        switch (p.mode) {
+          case "CASH":
+            return `change ${p.tenderedPaise - p.paise}`;
+          case "CARD":
+            return `card ${p.last4}`;
+        }
+      }
+      console.log(slip({ mode: "CARD", paise: 89900, last4: "4242" }));
+      console.log(slip({ mode: "CASH", paise: 15000, tenderedPaise: 20000 }));
+    answer: "card 4242\nchange 5000"
+    explain: "Each case narrows p to one member. The card slip shows its last four digits, and the cash slip works out 20000 - 15000."
+    reteach: "### Syntax: switch on the tag"
+
+  - id: q03
+    type: spot-the-bug
+    concept: switch-narrowing
+    code: |
+      type Payment =
+        | { mode: "UPI"; paise: number; upiRef: string }
+        | { mode: "CARD"; paise: number; last4: string };
+      function refOf(p: Payment): string {
+        if (p.mode === "CARD") {
+          return p.last4;
+        }
+        return p.last4;
+      }
+    bugLine: 8
+    explain: "After the if, p can only be the UPI member, which has no last4. That line should return p.upiRef."
+    reteach: "### Checking the tag narrows the type"
+
+  - id: q04
+    type: mcq
+    concept: exhaustive-check
+    prompt: "Every case of a switch over a union has been handled. What type does the value have in the default case?"
+    choices: ["never", "unknown", "any", "The last member of the union"]
+    answer: 0
+    explain: "Every possibility has been ruled out, so nothing is left. That is the never type."
+    reteach: "### Syntax: never and the exhaustive check"
+
+  - id: q05
+    type: fill-blank
+    concept: exhaustive-check
+    goal: "Declare the parameter so this helper only accepts a value that can't exist."
+    prompt: "function assertNever(value: ___): never {"
+    answers: ["never"]
+    explain: "Only never can be passed where never is expected, so any forgotten member makes the call a type error."
+    reteach: "### Syntax: never and the exhaustive check"
+
+  - id: q06
+    type: mcq
+    concept: exhaustive-check
+    prompt: "A switch on payment.mode ends with default: return assertNever(payment);. Someone adds a WALLET mode to Payment but no case for it. What happens?"
+    choices:
+      - "TypeScript shows an error on the assertNever line, because payment there could be a WALLET payment"
+      - "Nothing until a customer pays with WALLET"
+      - "WALLET payments silently use the first case"
+      - "TypeScript removes the WALLET member"
+    answer: 0
+    explain: "In default, payment is now the WALLET member instead of never, so passing it to assertNever is a type error. The bug is caught before release."
+    reteach: "### Syntax: never and the exhaustive check"
+
+  - id: q07
+    type: mcq
+    concept: modelling-states
+    prompt: "Which type best describes a stock check that is loading, has a stock number, or has failed with a message?"
+    choices:
+      - '{ status: "loading" } | { status: "ready"; stock: number } | { status: "failed"; error: string }'
+      - "{ loading: boolean; stock?: number; error?: string }"
+      - "{ status: string; stock: number; error: string }"
+      - "boolean | number | string"
+    answer: 0
+    explain: "The union allows only real states, each with its own data. The flags version allows nonsense like loading with an error."
+    reteach: "### Modelling states, not flags"
+
+  - id: q08
+    type: mcq
+    concept: discriminant
+    prompt: "Both members of a union have mode: string. Why can't checking mode narrow the type?"
+    choices:
+      - "Both members have the same tag type, so mode says nothing about which member it is"
+      - "Strings can never be compared with ==="
+      - "TypeScript only narrows numbers"
+      - "It can: string tags work the same as literal tags"
+    answer: 0
+    explain: "Narrowing needs each member to have its own literal, like \"UPI\" and \"CARD\"."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: predict-output
+    concept: modelling-states
+    code: |
+      type Check =
+        | { status: "ready"; stock: number }
+        | { status: "failed"; error: string };
+      function show(check: Check): string {
+        if (check.status === "failed") {
+          return `Sorry: ${check.error}`;
+        }
+        return check.stock > 0 ? `${check.stock} left` : "Sold out";
+      }
+      console.log(show({ status: "ready", stock: 0 }));
+      console.log(show({ status: "failed", error: "server busy" }));
+    answer: "Sold out\nSorry: server busy"
+    explain: "The first check is ready with 0 stock, so it shows Sold out. The second failed, so it shows its error."
+    reteach: "### Checking the tag narrows the type"
+
+  - id: q10
+    type: fill-blank
+    concept: switch-narrowing
+    goal: "Branch on the Payment union's tag field, the one that holds CASH, UPI or CARD."
+    prompt: "switch (payment.___) {"
+    answers: ["mode"]
+    explain: "Switching on the discriminant narrows payment to one member in each case."
+    reteach: "### Syntax: switch on the tag"
+
+  - id: q11
+    type: mcq
+    concept: exhaustive-check
+    prompt: "Why is default: return \"Card\"; worse than a CARD case plus default: return assertNever(payment);?"
+    choices:
+      - "Any new mode would silently be treated as a card, with no error"
+      - "It runs more slowly"
+      - "It doesn't compile"
+      - "There's no difference"
+    answer: 0
+    explain: "A catch-all default hides forgotten members. assertNever turns them into type errors, and throws if bad data arrives at run time."
+    reteach: "## Common mistakes"

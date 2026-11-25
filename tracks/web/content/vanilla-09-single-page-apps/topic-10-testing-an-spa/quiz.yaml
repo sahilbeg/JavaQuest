@@ -1,0 +1,142 @@
+topic: vanilla-09-single-page-apps/topic-10-testing-an-spa
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: integration-tests
+    variants:
+      - { prompt: "What does an integration test check?", choices: ["Several parts working together, such as the router, a screen and a pretend API", "One small function on its own", "How fast the server is", "That the code is formatted"], answer: 0 }
+      - { prompt: "The router fetches /api/item/DC-1042 instead of /api/items/DC-1042. Which test is most likely to catch it?", choices: ["An integration test that opens Golu's page with a fake server", "A unit test of the rupees formatter", "A test of the CSS", "A test that the store starts empty"], answer: 0 }
+    explain: "Many SPA bugs live where the router, screens and API meet. Integration tests walk through those joins."
+    reteach: "### Tests for the joins"
+
+  - id: q02
+    type: mcq
+    concept: testing-like-a-user
+    prompt: "Which check is most like what a customer experiences?"
+    choices: ["The heading says Golu the elephant and the address is /items/DC-1042", "store.getState().items.status is \"ready\"", "The render function was called twice", "A private variable called latest is 3"]
+    answer: 0
+    explain: "Customers see text, links and the address. Tests that check those survive rewrites of the inside."
+    reteach: "### Test like a customer"
+
+  - id: q03
+    type: order
+    concept: driving-the-url
+    prompt: "Put the steps in order for a test that checks the Back button."
+    items:
+      - "Start the app and visit /items"
+      - "Wait for the catalogue, then click Golu's link"
+      - "Wait for Golu's page"
+      - "replaceState to /items and dispatch popstate"
+      - "Wait for the catalogue heading again"
+    explain: "Open, act, wait, then do what the browser does on Back, and wait for the screen it should show."
+    reteach: "### Driving the URL"
+
+  - id: q04
+    type: fill-blank
+    concept: driving-the-url
+    goal: "Fire the event the browser sends after Back, so the router redraws in the test."
+    prompt: "window.dispatchEvent(new PopStateEvent(\"___\"));"
+    answers: ["popstate"]
+    explain: "After changing the address with replaceState, dispatching popstate makes the router redraw, just as Back would."
+    reteach: "### Syntax: visiting an address in a test"
+
+  - id: q05
+    type: mcq
+    concept: fake-server
+    prompt: "Why does startApp take fetch as an argument, startApp(root, { fetch })?"
+    choices: ["So a test can pass in a fake server instead of the real network", "Because the global fetch doesn't exist in browsers", "To make the app faster", "So the app can fetch twice"]
+    answer: 0
+    explain: "This is dependency injection: the test hands in a fake fetch that answers from a table and records each path."
+    reteach: "### A pretend server"
+
+  - id: q06
+    type: predict-output
+    concept: fake-server
+    code: |
+      const answers = { "/api/items": ["DC-1042"] };
+      const calls = [];
+      async function fakeFetch(path) {
+        calls.push(path);
+        const found = path in answers;
+        return { ok: found, status: found ? 200 : 404 };
+      }
+      async function main() {
+        const a = await fakeFetch("/api/items");
+        const b = await fakeFetch("/api/cart");
+        console.log(a.status, b.status);
+        console.log(calls.length);
+      }
+      main();
+    answer: "200 404\n2"
+    explain: "The table knows /api/items but not /api/cart. Both calls are recorded."
+    reteach: "### A pretend server"
+
+  - id: q07
+    type: mcq
+    concept: waiting-for-the-screen
+    variants:
+      - { prompt: "Why is await sleep(500) a poor way to wait for the catalogue in a test?", choices: ["It slows every test, and on a busy computer 500 ms may still not be enough", "sleep doesn't exist in JavaScript", "It makes the fake server fail", "It changes the address"], answer: 0 }
+      - { prompt: "What is a flaky test?", choices: ["One that passes sometimes and fails other times with no change to the code", "One that tests the CSS", "One with no expect", "One that always fails"], answer: 0 }
+    explain: "Fixed sleeps are slow and depend on timing. Checking again every few milliseconds is fast and reliable."
+    reteach: "### Waiting for the screen"
+
+  - id: q08
+    type: spot-the-bug
+    concept: waiting-for-the-screen
+    code: |
+      it("shows the catalogue", async () => {
+        visit("/items");
+        waitFor(() => heading() === "Catalogue");
+        expect(heading()).toBe("Catalogue");
+      });
+    bugLine: 3
+    explain: "Without await, the test doesn't wait, so the expect sees Loading. Write await waitFor(...)."
+    reteach: "### Syntax: waiting with waitFor"
+
+  - id: q09
+    type: predict-output
+    concept: test-isolation
+    code: |
+      const storage = new Map();
+      function addToCart(id) {
+        const cart = storage.get("cart") ?? [];
+        storage.set("cart", [...cart, id]);
+        return storage.get("cart").length;
+      }
+      console.log(addToCart("DC-2001"));
+      console.log(addToCart("DC-3001"));
+      storage.clear();
+      console.log(addToCart("DC-2001"));
+    answer: "1\n2\n1"
+    explain: "The second call sees the first one's leftovers. After clear(), the cart starts empty again."
+    reteach: "### Each test starts clean"
+
+  - id: q10
+    type: mcq
+    concept: test-isolation
+    prompt: "Two tests pass alone but fail when run together. The first saves a cart in localStorage. What is the fix?"
+    choices: ["Clear localStorage, the body and the address in beforeEach", "Run the tests in a different order", "Add a longer sleep", "Delete the first test"]
+    answer: 0
+    explain: "Isolated tests start from the same clean state, so they pass alone, together and in any order."
+    reteach: "### Each test starts clean"
+
+  - id: q11
+    type: predict-output
+    concept: testing-like-a-user
+    code: |
+      const text = "\n  Golu   the\n   elephant  ";
+      console.log(`[${text.replace(/\s+/g, " ").trim()}]`);
+    answer: "[Golu the elephant]"
+    explain: "Each run of whitespace becomes one space, and trim removes the spaces at both ends."
+    reteach: "### Reading text like a person"
+
+  - id: q12
+    type: mcq
+    concept: test-isolation
+    prompt: "Why stop the app in afterEach?"
+    choices: ["Its listeners would otherwise hear the next test's popstate and clicks", "To make the next test start faster", "Because Vitest requires it", "To clear localStorage"]
+    answer: 0
+    explain: "A running app keeps its popstate and click listeners. Stopping it keeps one test's app out of the next test."
+    reteach: "### Each test starts clean"

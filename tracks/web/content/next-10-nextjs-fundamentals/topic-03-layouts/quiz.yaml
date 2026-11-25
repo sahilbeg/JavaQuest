@@ -1,0 +1,112 @@
+topic: next-10-nextjs-fundamentals/topic-03-layouts
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: children-prop
+    prompt: "How does a layout receive the page it wraps?"
+    choices: ["As its children prop", "By importing every page file", "From a useLayout() hook", "Through window.location"]
+    answer: 0
+    explain: "Next.js calls the layout with the page as children, just like <Card><p>Hi</p></Card> gives Card the <p>."
+    reteach: "### Syntax: a layout"
+
+  - id: q02
+    type: fill-blank
+    concept: children-prop
+    goal: "Show the current page inside the main element of this layout."
+    prompt: "<main>{___}</main>"
+    answers: ["children"]
+    explain: "The page arrives in the children prop. Placing {children} decides where the page appears."
+    reteach: "### Syntax: a layout"
+
+  - id: q03
+    type: mcq
+    concept: root-layout
+    prompt: "Which file is the root layout?"
+    choices: ["src/app/layout.jsx", "src/app/root/layout.jsx", "src/layout.jsx", "public/index.html"]
+    answer: 0
+    explain: "The layout directly inside app wraps every page on the site. A Next.js project has no index.html."
+    reteach: "### The root layout"
+
+  - id: q04
+    type: mcq
+    concept: html-and-body
+    prompt: "Where do the <html> and <body> tags belong in a Next.js app?"
+    choices: ["Only in the root layout", "In every page", "In every layout", "Nowhere; Next.js always writes them itself"]
+    answer: 0
+    explain: "The root layout writes them once. Nested layouts and pages return ordinary elements inside them."
+    reteach: "### The root layout"
+
+  - id: q05
+    type: spot-the-bug
+    concept: html-and-body
+    prompt: "This is src/app/help/layout.jsx. React warns about nested <html> elements. Which line is wrong?"
+    code: |
+      export default function HelpLayout({ children }) {
+        return (
+          <html lang="en">
+            <h2>Help centre</h2>
+            {children}
+          </html>
+        );
+      }
+    bugLine: 3
+    explain: "Only the root layout returns <html>. A nested layout should return something like a <div> or <section>."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: mcq
+    concept: nested-layouts
+    prompt: "The project has src/app/layout.jsx and src/app/help/layout.jsx. Which layouts wrap the page at /about?"
+    choices: ["Only the root layout", "Both layouts", "Only the help layout", "None"]
+    answer: 0
+    explain: "A layout wraps the pages in its own folder and below. /about is not inside help, so only the root layout applies."
+    reteach: "### Nested layouts"
+
+  - id: q07
+    type: order
+    concept: nested-layouts
+    prompt: "For the page at /help/delivery, put the parts in order from the outside in."
+    items:
+      - "RootLayout from src/app/layout.jsx"
+      - "HelpLayout from src/app/help/layout.jsx"
+      - "DeliveryPage from src/app/help/delivery/page.jsx"
+    explain: "Layouts nest by folder: the root wraps the section, and the section wraps the page."
+    reteach: "### Nested layouts"
+
+  - id: q08
+    type: mcq
+    concept: layout-state
+    prompt: "A customer types golu into a search box in the root layout, then taps a link to another page. What happens to the box?"
+    choices: ["It still says golu, because the layout stays on screen and keeps its state", "It empties, because every navigation draws the whole site again", "The page reloads and the box disappears", "The text moves into the address bar"]
+    answer: 0
+    explain: "On navigation, Next.js swaps only the page. Layouts are preserved, state included."
+    reteach: "### Moving between pages keeps the layout"
+
+  - id: q09
+    type: mcq
+    concept: layout-state
+    prompt: "You want a wrapper that starts fresh, with new state, on every navigation. Which file do you use?"
+    choices: ["template.jsx", "layout.jsx", "page.jsx", "fresh.jsx"]
+    answer: 0
+    explain: "A template works like a layout, but Next.js mounts a new copy of it on every navigation."
+    reteach: "### What a layout can't do"
+
+  - id: q10
+    type: mcq
+    concept: root-layout
+    prompt: "Where should the Free delivery in Pune above ₹999 banner go, so every page shows it?"
+    choices: ["In the root layout, once", "Copied into each page", "In a nested layout inside help", "In next.config.js"]
+    answer: 0
+    explain: "Anything every page shares belongs in the root layout. One copy means one place to change."
+    reteach: "### What goes where"
+
+  - id: q11
+    type: mcq
+    concept: children-prop
+    prompt: "A layout returns its header and footer but never uses children. What do customers see?"
+    choices: ["The header and footer on every page, with no page content between them", "An error naming the missing prop", "The page without the header and footer", "The 404 page"]
+    answer: 0
+    explain: "Nothing forces a layout to place children. If it doesn't, the page is simply never shown."
+    reteach: "## Common mistakes"

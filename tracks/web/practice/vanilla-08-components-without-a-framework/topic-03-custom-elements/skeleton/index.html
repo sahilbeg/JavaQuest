@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stock badges | Dhaaga &amp; Co.</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #FAF7F0; color: #2E3A8C; margin: 1rem; }
+    stock-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; background: #dfe3f5; }
+    stock-badge.low { background: #F2A81D; }
+    stock-badge.out { background: #ccc; color: #555; }
+    li { margin: 0.5rem 0; }
+  </style>
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <h1>Dhaaga &amp; Co.</h1>
+  <ul>
+    <li>Golu the elephant <stock-badge id="golu" count="3"></stock-badge></li>
+    <li>Marigold coaster set <stock-badge count="12"></stock-badge></li>
+    <li>Indigo tote bag <stock-badge count="0"></stock-badge></li>
+  </ul>
+  <label>Golus left: <input id="golu-count" type="range" min="0" max="10" value="3"></label>
+</body>
+</html>

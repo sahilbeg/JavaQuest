@@ -1,0 +1,24 @@
+id: tsreact-10-react-with-typescript/topic-05-typed-forms
+title: "Typed forms"
+order: 5
+minutes: 10
+prerequisites: [tsreact-10-react-with-typescript/topic-04-typed-events]
+concepts: [controlled-inputs, form-state-object, keyof-updates, select-and-checkbox, submit-events]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1005
+  from: maya
+  title: "The custom-order form sends quantity as text"
+  body: >
+    Kavya here. Meera Aunty's custom-order requests arrive with the quantity as "3" instead of 3, the gift wrap
+    always says no, and an empty name got through yesterday. I'd like the form state as one typed object, so
+    TypeScript checks every field. Can you rebuild the React form that way?
+hints:
+  - "update(key, value) copies the form with one field changed: setForm({ ...form, [key]: value }). The K extends keyof OrderRequest part makes value match that field's type."
+  - 'The item select gives text: check it with isItemCode(e.target.value) before update("item", ...). The quantity is update("qty", Number(e.target.value)), and the checkbox is update("giftWrap", e.target.checked).'
+  - 'In handleSubmit, after e.preventDefault(): if form.name.trim() is "", setError("Please enter your name") and stop. Otherwise setError("") and onSend(form). The total is PRICES[form.item] * form.qty, plus GIFT_WRAP_PAISE when giftWrap is true.'
+review: true

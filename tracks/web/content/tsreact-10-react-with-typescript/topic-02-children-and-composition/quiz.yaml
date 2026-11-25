@@ -1,0 +1,140 @@
+topic: tsreact-10-react-with-typescript/topic-02-children-and-composition
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: children-prop
+    prompt: "In <Panel title=\"Delivery\"><p>₹60.00</p></Panel>, how does Panel receive the paragraph?"
+    choices:
+      - "As the children prop"
+      - "As the title prop"
+      - "It doesn't: Panel must fetch it from the page"
+      - "As a second argument after the props object"
+    answer: 0
+    explain: "Everything between the opening and closing tags arrives as the children prop."
+    reteach: "### Syntax: the children prop"
+
+  - id: q02
+    type: spot-the-bug
+    concept: children-prop
+    prompt: "The panel shows its title but never the content written inside it. Which line should change?"
+    code: |
+      function Panel({ title, children }: PanelProps) {
+        return (
+          <section className="panel">
+            <h2>{title}</h2>
+            <div className="panel-body"></div>
+          </section>
+        );
+      }
+    bugLine: 5
+    explain: "The body div is empty. Write {children} inside it: <div className=\"panel-body\">{children}</div>."
+    reteach: "## Common mistakes"
+
+  - id: q03
+    type: fill-blank
+    concept: react-node
+    goal: "Type the children prop so it accepts text, elements, lists or nothing at all."
+    prompt: "  children: ___;"
+    answers: ["ReactNode", "React.ReactNode"]
+    explain: "ReactNode is React's type for anything it can draw."
+    reteach: "### Syntax: ReactNode"
+
+  - id: q04
+    type: mcq
+    concept: react-node
+    prompt: "PanelProps has children: string. What happens with <Panel title=\"Hours\"><p>Tue to Sun</p></Panel>?"
+    choices:
+      - "tsc reports that an Element is not assignable to string."
+      - "The paragraph is turned into text automatically."
+      - "It works, because JSX is always text."
+      - "React shows [object Object]."
+    answer: 0
+    explain: "A <p> is a JSX element, not a string. Use ReactNode so elements fit."
+    reteach: "### Syntax: ReactNode"
+
+  - id: q05
+    type: mcq
+    concept: react-node
+    prompt: "Which of these does React draw as nothing when it is a child?"
+    choices: ["false", "0", "\"Sold out\"", "\"false\""]
+    answer: 0
+    explain: "null, undefined, true and false draw nothing. The number 0 and the text \"false\" are shown."
+    reteach: "### Syntax: ReactNode"
+
+  - id: q06
+    type: predict-output
+    concept: react-node
+    code: |
+      type Child = string | number | boolean | null | Child[];
+      function toText(child: Child): string {
+        if (child === null || typeof child === "boolean") return "";
+        if (Array.isArray(child)) return child.map(toText).join("");
+        return String(child);
+      }
+      console.log(toText(["Cart (", 0, ")", false, null]));
+    answer: "Cart (0)"
+    explain: "false and null are skipped. The number 0 is shown, like React shows it."
+    reteach: "### Syntax: ReactNode"
+
+  - id: q07
+    type: mcq
+    concept: composition
+    prompt: "What does composition mean in React?"
+    choices:
+      - "Building bigger components out of smaller ones"
+      - "Writing all of a page in one big component"
+      - "Joining CSS files together"
+      - "Turning JSX into function calls"
+    answer: 0
+    explain: "A page is a tree of components, each one made of smaller ones."
+    reteach: "### Composition: components inside components"
+
+  - id: q08
+    type: mcq
+    concept: children-prop
+    prompt: "PanelProps is { title: string } with no children. Why does tsc reject <Panel title=\"Delivery\"><p>₹60.00</p></Panel>?"
+    choices:
+      - "children is not one of Panel's props, so passing content inside is an error."
+      - "Panel must be self-closing in TypeScript."
+      - "title cannot be text."
+      - "tsc never allows paragraphs inside components."
+    answer: 0
+    explain: "The content inside the tags is the children prop. Add children: ReactNode to the interface."
+    reteach: "### TypeScript checks children too"
+
+  - id: q09
+    type: mcq
+    concept: slots
+    prompt: "A Layout has header: ReactNode and children: ReactNode. Which use is correct?"
+    choices:
+      - "<Layout header={<h1>Dhaaga & Co.</h1>}><p>Hello</p></Layout>"
+      - "<Layout header=\"<h1>Dhaaga & Co.</h1>\"><p>Hello</p></Layout>"
+      - "<Layout><header><h1>Dhaaga & Co.</h1></header></Layout>"
+      - "<Layout header=<h1>Dhaaga & Co.</h1> />"
+    answer: 0
+    explain: "JSX in a prop goes inside braces. In quotes it would be plain text, shown with its angle brackets."
+    reteach: "### Syntax: slots"
+
+  - id: q10
+    type: fill-blank
+    concept: fragments
+    goal: "Open a group around two paragraphs without adding any element to the page."
+    prompt: "return (___"
+    answers: ["<>"]
+    explain: "A fragment opens with <> and closes with </>."
+    reteach: "### Syntax: fragments"
+
+  - id: q11
+    type: mcq
+    concept: fragments
+    prompt: "What does a fragment add to the page?"
+    choices:
+      - "Nothing: its children go straight into the parent"
+      - "An empty <div>"
+      - "A <span> around each child"
+      - "A comment marking the group"
+    answer: 0
+    explain: "A fragment groups elements in your code only. No element appears for it."
+    reteach: "### Syntax: fragments"

@@ -1,0 +1,131 @@
+topic: next-11-data-and-server/topic-04-server-actions
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: use-server
+    prompt: "What does \"use server\" at the top of actions.js do?"
+    choices: ["It marks every export as a server action: it runs on the server, but forms in the browser can call it", "It makes the whole page render in the browser", "It caches every function in the file", "It hides the file from Git"]
+    answer: 0
+    explain: "The directive tells Next.js these async functions may be called from the browser, while their code stays on the server."
+    reteach: "### Syntax: a server action"
+
+  - id: q02
+    type: fill-blank
+    concept: use-server
+    goal: "Make every async function exported from this actions file callable by forms, while its code never reaches the browser."
+    prompt: "\"use ___\";"
+    answers: ["server"]
+    explain: "\"use server\" goes on the very first line of the file."
+    reteach: "### Syntax: a server action"
+
+  - id: q03
+    type: mcq
+    concept: form-action
+    prompt: "How do you make a form call the markPacked action?"
+    choices: ["<form action={markPacked}>", "<form action=\"/markPacked\">", "<form onSubmit=\"markPacked\">", "<form method={markPacked}>"]
+    answer: 0
+    explain: "In Next.js, a form's action can be the function itself. Next.js sends the form to the server and calls it."
+    reteach: "### Syntax: a form that calls an action"
+
+  - id: q04
+    type: predict-output
+    concept: reading-formdata
+    code: |
+      const form = new FormData();
+      form.append("orderId", "order-19");
+      console.log(form.get("orderId"));
+      console.log(form.get("orderID"));
+    answer: "order-19\nnull"
+    explain: "Field names must match exactly, capitals included. A name that isn't in the form gives null."
+    reteach: "### Syntax: reading FormData"
+
+  - id: q05
+    type: fill-blank
+    concept: reading-formdata
+    goal: "Read the value of the hidden field named orderId from the submitted form."
+    prompt: "const orderId = formData.___(\"orderId\");"
+    answers: ["get"]
+    explain: "formData.get(name) gives the field's value as text, or null if it isn't there."
+    reteach: "### Syntax: reading FormData"
+
+  - id: q06
+    type: mcq
+    concept: revalidate-after-change
+    prompt: "markPacked changes order-17 to PACKED, but Raju's page still says NEW until he reloads. What's missing?"
+    choices: ["A call to revalidatePath(\"/orders\") after the change", "A useEffect in the page", "cache: \"no-store\" on the form", "A second click on the button"]
+    answer: 0
+    explain: "The page was built before the change. revalidatePath tells Next.js to build it again, and the answer carries the new page."
+    reteach: "### Refresh the page after a change"
+
+  - id: q07
+    type: order
+    concept: revalidate-after-change
+    prompt: "Raju marks order-17 as packed. Put the steps in order."
+    items:
+      - "Raju presses Mark packed"
+      - "The browser posts the form to the server"
+      - "markPacked checks order-17 and sets it to PACKED"
+      - "revalidatePath(\"/orders\") marks the page as out of date"
+      - "The fresh orders page comes back in the same answer"
+    explain: "The action runs on the server, changes the data, then asks for the page to be rebuilt."
+    reteach: "### What happens when Raju presses the button"
+
+  - id: q08
+    type: predict-output
+    concept: binding-arguments
+    code: |
+      function cancelOrder(orderId, formData) {
+        return `${orderId} / ${formData}`;
+      }
+      const cancel18 = cancelOrder.bind(null, "order-18");
+      console.log(cancel18("form"));
+    answer: "order-18 / form"
+    explain: "bind fixes the first argument. The value passed later becomes the second."
+    reteach: "### Syntax: passing extra arguments with bind"
+
+  - id: q09
+    type: mcq
+    concept: binding-arguments
+    prompt: "A form uses action={cancelOrder.bind(null, order.id)}. What must cancelOrder's parameters be?"
+    choices: ["(orderId, formData)", "(formData, orderId)", "(formData)", "(this, orderId)"]
+    answer: 0
+    explain: "Bound arguments come first. The form's FormData arrives after them."
+    reteach: "### Syntax: passing extra arguments with bind"
+
+  - id: q10
+    type: mcq
+    concept: actions-are-public
+    prompt: "The Mark packed button only shows for NEW orders. Does markPacked still need to check the order's status?"
+    choices: ["Yes. Anyone can call the action directly, with any orderId", "No, the hidden button protects it", "No, Next.js checks the status for you", "Only on weekends"]
+    answer: 0
+    explain: "Every server action is a public endpoint. Hiding a button doesn't stop a request."
+    reteach: "### An action is a public door"
+
+  - id: q11
+    type: spot-the-bug
+    concept: actions-are-public
+    prompt: "Raju can't pack any new order, but he can pack orders that already shipped. Which line is wrong?"
+    code: |
+      export async function markPacked(formData) {
+        const orderId = formData.get("orderId");
+        const order = getOrder(orderId);
+        if (!order) return { error: `No order ${orderId}.` };
+        if (order.status === "NEW") return { error: `${orderId} is already ${order.status}.` };
+        setStatus(orderId, "PACKED");
+        revalidatePath("/orders");
+        return { ok: true };
+      }
+    bugLine: 5
+    explain: "The check is the wrong way round. Only NEW orders may be packed, so refuse when order.status !== \"NEW\"."
+    reteach: "## Worked example"
+
+  - id: q12
+    type: mcq
+    concept: form-action
+    prompt: "Which value can markPacked return to the browser?"
+    choices: ["{ error: \"order-18 is already PACKED.\" }", "A database connection", "A function that retries the change", "A class instance with private methods"]
+    answer: 0
+    explain: "Results travel back to the browser, so they must be plain data: strings, numbers, arrays and objects."
+    reteach: "### Return a result instead of throwing"

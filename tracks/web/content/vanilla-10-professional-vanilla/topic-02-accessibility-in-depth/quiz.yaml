@@ -1,0 +1,156 @@
+topic: vanilla-10-professional-vanilla/topic-02-accessibility-in-depth
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: focus-order
+    prompt: "What does tabindex=\"-1\" do to a heading?"
+    choices:
+      - "Code can focus it with focus(), but the Tab key skips it"
+      - "It becomes the first stop when the customer presses Tab"
+      - "It hides the heading from screen readers"
+      - "It stops the heading from ever taking focus"
+    answer: 0
+    explain: "-1 means focusable by code only. It's the right choice for headings and panels you move focus to on purpose."
+    reteach: "### Syntax: tabindex"
+
+  - id: q02
+    type: fill-blank
+    concept: focus-order
+    goal: "Let code move focus to this heading with focus(), while the Tab key keeps skipping it."
+    prompt: "<h2 id=\"cart-heading\" tabindex=\"___\">Your cart</h2>"
+    answers: ["-1"]
+    explain: "tabindex=\"-1\" makes an element focusable from code without adding it to the Tab order."
+    reteach: "### Syntax: tabindex"
+
+  - id: q03
+    type: spot-the-bug
+    concept: focus-order
+    prompt: "Keyboard users say Tab jumps around this cart. Which line causes it?"
+    code: |
+      <button type="button">Add to cart</button>
+      <button type="button" tabindex="2">Checkout</button>
+      <a href="/cart">View cart</a>
+    bugLine: 2
+    explain: "A positive tabindex pulls the element ahead of everything else in the Tab order. Remove it and let the HTML order decide."
+    reteach: "### Syntax: tabindex"
+
+  - id: q04
+    type: mcq
+    concept: visible-focus
+    prompt: "Sana finds the browser's focus ring ugly. What should the stylesheet do?"
+    choices:
+      - "Replace it with a clear brand-coloured ring in a :focus-visible rule"
+      - "Set outline: none on every element"
+      - "Make the ring the same colour as the background"
+      - "Show the ring only when the mouse hovers"
+    answer: 0
+    explain: "Keyboard users must always see where focus is. :focus-visible shows a ring after key presses, usually not after mouse clicks, so it can look good and stay useful."
+    reteach: "### Visible focus"
+
+  - id: q05
+    type: mcq
+    concept: keyboard-patterns
+    prompt: "A suggestion list has popped up under the search box. What should Escape do?"
+    choices:
+      - "Close the list and leave focus in the search box, keeping what was typed"
+      - "Clear the search box and move focus to the top of the page"
+      - "Pick the first suggestion"
+      - "Nothing, because Escape is only for dialogs"
+    answer: 0
+    explain: "Escape closes whatever popped up and leaves the customer where they were. It shouldn't throw away their typing or pick something for them."
+    reteach: "### Keys every widget should answer"
+
+  - id: q06
+    type: mcq
+    concept: keyboard-patterns
+    prompt: "Why is <button type=\"button\"> better than a <div> with a click listener?"
+    choices:
+      - "A button can take focus, answers Enter and Space, and is announced as a button, all for free"
+      - "A div can't have a click listener"
+      - "Buttons draw faster than divs"
+      - "Screen readers skip buttons, which keeps the page quiet"
+    answer: 0
+    explain: "A real button brings focus, keyboard support and its role with it. A div needs tabindex, key handlers and a role added by hand, and usually misses one."
+    reteach: "### Keys every widget should answer"
+
+  - id: q07
+    type: mcq
+    concept: focus-management
+    prompt: "A single-page app swaps the cart screen for the checkout screen. Where should focus go?"
+    choices:
+      - "To the new screen's heading, which has tabindex=\"-1\""
+      - "Nowhere: focus should stay on the button that was pressed, even though it's gone"
+      - "To the browser's address bar"
+      - "To the last link in the footer"
+    answer: 0
+    explain: "Moving focus to the new heading tells a screen reader user that the screen changed, and puts their next Tab in the right place."
+    reteach: "### Moving focus on purpose"
+
+  - id: q08
+    type: mcq
+    concept: focus-management
+    prompt: "A customer removes a saved item with its focused Remove button, and the code only calls item.remove(). What happens to focus?"
+    choices:
+      - "It falls back to the top of the page, so the next Tab starts from the header"
+      - "It moves to the next item's Remove button by itself"
+      - "It stays on the removed button, which still works"
+      - "The browser shows an error"
+    answer: 0
+    explain: "When the focused element leaves the page, focus is lost to the top of the page. Find the neighbour first, remove the item, then focus the neighbour's button or the heading."
+    reteach: "### Moving focus on purpose"
+
+  - id: q09
+    type: fill-blank
+    concept: active-descendant
+    goal: "Tell the screen reader that the third suggestion is the active one, while real focus stays in the search box."
+    prompt: "search.setAttribute(\"___\", \"suggestions-2\");"
+    answers: ["aria-activedescendant"]
+    explain: "aria-activedescendant on the focused input holds the id of the active option. The screen reader reads that option out, and the customer can keep typing."
+    reteach: "### Syntax: aria-activedescendant"
+
+  - id: q10
+    type: mcq
+    concept: active-descendant
+    prompt: "The suggestion list closes and no option is active. What should happen to aria-activedescendant on the input?"
+    choices:
+      - "Remove the attribute completely"
+      - "Set it to an empty string"
+      - "Leave it pointing at the last active option"
+      - "Set it to the listbox's id"
+    answer: 0
+    explain: "An empty value or an id that no longer exists confuses screen readers. When nothing is active, removeAttribute(\"aria-activedescendant\")."
+    reteach: "### Syntax: aria-activedescendant"
+
+  - id: q11
+    type: predict-output
+    concept: keyboard-patterns
+    prompt: "This works out the active option in a list of 4. -1 means none is active. What does it print?"
+    code: |
+      function next(key, current, count) {
+        if (key === "ArrowDown") return (current + 1) % count;
+        if (key === "ArrowUp") return current <= 0 ? count - 1 : current - 1;
+        return current;
+      }
+      let active = -1;
+      for (const key of ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown"]) {
+        active = next(key, active, 4);
+      }
+      console.log("suggestions-" + active);
+    answer: "suggestions-0"
+    explain: "ArrowUp from none wraps to 3, then 2. ArrowDown goes to 3, then wraps to 0."
+    reteach: "### Keys every widget should answer"
+
+  - id: q12
+    type: mcq
+    concept: live-regions
+    prompt: "How should the page announce \"2 suggestions\" to a screen reader user?"
+    choices:
+      - "Change the text of a role=\"status\" paragraph that was in the HTML from the start"
+      - "Add a new <p role=\"status\">2 suggestions</p> to the page at that moment"
+      - "Use role=\"alert\", so it interrupts whatever is being read"
+      - "Put the text in a title attribute on the input"
+    answer: 0
+    explain: "Screen readers watch live regions that already exist. A polite status suits news like a count; alert interrupts, so keep it for errors."
+    reteach: "### Live regions: saying what changed"

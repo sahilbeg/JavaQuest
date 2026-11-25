@@ -1,0 +1,132 @@
+topic: ts-09-typescript-in-depth/topic-05-type-guards
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: typeof-guard
+    prompt: "value has the type string | number. Which check narrows it to a string?"
+    choices: ['typeof value === "string"', "value instanceof String", 'value is "string"', '"string" in value']
+    answer: 0
+    explain: "typeof is the guard for simple types like strings and numbers."
+    reteach: "### Syntax: typeof"
+
+  - id: q02
+    type: mcq
+    concept: instanceof-guard
+    prompt: "error has the type Error | string. Which check narrows it to an Error?"
+    choices: ["error instanceof Error", 'typeof error === "Error"', 'typeof error === "object" && error === Error', '"Error" in error']
+    answer: 0
+    explain: "instanceof checks which class made an object. typeof says \"object\" for every object, never \"Error\"."
+    reteach: "### Syntax: instanceof"
+
+  - id: q03
+    type: predict-output
+    concept: in-guard
+    code: |
+      type Courier = { courier: string; trackingId: string };
+      type Pickup = { pickupAt: string };
+      function note(d: Courier | Pickup): string {
+        if ("trackingId" in d) {
+          return d.trackingId;
+        }
+        return d.pickupAt;
+      }
+      console.log(note({ pickupAt: "Aundh" }));
+      console.log(note({ courier: "Swift", trackingId: "SC-88" }));
+    answer: "Aundh\nSC-88"
+    explain: "The pickup has no trackingId, so it returns pickupAt. The courier delivery has one, so it returns it."
+    reteach: "### Syntax: in"
+
+  - id: q04
+    type: fill-blank
+    concept: type-predicates
+    goal: "Promise TypeScript that a true answer means the listing has the Bundle type."
+    prompt: "function isBundle(listing: Listing): listing ___ Bundle {"
+    answers: ["is"]
+    explain: "A type predicate is written param is Type, in the return type's place."
+    reteach: "### Syntax: your own type guard"
+
+  - id: q05
+    type: predict-output
+    concept: filtering-with-guards
+    code: |
+      function isText(value: unknown): value is string {
+        return typeof value === "string";
+      }
+      const scanned: unknown[] = ["DC-1042", 7, "DC-1050", undefined];
+      const ids = scanned.filter(isText);
+      console.log(ids.join(" "));
+    answer: "DC-1042 DC-1050"
+    explain: "Only the two strings pass the guard, and the result has the type string[]."
+    reteach: "### Guards and filter"
+
+  - id: q06
+    type: mcq
+    concept: type-predicates
+    prompt: "A guard's body is just return true;, but its return type is d is Pickup. What does TypeScript do?"
+    choices:
+      - "Accepts it, and treats every value as a Pickup wherever the guard is called"
+      - "Refuses to compile, because the body doesn't check anything"
+      - "Checks the value when the code runs and throws if it's wrong"
+      - "Ignores the predicate and keeps the old type"
+    answer: 0
+    explain: "TypeScript believes the predicate without checking the body. That's why guards must be simple and tested."
+    reteach: "### A guard is a promise TypeScript believes"
+
+  - id: q07
+    type: spot-the-bug
+    concept: type-predicates
+    code: |
+      function isPresent<T>(value: T | null | undefined): value is T {
+        return Boolean(value);
+      }
+      const stock = [3, null, 0, 5];
+      console.log(stock.filter(isPresent));
+    bugLine: 2
+    explain: "Boolean(0) is false, so a real stock count of 0 is thrown away. Write value !== null && value !== undefined."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: filtering-with-guards
+    prompt: "listings has the type (Product | Bundle)[], and isBundle is a type guard. What type does listings.filter(isBundle) have?"
+    choices: ["Bundle[]", "(Product | Bundle)[]", "boolean[]", "Product[]"]
+    answer: 0
+    explain: "filter understands type predicates, so the array it returns holds only the narrower type."
+    reteach: "### Guards and filter"
+
+  - id: q09
+    type: predict-output
+    concept: instanceof-guard
+    code: |
+      function messageFor(error: unknown): string {
+        if (error instanceof Error) {
+          return error.message;
+        }
+        return typeof error === "string" ? error : "Something went wrong";
+      }
+      console.log(messageFor(new Error("Out of stock")));
+      console.log(messageFor("UPI timed out"));
+      console.log(messageFor(404));
+    answer: "Out of stock\nUPI timed out\nSomething went wrong"
+    explain: "An Error gives its message, a string is shown as it is, and anything else gets the general message."
+    reteach: "### Syntax: instanceof"
+
+  - id: q10
+    type: fill-blank
+    concept: in-guard
+    goal: "Check whether this delivery object has a trackingId field."
+    prompt: 'if ("trackingId" ___ delivery) {'
+    answers: ["in"]
+    explain: "\"field\" in object is true when the object has that field, and it narrows a union to the members that have it."
+    reteach: "### Syntax: in"
+
+  - id: q11
+    type: mcq
+    concept: typeof-guard
+    prompt: "What does typeof say for an Error, a Date and a plain object?"
+    choices: ['"object" for all three', '"Error", "Date" and "object"', '"class" for the first two', '"undefined" for all three']
+    answer: 0
+    explain: "typeof only knows the simple types. For any object it says \"object\", so use instanceof to tell classes apart."
+    reteach: "### Syntax: instanceof"

@@ -1,0 +1,22 @@
+id: vanilla-09-single-page-apps/topic-01-what-is-an-spa
+title: "What a single-page app is"
+order: 1
+minutes: 9
+prerequisites: [vanilla-08-components-without-a-framework/boss]
+concepts: [multi-page-app, single-page-app, app-shell, client-side-routing, deep-links, spa-tradeoffs]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: VAN-0901
+  from: maya
+  title: "Before we turn dhaaga.in into an app"
+  body: >
+    Every tap on dhaaga.in loads a whole new page, so the cart badge blinks and the header redraws on Meera Aunty's old phone.
+    We're going to make the store a single-page app, with plain JavaScript and no framework.
+    Read the KB page on what that changes, good and bad, and pass the onboarding check before we start on the router.
+hints:
+  - "Ask yourself what the browser asks the server for. A whole new HTML page, or only some data?"
+  - "The app shell is the part that stays put on every screen. Only the outlet in the middle changes."
+  - "A single-page app must still change the URL for every screen. Otherwise Back, refresh and shared links all break."
+review: true

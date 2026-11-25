@@ -74,7 +74,8 @@ public final class CheckContent {
             }
             for (Quiz.Question question : topic.hasQuiz() ? topic.quiz().questions() : List.<Quiz.Question>of()) {
                 if (question instanceof Quiz.PredictOutput predict) {
-                    String problem = web ? checkJavaScriptPrediction(node, predict) : checkPrediction(runner, predict);
+                    boolean ts = topic.id().startsWith("ts-") || topic.id().startsWith("tsreact-");
+                    String problem = web ? checkJavaScriptPrediction(node, predict, ts) : checkPrediction(runner, predict);
                     if (problem != null) {
                         problems.add(topic.id() + " quiz " + predict.id() + ": " + problem);
                     }
@@ -121,8 +122,9 @@ public final class CheckContent {
         if (animation.kind() != Animation.Kind.CODE) {
             return null;
         }
-        if (animation.language().equals("js")) {
-            ProgramResult run = node.runSnippet(animation.code(), "");
+        if (animation.language().equals("js") || animation.language().equals("ts")) {
+            ProgramResult run = animation.language().equals("ts")
+                    ? node.runTypeScriptSnippet(animation.code(), "") : node.runSnippet(animation.code(), "");
             if (run.status() != ProgramResult.Status.COMPLETED) {
                 return "animation code ended with " + run.status();
             }
@@ -151,22 +153,23 @@ public final class CheckContent {
 
     /** A ```js block must parse; a ```js run block must also finish, and a ```js run crash block must end in an error. */
     private static String checkJavaScript(dev.cadence.runner.NodeRunner node, LessonCode.Block block) throws Exception {
-        var errors = node.check(block.code());
+        var errors = node.check(block.code(), block.typeScript() ? "main.ts" : "main.js");
         if (!errors.isEmpty()) {
             return "JavaScript does not parse: line " + errors.getFirst().line() + ": " + errors.getFirst().message();
         }
         if (!block.runnable()) {
             return null;
         }
-        ProgramResult result = node.runSnippet(block.code(), "");
+        ProgramResult result = block.typeScript() ? node.runTypeScriptSnippet(block.code(), "") : node.runSnippet(block.code(), "");
         if (block.expectsCrash()) {
             return result.status() == ProgramResult.Status.EXCEPTION ? null : "crash snippet ended with " + result.status() + " instead of an error";
         }
         return result.status() == ProgramResult.Status.COMPLETED ? null : "runnable snippet ended with " + result.status() + ": " + result.output().strip();
     }
 
-    private static String checkJavaScriptPrediction(dev.cadence.runner.NodeRunner node, Quiz.PredictOutput predict) throws Exception {
-        ProgramResult result = node.runSnippet(predict.code(), "");
+    private static String checkJavaScriptPrediction(dev.cadence.runner.NodeRunner node, Quiz.PredictOutput predict, boolean ts)
+            throws Exception {
+        ProgramResult result = ts ? node.runTypeScriptSnippet(predict.code(), "") : node.runSnippet(predict.code(), "");
         if (result.status() != ProgramResult.Status.COMPLETED) {
             return "code does not run: " + result.status();
         }

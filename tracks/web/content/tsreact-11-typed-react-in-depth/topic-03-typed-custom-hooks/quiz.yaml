@@ -1,0 +1,122 @@
+topic: tsreact-11-typed-react-in-depth/topic-03-typed-custom-hooks
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: custom-hooks
+    prompt: "What makes a function a custom hook?"
+    choices: ["Its name starts with use and it calls other hooks inside", "It returns JSX", "It is a class that extends Component", "It is exported from a file called hooks.ts"]
+    answer: 0
+    explain: "A custom hook is a use... function that calls hooks like useState or useEffect, and returns values, not JSX."
+    reteach: "### A custom hook is a function that uses hooks"
+
+  - id: q02
+    type: mcq
+    concept: custom-hooks
+    prompt: "WishList and SizeGuide both call useToggle(). A customer taps Show saved in WishList. What happens to SizeGuide's value?"
+    choices: ["Nothing: each call has its own state", "It flips too, because they share the hook", "It resets to false", "React throws an error"]
+    answer: 0
+    explain: "Each call of a hook makes its own useState. Hooks share logic, not values."
+    reteach: "### Hooks share logic, not state"
+
+  - id: q03
+    type: mcq
+    concept: rules-of-hooks
+    variants:
+      - { prompt: "Where may you call a hook?", choices: ["At the top of a component or custom hook, before any early return", "Inside an if, when you only sometimes need it", "Inside a for loop, once per item", "Inside an onClick handler"], answer: 0 }
+      - { prompt: "Why must hooks run in the same order on every render?", choices: ["React finds each hook's state by its position in the order of calls", "TypeScript checks the order", "Hooks are sorted by name", "Otherwise the page loads slower"], answer: 0 }
+    explain: "React keeps hook state in call order: first useState, second useState, and so on. An if or loop changes the order."
+    reteach: "### The rules of hooks"
+
+  - id: q04
+    type: spot-the-bug
+    concept: rules-of-hooks
+    prompt: "This throws when the customer signs in. Which line is wrong?"
+    code: |
+      function WishList({ loggedIn }: { loggedIn: boolean }) {
+        if (!loggedIn) return <p>Please sign in.</p>;
+        const [saved, setSaved] = useStoredState<string[]>("dhaaga-wishlist", []);
+        return <p>{saved.length} saved</p>;
+      }
+    bugLine: 3
+    explain: "The hook runs only on some renders, after an early return. Call useStoredState first, then return early."
+    reteach: "### The rules of hooks"
+
+  - id: q05
+    type: mcq
+    concept: tuple-return-types
+    prompt: "A hook ends with return [on, toggle]; and has no return type. What type does TypeScript infer?"
+    choices: ["(boolean | (() => void))[]", "[boolean, () => void]", "readonly [boolean, () => void]", "any[]"]
+    answer: 0
+    explain: "An array literal is inferred as an array of the union of its element types, not as a tuple. as const fixes it."
+    reteach: "### Typing what a hook returns"
+
+  - id: q06
+    type: fill-blank
+    concept: tuple-return-types
+    goal: "Return the two values as a fixed, read-only pair so each place keeps its own type."
+    prompt: "return [on, toggle] ___;"
+    answers: ["as const"]
+    explain: "as const turns the array into a readonly [boolean, () => void] tuple."
+    reteach: "### Typing what a hook returns"
+
+  - id: q07
+    type: mcq
+    concept: generic-hooks
+    prompt: "Given useStoredState<T>(key: string, initial: T): [T, (next: T) => void], which call is a type error?"
+    choices: ["const [ids, setIds] = useStoredState<string[]>(\"w\", []); setIds(\"DC-1042\");", "const [ids, setIds] = useStoredState<string[]>(\"w\", []); setIds([\"DC-1042\"]);", "const [n, setN] = useStoredState(\"qty\", 1); setN(2);", "const [c, setC] = useStoredState(\"colour\", \"Mint\"); setC(\"Indigo\");"]
+    answer: 0
+    explain: "T is string[], so the setter needs a string[]. A single string is not one."
+    reteach: "### Syntax: a generic hook"
+
+  - id: q08
+    type: mcq
+    concept: generic-hooks
+    prompt: "Why write useStoredState<string[]>(\"dhaaga-wishlist\", []) instead of letting TypeScript infer T?"
+    choices: ["An empty array says nothing about what goes in it, so T would be too vague", "Generics always need to be written out", "Without it the hook can't read localStorage", "It makes the hook run faster"]
+    answer: 0
+    explain: "TypeScript infers T from initial. [] gives no hint about the element type, so naming T says it's a list of strings."
+    reteach: "### Syntax: a generic hook"
+
+  - id: q09
+    type: mcq
+    concept: lazy-initial-state
+    prompt: "What is the difference between useState(readSaved()) and useState(() => readSaved())?"
+    choices: ["The first calls readSaved on every render; the second only on the first render", "There is no difference", "The second never calls readSaved", "The first only works with strings"]
+    answer: 0
+    explain: "An argument is worked out every time the component runs. A function is called by React only for the first render."
+    reteach: "### Syntax: lazy initial state"
+
+  - id: q10
+    type: predict-output
+    concept: lazy-initial-state
+    code: |
+      function readSaved<T>(text: string | null, fallback: T): T {
+        if (text === null) return fallback;
+        try { return JSON.parse(text) as T; } catch { return fallback; }
+      }
+      console.log(readSaved<string[]>('["DC-1042","DC-2001"]', []).length);
+      console.log(readSaved<string[]>("[oops", []).length);
+      console.log(readSaved<number>(null, 1));
+    answer: "2\n0\n1"
+    explain: "Good JSON gives a list of two ids. Broken JSON throws, so the fallback is used. null means nothing was saved, so the fallback 1 is used."
+    reteach: "### Saved data can be broken"
+
+  - id: q11
+    type: mcq
+    concept: custom-hooks
+    prompt: "The heart fills in, but after a refresh the wishlist is empty again. What is the setter most likely missing?"
+    choices: ["localStorage.setItem(key, JSON.stringify(next))", "as const", "A dependency array", "A type parameter <T>"]
+    answer: 0
+    explain: "Setting state alone lasts until the page reloads. The setter must also save the value to localStorage."
+    reteach: "## Common mistakes"
+
+  - id: q12
+    type: mcq
+    concept: tuple-return-types
+    prompt: "A hook returns five things: items, total, add, remove and clear. What is the clearest return shape?"
+    choices: ["An object, { items, total, add, remove, clear }", "A tuple of five places", "Five separate hooks that must be called in order", "A string joining the five names"]
+    answer: 0
+    explain: "Tuples suit one or two values. With more, names matter, so an object reads better."
+    reteach: "### Typing what a hook returns"

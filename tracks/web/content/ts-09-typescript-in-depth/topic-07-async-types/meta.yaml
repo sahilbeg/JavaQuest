@@ -1,0 +1,23 @@
+id: ts-09-typescript-in-depth/topic-07-async-types
+title: "Typing async code"
+order: 7
+minutes: 10
+prerequisites: [ts-09-typescript-in-depth/topic-06-typed-classes]
+concepts: [promise-type, async-return-types, forgetting-await, typing-json, unknown-in-catch, promise-all-types]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0907
+  from: maya
+  title: "The stock badge says [object Promise] in stock"
+  body: >
+    Kavya here. The new stock badge on dhaaga.in showed "[object Promise] in stock" for an hour this morning, because a missing await slipped through.
+    When the stock server is down, the page breaks completely instead of showing a message.
+    Please write the typed stock client in stockApi.ts, so TypeScript catches those mistakes and a failed check becomes a message.
+hints:
+  - "fetchStock: const response = await fetch(`/api/stock/${id}`); if (!response.ok) throw new Error(`Stock check failed: ${response.status}`); then return (await response.json()) as StockReply."
+  - "stockResult: try { const reply = await fetchStock(id); return { ok: true, stock: reply.stock }; } catch (error) { ... }. The error is unknown, so use error instanceof Error ? error.message : String(error)."
+  - "stockForAll: const replies = await Promise.all(ids.map((id) => fetchStock(id))); then put each reply's id and stock into a new Map<string, number>."
+review: true

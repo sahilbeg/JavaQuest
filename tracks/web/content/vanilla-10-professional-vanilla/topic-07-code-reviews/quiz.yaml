@@ -1,0 +1,159 @@
+topic: vanilla-10-professional-vanilla/topic-07-code-reviews
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: why-review
+    prompt: "Which of these is a job of a code review?"
+    choices:
+      - "Catching bugs, security holes and keyboard problems before customers meet them"
+      - "Deciding who on the team is the best programmer"
+      - "Rewriting the change the way the reviewer would have written it"
+      - "Replacing the automated tests"
+    answer: 0
+    explain: "Reviews catch problems early, share knowledge and keep the code consistent. They add to tests; they never replace them."
+    reteach: "### Why we review code"
+
+  - id: q02
+    type: mcq
+    concept: why-review
+    prompt: "What should a review judge?"
+    choices:
+      - "Whether the change is good for the store"
+      - "Whether the author is good enough for the team"
+      - "Whether the author uses the reviewer's favourite style"
+      - "How long the author took"
+    answer: 0
+    explain: "The question is always about the change, never the person. That keeps reviews useful and kind."
+    reteach: "### Why we review code"
+
+  - id: q03
+    type: mcq
+    concept: small-pull-requests
+    prompt: "Which pull request is easiest to review well?"
+    choices:
+      - "80 lines that fix the booties price and add a test for it"
+      - "1,400 lines that fix the price, redesign the header and rename every file"
+      - "One commit called 'stuff' touching 38 files"
+      - "A PR with no description, so the reviewer isn't biased"
+    answer: 0
+    explain: "Small, single-idea pull requests get careful reading. In a huge one, bugs hide in the middle."
+    reteach: "### Small pull requests with a good description"
+
+  - id: q04
+    type: mcq
+    concept: small-pull-requests
+    prompt: "What should a pull request's description say?"
+    choices:
+      - "What changed, why, and how to test it, with before-and-after screenshots for UI changes"
+      - "Only the ticket number"
+      - "A list of every line that changed"
+      - "Nothing: the code speaks for itself"
+    answer: 0
+    explain: "A good description lets the reviewer understand the goal and try the change quickly."
+    reteach: "### Small pull requests with a good description"
+
+  - id: q05
+    type: predict-output
+    concept: frontend-checklist
+    prompt: "render() stands for a function that adds a click listener each time it runs. What does this print?"
+    code: |
+      let listeners = 0;
+      function render() {
+        listeners += 1;
+      }
+      for (const qty of [1, 2, 3, 4]) {
+        render();
+      }
+      console.log(`a click adds ${listeners} items`);
+    answer: "a click adds 4 items"
+    explain: "render ran four times, so four listeners wait on the same button. One click runs them all. Add listeners once, outside render."
+    reteach: "### What to look for in frontend code"
+
+  - id: q06
+    type: spot-the-bug
+    concept: frontend-checklist
+    prompt: "showCart runs after every change to the cart. Which line should a reviewer flag?"
+    code: |
+      function showCart(list, lines) {
+        list.replaceChildren(...lines.map(lineItem));
+        list.addEventListener("click", onRemove);
+      }
+    bugLine: 3
+    explain: "Each call adds another click listener to the same list, so one click soon removes several times. Add the listener once, where the list is set up."
+    reteach: "### What to look for in frontend code"
+
+  - id: q07
+    type: mcq
+    concept: frontend-checklist
+    prompt: "A PR adds a cart drawer. The diff looks clean. What should the reviewer still do?"
+    choices:
+      - "Open the preview and use the drawer with a mouse, then with only the keyboard"
+      - "Approve, because clean code always works"
+      - "Count the lines to check the PR is small"
+      - "Ask the author to add more comments"
+    answer: 0
+    explain: "Reading finds many problems, but focus, keyboard and layout bugs only show when you use the change."
+    reteach: "### What to look for in frontend code"
+
+  - id: q08
+    type: mcq
+    concept: writing-comments
+    prompt: "Which review comment is most helpful?"
+    choices:
+      - "blocking: review.text goes into innerHTML, so a review with <img onerror> would run code. Could we use textContent?"
+      - "This is wrong."
+      - "Why would anyone write it like this?"
+      - "I would never use innerHTML."
+    answer: 0
+    explain: "A useful comment has a label, what you see, why it matters, and a suggestion. It talks about the code, not the person."
+    reteach: "### Syntax: a review comment"
+
+  - id: q09
+    type: fill-blank
+    concept: writing-comments
+    goal: "Label a tiny style point, so the author knows it should never hold up the pull request."
+    prompt: "___: I'd call this variable items instead of lines."
+    answers: ["nit"]
+    explain: "nit: marks a small preference. The author may take it or leave it, and the PR can be approved."
+    reteach: "### Syntax: a review comment"
+
+  - id: q10
+    type: mcq
+    concept: receiving-feedback
+    prompt: "Your PR gets six comments. What is the best way to respond?"
+    choices:
+      - "Reply to each one, with the commit that fixes it or a short reason, then ask for another look"
+      - "Push fixes without replying, so the reviewer finds them"
+      - "Close the PR and start again"
+      - "Argue every point in the comments until the reviewer gives up"
+    answer: 0
+    explain: "Replies show which comments are handled and why. If a point turns into a long debate, a five-minute call is quicker."
+    reteach: "### Receiving feedback"
+
+  - id: q11
+    type: mcq
+    concept: self-review
+    prompt: "What is a self-review?"
+    choices:
+      - "Reading your own diff line by line, and trying the change, before asking anyone else to review"
+      - "Approving your own pull request"
+      - "Asking the reviewer to review themselves"
+      - "Running the tests on someone else's branch"
+    answer: 0
+    explain: "Reading your own diff as a stranger would catches leftover logs, forgotten TODOs and real bugs, so the reviewer can focus on the hard parts."
+    reteach: "### Review your own PR first"
+
+  - id: q12
+    type: mcq
+    concept: receiving-feedback
+    prompt: "A reviewer asks a question: 'Why does this reset focus to the heading?' The code is right. What does the question tell you?"
+    choices:
+      - "The reason isn't obvious from the code, so a short comment or a clearer name would help"
+      - "The reviewer is wrong and should be ignored"
+      - "The code must be rewritten"
+      - "The PR should be closed"
+    answer: 0
+    explain: "If a teammate had to ask, the next reader will wonder too. Answer it, and consider putting the answer in the code."
+    reteach: "### Receiving feedback"

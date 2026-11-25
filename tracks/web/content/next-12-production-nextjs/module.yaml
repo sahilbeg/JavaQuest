@@ -1,0 +1,6 @@
+id: next-12-production-nextjs
+title: Production Next.js
+project: Launch on Next.js
+summary: Ship dhaaga.in on Next.js like a professional. Test server components, route handlers and server actions, make pages fast, make them accessible and easy to find, lock down secrets and input, deploy, watch errors in production, review Next.js code, and pass the Next.js interview loop.
+unlockAfter: next-11-data-and-server/boss
+mascotIntro: "The Next.js store takes orders. Now let's test it, speed it up, lock it down and launch it."

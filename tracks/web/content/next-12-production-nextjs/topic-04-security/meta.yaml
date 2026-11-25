@@ -1,0 +1,24 @@
+id: next-12-production-nextjs/topic-04-security
+title: "Security: secrets, headers and input"
+order: 4
+minutes: 10
+prerequisites: [next-12-production-nextjs/topic-03-accessibility-and-seo]
+concepts: [server-only-secrets, public-env-vars, actions-are-public, validate-input, never-trust-client-prices, access-control, data-minimisation, security-headers]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1204
+  from: maya
+  title: "Three holes the security check found"
+  body: >
+    My friend who does security testing poked at our Next.js store for an hour last night. She bought Golu for one paisa by editing the form,
+    read Asha's phone number and address from /api/orders/order-17 without logging in, and found we send no security headers at all.
+    Nothing has leaked to real customers yet. Please close all three before Friday's launch.
+hints:
+  - "In the action, get the item first: const item = await getItem(String(formData.get(\"id\"))); return the Unknown item error when it's null, and use item.paise. Then const qty = Number(formData.get(\"qty\")) and refuse it unless Number.isInteger(qty) && qty >= 1 && qty <= 5."
+  - "In the route: const customerId = customerFor(sessionFromCookie(request.headers.get(\"cookie\"))); answer 401 when it's null. Then 404 when !order || order.customerId !== customerId. Build the answer by hand: { id: order.id, itemId: order.itemId, qty: order.qty, totalPaise: order.totalPaise, status: order.status }."
+  - "securityHeaders is a plain array: [{ key: \"Content-Security-Policy\", value: \"default-src 'self'; ...\" }, { key: \"X-Content-Type-Options\", value: \"nosniff\" }, { key: \"Referrer-Policy\", value: \"strict-origin-when-cross-origin\" }]. Copy the policy from the README."
+review: true

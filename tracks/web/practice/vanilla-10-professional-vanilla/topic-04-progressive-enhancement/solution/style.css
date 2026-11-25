@@ -1,0 +1,64 @@
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #faf7f0;
+  color: #2e3a8c;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background: #2e3a8c;
+}
+
+header a {
+  color: #faf7f0;
+  font-weight: 700;
+}
+
+main {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+#search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+#products {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 1rem;
+}
+
+.product {
+  border: 2px solid #f2a81d;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  background: white;
+}
+
+.product h2 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  padding: 0.4rem 0.8rem;
+  background: #f2a81d;
+  color: #2e3a8c;
+  border: none;
+  border-radius: 0.3rem;
+}
+
+button:disabled {
+  opacity: 0.6;
+}

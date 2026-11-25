@@ -1,0 +1,23 @@
+id: vanilla-09-single-page-apps/topic-03-history-routing
+title: "Routing with the History API"
+order: 3
+minutes: 10
+prerequisites: [vanilla-09-single-page-apps/topic-02-hash-routing]
+concepts: [history-api, push-state, replace-state, popstate-event, link-interception, server-fallback]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0903
+  from: sana
+  title: "The # in our links looks like a typo"
+  body: >
+    I've just printed new price tags with QR codes, and they say dhaaga.in/#/items/DC-1042. Two customers at the FC Road stall asked me if the # was a mistake.
+    Can the links be clean, like dhaaga.in/items/DC-1042? Tapping around should still feel instant,
+    and the Back button has to keep working, because that's the first thing people press.
+hints:
+  - "history.pushState(null, \"\", path) changes the address bar without loading a page, and adds an entry for Back. It fires no event, so call render() yourself straight after."
+  - "Back and Forward fire popstate on window, after the address has already changed. Just call render(): it reads location.pathname. Never pushState there."
+  - "In onClick: const link = event.target.closest(\"a[data-link]\"); if (link === null || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return; then event.preventDefault() and navigate(link.getAttribute(\"href\")). stop() calls removeEventListener with the same two functions start() added."
+review: true

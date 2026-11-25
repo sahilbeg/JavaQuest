@@ -1,0 +1,24 @@
+id: vanilla-10-professional-vanilla/topic-01-rendering-performance
+title: "Fast rendering: fragments, batching and requestAnimationFrame"
+order: 1
+minutes: 10
+prerequisites: [vanilla-09-single-page-apps/boss]
+concepts: [layout-and-paint, document-fragment, layout-thrashing, request-animation-frame, one-draw-per-frame, measure-first]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-1001
+  from: maya
+  title: "The catalogue stutters on Raju's old phone"
+  body: >
+    Raju tried the new catalogue on his old Android phone at the Aundh shop, and typing "golu" in the search box froze it for a moment on every letter.
+    I profiled it: every keystroke redraws the whole list one card at a time, and the equal-height code measures and resizes card by card.
+    Make each redraw one change to the page, measure before resizing, and draw at most once per frame.
+hints:
+  - "Three separate fixes, one per TODO. None of them changes what the customer sees, only how much work the browser does to show it."
+  - "TODO 1: append each productItem(product) to a DocumentFragment, then list.replaceChildren(fragment). TODO 2: three loops: clear every style.height, then read every offsetHeight into an array, then write the tallest to every card."
+  - "TODO 3: keep two variables outside schedule: the newest state and a waiting flag. schedule stores the state; only when nothing is waiting does it set the flag and call raf(() => { waiting = false; draw(latest); })."
+review: true

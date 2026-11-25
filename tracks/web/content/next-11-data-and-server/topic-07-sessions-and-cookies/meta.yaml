@@ -1,0 +1,24 @@
+id: next-11-data-and-server/topic-07-sessions-and-cookies
+title: "Sessions and cookies"
+order: 7
+minutes: 10
+prerequisites: [next-11-data-and-server/topic-06-data-layer]
+concepts: [http-forgets, cookie-basics, cookie-options, sessions, session-expiry, next-cookies-api]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1107
+  from: maya
+  title: "Anyone can see anyone's orders by editing a cookie"
+  body: >
+    Kavya here. Our "My orders" page remembers customers with a cookie called customer that holds their phone
+    number. Arjun changed his to 9876543210 in DevTools and saw all of Asha Rao's orders. Let's switch to real
+    sessions: the cookie holds only a random id, the server remembers who it belongs to, and it runs out after a week.
+hints:
+  - "startSession makes a random id with randomUUID(), remembers { phone, expiresAt } for it in the sessions Map, and sets the cookie with cookieStore.set(SESSION_COOKIE, id, { httpOnly: true, secure: true, sameSite: \"lax\", path: \"/\", maxAge: WEEK_SECONDS })."
+  - "currentCustomer reads cookieStore.get(SESSION_COOKIE)?.value, looks it up in the Map, and returns null when there's no cookie, no such session, or now >= expiresAt."
+  - "endSession forgets the id on the server (sessions.delete(id)) and removes the cookie with cookieStore.delete(SESSION_COOKIE)."
+review: true

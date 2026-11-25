@@ -1,0 +1,22 @@
+id: next-12-production-nextjs/topic-06-observability
+title: "Logs and errors in production"
+order: 6
+minutes: 10
+prerequisites: [next-12-production-nextjs/topic-05-deploying-next]
+concepts: [server-logs, structured-logs, error-digest, error-boundaries-in-next, on-request-error, client-error-reporting, metrics-and-alerts]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: NXT-1206
+  from: maya
+  title: "\"Something went wrong\" and nothing else"
+  body: >
+    On Sunday a customer in Nashik sent Raju a screenshot: Golu's page said "Something went wrong" with a long number under it.
+    We couldn't tell what broke, when, or for how many people, and by Monday it had gone away on its own.
+    Before launch I want us to see errors before customers report them. Read up on logs, errors and alerts in a Next.js app.
+hints:
+  - "console.log in a server component or action goes to the server's logs, not the browser. Log JSON lines with a level and fields, and never log secrets or full phone numbers."
+  - "In production, an error from a server component reaches error.js with a generic message and a digest. Search the server logs for that digest to find the real error."
+  - "instrumentation.js can export onRequestError to send every server error to a tracking service. Watch rates, like errors per minute and slow requests, and alert on what customers feel."
+review: true

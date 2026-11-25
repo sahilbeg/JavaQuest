@@ -1,0 +1,130 @@
+topic: vanilla-08-components-without-a-framework/topic-05-component-events
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: custom-event
+    prompt: "Why should the quantity picker send an event instead of calling window.cart.add() itself?"
+    choices: ["So it works on any page, and the page decides what adding means", "Because events are faster than function calls", "Because custom elements can't call functions", "So the cart is saved in localStorage"]
+    answer: 0
+    explain: "A picker that calls the cart is coupled to it and breaks where there is no cart. An event only announces what happened."
+    reteach: "### Don't reach into other components"
+
+  - id: q02
+    type: fill-blank
+    concept: custom-event
+    goal: "Make a new event named add-to-cart that carries the item and quantity."
+    prompt: "const event = new ___(\"add-to-cart\", { detail: { id, qty }, bubbles: true });"
+    answers: ["CustomEvent"]
+    explain: "CustomEvent is the event you make and name yourself, with your own data in detail."
+    reteach: "### Syntax: CustomEvent"
+
+  - id: q03
+    type: predict-output
+    concept: event-detail
+    prompt: "What does this print?"
+    code: |
+      const picker = new EventTarget();
+      picker.addEventListener("add-to-cart", (event) => {
+        console.log(event.detail.qty * 45000);
+      });
+      console.log("before");
+      picker.dispatchEvent(new CustomEvent("add-to-cart", { detail: { id: "DC-1042", qty: 2 } }));
+      console.log("after");
+    answer: "before\n90000\nafter"
+    explain: "Listeners run straight away, inside dispatchEvent, so 90000 is printed between before and after."
+    reteach: "### Syntax: dispatchEvent"
+
+  - id: q04
+    type: predict-output
+    concept: event-detail
+    prompt: "The data was passed in the wrong place. What does this print?"
+    code: |
+      const picker = new EventTarget();
+      picker.addEventListener("add-to-cart", (event) => {
+        console.log(event.detail);
+      });
+      picker.dispatchEvent(new CustomEvent("add-to-cart", { id: "DC-1042", qty: 2 }));
+    answer: "null"
+    explain: "CustomEvent only reads detail, bubbles, composed and cancelable. The id and qty were ignored, so detail is null."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: mcq
+    concept: bubbles-and-composed
+    prompt: "A picker dispatches new CustomEvent(\"add-to-cart\", { detail }) with no other options. The listener is on the catalogue around it. Does it run?"
+    choices: ["No: without bubbles: true only listeners on the picker itself hear it", "Yes, events always bubble", "Yes, but only once per page", "Only if the catalogue has a shadow root"]
+    answer: 0
+    explain: "Custom events don't bubble unless you ask. Add bubbles: true so ancestors hear it."
+    reteach: "### Bubbles and composed"
+
+  - id: q06
+    type: mcq
+    concept: bubbles-and-composed
+    prompt: "A picker sits inside a product card's shadow root. Its event has bubbles: true but not composed. Does a listener on document hear it?"
+    choices: ["No: it stops at the edge of the card's shadow root", "Yes: bubbles is enough", "Yes, but event.detail is empty", "Only if the card is open mode"]
+    answer: 0
+    explain: "Without composed, an event can't leave the shadow root it was dispatched in. Set composed: true too."
+    reteach: "### Bubbles and composed"
+
+  - id: q07
+    type: mcq
+    concept: retargeting
+    prompt: "A picker inside a product card's shadow root dispatches a composed, bubbling event. For a listener on document, what is event.target?"
+    choices: ["The product card, the outermost host the page can see", "The picker", "The Add button inside the picker", "document"]
+    answer: 0
+    explain: "As an event leaves a shadow root, its target is retargeted to that root's host, so the page never sees the insides."
+    reteach: "### Retargeting: the page sees the host"
+
+  - id: q08
+    type: spot-the-bug
+    concept: bubbles-and-composed
+    prompt: "The catalogue's add-to-cart listener never runs. Which line is wrong?"
+    code: |
+      addButton.addEventListener("click", () => {
+        this.dispatchEvent(new CustomEvent("add-to-cart", {
+          detail: { id: this.getAttribute("item-id"), qty: this.qty },
+          bubbles: false,
+          composed: true,
+        }));
+      });
+    bugLine: 4
+    explain: "With bubbles: false only listeners on the picker itself hear the event. The catalogue around it needs bubbles: true."
+    reteach: "### Bubbles and composed"
+
+  - id: q09
+    type: mcq
+    concept: listening-from-the-parent
+    prompt: "The catalogue holds 40 pickers. How many add-to-cart listeners does it need?"
+    choices: ["One, on the catalogue: every picker's bubbling event reaches it", "40, one per picker", "One per picker, plus one on document", "None: the pickers add to the cart themselves"]
+    answer: 0
+    explain: "Like event delegation, one listener on the container hears every picker inside it, even ones added later."
+    reteach: "### Listening from the parent"
+
+  - id: q10
+    type: mcq
+    concept: data-down-events-up
+    prompt: "The catalogue must tell a picker that only 4 Golus are left. Which fits data down, events up?"
+    choices: ["Set an attribute or property on the picker, like max=\"4\"", "Dispatch an event on document and hope the picker hears it", "Reach into picker.shadowRoot and change its buttons", "Have the picker call the catalogue to ask"]
+    answer: 0
+    explain: "Parents pass data down with attributes and properties. Children send news up with events."
+    reteach: "### Data down, events up"
+
+  - id: q11
+    type: mcq
+    concept: custom-event
+    prompt: "Which is the best name for the picker's event when its quantity changes?"
+    choices: ["qty-change", "change", "click", "onQtyChange"]
+    answer: 0
+    explain: "Lower case with dashes, and not a built-in name, so no other listener runs by mistake."
+    reteach: "### Syntax: CustomEvent"
+
+  - id: q12
+    type: mcq
+    concept: retargeting
+    prompt: "The page's listener needs the item id. Where should it read it from?"
+    choices: ["event.detail.id, sent by the picker", "event.target.dataset.id", "event.currentTarget.id", "picker.shadowRoot.querySelector(\".add\").id"]
+    answer: 0
+    explain: "event.target may be a retargeted host without the id. Send everything the page needs in detail."
+    reteach: "## Common mistakes"

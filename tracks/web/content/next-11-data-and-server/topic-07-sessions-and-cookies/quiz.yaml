@@ -1,0 +1,124 @@
+topic: next-11-data-and-server/topic-07-sessions-and-cookies
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: http-forgets
+    prompt: "Why does dhaaga.in need a cookie to remember that Asha is logged in?"
+    choices: ["HTTP is stateless: each request stands alone, and the server doesn't link them by itself", "Because Next.js deletes all data after each page", "Because phones can't keep passwords", "It doesn't: the server always knows who is asking"]
+    answer: 0
+    explain: "Something must come with every request to say who it is. The browser sends cookies automatically."
+    reteach: "### The web forgets you"
+
+  - id: q02
+    type: mcq
+    concept: cookie-basics
+    prompt: "The server sets a cookie dhaaga_session. What does the browser do with it?"
+    choices: ["Keeps it and sends it back with every later request to dhaaga.in", "Shows it to the customer on every page", "Sends it to every website the customer visits", "Deletes it when the page finishes loading"]
+    answer: 0
+    explain: "A cookie belongs to one site. The browser adds it to every request to that site until it expires or is deleted."
+    reteach: "### Cookies: notes the browser sends back"
+
+  - id: q03
+    type: mcq
+    concept: sessions
+    prompt: "Which value is safe to keep in the login cookie?"
+    choices: ["A random session id like 3b241101-e2bb-4255-8caf-4136c566a962", "The customer's phone number", "role=staff", "The customer's name and address"]
+    answer: 0
+    explain: "Anyone can edit a cookie. A random id only means something to the server's list, and nobody can guess another one."
+    reteach: "### Never trust what a cookie says"
+
+  - id: q04
+    type: predict-output
+    concept: sessions
+    code: |
+      const sessions = new Map([["3b24-e2bb", { phone: "9876543210" }]]);
+      function customerFor(cookieValue) {
+        return sessions.get(cookieValue)?.phone ?? "nobody";
+      }
+      console.log(customerFor("3b24-e2bb"));
+      console.log(customerFor("9876543210"));
+    answer: "9876543210\nnobody"
+    explain: "The real session id finds Asha. Typing her phone number into the cookie finds no session at all."
+    reteach: "### Sessions: a random id, remembered on the server"
+
+  - id: q05
+    type: mcq
+    concept: cookie-options
+    prompt: "Which option stops JavaScript in the page from reading the session cookie?"
+    choices: ["httpOnly: true", "secure: true", "path: \"/\"", "maxAge: 0"]
+    answer: 0
+    explain: "An httpOnly cookie is still sent with requests, but document.cookie can't see it, so a bad script can't steal it."
+    reteach: "### Syntax: cookie options"
+
+  - id: q06
+    type: fill-blank
+    concept: cookie-options
+    goal: "Make the browser send the session cookie only over encrypted HTTPS connections."
+    prompt: "cookieStore.set(\"dhaaga_session\", id, { httpOnly: true, ___: true });"
+    answers: ["secure"]
+    explain: "With secure set, the cookie never travels over plain HTTP, where others on the Wi-Fi could read it."
+    reteach: "### Syntax: cookie options"
+
+  - id: q07
+    type: mcq
+    concept: cookie-options
+    prompt: "What does maxAge: 60 * 60 * 24 * 7 mean on a cookie?"
+    choices: ["The browser keeps it for one week, because maxAge is in seconds", "It can be read 604800 times", "It is kept for 7 minutes", "It is sent only on Sundays"]
+    answer: 0
+    explain: "60 seconds, times 60 minutes, times 24 hours, times 7 days: one week in seconds."
+    reteach: "### Syntax: cookie options"
+
+  - id: q08
+    type: predict-output
+    concept: session-expiry
+    code: |
+      const expiresAt = 1000;
+      for (const now of [999, 1000, 1001]) {
+        console.log(now, now >= expiresAt ? "expired" : "ok");
+      }
+    answer: "999 ok\n1000 expired\n1001 expired"
+    explain: "The session ends the moment now reaches expiresAt, not one step later."
+    reteach: "### Sessions run out"
+
+  - id: q09
+    type: mcq
+    concept: session-expiry
+    prompt: "The cookie already has a maxAge of one week. Why does the server also check expiresAt?"
+    choices: ["The browser belongs to the customer and can be made to keep a cookie longer. Only the server's check counts", "Because maxAge is ignored by every browser", "To make the cookie smaller", "It doesn't need to"]
+    answer: 0
+    explain: "Anything on the customer's side can be changed. The server decides when a session is over."
+    reteach: "### Sessions run out"
+
+  - id: q10
+    type: fill-blank
+    concept: next-cookies-api
+    goal: "Get the request's cookie store inside a Next.js 16 server action."
+    prompt: "const cookieStore = ___ cookies();"
+    answers: ["await"]
+    explain: "cookies() from next/headers is async in Next.js 16, so you await it."
+    reteach: "### Syntax: cookies in Next.js"
+
+  - id: q11
+    type: spot-the-bug
+    concept: next-cookies-api
+    prompt: "The page crashes for every visitor who has never logged in. Which line is wrong?"
+    code: |
+      export function currentCustomer(cookieStore) {
+        const id = cookieStore.get("dhaaga_session").value;
+        const session = sessions.get(id);
+        return session ? { phone: session.phone } : null;
+      }
+    bugLine: 2
+    explain: "With no cookie, get gives undefined, and reading .value from it throws. Use ?.value."
+    reteach: "### Syntax: cookies in Next.js"
+
+  - id: q12
+    type: mcq
+    concept: sessions
+    prompt: "What must Log out do?"
+    choices: ["Delete the cookie and forget the session on the server", "Only delete the cookie", "Only show the home page", "Change the customer's phone number"]
+    answer: 0
+    explain: "If the server still remembers the session, a copied cookie keeps working."
+    reteach: "### Logging out"

@@ -1,0 +1,23 @@
+id: ts-09-typescript-in-depth/topic-04-discriminated-unions
+title: "Discriminated unions"
+order: 4
+minutes: 10
+prerequisites: [ts-09-typescript-in-depth/topic-03-utility-types]
+concepts: [discriminant, switch-narrowing, exhaustive-check, modelling-states]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0904
+  from: sam
+  title: "A UPI receipt that says change ₹NaN"
+  body: >
+    Raju here. Mr. Deshpande paid ₹450 by UPI at the Aundh shop, and his receipt said "Change ₹NaN".
+    Our payment type has every field optional, so the receipt code guessed which ones were there and got it wrong.
+    Kavya has rewritten the type as a proper union in payment.ts. Can you write the receipt, change and day-total code on top of it?
+hints:
+  - "switch (payment.mode) { case \"CASH\": ... }. Inside each case, TypeScript knows exactly which payment it is, so only that mode's fields are allowed."
+  - "In the default case, write return assertNever(payment);. If every mode has a case, payment is never there, and a mode the code doesn't know throws an error instead of printing nonsense."
+  - "changePaise: payment.mode === \"CASH\" ? payment.tenderedPaise - payment.paise : 0. totalsByMode: start with { CASH: 0, UPI: 0, CARD: 0 } and add each payment's paise to totals[payment.mode]."
+review: true

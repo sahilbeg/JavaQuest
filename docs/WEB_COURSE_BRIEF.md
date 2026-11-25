@@ -314,3 +314,44 @@ You can't run commands, so check by reading:
 - Every quiz `reteach` heading exists in the lesson.
 - `src/` equals `skeleton/`.
 - Ids, keys, prerequisites and `order` match `docs/CURRICULUM.md`.
+
+
+## More stacks: plain JavaScript, TypeScript and Next.js
+
+The same rules apply to the modules of `frontend-vanilla`, `frontend-react-ts` and `frontend-next` (see "More Frontend stacks" in `docs/CURRICULUM.md`), with these additions.
+
+- **Ticket keys:** `VAN-MMTT` (vanilla-*), `TSX-MMTT` (ts-* and tsreact-*), `NXT-MMTT` (next-*), where MM is the module's number. Incidents are `INC-MM` and features `FEAT-MM`; each course's last mini-project is `CAPSTONE`. Use the `courses.yaml` module ids exactly.
+- **Learners arrive having done web-00 to web-07** (and react-08 and react-09 for Next.js). Don't reteach those. Do refer back to them.
+
+### TypeScript (ts-*, tsreact-*)
+
+- Learner files are `.ts` and `.tsx`, and tests are `test/*.test.ts` or `test/*.test.tsx`. Tests import with the extension: `import { total } from "../src/cart.ts";`. Files in `src/` may import each other with `.ts`/`.tsx` extensions too.
+- **Type checking:** before the checks run, `src/` is type-checked with `tsc`, in strict mode (`target es2022`, `module esnext`, `moduleResolution bundler`, `jsx react-jsx`, `lib es2023 + dom`). A type error is shown like a compile error, with file and line.
+  - **The skeleton must type-check cleanly.** Its placeholders return a value of the right type (`return 0;`, `return [];`, `return null` only where the type allows it), so the checks fail with assertion messages, not type errors.
+  - The solution must type-check too. Tests are not type-checked.
+- To teach "TypeScript catches this", the lesson shows the error: `ts nocompile` for code that doesn't parse, or a ```` ```ts ```` block plus the error text in a ```` ```text ```` block. Don't make an exercise that passes only when tsc fails.
+- **Lessons:** ```` ```ts run ```` runs with Node, which strips the types, so don't use `enum`, `namespace` or constructor parameter properties in run blocks. Show those in plain ```` ```ts ```` blocks, which are parsed, not run. ```` ```tsx ```` blocks are shown only.
+- **Animations and quizzes:** code animations in TypeScript use `language: ts`. Predict-output questions in ts-* and tsreact-* modules run as TypeScript.
+- **React with TypeScript:** type props with an interface or type alias, and type events (`React.ChangeEvent<HTMLInputElement>`), state (`useState<Item[]>([])`), reducers with action unions, and context. `@types/react` is installed: `import type { ReactNode } from "react";`.
+
+### Next.js (next-*)
+
+- Next.js 16 is installed. Practice code is JavaScript (`.jsx`/`.js`), like react-08 and react-09. **Set `preview: false`**: the in-app preview can't run a Next.js server, so pages are checked by the tests alone.
+- **Layout:** files follow the app router inside `src/`: `src/app/page.jsx`, `src/app/layout.jsx`, `src/app/items/[id]/page.jsx`, `src/app/api/stock/route.js`, `src/lib/orders.js`, and so on.
+- **Testing:**
+  - **Server components** are async functions: `render(await ItemPage({ params: Promise.resolve({ id: "DC-1042" }) }))`. In Next.js 16, `params` and `searchParams` are Promises.
+  - **Route handlers** are tested with real `Request`/`Response`: `const res = await GET(new Request("http://localhost/api/stock?id=DC-1042")); expect(await res.json(), "...")...`.
+  - **Server actions** are plain async functions (a `"use server"` line at the top is fine). Call them with a `FormData` you build.
+  - **`next/link`** renders a normal `<a>` in tests.
+  - **`next/navigation`** must be mocked: `vi.mock("next/navigation", () => ({ notFound: vi.fn(() => { throw new Error("NEXT_NOT_FOUND"); }), redirect: vi.fn((to) => { throw new Error("NEXT_REDIRECT " + to); }), useRouter: () => ({ push: vi.fn() }), usePathname: () => "/" }))`.
+  - **Cookies and headers:** pass them in, for example a function that takes a `cookies` object, instead of importing `next/headers` in tested code.
+  - **Don't use** `next/image` or `next/font` in exercises. Teach them in lessons and quizzes.
+  - The data layer is an in-memory module in `src/lib/` that tests can reset.
+  - **Suspense with `use(promise)`:** render inside `await act(async () => { render(...); })` and resolve held promises inside `await act(async () => { resolve(...); })`. A plain `render` followed by `waitFor` never shows the resolved content in jsdom.
+- Teach what is current in Next.js 16 (the app router; `params` as a Promise; `proxy.js` is the new name for middleware). The installed package's `node_modules/next/dist/docs` and its type definitions are the reference when unsure.
+
+### Plain JavaScript (vanilla-*)
+
+- jsdom supports `customElements`, `attachShadow`, `<template>`, `CustomEvent` and `history.pushState`. After changing the history, dispatch `popstate` yourself: `window.dispatchEvent(new PopStateEvent("popstate"))`.
+- Service workers don't exist in jsdom. Write caching logic as a pure function that takes a cache-like object, and teach the service-worker wiring in the lesson.
+- Each custom element test defines its element once per file (`customElements.define` throws if the same name is defined twice), so import the module once at the top.

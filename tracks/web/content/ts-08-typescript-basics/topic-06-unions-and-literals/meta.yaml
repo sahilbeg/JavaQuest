@@ -1,0 +1,23 @@
+id: ts-08-typescript-basics/topic-06-unions-and-literals
+title: "Union and literal types"
+order: 6
+minutes: 9
+prerequisites: [ts-08-typescript-basics/topic-05-object-types]
+concepts: [union-types, common-members, literal-types, literal-unions, literal-widening]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0806
+  from: sam
+  title: "Saturday's UPI total doesn't match the bank"
+  body: >
+    Raju here. On Saturday I typed "upi", "Upi" and once "GPay" into the payments sheet, and the day's report only
+    counted the ones I typed as "UPI". The report said ₹899 by UPI, but the bank shows ₹1,019. Kavya says the
+    payment mode should only ever be CASH, UPI or CARD. Can you fix src/payments.ts?
+hints:
+  - "mode can only be one of three strings, so an if for \"CASH\", one for \"UPI\" and a last return \"Card\" cover them all."
+  - "String(id) works on a number and on text, because both can be turned into a string. Then check startsWith(\"order-\")."
+  - "Start dayTotals with const totals = { CASH: 0, UPI: 0, CARD: 0 } and add totals[payment.mode] += payment.paise. In readMode, compare the cleaned text with each of the three modes."
+review: true

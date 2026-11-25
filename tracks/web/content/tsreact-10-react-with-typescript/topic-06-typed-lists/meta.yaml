@@ -1,0 +1,24 @@
+id: tsreact-10-react-with-typescript/topic-06-typed-lists
+title: "Typed lists and keys"
+order: 6
+minutes: 10
+prerequisites: [tsreact-10-react-with-typescript/topic-05-typed-forms]
+concepts: [rendering-lists, keys, readonly-arrays, sorting-copies, derived-values]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1006
+  from: maya
+  title: "Show the yarn shelf on the shop tablet"
+  body: >
+    Kavya here. Arjun wants the Aundh shop tablet to show every yarn cone on the shelf, with low ones marked, so
+    he can reorder before Diwali. We have two Mint cones, so colour alone won't tell rows apart. The props are
+    readonly on purpose: please sort a copy, never the shelf itself.
+hints:
+  - 'Map the yarns to rows: shown.map((yarn) => <li key={yarn.id}>{yarn.colour}: {yarn.grams} g</li>). The key is the id, because two cones can share a colour.'
+  - "yarns is readonly Yarn[], so yarns.sort(...) is a type error. Sort a copy: [...yarns].sort((a, b) => a.grams - b.grams), and use it only when sortBy is \"grams\"."
+  - 'Give a row className={yarn.grams < LOW_GRAMS ? "low" : undefined}. The total is yarns.reduce((sum, yarn) => sum + yarn.grams, 0).'
+review: true

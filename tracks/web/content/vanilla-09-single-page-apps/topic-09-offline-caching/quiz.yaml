@@ -1,0 +1,130 @@
+topic: vanilla-09-single-page-apps/topic-09-offline-caching
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: service-worker
+    variants:
+      - { prompt: "What is a service worker?", choices: ["A background script that sits between the page and the network, and can answer requests itself", "A server that sends the page", "A function that draws the outlet", "A person who fixes the website"], answer: 0 }
+      - { prompt: "Which of these can a service worker NOT do?", choices: ["Change the page's elements through document", "Answer a request from a saved copy", "Keep working when the network is gone", "Save responses in a cache"], answer: 0 }
+    explain: "A service worker runs apart from the page, with no document. It works on requests and responses."
+    reteach: "### The service worker"
+
+  - id: q02
+    type: fill-blank
+    concept: service-worker
+    goal: "Ask the browser to install the worker script at /sw.js for this site."
+    prompt: "navigator.serviceWorker.___(\"/sw.js\", { type: \"module\" });"
+    answers: ["register"]
+    explain: "register installs the service worker. The if (\"serviceWorker\" in navigator) check around it skips old browsers."
+    reteach: "### Syntax: registering a service worker"
+
+  - id: q03
+    type: order
+    concept: sw-lifecycle
+    prompt: "Put a new service worker's life in order."
+    items:
+      - "The page registers sw.js"
+      - "install fires, and the worker saves the app shell"
+      - "activate fires, and the worker deletes old caches"
+      - "fetch fires for each request, and the worker answers it"
+    explain: "Register, install (save the shell), activate (clean up), then handle requests through fetch."
+    reteach: "### The life of a service worker"
+
+  - id: q04
+    type: mcq
+    concept: sw-lifecycle
+    prompt: "Why wrap the install work in event.waitUntil(precache(...))?"
+    choices: ["So the browser waits until the shell is fully saved before the worker goes live", "So the page reloads", "To make the download faster", "To answer a request"]
+    answer: 0
+    explain: "waitUntil keeps the install step open until the promise settles. event.respondWith is the one that answers requests."
+    reteach: "### Syntax: the three events"
+
+  - id: q05
+    type: mcq
+    concept: cache-api
+    prompt: "Why save response.clone() instead of response?"
+    choices: ["A body can be read only once, and both the cache and the page need it", "clone() makes the response smaller", "The Cache API only accepts copies of copies", "clone() checks that the response is ok"]
+    answer: 0
+    explain: "Saving the original uses up its body, so the page would get an empty one. Save a copy and return the original."
+    reteach: "### The Cache API"
+
+  - id: q06
+    type: mcq
+    concept: cache-api
+    prompt: "What does cache.match(\"/api/items\") give when nothing is saved for that path?"
+    choices: ["undefined", "null", "An empty response", "It throws an error"]
+    answer: 0
+    explain: "match resolves to undefined when there is no saved response, so check for that before using it."
+    reteach: "### The Cache API"
+
+  - id: q07
+    type: mcq
+    concept: cache-first
+    variants:
+      - { prompt: "Which request suits cache first?", choices: ["/main.js, the app's code", "/api/stock/DC-1042, today's stock", "/api/items, today's prices", "POST /api/orders"], answer: 0 }
+      - { prompt: "With cache first, what happens when a saved copy exists?", choices: ["It is returned at once, without using the network", "The network is asked first anyway", "The copy is deleted", "Both are shown"], answer: 0 }
+    explain: "Cache first answers from the saved copy straight away. It suits files that change only when you deploy."
+    reteach: "### Cache first, for things that rarely change"
+
+  - id: q08
+    type: predict-output
+    concept: network-first
+    code: |
+      const saved = { "/api/items": "list from 9 am" };
+      function networkFirst(path, online) {
+        if (online) {
+          saved[path] = "list from 2 pm";
+          return saved[path];
+        }
+        return saved[path] ?? "error";
+      }
+      console.log(networkFirst("/api/items", false));
+      console.log(networkFirst("/api/items", true));
+      console.log(networkFirst("/api/items", false));
+    answer: "list from 9 am\nlist from 2 pm\nlist from 2 pm"
+    explain: "Offline, the saved copy answers. Online, the fresh answer replaces it, so the next offline answer is the 2 pm list."
+    reteach: "### Network first, for data that changes"
+
+  - id: q09
+    type: mcq
+    concept: network-first
+    prompt: "With network first, the server answers 500 for /api/items. What should the worker do?"
+    choices: ["Return the 500 to the page, and keep the good saved copy", "Save the 500 as the new copy", "Delete the whole cache", "Retry forever"]
+    answer: 0
+    explain: "A 500 is an answer, not a dropped connection. The page shows its error state, and the saved list stays good for later."
+    reteach: "### Network first, for data that changes"
+
+  - id: q10
+    type: spot-the-bug
+    concept: cache-first
+    code: |
+      async function cacheFirst(path, cache, fetchFn) {
+        const saved = await cache.match(path);
+        if (saved !== undefined) return saved;
+        const response = await fetchFn(path);
+        await cache.put(path, response.clone());
+        return response;
+      }
+    bugLine: 5
+    explain: "It saves every answer, even a 404 or a 500, which would then be served forever. Save only when response.ok is true."
+    reteach: "### What a worker should not cache"
+
+  - id: q11
+    type: mcq
+    concept: cache-versioning
+    prompt: "You deploy a fixed main.js, but customers keep getting the old one. The cache is named \"dhaaga\" and never changes. What is the fix?"
+    choices: ["Put a version in the name, like dhaaga-v3, and delete other caches on activate", "Ask customers to clear their browser data", "Switch the app shell to network first", "Stop using a service worker"]
+    answer: 0
+    explain: "A new cache name makes the new worker save the new shell, and activate removes the old copies."
+    reteach: "### Versioning your caches"
+
+  - id: q12
+    type: mcq
+    concept: cache-api
+    prompt: "Which request should the worker never answer from its cache?"
+    choices: ["POST /api/orders, placing an order", "GET /style.css", "GET /images/golu.jpg", "GET /"]
+    answer: 0
+    explain: "Only GET requests are safe to answer from a copy. A saved POST would pretend to place an order that never reached the shop."
+    reteach: "### What a worker should not cache"

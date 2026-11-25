@@ -1,0 +1,24 @@
+id: ts-08-typescript-basics/topic-04-arrays-and-tuples
+title: "Arrays and tuples"
+order: 4
+minutes: 9
+prerequisites: [ts-08-typescript-basics/topic-03-typed-functions]
+concepts: [array-types, typed-array-methods, readonly-arrays, tuples, tuple-destructuring]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0804
+  from: maya
+  title: "The price list got sorted under everyone's feet"
+  body: >
+    Sana's new "cheapest first" view sorted our shared price list in place, and the WhatsApp quote started
+    listing items in a different order for everyone. Let's type it properly. I've moved the cart in src/cart.ts
+    to tuples and made the price list readonly. Please fill in the functions, and make sure sorting never
+    touches the original list.
+hints:
+  - "for (const [listCode, paise] of PRICE_LIST) destructures each tuple. Return paise when listCode matches, and 0 after the loop."
+  - "For codesInCart, start with const codes: string[] = [] and push a code only when !codes.includes(code)."
+  - "A pair is just an array literal: return [Math.min(...prices), Math.max(...prices)]. For a new sorted list, copy first: [...list].sort((a, b) => a[1] - b[1])."
+review: true

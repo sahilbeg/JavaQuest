@@ -1,0 +1,145 @@
+topic: tsreact-12-professional-typescript/topic-03-typed-apis-end-to-end
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: predict-output
+    concept: api-contract
+    prompt: "The server broke the contract and sent the price as text. The types say number. What does this print?"
+    code: |
+      const fromServer: any = { price_paise: "45000" };
+      const price: number = fromServer.price_paise;
+      console.log(price + 12000);
+    answer: "4500012000"
+    explain: "Types vanish when the code runs. price is really the text \"45000\", so + joins text instead of adding. The any let the wrong value in without a word."
+    reteach: "### Types stop at the edge of your code"
+
+  - id: q02
+    type: mcq
+    concept: api-contract
+    prompt: "Why doesn't `(await response.json()) as Item[]` protect you from a bad answer?"
+    choices:
+      - "as only changes what the compiler believes; nothing checks the real JSON"
+      - "as Item[] throws if the JSON is wrong"
+      - "response.json() already checks the types"
+      - "TypeScript downloads the API's types first"
+    answer: 0
+    explain: "json() returns any, and as is an unchecked promise. tsc never sees what the server sends while the app runs."
+    reteach: "### Types stop at the edge of your code"
+
+  - id: q03
+    type: mcq
+    concept: trust-boundary
+    prompt: "Which of these is NOT data crossing a trust boundary into the app?"
+    choices:
+      - "A constant price list written in your own TypeScript file"
+      - "The JSON answer from the stock API"
+      - "A value read back from localStorage"
+      - "The ?pin= part of the page's URL"
+    answer: 0
+    explain: "Your own typed constants are checked by tsc. Server answers, storage and URLs come from outside, so they start as unknown and need a check."
+    reteach: "### The trust boundary"
+
+  - id: q04
+    type: fill-blank
+    concept: runtime-validation
+    goal: "Read a server's answer with the one type that forces a check before any field is used."
+    prompt: "const data: ___ = await response.json();"
+    answers: ["unknown"]
+    explain: "json() returns any. Storing it as unknown makes the compiler refuse every use until a check, like a parser, narrows it."
+    reteach: "### Syntax: a parser for unknown data"
+
+  - id: q05
+    type: predict-output
+    concept: runtime-validation
+    prompt: "What does this check print?"
+    code: |
+      const answer: unknown = JSON.parse('{"days":"2"}');
+      const ok = typeof answer === "object" && answer !== null && "days" in answer && typeof answer.days === "number";
+      console.log(ok);
+    answer: "false"
+    explain: "days is there, but it is the text \"2\", not a number. A parser like this refuses it at the door instead of letting text pose as a number."
+    reteach: "### Syntax: a parser for unknown data"
+
+  - id: q06
+    type: mcq
+    concept: runtime-validation
+    prompt: "A parser checks price_paise with typeof value === \"number\". Which bad value still gets through?"
+    choices:
+      - "450.5, which isn't whole paise"
+      - "\"45000\", sent as text"
+      - "null"
+      - "a missing price_paise"
+    answer: 0
+    explain: "450.5 is a number, so typeof is happy. Money in paise is always whole, so add Number.isInteger (and value >= 0)."
+    reteach: "### Syntax: a parser for unknown data"
+
+  - id: q07
+    type: mcq
+    concept: dto-mapping
+    prompt: "The server sends pin_code; the app's Delivery type uses pin. Where should the renaming happen?"
+    choices:
+      - "Once, in the parser at the boundary, so no screen ever sees pin_code"
+      - "In every component that shows the PIN code"
+      - "Nowhere: rename the app's type to pin_code everywhere"
+      - "In the CSS"
+    answer: 0
+    explain: "Keep the wire shape (the DTO) and the app's shape apart, and convert at the boundary. A backend rename then changes one function, not every screen."
+    reteach: "### Two shapes: the server's and the app's"
+
+  - id: q08
+    type: fill-blank
+    concept: result-type
+    goal: "Finish the failure member of a union that holds either a value or a message for the customer."
+    prompt: "type Result<T> = { ok: true; value: T } | { ok: ___; error: string };"
+    answers: ["false"]
+    explain: "The literal types true and false make ok the discriminant. Checking result.ok narrows to the member with value or the member with error."
+    reteach: "### Syntax: a Result type"
+
+  - id: q09
+    type: spot-the-bug
+    concept: result-type
+    prompt: "This doesn't type-check. Which line is the problem?"
+    code: |
+      async function showDelivery(pin: string) {
+        const result = await fetchDelivery(pin);
+        showDays(result.value.days);
+        if (!result.ok) showError(result.error);
+      }
+    bugLine: 3
+    explain: "result might be the error member, which has no value. Check result.ok first; then value is allowed. That's how a Result makes callers handle failure."
+    reteach: "### Syntax: a Result type"
+
+  - id: q10
+    type: mcq
+    concept: result-type
+    prompt: "fetch(url) answers with status 500. What does fetch itself do?"
+    choices:
+      - "It resolves normally, with response.ok set to false"
+      - "It throws an Error"
+      - "It returns null"
+      - "It retries until it gets a 200"
+    answer: 0
+    explain: "fetch only rejects when the network fails. A 404 or 500 is a normal answer, so check response.ok and turn it into an error yourself."
+    reteach: "## Worked example"
+
+  - id: q11
+    type: mcq
+    concept: shared-and-generated-types
+    variants:
+      - prompt: "The backend publishes an OpenAPI file. What is the best way to get the frontend's API types?"
+        choices:
+          - "Generate them from the OpenAPI file, and still check answers at the boundary"
+          - "Write them by hand and hope they match"
+          - "Use any for every answer"
+          - "Generate them, and then skip all runtime checks"
+        answer: 0
+      - prompt: "What does a schema library like Zod give you from one description of a shape?"
+        choices:
+          - "Both a runtime check and the TypeScript type"
+          - "Only the TypeScript type"
+          - "Only documentation"
+          - "A faster fetch"
+        answer: 0
+    explain: "Generated or shared types stop the two sides drifting apart. They describe what should arrive; a check at the boundary proves what did. Zod gives the check and the type together."
+    reteach: "### One contract, shared or generated"

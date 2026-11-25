@@ -1,0 +1,24 @@
+id: vanilla-09-single-page-apps/topic-04-store-and-views
+title: "A store and views that follow it"
+order: 4
+minutes: 10
+prerequisites: [vanilla-09-single-page-apps/topic-03-history-routing]
+concepts: [app-store, immutable-updates, selectors, watching-a-slice, mount-and-unmount]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0904
+  from: maya
+  title: "The cart badge says 0 on the item page"
+  body: >
+    Now that screens come and go, each one keeps its own copy of the cart. Add Golu on his item page,
+    and the header badge still says 0 until you open the cart screen.
+    Let's keep the cart in the one store, and make the badge follow it, redrawing only when the count really changes.
+hints:
+  - "Never change the old state. Return { ...state, lines: newLines }, and build newLines with map, filter or [...state.lines, newLine]."
+  - "watch keeps the last selected value in a variable. In its subscribe listener, select again and call onChange only when next !== last."
+  - "mountCartBadge is one line: return watch(store, itemCount, (count) => { el.textContent = String(count); });"
+review: true

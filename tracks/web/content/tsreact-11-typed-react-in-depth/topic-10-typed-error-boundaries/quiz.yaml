@@ -1,0 +1,113 @@
+topic: tsreact-11-typed-react-in-depth/topic-10-typed-error-boundaries
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: error-boundaries
+    prompt: "A component throws while React renders it, and there is no error boundary. What does the customer see?"
+    choices: ["A blank page: React removes the whole app", "Only that component disappears", "A red error box from the browser", "Nothing changes"]
+    answer: 0
+    explain: "Without a boundary, React can't trust anything it was building, so it removes the whole tree."
+    reteach: "### One broken part blanks the page"
+
+  - id: q02
+    type: mcq
+    concept: error-boundaries
+    prompt: "Which error does an error boundary catch?"
+    choices: ["A child component throwing while it renders", "An onClick handler throwing", "A fetch that fails after a click", "An error inside the boundary's own render"]
+    answer: 0
+    explain: "Boundaries catch rendering errors in the components inside them. Handlers and async code need try/catch and error state."
+    reteach: "### What boundaries don't catch"
+
+  - id: q03
+    type: fill-blank
+    concept: typed-class-components
+    goal: "Start a boundary class whose props and state are both typed, from React's base class."
+    prompt: "class ErrorBoundary extends ___<ErrorBoundaryProps, ErrorBoundaryState> {"
+    answers: ["Component"]
+    explain: "Component<Props, State> is generic. It types this.props, this.state and setState."
+    reteach: "### Syntax: a typed class component"
+
+  - id: q04
+    type: mcq
+    concept: typed-class-components
+    prompt: "Why is an error boundary a class, when everything else in the store uses function components?"
+    choices: ["There is no hook for catching render errors; only class methods can do it", "Classes are faster", "TypeScript requires classes for state", "Function components can't have children"]
+    answer: 0
+    explain: "getDerivedStateFromError and componentDidCatch only exist on class components."
+    reteach: "### Syntax: a typed class component"
+
+  - id: q05
+    type: mcq
+    concept: error-boundaries
+    prompt: "Which method should send the error to a logging service?"
+    choices: ["componentDidCatch", "static getDerivedStateFromError", "render", "The constructor"]
+    answer: 0
+    explain: "getDerivedStateFromError only turns the error into state. Side effects like logging belong in componentDidCatch."
+    reteach: "### Syntax: componentDidCatch"
+
+  - id: q06
+    type: predict-output
+    concept: thrown-values-are-unknown
+    code: |
+      function toError(value: unknown): Error {
+        return value instanceof Error ? value : new Error(String(value));
+      }
+      const thrown: unknown[] = [new RangeError("qty too big"), "API down", 500, null];
+      for (const value of thrown) {
+        console.log(toError(value).message);
+      }
+    answer: "qty too big\nAPI down\n500\nnull"
+    explain: "A RangeError is an Error, so it is kept. The string, the number and null become messages through String()."
+    reteach: "### Anything can be thrown"
+
+  - id: q07
+    type: mcq
+    concept: thrown-values-are-unknown
+    prompt: "Why does getDerivedStateFromError take error: unknown instead of error: Error?"
+    choices: ["JavaScript can throw any value, not only Errors", "TypeScript doesn't know the Error type", "React always passes a string", "unknown is faster"]
+    answer: 0
+    explain: "throw \"oops\" is legal. Typing it unknown makes you turn it into a real Error before reading .message."
+    reteach: "### Anything can be thrown"
+
+  - id: q08
+    type: mcq
+    concept: typed-fallback
+    prompt: "The prop is fallback: (error: Error, reset: () => void) => ReactNode. What does the boundary do with it?"
+    choices: ["Calls it with the caught error and a reset function, and shows what it returns", "Shows it as text", "Calls it before every render", "Passes it to the children"]
+    answer: 0
+    explain: "It's a render prop: the parent decides what the fallback looks like, and gets the error and a way to try again."
+    reteach: "### A typed fallback that can try again"
+
+  - id: q09
+    type: spot-the-bug
+    concept: resetting-boundaries
+    prompt: "Moving from Golu to the coaster set never clears the fallback. Which line is wrong?"
+    code: |
+      componentDidUpdate(prevProps: ErrorBoundaryProps) {
+        if (this.state.error !== null && prevProps.resetKey === this.props.resetKey) {
+          this.setState({ error: null });
+        }
+      }
+    bugLine: 2
+    explain: "It should clear the error when the key has changed: prevProps.resetKey !== this.props.resetKey."
+    reteach: "### Resetting when the page moves on"
+
+  - id: q10
+    type: mcq
+    concept: resetting-boundaries
+    prompt: "What does reset do in the fallback's Try again button?"
+    choices: ["Sets the boundary's state back to { error: null }, so the children render again", "Reloads the whole page", "Deletes the broken component for good", "Calls componentDidCatch again"]
+    answer: 0
+    explain: "Clearing the error makes render() show the children once more. If they still throw, the fallback comes back."
+    reteach: "### Resetting when the page moves on"
+
+  - id: q11
+    type: mcq
+    concept: error-boundaries
+    prompt: "Where should the boundary go on Golu's item page?"
+    choices: ["Around just the Similar items list, so the heading, price and Add to cart stay", "Around the whole app only", "Inside SimilarItems, around each name", "Around the Add to cart button"]
+    answer: 0
+    explain: "Wrap the risky extra. The parts a customer needs to buy should stay outside the boundary."
+    reteach: "## Common mistakes"

@@ -1,0 +1,24 @@
+id: next-11-data-and-server/topic-10-environment-and-secrets
+title: "Environment variables and secrets"
+order: 10
+minutes: 10
+prerequisites: [next-11-data-and-server/topic-09-streaming-and-suspense]
+concepts: [process-env, env-files, next-public-prefix, check-config-early, webhook-secrets]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1110
+  from: maya
+  title: "Our UPI gateway key is in the browser"
+  body: >
+    Kavya here. Sana opened DevTools on dhaaga.in and found our UPI gateway key sitting in a JavaScript file, because
+    someone named it NEXT_PUBLIC_UPI_GATEWAY_KEY. I've already changed the key with the gateway. Now let's make sure
+    it can't happen again, check our settings when the server starts, and stop anyone faking payment messages to us.
+hints:
+  - "readServerConfig collects every name in REQUIRED whose env value is missing or empty. If there are any, throw new Error(`Missing environment variables: ${missing.join(\", \")}.`). Otherwise return { upiKey, dbUrl }."
+  - "leakedSecrets keeps the names that start with NEXT_PUBLIC_ and contain KEY, SECRET, TOKEN or PASSWORD, then sorts them. publicConfig only reads NEXT_PUBLIC_ values."
+  - "In the webhook, read process.env.UPI_WEBHOOK_SECRET inside POST. No secret: 500 { error: \"Webhook is not set up.\" }. A header x-dhaaga-signature that doesn't match: 401 { error: \"Bad signature.\" }. Otherwise { ok: true }."
+review: true

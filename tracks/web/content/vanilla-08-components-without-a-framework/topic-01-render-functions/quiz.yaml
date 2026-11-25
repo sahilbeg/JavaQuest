@@ -1,0 +1,134 @@
+topic: vanilla-08-components-without-a-framework/topic-01-render-functions
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: h-helper
+    prompt: "What does h(\"p\", { class: \"price\" }, \"₹450.00\") give back?"
+    choices: ["A new <p> element with class price and the text ₹450.00, not yet on the page", "The string <p class=\"price\">₹450.00</p>", "A <p> that is already on the page", "undefined, because h only changes the page"]
+    answer: 0
+    explain: "h builds one detached element from a tag, props and children. You put it on the page yourself."
+    reteach: "### Syntax: h"
+
+  - id: q02
+    type: mcq
+    concept: props
+    prompt: "Which props make h(\"button\", props) give <button type=\"button\" disabled>?"
+    choices: ["{ type: \"button\", disabled: true }", "{ type: \"button\", disabled: false }", "{ type: \"button\", disabled: null }", "{ type: \"button\" }"]
+    answer: 0
+    explain: "true sets an empty attribute, so the button is disabled. false, null and a missing prop set nothing."
+    reteach: "### What props can hold"
+
+  - id: q03
+    type: mcq
+    concept: props
+    prompt: "soldOut is false. What does h(\"button\", { disabled: soldOut }, \"Add to cart\") make?"
+    choices: ["An enabled button with no disabled attribute", "A disabled button", "A button with disabled=\"false\", which is disabled", "An error, because false is not a string"]
+    answer: 0
+    explain: "h skips props whose value is false, null or undefined, so { disabled: soldOut } works either way."
+    reteach: "### What props can hold"
+
+  - id: q04
+    type: fill-blank
+    concept: props
+    goal: "Make a list item whose data-id attribute is DC-1042."
+    prompt: "h(\"li\", { ___: { id: \"DC-1042\" } });"
+    answers: ["dataset"]
+    explain: "The dataset prop is copied into data- attributes, so { id: \"DC-1042\" } becomes data-id=\"DC-1042\"."
+    reteach: "### What props can hold"
+
+  - id: q05
+    type: mcq
+    concept: text-not-html
+    prompt: "A customer names an order \"<b>Golu</b>\". What does h(\"h3\", null, name) show?"
+    choices: ["The characters <b>Golu</b>, as plain text", "The word Golu in bold", "Nothing, because tags are removed", "An error"]
+    answer: 0
+    explain: "Text children become text nodes. The browser never reads them as HTML, so customer text is safe."
+    reteach: "### Children: text stays text"
+
+  - id: q06
+    type: predict-output
+    concept: children
+    prompt: "This h keeps children the way the lesson's h does. What does it print?"
+    code: |
+      function h(tag, props, ...children) {
+        return children.flat().filter((child) => child !== null && child !== undefined && child !== false);
+      }
+      const stock = 0;
+      console.log(h("p", null, stock && "left").length);
+      console.log(h("p", null, stock > 0 && "left").length);
+    answer: "1\n0"
+    explain: "0 && \"left\" is 0, and 0 is not skipped, so one child is kept: the card would show 0. stock > 0 && \"left\" is false, which is skipped."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: mcq
+    concept: children
+    prompt: "Which of these children does h skip, adding nothing for it?"
+    choices: ["false", "0", "\"Golu\"", "an h(\"span\", null) element"]
+    answer: 0
+    explain: "h skips null, undefined and false. 0 and strings become text; elements are appended."
+    reteach: "### Children: text stays text"
+
+  - id: q08
+    type: predict-output
+    concept: children
+    prompt: "What does this print?"
+    code: |
+      function h(tag, props, ...children) {
+        return { tag, children: children.flat() };
+      }
+      const names = ["Golu", "Coasters", "Keychain"];
+      const list = h("ul", null, h("li", null, "Header"), names.map((name) => h("li", null, name)));
+      console.log(list.children.length);
+      console.log(list.children[1].children[0]);
+    answer: "4\nGolu"
+    explain: "The mapped array of three items is flattened next to the header, so the ul has 4 children. The second is Golu's li."
+    reteach: "### Children: text stays text"
+
+  - id: q09
+    type: spot-the-bug
+    concept: components-as-functions
+    prompt: "The button does nothing when pressed, and onAdd runs once while the card is built. Which line is wrong?"
+    code: |
+      function addButton(product, onAdd) {
+        return h("button", {
+          class: "add",
+          type: "button",
+          onClick: onAdd(product.id),
+        }, "Add to cart");
+      }
+    bugLine: 5
+    explain: "onAdd(product.id) calls the function straight away and passes its result. Pass a function instead: onClick: () => onAdd(product.id)."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: components-as-functions
+    prompt: "In this ticket, what is a component?"
+    choices: ["A function that takes data and returns the elements that show it", "A CSS file for one part of the page", "A tag that the browser already knows", "A copy of the page saved in localStorage"]
+    answer: 0
+    explain: "Without a framework, the simplest component is a function: data in, element out."
+    reteach: "### Components are just functions"
+
+  - id: q11
+    type: mcq
+    concept: composition
+    prompt: "productList calls productCard for every product. What must productList know about how a card is built?"
+    choices: ["Nothing: it calls productCard and uses the element that comes back", "Every class name inside the card", "How many lines productCard has", "The card's HTML as a string"]
+    answer: 0
+    explain: "Bigger components call smaller ones and only use what they return. A card can change inside without touching the list."
+    reteach: "### Components inside components"
+
+  - id: q12
+    type: order
+    concept: h-helper
+    prompt: "Put the work h does in order."
+    items:
+      - "Make the element with document.createElement(tag)"
+      - "Apply each prop: class, dataset, listeners and attributes"
+      - "Append each child, as an element or as a text node"
+      - "Return the finished element"
+    explain: "h makes the element, sets it up from the props, fills it with the children, and hands it back."
+    reteach: "## Concept"

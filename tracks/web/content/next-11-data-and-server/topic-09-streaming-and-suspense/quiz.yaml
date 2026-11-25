@@ -1,0 +1,135 @@
+topic: next-11-data-and-server/topic-09-streaming-and-suspense
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: streaming
+    prompt: "What does streaming a page mean?"
+    choices: ["Sending the page in parts over one answer: what's ready first, slow parts when they're done", "Sending a video instead of HTML", "Loading the page twice to be safe", "Sending the page only after every request has finished"]
+    answer: 0
+    explain: "The server keeps the answer open and adds each slow part when its data arrives."
+    reteach: "### Streaming: the page in pieces"
+
+  - id: q02
+    type: mcq
+    concept: streaming
+    prompt: "DashboardPage awaits an eight-second sales report before it returns any JSX, and there is no loading.jsx. What does Meera see for those eight seconds?"
+    choices: ["Nothing, not even the heading", "The heading and a loading message", "Yesterday's sales", "An error page"]
+    answer: 0
+    explain: "The page can't send anything until it returns, so the whole page waits for the slowest await."
+    reteach: "### One slow request holds up the whole page"
+
+  - id: q03
+    type: mcq
+    concept: suspense-boundaries
+    prompt: "SalesCard is waiting for its data inside <Suspense fallback={<p>Loading today's sales...</p>}>. What shows in its place?"
+    choices: ["Loading today's sales...", "Nothing at all", "An empty SalesCard", "The whole page's loading.jsx"]
+    answer: 0
+    explain: "The nearest Suspense boundary shows its fallback until everything inside it is ready."
+    reteach: "### Syntax: Suspense"
+
+  - id: q04
+    type: fill-blank
+    concept: suspense-boundaries
+    goal: "Show a short loading message in this spot while the sales card waits for its data."
+    prompt: "<Suspense ___={<p>Loading today's sales...</p>}>"
+    answers: ["fallback"]
+    explain: "fallback is what the boundary shows while anything inside it is waiting."
+    reteach: "### Syntax: Suspense"
+
+  - id: q05
+    type: mcq
+    concept: loading-file
+    prompt: "How does a loading.jsx file next to page.jsx work?"
+    choices: ["Next.js wraps the page in a Suspense boundary and uses loading.jsx as its fallback", "It replaces the page forever", "It runs before the proxy", "It only works for client components"]
+    answer: 0
+    explain: "It's one boundary around the whole page. Your own Suspense elements can split the page into smaller parts."
+    reteach: "### loading.jsx is a boundary around the whole page"
+
+  - id: q06
+    type: predict-output
+    concept: start-requests-early
+    code: |
+      const log = [];
+      function slow(name, ms) {
+        log.push(`start ${name}`);
+        return new Promise((resolve) =>
+          setTimeout(() => {
+            log.push(`done ${name}`);
+            resolve();
+          }, ms),
+        );
+      }
+      const a = slow("sales", 10);
+      const b = slow("stock", 5);
+      log.push("shell");
+      Promise.all([a, b]).then(() => console.log(log.join(", ")));
+    answer: "start sales, start stock, shell, done stock, done sales"
+    explain: "Calling slow starts the work at once. The shell is ready before either report, and the shorter one finishes first."
+    reteach: "### Start every request early"
+
+  - id: q07
+    type: fill-blank
+    concept: use-a-promise
+    goal: "Read the value of the sales promise inside the card, pausing it until the value is ready."
+    prompt: "const sales = ___(salesPromise);"
+    answers: ["use"]
+    explain: "use(promise) from react gives the value, or pauses the component and shows the nearest fallback."
+    reteach: "### Syntax: reading a promise with use"
+
+  - id: q08
+    type: mcq
+    concept: use-a-promise
+    prompt: "The promise passed to use(salesPromise) rejects. What shows?"
+    choices: ["The nearest error boundary, like error.jsx", "The fallback, forever", "The card with empty values", "Nothing changes"]
+    answer: 0
+    explain: "A rejected promise is an error in that component, so the nearest error boundary takes over."
+    reteach: "### Syntax: reading a promise with use"
+
+  - id: q09
+    type: spot-the-bug
+    concept: start-requests-early
+    prompt: "The fallback never shows, and the page stays white until the sales arrive. Which line is wrong?"
+    code: |
+      export default async function DashboardPage() {
+        const sales = await getTodaySales();
+        return (
+          <Suspense fallback={<p>Loading today's sales...</p>}>
+            <SalesCard sales={sales} />
+          </Suspense>
+        );
+      }
+    bugLine: 2
+    explain: "The await happens before the boundary exists. Start the request without await, pass the promise down, and read it with use."
+    reteach: "### The page itself must not wait"
+
+  - id: q10
+    type: mcq
+    concept: suspense-boundaries
+    prompt: "Both cards sit in one Suspense boundary. The stock is ready after 2 seconds, the sales after 8. When does the stock card show?"
+    choices: ["After 8 seconds, together with the sales", "After 2 seconds", "Straight away", "Never"]
+    answer: 0
+    explain: "A boundary shows its content only when everything inside is ready. Give each card its own boundary."
+    reteach: "### One boundary per slow part"
+
+  - id: q11
+    type: mcq
+    concept: use-a-promise
+    prompt: "Where should the promise that a card reads with use() be created?"
+    choices: ["In the page, a server component, and passed to the card as a prop", "Inside the card, on every render", "In a CSS file", "In the browser's localStorage"]
+    answer: 0
+    explain: "A promise made inside the card would be new on every render, so React would wait again and again."
+    reteach: "### Syntax: reading a promise with use"
+
+  - id: q12
+    type: order
+    concept: streaming
+    prompt: "Meera opens the streamed dashboard. Put the steps in order."
+    items:
+      - "The page starts both reports without waiting"
+      - "The heading and two loading messages reach the browser"
+      - "The stock report finishes and its card replaces one loading message"
+      - "The sales report finishes and its card replaces the other"
+    explain: "The shell goes first, then each slow part as soon as it's ready. Here the stock report is the faster one."
+    reteach: "### Streaming: the page in pieces"

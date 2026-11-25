@@ -1,0 +1,119 @@
+topic: ts-08-typescript-basics/topic-01-why-typescript
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: static-types
+    prompt: "What does the annotation in let qty: number = 2; promise?"
+    choices: ["qty will only ever hold a number", "qty will always be 2", "qty can never change", "qty is checked by the browser every time it changes"]
+    answer: 0
+    explain: "A type annotation says what kind of value a name may hold. qty can change, but only to another number."
+    reteach: "### Syntax: a type annotation"
+
+  - id: q02
+    type: mcq
+    concept: type-checker
+    prompt: "What does npx tsc --noEmit do?"
+    choices: ["Reads every .ts file and reports type errors, without running the code", "Runs the code and stops at the first crash", "Formats the code, like Prettier", "Uploads the site to the server"]
+    answer: 0
+    explain: "tsc checks by reading. --noEmit means it only checks and writes no files."
+    reteach: "### The type checker: tsc"
+
+  - id: q03
+    type: mcq
+    concept: type-errors
+    prompt: "Which of these mistakes can TypeScript catch before the code runs?"
+    choices: ["Writing line.qyt when the object only has qty", "A customer typing \"two\" in the quantity box", "A server sending a price of -5", "A tote bag being priced at ₹89 instead of ₹899 in the price list"]
+    answer: 0
+    explain: "TypeScript knows the shape of line, so a missing property is a type error. The other three are wrong values that only show up at run time."
+    reteach: "### The same code, read by TypeScript"
+
+  - id: q04
+    type: predict-output
+    concept: type-erasure
+    code: |
+      const price: number = 45000;
+      console.log(typeof price);
+    answer: "number"
+    explain: "The annotation is stripped before the code runs. What's left is plain JavaScript, and typeof 45000 is number."
+    reteach: "### Types disappear when the code runs"
+
+  - id: q05
+    type: predict-output
+    concept: type-erasure
+    code: |
+      function lineTotal(paise: number, qty: number): number {
+        return paise * qty;
+      }
+      console.log(lineTotal(15000, 3));
+    answer: "45000"
+    explain: "With the types stripped, it's the same function as in JavaScript: 15000 times 3."
+    reteach: "### Types disappear when the code runs"
+
+  - id: q06
+    type: predict-output
+    concept: type-erasure
+    code: |
+      const qty: number = Number("three");
+      console.log(qty);
+    answer: "NaN"
+    explain: "TypeScript is happy, because Number(...) always gives a number. But \"three\" isn't a number, so the value is NaN."
+    reteach: "### What TypeScript can't catch"
+
+  - id: q07
+    type: mcq
+    concept: type-erasure
+    prompt: "What happens to type annotations when dhaaga.in is built and opened on a customer's phone?"
+    choices: ["They are removed, and the phone runs plain JavaScript", "The phone checks them every time a function is called", "They are turned into if statements that check each value", "The phone downloads TypeScript to read them"]
+    answer: 0
+    explain: "This is type erasure. Browsers only run JavaScript, so the build strips the types away."
+    reteach: "### Types disappear when the code runs"
+
+  - id: q08
+    type: fill-blank
+    concept: static-types
+    goal: "Declare a box for the coaster set's price that may only ever hold numbers."
+    prompt: "let coasterPaise___ number = 15000;"
+    answers: [":"]
+    explain: "An annotation is a colon after the name, then the type: let coasterPaise: number = 15000;"
+    reteach: "### Syntax: a type annotation"
+
+  - id: q09
+    type: spot-the-bug
+    concept: type-errors
+    code: |
+      const shopName: string = "Dhaaga & Co.";
+      const openDays: number = 6;
+      const giftWrapPaise: number = "3000";
+      const takesUpi: boolean = true;
+    bugLine: 3
+    explain: "\"3000\" in quotes is text, but the box is labelled number. TypeScript reports TS2322: Type 'string' is not assignable to type 'number'."
+    reteach: "### Syntax: a type annotation"
+
+  - id: q10
+    type: mcq
+    concept: type-errors
+    prompt: "deliveryFee(subtotal: number) is called as deliveryFee(\"1200\"). What does \"Argument of type 'string' is not assignable to parameter of type 'number'\" mean?"
+    choices: ["Text was passed where the function expects a number", "The function returned text instead of a number", "The function needs two arguments", "1200 is too big for a number"]
+    answer: 0
+    explain: "An argument is the value you pass in. \"1200\" in quotes is a string, and subtotal must be a number."
+    reteach: "## Worked example"
+
+  - id: q11
+    type: mcq
+    concept: adopting-typescript
+    prompt: "dhaaga.in has forty .js files. How can the team start using TypeScript?"
+    choices: ["Add TypeScript and move files to .ts one at a time, keeping the rest as .js", "Rewrite all forty files in one weekend, or it won't work", "Buy a new server that runs TypeScript", "Ask customers to update their browsers"]
+    answer: 0
+    explain: "A project can hold .js and .ts files side by side. Browsers never see TypeScript, so nothing changes for customers."
+    reteach: "### Why teams use it"
+
+  - id: q12
+    type: mcq
+    concept: type-checker
+    prompt: "Node runs a .ts file that still has a type error in it. What happens?"
+    choices: ["Node strips the types and runs the code anyway, without checking them", "Node prints the type error and stops", "Node fixes the type error for you", "Node refuses to open any .ts file"]
+    answer: 0
+    explain: "Node only strips the types. Checking is tsc's job, so run tsc before you ship."
+    reteach: "## Common mistakes"

@@ -1,0 +1,22 @@
+id: ts-08-typescript-basics/boss
+title: "INC-08: A price arrives as text and the total breaks"
+order: 99
+minutes: 12
+prerequisites: [ts-08-typescript-basics/topic-10-modules-and-tsconfig]
+concepts: [union-types, typeof-narrowing, type-assertions, validating-input]
+practice:
+  kind: code
+  runner: vitest
+ticket:
+  key: INC-08
+  from: theo
+  title: "A price arrives as text and the total breaks"
+  body: >
+    Arjun here. Since Meera Aunty's new price sheet went live this morning, Mrs. Deshpande was asked ₹1,350 for a
+    keychain and a coaster set that cost ₹270, and every pair of baby booties shows ₹NaN. The sheet sends some
+    prices as text. Please fix src/catalogue.ts before the evening orders come in.
+hints:
+  - "Bronze: delete price as number. Check with typeof price === \"number\". When it's text, return Number(price.trim())."
+  - "Silver: work out the number first, then throw new Error(`Bad price: ${price}`) when !Number.isInteger(paise) || paise < 0. Treat empty text as NaN, because Number(\"\") is 0. In lineTotal, throw new Error(`Unknown item: ${line.code}`) when no row is found."
+  - "Gold: text.replaceAll(\"₹\", \"\").replaceAll(\",\", \"\").trim() leaves just the amount. Check it with Number.isFinite and >= 0, then return Math.round(rupees * 100)."
+review: false

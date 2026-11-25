@@ -1,0 +1,122 @@
+topic: tsreact-11-typed-react-in-depth/topic-06-typed-routing
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: single-page-apps
+    prompt: "What does a single-page app do when you move to another screen?"
+    choices: ["Changes what's shown with JavaScript, without loading a new page from the server", "Loads a new HTML page from the server every time", "Opens a new browser tab", "Reloads the whole site"]
+    answer: 0
+    explain: "The browser loads one page once. Routing then chooses which screen to show from the address."
+    reteach: "### One page, many screens"
+
+  - id: q02
+    type: mcq
+    concept: hash-addresses
+    prompt: "The address changes from dhaaga.in/#/ to dhaaga.in/#/item/DC-1042. What does the browser do?"
+    choices: ["Fires a hashchange event on window, without loading a new page", "Loads /item/DC-1042 from the server", "Nothing at all", "Fires a click event on the page"]
+    answer: 0
+    explain: "Changing the hash never asks the server. The page hears about it through hashchange, and Back works."
+    reteach: "### The hash part of an address"
+
+  - id: q03
+    type: predict-output
+    concept: route-unions
+    code: |
+      type Route = { page: "shop" } | { page: "item"; id: string } | { page: "notFound"; path: string };
+      function parse(path: string): Route {
+        if (path === "/") return { page: "shop" };
+        const [empty, section, id, ...rest] = path.split("/");
+        if (empty === "" && section === "item" && id && rest.length === 0) return { page: "item", id };
+        return { page: "notFound", path };
+      }
+      console.log(parse("/item/DC-2001").page);
+      console.log(parse("/item/").page);
+      console.log(parse("/item/DC-2001/photos").page);
+      console.log(parse("/").page);
+    answer: "item\nnotFound\nnotFound\nshop"
+    explain: "Only exactly three parts with a non-empty id make an item. An empty id and an extra part both fall through to notFound."
+    reteach: "### Syntax: parsing a path into a Route"
+
+  - id: q04
+    type: mcq
+    concept: route-unions
+    prompt: "Route is { page: \"shop\" } | { page: \"item\"; id: string }. Inside case \"item\": of switch (route.page), what may you read?"
+    choices: ["route.id", "route.orderId", "Nothing: you need a cast", "route.path"]
+    answer: 0
+    explain: "Each case narrows the union. Only the item shape has an id."
+    reteach: "### Choosing the page with an exhaustive switch"
+
+  - id: q05
+    type: mcq
+    concept: typed-links
+    prompt: "Why give Link a to prop of type Route instead of a string href?"
+    choices: ["A typo like { page: \"itme\" } becomes a type error instead of a broken link", "Strings can't be used in href", "It makes links load faster", "React requires objects for links"]
+    answer: 0
+    explain: "A string like \"#/itme/DC-1042\" type-checks and breaks at runtime. A Route can only name pages that exist."
+    reteach: "### Syntax: building links from routes"
+
+  - id: q06
+    type: fill-blank
+    concept: typed-links
+    goal: "Turn the route into the text after the address, so an item link points at Golu's page."
+    prompt: "return <a href={___(to)}>{children}</a>;"
+    answers: ["toHash"]
+    explain: "toHash turns { page: \"item\", id: \"DC-1042\" } into \"#/item/DC-1042\"."
+    reteach: "### Syntax: building links from routes"
+
+  - id: q07
+    type: mcq
+    concept: route-hook
+    prompt: "useRoute returns parseRoute(pathFromHash(window.location.hash)) and nothing else. What goes wrong?"
+    choices: ["The first page is right, but clicking a link never changes the screen", "Nothing: it works perfectly", "The page crashes on load", "Every page shows Page not found"]
+    answer: 0
+    explain: "Nothing re-renders when the hash changes. Keep the path in state and update it in a hashchange listener."
+    reteach: "### Syntax: a hook for the current route"
+
+  - id: q08
+    type: spot-the-bug
+    concept: route-hook
+    prompt: "In Strict Mode, every hash change sets the state twice. Which line adds a listener that is never removed?"
+    code: |
+      useEffect(() => {
+        function handleChange() {
+          setPath(pathFromHash(window.location.hash));
+        }
+        window.addEventListener("hashchange", handleChange);
+      }, []);
+    bugLine: 5
+    explain: "The effect adds a listener but returns no cleanup, so the second mount adds a second one. Add return () => window.removeEventListener(\"hashchange\", handleChange);"
+    reteach: "### Syntax: a hook for the current route"
+
+  - id: q09
+    type: mcq
+    concept: route-unions
+    prompt: "You add { page: \"wishlist\" } to Route. Page's switch ends with default: return assertNever(route);. What happens?"
+    choices: ["A type error until Page has a case for wishlist", "The wishlist shows the shop page", "A runtime error when the app starts", "Nothing, until someone opens the wishlist"]
+    answer: 0
+    explain: "In default, route is still the wishlist shape, which isn't never. TypeScript makes you add the screen."
+    reteach: "### Choosing the page with an exhaustive switch"
+
+  - id: q10
+    type: order
+    concept: route-hook
+    prompt: "A customer taps a link to Golu. Put what happens in order."
+    items:
+      - "The browser changes the hash to #/item/DC-1042"
+      - "The browser fires hashchange on window"
+      - "useRoute's listener sets the new path in state"
+      - "App renders again, and parseRoute gives the item route"
+      - "Golu's item page is shown"
+    explain: "The hash changes, the event fires, state updates, and the re-render picks the new page."
+    reteach: "### Syntax: a hook for the current route"
+
+  - id: q11
+    type: mcq
+    concept: single-page-apps
+    prompt: "What do most real React projects use for routing?"
+    choices: ["A router library such as React Router or TanStack Router", "One HTML file per screen", "An iframe per page", "The fetch API"]
+    answer: 0
+    explain: "Router libraries do the same job as the union you built: parse the address, render the page, build links."
+    reteach: "### What teams use"

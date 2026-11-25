@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catalogue | Dhaaga &amp; Co.</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Other parts of the site: their rules must not change the cards. */
+    body { font-family: system-ui, sans-serif; margin: 1rem; }
+    h3 { color: purple; }
+    .price { color: #b00020; }
+    #catalogue { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+    .gift-guide sale-badge { --sale-badge-bg: #8FD3B6; }
+  </style>
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <h1>Dhaaga &amp; Co.</h1>
+  <h3>A blog heading, styled by the blog</h3>
+  <p>Cart savings: <span class="price">₹45.00</span></p>
+  <div id="catalogue"></div>
+  <p>Catalogue: <sale-badge>Diwali offer</sale-badge></p>
+  <p class="gift-guide">Gift guide: <sale-badge>Gift pick</sale-badge></p>
+</body>
+</html>

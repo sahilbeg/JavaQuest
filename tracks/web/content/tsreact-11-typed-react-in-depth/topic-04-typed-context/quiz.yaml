@@ -1,0 +1,117 @@
+topic: tsreact-11-typed-react-in-depth/topic-04-typed-context
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: prop-drilling
+    prompt: "What is prop drilling?"
+    choices: ["Passing a prop through components that don't use it, only so it reaches one far below", "Reading a prop with useContext", "Changing a prop inside a child", "Giving every prop a type"]
+    answer: 0
+    explain: "Every layer in between grows a prop it doesn't care about. Context avoids that."
+    reteach: "### Passing props through many layers"
+
+  - id: q02
+    type: mcq
+    concept: create-context
+    prompt: "There is no sensible default customer. Which line creates the context the safest way?"
+    choices: ["createContext<CustomerContextValue | null>(null)", "createContext<CustomerContextValue>(null)", "createContext<any>({})", "createContext()"]
+    answer: 0
+    explain: "The type admits null, and so does the default. The second choice is a type error under strict mode, and any switches checks off."
+    reteach: "### Syntax: creating a typed context"
+
+  - id: q03
+    type: mcq
+    concept: create-context
+    prompt: "When does a component get the default value you passed to createContext?"
+    choices: ["When there is no provider for that context above it", "On its first render only", "When the provider's value is undefined", "Never: the default is only for TypeScript"]
+    answer: 0
+    explain: "The default is what useContext returns when no provider sits above the component in the tree."
+    reteach: "### Syntax: creating a typed context"
+
+  - id: q04
+    type: fill-blank
+    concept: context-provider
+    goal: "Wrap the children so every component below can read the customer and the two functions."
+    prompt: "<CustomerContext.___ value={{ customer, signIn, signOut }}>"
+    answers: ["Provider"]
+    explain: "The Provider component gives its value to every reader below it. In React 19 you may also write <CustomerContext value={...}>."
+    reteach: "### Syntax: providing the value"
+
+  - id: q05
+    type: mcq
+    concept: context-provider
+    prompt: "The context's type has customer, signIn and signOut. The provider passes value={{ customer, signIn }}. What happens?"
+    choices: ["A type error: signOut is missing", "It works, and signOut is undefined", "React adds signOut for you", "It works only in development"]
+    answer: 0
+    explain: "TypeScript checks the value against the context's type, so the missing function is caught before the code runs."
+    reteach: "### Syntax: providing the value"
+
+  - id: q06
+    type: mcq
+    concept: null-default-and-guard-hook
+    prompt: "const value = useContext(CustomerContext); is typed CustomerContextValue | null. What does value.customer give?"
+    choices: ["A type error: 'value' is possibly 'null'", "The customer, because the provider is always there", "undefined", "A runtime warning only"]
+    answer: 0
+    explain: "Strict TypeScript makes you rule out null before reading a property."
+    reteach: "### Syntax: reading it with useContext"
+
+  - id: q07
+    type: spot-the-bug
+    concept: null-default-and-guard-hook
+    prompt: "This hook should never return null. Which line is wrong?"
+    code: |
+      export function useCustomer(): CustomerContextValue {
+        const value = useContext(CustomerContext);
+        if (value === null) console.error("No provider");
+        return value;
+      }
+    bugLine: 3
+    explain: "Logging doesn't stop the function, so value may still be null on the next line (and TypeScript says so). Throw instead: if (value === null) throw new Error(...)."
+    reteach: "### A hook that guards the null"
+
+  - id: q08
+    type: predict-output
+    concept: null-default-and-guard-hook
+    code: |
+      type Ctx = { shop: string } | null;
+      function useShopLike(value: Ctx): string {
+        if (value === null) throw new Error("useShop must be used inside <ShopProvider>");
+        return value.shop;
+      }
+      console.log(useShopLike({ shop: "Aundh shop" }));
+      try {
+        console.log(useShopLike(null));
+      } catch (e) {
+        console.log((e as Error).message);
+      }
+    answer: "Aundh shop\nuseShop must be used inside <ShopProvider>"
+    explain: "The first call has a value and returns its shop. The second throws before the console.log inside try can print, so the catch prints the message."
+    reteach: "### A hook that guards the null"
+
+  - id: q09
+    type: mcq
+    concept: null-default-and-guard-hook
+    prompt: "Why is a fake default like { customer: null, signIn: () => {}, signOut: () => {} } risky?"
+    choices: ["A forgotten provider fails silently: Sign in just does nothing", "It doesn't type-check", "React refuses functions in a default", "It makes every reader re-render twice"]
+    answer: 0
+    explain: "With a fake default nothing crashes, so nobody notices the missing provider. A null default plus a throwing hook fails loudly."
+    reteach: "### A hook that guards the null"
+
+  - id: q10
+    type: mcq
+    concept: context-rerenders
+    prompt: "Asha signs in, so the provider's value changes. Which components re-render because of the context?"
+    choices: ["Every component that reads this context with useContext (or useCustomer)", "Only the provider", "Only the component that called signIn", "None: context values never cause renders"]
+    answer: 0
+    explain: "React re-renders every reader of a context when the provider's value changes."
+    reteach: "### Who re-renders when the value changes"
+
+  - id: q11
+    type: mcq
+    concept: context-provider
+    prompt: "App calls useCustomer() and also renders <CustomerProvider> around its children. What happens?"
+    choices: ["App throws: a component only sees providers above it, not ones it renders", "It works, because the provider is in the same component", "useCustomer returns the default silently", "TypeScript reports an error"]
+    answer: 0
+    explain: "Context flows down. Put the provider higher, for example around <App /> in main.tsx."
+    reteach: "## Common mistakes"

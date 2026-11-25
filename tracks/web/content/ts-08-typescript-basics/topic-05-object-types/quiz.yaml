@@ -1,0 +1,126 @@
+topic: ts-08-typescript-basics/topic-05-object-types
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: object-types
+    prompt: "Which object fits the type { id: string; paise: number }?"
+    choices: ["{ id: \"DC-1042\", paise: 45000 }", "{ id: \"DC-1042\" }", "{ id: 1042, paise: 45000 }", "{ id: \"DC-1042\", paise: \"45000\" }"]
+    answer: 0
+    explain: "It needs both properties, with id as text and paise as a number."
+    reteach: "### Syntax: an object type"
+
+  - id: q02
+    type: fill-blank
+    concept: interfaces
+    goal: "Give the shape of a catalogue item a name that every function can use as a type."
+    prompt: "___ Item { id: string; name: string; paise: number; }"
+    answers: ["interface"]
+    explain: "An interface is a named object type. After this line, Item can be used anywhere a type goes."
+    reteach: "### Syntax: interface"
+
+  - id: q03
+    type: predict-output
+    concept: interfaces
+    code: |
+      interface Item {
+        id: string;
+        paise: number;
+      }
+      const golu: Item = { id: "DC-1042", paise: 45000 };
+      console.log(golu.id, golu.paise / 100);
+    answer: "DC-1042 450"
+    explain: "The interface is erased before running. The object is an ordinary object."
+    reteach: "### Syntax: interface"
+
+  - id: q04
+    type: mcq
+    concept: excess-property-checks
+    prompt: "Item has id and paise. Why does const bag: Item = { id: \"DC-2001\", paise: 89900, discount: 10 }; fail?"
+    choices: ["discount isn't part of Item, and object literals may not add unknown properties", "discount must be a string", "Item objects can only have one property", "89900 is too big for paise"]
+    answer: 0
+    explain: "TypeScript refuses extra properties in an object literal, because they are often typos or mistakes."
+    reteach: "### Extra properties are refused"
+
+  - id: q05
+    type: spot-the-bug
+    concept: readonly-properties
+    code: |
+      interface Order {
+        readonly id: string;
+        paise: number;
+      }
+      const order: Order = { id: "order-17", paise: 65000 };
+      order.paise = 60000;
+      order.id = "order-18";
+    bugLine: 7
+    explain: "id is readonly: it can be set when the object is made, never after. Changing paise is allowed."
+    reteach: "### Syntax: readonly properties"
+
+  - id: q06
+    type: fill-blank
+    concept: readonly-properties
+    goal: "Make sure an item's id can be set when the item is made, but never changed after."
+    prompt: "  ___ id: string;"
+    answers: ["readonly"]
+    explain: "A readonly property can't be assigned again after the object is made."
+    reteach: "### Syntax: readonly properties"
+
+  - id: q07
+    type: mcq
+    concept: extending-interfaces
+    prompt: "interface Amigurumi extends Item { animal: string; }. What does an Amigurumi have?"
+    choices: ["Every property of Item, plus animal", "Only animal", "Only the properties of Item", "animal, and an item property holding an Item"]
+    answer: 0
+    explain: "extends copies in everything from Item, then adds the new properties."
+    reteach: "### Syntax: extends"
+
+  - id: q08
+    type: mcq
+    concept: extending-interfaces
+    prompt: "priceLabel(item: Item) is called with golu, an Amigurumi that extends Item. What does tsc say?"
+    choices: ["Nothing: golu has every property an Item needs, so it fits", "Argument of type 'Amigurumi' is not assignable to parameter of type 'Item'", "priceLabel must be rewritten to take an Amigurumi", "golu loses its animal property"]
+    answer: 0
+    explain: "TypeScript compares shapes. An Amigurumi has everything an Item has, so it can go wherever an Item is expected."
+    reteach: "### Syntax: extends"
+
+  - id: q09
+    type: predict-output
+    concept: object-types
+    code: |
+      interface OrderLine {
+        code: string;
+        paise: number;
+        qty: number;
+      }
+      const lines: OrderLine[] = [
+        { code: "CST", paise: 15000, qty: 2 },
+        { code: "KEY", paise: 12000, qty: 3 },
+      ];
+      let total = 0;
+      for (const line of lines) {
+        total += line.paise * line.qty;
+      }
+      console.log(total);
+    answer: "66000"
+    explain: "30000 for the coaster sets plus 36000 for the keychains."
+    reteach: "### Objects inside objects"
+
+  - id: q10
+    type: mcq
+    concept: interfaces
+    prompt: "Why does console.log(thing instanceof Item) fail when Item is an interface?"
+    choices: ["Interfaces are only types, erased before the code runs, so there's nothing to check against", "instanceof only works on numbers", "Item must be written in lower case", "thing must be readonly first"]
+    answer: 0
+    explain: "tsc says 'Item' only refers to a type, but is being used as a value here."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: object-types
+    prompt: "Item has id and paise. What does tsc say about const key: Item = { id: \"DC-0007\" };?"
+    choices: ["Property 'paise' is missing in type '{ id: string; }' but required in type 'Item'", "Nothing: missing properties become undefined", "Object literal may only specify known properties", "Cannot assign to 'id' because it is a read-only property"]
+    answer: 0
+    explain: "Every property in the interface must be there. Optional properties come in ticket 8."
+    reteach: "## Common mistakes"

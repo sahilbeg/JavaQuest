@@ -1,0 +1,120 @@
+topic: ts-09-typescript-in-depth/topic-10-typing-the-dom
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: query-selector-types
+    prompt: 'What type does document.querySelector("#qty") have?'
+    choices: ["Element | null", "HTMLInputElement", "HTMLInputElement | null", "any"]
+    answer: 0
+    explain: "TypeScript can't read your HTML, so an id selector gives the general Element, and null when nothing matches."
+    reteach: "### Syntax: what querySelector returns"
+
+  - id: q02
+    type: mcq
+    concept: query-selector-types
+    prompt: 'What type does document.querySelector("input") have?'
+    choices: ["HTMLInputElement | null", "Element | null", "HTMLInputElement", "string"]
+    answer: 0
+    explain: "With a plain tag name, TypeScript knows which element type it gives. It can still be null."
+    reteach: "### Syntax: what querySelector returns"
+
+  - id: q03
+    type: fill-blank
+    concept: query-selector-types
+    goal: "Say that the element found by #qty is expected to be an <input> element."
+    prompt: 'const box = document.querySelector<___>("#qty");'
+    answers: ["HTMLInputElement"]
+    explain: "The type argument tells TypeScript which element to expect, so box is HTMLInputElement | null."
+    reteach: "### Syntax: querySelector with a type argument"
+
+  - id: q04
+    type: spot-the-bug
+    concept: null-checks
+    code: |
+      function readQty(root: HTMLElement): number {
+        const box = root.querySelector<HTMLInputElement>("input[name=qty]");
+        const typed = box.value;
+        return Number(typed);
+      }
+    bugLine: 3
+    explain: "box is HTMLInputElement | null. Check for null before reading value, and throw a clear error if it's missing."
+    reteach: "### Syntax: what querySelector returns"
+
+  - id: q05
+    type: mcq
+    concept: null-checks
+    prompt: "What does the ! in document.querySelector<HTMLInputElement>(\"#qty\")! do?"
+    choices:
+      - "Tells TypeScript the result is never null, without checking anything"
+      - "Checks for null and throws a clear error"
+      - "Turns null into an empty input"
+      - "Makes the selector required in the HTML"
+    answer: 0
+    explain: "! silences the null error. If the element is missing, the page still crashes later, with a less helpful message."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: mcq
+    concept: narrowing-targets
+    prompt: "In a click listener on a parent element, what type is event.target?"
+    choices: ["EventTarget | null", "HTMLButtonElement", "HTMLElement", "MouseEvent"]
+    answer: 0
+    explain: "The click could come from any element inside, so TypeScript can only promise an EventTarget, or null."
+    reteach: "### Syntax: narrowing event.target"
+
+  - id: q07
+    type: fill-blank
+    concept: narrowing-targets
+    goal: "Make sure the clicked thing really is a button before reading its data-step attribute."
+    prompt: "if (event.target ___ HTMLButtonElement) {"
+    answers: ["instanceof"]
+    explain: "instanceof checks the real element while the page runs, and narrows event.target to HTMLButtonElement."
+    reteach: "### Syntax: checking an element with instanceof"
+
+  - id: q08
+    type: mcq
+    concept: event-types
+    prompt: 'button.addEventListener("click", (event) => { ... }). What type does TypeScript give event?'
+    choices: ["MouseEvent", "KeyboardEvent", "string", "any"]
+    answer: 0
+    explain: "TypeScript knows which event type each name gives: click gives a MouseEvent."
+    reteach: "### Syntax: typed events"
+
+  - id: q09
+    type: mcq
+    concept: element-types
+    prompt: "Why is reading .value from an HTMLElement (like a div) a type error?"
+    choices:
+      - "Only some elements, like HTMLInputElement, have a value property"
+      - "value is private"
+      - "HTMLElement has no properties at all"
+      - "It isn't an error"
+    answer: 0
+    explain: "Each element type lists what it has. A div has no value, so TypeScript refuses before the page loads."
+    reteach: "### The DOM has types"
+
+  - id: q10
+    type: mcq
+    concept: element-types
+    prompt: "button.dataset.step: what is its type?"
+    choices: ["string | undefined", "number", "string", "HTMLElement"]
+    answer: 0
+    explain: "dataset values are text, and the attribute might not be there, so the type includes undefined."
+    reteach: "### Syntax: narrowing event.target"
+
+  - id: q11
+    type: predict-output
+    concept: null-checks
+    code: |
+      function stepFrom(step: string | undefined): number {
+        if (step === undefined) {
+          return 0;
+        }
+        return Number(step);
+      }
+      console.log(stepFrom("1") + stepFrom("-1") + stepFrom(undefined) + stepFrom("1"));
+    answer: "1"
+    explain: "\"1\" gives 1, \"-1\" gives -1, a missing step gives 0, so 1 - 1 + 0 + 1 is 1."
+    reteach: "### Syntax: narrowing event.target"

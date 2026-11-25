@@ -1,0 +1,24 @@
+id: tsreact-10-react-with-typescript/topic-02-children-and-composition
+title: "Children and composition"
+order: 2
+minutes: 9
+prerequisites: [tsreact-10-react-with-typescript/topic-01-typed-components]
+concepts: [children-prop, react-node, composition, slots, fragments]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1002
+  from: sana
+  title: "Every info box on the page looks different"
+  body: >
+    Sana here. The opening hours, delivery and gift-wrap boxes on dhaaga.in each have their own markup, and no
+    two look alike. I want one Panel with a title on top and anything at all inside it, plus a page layout with a
+    header slot. Can you build them so every box matches my design?
+hints:
+  - "Whatever you write between <Panel> and </Panel> arrives as the children prop. Take it from the props next to title."
+  - 'Put {children} inside <div className="panel-body">. PageLayout does the same twice: {header} goes in <header className="page-header"> and {children} in <main className="page-main">.'
+  - 'HoursPanel returns <Panel title="Opening hours"> with two paragraphs inside: "Stall: Sat and Sun, 10:00 to 20:00" and "Aundh shop: Tue to Sun, 11:00 to 21:00".'
+review: true

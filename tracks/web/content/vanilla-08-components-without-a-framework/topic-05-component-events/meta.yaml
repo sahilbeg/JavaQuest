@@ -1,0 +1,24 @@
+id: vanilla-08-components-without-a-framework/topic-05-component-events
+title: "Components talking: CustomEvent"
+order: 5
+minutes: 9
+prerequisites: [vanilla-08-components-without-a-framework/topic-04-shadow-dom-and-slots]
+concepts: [custom-event, event-detail, bubbles-and-composed, retargeting, data-down-events-up, listening-from-the-parent]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0805
+  from: maya
+  title: "The quantity picker reaches into the cart"
+  body: >
+    Kavya here. The new <qty-picker> calls window.cart.add() itself, so it breaks on every page that has no cart,
+    like Sana's gift guide. A picker should only announce "someone wants 2 of DC-1042" and let the page decide.
+    Can you make it send an add-to-cart event, and give the catalogue one listener for it?
+hints:
+  - "+ and − only change this.#qty, kept between 1 and the max attribute (10 when there is none), and then show it in the shadow root's .qty."
+  - "Announce with this.dispatchEvent(new CustomEvent(\"add-to-cart\", { detail: { id, qty }, bubbles: true, composed: true })). bubbles lets ancestors hear it; composed lets it leave any shadow root it sits in."
+  - "listenForAddToCart is one root.addEventListener(\"add-to-cart\", (event) => onAdd(event.detail.id, event.detail.qty))."
+review: true

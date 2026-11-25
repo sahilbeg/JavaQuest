@@ -1,0 +1,24 @@
+id: tsreact-11-typed-react-in-depth/topic-01-typed-effects
+title: "Typed effects"
+order: 1
+minutes: 10
+prerequisites: [tsreact-10-react-with-typescript/boss]
+concepts: [side-effects, use-effect, dependency-array, cleanup, typed-listeners-and-timers]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1101
+  from: sana
+  title: "Escape doesn't close the quick view, and the cart reminder never shows"
+  body: >
+    On my laptop I open Golu's quick view, press Escape out of habit, and nothing happens. Every other site
+    closes the pop-up. Also, my design had a gentle "Still thinking?" line under the cart after a few quiet
+    seconds, but it never appears. Can you make both work?
+hints:
+  - "Both jobs reach outside React: one listens to the keyboard on window, the other starts a timer. That is what useEffect is for. Put each effect above any early return."
+  - "In QuickView, make one named function handleKey(event: KeyboardEvent), add it with window.addEventListener, and return () => window.removeEventListener(\"keydown\", handleKey). List [open, onClose] as dependencies."
+  - "In CartNudge: if (count === 0) return; then const id: ReturnType<typeof setTimeout> = setTimeout(() => setNudgedAt(count), delayMs); return () => clearTimeout(id); with [count, delayMs]."
+review: true

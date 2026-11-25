@@ -1,0 +1,6 @@
+id: next-11-data-and-server
+title: Data and the server
+project: Orders on the server
+summary: Fetch and cache data on the server, build your own API, take orders with server actions, keep sessions in cookies, guard pages, stream slow parts and keep secrets secret.
+unlockAfter: next-10-nextjs-fundamentals/boss
+mascotIntro: "Shabaash, dhaaga.in runs on Next.js! Now the orders move to the server too. Let's give the store a memory, an API and a safe place for its secrets."

@@ -1,0 +1,115 @@
+topic: next-11-data-and-server/topic-02-caching-and-revalidation
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: fetch-cache-options
+    prompt: "In Next.js 16, a server component calls fetch(url) with no options. Does fetch keep a cached copy of the answer?"
+    choices: ["No. Caching is opt-in, with fetch's second argument", "Yes, forever", "Yes, for exactly one hour", "Only if the answer is a 404"]
+    answer: 0
+    explain: "Caching is opt-in in Next.js 16. You ask for it per request with fetch's second argument. Use cache: \"no-store\" to be sure the API is asked on every request."
+    reteach: "### In Next.js 16, fetch is not cached unless you ask"
+
+  - id: q02
+    type: fill-blank
+    concept: fetch-cache-options
+    goal: "Ask the stock API on every single request, never keeping a copy."
+    prompt: "getJson(\"/stock\", { cache: \"___\" });"
+    answers: ["no-store"]
+    explain: "no-store means no copy is kept, so stock is always as true as the API's answer."
+    reteach: "### Syntax: fetch caching options"
+
+  - id: q03
+    type: mcq
+    concept: fetch-cache-options
+    prompt: "The shop hours change a few times a year, and the admin page can say when they change. Which options fit best?"
+    choices: ["{ cache: \"force-cache\", next: { tags: [\"hours\"] } }", "{ cache: \"no-store\" }", "{ next: { revalidate: 1 } }", "No options at all"]
+    answer: 0
+    explain: "Keep a copy until told otherwise, and tag it so the admin page can clear it with revalidateTag(\"hours\", \"max\")."
+    reteach: "### Choosing for each piece of data"
+
+  - id: q04
+    type: predict-output
+    concept: time-based-revalidation
+    code: |
+      function isStale(savedAt, now, revalidate) {
+        return now - savedAt >= revalidate;
+      }
+      console.log(isStale(0, 3599, 3600));
+      console.log(isStale(0, 3600, 3600));
+    answer: "false\ntrue"
+    explain: "At 3599 seconds the copy is still fresh. At 3600 it has reached its revalidate time."
+    reteach: "### Revalidate: a copy with an expiry time"
+
+  - id: q05
+    type: mcq
+    concept: time-based-revalidation
+    prompt: "A fetch uses next: { revalidate: 3600 }, and its copy is two hours old. What does the next customer get?"
+    choices: ["The old copy, fast, while Next.js fetches a fresh one behind the scenes", "An error page", "Nothing until the API answers", "The copy is deleted and the page is empty"]
+    answer: 0
+    explain: "This is stale-while-revalidate. The visitor after that one gets the fresh copy."
+    reteach: "### Revalidate: a copy with an expiry time"
+
+  - id: q06
+    type: mcq
+    concept: cache-tags
+    prompt: "The catalogue is fetched with { next: { revalidate: 3600 } }. Why does revalidateTag(\"catalogue\", \"max\") change nothing?"
+    choices: ["The fetch has no tags, so no copy is named catalogue", "revalidateTag only works in the browser", "Tags must be numbers", "revalidate and tags can't be used in the same app"]
+    answer: 0
+    explain: "A tag must be put on the data first, with next: { tags: [\"catalogue\"] } or cacheTag."
+    reteach: "### Tags: throw a copy away the moment it changes"
+
+  - id: q07
+    type: fill-blank
+    concept: cache-tags
+    goal: "Cache the items for an hour and give the copy a name, so it can be cleared later."
+    prompt: "fetch(url, { next: { revalidate: 3600, ___: [\"catalogue\"] } });"
+    answers: ["tags"]
+    explain: "next.tags names the cached copy. revalidateTag(\"catalogue\", \"max\") can then mark it stale."
+    reteach: "### Syntax: fetch caching options"
+
+  - id: q08
+    type: mcq
+    concept: on-demand-revalidation
+    prompt: "Meera Aunty edits the tote bag, DC-3007. Which call refreshes just the tote bag's own page?"
+    choices: ["revalidatePath(\"/items/DC-3007\")", "cacheLife(\"/items/DC-3007\")", "fetch(\"/items/DC-3007\", { cache: \"no-store\" })", "useEffect(() => {}, [\"DC-3007\"])"]
+    answer: 0
+    explain: "revalidatePath refreshes one page by its path. revalidateTag clears every page that used a tag."
+    reteach: "### Syntax: revalidating on demand"
+
+  - id: q09
+    type: mcq
+    concept: on-demand-revalidation
+    prompt: "Where should revalidateTag(\"catalogue\", \"max\") be called?"
+    choices: ["On the server, in a server action or route handler, right after the data changes", "In a client component's useEffect", "Inside the fetch options", "In next.config.js"]
+    answer: 0
+    explain: "Revalidation only works on the server. The code that changes the data is the code that knows the copy is now old."
+    reteach: "### Syntax: revalidating on demand"
+
+  - id: q10
+    type: mcq
+    concept: use-cache-directive
+    prompt: "With Cache Components turned on, what does \"use cache\" at the top of getBestSellers() do?"
+    choices: ["It saves the function's result, keyed by its arguments, so later calls can reuse it", "It runs the function in the browser", "It makes the function run twice", "It deletes the cache every time the function runs"]
+    answer: 0
+    explain: "use cache works for any async function, like a database query. cacheLife sets how long, and cacheTag names it."
+    reteach: "### Syntax: the use cache directive"
+
+  - id: q11
+    type: mcq
+    concept: request-memoization
+    prompt: "During one render, the layout and the page both call getCatalogue(), which fetches the same URL with the same options. How many requests reach the API?"
+    choices: ["One. The same GET in one render is sent once and shared", "Two, one for each component", "None, the catalogue is always cached forever", "Three, because the layout renders twice"]
+    answer: 0
+    explain: "Next.js memoizes identical GET requests during a render pass, so components don't have to share data by hand."
+    reteach: "### Memoization: one request, asked once"
+
+  - id: q12
+    type: mcq
+    concept: request-memoization
+    prompt: "How long does fetch memoization last?"
+    choices: ["For one render of one page. The next visit starts fresh", "For one hour", "Until revalidateTag is called", "Until the server restarts"]
+    answer: 0
+    explain: "Memoization only saves repeated work within a single render. Keeping data between visitors needs real caching options."
+    reteach: "### Memoization: one request, asked once"

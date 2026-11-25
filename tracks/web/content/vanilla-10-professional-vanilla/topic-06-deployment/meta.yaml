@@ -1,0 +1,22 @@
+id: vanilla-10-professional-vanilla/topic-06-deployment
+title: "Deploying a static site"
+order: 6
+minutes: 10
+prerequisites: [vanilla-10-professional-vanilla/topic-05-seo-and-sharing]
+concepts: [static-hosting, cache-busting, cache-headers, history-fallback, service-worker-updates, security-headers, preview-and-rollback]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: VAN-1006
+  from: maya
+  title: "Customers still see last week's price"
+  body: >
+    We changed the booties to ₹350 on Monday and deployed, but on Wednesday Raju still had customers quoting the old price from their phones.
+    Some refreshes even showed a 404 on /products/DC-1042. Before launch day I want our static hosting set up properly: caching, fallbacks, the service worker, headers, previews and rollbacks.
+    Read up on how a plain static site gets deployed, then we'll write the host's config together.
+hints:
+  - "A static site is just files. Give the JavaScript and CSS file names that change with their content (hashed names), cache those for a year, and make index.html no-cache."
+  - "With History API routes, the host needs a fallback: any path that isn't a real file answers with /index.html and status 200."
+  - "A service worker keeps serving its own cached copy. Give each release a new cache name and delete old caches in its activate event, or customers keep last week's site."
+review: true

@@ -1,0 +1,23 @@
+id: ts-09-typescript-in-depth/topic-03-utility-types
+title: "Utility types: Partial, Pick, Omit and Record"
+order: 3
+minutes: 10
+prerequisites: [ts-09-typescript-in-depth/topic-02-generic-constraints]
+concepts: [partial, pick-and-omit, record, readonly-and-required, combining-utilities]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0903
+  from: sana
+  title: "Three copies of the Item type, and they don't agree"
+  body: >
+    Sana here. The edit form, the product card and the new-item form each have their own copy of the Item type.
+    Kavya renamed colour on Item last week, and the card's copy still says color, so the card shows nothing.
+    Kavya says these types should be built from Item itself. Can you finish items.ts so the form, the card and the stock board all work?
+hints:
+  - "The types at the top are already built from Item. Partial makes every field optional, Pick keeps some fields, Omit drops some, and Record<Code, number> has one number per code."
+  - "updateItem is one spread: { ...item, ...changes }. toCard builds a new object with exactly id, name and paise. createItem is { ...input, id: `DC-${nextNumber}` }."
+  - "stockByCode: start with const totals: StockByCode = { CST: 0, KEY: 0, AMI: 0, BAG: 0, BTY: 0 }, then for each item do totals[item.code] += item.stock."
+review: true

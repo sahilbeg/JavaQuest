@@ -1,0 +1,24 @@
+id: tsreact-11-typed-react-in-depth/topic-02-typed-fetching
+title: "Typed data fetching"
+order: 2
+minutes: 10
+prerequisites: [tsreact-11-typed-react-in-depth/topic-01-typed-effects]
+concepts: [fetch-in-effect, json-is-unknown, type-guards-for-data, load-state-union, ignore-stale]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1102
+  from: theo
+  title: "The yarn panel says Checking... forever"
+  body: >
+    Arjun here. Before I promise a customer a Marigold elephant, I look at the yarn panel on the admin page.
+    It says "Checking Marigold yarn..." and never changes. Yesterday the stock API sent grams as text after a
+    bad deploy, and nobody noticed. I need real grams, and an honest error when the answer is wrong.
+hints:
+  - "Start with isYarnStock in src/yarn.ts: check typeof value === \"object\" and value !== null, then \"colour\" in value and typeof value.colour === \"string\", and the same for grams with \"number\"."
+  - "In the effect, write an inner async function and call it. Inside: await fetch(...), throw if !res.ok, then const data: unknown = await res.json(); and check it with isYarnStock before you call setLoad({ status: \"ready\", data })."
+  - "Start the effect with let ignore = false; and setLoad({ status: \"loading\" }). Only call setLoad after an await when !ignore, and return () => { ignore = true; }. List [colour] as the dependency."
+review: true

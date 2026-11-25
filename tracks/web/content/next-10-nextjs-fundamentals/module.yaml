@@ -1,0 +1,6 @@
+id: next-10-nextjs-fundamentals
+title: Next.js fundamentals
+project: dhaaga.in on Next.js
+summary: Pages from folders, shared layouts, links, server and client components, a page per colour and per item, loading and error pages, metadata, images, fonts and styles, until dhaaga.in runs on Next.js.
+unlockAfter: react-09-react-in-depth/boss
+mascotIntro: "Shabaash, checkout works! Now the store moves to Next.js, so every page arrives ready to read, even on Raju's old phone and in WhatsApp previews."

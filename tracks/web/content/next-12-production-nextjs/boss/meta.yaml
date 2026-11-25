@@ -1,0 +1,24 @@
+id: next-12-production-nextjs/boss
+title: "INC-12: The mock Next.js interview loop"
+order: 99
+minutes: 15
+prerequisites: [next-12-production-nextjs/topic-08-interviews]
+concepts: [edge-cases, route-handler-validation, server-action-state, immutable-updates, search-params-as-promises, pagination-and-canonical-urls]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+ticket:
+  key: INC-12
+  from: theo
+  title: "The mock Next.js interview loop"
+  body: >
+    I'm running your mock loop today, and I'm playing the interviewer.
+    Here are the answers a previous candidate gave in three rounds: a search API, an add-to-cart action and a paginated catalogue page.
+    Each one worked the one time they tried it, and each one failed the round.
+    Fix them the way I'd want to see in a real loop. Edge cases first.
+hints:
+  - "Bronze: q = (params.get(\"q\") ?? \"\").trim().toLowerCase(). Keep maxText = params.get(\"max\") as text: null means no limit (Infinity), and anything not matching /^\\d+$/ answers 400. Then filter, sort((a, b) => a.paise - b.paise) and map to { id, name, paise }."
+  - "Silver: const item = await getItem(String(formData.get(\"id\"))); const qty = Number(formData.get(\"qty\")); check both, then total = (existing ? existing.qty : 0) + qty and compare with item.stock. Build new lines with map or [...prevState.lines, { id: item.id, qty }]."
+  - "Gold: const raw = (await searchParams).page. If raw === \"1\", redirect(\"/\"). Turn raw into a page number (undefined is 1; only strings of digits count), notFound() when it's null, 0 or past the last page, and slice((page - 1) * 2, page * 2)."
+review: false

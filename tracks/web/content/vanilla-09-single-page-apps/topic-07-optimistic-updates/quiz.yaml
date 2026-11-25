@@ -1,0 +1,147 @@
+topic: vanilla-09-single-page-apps/topic-07-optimistic-updates
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: optimistic-update
+    variants:
+      - { prompt: "What does an optimistic update do?", choices: ["Changes the screen first, then asks the server", "Asks the server first, then changes the screen", "Changes the screen and never tells the server", "Retries until the server says yes"], answer: 0 }
+      - { prompt: "Why do optimistic updates help customers on slow connections?", choices: ["The screen changes at once, so taps feel instant", "They make the network faster", "They skip the server completely", "They load the page again"], answer: 0 }
+    explain: "Acting first and checking afterwards hides the wait. Most saves succeed, so most of the time nothing more happens."
+    reteach: "### Waiting for the server feels slow"
+
+  - id: q02
+    type: mcq
+    concept: optimistic-update
+    prompt: "Which change should NOT be optimistic?"
+    choices: ["Paying for the order by UPI", "Changing a cart line's qty", "Tapping a heart on the wishlist", "Removing an item, with Undo"]
+    answer: 0
+    explain: "A payment must really have happened before the screen says so. Small, safe, common changes are the ones to make optimistic."
+    reteach: "### When not to be optimistic"
+
+  - id: q03
+    type: predict-output
+    concept: rollback
+    code: |
+      let qty = 1;
+      async function save(works) {
+        if (!works) throw new Error("500");
+      }
+      async function change(next, works) {
+        const before = qty;
+        qty = next;
+        try {
+          await save(works);
+        } catch {
+          qty = before;
+        }
+        console.log(qty);
+      }
+      async function main() {
+        await change(2, true);
+        await change(5, false);
+      }
+      main();
+    answer: "2\n2"
+    explain: "The first save works, so qty stays 2. The second fails, so qty goes back to the 2 it held before."
+    reteach: "### Rolling back"
+
+  - id: q04
+    type: spot-the-bug
+    concept: rollback
+    code: |
+      async function changeQty(store, id, qty) {
+        setQty(store, id, qty);
+        const before = store.getState().lines.find((line) => line.id === id).qty;
+        try {
+          await save(id, qty);
+        } catch {
+          setQty(store, id, before);
+        }
+      }
+    bugLine: 3
+    explain: "The old qty is read after the change, so it already holds the new number. Read it before calling setQty."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: mcq
+    concept: rollback
+    prompt: "A save fails and the qty jumps back from 3 to 1. What else should the page do?"
+    choices: ["Show a short message, such as \"Couldn't update your cart. Please try again.\"", "Nothing: the number is right again", "Reload the page", "Empty the cart"]
+    answer: 0
+    explain: "A number that quietly jumps back looks like a bug. A short message tells the customer what happened."
+    reteach: "### Rolling back"
+
+  - id: q06
+    type: mcq
+    concept: targeted-rollback
+    prompt: "While Golu's new qty is saving, the customer changes the coaster set. Then Golu's save fails. What should the rollback do?"
+    choices: ["Put back only Golu's old qty, and keep the coaster set's new one", "Put back the whole state from before Golu's change", "Empty the cart", "Undo the coaster set's change too, to be safe"]
+    answer: 0
+    explain: "Restoring a whole old snapshot would wipe out changes made while waiting. Roll back only the piece you changed."
+    reteach: "### Roll back only what you changed"
+
+  - id: q07
+    type: fill-blank
+    concept: optimistic-update
+    goal: "Send the cart line's new qty to the server as JSON text."
+    prompt: "fetch(\"/api/cart/DC-1042\", { method: \"PATCH\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.___({ qty: 3 }) });"
+    answers: ["stringify"]
+    explain: "JSON.stringify turns the object into JSON text for the request body."
+    reteach: "### Syntax: sending a change with fetch"
+
+  - id: q08
+    type: mcq
+    concept: undo-instead-of-confirm
+    variants:
+      - { prompt: "Why is an Undo bar often better than an \"Are you sure?\" pop-up?", choices: ["Removing stays one tap, and mistakes can still be fixed; people stop reading pop-ups anyway", "Pop-ups don't work on phones", "Undo bars are required by law", "Undo makes the server faster"], answer: 0 }
+      - { prompt: "A customer taps Remove on the tote bag. With the undo pattern, what does she see?", choices: ["The tote bag leaves at once, and a bar says \"Removed. Undo\"", "A pop-up asking if she is sure", "Nothing until the server answers", "The page reloads"], answer: 0 }
+    explain: "Undo keeps the common case fast and makes the rare mistake easy to fix."
+    reteach: "### Undo instead of \"Are you sure?\""
+
+  - id: q09
+    type: mcq
+    concept: delayed-commit
+    prompt: "With a delayed commit, when is the DELETE request sent?"
+    choices: ["Only when the Undo time runs out without Undo being pressed", "The moment Remove is tapped", "When Undo is pressed", "Never"]
+    answer: 0
+    explain: "Until the timer ends, the removal lives only in the browser, so Undo needs no request at all."
+    reteach: "### Undo instead of \"Are you sure?\""
+
+  - id: q10
+    type: predict-output
+    concept: delayed-commit
+    code: |
+      const index = 1;
+      const lines = ["DC-1042", "DC-3001"];
+      const back = [...lines.slice(0, index), "DC-2001", ...lines.slice(index)];
+      console.log(back.join(","));
+      console.log(lines.length);
+    answer: "DC-1042,DC-2001,DC-3001\n2"
+    explain: "The line goes back at index 1, between the two halves. lines itself is not changed."
+    reteach: "### Putting a line back in its place"
+
+  - id: q11
+    type: spot-the-bug
+    concept: delayed-commit
+    code: |
+      function undoRemove(store, line, index) {
+        store.setState((state) => ({
+          ...state,
+          lines: [...state.lines, line],
+          undo: null,
+        }));
+      }
+    bugLine: 4
+    explain: "The undone line goes to the bottom of the cart instead of its old place. Put it back at its index with slice and spread."
+    reteach: "### Putting a line back in its place"
+
+  - id: q12
+    type: mcq
+    concept: undo-instead-of-confirm
+    prompt: "The customer presses Undo two seconds after removing Golu. What should happen to the five-second timer?"
+    choices: ["clearTimeout cancels it, so DELETE is never sent", "It keeps running and sends DELETE anyway", "It restarts from five seconds", "It sends DELETE at once"]
+    answer: 0
+    explain: "Undo must stop the timer, or the server would delete the item the customer just took back."
+    reteach: "### Undo instead of \"Are you sure?\""

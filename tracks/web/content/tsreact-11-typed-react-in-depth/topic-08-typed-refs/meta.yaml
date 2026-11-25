@@ -1,0 +1,24 @@
+id: tsreact-11-typed-react-in-depth/topic-08-typed-refs
+title: "Typed refs"
+order: 8
+minutes: 10
+prerequisites: [tsreact-11-typed-react-in-depth/topic-07-typed-validation]
+concepts: [dom-refs, ref-null-until-attached, value-refs, callback-refs, ref-as-prop]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1108
+  from: sana
+  title: "The PIN code boxes make you tap every single box"
+  body: >
+    I designed the delivery PIN code as six little boxes, like the OTP screens everyone knows. But on a phone
+    you have to tap each box before you type its digit, and Backspace gets stuck in an empty box. A customer
+    in Kothrud gave up halfway through 411038. Can the focus move by itself, both ways?
+hints:
+  - "Make const boxes = useRef<(HTMLInputElement | null)[]>([]); and give each input ref={(el) => { boxes.current[i] = el; }}. Use braces, so the callback returns nothing."
+  - "Focus the first box in an effect with []: boxes.current[0]?.focus(). In handleChange, when digit isn't empty, call boxes.current[index + 1]?.focus(); then, if next.every((d) => d !== \"\"), call onComplete(next.join(\"\"))."
+  - "In handleKeyDown: if (event.key === \"Backspace\" && digits[index] === \"\" && index > 0) { event.preventDefault(); boxes.current[index - 1]?.focus(); }"
+review: true

@@ -1,0 +1,22 @@
+id: ts-08-typescript-basics/mini-project
+title: "FEAT-08: The typed price calculator"
+order: 100
+minutes: 15
+prerequisites: [ts-08-typescript-basics/topic-10-modules-and-tsconfig]
+concepts: [interfaces, literal-unions, optional-properties, as-const, typed-modules]
+practice:
+  kind: code
+  runner: vitest
+ticket:
+  key: FEAT-08
+  from: priya
+  title: "A quote that can't get the price wrong"
+  body: >
+    The calculator you built for my WhatsApp quotes saves me an hour every evening. But this week a price came out
+    wrong twice, and I can't check every number myself. Kavya says TypeScript can keep the mistakes out. Could you
+    rebuild it that way? And please add pickups from the stall, and say on the quote how the customer will pay.
+hints:
+  - "Build from the bottom up: parseCode, itemsTotal, extrasTotal, diwaliDiscount and deliveryFee first. PRICES[line.code] works because code is an ItemCode."
+  - "quote calls the smaller functions: subtotal = items + extras, then discount and delivery both look at the subtotal, and total = subtotal - discount + delivery."
+  - "In receipt, push rows into a string[], push the offer row only when the discount is above 0, pick the Delivery row with an if on order.delivery, and finish with rows.join(\"\\n\")."
+review: false

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diwali sale | Dhaaga &amp; Co.</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #FAF7F0; color: #2E3A8C; margin: 1rem; }
+    #grid { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); }
+    .card { background: #fff; border: 2px solid #2E3A8C; border-radius: 12px; padding: 1rem; }
+    .card__name { margin: 0; }
+    .card__price { font-weight: 700; }
+    .card__stitch { display: block; margin: 0.5rem 0; }
+    .card__stitch-input { font: inherit; width: 100%; box-sizing: border-box; }
+    .card__add { background: #F2A81D; border: 0; border-radius: 8px; padding: 0.5rem 1rem; font: inherit; }
+  </style>
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <h1>Diwali sale</h1>
+  <p>Stock refreshes every 4 seconds.</p>
+  <ul id="grid"></ul>
+  <p id="cart" role="status">Your cart is empty.</p>
+</body>
+</html>

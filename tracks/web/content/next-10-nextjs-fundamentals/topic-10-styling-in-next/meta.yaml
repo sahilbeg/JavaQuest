@@ -1,0 +1,24 @@
+id: next-10-nextjs-fundamentals/topic-10-styling-in-next
+title: "Styling in Next.js"
+order: 10
+minutes: 10
+prerequisites: [next-10-nextjs-fundamentals/topic-09-images-and-fonts]
+concepts: [global-css, css-modules, scoped-class-names, css-variables, conditional-classes]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1010
+  from: sana
+  title: "Our brand colours are gone, and the item cards look like help boxes"
+  body: >
+    On the new site, Marigold and Indigo are gone: links are browser blue and the background is plain white.
+    And the item cards picked up the grey ".card" box from the Help page, because both use the same class name.
+    Can the brand colours come back everywhere, and can the cards get styles nobody else can borrow?
+hints:
+  - "globals.css: a :root rule with --marigold, --indigo and --off-white, then body and a rules that use them with var(--...). The root layout already imports it."
+  - "In ItemCard.module.css, write .card, .price and .soldOut. In ItemCard.jsx, use className={cardClass(styles, item)} and className={styles.price}."
+  - "cardClass returns styles.card, or `${styles.card} ${styles.soldOut}` when item.stock is 0."
+review: true

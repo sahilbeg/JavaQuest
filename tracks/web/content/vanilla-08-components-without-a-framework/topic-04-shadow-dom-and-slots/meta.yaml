@@ -1,0 +1,25 @@
+id: vanilla-08-components-without-a-framework/topic-04-shadow-dom-and-slots
+title: "Shadow DOM and slots"
+order: 4
+minutes: 10
+prerequisites: [vanilla-08-components-without-a-framework/topic-03-custom-elements]
+concepts: [attach-shadow, style-scoping, host-selector, named-slots, default-slot, fallback-content]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0804
+  from: sana
+  title: "The blog's CSS turned our product cards purple"
+  body: >
+    Sana here. Meera Aunty's Diwali blog post has its own CSS for h3 and p, and it repainted every product card we
+    put in the post. I want a <dhaaga-card> whose look can't be touched from outside, but where the page still
+    decides the title, the text and the price. A small "Diwali offer" badge when the card has a sale attribute,
+    please.
+hints:
+  - "Attach the shadow root in the constructor, which runs once per element: this.attachShadow({ mode: \"open\" }).innerHTML = CARD_HTML. connectedCallback can run again every time the card moves."
+  - "Slots are holes in the shadow markup: <slot name=\"title\"></slot> takes the child with slot=\"title\"; a <slot> with no name takes every other child. Text between <slot name=\"price\"> and </slot> shows only when nothing fills it."
+  - "For the badge: this.shadowRoot.querySelector(\".badge\").hidden = !this.hasAttribute(\"sale\"), inside attributeChangedCallback."
+review: true

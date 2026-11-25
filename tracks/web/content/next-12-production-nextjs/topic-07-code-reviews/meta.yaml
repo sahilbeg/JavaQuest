@@ -1,0 +1,22 @@
+id: next-12-production-nextjs/topic-07-code-reviews
+title: "Code reviews for Next.js"
+order: 7
+minutes: 10
+prerequisites: [next-12-production-nextjs/topic-06-observability]
+concepts: [review-checklist, client-boundary-review, data-fetching-review, action-security-review, caching-review, review-comments]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: NXT-1207
+  from: maya
+  title: "You're reviewing pull requests from Monday"
+  body: >
+    From Monday you'll review pull requests on the Next.js store, starting with the new gift wrap option and the order tracking page.
+    Most of our Next.js bugs so far would have been caught by a careful review: a secret sent to the browser, a page that waited for things in a line, a price taken from a form.
+    Read up on what to look for in Next.js code, and how to write comments people are glad to get.
+hints:
+  - "For each file, ask: does this run on the server or in the browser? Look for \"use client\" set too high, and for props that carry more than the client part needs."
+  - "In data code, look for waterfalls, a call inside a loop, params read without await, and server components fetching their own API. In actions and routes: who is calling, is every field checked, and where does the price come from?"
+  - "Label each comment (blocking, suggestion, question or nit), say why it matters, and suggest a fix. Praise what's good."
+review: true

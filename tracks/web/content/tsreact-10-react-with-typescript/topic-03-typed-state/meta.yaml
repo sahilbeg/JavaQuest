@@ -1,0 +1,24 @@
+id: tsreact-10-react-with-typescript/topic-03-typed-state
+title: "Typed state"
+order: 3
+minutes: 10
+prerequisites: [tsreact-10-react-with-typescript/topic-02-children-and-composition]
+concepts: [use-state, re-render, state-type-inference, explicit-state-type, array-state]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1003
+  from: sam
+  title: "Tapping a yarn colour does nothing"
+  body: >
+    Raju here. Ms. Fernandes wanted a Mint amigurumi and a Rani pink one for her twins. On the website she tapped
+    Mint, but nothing lit up, and "Add to bag" never worked. She gave up and sent a WhatsApp voice note instead.
+    Can you make the yarn picker remember her choice and fill the bag?
+hints:
+  - "useState(null) makes state whose type is only null, so it can never hold a colour later. Give it a type argument: useState<Colour | null>(null)."
+  - "The bag starts as an empty array. useState([]) gives never[], so write useState<Colour[]>([]). Each colour button calls setColour(c)."
+  - 'Add to bag runs: if (colour !== null) setBag([...bag, colour]). Never push into bag: make a new array so React sees the change.'
+review: true

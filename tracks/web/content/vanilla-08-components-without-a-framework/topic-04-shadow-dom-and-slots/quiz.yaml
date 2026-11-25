@@ -1,0 +1,122 @@
+topic: vanilla-08-components-without-a-framework/topic-04-shadow-dom-and-slots
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: fill-blank
+    concept: attach-shadow
+    goal: "Give this custom element its own hidden tree, which your code can still reach through element.shadowRoot."
+    prompt: "this.___({ mode: \"open\" });"
+    answers: ["attachShadow"]
+    explain: "attachShadow creates the element's shadow root and returns it. Open mode keeps element.shadowRoot available."
+    reteach: "### Syntax: attachShadow"
+
+  - id: q02
+    type: mcq
+    concept: attach-shadow
+    prompt: "Where should a custom element call attachShadow?"
+    choices: ["In the constructor, which runs once per element", "In connectedCallback, which runs each time it joins the page", "In attributeChangedCallback", "In disconnectedCallback"]
+    answer: 0
+    explain: "An element can have only one shadow root. connectedCallback can run again when the element moves, and a second attachShadow throws."
+    reteach: "### Attach it once, in the constructor"
+
+  - id: q03
+    type: mcq
+    concept: attach-shadow
+    prompt: "A card's <article> sits inside its shadow root. What does document.querySelector(\"dhaaga-card article\") return?"
+    choices: ["null: the page's searches can't see into a shadow root", "The article", "The card", "An error"]
+    answer: 0
+    explain: "Shadow content is hidden from the page's searches. Use card.shadowRoot.querySelector(\"article\")."
+    reteach: "## Common mistakes"
+
+  - id: q04
+    type: mcq
+    concept: style-scoping
+    prompt: "The page has h3 { color: purple; }. A card's shadow root has its own h3 and h3 { color: #2E3A8C; }. What colour is the card's h3?"
+    choices: ["Indigo #2E3A8C: the page's rule can't reach into the shadow root", "Purple: the page always wins", "Both colours mixed", "Black, the browser's default"]
+    answer: 0
+    explain: "Styles in a shadow root apply only inside it, and the page's styles stay out."
+    reteach: "### Styles inside stay inside"
+
+  - id: q05
+    type: mcq
+    concept: style-scoping
+    prompt: "A card's shadow root has p { margin: 0; }. What happens to the paragraphs of the blog post around the card?"
+    choices: ["Nothing: the rule only applies inside the card's shadow root", "They lose their margins too", "They lose their margins only when the card is visible", "The rule is ignored everywhere"]
+    answer: 0
+    explain: "Shadow styles stay inside, so the component can't repaint the page."
+    reteach: "### Styles inside stay inside"
+
+  - id: q06
+    type: mcq
+    concept: host-selector
+    prompt: "Inside a <dhaaga-card>'s shadow style, what does :host([sale]) match?"
+    choices: ["The <dhaaga-card> element itself, only when it has a sale attribute", "Every element with a sale attribute on the page", "Any child of the card with a sale attribute", "The shadow root"]
+    answer: 0
+    explain: ":host is the custom element itself, and the part in brackets adds a condition on its attributes."
+    reteach: "### Syntax: :host"
+
+  - id: q07
+    type: mcq
+    concept: host-selector
+    prompt: "A card's shadow style is :host { border: 2px solid #2E3A8C; } and nothing else. Why doesn't the border draw one neat box around each card?"
+    choices: ["Custom elements are display: inline by default; add display: block to :host", "The border needs !important", "Shadow styles don't support borders", "The page's CSS overrides :host"]
+    answer: 0
+    explain: "A new tag starts as inline. Most cards need :host { display: block; }."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: named-slots
+    prompt: "The shadow markup has <slot name=\"title\"></slot>. Which child of the card is shown there?"
+    choices: ["<h3 slot=\"title\">Golu the elephant</h3>", "<h3 name=\"title\">Golu the elephant</h3>", "<h3 id=\"title\">Golu the elephant</h3>", "<title>Golu the elephant</title>"]
+    answer: 0
+    explain: "A child's slot attribute picks the slot with that name."
+    reteach: "### Syntax: slots"
+
+  - id: q09
+    type: mcq
+    concept: default-slot
+    prompt: "The card has a <p> with no slot attribute, and the shadow markup has a <slot> with no name. Where does the p show?"
+    choices: ["In the unnamed slot, the default slot", "Nowhere", "In the first named slot", "Above the shadow content"]
+    answer: 0
+    explain: "Every child without a slot attribute goes to the default slot."
+    reteach: "### Syntax: slots"
+
+  - id: q10
+    type: mcq
+    concept: fallback-content
+    prompt: "The shadow markup has <slot name=\"price\">Price on request</slot>. The page later adds <p slot=\"price\">₹450.00</p> to the card. What shows in that spot?"
+    choices: ["₹450.00, and the fallback hides", "Price on request, then ₹450.00", "Price on request only", "Nothing"]
+    answer: 0
+    explain: "Fallback content shows only while nothing is slotted. Once the price arrives, it takes the slot's place."
+    reteach: "### Fallback content"
+
+  - id: q11
+    type: mcq
+    concept: named-slots
+    prompt: "A heading is slotted into a card's title slot. What does card.querySelector(\"h3\") return?"
+    choices: ["The heading: slotted children stay in the card's light DOM", "null: it moved into the shadow root", "The slot element", "The shadow root"]
+    answer: 0
+    explain: "Slotting shows a child somewhere new without moving it. It is still the card's own child."
+    reteach: "### Slotted content stays in the light DOM"
+
+  - id: q12
+    type: predict-output
+    concept: default-slot
+    prompt: "This code follows the slotting rule. What does it print?"
+    code: |
+      const children = [
+        { slot: "price", text: "₹450.00" },
+        { slot: null, text: "Crocheted in Indigo." },
+        { slot: "title", text: "Golu" },
+      ];
+      const slots = { title: [], default: [], price: [] };
+      for (const child of children) {
+        slots[child.slot ?? "default"].push(child.text);
+      }
+      console.log(slots.title.length + slots.price.length);
+      console.log(slots.default[0]);
+    answer: "2\nCrocheted in Indigo."
+    explain: "One child each goes to title and price, so 1 + 1 is 2. The child with no slot goes to the default slot."
+    reteach: "## Try it"

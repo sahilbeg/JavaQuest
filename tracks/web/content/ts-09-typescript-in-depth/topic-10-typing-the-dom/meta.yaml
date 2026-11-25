@@ -1,0 +1,23 @@
+id: ts-09-typescript-in-depth/topic-10-typing-the-dom
+title: "Typing the DOM"
+order: 10
+minutes: 10
+prerequisites: [ts-09-typescript-in-depth/topic-09-mapped-types]
+concepts: [element-types, query-selector-types, null-checks, event-types, narrowing-targets]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0910
+  from: sana
+  title: "The quantity stepper lets people order 37 elephants"
+  body: >
+    Sana here. On the item page, the + button keeps going past 10, and typing letters into the quantity box makes the cart say NaN.
+    The old stepper code read .value from things that weren't inputs, and nothing complained.
+    Please rewrite it in stepper.ts with proper DOM types: quantities from 1 to 10, whether people click or type.
+hints:
+  - "clampQty: if Number.isNaN(value) return 1; otherwise Math.min(10, Math.max(1, Math.floor(value)))."
+  - "findInput: root.querySelector<HTMLInputElement>(`input[name=\"${name}\"]`) gives HTMLInputElement | null. Throw new Error(`No input named ${name}`) when it is null, and return it otherwise."
+  - "setupStepper: one click listener on root. event.target is EventTarget | null, so check target instanceof HTMLButtonElement and that target.dataset.step isn't undefined. Add Number(step) to Number(input.value), clamp, write it back with input.value = String(qty), and call onChange(qty). Do the same on the input's \"input\" event, without the step."
+review: true

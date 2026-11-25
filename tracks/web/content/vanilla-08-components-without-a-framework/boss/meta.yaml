@@ -1,0 +1,23 @@
+id: vanilla-08-components-without-a-framework/boss
+title: "INC-08: The product grid redraws and loses what customers typed"
+order: 99
+minutes: 15
+prerequisites: [vanilla-08-components-without-a-framework/topic-10-accessible-widgets]
+concepts: [element-state, keyed-updates, focus, listener-once]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: INC-08
+  from: theo
+  title: "The product grid wipes the names customers type"
+  body: >
+    Arjun here, on the first evening of the Diwali sale. The grid refreshes stock every few seconds, and every
+    refresh wipes the "Name to stitch on" box. A grandmother typed her grandson's name on Golu four times and gave
+    up. Some customers who did get through were charged for two Golus after one tap. Please fix the grid tonight.
+hints:
+  - "Bronze: update() throws every card away with replaceChildren and draws new ones, so the typed name goes with the old input. Keep the card of every product that is still there, found by its data-id, and only change its stock text, price and button."
+  - "Silver: split card() into a part that makes a new, empty card and a part that fills it. Make cards only for new ids, remove cards whose ids are gone, and insertBefore a card only when it isn't already in its place, so the box being typed in keeps its focus."
+  - "Gold: look at where the click listener is added. update() runs on every refresh, so after three refreshes one tap calls onAdd three times. Add the one delegated listener in createGrid, outside update."
+review: false

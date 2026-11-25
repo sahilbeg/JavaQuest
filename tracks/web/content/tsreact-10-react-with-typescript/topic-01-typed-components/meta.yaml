@@ -1,0 +1,24 @@
+id: tsreact-10-react-with-typescript/topic-01-typed-components
+title: "Typed components and props"
+order: 1
+minutes: 10
+prerequisites: [ts-09-typescript-in-depth/boss]
+concepts: [react-components, jsx, typed-props, optional-props, rendering-root]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1001
+  from: sana
+  title: "The item card says 45000 instead of ₹450.00"
+  body: >
+    Sana here. I started the new dhaaga.in item card in React, but Golu's card shows 45000 under his name,
+    and the little "Handmade" badge from my design is missing. The store header is still empty too. Can you
+    finish both, with proper types so nobody passes the wrong thing again?
+hints:
+  - 'Props are typed like any object. Add badge?: string to ItemCardProps. The ? means a caller may leave it out.'
+  - 'Take badge with a default value: function ItemCard({ name, paise, colour, badge = "Handmade" }: ItemCardProps). Show it in <span className="badge">{badge}</span>.'
+  - 'The price is <p className="price">{rupees(paise)}</p>. StoreHeader returns <header className="store-header"> holding <h1>Dhaaga & Co.</h1> and <p className="tagline">Handmade crochet from Pune</p>.'
+review: true

@@ -1,0 +1,24 @@
+id: next-11-data-and-server/topic-03-route-handlers
+title: "Route handlers: your own API"
+order: 3
+minutes: 10
+prerequisites: [next-11-data-and-server/topic-02-caching-and-revalidation]
+concepts: [route-files, http-method-functions, reading-the-request, status-codes, dynamic-route-params]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1103
+  from: maya
+  title: "The WhatsApp bot and the restock scanner need an API"
+  body: >
+    Kavya here. Raju's WhatsApp bot wants to ask dhaaga.in how many of an item are left, and Arjun's new scanner
+    at the Aundh shop wants to add stock when a box of booties arrives. Neither of them wants a web page. Let's give
+    the site a small JSON API of its own, with clear errors when they send something wrong.
+hints:
+  - "A route.js file exports one function per HTTP method: export async function GET(request) { ... }. Read the query with new URL(request.url).searchParams.get(\"id\")."
+  - "Answer with Response.json(body, { status }). A missing id is 400, an unknown item is 404, and a good answer is 200."
+  - "In POST, wrap await request.json() in try/catch for bad JSON. In items/[id]/route.js, the second argument holds the params: const { id } = await params;."
+review: true

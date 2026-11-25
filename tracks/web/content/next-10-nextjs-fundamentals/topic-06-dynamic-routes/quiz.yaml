@@ -1,0 +1,125 @@
+topic: next-10-nextjs-fundamentals/topic-06-dynamic-routes
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: dynamic-segments
+    prompt: "Which folder makes one page serve /items/DC-1042, /items/DC-1045 and every other id?"
+    choices: ["src/app/items/[id]/", "src/app/items/{id}/", "src/app/items/:id/", "src/app/items/id/"]
+    answer: 0
+    explain: "Square brackets make a dynamic segment. The name inside, id, becomes the key in params."
+    reteach: "### Syntax: a dynamic segment"
+
+  - id: q02
+    type: mcq
+    concept: dynamic-segments
+    prompt: "A customer opens /colours/mint. The page lives in src/app/colours/[colour]/page.jsx. What do the params hold?"
+    choices: ["{ colour: \"mint\" }", "{ mint: true }", "[\"colours\", \"mint\"]", "\"/colours/mint\""]
+    answer: 0
+    explain: "The folder's name in brackets is the key, and the part of the address it matched is the value."
+    reteach: "### Following /colours/indigo"
+
+  - id: q03
+    type: predict-output
+    concept: params-promise
+    code: |
+      async function main() {
+        const params = Promise.resolve({ id: "DC-1042" });
+        console.log(typeof params.id);
+        const { id } = await params;
+        console.log(id);
+      }
+      main();
+    answer: "undefined\nDC-1042"
+    explain: "A Promise has no id property, so reading it early gives undefined. After await, you have the real object."
+    reteach: "### Syntax: reading params"
+
+  - id: q04
+    type: fill-blank
+    concept: params-promise
+    goal: "Wait for the address details, then take the colour out of them."
+    prompt: "const { colour } = ___ params;"
+    answers: ["await"]
+    explain: "In Next.js 16, params is a Promise. await gives you the object inside."
+    reteach: "### Syntax: reading params"
+
+  - id: q05
+    type: spot-the-bug
+    concept: params-promise
+    prompt: "Every colour page shows Colour not found, even /colours/indigo. Which line is wrong?"
+    code: |
+      export default async function ColourPage({ params }) {
+        const colour = colourBySlug(params.colour);
+        if (!colour) return <p>Colour not found</p>;
+        return <h1>{colour.name}</h1>;
+      }
+    bugLine: 2
+    explain: "params is a Promise, so params.colour is undefined. Write const { colour: slug } = await params; first."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: mcq
+    concept: not-found
+    prompt: "A customer opens /colours/purple, and there's no purple. What should the page do?"
+    choices: ["Call notFound(), so the 404 page shows", "Show the first colour instead", "Return null, showing an empty page", "Throw new Error(\"purple\")"]
+    answer: 0
+    explain: "notFound() stops the page and shows the 404 page, which tells the customer the address doesn't exist."
+    reteach: "### Syntax: notFound"
+
+  - id: q07
+    type: mcq
+    concept: not-found
+    prompt: "What happens to the code after notFound() in a page?"
+    choices: ["It never runs, because notFound() works by throwing", "It runs, then the 404 page shows", "It runs twice", "It runs only in development"]
+    answer: 0
+    explain: "Like redirect(), notFound() throws a special error that Next.js catches. Nothing after it runs."
+    reteach: "### Syntax: notFound"
+
+  - id: q08
+    type: mcq
+    concept: search-params
+    prompt: "On /colours/indigo?sort=price, what does (await searchParams).sort give?"
+    choices: ["\"price\"", "\"indigo\"", "true", "undefined"]
+    answer: 0
+    explain: "searchParams holds the part after ?. Values are strings."
+    reteach: "### Syntax: searchParams"
+
+  - id: q09
+    type: mcq
+    concept: search-params
+    prompt: "Which file gets a searchParams prop?"
+    choices: ["page.jsx", "layout.jsx", "Both", "Neither; you must read window.location"]
+    answer: 0
+    explain: "Only pages get searchParams. Layouts aren't drawn again on every navigation, so they can't follow the ? part."
+    reteach: "### Syntax: searchParams"
+
+  - id: q10
+    type: predict-output
+    concept: search-params
+    code: |
+      const items = [{ name: "tote", paise: 89900 }, { name: "golu", paise: 45000 }];
+      const cheapest = [...items].sort((a, b) => a.paise - b.paise);
+      console.log(cheapest[0].name);
+      console.log(items[0].name);
+    answer: "golu\ntote"
+    explain: "Sorting a copy puts golu first in cheapest, and leaves the original list in its own order."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: generate-static-params
+    prompt: "What does generateStaticParams return?"
+    choices: ["An array with one params object per page to build ahead of time, like [{ colour: \"indigo\" }]", "The HTML of every page", "A list of addresses that are not allowed", "One string with every colour"]
+    answer: 0
+    explain: "During next build, Next.js renders a page for each params object in the array."
+    reteach: "### Syntax: generateStaticParams"
+
+  - id: q12
+    type: mcq
+    concept: dynamic-segments
+    prompt: "The page in src/app/guides/[...slug]/page.jsx is opened at /guides/amigurumi/first-steps. What is the slug param?"
+    choices: ["[\"amigurumi\", \"first-steps\"]", "\"amigurumi/first-steps\"", "\"first-steps\"", "\"amigurumi\""]
+    answer: 0
+    explain: "Three dots make a catch-all segment. It matches several segments, and its value is an array of them."
+    reteach: "### Catch-all segments"

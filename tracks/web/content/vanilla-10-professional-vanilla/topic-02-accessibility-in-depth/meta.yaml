@@ -1,0 +1,24 @@
+id: vanilla-10-professional-vanilla/topic-02-accessibility-in-depth
+title: "Accessibility in depth: focus and keyboards"
+order: 2
+minutes: 10
+prerequisites: [vanilla-10-professional-vanilla/topic-01-rendering-performance]
+concepts: [focus-order, visible-focus, keyboard-patterns, focus-management, active-descendant, live-regions]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-1002
+  from: sam
+  title: "Mr. Deshpande can't pick a search suggestion"
+  body: >
+    Raju here. Mr. Deshpande broke his wrist and shops on dhaaga.in with only the keyboard, and his screen reader reads the page to him.
+    He types "coaster" and the suggestion list pops up, but the arrow keys do nothing and his screen reader stays silent.
+    He had to phone me to order a Marigold coaster set for his daughter. Can we make the suggestions work for him?
+hints:
+  - "Keep focus in the input the whole time. The input points at the active option with aria-activedescendant, and the screen reader reads that option out."
+  - "Draw everything from state in render(): one li[role=option] per match with id `${listbox.id}-${index}` and aria-selected, listbox.hidden, the input's aria-expanded, aria-activedescendant (removeAttribute when nothing is active) and the status text."
+  - "In the keydown listener, return early when there are no matches. ArrowDown: (active + 1) % count. ArrowUp: active <= 0 ? count - 1 : active - 1. Call event.preventDefault() for both. Enter with active >= 0 calls pick(state.matches[state.active]); Escape updates to { matches: [], active: -1, message: \"\" }."
+review: true

@@ -1,0 +1,126 @@
+topic: ts-09-typescript-in-depth/topic-09-mapped-types
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: mapped-types
+    prompt: "interface Line { code: string; qty: number }. What is { [K in keyof Line]: boolean }?"
+    choices:
+      - "{ code: boolean; qty: boolean }"
+      - "{ code: string; qty: number }"
+      - "boolean[]"
+      - '"code" | "qty"'
+    answer: 0
+    explain: "The mapped type makes one field for every key of Line, and gives each one the type boolean."
+    reteach: "### Syntax: a mapped type"
+
+  - id: q02
+    type: fill-blank
+    concept: mapped-types
+    goal: "Loop over every key K of T, so each field of T gets an optional string message."
+    prompt: "type FormErrors<T> = { [K ___ keyof T]?: string };"
+    answers: ["in"]
+    explain: "[K in keyof T] goes over every key of T, a bit like for...of for types."
+    reteach: "### Syntax: a mapped type"
+
+  - id: q03
+    type: mcq
+    concept: mapped-types
+    prompt: "type Copy<T> = { [K in keyof T]: T[K] }. What is Copy<{ id: string; paise: number }>?"
+    choices: ["{ id: string; paise: number }", "{ id: unknown; paise: unknown }", "{ id: K; paise: K }", "string | number"]
+    answer: 0
+    explain: "T[K] is the type of the original field, so every field keeps its own type."
+    reteach: "### The new type can use the old one"
+
+  - id: q04
+    type: mcq
+    concept: mapping-modifiers
+    prompt: "Which built-in utility type is the same as { [K in keyof T]?: T[K] }?"
+    choices: ["Partial<T>", "Readonly<T>", "Required<T>", "Record<keyof T, T>"]
+    answer: 0
+    explain: "The ? after the brackets makes every field optional, which is exactly what Partial does."
+    reteach: "### Syntax: modifiers in mapped types"
+
+  - id: q05
+    type: fill-blank
+    concept: mapping-modifiers
+    goal: "Make every field of the new type impossible to assign after the object is made."
+    prompt: "type Frozen<T> = { ___ [K in keyof T]: T[K] };"
+    answers: ["readonly"]
+    explain: "readonly in front of the brackets marks every mapped field as read-only, like Readonly<T>."
+    reteach: "### Syntax: modifiers in mapped types"
+
+  - id: q06
+    type: mcq
+    concept: template-literal-types
+    prompt: "type ItemId = `DC-${number}`. Which value has the type ItemId?"
+    choices: ['"DC-1042"', '"AMI-1042"', '"DC-"', '"dc-1042"']
+    answer: 0
+    explain: "The pattern is DC- followed by a number. \"DC-\" alone has no number, and \"dc-\" has the wrong letters."
+    reteach: "### Syntax: template literal types"
+
+  - id: q07
+    type: mcq
+    concept: template-literal-types
+    prompt: 'type Colour = "Mint" | "Indigo"; type Size = "S" | "L". How many strings does `${Colour}-${Size}` allow?'
+    choices: ["4", "2", "1", "Any string"]
+    answer: 0
+    explain: "Every combination: Mint-S, Mint-L, Indigo-S and Indigo-L."
+    reteach: "### Template literals with unions"
+
+  - id: q08
+    type: predict-output
+    concept: template-literal-types
+    code: |
+      type Theme = { marigold: string; indigo: string };
+      type CssVar = `--${keyof Theme}`;
+      const names: CssVar[] = ["--indigo", "--marigold"];
+      console.log(names.map((name) => name.slice(2)).join(" and "));
+    answer: "indigo and marigold"
+    explain: "The types only check the names. At run time they're plain strings, and slice(2) drops the two dashes."
+    reteach: "### Syntax: template literal types"
+
+  - id: q09
+    type: predict-output
+    concept: keys-at-run-time
+    code: |
+      type Touched<T> = { [K in keyof T]: boolean };
+      function nothingTouched<T extends object>(form: T): Touched<T> {
+        const touched = {} as Touched<T>;
+        for (const key of Object.keys(form) as (keyof T)[]) {
+          touched[key] = false;
+        }
+        return touched;
+      }
+      const touched = nothingTouched({ name: "Asha", pincode: "411004" });
+      console.log(Object.keys(touched).join(","), touched.name);
+    answer: "name,pincode false"
+    explain: "The loop makes one false field for each key of the form, in order."
+    reteach: "### Keys at run time"
+
+  - id: q10
+    type: mcq
+    concept: keys-at-run-time
+    prompt: "Why write Object.keys(form) as (keyof T)[] instead of just Object.keys(form)?"
+    choices:
+      - "Object.keys returns string[], and a plain string can't be used as a key of a mapped type over T"
+      - "Without as, Object.keys returns the values instead of the keys"
+      - "as makes the loop run faster"
+      - "Object.keys doesn't work on objects with a type"
+    answer: 0
+    explain: "TypeScript types Object.keys as string[], because an object might have extra keys. as tells it these are T's keys."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: mapped-types
+    prompt: "Why build FormErrors from the form type instead of writing { name?: string; phone?: string } by hand?"
+    choices:
+      - "When a field like pincode is added to the form, the errors type gets it too"
+      - "A hand-written type can't have optional fields"
+      - "Mapped types check the form when the code runs"
+      - "It makes the form submit faster"
+    answer: 0
+    explain: "A mapped type follows the type it maps over, so the two can't drift apart."
+    reteach: "### Syntax: a mapped type"

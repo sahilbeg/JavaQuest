@@ -1,0 +1,119 @@
+topic: tsreact-11-typed-react-in-depth/topic-08-typed-refs
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: value-refs
+    prompt: "What happens when you change ref.current?"
+    choices: ["The new value is kept, but the component does not re-render", "The component re-renders, like with state", "React throws an error", "The value is lost on the next render"]
+    answer: 0
+    explain: "A ref is a pocket React doesn't watch. It keeps its value between renders and never causes one."
+    reteach: "### A ref is a box React doesn't watch"
+
+  - id: q02
+    type: fill-blank
+    concept: dom-refs
+    goal: "Make a ref for a text box, typed with the browser's element type for text boxes, starting empty."
+    prompt: "const inputRef = useRef<___>(null);"
+    answers: ["HTMLInputElement"]
+    explain: "Each tag has its own element type. An <input> is an HTMLInputElement, which has focus() and value."
+    reteach: "### Syntax: a ref to an element"
+
+  - id: q03
+    type: mcq
+    concept: ref-null-until-attached
+    prompt: "const inputRef = useRef<HTMLInputElement>(null); What is the type of inputRef.current?"
+    choices: ["HTMLInputElement | null", "HTMLInputElement", "null", "any"]
+    answer: 0
+    explain: "Until React attaches the element, and after it leaves the page, current is null. The type says so."
+    reteach: "### What TypeScript knows about ref.current"
+
+  - id: q04
+    type: spot-the-bug
+    concept: ref-null-until-attached
+    prompt: "TypeScript says 'inputRef.current' is possibly 'null'. Which line?"
+    code: |
+      const inputRef = useRef<HTMLInputElement>(null);
+      function handleClear() {
+        setText("");
+        inputRef.current.focus();
+      }
+    bugLine: 4
+    explain: "current may be null. Write inputRef.current?.focus();"
+    reteach: "### What TypeScript knows about ref.current"
+
+  - id: q05
+    type: order
+    concept: ref-null-until-attached
+    prompt: "A component with an input ref appears for the first time. Put what happens in order."
+    items:
+      - "React calls the component; inputRef.current is still null"
+      - "React puts the input on the page"
+      - "React sets inputRef.current to the input element"
+      - "React runs the effects, which can call inputRef.current?.focus()"
+    explain: "Refs are filled after the element exists and before effects run."
+    reteach: "### When is ref.current set?"
+
+  - id: q06
+    type: mcq
+    concept: value-refs
+    prompt: "Which is the best type for a ref that holds a timer id, starting with no timer?"
+    choices: ["useRef<ReturnType<typeof setTimeout> | null>(null)", "useRef<HTMLInputElement>(null)", "useRef<string>(\"\")", "useState<number>(0)"]
+    answer: 0
+    explain: "The timer id type fits both browser and Node, and | null covers the time before a timer exists."
+    reteach: "### Syntax: a ref that holds a value"
+
+  - id: q07
+    type: predict-output
+    concept: value-refs
+    code: |
+      const taps: { current: number } = { current: 0 };
+      function render(): string {
+        return `Tapped ${taps.current} times`;
+      }
+      const first = render();
+      taps.current += 1;
+      taps.current += 1;
+      taps.current += 1;
+      console.log(first);
+      console.log(render());
+    answer: "Tapped 0 times\nTapped 3 times"
+    explain: "The first render saw 0. Changing current doesn't update what was already rendered; only a new render reads 3."
+    reteach: "### Syntax: a ref that holds a value"
+
+  - id: q08
+    type: mcq
+    concept: callback-refs
+    prompt: "Six PIN boxes each need their element remembered. What is the right way?"
+    choices: ["One useRef<(HTMLInputElement | null)[]>([]) filled by callback refs", "Six useRef calls inside a for loop", "document.querySelectorAll in every render", "Keep the elements in useState"]
+    answer: 0
+    explain: "Hooks can't go in loops. One ref holding an array, filled by ref={(el) => { boxes.current[i] = el; }}, works for any number of boxes."
+    reteach: "### Refs for many elements"
+
+  - id: q09
+    type: mcq
+    concept: callback-refs
+    prompt: "Why does TypeScript refuse ref={(el) => (boxes.current[i] = el)} in React 19?"
+    choices: ["The arrow returns the element, but a callback ref may only return nothing or a cleanup function", "Callback refs are not allowed on inputs", "boxes.current can't hold null", "el is any"]
+    answer: 0
+    explain: "Without braces, an assignment arrow returns the assigned value. Add braces so it returns nothing."
+    reteach: "### Refs for many elements"
+
+  - id: q10
+    type: mcq
+    concept: ref-as-prop
+    prompt: "In React 19, your DigitBox component should accept a ref from its parent. How do you type it?"
+    choices: ["As a normal prop: ref?: Ref<HTMLInputElement>", "You can't: refs never reach function components", "As ref: string", "As ref: HTMLInputElement"]
+    answer: 0
+    explain: "In React 19 ref is a normal prop for function components. Ref<T> accepts both ref objects and callback refs."
+    reteach: "### Syntax: passing a ref to your own component"
+
+  - id: q11
+    type: mcq
+    concept: dom-refs
+    prompt: "A component shows {inputRef.current?.value} in its JSX. What goes wrong?"
+    choices: ["It's empty on the first render and out of date after, because typing doesn't re-render", "Nothing: refs are made for this", "It's a type error", "React throws because refs can't be read"]
+    answer: 0
+    explain: "Don't read refs while rendering. Keep anything the screen shows in state."
+    reteach: "### Don't read refs while rendering"
