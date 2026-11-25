@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shop | Dhaaga &amp; Co.</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <header>
+    <a href="/">Dhaaga &amp; Co.</a>
+    <a id="cart-link" href="/cart">Cart (<span id="cart-count">0</span>)</a>
+  </header>
+  <main>
+    <h1>Shop</h1>
+
+    <!-- TODO 1: make the search a real form that works without JavaScript:
+         <form id="search-form" action="/search" method="get" role="search"> around the label,
+         the input (give it name="q") and a <button type="submit">Search</button> -->
+    <div id="search-form">
+      <label for="q">Search</label>
+      <input id="q" type="search">
+    </div>
+    <p id="status" role="status"></p>
+
+    <!-- TODO 2: in every product card, link the name to its own page (<a href="/products/DC-1042">),
+         and replace the button with <form class="add" action="/cart" method="post"> holding
+         <input type="hidden" name="id" value="DC-1042"> and <button type="submit">Add to cart</button> -->
+    <ul id="products">
+      <li class="product" data-name="Golu the elephant">
+        <h2>Golu the elephant</h2>
+        <p>₹450.00</p>
+        <button class="add" type="button" data-id="DC-1042">Add to cart</button>
+      </li>
+      <li class="product" data-name="Marigold coaster set">
+        <h2>Marigold coaster set</h2>
+        <p>₹150.00</p>
+        <button class="add" type="button" data-id="DC-1101">Add to cart</button>
+      </li>
+      <li class="product" data-name="Mint keychain">
+        <h2>Mint keychain</h2>
+        <p>₹120.00</p>
+        <button class="add" type="button" data-id="DC-1201">Add to cart</button>
+      </li>
+      <li class="product" data-name="Rani pink tote bag">
+        <h2>Rani pink tote bag</h2>
+        <p>₹899.00</p>
+        <button class="add" type="button" data-id="DC-1301">Add to cart</button>
+      </li>
+    </ul>
+  </main>
+</body>
+</html>

@@ -1,0 +1,123 @@
+topic: next-10-nextjs-fundamentals/topic-09-images-and-fonts
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: next-image
+    prompt: "Sana's 4 MB photo is shown 360 pixels wide on a phone with a plain <img>. What does the phone download?"
+    choices: ["The whole 4 MB photo", "A 360-pixel copy", "Nothing until it is tapped", "Only the top half"]
+    answer: 0
+    explain: "A plain <img> always fetches the file as it is. The Image component asks for a resized copy instead."
+    reteach: "### The trouble with a plain img"
+
+  - id: q02
+    type: fill-blank
+    concept: next-image
+    goal: "Bring in Next.js's component that resizes and lazy-loads photos."
+    prompt: "import Image from \"___\";"
+    answers: ["next/image"]
+    explain: "Image is the default export of next/image."
+    reteach: "### Syntax: the Image component"
+
+  - id: q03
+    type: mcq
+    concept: next-image
+    prompt: "What does Next.js do with a photo shown through the Image component?"
+    choices: ["Makes smaller copies for each screen size, compresses them and serves a modern format like WebP", "Uploads it to Google", "Turns it into a black-and-white thumbnail", "Nothing; it's the same as <img>"]
+    answer: 0
+    explain: "The image service resizes and compresses on request, and keeps the small copies for the next visitor."
+    reteach: "### What Image does with your photo"
+
+  - id: q04
+    type: mcq
+    concept: layout-shift
+    prompt: "Why do width and height stop the text from jumping when a photo loads?"
+    choices: ["They give the photo's shape, so the browser saves the right space before the photo arrives", "They make the photo load faster", "They crop the photo", "They decide how big the photo shows on every screen"]
+    answer: 0
+    explain: "From the aspect ratio, the browser knows how tall the photo will be. CSS still decides the size it shows at."
+    reteach: "### How the shape stops the jump"
+
+  - id: q05
+    type: predict-output
+    concept: layout-shift
+    code: |
+      const photo = { width: 1200, height: 900 };
+      const shown = 400;
+      console.log((shown * photo.height) / photo.width);
+    answer: "300"
+    explain: "A 1200 by 900 photo has a 4 to 3 shape. Shown 400 pixels wide, it needs 300 pixels of height, saved before it loads."
+    reteach: "### How the shape stops the jump"
+
+  - id: q06
+    type: mcq
+    concept: lazy-loading
+    prompt: "The shop page shows 30 photos. Which ones does the Image component load first?"
+    choices: ["Only those on or near the screen; the rest wait until the customer scrolls near them", "All 30 at once", "Only the last one", "None until the customer taps them"]
+    answer: 0
+    explain: "Images are lazy by default: they load as they come near the screen, which saves data on mobile."
+    reteach: "### What Image does with your photo"
+
+  - id: q07
+    type: mcq
+    concept: image-preload
+    prompt: "Which image should get preload?"
+    choices: ["The one big photo at the top of the page, the first thing customers see", "Every photo in the catalogue", "Photos at the bottom of the page", "Small icons"]
+    answer: 0
+    explain: "preload makes one important image start early. Preloading everything makes them all compete, so the important one arrives later."
+    reteach: "### The first big photo: load it early"
+
+  - id: q08
+    type: mcq
+    concept: image-preload
+    prompt: "An old tutorial uses <Image priority />. In Next.js 16, what replaced priority?"
+    choices: ["preload", "eager", "first", "important"]
+    answer: 0
+    explain: "Next.js 16 deprecated priority in favour of preload, which says more clearly what it does."
+    reteach: "### The first big photo: load it early"
+
+  - id: q09
+    type: mcq
+    concept: next-image
+    prompt: "<Image src=\"https://photos.dhaaga.in/golu.jpg\" ... /> stops with an error about an unconfigured hostname. What's the fix?"
+    choices: ["List the host in images.remotePatterns in next.config.js", "Use a plain <img> instead, always", "Rename the photo", "Add \"use client\" to the page"]
+    answer: 0
+    explain: "Next.js only optimises remote photos from hosts you allow, so strangers can't use your image service."
+    reteach: "### Photos from other websites"
+
+  - id: q10
+    type: mcq
+    concept: next-font
+    prompt: "What does next/font/google do with Nunito?"
+    choices: ["Downloads the font files at build time and serves them from your own site", "Asks Google for the font on every visit", "Converts Nunito into an image", "Draws the text with JavaScript"]
+    answer: 0
+    explain: "No visitor's browser contacts Google, and Next.js matches the fallback font's size so the switch barely moves anything."
+    reteach: "### Syntax: next/font"
+
+  - id: q11
+    type: spot-the-bug
+    concept: next-font
+    prompt: "Next.js refuses this layout. Which line is wrong?"
+    code: |
+      import { Nunito } from "next/font/google";
+
+      export default function RootLayout({ children }) {
+        const nunito = Nunito({ subsets: ["latin"] });
+        return (
+          <html lang="en" className={nunito.className}>
+            <body>{children}</body>
+          </html>
+        );
+      }
+    bugLine: 4
+    explain: "Font loaders must be called at the top level of the file, outside any component, so they can run at build time."
+    reteach: "### Syntax: next/font"
+
+  - id: q12
+    type: mcq
+    concept: layout-shift
+    prompt: "What is layout shift?"
+    choices: ["Things on the page moving after they first appear, because something above them changed size", "Moving a page to another folder", "Switching from a phone to a laptop", "Changing the page's colours at night"]
+    answer: 0
+    explain: "It makes people tap the wrong thing. Google measures it as CLS, one of the Core Web Vitals."
+    reteach: "### The trouble with a plain img"

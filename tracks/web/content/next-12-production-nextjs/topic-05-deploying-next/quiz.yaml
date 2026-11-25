@@ -1,0 +1,179 @@
+topic: next-12-production-nextjs/topic-05-deploying-next
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: next-build-and-start
+    variants:
+      - prompt: "What does next build produce for an app with server actions?"
+        choices:
+          - "A .next folder with hashed static files and server code, which next start runs as a Node.js server"
+          - "Only HTML files that any static host can serve"
+          - "A database"
+          - "A copy of the source code with comments removed"
+        answer: 0
+      - prompt: "Why can't the Next.js store simply be uploaded to a plain static file host?"
+        choices:
+          - "Parts of it, like server actions and the cart's cookie reading, run on a server for every request"
+          - "Static hosts don't allow JavaScript files"
+          - "Next.js apps are too big for static hosts"
+          - "It can: every Next.js app is only files"
+        answer: 0
+    explain: "A Next.js build is files and a program. next start runs a Node.js server that supports every feature."
+    reteach: "### What next build makes"
+
+  - id: q02
+    type: order
+    concept: next-build-and-start
+    prompt: "Put a safe deploy of the Next.js store in order."
+    items:
+      - "A pull request is merged into main"
+      - "CI installs exact versions with npm ci"
+      - "CI runs the tests"
+      - "CI runs next build and packs one version"
+      - "The servers switch to the new version, keeping the old one"
+    explain: "Tests run before the build is packed, so a red test stops the deploy. The old version stays ready for a rollback."
+    reteach: "### What next build makes"
+
+  - id: q03
+    type: mcq
+    concept: deployment-options
+    prompt: "Which deployment options support every Next.js feature?"
+    choices:
+      - "A Node.js server with next start, or the same server in a Docker container"
+      - "Only a static export"
+      - "Only a static export on a CDN"
+      - "None of them"
+    answer: 0
+    explain: "Both run the real Next.js server. A static export is limited, and platforms vary in what they support."
+    reteach: "### Four ways to run it"
+
+  - id: q04
+    type: mcq
+    concept: static-export-limits
+    variants:
+      - prompt: "Which feature stops working with output: \"export\"?"
+        choices:
+          - "A server action that places orders"
+          - "A page rendered ahead of time"
+          - "A Link between two pages"
+          - "Metadata titles"
+        answer: 0
+      - prompt: "When is a static export a good fit?"
+        choices:
+          - "A site with no per-request server work, such as a brochure or docs site"
+          - "A store with a cart cookie and server actions"
+          - "An app that reads headers() on every page"
+          - "An app that uses proxy.js for login"
+        answer: 0
+    explain: "A static export is only files. Anything that needs a live request, like actions, cookies, proxy or request-reading handlers, is lost."
+    reteach: "### Static export and what it loses"
+
+  - id: q05
+    type: fill-blank
+    concept: standalone-docker
+    goal: "Make next build copy only the files the server needs, with a small server.js, for a lean Docker image."
+    prompt: "export default { output: \"___\" };"
+    answers: ["standalone"]
+    explain: "output: \"standalone\" traces the server's files into .next/standalone. You add public and .next/static, and start it with node server.js."
+    reteach: "### Syntax: output \"standalone\""
+
+  - id: q06
+    type: mcq
+    concept: standalone-docker
+    prompt: "In a Dockerfile, why is the build done in a first stage and only the standalone output copied into the second?"
+    choices:
+      - "The final image stays small, without build tools or the full node_modules"
+      - "Docker can only run one command per stage"
+      - "It makes the tests run twice"
+      - "The second stage needs the source code to start"
+    answer: 0
+    explain: "The first stage installs, tests and builds. The second holds only what runs: the standalone server, static files and public."
+    reteach: "### Syntax: output \"standalone\""
+
+  - id: q07
+    type: mcq
+    concept: runtime-env
+    variants:
+      - prompt: "You change NEXT_PUBLIC_SUPPORT_PHONE in the host's settings and restart the server. Why does the page still show the old number?"
+        choices:
+          - "NEXT_PUBLIC_ values are written into the JavaScript at build time, so it needs a new build"
+          - "The server ignores environment variables"
+          - "Browsers cache phone numbers"
+          - "Variables only change at midnight"
+        answer: 0
+      - prompt: "Which value can differ between preview and production while using the very same build?"
+        choices:
+          - "A server-only variable like DATABASE_URL, read at run time"
+          - "A NEXT_PUBLIC_ variable"
+          - "The hashed file names"
+          - "None: every environment needs its own build"
+        answer: 0
+    explain: "Build once, deploy many: server variables are read at run time, but NEXT_PUBLIC_ values are fixed when next build runs."
+    reteach: "### Build-time and run-time settings"
+
+  - id: q08
+    type: predict-output
+    concept: caching-in-production
+    prompt: "A year-long cache for hashed files is written in seconds. What does this print?"
+    code: |
+      console.log(60 * 60 * 24 * 365);
+    answer: "31536000"
+    explain: "60 × 60 × 24 × 365 is 31,536,000 seconds, the max-age Next.js gives files under /_next/static/."
+    reteach: "### Caching in production"
+
+  - id: q09
+    type: mcq
+    concept: caching-in-production
+    variants:
+      - prompt: "Why does Next.js send no-store on dynamic pages like the cart?"
+        choices:
+          - "So one customer's personal page is never stored and shown to someone else"
+          - "So the cart loads faster"
+          - "Because dynamic pages have no HTML"
+          - "So search engines can read them"
+        answer: 0
+      - prompt: "Three servers each keep their own Next.js cache. What goes wrong?"
+        choices:
+          - "A revalidation on one server doesn't reach the others, so customers see different versions"
+          - "Nothing: caches are always shared"
+          - "Static files stop loading"
+          - "Server actions stop working"
+        answer: 0
+    explain: "Hashed files are safe to keep for a year and personal pages never. With several servers, a shared cache handler keeps them in step."
+    reteach: "### Caching in production"
+
+  - id: q10
+    type: mcq
+    concept: version-skew-and-rollback
+    variants:
+      - prompt: "During a rolling deploy, some Buy now clicks fail with \"Failed to find Server Action\". What is a likely cause?"
+        choices:
+          - "The servers don't share one NEXT_SERVER_ACTIONS_ENCRYPTION_KEY"
+          - "The CDN is too fast"
+          - "The cart cookie expired"
+          - "metadataBase is missing"
+        answer: 0
+      - prompt: "What does setting a deploymentId do when a browser on v41 talks to a v42 server?"
+        choices:
+          - "Next.js notices the mismatch and does a full page reload instead of a broken navigation"
+          - "It blocks the customer"
+          - "It rolls the server back to v41"
+          - "Nothing"
+        answer: 0
+    explain: "Version skew happens while old and new versions overlap. A shared actions key and a deploymentId keep customers working during the switch."
+    reteach: "### Several servers: version skew"
+
+  - id: q11
+    type: mcq
+    concept: version-skew-and-rollback
+    prompt: "Checkout breaks five minutes after a deploy on Diwali morning. What should you do first?"
+    choices:
+      - "Roll back to the last good build, then fix calmly"
+      - "Write a quick fix and deploy it without tests"
+      - "Wait for more customer reports"
+      - "Delete the old builds to free space"
+    answer: 0
+    explain: "Kept builds make rollback a one-step switch. Roll back first, fix second, and remember data doesn't roll back with the code."
+    reteach: "### Rolling back"

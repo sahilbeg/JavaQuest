@@ -1,0 +1,163 @@
+topic: vanilla-10-professional-vanilla/topic-01-rendering-performance
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: layout-and-paint
+    prompt: "Most phone screens show 60 frames a second. About how long does the browser have to make one frame?"
+    choices: ["About 16 milliseconds", "About 1 second", "About 60 milliseconds", "About 1 millisecond"]
+    answer: 0
+    explain: "1000 ms divided by 60 frames is about 16.7 ms. Your code, layout and paint all have to fit in that, or the page stutters."
+    reteach: "### What the browser does after your code runs"
+
+  - id: q02
+    type: mcq
+    concept: layout-and-paint
+    prompt: "Your input handler changes ten cards and reads no sizes. When does the browser usually do layout?"
+    choices:
+      - "Once, after your code finishes and before the next frame"
+      - "Ten times, once after each change"
+      - "Never, because nothing was read"
+      - "Only when the customer scrolls"
+    answer: 0
+    explain: "The browser marks the layout as out of date and waits. When your code is done, it lays out once, then paints."
+    reteach: "### What the browser does after your code runs"
+
+  - id: q03
+    type: fill-blank
+    concept: document-fragment
+    goal: "Make an empty off-page box to build many product cards in, before putting them on the page in one go."
+    prompt: "const fragment = document.___();"
+    answers: ["createDocumentFragment"]
+    explain: "document.createDocumentFragment() makes a box that isn't part of the page. Inserting it moves all its children into the page at once."
+    reteach: "### Syntax: DocumentFragment"
+
+  - id: q04
+    type: mcq
+    concept: document-fragment
+    prompt: "A fragment holds 30 cards. After list.replaceChildren(fragment), what is left inside the fragment?"
+    choices:
+      - "Nothing: the 30 cards moved into the list"
+      - "The same 30 cards, copied"
+      - "One card, the last one"
+      - "An error, because a fragment can only be used once"
+    answer: 0
+    explain: "Inserting a fragment moves its children into the page. The empty fragment is left behind, and the list changed in one step."
+    reteach: "### Why one change beats three hundred"
+
+  - id: q05
+    type: predict-output
+    concept: layout-thrashing
+    prompt: "This pretends to be a browser: a write makes the layout dirty, and a read lays out only when it is dirty. What does it print?"
+    code: |
+      let dirty = false;
+      let layouts = 0;
+      const write = () => { dirty = true; };
+      const read = () => { if (dirty) { layouts += 1; dirty = false; } };
+      write(); write(); read(); read(); write(); read();
+      console.log(layouts);
+    answer: "2"
+    explain: "The first read lays out after two writes. The second read finds the layout fresh. The last write makes it dirty again, so the last read lays out: 2 in all."
+    reteach: "### Layout thrashing: reads mixed with writes"
+
+  - id: q06
+    type: spot-the-bug
+    concept: layout-thrashing
+    prompt: "This makes every card as wide as the widest. Which line forces a fresh layout for every card?"
+    code: |
+      function equalWidths(cards) {
+        let widest = 0;
+        for (const card of cards) {
+          card.style.width = "";
+          widest = Math.max(widest, card.offsetWidth);
+        }
+        for (const card of cards) {
+          card.style.width = `${widest}px`;
+        }
+      }
+    bugLine: 5
+    explain: "Reading offsetWidth right after changing a width forces a layout, once per card. Clear every width in one loop, then read them all in a second loop."
+    reteach: "### Layout thrashing: reads mixed with writes"
+
+  - id: q07
+    type: mcq
+    concept: layout-thrashing
+    prompt: "Which of these makes the browser lay out straight away if the page has changed?"
+    choices: ["card.offsetHeight", "card.classList.add(\"sold-out\")", "card.textContent = \"Golu\"", "card.dataset.id = \"DC-1042\""]
+    answer: 0
+    explain: "offsetHeight reads a size, so the browser must lay out first to answer truthfully. The others are writes, which the browser can save up."
+    reteach: "### Layout thrashing: reads mixed with writes"
+
+  - id: q08
+    type: fill-blank
+    concept: request-animation-frame
+    goal: "Ask the browser to run the drawing code once, just before it paints the next frame."
+    prompt: "___(() => draw(latest));"
+    answers: ["requestAnimationFrame", "window.requestAnimationFrame"]
+    explain: "requestAnimationFrame runs its callback right before the next paint, at the screen's own speed."
+    reteach: "### Syntax: requestAnimationFrame"
+
+  - id: q09
+    type: mcq
+    concept: request-animation-frame
+    prompt: "Why is requestAnimationFrame better than setTimeout(draw, 16) for drawing?"
+    choices:
+      - "It runs once per frame, in step with the screen, and pauses in hidden tabs"
+      - "It runs faster than the screen can refresh"
+      - "It runs the callback straight away, without waiting"
+      - "setTimeout can't change the page"
+    answer: 0
+    explain: "A 16 ms timer drifts out of step with the screen and keeps running in background tabs. rAF is called exactly when a frame is about to be drawn."
+    reteach: "### Syntax: requestAnimationFrame"
+
+  - id: q10
+    type: predict-output
+    concept: one-draw-per-frame
+    prompt: "frames is a pretend frame queue. What does this print?"
+    code: |
+      const frames = [];
+      let waiting = false;
+      let latest = 0;
+      let draws = 0;
+      function schedule(n) {
+        latest = n;
+        if (waiting) return;
+        waiting = true;
+        frames.push(() => { waiting = false; draws += 1; });
+      }
+      schedule(1);
+      schedule(2);
+      schedule(3);
+      frames.shift()();
+      schedule(4);
+      console.log(frames.length + " " + draws + " " + latest);
+    answer: "1 1 4"
+    explain: "Three calls ask for one frame. Running it draws once and clears the flag, so schedule(4) asks for a new frame. One frame waits, one draw happened, and latest is 4."
+    reteach: "### One draw per frame"
+
+  - id: q11
+    type: mcq
+    concept: one-draw-per-frame
+    prompt: "How is drawing once per frame different from the debounce you met in the async module?"
+    choices:
+      - "Once per frame keeps up while the customer types; debounce waits until they stop"
+      - "They are the same thing with different names"
+      - "Debounce draws more often than once per frame"
+      - "Once per frame only works for mouse events"
+    answer: 0
+    explain: "Coalescing draws the newest state at every frame, so the list follows the typing. A debounce draws nothing until there's a pause."
+    reteach: "### One draw per frame"
+
+  - id: q12
+    type: mcq
+    concept: measure-first
+    prompt: "The catalogue feels slow on Raju's phone. What should you do first?"
+    choices:
+      - "Record it in the Performance panel with CPU throttling, and find the long task"
+      - "Rewrite the whole page with a framework"
+      - "Add a cache to every function"
+      - "Remove all the product photos"
+    answer: 0
+    explain: "Measure first. The recording shows which task is long and whether layout is forced. Then fix that part and record again."
+    reteach: "### Measure first"

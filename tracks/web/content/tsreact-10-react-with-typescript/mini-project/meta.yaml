@@ -1,0 +1,23 @@
+id: tsreact-10-react-with-typescript/mini-project
+title: "FEAT-10: The typed React catalogue"
+order: 100
+minutes: 15
+prerequisites: [tsreact-10-react-with-typescript/topic-10-generic-components]
+concepts: [typed-props, typed-state, union-props, lists-and-keys, controlled-inputs, derived-values, lifting-state]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: FEAT-10
+  from: priya
+  title: "Let customers find things, and stop them buying what we don't have"
+  body: >
+    People ask me on WhatsApp, "Do you have anything in Indigo?" and then try to buy three Golus when we have two.
+    I want the website to answer the first question by itself, show what is left of each thing, and never sell more
+    than we have. Sana and Kavya have put the details on the KB page.
+hints:
+  - "Start with ProductCard: stockText(stock) is a switch on stock.kind. canAdd is stock.kind === \"in-stock\" && inCart < stock.count, and Add is disabled when it is false."
+  - "In CatalogueApp keep three pieces of state: query (\"\"), colour (useState<Colour | \"All\">(\"All\")) and cart (useState<Record<string, number>>({})). add(id) sets { ...cart, [id]: (cart[id] ?? 0) + 1 }."
+  - "visible = products.filter((p) => p.name.toLowerCase().includes(query.trim().toLowerCase()) && (colour === \"All\" || p.colour === colour)). The cart count is Object.values(cart) added up."
+review: false

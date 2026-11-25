@@ -1,0 +1,152 @@
+topic: tsreact-12-professional-typescript/topic-06-code-reviews
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: review-order
+    prompt: "CI runs tsc on every pull request. What should a reviewer spend the least time on?"
+    choices:
+      - "Wrong property names and missing arguments, which tsc already catches"
+      - "Whether the feature works on the preview"
+      - "Every any, as and ! in the diff"
+      - "Whether a switch handles a new union member"
+    answer: 0
+    explain: "Don't re-do the compiler's job. Spend review time on behaviour and on what the compiler can't see: escape hatches, honest types and grown unions."
+    reteach: "### What the compiler already did"
+
+  - id: q02
+    type: mcq
+    concept: unsafe-escapes
+    prompt: "Which of these is NOT an escape hatch that switches type checking off?"
+    choices:
+      - "if (item === undefined) return null;"
+      - "data as Item[]"
+      - "items.find((i) => i.id === id)!"
+      - "// @ts-ignore"
+    answer: 0
+    explain: "An if is a real check: it narrows the type honestly. as, ! and @ts-ignore tell the compiler to look away."
+    reteach: "### Escape hatches: where the checks stop"
+
+  - id: q03
+    type: spot-the-bug
+    concept: unsafe-escapes
+    prompt: "As the reviewer, which line switches type checking off, so you'd ask for a real check?"
+    code: |
+      async function walletBalance(phone: string): Promise<number> {
+        const response = await fetch(`/api/wallet/${phone}`);
+        if (!response.ok) return 0;
+        const data = (await response.json()) as any;
+        return Number.isInteger(data.balance_paise) ? data.balance_paise : 0;
+      }
+    bugLine: 4
+    explain: "as any switches checking off for everything that follows. The answer should be read as unknown and checked, so the compiler keeps helping."
+    reteach: "### Escape hatches: where the checks stop"
+
+  - id: q04
+    type: mcq
+    concept: honest-types
+    variants:
+      - prompt: "findCustomer(phone) returns the customer, or nothing for a new number. Which return type is honest?"
+        choices:
+          - "Customer | undefined"
+          - "Customer"
+          - "any"
+          - "Customer[]"
+        answer: 0
+      - prompt: "Which field type is the most honest for an order's status?"
+        choices:
+          - "\"placed\" | \"packed\" | \"shipped\" | \"delivered\" | \"cancelled\""
+          - "string"
+          - "any"
+          - "unknown"
+        answer: 0
+    explain: "A type is a promise to every caller. If a value can be missing, say so; if only some words are allowed, list them as a union so a typo is an error."
+    reteach: "### Honest types"
+
+  - id: q05
+    type: predict-output
+    concept: exhaustive-unions
+    prompt: "A new size was added without updating this switch. What does it print?"
+    code: |
+      type Size = "S" | "M" | "L";
+      function stitches(size: Size): number {
+        switch (size) {
+          case "S": return 40;
+          case "M": return 60;
+          default: return 80;
+        }
+      }
+      console.log(stitches("XL" as Size));
+    answer: "80"
+    explain: "The default branch catches XL and quietly treats it like L. An exhaustive switch with a never check would have made the new size a compile error."
+    reteach: "### Unions that grew"
+
+  - id: q06
+    type: fill-blank
+    concept: exhaustive-unions
+    goal: "In the default branch, prove that every payment mode was already handled, so a new mode is a compile error."
+    prompt: "const unhandled: ___ = mode;"
+    answers: ["never"]
+    explain: "When every case is handled, mode has no type left in the default: never. A new member makes the assignment fail, and the compiler points at the switch."
+    reteach: "### Syntax: an exhaustive check"
+
+  - id: q07
+    type: mcq
+    concept: exhaustive-unions
+    prompt: "A pull request adds \"WALLET\" to the Payment union. What is the most important thing to check?"
+    choices:
+      - "Every place that branches on Payment handles WALLET"
+      - "That WALLET is written in capitals"
+      - "That the union is sorted"
+      - "That the file is under 400 lines"
+    answer: 0
+    explain: "A grown union is a hunt. Switches with a default branch, and if/else chains, can swallow the new member without any error."
+    reteach: "### Unions that grew"
+
+  - id: q08
+    type: mcq
+    concept: simple-types
+    prompt: "A form's props use a 6-line recursive conditional type that nobody else on the team can read. What is a good review comment?"
+    choices:
+      - "suggestion: could a plain interface describe this form's data? It would be easier to change and its errors easier to read."
+      - "issue (blocking): rewrite this with any."
+      - "praise: the cleverer the type, the safer the code."
+      - "nitpick: add more conditional types."
+    answer: 0
+    explain: "App types should read like a description of the data. Clever types are hard to change and give confusing errors; save them for shared libraries with tests."
+    reteach: "### Simple types beat clever types"
+
+  - id: q09
+    type: mcq
+    concept: review-comments
+    variants:
+      - prompt: "Which comment should be labelled issue (blocking)?"
+        choices:
+          - "The API answer is cast with as Item[], so a price sent as text breaks the cart total."
+          - "I'd use interface instead of type here."
+          - "Could res be called response?"
+          - "The Result type here is lovely."
+        answer: 0
+      - prompt: "Which comment should NOT block the merge?"
+        choices:
+          - "nitpick: I prefer interface over type for this props object."
+          - "The default branch prints Card for WALLET payments."
+          - "The ! on the ref is wrong on the first render, and crashes."
+          - "findCustomer's type says Customer, but it can return undefined."
+        answer: 0
+    explain: "Block for wrong behaviour and for types that lie. type versus interface for a plain object is taste: settle it with a team rule, not a blocking comment."
+    reteach: "### Writing TypeScript review comments"
+
+  - id: q10
+    type: mcq
+    concept: review-comments
+    prompt: "An author writes \"the types all pass\" under your comment about as any. What is the best reply?"
+    choices:
+      - "They pass because as any switched the check off here. Could we read the answer as unknown and parse it?"
+      - "OK, approved."
+      - "TypeScript is useless then."
+      - "Please turn strict mode off so we can see."
+    answer: 0
+    explain: "Explain why, and suggest a way forward. A green tsc can't vouch for code where checking was switched off."
+    reteach: "## Worked example"

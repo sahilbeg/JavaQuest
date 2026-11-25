@@ -1,0 +1,23 @@
+id: vanilla-09-single-page-apps/topic-05-fetching-into-the-store
+title: "Fetching data into the store"
+order: 5
+minutes: 10
+prerequisites: [vanilla-09-single-page-apps/topic-04-store-and-views]
+concepts: [server-data-in-store, status-slice, fetch-once-cache, shared-request, keep-data-on-error]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0905
+  from: sam
+  title: "The catalogue spins every time you press Back"
+  body: >
+    Raju here. Mrs. Deshpande was choosing a Diwali gift on her phone. Every time she opened an item and pressed Back,
+    the whole catalogue showed "Loading..." again and took ten seconds on her connection.
+    She says the shop "keeps forgetting" what it already showed her. Can it remember the items while she browses?
+hints:
+  - "Keep the items in the store, as { status, data, error }. Before fetching, check the status: \"ready\" means the items are already there, so don't ask again."
+  - "Two screens can ask at the same moment. Keep the running request's promise in inFlight and hand that same promise to every caller until it settles."
+  - "load(): if (store.getState().items.status === \"ready\") return Promise.resolve(); if (inFlight === null) inFlight = request().finally(() => { inFlight = null; }); return inFlight;"
+review: true

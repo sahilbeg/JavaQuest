@@ -1,0 +1,155 @@
+topic: vanilla-10-professional-vanilla/topic-06-deployment
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: static-hosting
+    prompt: "What makes dhaaga.in's plain-JavaScript store a static site?"
+    choices:
+      - "It is only files that the host sends exactly as they are, with nothing running on the server per visit"
+      - "Its pages never change after launch"
+      - "It has no JavaScript"
+      - "It can only be opened on a computer, not a phone"
+    answer: 0
+    explain: "Static means the server sends stored files as they are. The JavaScript in them still runs in the customer's browser."
+    reteach: "### A static site is just files"
+
+  - id: q02
+    type: mcq
+    concept: cache-busting
+    prompt: "Why does a build name the script main-b04f9d.js instead of main.js?"
+    choices:
+      - "The name changes whenever the content changes, so no cache can serve an old copy"
+      - "Short random names load faster"
+      - "Browsers refuse to run files called main.js"
+      - "It hides the code from customers"
+    answer: 0
+    explain: "This is cache busting with a content hash. New content gets a new address, which no browser has cached yet."
+    reteach: "### Cache busting: a new name for new content"
+
+  - id: q03
+    type: mcq
+    concept: cache-headers
+    prompt: "Which file should be served with Cache-Control: no-cache?"
+    choices: ["index.html", "assets/main-b04f9d.js", "assets/style-91aa3c.css", "assets/golu-4e7d10.webp"]
+    answer: 0
+    explain: "HTML points at the newest hashed names, so browsers must check it every time. Hashed files can be cached for a year."
+    reteach: "### Syntax: Cache-Control headers"
+
+  - id: q04
+    type: fill-blank
+    concept: cache-headers
+    goal: "Tell browsers that this hashed file will never change, so they shouldn't even check with the server."
+    prompt: "Cache-Control: public, max-age=31536000, ___"
+    answers: ["immutable"]
+    explain: "immutable says the file at this address never changes. Together with a year-long max-age, returning visitors load it with no request at all."
+    reteach: "### Syntax: Cache-Control headers"
+
+  - id: q05
+    type: predict-output
+    concept: cache-headers
+    prompt: "What does this print?"
+    code: |
+      const seconds = 365 * 24 * 60 * 60;
+      console.log(`max-age=${seconds}`);
+    answer: "max-age=31536000"
+    explain: "A year is 365 days of 86,400 seconds: 31,536,000 seconds, the number you see in long cache headers."
+    reteach: "### Syntax: Cache-Control headers"
+
+  - id: q06
+    type: mcq
+    concept: history-fallback
+    prompt: "Clicking to /orders/order-17 works, but refreshing that page shows the host's 404. What's missing?"
+    choices:
+      - "A fallback that answers paths with no file with /index.html and status 200"
+      - "A longer cache on index.html"
+      - "A service worker"
+      - "A Content-Security-Policy header"
+    answer: 0
+    explain: "The History API made a path that exists only in your router. The host has no such file, so it needs a rule to send index.html instead."
+    reteach: "### Real paths need a fallback"
+
+  - id: q07
+    type: predict-output
+    concept: history-fallback
+    prompt: "This pretends to be a host with a fallback. What does it print?"
+    code: |
+      const files = ["/index.html", "/assets/main-b04f9d.js", "/products/DC-1042/index.html"];
+      function answer(path) {
+        if (files.includes(path)) return path + " 200";
+        if (files.includes(path + "/index.html")) return path + "/index.html 200";
+        return "/index.html 200";
+      }
+      console.log(answer("/orders/order-17"));
+      console.log(answer("/products/DC-1042"));
+    answer: |
+      /index.html 200
+      /products/DC-1042/index.html 200
+    explain: "There's no file for /orders/order-17, so the fallback sends index.html. Golu's page was prerendered, so its real file is served."
+    reteach: "### Real paths need a fallback"
+
+  - id: q08
+    type: mcq
+    concept: service-worker-updates
+    prompt: "After three releases, some customers still see the launch-day site. Their service worker uses const CACHE = \"dhaaga\" and sw.js hasn't changed. Why?"
+    choices:
+      - "The browser only installs a new worker when sw.js changes, so the old one keeps serving its old cache"
+      - "Service workers delete themselves after a week"
+      - "The host stopped sending HTML"
+      - "Customers must clear their browser by hand after every release"
+    answer: 0
+    explain: "Change sw.js on every release, for example a new cache name like dhaaga-v4. Then a new worker installs and takes over."
+    reteach: "### Service workers and updates"
+
+  - id: q09
+    type: mcq
+    concept: service-worker-updates
+    prompt: "What should the new service worker do in its activate event?"
+    choices:
+      - "Delete every cache whose name isn't the new release's cache"
+      - "Delete the new cache it just filled"
+      - "Reload every page the customer has open, without asking"
+      - "Unregister itself"
+    answer: 0
+    explain: "Old caches hold old files and use space on the phone. Clearing them on activate means only the new release is served."
+    reteach: "### Service workers and updates"
+
+  - id: q10
+    type: mcq
+    concept: security-headers
+    prompt: "What does Strict-Transport-Security: max-age=31536000 ask the browser to do?"
+    choices:
+      - "Use only HTTPS for dhaaga.in for the next year, even if a link says http://"
+      - "Cache every page for a year"
+      - "Block all scripts from other sites"
+      - "Stop guessing file types"
+    answer: 0
+    explain: "HSTS makes browsers upgrade every visit to HTTPS. Script rules belong to CSP, and nosniff stops type guessing."
+    reteach: "### Security headers"
+
+  - id: q11
+    type: mcq
+    concept: preview-and-rollback
+    prompt: "Ten minutes after a release on Diwali morning, checkout is broken. What should you do first?"
+    choices:
+      - "Roll back to the last good deploy, then find and fix the bug calmly"
+      - "Write a quick fix and deploy it straight from your laptop"
+      - "Delete the CDN's cache and hope"
+      - "Wait for more customers to report it"
+    answer: 0
+    explain: "The host keeps earlier deploys, so going back takes a minute. Customers can pay again while you fix the bug properly."
+    reteach: "### Previews, checks and rollbacks"
+
+  - id: q12
+    type: mcq
+    concept: preview-and-rollback
+    prompt: "What is a preview deploy for?"
+    choices:
+      - "Clicking through one pull request's changes on a real phone, at its own address, before they go live"
+      - "Showing customers the next release early"
+      - "Keeping a backup of the database"
+      - "Making the live site load faster"
+    answer: 0
+    explain: "Each pull request gets a temporary copy of the site. Reviewers and Sana can try it, and nothing reaches customers until it's merged."
+    reteach: "### Previews, checks and rollbacks"

@@ -1,0 +1,126 @@
+topic: next-10-nextjs-fundamentals/topic-04-links-and-navigation
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: next-link
+    prompt: "What does <Link href=\"/items\">Shop</Link> put into the page?"
+    choices: ["A real <a href=\"/items\"> element, which Next.js handles when it's tapped", "A <button> that calls router.push", "A <div> with an onClick handler", "Nothing until the link is tapped"]
+    answer: 0
+    explain: "Link renders a normal <a>, so it can be opened in a new tab, copied and read by screen readers. Next.js takes over the tap."
+    reteach: "### Syntax: Link"
+
+  - id: q02
+    type: fill-blank
+    concept: next-link
+    goal: "Bring in Next.js's link component so the menu can use it."
+    prompt: "import Link from \"___\";"
+    answers: ["next/link"]
+    explain: "Link is the default export of the next/link module."
+    reteach: "### Syntax: Link"
+
+  - id: q03
+    type: mcq
+    concept: client-navigation
+    prompt: "The header shows a cart count kept in state. The customer taps a plain <a href=\"/items\">. What happens to the count?"
+    choices: ["It starts over, because a full page load restarts all the JavaScript", "It stays, because the layout is preserved", "It doubles", "The link does nothing"]
+    answer: 0
+    explain: "A plain <a> makes the browser load a whole new document, so every component starts again. Link keeps the layout and its state."
+    reteach: "### A plain <a> versus Link"
+
+  - id: q04
+    type: mcq
+    concept: client-navigation
+    prompt: "What does prefetching mean for a Link?"
+    choices: ["Next.js fetches what the linked page needs before the tap, so the tap feels instant", "The link opens in a new tab", "The page is printed", "The browser caches the whole website forever"]
+    answer: 0
+    explain: "When a link comes into view in a production build, Next.js quietly loads that page's part ahead of time."
+    reteach: "### A plain <a> versus Link"
+
+  - id: q05
+    type: mcq
+    concept: active-link
+    prompt: "How should the menu tell screen readers which link is the page you're on?"
+    choices: ["Put aria-current=\"page\" on that link", "Make that link bold with <b>", "Remove the href from that link", "Add the word (current) to every link"]
+    answer: 0
+    explain: "aria-current=\"page\" is read out by screen readers, and CSS can style it with [aria-current=\"page\"]."
+    reteach: "### Showing which page you're on"
+
+  - id: q06
+    type: predict-output
+    concept: active-link
+    code: |
+      function isActive(pathname, href) {
+        if (href === "/") return pathname === "/";
+        return pathname === href || pathname.startsWith(href + "/");
+      }
+      console.log(isActive("/items/DC-1042", "/items"));
+      console.log(isActive("/items", "/"));
+      console.log(isActive("/itemsale", "/items"));
+    answer: "true\nfalse\nfalse"
+    explain: "An item page is inside the shop. Home is active only on / itself. /itemsale doesn't start with /items/, so it isn't inside the shop."
+    reteach: "### Which link is active?"
+
+  - id: q07
+    type: mcq
+    concept: use-pathname
+    prompt: "On dhaaga.in/items/DC-1042?ref=whatsapp, what does usePathname() return?"
+    choices: ["\"/items/DC-1042\"", "\"dhaaga.in/items/DC-1042\"", "\"/items/DC-1042?ref=whatsapp\"", "\"DC-1042\""]
+    answer: 0
+    explain: "usePathname gives only the path: no domain and no ? part."
+    reteach: "### Syntax: usePathname"
+
+  - id: q08
+    type: mcq
+    concept: use-pathname
+    prompt: "A NavBar component calls usePathname(). What must its file start with?"
+    choices: ["The line \"use client\";", "import React from \"react\";", "export default", "Nothing special"]
+    answer: 0
+    explain: "Hooks like usePathname and useRouter only run in client components, which start with \"use client\"."
+    reteach: "### Syntax: usePathname"
+
+  - id: q09
+    type: spot-the-bug
+    concept: use-router
+    prompt: "In the app router, this search box crashes with an error saying NextRouter was not mounted. Which line is wrong?"
+    code: |
+      "use client";
+      import { useRouter } from "next/router";
+
+      export function SearchBox() {
+        const router = useRouter();
+        return <button onClick={() => router.push("/items?q=golu")}>Search</button>;
+      }
+    bugLine: 2
+    explain: "next/router belongs to the old pages router. In the app router, import useRouter from next/navigation."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: predict-output
+    concept: use-router
+    code: |
+      const q = "Golu elephant";
+      console.log("/items?q=" + encodeURIComponent(q));
+      console.log(encodeURIComponent("a&b"));
+    answer: "/items?q=Golu%20elephant\na%26b"
+    explain: "encodeURIComponent turns a space into %20 and & into %26, so the address can't be misread."
+    reteach: "### Putting text in an address"
+
+  - id: q11
+    type: mcq
+    concept: use-router
+    prompt: "After a search, which call goes to the results and lets Back return to the page before?"
+    choices: ["router.push(\"/items?q=golu\")", "router.replace(\"/items?q=golu\")", "router.back()", "window.location.reload()"]
+    answer: 0
+    explain: "push adds the new address to the history. replace swaps the current entry, so Back would skip it."
+    reteach: "### Syntax: useRouter"
+
+  - id: q12
+    type: mcq
+    concept: client-navigation
+    prompt: "The old address /catalogue should now send customers to /items. In the server component for /catalogue, what do you call?"
+    choices: ["redirect(\"/items\") from next/navigation", "useRouter().push(\"/items\")", "<Link href=\"/items\" />", "window.location = \"/items\""]
+    answer: 0
+    explain: "redirect works in server components: it stops the page and sends the customer to the new address. Hooks and window don't exist on the server."
+    reteach: "### Syntax: redirect on the server"

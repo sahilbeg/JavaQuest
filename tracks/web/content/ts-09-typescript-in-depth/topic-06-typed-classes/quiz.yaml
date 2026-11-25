@@ -1,0 +1,165 @@
+topic: ts-09-typescript-in-depth/topic-06-typed-classes
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: typed-fields
+    prompt: "A TypeScript class sets this.colour = colour in its constructor, but colour isn't declared in the class body. What happens?"
+    choices:
+      - "A type error: property colour does not exist on the class"
+      - "Nothing: TypeScript adds the field for you"
+      - "colour becomes private"
+      - "colour gets the type any"
+    answer: 0
+    explain: "In TypeScript, every field is declared in the class body with its type before it is used."
+    reteach: "### Syntax: typed fields"
+
+  - id: q02
+    type: mcq
+    concept: typed-fields
+    prompt: "Strict mode is on. A class declares grams: number; but never gives it a value. What does TypeScript say?"
+    choices:
+      - "grams has no initializer and is not definitely assigned in the constructor"
+      - "Nothing, grams is simply undefined"
+      - "grams must be readonly"
+      - "grams must be private"
+    answer: 0
+    explain: "Strict mode checks that every field gets a value, in its declaration or in the constructor."
+    reteach: "### Syntax: typed fields"
+
+  - id: q03
+    type: spot-the-bug
+    concept: access-modifiers
+    code: |
+      class StockBook {
+        private counts = new Map<string, number>();
+        stockOf(id: string): number {
+          return this.counts.get(id) ?? 0;
+        }
+      }
+      const book = new StockBook();
+      book.counts.set("DC-1042", 5);
+      console.log(book.stockOf("DC-1042"));
+    bugLine: 8
+    explain: "counts is private, so only StockBook's own methods may use it. Outside the class, that line is a type error."
+    reteach: "### Syntax: public and private"
+
+  - id: q04
+    type: predict-output
+    concept: access-modifiers
+    code: |
+      class YarnBall {
+        private grams: number;
+        constructor(grams: number) {
+          this.grams = grams;
+        }
+        use(g: number): boolean {
+          if (g > this.grams) return false;
+          this.grams -= g;
+          return true;
+        }
+        get left(): number {
+          return this.grams;
+        }
+      }
+      const indigo = new YarnBall(150);
+      console.log(indigo.use(40), indigo.use(40), indigo.use(80), indigo.left);
+    answer: "true true false 70"
+    explain: "150 - 40 - 40 leaves 70 g. Asking for 80 more is too much, so use returns false and nothing changes."
+    reteach: "### Watching a typed class work"
+
+  - id: q05
+    type: fill-blank
+    concept: readonly-fields
+    goal: "Declare a field that can be set in the constructor but never changed afterwards."
+    prompt: "___ id: string;"
+    answers: ["readonly"]
+    explain: "A readonly field is set once, in its declaration or the constructor."
+    reteach: "### Syntax: readonly fields"
+
+  - id: q06
+    type: mcq
+    concept: readonly-fields
+    prompt: "golu.id is a readonly field. What does golu.id = \"DC-9999\"; do?"
+    choices:
+      - "A type error: id is a read-only property"
+      - "It changes the id"
+      - "It throws an error when the code runs"
+      - "It makes a second id field"
+    answer: 0
+    explain: "TypeScript refuses the assignment. readonly is a check before the code runs."
+    reteach: "### Syntax: readonly fields"
+
+  - id: q07
+    type: fill-blank
+    concept: implements
+    goal: "Promise that this class has every member the StockStore interface lists."
+    prompt: "class StallStock ___ StockStore {"
+    answers: ["implements"]
+    explain: "implements makes TypeScript check the class against the interface."
+    reteach: "### Syntax: implements"
+
+  - id: q08
+    type: mcq
+    concept: implements
+    prompt: "class StallStock implements StockStore, but it has no sell method, and StockStore lists one. What happens?"
+    choices:
+      - "A type error at the class: it incorrectly implements StockStore"
+      - "TypeScript adds an empty sell method"
+      - "Nothing until some code calls sell"
+      - "StockStore loses its sell method"
+    answer: 0
+    explain: "implements is a promise TypeScript checks. A missing or wrongly typed member is an error at the class itself."
+    reteach: "### Syntax: implements"
+
+  - id: q09
+    type: mcq
+    concept: parameter-properties
+    prompt: "What does constructor(private readonly name: string) {} do?"
+    choices:
+      - "Declares a private, read-only field called name and sets it from the argument"
+      - "Nothing: the parameter is unused"
+      - "Makes the whole constructor private"
+      - "Creates a getter called name"
+    answer: 0
+    explain: "That's a parameter property: the modifiers turn the parameter into a field, set automatically."
+    reteach: "### Syntax: parameter properties"
+
+  - id: q10
+    type: mcq
+    concept: access-modifiers
+    prompt: "What is the difference between private grams and #grams?"
+    choices:
+      - "private is only checked by TypeScript; #grams is private when the code runs too"
+      - "There is none: they compile to the same thing"
+      - "#grams is public, private grams is hidden"
+      - "private only works on methods"
+    answer: 0
+    explain: "private disappears when the types are stripped. JavaScript's # fields stay private at run time."
+    reteach: "### Syntax: public and private"
+
+  - id: q11
+    type: predict-output
+    concept: typed-fields
+    code: |
+      class LoyaltyCard {
+        readonly phone: string;
+        private stamps = 0;
+        constructor(phone: string) {
+          this.phone = phone;
+        }
+        stamp(): boolean {
+          this.stamps += 1;
+          if (this.stamps === 3) {
+            this.stamps = 0;
+            return true;
+          }
+          return false;
+        }
+      }
+      const card = new LoyaltyCard("98765 43210");
+      console.log(card.stamp(), card.stamp(), card.stamp(), card.stamp());
+    answer: "false false true false"
+    explain: "The third stamp reaches 3, returns true and starts again at 0. The fourth is the first of the new round."
+    reteach: "## Worked example"

@@ -1,0 +1,128 @@
+topic: ts-08-typescript-basics/topic-07-narrowing
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: narrowing
+    prompt: "What does narrowing mean in TypeScript?"
+    choices: ["Checking which member of a union a value is, so TypeScript uses that narrower type after the check", "Making a variable hold fewer characters", "Removing members from a union type by hand", "Turning a number into a string"]
+    answer: 0
+    explain: "After a check like typeof id === \"number\", TypeScript treats id as a number inside the if."
+    reteach: "## Concept"
+
+  - id: q02
+    type: fill-blank
+    concept: typeof-narrowing
+    goal: "Check whether the order id is a number, so the code inside can use number methods."
+    prompt: "if (___ id === \"number\") {"
+    answers: ["typeof"]
+    explain: "typeof gives the kind of a value as text, and TypeScript narrows the union inside the if."
+    reteach: "### Syntax: typeof checks"
+
+  - id: q03
+    type: predict-output
+    concept: typeof-narrowing
+    code: |
+      function orderLabel(id: string | number): string {
+        if (typeof id === "number") {
+          return "order-" + id;
+        }
+        return id.toLowerCase();
+      }
+      console.log(orderLabel(21), orderLabel("ORDER-22"));
+    answer: "order-21 order-22"
+    explain: "The number takes the first path. The text skips it and is lower-cased."
+    reteach: "### Syntax: typeof checks"
+
+  - id: q04
+    type: mcq
+    concept: narrowing
+    prompt: "In orderLabel(id: string | number), the if (typeof id === \"number\") block ends with return. What is id's type on the lines after the if?"
+    choices: ["string", "number", "string | number", "never"]
+    answer: 0
+    explain: "Every number has already returned inside the if, so only strings reach the lines after it."
+    reteach: "### Syntax: typeof checks"
+
+  - id: q05
+    type: predict-output
+    concept: null-and-truthiness
+    code: |
+      function stitchLabel(name: string | null): string {
+        if (name === null) {
+          return "No name";
+        }
+        return name.toUpperCase();
+      }
+      console.log(stitchLabel("Asha"), stitchLabel(null));
+    answer: "ASHA No name"
+    explain: "null takes the early return. After the if, name is a string, so toUpperCase is allowed."
+    reteach: "### Checking for null"
+
+  - id: q06
+    type: spot-the-bug
+    concept: null-and-truthiness
+    code: |
+      function qtyText(qty: number | null): string {
+        if (qty) {
+          return `${qty} items`;
+        }
+        return "No quantity";
+      }
+    bugLine: 2
+    explain: "0 is falsy, so a real quantity of 0 is treated as missing. Check qty !== null instead."
+    reteach: "### Checking for null"
+
+  - id: q07
+    type: predict-output
+    concept: in-narrowing
+    code: |
+      function where(order: { stall: string } | { address: string }): string {
+        if ("stall" in order) {
+          return "Stall: " + order.stall;
+        }
+        return "Address: " + order.address;
+      }
+      console.log(where({ address: "Baner" }));
+    answer: "Address: Baner"
+    explain: "The object has no stall property, so the in check is false, and order is the address shape."
+    reteach: "### Syntax: the in operator"
+
+  - id: q08
+    type: mcq
+    concept: in-narrowing
+    prompt: "contact is { phone: string } | { email: string }. Which check lets you read contact.phone safely?"
+    choices: ["if (\"phone\" in contact)", "if (typeof contact === \"phone\")", "if (contact.phone)", "if (contact instanceof phone)"]
+    answer: 0
+    explain: "in checks whether the object has that property, and narrows to the shape that has it. Reading contact.phone before narrowing is itself an error."
+    reteach: "### Syntax: the in operator"
+
+  - id: q09
+    type: mcq
+    concept: instanceof-and-arrays
+    prompt: "items is string | string[]. Which check tells the list apart from a single code?"
+    choices: ["Array.isArray(items)", "typeof items === \"array\"", "items instanceof String", "items.length > 1"]
+    answer: 0
+    explain: "typeof never gives \"array\", and length exists on both strings and arrays. Array.isArray is the check."
+    reteach: "### Syntax: instanceof and Array.isArray"
+
+  - id: q10
+    type: predict-output
+    concept: instanceof-and-arrays
+    code: |
+      function colourList(colours: string | string[]): string {
+        return Array.isArray(colours) ? colours.join("/") : colours;
+      }
+      console.log(colourList(["Mint", "Off-white"]), colourList("Indigo"));
+    answer: "Mint/Off-white Indigo"
+    explain: "The list is joined with slashes. The single string is returned as it is."
+    reteach: "### Syntax: instanceof and Array.isArray"
+
+  - id: q11
+    type: mcq
+    concept: instanceof-and-arrays
+    prompt: "when is Date | string. What is when's type inside if (when instanceof Date) { ... }?"
+    choices: ["Date", "string", "Date | string", "object"]
+    answer: 0
+    explain: "instanceof checks which class made the object, so TypeScript narrows when to Date inside the if."
+    reteach: "### Syntax: instanceof and Array.isArray"

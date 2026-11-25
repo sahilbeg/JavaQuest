@@ -1,0 +1,22 @@
+id: ts-09-typescript-in-depth/mini-project
+title: "FEAT-09: The typed catalogue engine"
+order: 100
+minutes: 15
+prerequisites: [ts-09-typescript-in-depth/topic-10-typing-the-dom]
+concepts: [discriminated-unions, generic-constraints, utility-types, template-literal-types]
+practice:
+  kind: code
+  runner: vitest
+ticket:
+  key: FEAT-09
+  from: priya
+  title: "A catalogue that can answer any question"
+  body: >
+    People ask me such different things on WhatsApp. "Anything in Mint?" "Gifts under ₹500 that you have today?" "Your cheapest bags first?"
+    I want the website to answer all of them, and I want to add new kinds of questions later without anything breaking.
+    Kavya says TypeScript can keep it all honest. Sana has drawn the filter buttons; please build the engine behind them.
+hints:
+  - "matches: switch (filter.by) with one case per kind of filter, and default: return assertNever(filter). For price, check minPaise and maxPaise only when they aren't undefined, so 0 still counts."
+  - "runQuery: keep the items for which query.filters.every((filter) => matches(item, filter)). If query.sort is set, sort that copy: name with localeCompare, paise and stock by subtraction, and multiply by -1 for \"desc\"."
+  - "countBy: a new Map<Item[K], number>(); for each item, set item[key] to (counts.get(item[key]) ?? 0) + 1. toCard: { id, name, price: rupees(item.paise), soldOut: item.stock === 0 }."
+review: false

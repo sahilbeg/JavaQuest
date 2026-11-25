@@ -1,0 +1,110 @@
+topic: ts-08-typescript-basics/topic-10-modules-and-tsconfig
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: exporting-types
+    prompt: "types.ts exports CartLine, but says type ItemCode = \"CST\" | \"KEY\"; with no export. What happens when prices.ts imports ItemCode?"
+    choices: ["tsc reports that types.ts declares ItemCode locally, but it is not exported", "It works, because types are always shared", "It works, but ItemCode becomes any", "Node crashes when it loads types.ts"]
+    answer: 0
+    explain: "A type is private to its file until it is exported, just like a function."
+    reteach: "## Common mistakes"
+
+  - id: q02
+    type: fill-blank
+    concept: import-type
+    goal: "Bring in the CartLine shape for checking only, so the line is deleted before the code runs."
+    prompt: "import ___ { CartLine } from \"./types.ts\";"
+    answers: ["type"]
+    explain: "import type marks the import as types only. File-by-file tools can delete it safely."
+    reteach: "### Syntax: import type"
+
+  - id: q03
+    type: mcq
+    concept: import-type
+    prompt: "Why do tools like Vite need import type to be marked?"
+    choices: ["They look at one file at a time, so they can't open the other file to see whether a name is only a type", "They can't read files ending in .ts", "import type makes the bundle load faster at run time by loading the file early", "Without it, the type is checked twice"]
+    answer: 0
+    explain: "Seeing the word type, a one-file-at-a-time tool knows the whole import can be deleted."
+    reteach: "### Syntax: import type"
+
+  - id: q04
+    type: predict-output
+    concept: exporting-types
+    code: |
+      export type ItemCode = "CST" | "KEY";
+      export const PRICES = { CST: 15000, KEY: 12000 };
+      export function priceOf(code: ItemCode): number {
+        return PRICES[code];
+      }
+      console.log(priceOf("CST") + priceOf("KEY"));
+    answer: "27000"
+    explain: "The exported type is erased. The function adds 15000 and 12000."
+    reteach: "### Modules work as before"
+
+  - id: q05
+    type: mcq
+    concept: tsconfig
+    prompt: "What does \"noEmit\": true in tsconfig.json tell tsc?"
+    choices: ["Only check the code, and don't write any .js files", "Don't show any errors", "Don't check any files", "Remove all console.log lines"]
+    answer: 0
+    explain: "Vite builds the JavaScript, so tsc's only job is checking."
+    reteach: "### Syntax: tsconfig.json"
+
+  - id: q06
+    type: mcq
+    concept: tsconfig
+    prompt: "Which tsconfig.json setting makes names like document and window exist for the checker?"
+    choices: ["\"lib\": [\"es2023\", \"dom\"]", "\"target\": \"es2022\"", "\"module\": \"esnext\"", "\"noEmit\": true"]
+    answer: 0
+    explain: "lib lists the built-in names. dom adds the browser's, like document and window."
+    reteach: "### Syntax: tsconfig.json"
+
+  - id: q07
+    type: mcq
+    concept: strict-mode
+    prompt: "With strict: true, what does tsc say about function cityOf(customer) { return customer.address.city; }?"
+    choices: ["Parameter 'customer' implicitly has an 'any' type", "Nothing: it's valid JavaScript", "'customer.address' is not exported", "Expected 1 arguments, but got 0"]
+    answer: 0
+    explain: "noImplicitAny, part of strict, refuses parameters without a type."
+    reteach: "### strict mode"
+
+  - id: q08
+    type: mcq
+    concept: strict-mode
+    prompt: "Someone switched strict off to quieten forty errors. What is the best fix?"
+    choices: ["Switch strict back on and fix the errors, one file at a time", "Leave it off, since the code still runs", "Add any to every parameter", "Delete tsconfig.json"]
+    answer: 0
+    explain: "The errors are real bugs waiting to happen. Turning strict off only hides them."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: type-check-script
+    prompt: "Why did dhaaga.in's build pass with forty type errors?"
+    choices: ["vite build strips types without checking them", "tsc only checks .js files", "Type errors only show up in the browser", "The errors were in tsconfig.json"]
+    answer: 0
+    explain: "Vite builds fast by stripping types. Checking needs tsc --noEmit as its own step."
+    reteach: "### Running the check in a real project"
+
+  - id: q10
+    type: fill-blank
+    concept: type-check-script
+    goal: "Make the build script stop at the first type error, so vite build only runs when the check passes."
+    prompt: "\"build\": \"tsc --noEmit ___ vite build\""
+    answers: ["&&"]
+    explain: "&& runs the second command only when the first one succeeds."
+    reteach: "### Running the check in a real project"
+
+  - id: q11
+    type: spot-the-bug
+    concept: exporting-types
+    code: |
+      import type { ItemCode } from "./types.ts";
+      import { priceOf } from "./prices.ts";
+      const code: ItemCode = "BGA";
+      console.log(priceOf(code));
+    bugLine: 3
+    explain: "\"BGA\" is a typo, not one of the ItemCode choices. tsc reads both files and refuses it."
+    reteach: "## Worked example"

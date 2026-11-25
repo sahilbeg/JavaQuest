@@ -1,0 +1,24 @@
+id: tsreact-10-react-with-typescript/topic-04-typed-events
+title: "Typed events"
+order: 4
+minutes: 10
+prerequisites: [tsreact-10-react-with-typescript/topic-03-typed-state]
+concepts: [event-props, event-types, change-events, keyboard-events, callback-props]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1004
+  from: sam
+  title: "The counter screen ignores Enter"
+  body: >
+    Raju here. On Sunday the stall queue went past the chai stall. On the new counter screen I type an item code like
+    "ami" and press Enter, and nothing happens. I have to type capitals and tap Add every single time. Can you make it
+    take Enter, accept small letters, and tell me when I mistype a code?
+hints:
+  - "Write function handleChange(e: ChangeEvent<HTMLInputElement>) that calls setText(e.target.value.toUpperCase()). Use it as the input's onChange."
+  - 'Write function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) that runs addTyped() when e.key === "Enter", and give the input onKeyDown={handleKeyDown}.'
+  - 'In addTyped, trim the text. Empty: "Type a code first". isItemCode(code): call onAdd(code), set "Added " + ITEM_NAMES[code] and setText(""). Otherwise: "Unknown code: " + code.'
+review: true

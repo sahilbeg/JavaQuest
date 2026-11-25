@@ -1,0 +1,119 @@
+topic: next-10-nextjs-fundamentals/topic-08-metadata
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: metadata-object
+    prompt: "Who reads a page's metadata?"
+    choices: ["Browser tabs, search engines and link-preview bots, from the tags in the <head>", "Only the customer, at the top of the page", "Only Next.js during the build", "Nobody; it's a comment"]
+    answer: 0
+    explain: "Metadata isn't shown on the page itself. It labels the page for tabs, search results and preview cards."
+    reteach: "### What metadata is"
+
+  - id: q02
+    type: fill-blank
+    concept: metadata-object
+    goal: "Give the Visit us page its own tab title by exporting the object Next.js reads for head tags."
+    prompt: "export const ___ = { title: \"Visit us\" };"
+    answers: ["metadata"]
+    explain: "A layout or page exports a constant called metadata, and Next.js writes the matching tags."
+    reteach: "### Syntax: the metadata object"
+
+  - id: q03
+    type: predict-output
+    concept: title-template
+    code: |
+      const template = "%s | Dhaaga & Co.";
+      console.log(template.replace("%s", "Shop"));
+      console.log(template.replace("%s", "Shop | Dhaaga & Co."));
+    answer: "Shop | Dhaaga & Co.\nShop | Dhaaga & Co. | Dhaaga & Co."
+    explain: "The template always adds the shop's name. A page that adds it too ends up with it twice."
+    reteach: "### Syntax: a title template"
+
+  - id: q04
+    type: mcq
+    concept: title-template
+    prompt: "The root layout has title: { default: \"Dhaaga & Co.\", template: \"%s | Dhaaga & Co.\" }. The About page sets no title. What does its tab say?"
+    choices: ["Dhaaga & Co.", "%s | Dhaaga & Co.", " | Dhaaga & Co.", "About"]
+    answer: 0
+    explain: "default is used for pages that set no title of their own. The template only applies when there's a title to put in it."
+    reteach: "### Syntax: a title template"
+
+  - id: q05
+    type: mcq
+    concept: generate-metadata
+    prompt: "Why does the colour page need generateMetadata instead of a metadata object?"
+    choices: ["Its title depends on the address, so it must be worked out from params for each request", "Metadata objects are only for layouts", "generateMetadata is faster", "Colour names can't be written in an object"]
+    answer: 0
+    explain: "A fixed object can't know which colour was asked for. generateMetadata gets the same params as the page."
+    reteach: "### Syntax: generateMetadata"
+
+  - id: q06
+    type: spot-the-bug
+    concept: generate-metadata
+    prompt: "Every colour page's tab says Colour not found. Which line is wrong?"
+    code: |
+      export async function generateMetadata({ params }) {
+        const colour = colourBySlug(params.colour);
+        if (!colour) return { title: "Colour not found" };
+        return { title: `${colour.name} crochet` };
+      }
+    bugLine: 2
+    explain: "params is a Promise, so params.colour is undefined. Await it first: const { colour: slug } = await params;"
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: mcq
+    concept: generate-metadata
+    prompt: "A page file exports both const metadata and function generateMetadata. What happens?"
+    choices: ["Next.js stops with an error: a file exports one or the other", "The object wins", "The function wins", "Both titles are joined"]
+    answer: 0
+    explain: "Each route segment uses either a fixed metadata object or generateMetadata, never both."
+    reteach: "### Syntax: generateMetadata"
+
+  - id: q08
+    type: mcq
+    concept: open-graph
+    prompt: "Which part of the metadata does WhatsApp use to build a link's preview card?"
+    choices: ["openGraph, written as og: tags", "The page's <h1>", "The CSS", "The JavaScript bundle"]
+    answer: 0
+    explain: "Preview bots read the og: tags in the HTML's head. In Next.js they come from the openGraph object."
+    reteach: "### Open Graph: the preview card"
+
+  - id: q09
+    type: mcq
+    concept: open-graph
+    prompt: "Why did the old React app's links get empty WhatsApp previews?"
+    choices: ["The preview bot doesn't run JavaScript, and the app's HTML had no tags until JavaScript ran", "WhatsApp doesn't support React", "The images were too big", "The links were too long"]
+    answer: 0
+    explain: "Next.js writes the tags into the HTML on the server, so the bot finds them without running any JavaScript."
+    reteach: "### Open Graph: the preview card"
+
+  - id: q10
+    type: predict-output
+    concept: metadata-base
+    code: |
+      const base = new URL("https://dhaaga.in");
+      console.log(new URL("/colours/indigo", base).href);
+    answer: "https://dhaaga.in/colours/indigo"
+    explain: "A short address is joined to the base to make a full one. metadataBase does this for every short address in your metadata."
+    reteach: "### Syntax: metadataBase"
+
+  - id: q11
+    type: mcq
+    concept: metadata-base
+    prompt: "Where should metadataBase: new URL(\"https://dhaaga.in\") go?"
+    choices: ["In the root layout's metadata, once", "In every page", "In next.config.js only", "In each openGraph object"]
+    answer: 0
+    explain: "Set once in the root layout, it applies to all pages, so each page can use short addresses like /colours/indigo."
+    reteach: "### Syntax: metadataBase"
+
+  - id: q12
+    type: mcq
+    concept: metadata-object
+    prompt: "Which file can export metadata?"
+    choices: ["A server component page or layout", "A file that starts with \"use client\"", "Any CSS file", "A loading.jsx file only"]
+    answer: 0
+    explain: "Metadata is read on the server, so only server component pages and layouts can export it."
+    reteach: "### Syntax: the metadata object"

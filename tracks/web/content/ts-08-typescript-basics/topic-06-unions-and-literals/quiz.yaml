@@ -1,0 +1,121 @@
+topic: ts-08-typescript-basics/topic-06-unions-and-literals
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: union-types
+    prompt: "Which values fit the type string | number?"
+    choices: ["17 and \"order-17\"", "Only \"order-17\"", "Only 17", "true, 17 and \"order-17\""]
+    answer: 0
+    explain: "A union allows a value of any one of its members: here, text or a number. true is neither."
+    reteach: "### Syntax: union types"
+
+  - id: q02
+    type: fill-blank
+    concept: union-types
+    goal: "Let an order id be either a plain number from WhatsApp or text from the website."
+    prompt: "let orderId: string ___ number;"
+    answers: ["|"]
+    explain: "The bar between two types makes a union: the box may hold either one."
+    reteach: "### Syntax: union types"
+
+  - id: q03
+    type: mcq
+    concept: common-members
+    prompt: "id has the type string | number. Why does id.toUpperCase() fail?"
+    choices: ["id might be a number, and numbers have no toUpperCase", "toUpperCase doesn't exist in TypeScript", "Unions can't have methods called on them at all", "id must be converted to a literal type first"]
+    answer: 0
+    explain: "You can only use what every member of the union has. String(id) works on both."
+    reteach: "### You can only use what every member has"
+
+  - id: q04
+    type: predict-output
+    concept: common-members
+    code: |
+      function orderRef(id: string | number): string {
+        return "#" + String(id).padStart(3, "0");
+      }
+      console.log(orderRef(7), orderRef("42"));
+    answer: "#007 #042"
+    explain: "String works on numbers and text, so it's allowed on the union. padStart fills each to three characters."
+    reteach: "## Worked example"
+
+  - id: q05
+    type: mcq
+    concept: literal-types
+    prompt: "What does the type \"UPI\" allow?"
+    choices: ["Only the exact text \"UPI\"", "Any text", "Any text that contains UPI", "\"UPI\" and \"upi\""]
+    answer: 0
+    explain: "A literal type allows exactly one value. Case matters, so \"upi\" doesn't fit."
+    reteach: "### Syntax: literal types"
+
+  - id: q06
+    type: spot-the-bug
+    concept: literal-unions
+    code: |
+      function modeLabel(mode: "CASH" | "UPI" | "CARD"): string {
+        return mode === "CASH" ? "Cash" : mode;
+      }
+      console.log(modeLabel("UPI"));
+      console.log(modeLabel("CARD"));
+      console.log(modeLabel("GPAY"));
+    bugLine: 6
+    explain: "\"GPAY\" isn't one of the three choices, so tsc refuses it."
+    reteach: "### Syntax: a union of literals"
+
+  - id: q07
+    type: predict-output
+    concept: literal-unions
+    code: |
+      function deliveryFee(method: "pickup" | "pune", subtotal: number): number {
+        if (method === "pickup") {
+          return 0;
+        }
+        return subtotal > 99900 ? 0 : 6000;
+      }
+      console.log(deliveryFee("pune", 99900), deliveryFee("pickup", 10000));
+    answer: "6000 0"
+    explain: "99900 isn't above 99900, so Pune delivery costs 6000. A pickup is always 0."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: mcq
+    concept: literal-widening
+    prompt: "What type does TypeScript give mode in let mode = \"UPI\";?"
+    choices: ["string, because a let could later hold any text", "\"UPI\"", "\"CASH\" | \"UPI\" | \"CARD\"", "any"]
+    answer: 0
+    explain: "A let can change, so TypeScript widens the literal to string. With const, it would stay \"UPI\"."
+    reteach: "### const, let and literal types"
+
+  - id: q09
+    type: mcq
+    concept: literal-widening
+    prompt: "modeLabel takes \"CASH\" | \"UPI\" | \"CARD\". Which call does tsc accept?"
+    choices: ["const m = \"UPI\"; modeLabel(m);", "let m = \"UPI\"; modeLabel(m);", "modeLabel(\"upi\");", "const m: string = \"UPI\"; modeLabel(m);"]
+    answer: 0
+    explain: "A const keeps the literal type \"UPI\", which is one of the choices. The others are plain string, or the wrong case."
+    reteach: "### const, let and literal types"
+
+  - id: q10
+    type: mcq
+    concept: literal-unions
+    prompt: "mode has the type \"CASH\" | \"UPI\" | \"CARD\". What does tsc say about if (mode === \"Upi\")?"
+    choices: ["The comparison appears to be unintentional, because the types have no overlap", "Nothing: it's just false at run time", "It turns \"Upi\" into \"UPI\" for you", "Property 'Upi' does not exist"]
+    answer: 0
+    explain: "mode can never be \"Upi\", so the comparison is always false. TypeScript points out the typo."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: predict-output
+    concept: literal-unions
+    code: |
+      const grams = { Marigold: 0, Indigo: 0 };
+      const colours: ("Marigold" | "Indigo")[] = ["Indigo", "Indigo", "Marigold"];
+      for (const colour of colours) {
+        grams[colour] += 40;
+      }
+      console.log(grams.Marigold, grams.Indigo);
+    answer: "40 80"
+    explain: "Each colour picks its own key. Indigo comes up twice, Marigold once."
+    reteach: "### Literal unions as keys"

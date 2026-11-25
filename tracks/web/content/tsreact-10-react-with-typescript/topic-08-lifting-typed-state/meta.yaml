@@ -1,0 +1,24 @@
+id: tsreact-10-react-with-typescript/topic-08-lifting-typed-state
+title: "Lifting typed state"
+order: 8
+minutes: 10
+prerequisites: [tsreact-10-react-with-typescript/topic-07-unions-in-ui]
+concepts: [lifting-state, single-source-of-truth, typed-callbacks, updating-objects-in-arrays, setter-types]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1008
+  from: sam
+  title: "The header says Cart (0) after adding two Golus"
+  body: >
+    Raju here. A customer in Wakad added two Golus and a coaster set on the website. The header still said
+    Cart (0), and the cart box at the bottom stayed empty, so she thought the site was broken. Can you get the
+    header, the item list and the cart box to agree?
+hints:
+  - "The item list, the header and the cart box all need the same cart, so it lives in ShopPage, their shared parent: useState<CartLine[]>([])."
+  - "add(item) checks whether the item is already in the cart. If it is, map the lines and give that one qty + 1; if not, add { item, qty: 1 } to a new array."
+  - "remove(id) is setCart(cart.filter((line) => line.item.id !== id)). In CartSummary, add onRemove: (id: string) => void to the props and a Remove button per line labelled Remove <name>."
+review: true

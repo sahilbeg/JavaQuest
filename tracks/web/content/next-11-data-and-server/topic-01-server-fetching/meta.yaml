@@ -1,0 +1,24 @@
+id: next-11-data-and-server/topic-01-server-fetching
+title: "Fetching data in server components"
+order: 1
+minutes: 9
+prerequisites: [next-10-nextjs-fundamentals/boss]
+concepts: [async-server-components, fetch-on-the-server, check-res-ok, parallel-requests, server-only-data]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1101
+  from: maya
+  title: "The catalogue arrives empty and then says Loading..."
+  body: >
+    Kavya here. Our catalogue page on Next.js still fetches in the browser with useEffect, like the old React site.
+    Customers on slow phones stare at "Loading..." and search engines see an empty list. Let's fetch on the server
+    instead, so the page arrives with Golu and the coaster sets already in it, stock and all.
+hints:
+  - "A server component can be an async function. Await the data inside the component, before the return. No useEffect, no useState."
+  - "In api.js: const res = await fetch(url); if (!res.ok) throw new Error(`Items API answered ${res.status}`); then return res.json()."
+  - "In the page: const [items, stock] = await Promise.all([getItems(), getStock()]); then map each item to <li key={item.id}>{`${item.name}: ${rupees(item.paise)} (${label})`}</li>."
+review: true

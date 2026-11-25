@@ -1,0 +1,24 @@
+id: tsreact-11-typed-react-in-depth/topic-05-typed-reducers
+title: "Typed reducers with action unions"
+order: 5
+minutes: 10
+prerequisites: [tsreact-11-typed-react-in-depth/topic-04-typed-context]
+concepts: [reducer-function, action-unions, use-reducer, exhaustive-never, typed-dispatch]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1105
+  from: sam
+  title: "A cancelled order got shipped anyway"
+  body: >
+    Raju here. Mrs. Kulkarni cancelled order-17 on WhatsApp, I pressed Cancel on the order board, and the
+    courier still took it. The board lets any button change any order to anything. Packed orders should ship,
+    new ones should be packed first, and once something has shipped, nobody can cancel it.
+hints:
+  - "Each case narrows action to one shape. Write a small helper move(orders, id, from, to) that maps over the orders and changes only the matching id whose status is in from."
+  - "packed: from [\"new\"]. shipped: from [\"packed\"]. cancelled: from [\"new\", \"packed\"]. added: if orders.some((o) => o.id === action.id) return orders; else return [...orders, { id, customer, status: \"new\" }]."
+  - "default: return assertNever(action);. In OrderBoard: const [orders, dispatch] = useReducer(ordersReducer, start);"
+review: true

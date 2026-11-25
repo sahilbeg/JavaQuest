@@ -1,0 +1,24 @@
+id: tsreact-10-react-with-typescript/topic-07-unions-in-ui
+title: "Showing states with unions"
+order: 7
+minutes: 10
+prerequisites: [tsreact-10-react-with-typescript/topic-06-typed-lists]
+concepts: [conditional-rendering, ternary-and-and, union-props, switch-rendering, exhaustive-check]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1007
+  from: sam
+  title: "The site says In stock for a sold-out Golu"
+  body: >
+    Raju here. Golu the elephant sold out on Sunday, but his page still says "In stock", and three customers paid on
+    WhatsApp for one we don't have. The made-to-order booties say "In stock" too. Every badge says the same thing!
+    Can you make the badge tell the truth for every kind of stock?
+hints:
+  - 'Switch on stock.kind. Inside case "sold-out", TypeScript knows backOn exists; inside case "made-to-order", it knows days exists.'
+  - 'For in-stock: stock.count <= 3 gives "Only {count} left" with badge--low, otherwise "In stock" with badge--ok. For sold-out, add the date only when it is not null: {stock.backOn !== null && `, back on ${stock.backOn}`}.'
+  - 'In BuyBox, disable Add to cart when stock.kind === "sold-out", and show the note with {stock.kind === "made-to-order" && <p className="note">...</p>}.'
+review: true

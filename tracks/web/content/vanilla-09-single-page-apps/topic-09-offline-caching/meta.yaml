@@ -1,0 +1,23 @@
+id: vanilla-09-single-page-apps/topic-09-offline-caching
+title: "Offline: caching with a service worker"
+order: 9
+minutes: 10
+prerequisites: [vanilla-09-single-page-apps/topic-08-dynamic-import]
+concepts: [service-worker, sw-lifecycle, cache-api, cache-first, network-first, cache-versioning]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0909
+  from: sam
+  title: "The site is blank at the stall when the signal drops"
+  body: >
+    Raju here. At the FC Road stall on Sundays the phone signal comes and goes. When a customer asks about the tote bags,
+    I open dhaaga.in to show them, and half the time I get the browser's dinosaur instead of our catalogue.
+    Can the site at least open and show the last prices it knew, even with no signal?
+hints:
+  - "Two strategies: cache-first answers from the saved copy and only fetches when there is none. network-first fetches, and only uses the saved copy when the fetch throws."
+  - "Save response.clone(), not response itself: a body can be read only once, and the page still needs to read the original. Only save answers where response.ok is true."
+  - "networkFirst: try { const response = await fetchFn(path); if (response.ok) await cache.put(path, response.clone()); return response; } catch (error) { const saved = await cache.match(path); if (saved !== undefined) return saved; throw error; }"
+review: true

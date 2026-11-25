@@ -1,0 +1,24 @@
+id: vanilla-08-components-without-a-framework/topic-08-keyed-list-updates
+title: "Updating lists without redrawing everything"
+order: 8
+minutes: 10
+prerequisites: [vanilla-08-components-without-a-framework/topic-07-forms-as-components]
+concepts: [element-state, keys, reconcile, keep-create-remove, moving-nodes, stable-keys]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0808
+  from: sam
+  title: "My Packed ticks vanish every time a new order comes in"
+  body: >
+    Raju here. The packing screen at the Aundh shop lists today's orders, and I tick "Packed" as I go. Every time
+    a new WhatsApp order arrives, the list redraws and all my ticks disappear. This morning I packed order-17 twice.
+    Can the list keep the rows it already has, and only add the new one?
+hints:
+  - "Before changing anything, put the rows already in the list into a Map from row.dataset.key to the row."
+  - "For each item: take its row from the Map (and delete it there), or make one with create(item) and set its data-key. Call update(row, item). If list.children[index] isn't this row, list.insertBefore(row, list.children[index] ?? null)."
+  - "Whatever is left in the Map at the end belongs to items that are gone: call row.remove() on each."
+review: true

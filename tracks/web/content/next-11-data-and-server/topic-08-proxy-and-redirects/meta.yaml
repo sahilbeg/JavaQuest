@@ -1,0 +1,24 @@
+id: next-11-data-and-server/topic-08-proxy-and-redirects
+title: "Proxy, redirects and guards"
+order: 8
+minutes: 10
+prerequisites: [next-11-data-and-server/topic-07-sessions-and-cookies]
+concepts: [proxy-file, proxy-matcher, redirect-statuses, navigation-functions, guards-in-the-server, not-found-for-others]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1108
+  from: sam
+  title: "Old WhatsApp links break, and order pages leak"
+  body: >
+    Raju here. Customers still tap old WhatsApp links like dhaaga.in/catalogue/DC-1042 and land on a "not found"
+    page. Logged-out people who open My orders see a half-broken page instead of the login. And Ravi Joshi says he
+    opened /account/orders/order-17 by changing the number in the address, and saw Asha Rao's order!
+hints:
+  - "In proxy.js, read request.nextUrl.pathname. /catalogue and anything under it moves for good: return Response.redirect(new URL(`/items${rest}`, request.url), 308)."
+  - "Under /account, read request.cookies.get(\"dhaaga_session\")?.value. With none, return Response.redirect(new URL(`/login?next=${pathname}`, request.url), 307). Otherwise return nothing. Set config.matcher to [\"/account/:path*\", \"/catalogue/:path*\"]."
+  - "In guard.js, requireCustomer calls redirect(`/login?next=${path}`) when currentCustomer gives null. getOwnOrder calls notFound() when the order is missing or its phone isn't the customer's."
+review: true

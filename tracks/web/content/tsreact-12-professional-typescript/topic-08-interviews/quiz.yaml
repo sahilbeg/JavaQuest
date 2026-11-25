@@ -1,0 +1,158 @@
+topic: tsreact-12-professional-typescript/topic-08-interviews
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: interview-loop
+    prompt: "In a TypeScript interview round, what is the most common reason a good candidate fails?"
+    choices:
+      - "Working in silence, so the interviewer can't see how they think"
+      - "Using const instead of let"
+      - "Writing the types before the code"
+      - "Asking what should happen for an empty list"
+    answer: 0
+    explain: "Every round watches how you get to the answer. Talk through the types, the examples and the edge cases as you go."
+    reteach: "### The TypeScript interview loop"
+
+  - id: q02
+    type: mcq
+    concept: type-vs-interface
+    variants:
+      - prompt: "Which can only be written with type, not interface?"
+        choices:
+          - "type Payment = \"CASH\" | \"UPI\" | \"CARD\""
+          - "A shape with id and paise"
+          - "A shape that extends another shape"
+          - "A shape with an optional field"
+        answer: 0
+      - prompt: "What can interface do that type can't?"
+        choices:
+          - "Merge two declarations with the same name into one"
+          - "Name a union of string literals"
+          - "Name a tuple"
+          - "Describe a function"
+        answer: 0
+    explain: "Only type can name unions, tuples and other non-object types. Only interface declarations merge, which libraries use to let you add fields. For plain objects, either works; be consistent."
+    reteach: "### Question: type or interface?"
+
+  - id: q03
+    type: predict-output
+    concept: any-unknown-never
+    prompt: "What does this print?"
+    code: |
+      const value: unknown = "45000";
+      console.log(typeof value === "number" ? value + 1 : "not a number");
+    answer: "not a number"
+    explain: "value is the text \"45000\", so the typeof check is false. Inside a true check, TypeScript would let you use value as a number; that's narrowing an unknown."
+    reteach: "### Question: any, unknown and never"
+
+  - id: q04
+    type: mcq
+    concept: any-unknown-never
+    prompt: "Which type has no values at all, and marks code that can't be reached?"
+    choices:
+      - "never"
+      - "unknown"
+      - "any"
+      - "undefined"
+    answer: 0
+    explain: "never is the empty type. It shows up in the default of an exhaustive switch, where every case has already been handled."
+    reteach: "### Question: any, unknown and never"
+
+  - id: q05
+    type: fill-blank
+    concept: any-unknown-never
+    goal: "Store parsed JSON with the type that forces a check before anything can be done with it."
+    prompt: "const data: ___ = JSON.parse(text);"
+    answers: ["unknown"]
+    explain: "unknown accepts any value, like any, but the compiler refuses every use until a check narrows it."
+    reteach: "### Question: any, unknown and never"
+
+  - id: q06
+    type: predict-output
+    concept: structural-typing
+    prompt: "The object has an extra field. What does this print?"
+    code: |
+      type Priced = { id: string; paise: number };
+      const tote = { id: "DC-1301", paise: 89900, colour: "Rani pink" };
+      const show = (item: Priced): string => item.id + " " + item.paise;
+      console.log(show(tote));
+    answer: "DC-1301 89900"
+    explain: "tote has everything Priced needs, so it fits: TypeScript compares shapes. The extra colour field is fine for a variable that already exists."
+    reteach: "### Question: why does this fit?"
+
+  - id: q07
+    type: mcq
+    concept: structural-typing
+    prompt: "show({ id: \"DC-1301\", paise: 89900, colour: \"Rani pink\" }) is an error, but passing the same object from a variable is fine. Why?"
+    choices:
+      - "An object literal written straight into a typed spot gets an excess property check, in case the extra field is a typo"
+      - "Variables are never type-checked"
+      - "colour is a reserved word"
+      - "Object literals can't be passed to functions"
+    answer: 0
+    explain: "Excess property checks apply only to fresh object literals. A variable is checked structurally: extra fields are allowed."
+    reteach: "### Question: why does this fit?"
+
+  - id: q08
+    type: predict-output
+    concept: generics-questions
+    prompt: "What does this print?"
+    code: |
+      function first<T>(items: readonly T[]): T | undefined {
+        return items[0];
+      }
+      console.log(first([]) ?? "empty");
+    answer: "empty"
+    explain: "An empty list has no first item, so first returns undefined, and ?? gives \"empty\". The T | undefined return type is what makes callers handle it."
+    reteach: "### Question: generics"
+
+  - id: q09
+    type: mcq
+    concept: generics-questions
+    prompt: "Why is function first<T>(items: readonly T[]): T | undefined better than function first(items: any[]): any?"
+    choices:
+      - "It keeps the link between input and output: first(orders) gives Order | undefined"
+      - "It runs faster"
+      - "It works on more kinds of arrays"
+      - "It changes the array in place"
+    answer: 0
+    explain: "A generic carries the element type through, so callers get a real type back. any loses it, and every use after that is unchecked."
+    reteach: "### Question: generics"
+
+  - id: q10
+    type: fill-blank
+    concept: generics-questions
+    goal: "Allow only key names that really exist on T for the second type parameter."
+    prompt: "function pluck<T, K extends ___ T>(items: readonly T[], key: K): T[K][] {"
+    answers: ["keyof"]
+    explain: "keyof T is the union of T's property names. K extends keyof T means key must be one of them, and T[K] is that property's type."
+    reteach: "### Question: generics"
+
+  - id: q11
+    type: mcq
+    concept: live-typing-method
+    prompt: "You are asked to type and write a function in a live round. What should you do first?"
+    choices:
+      - "Ask about the edge cases, then write and say the signature"
+      - "Start the loop and add types at the end"
+      - "Write the tests for the interviewer's codebase"
+      - "Type every value as any to save time"
+    answer: 0
+    explain: "Questions first, then types: the signature is half the answer, and it shows your plan. Then examples by hand, code, and the edge cases out loud."
+    reteach: "### The method for a live typing round"
+
+  - id: q12
+    type: spot-the-bug
+    concept: live-typing-method
+    prompt: "The interviewer calls this with an empty list. Which line throws?"
+    code: |
+      type Item = { id: string; paise: number };
+      function cheapest(items: readonly Item[]): Item {
+        return items.reduce((a, b) => (a.paise <= b.paise ? a : b));
+      }
+      console.log(cheapest([]).id);
+    bugLine: 3
+    explain: "reduce with no starting value throws on an empty array. Return Item | undefined and handle the empty list first; that is the edge case to say out loud."
+    reteach: "### The method for a live typing round"

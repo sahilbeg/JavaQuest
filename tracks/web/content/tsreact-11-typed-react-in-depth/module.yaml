@@ -1,0 +1,6 @@
+id: tsreact-11-typed-react-in-depth
+title: Typed React in depth
+project: Typed checkout
+summary: Effects, typed data from the API, custom hooks, context, reducers with action unions, pages, forms, refs and error boundaries, until dhaaga.in has a typed checkout that takes UPI.
+unlockAfter: tsreact-10-react-with-typescript/boss
+mascotIntro: "Shabaash, the typed store is live! Now it has to talk to the server, share state across pages and take payments, with TypeScript watching every step. Let's build checkout."

@@ -1,0 +1,185 @@
+topic: next-12-production-nextjs/topic-07-code-reviews
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: review-checklist
+    variants:
+      - prompt: "In what order should you read a pull request?"
+        choices:
+          - "The description, then the tests, then the code, and try the preview"
+          - "Only the code, starting from the last file"
+          - "Only the screenshots"
+          - "The commit messages only"
+        answer: 0
+      - prompt: "What should a reviewer spend most attention on?"
+        choices:
+          - "What tools can't see: where code runs, what reaches the browser, who can call it, and how it fails"
+          - "Spaces and semicolons"
+          - "Whether the author used their favourite variable names"
+          - "The number of files changed"
+        answer: 0
+    explain: "Linters catch formatting. A reviewer's attention goes to correctness, security, performance and clarity."
+    reteach: "### A Next.js review checklist"
+
+  - id: q02
+    type: order
+    concept: review-checklist
+    prompt: "Put a pull request's path to main in order."
+    items:
+      - "The author opens a small PR with a clear description"
+      - "The reviewer reads the description, tests and code"
+      - "The reviewer leaves labelled comments"
+      - "The author fixes and replies to each comment"
+      - "The reviewer approves and the change merges"
+    explain: "Small PRs, labelled comments and replies to each one keep reviews quick and friendly."
+    reteach: "### Writing comments people are glad to get"
+
+  - id: q03
+    type: mcq
+    concept: client-boundary-review
+    variants:
+      - prompt: "A PR adds \"use client\" to the top of app/items/[id]/page.jsx to make one button work. What should you suggest?"
+        choices:
+          - "Move the button into its own small client component and keep the page a server component"
+          - "Approve: the button works"
+          - "Add \"use client\" to the layout too"
+          - "Remove the button"
+        answer: 0
+      - prompt: "A server component passes customer={customer} to a client BuyBox that only shows the delivery city. What's the problem?"
+        choices:
+          - "Every prop is sent to the browser, so the customer's phone and address leak and the page grows"
+          - "Client components can't take objects"
+          - "Props slow down the server"
+          - "None"
+        answer: 0
+    explain: "Keep client islands small and pass them only what they use. Everything crossing the boundary reaches the phone."
+    reteach: "### Reviewing the client boundary"
+
+  - id: q04
+    type: predict-output
+    concept: data-fetching-review
+    prompt: "A reviewer counts data calls for a cart. What does this print?"
+    code: |
+      let calls = 0;
+      const getItem = (id) => { calls += 1; return id; };
+      const cart = ["DC-1042", "DC-1101", "DC-1205", "DC-1301"];
+      cart.forEach(getItem);
+      console.log(calls);
+    answer: "4"
+    explain: "One call per cart line: the N+1 problem. A bigger cart means more calls. One call that takes every id stays at one."
+    reteach: "### Reviewing data fetching"
+
+  - id: q05
+    type: spot-the-bug
+    concept: data-fetching-review
+    prompt: "Which line should a reviewer flag in this item page?"
+    code: |
+      export default async function ItemPage({ params }) {
+        const { id } = await params;
+        const response = await fetch("http://localhost:3000/api/items/" + id);
+        const item = await response.json();
+        return <h1>{item.name}</h1>;
+      }
+    bugLine: 3
+    explain: "A server component fetching its own API makes a needless extra trip, and breaks if the address changes. Call the data layer directly, like getItem(id)."
+    reteach: "### Reviewing data fetching"
+
+  - id: q06
+    type: mcq
+    concept: data-fetching-review
+    prompt: "Which diff line is a bug in Next.js 16?"
+    choices:
+      - "const item = await getItem(params.id);"
+      - "const { id } = await params;"
+      - "const [item, stock] = await Promise.all([getItem(id), getStock(id)]);"
+      - "if (!item) notFound();"
+    answer: 0
+    explain: "params is a Promise in Next.js 16, so params.id is undefined. Await params first."
+    reteach: "### Reviewing data fetching"
+
+  - id: q07
+    type: mcq
+    concept: action-security-review
+    variants:
+      - prompt: "A new server action reads giftWrapPaise from a hidden input. What label fits your comment?"
+        choices:
+          - "blocking: anyone can set the price to 0; use a server constant"
+          - "nit: rename the field"
+          - "question: why a hidden input?"
+          - "No comment needed"
+        answer: 0
+      - prompt: "Which question must you ask of every server action in a diff?"
+        choices:
+          - "Does it check who is calling, inside the action itself?"
+          - "Is it shorter than 20 lines?"
+          - "Does it use arrow functions?"
+          - "Is it in alphabetical order?"
+        answer: 0
+    explain: "Every action is a public endpoint. Check login, permission, every field, server-side prices and what it returns."
+    reteach: "### Reviewing actions and routes"
+
+  - id: q08
+    type: mcq
+    concept: caching-review
+    variants:
+      - prompt: "A PR adds cookies() to the catalogue page to read a theme. What should you ask?"
+        choices:
+          - "Is it on purpose that the page becomes dynamic and can no longer be served ready-made?"
+          - "Nothing: cookies are free"
+          - "Why not use NEXT_PUBLIC_ instead?"
+          - "Can the cookie be cached for everyone?"
+        answer: 0
+      - prompt: "A new action changes stock but the catalogue keeps showing the old numbers. What is likely missing?"
+        choices:
+          - "A revalidatePath or revalidateTag call after the change"
+          - "A skip link"
+          - "A sitemap entry"
+          - "A Content Security Policy"
+        answer: 0
+    explain: "Reading request data makes a page dynamic. After a mutation, revalidate whatever showed the old data."
+    reteach: "### Reviewing caching and rendering"
+
+  - id: q09
+    type: mcq
+    concept: review-comments
+    variants:
+      - prompt: "Which comment is most helpful?"
+        choices:
+          - "blocking: item can be null for an unknown id, so item.id throws. Could we return { ok: false, error: \"Unknown item\" } first?"
+          - "This is wrong."
+          - "Did you even test this?"
+          - "Rewrite it."
+        answer: 0
+      - prompt: "You'd name a variable lines instead of cartLines. How should you label that comment?"
+        choices:
+          - "nit"
+          - "blocking"
+          - "Don't label it"
+          - "security"
+        answer: 0
+    explain: "Label how much it matters, say why, suggest a fix, and comment on the code, not the person. Taste is a nit."
+    reteach: "### Writing comments people are glad to get"
+
+  - id: q10
+    type: fill-blank
+    concept: review-comments
+    goal: "Mark a comment as a must-fix bug that stops the merge until it changes."
+    prompt: "___: placeOrder trusts the paise field from the form."
+    answers: ["blocking"]
+    explain: "A blocking comment marks a bug, leak or security hole that must change before merge. Suggestions, questions and nits leave the choice to the author."
+    reteach: "### Writing comments people are glad to get"
+
+  - id: q11
+    type: mcq
+    concept: review-comments
+    prompt: "As the author, you disagree with a reviewer's suggestion. What's the best response?"
+    choices:
+      - "Reply with your reasons calmly, or talk it through, aiming for the best code"
+      - "Ignore the comment and merge"
+      - "Close the PR"
+      - "Change it anyway without a word, then complain later"
+    answer: 0
+    explain: "Reply to every comment. Disagreeing with reasons is fine: the goal is good code, not winning."
+    reteach: "### Receiving a review"

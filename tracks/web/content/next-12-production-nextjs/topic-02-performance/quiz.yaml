@@ -1,0 +1,181 @@
+topic: next-12-production-nextjs/topic-02-performance
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: server-components-ship-no-js
+    variants:
+      - prompt: "Golu's description and reviews are rendered by a server component. What does the phone download for them?"
+        choices:
+          - "Finished HTML, and none of the component's JavaScript"
+          - "The component's code, which it runs to build the HTML"
+          - "Nothing until the customer taps the page"
+          - "A copy of the database"
+        answer: 0
+      - prompt: "What does hydration do?"
+        choices:
+          - "Attaches a client component's handlers and state to HTML already on the screen"
+          - "Compresses images"
+          - "Builds static pages during next build"
+          - "Fetches data on the server"
+        answer: 0
+    explain: "Server components run on the server and send HTML only. Client components also send their code, which React hydrates in the browser."
+    reteach: "### Server components send no JavaScript"
+
+  - id: q02
+    type: mcq
+    concept: client-islands
+    prompt: "Only the Add to cart button on Golu's page needs a click handler. Where should \"use client\" go?"
+    choices:
+      - "At the top of the button's own file, so the button is a small client island"
+      - "At the top of the page file"
+      - "At the top of the root layout"
+      - "Nowhere: buttons can't be client components"
+    answer: 0
+    explain: "Keep \"use client\" as low in the tree as you can. The rest of the page stays on the server and sends no JavaScript."
+    reteach: "### Client islands"
+
+  - id: q03
+    type: fill-blank
+    concept: client-islands
+    goal: "Mark this button's file as browser code, so the button can keep state and handle clicks."
+    prompt: "\"___\";"
+    answers: ["use client"]
+    explain: "The \"use client\" directive at the top of a file makes its components client components, sent to the phone and hydrated."
+    reteach: "### Client islands"
+
+  - id: q04
+    type: mcq
+    concept: serialized-props
+    variants:
+      - prompt: "Which way of rendering the client button sends the least to the phone?"
+        choices:
+          - "<AddToCartButton id={item.id} stock={stock} />"
+          - "<AddToCartButton item={item} reviews={reviews} stock={stock} />"
+          - "<AddToCartButton page={pageData} />"
+          - "<AddToCartButton {...item} reviews={reviews} />"
+        answer: 0
+      - prompt: "Why does passing all 40 reviews to a client button slow the page down?"
+        choices:
+          - "Props of a client component are serialised and sent to the phone inside the page"
+          - "Reviews make the server slower to start"
+          - "React draws each review twice on the server"
+          - "It doesn't: props are free"
+        answer: 0
+    explain: "Everything a server component gives a client component travels to the browser. Pass only what the island uses."
+    reteach: "### Props that cross to the client"
+
+  - id: q05
+    type: predict-output
+    concept: serialized-props
+    prompt: "Props for a client component are sent as data, like JSON. What does this print?"
+    code: |
+      const props = { id: "DC-1042", stock: 7, onAdd: () => {} };
+      console.log(JSON.stringify(props));
+    answer: '{"id":"DC-1042","stock":7}'
+    explain: "JSON.stringify leaves functions out. A plain function can't travel from the server to the browser, which is why props must be plain data."
+    reteach: "### Props that cross to the client"
+
+  - id: q06
+    type: mcq
+    concept: static-and-dynamic-rendering
+    variants:
+      - prompt: "Which page must be rendered dynamically, on every request?"
+        choices:
+          - "The cart, which reads the customer's cookie"
+          - "Golu's item page, the same for everyone"
+          - "The About page"
+          - "The catalogue, which changes once a week"
+        answer: 0
+      - prompt: "Why is a static page usually the fastest?"
+        choices:
+          - "Its HTML is built once during next build, and a CDN can serve the ready copy from near the customer"
+          - "It has no HTML"
+          - "It runs only in the browser"
+          - "It skips the network entirely"
+        answer: 0
+    explain: "Static pages are built ahead of time and shared. Reading cookies, headers or searchParams makes a page dynamic, rendered again per request."
+    reteach: "### Static and dynamic rendering"
+
+  - id: q07
+    type: predict-output
+    concept: static-and-dynamic-rendering
+    prompt: "This is the core of a generateStaticParams. What does it print?"
+    code: |
+      const items = [{ id: "DC-1042", name: "Golu" }, { id: "DC-1101", name: "Coasters" }];
+      console.log(JSON.stringify(items.map((item) => ({ id: item.id }))));
+    answer: '[{"id":"DC-1042"},{"id":"DC-1101"}]'
+    explain: "generateStaticParams returns one object per page, and each object fills the [id] part of the route. Next.js builds those pages ahead of time."
+    reteach: "### Syntax: generateStaticParams"
+
+  - id: q08
+    type: fill-blank
+    concept: waterfalls-and-promise-all
+    goal: "Start the item and the stock calls together, then wait for both answers at once."
+    prompt: "const [item, stock] = await Promise.___([getItem(id), getStock(id)]);"
+    answers: ["all"]
+    explain: "Promise.all starts nothing itself: the calls inside the list already started. It waits for every promise and returns the answers in list order."
+    reteach: "### Syntax: Promise.all"
+
+  - id: q09
+    type: mcq
+    concept: waterfalls-and-promise-all
+    prompt: "A page awaits three independent calls one after another, each taking 600 ms. About how long does it wait, and how long with Promise.all?"
+    choices:
+      - "1,800 ms one by one, about 600 ms with Promise.all"
+      - "600 ms either way"
+      - "1,800 ms either way"
+      - "200 ms with Promise.all"
+    answer: 0
+    explain: "In a waterfall the waits add up. Started together, the calls overlap, so the page waits only as long as the slowest one."
+    reteach: "### Waterfalls and Promise.all"
+
+  - id: q10
+    type: spot-the-bug
+    concept: waterfalls-and-promise-all
+    prompt: "Customers wait for both calls added together. Which line starts the second call too late?"
+    code: |
+      export default async function ItemPage({ params }) {
+        const { id } = await params;
+        const item = await getItem(id);
+        const reviews = await getReviews(id);
+        return <Item item={item} reviews={reviews} />;
+      }
+    bugLine: 4
+    explain: "getReviews doesn't need the item, yet it only starts after getItem finishes. Start both with Promise.all on one line."
+    reteach: "### Waterfalls and Promise.all"
+
+  - id: q11
+    type: mcq
+    concept: streaming
+    prompt: "Reviews come from a slow outside service. How can Golu's price show before the reviews are ready?"
+    choices:
+      - "Wrap the Reviews component in Suspense with a fallback, so the rest of the page streams first"
+      - "Make the whole page a client component"
+      - "Fetch the reviews twice"
+      - "Remove the price"
+    answer: 0
+    explain: "With Suspense, Next.js sends the page with the fallback in place, then streams the reviews' HTML in when they're ready."
+    reteach: "### Streaming slow parts"
+
+  - id: q12
+    type: mcq
+    concept: images-and-fonts
+    variants:
+      - prompt: "The text jumps down when Golu's photo loads. What fixes it?"
+        choices:
+          - "next/image with width and height, which reserves the photo's space"
+          - "A bigger photo"
+          - "next/font"
+          - "Putting \"use client\" on the page"
+        answer: 0
+      - prompt: "Which tool loads a heavy client component's code only when it is shown?"
+        choices:
+          - "next/dynamic"
+          - "next/font"
+          - "generateStaticParams"
+          - "Promise.all"
+        answer: 0
+    explain: "next/image sizes, compresses and reserves space for photos, and preload helps the main photo's LCP. next/font self-hosts fonts. next/dynamic loads code later."
+    reteach: "### Images, fonts and heavy code"

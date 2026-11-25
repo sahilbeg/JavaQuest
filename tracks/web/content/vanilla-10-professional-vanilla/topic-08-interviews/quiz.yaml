@@ -1,0 +1,162 @@
+topic: vanilla-10-professional-vanilla/topic-08-interviews
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: interview-loop
+    prompt: "In which round are you most likely to build an accordion in a blank HTML file?"
+    choices: ["The DOM / UI round", "The behavioural round", "The screening call", "The frontend system design round"]
+    answer: 0
+    explain: "The UI round asks for a small working widget. System design is a conversation about a bigger feature, usually without code."
+    reteach: "### What a frontend interview loop looks like"
+
+  - id: q02
+    type: mcq
+    concept: interview-loop
+    prompt: "Why might a company that uses a framework at work run its loop in plain JavaScript?"
+    choices:
+      - "It shows whether you understand the language and the DOM that the framework is built on"
+      - "Because frameworks are banned in interviews by law"
+      - "Because plain JavaScript answers are shorter"
+      - "So nobody can pass"
+    answer: 0
+    explain: "Without a framework, you must handle state, events and the DOM yourself. That shows what you really understand."
+    reteach: "### What a frontend interview loop looks like"
+
+  - id: q03
+    type: order
+    concept: problem-solving-method
+    prompt: "Put the steps for a coding question in order."
+    items:
+      - "Clarify the question and its limits"
+      - "Write small examples, with edge cases"
+      - "Say your plan out loud"
+      - "Write the code"
+      - "Test your examples by hand, line by line"
+    explain: "Questions and examples come first, so you solve the right problem. Planning out loud lets the interviewer follow, and testing by hand catches the edge cases."
+    reteach: "### A method for every coding question"
+
+  - id: q04
+    type: mcq
+    concept: problem-solving-method
+    prompt: "You're stuck halfway through a coding question. What should you do?"
+    choices:
+      - "Say what you're thinking and what you've tried, so the interviewer can follow and maybe hint"
+      - "Go quiet until you've solved it"
+      - "Start again with a different language"
+      - "Say the question is unfair"
+    answer: 0
+    explain: "Interviewers grade your thinking. When they can hear it, they can give credit for progress and a nudge in the right direction."
+    reteach: "### A method for every coding question"
+
+  - id: q05
+    type: predict-output
+    concept: javascript-questions
+    prompt: "What does this print?"
+    code: |
+      console.log(1);
+      setTimeout(() => console.log(2), 0);
+      Promise.resolve().then(() => console.log(3));
+      queueMicrotask(() => console.log(4));
+      console.log(5);
+    answer: |
+      1
+      5
+      3
+      4
+      2
+    explain: "Synchronous code first (1, 5). Then microtasks, in the order they were queued (3, 4). Timers come last (2)."
+    reteach: "### Questions about JavaScript itself"
+
+  - id: q06
+    type: predict-output
+    concept: javascript-questions
+    prompt: "What does this print?"
+    code: |
+      function counter() {
+        let n = 0;
+        return () => ++n;
+      }
+      const a = counter();
+      const b = counter();
+      a();
+      a();
+      console.log(a() + " " + b());
+    answer: "3 1"
+    explain: "Each call to counter makes a new closure with its own n. a has been called three times by the log, b once."
+    reteach: "### Questions about JavaScript itself"
+
+  - id: q07
+    type: mcq
+    concept: dom-questions
+    prompt: "One click listener sits on a <ul>. A customer clicks a button inside an <li>. What are event.target and event.currentTarget?"
+    choices:
+      - "target is the button that was clicked; currentTarget is the <ul> the listener is on"
+      - "Both are the <ul>"
+      - "Both are the button"
+      - "target is the <ul>; currentTarget is the button"
+    answer: 0
+    explain: "The event starts at the clicked element and bubbles up. currentTarget is where the running listener was added, which is how event delegation works."
+    reteach: "### Questions about the DOM"
+
+  - id: q08
+    type: mcq
+    concept: dom-questions
+    prompt: "A form's submit listener must stop the page from reloading. Which call does that?"
+    choices: ["event.preventDefault()", "event.stopPropagation()", "event.target.remove()", "return true"]
+    answer: 0
+    explain: "preventDefault cancels the browser's own action, here sending the form. stopPropagation only stops the event reaching parent elements."
+    reteach: "### Questions about the DOM"
+
+  - id: q09
+    type: mcq
+    concept: dom-questions
+    prompt: "You're asked to build a to-do list with no framework. Which shape do interviewers like to see?"
+    choices:
+      - "One state object, a render() that draws from it, and events that change the state and call render()"
+      - "Changing the page directly in every click handler, with no state"
+      - "Storing each item's state in its own global variable"
+      - "Rebuilding the page with document.write"
+    answer: 0
+    explain: "State and render keeps the page in step with the data, and it scales as the widget grows. Add delegation, accessibility and edge cases on top."
+    reteach: "### The UI round: build a widget"
+
+  - id: q10
+    type: mcq
+    concept: frontend-system-design
+    prompt: "\"Design the product page of an online store.\" What should you talk about first?"
+    choices:
+      - "The requirements: what it must do, for whom, on which devices and networks"
+      - "The exact CSS colours"
+      - "Which framework is the most popular this year"
+      - "The code for the Add to cart button"
+    answer: 0
+    explain: "Requirements decide everything after them. Then components, data, performance, accessibility and trade-offs."
+    reteach: "### Frontend system design"
+
+  - id: q11
+    type: mcq
+    concept: behavioural-answers
+    prompt: "What does STAR stand for in a behavioural answer?"
+    choices:
+      - "Situation, Task, Actions, Result"
+      - "Start, Test, Approve, Release"
+      - "Story, Team, Answer, Review"
+      - "Skills, Tools, Achievements, Rewards"
+    answer: 0
+    explain: "Set the scene, say what you had to do, describe what you did, and finish with the result and what you learned."
+    reteach: "### Behavioural questions: tell a real story"
+
+  - id: q12
+    type: mcq
+    concept: behavioural-answers
+    prompt: "Which answer to \"Tell me about a mistake you made\" is strongest?"
+    choices:
+      - "\"I shipped a packing slip that used innerHTML. I wrote a failing test, switched to textContent, and now I check every sink in my reviews.\""
+      - "\"We had some bugs once, and we fixed them as a team.\""
+      - "\"I don't really make mistakes.\""
+      - "\"The tester should have caught it.\""
+    answer: 0
+    explain: "A real story, in the first person, with what you did and what you learned. Interviewers want to see ownership, not perfection."
+    reteach: "### Behavioural questions: tell a real story"

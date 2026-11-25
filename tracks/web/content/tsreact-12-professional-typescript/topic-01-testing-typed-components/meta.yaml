@@ -1,0 +1,24 @@
+id: tsreact-12-professional-typescript/topic-01-testing-typed-components
+title: "Testing typed components"
+order: 1
+minutes: 10
+prerequisites: [tsreact-11-typed-react-in-depth/boss]
+concepts: [types-and-tests, typed-test-files, fixture-builders, typed-spies, case-tables, type-tests]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1201
+  from: maya
+  title: "Our order tests never met a packed order"
+  body: >
+    Arjun added a "packed" status to orders last week, so customers know their parcel is waiting for the courier.
+    The OrderCard tests still only try "placed", and half of them build orders by hand with "as any".
+    Please make us proper typed helpers: one way to build an order, a table with a row for every status, and a typed spy.
+    When the next status arrives, I want the compiler to tell us which tests to update.
+hints:
+  - "makeOrder is one object literal: the defaults first, then ...overrides last, so a test's fields win."
+  - "Each call needs fresh lines: lines: [{ ...GOLU_LINE }] makes a new array and a new line every time. STATUS_CASES is just the README's table written as five rows."
+  - "In makeSpy: const calls: Args[] = []; return { fn: (...args: Args) => { calls.push(args); }, calls };"
+review: true

@@ -1,0 +1,25 @@
+id: tsreact-11-typed-react-in-depth/topic-10-typed-error-boundaries
+title: "Typed error boundaries"
+order: 10
+minutes: 10
+prerequisites: [tsreact-11-typed-react-in-depth/topic-09-typed-performance]
+concepts: [error-boundaries, typed-class-components, thrown-values-are-unknown, typed-fallback, resetting-boundaries]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1110
+  from: sam
+  title: "One broken suggestion blanks Golu's whole page"
+  body: >
+    Raju here. A customer called from Bengaluru: she opened Golu's page and saw a completely white screen.
+    Kavya says one item in the "Similar items" list came back without a name and crashed everything, even the
+    Add to cart button. And when she tapped another item, it stayed white. The suggestions are a nice extra;
+    the page must survive without them.
+hints:
+  - "toError: return value instanceof Error ? value : new Error(String(value)); Then static getDerivedStateFromError(error: unknown): ErrorBoundaryState { return { error: toError(error) }; }"
+  - "componentDidCatch(error: unknown) calls this.props.onError?.(toError(error)). In render, if this.state.error is not null, return this.props.fallback(this.state.error, this.reset)."
+  - "componentDidUpdate(prevProps: ErrorBoundaryProps): if there is an error and prevProps.resetKey !== this.props.resetKey, this.setState({ error: null }). In ItemPage, wrap only <SimilarItems> and pass resetKey={itemId}."
+review: true

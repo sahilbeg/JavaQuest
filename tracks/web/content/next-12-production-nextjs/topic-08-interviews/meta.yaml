@@ -1,0 +1,22 @@
+id: next-12-production-nextjs/topic-08-interviews
+title: "Next.js interviews"
+order: 8
+minutes: 10
+prerequisites: [next-12-production-nextjs/topic-07-code-reviews]
+concepts: [nextjs-loop, rendering-questions, data-questions, debugging-questions, nextjs-system-design, talking-trade-offs]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: NXT-1208
+  from: maya
+  title: "Get ready for your mock interview loop"
+  body: >
+    You've built most of the Next.js store yourself now, and I want you ready for the day you interview anywhere, including here.
+    Next week Arjun runs a mock Next.js loop for you, the same rounds a product company would use.
+    Read up on what each round checks, and practise saying your answers out loud.
+hints:
+  - "A Next.js loop has a JavaScript and React round, a Next.js round on rendering and data, a coding round, a system design round and a behavioural round."
+  - "Know when a page is static or dynamic, what runs on the server or in the browser, when to use a route handler or a server action, and what causes a hydration mismatch."
+  - "For system design, go from requirements to rendering, data, caching, client islands, failure, accessibility and SEO, and say the trade-off behind each choice."
+review: true

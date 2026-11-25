@@ -1,0 +1,24 @@
+id: next-10-nextjs-fundamentals/topic-05-server-and-client-components
+title: "Server and client components"
+order: 5
+minutes: 10
+prerequisites: [next-10-nextjs-fundamentals/topic-04-links-and-navigation]
+concepts: [server-components, client-components, use-client, async-components, serializable-props]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1005
+  from: maya
+  title: "The home page should list the catalogue, with working Add to cart buttons"
+  body: >
+    The new home page should list every piece in the catalogue with its price. I tried putting a useState and an
+    onClick straight into the page, and Next.js stopped with an error about client components. Could you build it
+    properly? The list should be drawn on the server, and only the Add to cart button should run in the browser.
+hints:
+  - "A server component can be async. Write export default async function HomePage(), then const items = await getItems();"
+  - "Draw one <li> per item: <h2>{item.name}</h2>, <p>{rupees(item.paise)}</p> and <AddToCartButton itemId={item.id} name={item.name} />, with key={item.id}."
+  - "AddToCartButton.jsx must start with \"use client\";. Inside, const [count, setCount] = useState(0); the button adds 1, and when count > 0 a <p> says `${count} in your cart`."
+review: true

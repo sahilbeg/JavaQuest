@@ -1,0 +1,134 @@
+topic: vanilla-08-components-without-a-framework/topic-07-forms-as-components
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: prevent-default
+    prompt: "A customer presses Send on the custom-order form, and the whole page reloads with the form empty. What was missing?"
+    choices: ["event.preventDefault() in the submit listener", "A click listener on the Send button", "novalidate on the form", "A shadow root"]
+    answer: 0
+    explain: "Sending a form loads a new page by default. preventDefault cancels that so your code can handle it."
+    reteach: "### Syntax: the submit event"
+
+  - id: q02
+    type: fill-blank
+    concept: prevent-default
+    goal: "Stop the browser from sending the form and loading a new page."
+    prompt: "event.___();"
+    answers: ["preventDefault"]
+    explain: "preventDefault cancels an event's default action, here the form being sent."
+    reteach: "### Syntax: the submit event"
+
+  - id: q03
+    type: mcq
+    concept: form-in-light-dom
+    prompt: "Why does this ticket draw the form as normal children, without a shadow root?"
+    choices: ["Labels, autofill and the page's form styles all expect fields in the page", "Shadow roots can't hold inputs", "Forms in a shadow root can't be submitted with Enter", "It makes the form load faster"]
+    answer: 0
+    explain: "Fields in the light DOM work with labels, autofill and the site's styles like any other form."
+    reteach: "### Keep the form in the light DOM"
+
+  - id: q04
+    type: mcq
+    concept: render-once
+    prompt: "connectedCallback always runs this.innerHTML = formHtml(...). A customer types their name, and the form is moved into a pop-up. What happens?"
+    choices: ["The form is drawn again and the name is gone", "The name is kept", "The browser throws an error", "Two forms appear"]
+    answer: 0
+    explain: "connectedCallback runs on every move. Draw only when there is no form yet."
+    reteach: "### Syntax: drawing once"
+
+  - id: q05
+    type: predict-output
+    concept: validation-function
+    prompt: "What does this print?"
+    code: |
+      function validateQty(value) {
+        const qty = Number(value);
+        if (!Number.isInteger(qty) || qty < 1 || qty > 20) {
+          return "Choose between 1 and 20 pieces.";
+        }
+        return "";
+      }
+      for (const value of ["2", "0", "2.5", "20"]) {
+        console.log(validateQty(value) === "" ? "ok" : "wrong");
+      }
+    answer: "ok\nwrong\nwrong\nok"
+    explain: "\"0\" is below 1 and \"2.5\" is not a whole number. \"2\" and \"20\" are inside the range."
+    reteach: "### Syntax: a validation function"
+
+  - id: q06
+    type: predict-output
+    concept: validation-function
+    prompt: "What does this print?"
+    code: |
+      function phoneOk(phone) {
+        return /^\d{10}$/.test(phone.replace(/\s/g, ""));
+      }
+      console.log(phoneOk("98765 43210"));
+      console.log(phoneOk("98765"));
+    answer: "true\nfalse"
+    explain: "Removing the space leaves 10 digits, which passes. 98765 has only 5."
+    reteach: "## Try it"
+
+  - id: q07
+    type: mcq
+    concept: validation-function
+    prompt: "What type is form.elements.namedItem(\"qty\").value for <input name=\"qty\" type=\"number\" value=\"2\">?"
+    choices: ["The string \"2\"", "The number 2", "null", "An array"]
+    answer: 0
+    explain: "Every field's value is a string, even for type=\"number\". Convert it with Number."
+    reteach: "### Reading the values"
+
+  - id: q08
+    type: mcq
+    concept: accessible-errors
+    prompt: "The phone is wrong. Which change makes a screen reader say the field is invalid?"
+    choices: ["phone.setAttribute(\"aria-invalid\", \"true\")", "phone.style.borderColor = \"red\"", "phone.classList.add(\"error\")", "phone.value = \"\""]
+    answer: 0
+    explain: "Colour and classes are only visible. aria-invalid tells assistive technology that the value is wrong."
+    reteach: "### Showing errors that everyone can find"
+
+  - id: q09
+    type: mcq
+    concept: accessible-errors
+    prompt: "What does aria-describedby=\"order-1-phone-error\" on the phone input do?"
+    choices: ["A screen reader reads that paragraph's text, the error, when the field gets focus", "It shows a tooltip", "It checks the phone number", "It hides the error until focus"]
+    answer: 0
+    explain: "aria-describedby names the element whose text describes the field, here its error message."
+    reteach: "### Showing errors that everyone can find"
+
+  - id: q10
+    type: spot-the-bug
+    concept: accessible-errors
+    prompt: "After the customer fixes the phone, the field still says it is invalid. Which line causes it?"
+    code: |
+      function showPhoneError(phone, errorText, message) {
+        errorText.textContent = message;
+        if (message !== "") {
+          phone.setAttribute("aria-invalid", "true");
+        } else {
+          phone.setAttribute("aria-invalid", "true");
+        }
+      }
+    bugLine: 6
+    explain: "When there is no error, the field must be cleared: phone.removeAttribute(\"aria-invalid\"). This line marks it invalid again."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: mcq
+    concept: accessible-errors
+    prompt: "Name is fine, but phone and quantity are both wrong. Where should focus go?"
+    choices: ["To the phone field, the first wrong one", "To the quantity field", "To the Send button", "Nowhere"]
+    answer: 0
+    explain: "Focus the first wrong field, so the customer lands right where the fixing starts."
+    reteach: "### Showing errors that everyone can find"
+
+  - id: q12
+    type: mcq
+    concept: result-event
+    prompt: "The form is valid. What should it send in the order-request event's detail for name \"  Mrs. Kulkarni \", phone \"98765 43210\" and qty \"2\"?"
+    choices: ["{ name: \"Mrs. Kulkarni\", phone: \"9876543210\", qty: 2 }", "{ name: \"  Mrs. Kulkarni \", phone: \"98765 43210\", qty: \"2\" }", "The form element itself", "Nothing: the page should read the fields"]
+    answer: 0
+    explain: "Send clean values: the trimmed name, digits only, and a number. Every listener then gets the same tidy shape."
+    reteach: "### Handing the result up"

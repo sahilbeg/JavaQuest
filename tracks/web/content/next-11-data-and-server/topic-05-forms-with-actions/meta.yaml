@@ -1,0 +1,24 @@
+id: next-11-data-and-server/topic-05-forms-with-actions
+title: "Forms with server actions"
+order: 5
+minutes: 10
+prerequisites: [next-11-data-and-server/topic-04-server-actions]
+concepts: [use-action-state, server-validation, field-errors, redirect-after-success, pending-state, works-without-javascript]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1105
+  from: sana
+  title: "The order form gives no clues and gets tapped three times"
+  body: >
+    Sana here. I watched my cousin order booties on dhaaga.in. She typed a 9-digit phone number, pressed Place order,
+    and the form just cleared itself with no message. Then the button showed nothing while it worked, so she tapped
+    it three times. Can each mistake show a message under its field, and can the button say it's busy?
+hints:
+  - "placeOrder(prevState, formData) is used with useActionState, so the state comes first. Read every field, check each one, and return { errors, values } when anything is wrong."
+  - "When everything is fine, createOrder(...) and then redirect(`/order/${order.id}`). redirect works by throwing, so never put it inside try/catch."
+  - "In OrderForm: const [state, formAction, isPending] = useActionState(action, START); use action={formAction} on the form, show state.errors.name in a <p role=\"alert\">, and disable the button with the text Placing order... while isPending."
+review: true

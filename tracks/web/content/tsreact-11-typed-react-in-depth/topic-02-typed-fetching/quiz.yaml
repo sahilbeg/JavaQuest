@@ -1,0 +1,136 @@
+topic: tsreact-11-typed-react-in-depth/topic-02-typed-fetching
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: fetch-in-effect
+    prompt: "Why do we write an async function inside the effect and call it, instead of useEffect(async () => ...)?"
+    choices: ["The effect must return nothing or a cleanup, and an async function returns a Promise", "async functions are not allowed inside components", "fetch only works outside async functions", "It makes the request faster"]
+    answer: 0
+    explain: "React treats what the effect returns as its cleanup. An inner async function keeps the effect itself plain."
+    reteach: "### Syntax: fetching in an effect"
+
+  - id: q02
+    type: mcq
+    concept: json-is-unknown
+    prompt: "In the DOM types, what does res.json() return?"
+    choices: ["Promise<any>", "Promise<unknown>", "The type you passed to fetch", "Promise<string>"]
+    answer: 0
+    explain: "res.json() is typed Promise<any>, so TypeScript checks nothing about the answer unless you store it as unknown and check it."
+    reteach: "### res.json() gives you any"
+
+  - id: q03
+    type: mcq
+    concept: json-is-unknown
+    prompt: "The server sends { \"grams\": \"1200\" }. What does const stock = (await res.json()) as YarnStock do with it?"
+    choices: ["Nothing at runtime: stock.grams is still the text \"1200\"", "Turns \"1200\" into the number 1200", "Throws an error because grams is not a number", "Refuses to compile"]
+    answer: 0
+    explain: "A cast only changes what TypeScript believes. It checks nothing and converts nothing while the code runs."
+    reteach: "### res.json() gives you any"
+
+  - id: q04
+    type: predict-output
+    concept: type-guards-for-data
+    code: |
+      function isYarn(v: unknown): v is { colour: string; grams: number } {
+        return typeof v === "object" && v !== null
+          && "colour" in v && typeof v.colour === "string"
+          && "grams" in v && typeof v.grams === "number";
+      }
+      console.log(isYarn({ colour: "Mint", grams: 300 }));
+      console.log(isYarn({ colour: "Mint", grams: "300" }));
+      console.log(isYarn({ grams: 300 }));
+      console.log(isYarn("Mint"));
+    answer: "true\nfalse\nfalse\nfalse"
+    explain: "Only the first has both fields with the right types. Text grams, a missing colour and a plain string all fail a check."
+    reteach: "### Syntax: a type guard for the answer"
+
+  - id: q05
+    type: fill-blank
+    concept: type-guards-for-data
+    goal: "Declare that when this checker returns true, its argument can be trusted as the stock shape."
+    prompt: "function isYarnStock(value: unknown): ___ {"
+    answers: ["value is YarnStock"]
+    explain: "A type predicate, value is YarnStock, narrows value to YarnStock wherever the guard returned true."
+    reteach: "### Syntax: a type guard for the answer"
+
+  - id: q06
+    type: spot-the-bug
+    concept: type-guards-for-data
+    prompt: "The guard crashes when the server answers null. Which line is wrong?"
+    code: |
+      function isYarnStock(value: unknown): value is YarnStock {
+        if (typeof value !== "object") return false;
+        return "colour" in value && typeof value.colour === "string"
+          && "grams" in value && typeof value.grams === "number";
+      }
+    bugLine: 2
+    explain: "typeof null is \"object\", so null slips past line 2, and \"colour\" in null throws. Check value === null too."
+    reteach: "### Syntax: a type guard for the answer"
+
+  - id: q07
+    type: mcq
+    concept: load-state-union
+    prompt: "load has the type Load<YarnStock>. Inside if (load.status === \"ready\") { ... }, what does TypeScript let you read?"
+    choices: ["load.data, a YarnStock", "load.message", "load.data, but only as unknown", "Nothing new: you still need a cast"]
+    answer: 0
+    explain: "status is the discriminant. Checking it narrows load to the ready shape, which has data."
+    reteach: "### One state, three shapes"
+
+  - id: q08
+    type: predict-output
+    concept: load-state-union
+    code: |
+      type Load<T> = { status: "loading" } | { status: "error"; message: string } | { status: "ready"; data: T };
+      function show(load: Load<number>): string {
+        if (load.status === "loading") return "Checking...";
+        if (load.status === "error") return load.message;
+        return `${load.data} g`;
+      }
+      console.log(show({ status: "ready", data: 600 }));
+      console.log(show({ status: "error", message: "Couldn't load Mint yarn." }));
+      console.log(show({ status: "loading" }));
+    answer: "600 g\nCouldn't load Mint yarn.\nChecking..."
+    explain: "Each call takes the branch for its status. After two returns, only the ready shape is left, so load.data is allowed."
+    reteach: "### One state, three shapes"
+
+  - id: q09
+    type: mcq
+    concept: load-state-union
+    prompt: "Why keep one Load<T> union instead of three states: loading, error and data?"
+    choices: ["Three states can disagree, like loading true with an error; one union allows only complete shapes", "A union makes the request faster", "React only allows one useState per component", "Three states can't be typed in TypeScript"]
+    answer: 0
+    explain: "With separate states every mix is allowed, even impossible ones. The union lists only the three real situations."
+    reteach: "### One state, three shapes"
+
+  - id: q10
+    type: mcq
+    concept: fetch-in-effect
+    prompt: "The API answers 404 Not Found. What does await fetch(url) do?"
+    choices: ["Resolves with a response whose ok is false", "Throws a TypeError", "Returns null", "Waits forever"]
+    answer: 0
+    explain: "fetch only rejects when the network fails. A 404 is a normal answer, so check res.ok yourself."
+    reteach: "## Worked example"
+
+  - id: q11
+    type: mcq
+    concept: ignore-stale
+    prompt: "What does return () => { ignore = true; } do when colour changes from Marigold to Indigo?"
+    choices: ["It marks the Marigold run's answer as stale, so it won't be shown when it arrives", "It cancels both requests", "It stops the Indigo request from being sent", "It clears the page"]
+    answer: 0
+    explain: "Each run has its own ignore. React cleans up the Marigold run before starting the Indigo one, so only Marigold's late answer is ignored."
+    reteach: "### Syntax: ignoring stale answers"
+
+  - id: q12
+    type: order
+    concept: ignore-stale
+    prompt: "Arjun taps Marigold, then Indigo. Marigold's answer is slow. Put what happens in order."
+    items:
+      - "The effect asks for Marigold"
+      - "colour changes, so React runs the cleanup and Marigold's ignore becomes true"
+      - "The effect sets the state back to loading and asks for Indigo"
+      - "Indigo's answer arrives and is shown"
+      - "Marigold's late answer arrives and is ignored"
+    explain: "The cleanup runs before the new effect, so the old run's flag is already set when its slow answer lands."
+    reteach: "### Answers can arrive out of order"

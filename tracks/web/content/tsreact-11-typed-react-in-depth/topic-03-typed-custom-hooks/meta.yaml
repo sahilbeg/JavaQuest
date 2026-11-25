@@ -1,0 +1,24 @@
+id: tsreact-11-typed-react-in-depth/topic-03-typed-custom-hooks
+title: "Typed custom hooks"
+order: 3
+minutes: 10
+prerequisites: [tsreact-11-typed-react-in-depth/topic-02-typed-fetching]
+concepts: [custom-hooks, rules-of-hooks, tuple-return-types, generic-hooks, lazy-initial-state]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1103
+  from: maya
+  title: "The wishlist forgets everything on refresh"
+  body: >
+    Customers tap the heart on Golu, refresh the page, and the heart is empty again. We have the same
+    "remember this in localStorage" code pasted in four components, and each copy has a different bug.
+    Let's write it once, as a typed hook, plus a tiny useToggle for the "Show saved" button.
+hints:
+  - "useToggle: keep a boolean in useState, make toggle with the updater form setOn((v) => !v), and return [on, toggle] as const so the tuple keeps its two types."
+  - "useStoredState: pass a function to useState, so localStorage is read only once. Inside it: getItem(key); null means initial; JSON.parse in try/catch; and if isValid is given and says no, use initial."
+  - "The setter is function save(next: T) { localStorage.setItem(key, JSON.stringify(next)); setValue(next); }. Return [value, save]."
+review: true

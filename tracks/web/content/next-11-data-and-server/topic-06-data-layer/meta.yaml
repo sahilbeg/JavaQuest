@@ -1,0 +1,24 @@
+id: next-11-data-and-server/topic-06-data-layer
+title: "A data layer for orders"
+order: 6
+minutes: 10
+prerequisites: [next-11-data-and-server/topic-05-forms-with-actions]
+concepts: [data-access-layer, data-transfer-objects, server-side-prices, server-only-import, react-cache]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1106
+  from: maya
+  title: "Order code is everywhere, and a phone number was on the big screen"
+  body: >
+    Kavya here. Three files read the raw order rows, checkout trusts the price the browser sends, and on Saturday
+    the staff screen at the Aundh shop showed Asha Rao's full phone number to the whole queue. Let's put every bit
+    of order code in one data layer: it works out prices itself, and it only hands out what a page needs to show.
+hints:
+  - "toOrderView builds a brand new object with only five fields: id, customer (from name), phoneEnding (the last 4 digits), total (rupees of totalPaise) and status. Never spread the whole row."
+  - "getOrders: dbAll(\"orders\"), keep only the status asked for (if any), sort by the number in the id, biggest first, then map each row with toOrderView. getOrderView returns null when dbFind finds nothing."
+  - "createOrder: look up each line's price with findItem, throw new Error(`Unknown item ${line.itemId}.`) when it's missing, and ignore any price in the line. Delivery is 6000 paise unless the items come to more than 99900."
+review: true

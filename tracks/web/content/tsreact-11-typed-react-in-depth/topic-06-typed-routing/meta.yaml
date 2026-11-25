@@ -1,0 +1,24 @@
+id: tsreact-11-typed-react-in-depth/topic-06-typed-routing
+title: "Typed routing"
+order: 6
+minutes: 10
+prerequisites: [tsreact-11-typed-react-in-depth/topic-05-typed-reducers]
+concepts: [single-page-apps, hash-addresses, route-unions, typed-links, route-hook]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1106
+  from: maya
+  title: "Every page of the store has the same address"
+  body: >
+    Meera Aunty wants to send customers a link straight to Golu, and Raju wants to WhatsApp people a link to
+    their order. Right now every screen lives at dhaaga.in, so a link always opens the shop. Let's give each
+    page its own address, with routes as a typed union so a broken link can't even compile.
+hints:
+  - "parseRoute: \"/\" is the shop. Split the path on \"/\": \"/item/DC-1042\" gives [\"\", \"item\", \"DC-1042\"]. Only exactly three parts with a non-empty last part make an item or order page."
+  - "toHash: switch (route.page) and return \"#/\", `#/item/${route.id}`, `#/order/${route.orderId}` or \"#\" + route.path. useRoute: useState<string>(() => pathFromHash(window.location.hash)), then an effect that adds a hashchange listener and removes it in the cleanup."
+  - "In Page, switch (route.page) and return the matching page, passing route.id, route.orderId or route.path. Finish with default: return assertNever(route);"
+review: true

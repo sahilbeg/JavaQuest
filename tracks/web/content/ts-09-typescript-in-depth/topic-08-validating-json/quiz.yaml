@@ -1,0 +1,152 @@
+topic: ts-09-typescript-in-depth/topic-08-validating-json
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: unknown-vs-any
+    prompt: "What is the difference between any and unknown?"
+    choices:
+      - "any lets you do anything without checks; unknown lets you do nothing until you've checked the value"
+      - "unknown is faster when the code runs"
+      - "any is only for numbers, unknown is for everything else"
+      - "There is none: they are two names for the same type"
+    answer: 0
+    explain: "Both can hold any value. any switches checking off, while unknown forces you to narrow first."
+    reteach: "### Syntax: unknown"
+
+  - id: q02
+    type: predict-output
+    concept: unknown-vs-any
+    code: |
+      interface Item {
+        paise: number;
+      }
+      const item: Item = JSON.parse('{ "paise": "15000" }');
+      console.log(item.paise + 3000);
+    answer: "150003000"
+    explain: "JSON.parse returns any, so the type was believed. paise is really the text \"15000\", so + joins text."
+    reteach: "### Types vanish, data doesn't obey them"
+
+  - id: q03
+    type: fill-blank
+    concept: unknown-vs-any
+    goal: "Give the parsed data the safe type that makes TypeScript insist on checks before any use."
+    prompt: "const data: ___ = JSON.parse(text);"
+    answers: ["unknown"]
+    explain: "unknown accepts any value but allows nothing until you narrow it."
+    reteach: "### Syntax: unknown"
+
+  - id: q04
+    type: mcq
+    concept: checking-objects
+    prompt: "Why does isRecord check value !== null as well as typeof value === \"object\"?"
+    choices:
+      - "Because typeof null is \"object\" too, and reading a field of null throws"
+      - "Because null is a string"
+      - "Because typeof can't check objects"
+      - "It doesn't need to: typeof already rules out null"
+    answer: 0
+    explain: "typeof null === \"object\" is an old JavaScript quirk. Arrays are \"object\" too, so isRecord rules them out as well."
+    reteach: "### Syntax: checking for an object"
+
+  - id: q05
+    type: predict-output
+    concept: validating-unknown
+    code: |
+      function isRecord(value: unknown): value is Record<string, unknown> {
+        return typeof value === "object" && value !== null && !Array.isArray(value);
+      }
+      const inputs: unknown[] = [{ paise: 1 }, null, [1], "x"];
+      console.log(inputs.map((input) => isRecord(input)).join(" "));
+    answer: "true false false false"
+    explain: "Only the plain object passes. null and the array say \"object\" to typeof, but are ruled out by the other checks."
+    reteach: "### Syntax: checking for an object"
+
+  - id: q06
+    type: mcq
+    concept: validating-unknown
+    prompt: "A price in paise arrives as unknown. Which check is right?"
+    choices:
+      - 'typeof paise === "number" && Number.isInteger(paise) && paise >= 0'
+      - 'typeof paise === "number"'
+      - "paise !== undefined"
+      - "Boolean(paise)"
+    answer: 0
+    explain: "typeof alone lets in 450.5, NaN and negative numbers. Boolean(paise) would also reject a real price of 0."
+    reteach: "### Checking each field"
+
+  - id: q07
+    type: spot-the-bug
+    concept: parse-at-the-edge
+    code: |
+      interface Item {
+        id: string;
+        paise: number;
+      }
+      async function loadItem(url: string): Promise<Item> {
+        const response = await fetch(url);
+        const item = (await response.json()) as Item;
+        return item;
+      }
+    bugLine: 7
+    explain: "as Item checks nothing: a price sent as text would get into the store. Treat the JSON as unknown and validate it before returning."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: result-types
+    prompt: "Why return { ok: false, error: \"paise must be a whole number\" } instead of just null?"
+    choices:
+      - "The caller can show exactly what was wrong, and result.ok narrows the type"
+      - "null is not allowed in TypeScript"
+      - "It makes the code run faster"
+      - "So the bad item can still be used"
+    answer: 0
+    explain: "A result type is a discriminated union: after if (result.ok) you get the value, and otherwise a useful message."
+    reteach: "### Syntax: a result type"
+
+  - id: q09
+    type: predict-output
+    concept: result-types
+    code: |
+      type ParseResult<T> = { ok: true; value: T } | { ok: false; error: string };
+      function parseQty(value: unknown): ParseResult<number> {
+        if (typeof value !== "number" || !Number.isInteger(value) || value < 1) {
+          return { ok: false, error: "qty must be 1 or more" };
+        }
+        return { ok: true, value };
+      }
+      for (const input of [2, 0, "3"]) {
+        const result = parseQty(input);
+        console.log(result.ok ? result.value : result.error);
+      }
+    answer: "2\nqty must be 1 or more\nqty must be 1 or more"
+    explain: "2 passes. 0 is below 1, and \"3\" is text, not a number, so both give the message."
+    reteach: "### Syntax: a result type"
+
+  - id: q10
+    type: mcq
+    concept: parse-at-the-edge
+    prompt: "Where should an app check data from a server or a file?"
+    choices:
+      - "Once, where the data enters the app, so the rest of the code can trust its types"
+      - "Nowhere: TypeScript already checked it"
+      - "In every function that uses it, again and again"
+      - "Only in the tests"
+    answer: 0
+    explain: "Validate at the edge: the fetch reply, the uploaded file, the form. Inside, nothing unchecked can get in."
+    reteach: "### Check at the edge, trust inside"
+
+  - id: q11
+    type: mcq
+    concept: validating-unknown
+    prompt: "const data: unknown = JSON.parse(text); console.log(data.paise);. What does TypeScript say?"
+    choices:
+      - "An error: data is of type unknown"
+      - "Nothing, because JSON.parse returns any"
+      - "Nothing, but data.paise is unknown"
+      - "An error: JSON.parse can't be assigned to unknown"
+    answer: 0
+    explain: "Once you give it the type unknown, you must check it before reading any field. That's what makes unknown safe."
+    reteach: "### Syntax: unknown"

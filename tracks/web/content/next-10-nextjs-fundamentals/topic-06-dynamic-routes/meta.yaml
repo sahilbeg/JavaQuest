@@ -1,0 +1,24 @@
+id: next-10-nextjs-fundamentals/topic-06-dynamic-routes
+title: "Dynamic routes: one page per item"
+order: 6
+minutes: 10
+prerequisites: [next-10-nextjs-fundamentals/topic-05-server-and-client-components]
+concepts: [dynamic-segments, params-promise, search-params, not-found, generate-static-params]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1006
+  from: sana
+  title: "Shop by colour: one page per colour"
+  body: >
+    On Instagram, people keep asking "do you have this in Indigo?". I'd love pages like dhaaga.in/colours/indigo
+    that show every piece in that colour, cheapest first when they ask. Five colours, one design. Please don't
+    make five copies of the page! And dhaaga.in/colours/purple should say we don't have that, not crash.
+hints:
+  - "The folder [colour] makes params.colour. In Next.js 16, params is a Promise: const { colour: slug } = await params; then colourBySlug(slug), and notFound() if it's null."
+  - "Filter the items whose colour equals colour.name. If (await searchParams).sort is \"price\", sort a copy by paise: [...list].sort((a, b) => a.paise - b.paise)."
+  - "generateStaticParams returns COLOURS.map((c) => ({ colour: c.slug })). Each row is <li><Link href={`/items/${item.id}`}>{item.name}</Link> {rupees(item.paise)}</li>."
+review: true

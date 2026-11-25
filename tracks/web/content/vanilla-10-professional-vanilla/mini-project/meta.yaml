@@ -1,0 +1,23 @@
+id: vanilla-10-professional-vanilla/mini-project
+title: "CAPSTONE: Launch the dhaaga.in store with plain JavaScript"
+order: 100
+minutes: 15
+prerequisites: [vanilla-10-professional-vanilla/topic-08-interviews]
+concepts: [pricing-rules, search-and-filters, store-and-views, checkout-steps, accessible-layout, end-to-end-tests]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: CAPSTONE
+  from: priya
+  title: "dhaaga.in opens on Friday, no framework needed"
+  body: >
+    Beta, the big day is here. On Friday at 10:00 I post the link in every WhatsApp group I'm in, and dhaaga.in opens to the whole of India.
+    My nephew says we need a big framework. Kavya says you can build it with plain JavaScript and it will be small and fast. I trust you both, so prove her right.
+    People must find Golu quickly, see the right price with free delivery and the Diwali offer, and pay by UPI. Mr. Deshpande will try it with only his keyboard, so it must work for him too.
+hints:
+  - "Go stage by stage, and run the checks after each one. Stage 1 is one reduce for the subtotal, Math.floor(subtotal / 10) for the offer above 150000, and delivery that is free for an empty cart or when the total after the offer is above 99900."
+  - "Stages 2 and 3 are render functions with one listener each on the list (delegation). Every render draws from the store's lines; nothing is stored twice. Tie labels with for and id, name buttons with aria-label, and use Number(select.value)."
+  - "Stage 4: in showStep, set aria-current=\"step\" on the matching li, remove it from the others, then heading.focus(). Stage 5: count = lines.reduce((sum, line) => sum + line.qty, 0) in a store subscriber; showCheckout calls stopCart(), replaces main's content and calls mountCheckout with cartTotals(store.getState()).total."
+review: false

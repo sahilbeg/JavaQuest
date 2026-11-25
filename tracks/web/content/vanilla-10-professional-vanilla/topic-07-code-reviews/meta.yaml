@@ -1,0 +1,22 @@
+id: vanilla-10-professional-vanilla/topic-07-code-reviews
+title: "Code reviews for frontend work"
+order: 7
+minutes: 9
+prerequisites: [vanilla-10-professional-vanilla/topic-06-deployment]
+concepts: [why-review, small-pull-requests, frontend-checklist, writing-comments, receiving-feedback, self-review]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: VAN-1007
+  from: maya
+  title: "From launch week on, nothing merges without a review"
+  body: >
+    Last month a pull request with 1,400 changed lines went in with a one-word review, "LGTM", and the cart started adding two Golus per click.
+    From launch week on, every change gets a real review, and you'll be reviewing Sana's and my pull requests too.
+    Read up on how to review frontend code well, and how to take review comments on your own work.
+hints:
+  - "A review checks correctness, security, accessibility, performance and readability, in that order of importance. Run the change, with the keyboard too, don't just read it."
+  - "Good comments say what, why and a suggestion, with a label like blocking:, suggestion:, question: or nit:. Comment on the code, never the person."
+  - "Keep pull requests small, describe them with how to test and before-and-after screenshots, and review your own diff before asking anyone else."
+review: true

@@ -1,0 +1,24 @@
+id: tsreact-11-typed-react-in-depth/topic-04-typed-context
+title: "Typed context"
+order: 4
+minutes: 10
+prerequisites: [tsreact-11-typed-react-in-depth/topic-03-typed-custom-hooks]
+concepts: [prop-drilling, create-context, context-provider, null-default-and-guard-hook, context-rerenders]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1104
+  from: maya
+  title: "Signing in doesn't reach the greeting"
+  body: >
+    Asha Rao signs in with the button in the header, but the greeting further down still says "Sign in to see
+    your orders". The two components sit far apart, and nobody wants to pass the customer through six layers
+    of props. Let's share the signed-in customer with a typed context, and make a missing provider fail loudly.
+hints:
+  - "In CustomerProvider, keep the customer in useState<Customer | null>(null), and wrap children in <CustomerContext.Provider value={{ customer, signIn, signOut }}>."
+  - "useCustomer: const value = useContext(CustomerContext); if (value === null) throw new Error(\"useCustomer must be used inside <CustomerProvider>\"); return value; After the throw, TypeScript knows value is not null."
+  - "In Greeting, take customer from useCustomer(). With a customer, the first name is customer.name.split(\" \")[0]."
+review: true

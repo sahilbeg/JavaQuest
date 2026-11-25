@@ -1,0 +1,186 @@
+topic: next-12-production-nextjs/topic-08-interviews
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: nextjs-loop
+    variants:
+      - prompt: "Which round asks you to design a feature like the product page, with no single right answer?"
+        choices:
+          - "System design"
+          - "JavaScript and React"
+          - "Behavioural"
+          - "The recruiter call"
+        answer: 0
+      - prompt: "What is the best way to learn which rounds your loop has?"
+        choices:
+          - "Ask the recruiter: they're happy to tell you"
+          - "Guess from the company's logo"
+          - "Prepare only for coding"
+          - "Wait and see on the day"
+        answer: 0
+    explain: "Loops mix JavaScript and React, Next.js concepts, coding, system design and behavioural rounds. Asking lets you prepare for the right ones."
+    reteach: "### The Next.js loop"
+
+  - id: q02
+    type: mcq
+    concept: rendering-questions
+    variants:
+      - prompt: "Golu's page is the same for every visitor. How should it be rendered?"
+        choices:
+          - "Ahead of time (static), and revalidated when it changes"
+          - "On every request, because it has a price"
+          - "Only in the browser"
+          - "It can't be rendered"
+        answer: 0
+      - prompt: "Which page must be rendered per request?"
+        choices:
+          - "The cart, which reads the customer's cookie"
+          - "The About page"
+          - "Golu's item page"
+          - "The sitemap"
+        answer: 0
+    explain: "Pages that are the same for everyone can be static and served from a CDN. Reading cookies or headers makes a page dynamic."
+    reteach: "### Rendering questions"
+
+  - id: q03
+    type: mcq
+    concept: rendering-questions
+    prompt: "What can a server component do that a client component can't?"
+    choices:
+      - "Be async, read the data layer and secrets directly, and send no JavaScript to the phone"
+      - "Handle onClick"
+      - "Use useState"
+      - "Read localStorage"
+    answer: 0
+    explain: "Server components run only on the server. State, effects, handlers and browser APIs need a client component."
+    reteach: "### Rendering questions"
+
+  - id: q04
+    type: mcq
+    concept: data-questions
+    variants:
+      - prompt: "A delivery partner's app needs to check stock. Route handler or server action?"
+        choices:
+          - "A route handler: a real URL that something outside your React code can call"
+          - "A server action: they're for any caller"
+          - "Neither: put the stock in NEXT_PUBLIC_"
+          - "A client component"
+        answer: 0
+      - prompt: "After the Buy now action saves an order, how does the catalogue show the new stock?"
+        choices:
+          - "The action calls revalidatePath or revalidateTag"
+          - "Customers press refresh until it changes"
+          - "next build runs again"
+          - "The CDN guesses"
+        answer: 0
+    explain: "Actions are for your own forms and buttons; route handlers are URLs for anyone. After a change, revalidate what showed the old data."
+    reteach: "### Data and mutation questions"
+
+  - id: q05
+    type: predict-output
+    concept: debugging-questions
+    prompt: "A component picks its text from the hour. The server renders at 17, the phone hydrates at 18. What does this print?"
+    code: |
+      const note = (hour) => (hour < 18 ? "same-day dispatch" : "next-day dispatch");
+      const server = note(17);
+      const browser = note(18);
+      console.log(server === browser ? "match" : "hydration mismatch");
+    answer: "hydration mismatch"
+    explain: "The server and the browser rendered different text for the same component. Decide time-based text in one place, or show it after hydration in an effect."
+    reteach: "### Debugging questions"
+
+  - id: q06
+    type: mcq
+    concept: debugging-questions
+    variants:
+      - prompt: "Which line in a component's render is most likely to cause a hydration mismatch?"
+        choices:
+          - "const code = Math.random().toString(36).slice(2);"
+          - "const name = item.name;"
+          - "const total = qty * 45000;"
+          - "const { id } = await params;"
+        answer: 0
+      - prompt: "A candidate says \"params.id is undefined on every item page since the upgrade.\" What's the likely cause?"
+        choices:
+          - "In Next.js 16, params is a Promise and must be awaited"
+          - "The folder should be called [ID]"
+          - "params only works in client components"
+          - "The database is empty"
+        answer: 0
+    explain: "Random values, the current time and browser-only APIs in render make server and browser disagree. params became a Promise in recent Next.js versions."
+    reteach: "### Debugging questions"
+
+  - id: q07
+    type: order
+    concept: nextjs-loop
+    prompt: "Put the steps of a coding round in order."
+    items:
+      - "Clarify the task and its edge cases"
+      - "Write two or three examples with answers"
+      - "Say your plan out loud"
+      - "Write the code, talking as you go"
+      - "Test by hand, including the edges"
+    explain: "Clarify, examples, plan, code, test by hand, then improve. Talking throughout lets the interviewer follow and help."
+    reteach: "### The coding round"
+
+  - id: q08
+    type: mcq
+    concept: nextjs-system-design
+    prompt: "In a design for dhaaga.in's product page, which parts should run in the browser?"
+    choices:
+      - "Only small islands like Add to cart and the photo gallery"
+      - "The whole page, so it feels fast"
+      - "Nothing at all, not even buttons"
+      - "The data layer"
+    answer: 0
+    explain: "Start from server components and add client islands only where there's interaction. That keeps the JavaScript sent to phones small."
+    reteach: "### Next.js system design"
+
+  - id: q09
+    type: mcq
+    concept: nextjs-system-design
+    prompt: "Product pages are static. Stock changes every few minutes. What's a good design?"
+    choices:
+      - "Revalidate the page on each order, and show live stock in a small island or a streamed part"
+      - "Make every page dynamic and uncached"
+      - "Never show stock"
+      - "Rebuild the whole site every minute"
+    answer: 0
+    explain: "Static pages stay fast, and revalidation plus a live island keeps the changing part fresh. Naming this trade-off is what interviewers listen for."
+    reteach: "### Next.js system design"
+
+  - id: q10
+    type: mcq
+    concept: talking-trade-offs
+    variants:
+      - prompt: "Which answer shows a trade-off?"
+        choices:
+          - "\"A nonce-based CSP is stricter, but it makes every page dynamic, so I'd start with one in next.config.\""
+          - "\"I'd use a CSP because it's secure.\""
+          - "\"I'd use the best option.\""
+          - "\"CSPs are always worth it.\""
+        answer: 0
+      - prompt: "Why do interviewers ask \"what would you give up?\""
+        choices:
+          - "Every choice has a cost, and they want to see you name both sides"
+          - "To trick you"
+          - "Because there's one right answer"
+          - "To fill time"
+        answer: 0
+    explain: "A trade-off names what you gain and what you give up. Saying it before you're asked shows you understand the choice."
+    reteach: "### Talking trade-offs"
+
+  - id: q11
+    type: mcq
+    concept: talking-trade-offs
+    prompt: "Which behavioural answer best follows STAR?"
+    choices:
+      - "\"Golu's page took 1.8 s. I started three calls together and kept only one client island. The wait dropped to 0.6 s.\""
+      - "\"We had a slow page and we fixed it as a team.\""
+      - "\"I'm very good at performance.\""
+      - "\"It was slow, then it wasn't.\""
+    answer: 0
+    explain: "STAR gives the situation, your task, the action you took and a result, ideally a number. Say \"I\" for your own part."
+    reteach: "### Behavioural questions"

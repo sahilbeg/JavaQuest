@@ -1,0 +1,24 @@
+id: vanilla-08-components-without-a-framework/topic-01-render-functions
+title: "Render functions: building elements from data"
+order: 1
+minutes: 9
+prerequisites: [web-07-tooling/boss]
+concepts: [h-helper, props, children, text-not-html, components-as-functions, composition]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0801
+  from: maya
+  title: "Every card is a wall of createElement"
+  body: >
+    Kavya here. Our product card is forty lines of createElement, className and append, and nobody can see the
+    card's shape any more. Adding a "Sold out" state to it last week took me an hour. Let's write a small h() helper
+    and build the cards with it, so the code looks like the card it makes.
+hints:
+  - "h(tag, props, ...children) does three jobs in order: make the element, apply each prop, then append each child."
+  - "For props: skip null, undefined and false; \"class\" goes to className; \"dataset\" is copied with Object.assign; a name starting with \"on\" whose value is a function becomes a listener; anything else is setAttribute (true becomes \"\")."
+  - "For children: loop over children.flat(Infinity), skip null, undefined and false, and append an element as it is or anything else as String(child). Then productCard is one h(\"li\", ...) call with three children."
+review: true

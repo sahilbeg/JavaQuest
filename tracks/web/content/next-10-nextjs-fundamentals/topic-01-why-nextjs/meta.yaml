@@ -1,0 +1,22 @@
+id: next-10-nextjs-fundamentals/topic-01-why-nextjs
+title: "Why Next.js: pages, servers and React together"
+order: 1
+minutes: 9
+prerequisites: [react-09-react-in-depth/boss]
+concepts: [framework, server-rendering, hydration, file-routing, nextjs-project]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1001
+  from: maya
+  title: "Why we are moving dhaaga.in to Next.js"
+  body: >
+    Sana shared Golu's page on WhatsApp this morning, and the preview just said "dhaaga.in", with no name and no
+    photo. On Raju's old phone, the shop shows a white screen for three seconds before anything appears. We're
+    moving the store to Next.js to fix both. Read up first, so we all speak the same language.
+hints:
+  - "A React app on its own sends the browser an almost empty page. JavaScript has to download and run before anything shows."
+  - "Next.js runs your React components on the server first, so the HTML arrives already filled in. Then hydration makes it interactive."
+  - "In the app router, folders inside app/ become addresses, and a file called page.jsx is the page for that address."
+review: true

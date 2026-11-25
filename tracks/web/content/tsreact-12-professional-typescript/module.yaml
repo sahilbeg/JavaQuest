@@ -1,0 +1,6 @@
+id: tsreact-12-professional-typescript
+title: Professional TypeScript
+project: "Launch day, typed"
+summary: Ship the typed dhaaga.in like a professional. Test typed components, switch on every strict check, type data from the server to the screen, move old JavaScript to TypeScript, guard the build with type checks in CI, review TypeScript, find your way in a big typed codebase, and pass the TypeScript interview loop.
+unlockAfter: tsreact-11-typed-react-in-depth/boss
+mascotIntro: "The typed store works. Now let's make the types honest, the checks strict, and the whole thing ready for launch day."

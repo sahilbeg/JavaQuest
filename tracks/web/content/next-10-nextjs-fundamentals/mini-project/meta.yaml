@@ -1,0 +1,23 @@
+id: next-10-nextjs-fundamentals/mini-project
+title: "FEAT-10: The catalogue on Next.js"
+order: 100
+minutes: 15
+prerequisites: [next-10-nextjs-fundamentals/topic-10-styling-in-next]
+concepts: [search-params, catalogue-query, url-state, client-filters, page-metadata]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+ticket:
+  key: FEAT-10
+  from: priya
+  title: "One shop page with every piece, that customers can filter"
+  body: >
+    Beta, the new website looks lovely, but there's no shop page yet! I want one page with every piece, where
+    customers can pick a colour, search for "elephant" and see the cheapest first. And when I copy the link after
+    choosing Indigo and send it to my friend in Nashik, she should see the same Indigo list, not everything.
+hints:
+  - "Start with src/lib/query.js. queryCatalogue copies the list, then filters by colour (colourBySlug gives the name to compare), then by the trimmed, lower-cased search, then sorts a copy. shopHref builds the address with URLSearchParams, skipping empty values."
+  - "ShopPage awaits searchParams, reads colour, q and sort (each defaulting to \"\"), and draws the list from queryCatalogue(await getItems(), { colour, q, sort })."
+  - "Filters is a client component. Each select's onChange calls router.push(shopHref({ colour, q, sort, ...the one that changed })). The search form does the same with q set to the trimmed text."
+review: false

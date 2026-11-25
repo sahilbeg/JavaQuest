@@ -1,0 +1,151 @@
+topic: tsreact-12-professional-typescript/topic-04-migrating-to-typescript
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: migration-plan
+    prompt: "Why do teams move to TypeScript one file at a time instead of all at once?"
+    choices:
+      - "The app keeps building and shipping after every small, reviewable step"
+      - "TypeScript can only check one file per project"
+      - "Big pull requests type-check faster"
+      - "JavaScript files stop working once one file is TypeScript"
+    answer: 0
+    explain: "A big-bang rewrite takes weeks, can't be reviewed, conflicts with everyone, and blocks fixes. Small steps keep the store working and are easy to undo."
+    reteach: "### Why move, and why one file at a time"
+
+  - id: q02
+    type: fill-blank
+    concept: allow-js-check-js
+    goal: "Let TypeScript files and old JavaScript files import each other while the move is under way."
+    prompt: "\"___\": true,"
+    answers: ["allowJs"]
+    explain: "allowJs puts .js files into the TypeScript project, so cart.ts can import money.js until money.js has moved too."
+    reteach: "### Step 1: let JavaScript and TypeScript live together"
+
+  - id: q03
+    type: mcq
+    concept: allow-js-check-js
+    prompt: "What does a // @ts-check line at the top of a .js file do?"
+    choices:
+      - "TypeScript checks that one JavaScript file, using what it can work out and any JSDoc types"
+      - "It converts the file to TypeScript"
+      - "It stops TypeScript from reading the file"
+      - "It runs the file's tests"
+    answer: 0
+    explain: "// @ts-check turns on checking for one .js file, like checkJs does for all of them. The file stays JavaScript."
+    reteach: "### Step 1: let JavaScript and TypeScript live together"
+
+  - id: q04
+    type: mcq
+    concept: migration-plan
+    prompt: "App.jsx imports cart.js, which imports money.js. money.js imports nothing. Which file should move first?"
+    choices:
+      - "money.js, the leaf"
+      - "App.jsx, the root"
+      - "cart.js, the middle"
+      - "It doesn't matter"
+    answer: 0
+    explain: "A leaf has no untyped imports, so its types are real all the way down. Every file that imports it then gets real types for free."
+    reteach: "### Step 2: pick the order"
+
+  - id: q05
+    type: mcq
+    concept: jsdoc-types
+    prompt: "Which comment gives a JavaScript function a typed parameter that TypeScript can check?"
+    choices:
+      - "/** @param {number} paise */"
+      - "// paise: number"
+      - "/* type paise = number */"
+      - "<!-- paise is a number -->"
+    answer: 0
+    explain: "TypeScript reads JSDoc comments that start with /** and use tags like @param {number}. Plain comments are just words to it."
+    reteach: "### Syntax: JSDoc types"
+
+  - id: q06
+    type: mcq
+    concept: rename-then-type
+    prompt: "Why keep \"rename giftOrder.js to .ts\" and \"add types and fix bugs\" as two separate commits?"
+    choices:
+      - "The first changes no behaviour, so the reviewer can see every real change and fix on its own"
+      - "Git can't rename and edit a file in one commit"
+      - "TypeScript needs two builds to see a renamed file"
+      - "It makes the file smaller"
+    answer: 0
+    explain: "A pure rename is quick to review. The typing commit then shows each new type and each bug fix clearly, instead of hiding them in a wall of changes."
+    reteach: "### Step 3: rename, then type"
+
+  - id: q07
+    type: predict-output
+    concept: bugs-types-find
+    prompt: "This is old code typed any. What does it print?"
+    code: |
+      const skein: any = { colour: "Mint", grams: 30 };
+      console.log(skein.colour + ": " + skein.gram + " g");
+    answer: "Mint: undefined g"
+    explain: "The object has grams, not gram, so skein.gram is undefined. With a real Skein type, tsc would say \"Property 'gram' does not exist on type 'Skein'. Did you mean 'grams'?\""
+    reteach: "### The bugs types find"
+
+  - id: q08
+    type: spot-the-bug
+    concept: bugs-types-find
+    prompt: "The Skein type just got written. Which line will the compiler now underline?"
+    code: |
+      interface Skein { colour: string; grams: number; reorderAt: number }
+      function needsReorder(skein: Skein): boolean {
+        return skein.grams < skein.reorderAt;
+      }
+      function shelfLabel(skein: Skein): string {
+        return skein.colour + ": " + skein.gram + " g";
+      }
+    bugLine: 6
+    explain: "Skein has grams, not gram. In JavaScript this quietly showed undefined; with a real type it's error TS2551, with a \"Did you mean\" hint."
+    reteach: "### The bugs types find"
+
+  - id: q09
+    type: mcq
+    concept: temporary-escape-hatches
+    prompt: "A file has 40 type errors and you can fix 30 today. What is the best way to mark the other 10?"
+    choices:
+      - "// @ts-expect-error with a reason and a ticket on each line"
+      - "// @ts-ignore on each line"
+      - "\"strict\": false for the whole project"
+      - "Delete the lines"
+    answer: 0
+    explain: "@ts-expect-error hides the error for now, but becomes an error itself when the problem is fixed, so it can't be forgotten. @ts-ignore stays silent forever."
+    reteach: "### Escape hatches, with an exit"
+
+  - id: q10
+    type: mcq
+    concept: temporary-escape-hatches
+    variants:
+      - prompt: "During a move, a parameter is typed any on purpose. What should the team do about it?"
+        choices:
+          - "Treat it as a list of work, and keep the number of anys going down"
+          - "Leave it: any is as good as a real type"
+          - "Replace it with as unknown as GiftLine"
+          - "Hide it with @ts-ignore"
+        answer: 0
+      - prompt: "Which lint rule helps a migration finish?"
+        choices:
+          - "Fail CI when the number of anys goes up"
+          - "Fail CI when a .ts file is added"
+          - "Fail CI when a comment mentions TypeScript"
+          - "Fail CI on every // @ts-expect-error, even with a ticket"
+        answer: 0
+    explain: "any is fine as a marked, temporary step. Counting it, and never letting the count rise, turns the leftovers into a list that shrinks."
+    reteach: "### Escape hatches, with an exit"
+
+  - id: q11
+    type: mcq
+    concept: rename-then-type
+    prompt: "When you start typing a renamed file, what should you type first?"
+    choices:
+      - "The data: interfaces for the objects that flow through the file"
+      - "Every function's return type, one by one"
+      - "The tests"
+      - "The CSS"
+    answer: 0
+    explain: "Once the data has real types, most function types follow, and the compiler starts finding wrong property names straight away."
+    reteach: "### Step 3: rename, then type"

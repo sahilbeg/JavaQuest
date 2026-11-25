@@ -1,0 +1,24 @@
+id: next-12-production-nextjs/mini-project
+title: "CAPSTONE: Launch dhaaga.in on Next.js"
+order: 100
+minutes: 15
+prerequisites: [next-12-production-nextjs/topic-08-interviews]
+concepts: [pricing-rules, app-router-pages, route-handler-api, server-action-orders, data-layer, metadata-and-seo, cart-and-checkout]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+ticket:
+  key: CAPSTONE
+  from: priya
+  title: "dhaaga.in opens on Next.js this Friday"
+  body: >
+    Beta, this is the big day. On Friday at 10:00 I post the link on Instagram, and the new dhaaga.in opens to the whole of India.
+    People must find Golu on Google, see the right price with the Diwali offer and free delivery, and place an order without any trouble.
+    Our delivery partner also wants to check our stock from their app.
+    Make it simple, make it work, and make me proud.
+hints:
+  - "Go stage by stage, and run the checks after each one. Stage 1 is one reduce for the subtotal, Math.floor(subtotal / 10) when it's above 150000, and delivery 0 for an empty cart or when subtotal - offer is above 99900."
+  - "Stages 2 and 3 reuse this module's tickets: await params, notFound() for unknown ids, generateMetadata, Response.json with a status, and an async HomePage that awaits listItems(). Stage 4: build a Map of qty per id in createOrder, check everything before changing any stock."
+  - "placeOrder: formData.getAll(\"line\"), then name.trim(), phone.replace(/\\s/g, \"\") tested with /^\\d{10}$/, then split each line at \":\". Stage 5: readCart uses cookieStore.get(\"cart\")?.value ?? \"\"; CartView returns early for an empty cart and uses orderTotals(lines) for the paragraphs."
+review: false

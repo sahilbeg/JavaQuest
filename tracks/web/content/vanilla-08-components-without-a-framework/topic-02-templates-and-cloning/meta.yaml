@@ -1,0 +1,24 @@
+id: vanilla-08-components-without-a-framework/topic-02-templates-and-cloning
+title: "The template element and cloning"
+order: 2
+minutes: 8
+prerequisites: [vanilla-08-components-without-a-framework/topic-01-render-functions]
+concepts: [template-element, inert-content, clone-node, document-fragment, fill-the-copy]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0802
+  from: sana
+  title: "I want to change the card's HTML without reading JavaScript"
+  body: >
+    Sana here. I tweak the product card's markup every week, like adding the photo or changing the button label for
+    screen readers. Right now the card lives inside JavaScript, and I'm scared of breaking it. Can the card's HTML
+    live in the page, in a template, and the code just copy and fill it?
+hints:
+  - "template.content holds the card's markup as a DocumentFragment. Copy it with cloneNode(true), and take the copy's firstElementChild: that is your <li>."
+  - "Fill the copy, not the template: card.querySelector(\".name\").textContent = product.name, and the same for .price. For the photo, set src and alt; for the button, setAttribute(\"aria-label\", ...)."
+  - "renderCards is one line: list.replaceChildren(...products.map((product) => cardFromTemplate(template, product)))."
+review: true

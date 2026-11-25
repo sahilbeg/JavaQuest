@@ -1,0 +1,24 @@
+id: next-10-nextjs-fundamentals/topic-04-links-and-navigation
+title: "Links and navigation"
+order: 4
+minutes: 10
+prerequisites: [next-10-nextjs-fundamentals/topic-03-layouts]
+concepts: [next-link, client-navigation, active-link, use-pathname, use-router]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1004
+  from: sam
+  title: "Every tap on the menu flashes the whole page white"
+  body: >
+    Raju here. Mrs. Deshpande says every time she taps Shop or Help, the whole page goes white and loads again,
+    and she can't tell which page she's on because the menu looks the same everywhere. She also typed "golu" in
+    the search box and pressed Search, and nothing happened at all.
+hints:
+  - "isActive: the home link \"/\" is active only on \"/\". Any other link is active on its own address and on every address under it, like \"/items/DC-1042\" for \"/items\"."
+  - "In NavBar, swap each <a> for <Link href={link.href}> from next/link. Give it aria-current={isActive(pathname, link.href) ? \"page\" : undefined}."
+  - "In SearchBox, trim the text. If it's empty, router.push(\"/items\"). Otherwise router.push(\"/items?q=\" + encodeURIComponent(q))."
+review: true

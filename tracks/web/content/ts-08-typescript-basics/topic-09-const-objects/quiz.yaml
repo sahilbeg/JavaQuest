@@ -1,0 +1,115 @@
+topic: ts-08-typescript-basics/topic-09-const-objects
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: as-const
+    prompt: "What type does TypeScript infer for const MODES = [\"CASH\", \"UPI\"] as const;?"
+    choices: ["readonly [\"CASH\", \"UPI\"]", "string[]", "(\"CASH\" | \"UPI\")[]", "readonly string[]"]
+    answer: 0
+    explain: "as const keeps each literal, the exact length and order, and makes the array readonly."
+    reteach: "### Syntax: as const"
+
+  - id: q02
+    type: mcq
+    concept: as-const
+    prompt: "What type does TypeScript infer for const MODES = [\"CASH\", \"UPI\"]; without as const?"
+    choices: ["string[]", "readonly [\"CASH\", \"UPI\"]", "\"CASH\" | \"UPI\"", "any[]"]
+    answer: 0
+    explain: "Without as const, the array could later hold any text, so TypeScript widens it to string[]."
+    reteach: "## Common mistakes"
+
+  - id: q03
+    type: fill-blank
+    concept: as-const
+    goal: "Keep every code as its exact literal and make the list unchangeable, so a type can be taken from it."
+    prompt: "const ITEM_CODES = [\"CST\", \"KEY\", \"AMI\"] as ___;"
+    answers: ["const"]
+    explain: "as const infers literal types and readonly for the whole array."
+    reteach: "### Syntax: as const"
+
+  - id: q04
+    type: mcq
+    concept: indexed-access
+    prompt: "ITEM_CODES is [\"CST\", \"KEY\", \"AMI\"] as const. What is (typeof ITEM_CODES)[number]?"
+    choices: ["\"CST\" | \"KEY\" | \"AMI\"", "number", "3", "string[]"]
+    answer: 0
+    explain: "[number] asks for the type of any entry, which is the union of the three literals."
+    reteach: "### Syntax: indexed access with [number]"
+
+  - id: q05
+    type: spot-the-bug
+    concept: typeof-types
+    code: |
+      const CODES = ["CST", "KEY", "AMI"] as const;
+      type Code = CODES[number];
+      function priceOf(code: Code): number {
+        return 0;
+      }
+    bugLine: 2
+    explain: "CODES is a value, not a type. Write (typeof CODES)[number] to get the type of its entries."
+    reteach: "### Syntax: typeof in a type"
+
+  - id: q06
+    type: mcq
+    concept: keyof
+    prompt: "PRICES is { CST: 15000, KEY: 12000 } as const. What is keyof typeof PRICES?"
+    choices: ["\"CST\" | \"KEY\"", "15000 | 12000", "string", "[\"CST\", \"KEY\"]"]
+    answer: 0
+    explain: "keyof gives the union of the object type's keys. The values would be (typeof PRICES)[keyof typeof PRICES]."
+    reteach: "### Syntax: keyof"
+
+  - id: q07
+    type: predict-output
+    concept: as-const
+    code: |
+      const CODES = ["CST", "KEY", "BTY"] as const;
+      const PRICE = { CST: 15000, KEY: 12000, BTY: 35000 } as const;
+      let total = 0;
+      for (const code of CODES) {
+        total += PRICE[code];
+      }
+      console.log(CODES.length, total);
+    answer: "3 62000"
+    explain: "as const is erased before running. The loop adds 15000, 12000 and 35000."
+    reteach: "## Worked example"
+
+  - id: q08
+    type: predict-output
+    concept: typeof-types
+    code: |
+      const MODES = ["CASH", "UPI", "CARD"] as const;
+      type Mode = (typeof MODES)[number];
+      const mode: Mode = "UPI";
+      console.log(typeof mode, MODES.indexOf(mode));
+    answer: "string 1"
+    explain: "The typeof inside the type line is erased. The JavaScript typeof gives string, and UPI is at index 1."
+    reteach: "### Syntax: typeof in a type"
+
+  - id: q09
+    type: mcq
+    concept: enums-vs-unions
+    prompt: "Why does Dhaaga use as const and literal unions instead of enums?"
+    choices: ["An enum creates a real object at run time, so it isn't simply erased like other types", "Enums can't hold strings", "tsc refuses all enums", "Literal unions run faster in the browser"]
+    answer: 0
+    explain: "A literal union is only a type. An enum needs code generated for it, which Node's type stripping can't do."
+    reteach: "### Enums, and why Dhaaga skips them"
+
+  - id: q10
+    type: mcq
+    concept: as-const
+    prompt: "CODES is written with as const. What does CODES.push(\"RAK\") do?"
+    choices: ["tsc reports that push does not exist on the readonly tuple", "It adds RAK, and ItemCode updates", "It throws an error in the browser, because the array is frozen", "Nothing at all"]
+    answer: 0
+    explain: "as const makes the array readonly for the checker. At run time it isn't frozen. Only Object.freeze does that."
+    reteach: "### as const doesn't freeze anything"
+
+  - id: q11
+    type: mcq
+    concept: typeof-types
+    prompt: "Why write type ItemCode = (typeof ITEM_CODES)[number]; instead of typing the five codes into a union by hand?"
+    choices: ["The codes are then written once, so the list and the type can never drift apart", "It makes the array faster", "Unions typed by hand aren't allowed", "It lets ItemCode hold any string"]
+    answer: 0
+    explain: "One source of truth: add a code to the list, and the type gains it automatically."
+    reteach: "### The list written twice"

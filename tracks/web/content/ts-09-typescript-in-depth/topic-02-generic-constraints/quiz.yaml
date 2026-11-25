@@ -1,0 +1,131 @@
+topic: ts-09-typescript-in-depth/topic-02-generic-constraints
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: extends-constraint
+    prompt: "What does <T extends { paise: number }> mean?"
+    choices:
+      - "T can be any type, as long as it has a paise field that is a number"
+      - "T must be exactly the type { paise: number } and nothing more"
+      - "T is a class that inherits from another class"
+      - "T is a number called paise"
+    answer: 0
+    explain: "A constraint sets the minimum T must have. Items, cart lines and bundles with a paise field all fit, and keep their other fields."
+    reteach: "### Syntax: extends"
+
+  - id: q02
+    type: spot-the-bug
+    concept: key-constraint
+    code: |
+      function valueOf<T, K extends keyof T>(obj: T, key: K): T[K] {
+        return obj[key];
+      }
+      const golu = { id: "DC-1042", paise: 45000 };
+      const id = valueOf(golu, "id");
+      const price = valueOf(golu, "price");
+    bugLine: 6
+    explain: "golu has no price field. K must be a key of golu's type, \"id\" or \"paise\", so TypeScript refuses \"price\"."
+    reteach: "### Syntax: K extends keyof T"
+
+  - id: q03
+    type: mcq
+    concept: keyof
+    prompt: "type Line = { code: string; qty: number }. What is keyof Line?"
+    choices: ['"code" | "qty"', "string | number", "string", '["code", "qty"]']
+    answer: 0
+    explain: "keyof gives the union of the property names, as literal types. It is a type, not an array."
+    reteach: "### Syntax: keyof"
+
+  - id: q04
+    type: fill-blank
+    concept: keyof
+    goal: "Allow key to be only one of the property names of T."
+    prompt: "function valueOf<T, K extends ___ T>(obj: T, key: K): T[K] {"
+    answers: ["keyof"]
+    explain: "keyof T is the union of T's property names, so K extends keyof T means K is one of them."
+    reteach: "### Syntax: K extends keyof T"
+
+  - id: q05
+    type: predict-output
+    concept: key-constraint
+    code: |
+      function valueOf<T, K extends keyof T>(obj: T, key: K): T[K] {
+        return obj[key];
+      }
+      const line = { code: "BAG", paise: 89900, qty: 2 };
+      console.log(valueOf(line, "paise") * valueOf(line, "qty"));
+    answer: "179800"
+    explain: "Both results are numbers, T[\"paise\"] and T[\"qty\"], so they multiply: 89900 times 2."
+    reteach: "### Syntax: K extends keyof T"
+
+  - id: q06
+    type: mcq
+    concept: keeping-the-type
+    prompt: "Why write inStockOnly<T extends { stock: number }>(list: T[]): T[] instead of inStockOnly(list: { stock: number }[]): { stock: number }[]?"
+    choices:
+      - "The generic version returns the full element type, so fields like name are still known"
+      - "The generic version runs faster"
+      - "The plain version doesn't compile"
+      - "The plain version only accepts numbers"
+    answer: 0
+    explain: "With the plain version, every result only has stock as far as TypeScript knows. T keeps the caller's whole type."
+    reteach: "### The constraint keeps the full type"
+
+  - id: q07
+    type: mcq
+    concept: extends-constraint
+    prompt: "Which call does inStockOnly<T extends { stock: number }>(list: T[]) refuse?"
+    choices:
+      - 'inStockOnly(colours), where colours is ["Mint", "Indigo"]'
+      - 'inStockOnly(items), where each item is { id: "DC-1042", stock: 3 }'
+      - 'inStockOnly(yarn), where each ball is { colour: "Mint", grams: 40, stock: 0 }'
+      - "inStockOnly(lines), where each line is { code: \"CST\", paise: 15000, stock: 2 }"
+    answer: 0
+    explain: "Strings have no stock field, so they don't meet the constraint. Extra fields are fine: the constraint is a minimum."
+    reteach: "### What doesn't fit is refused"
+
+  - id: q08
+    type: mcq
+    concept: indexed-access
+    prompt: "interface Item { id: string; paise: number }. What type is Item[\"paise\"]?"
+    choices: ["number", '"paise"', "string", "Item"]
+    answer: 0
+    explain: "An indexed access type looks up the type of one property. paise is a number."
+    reteach: "### Syntax: indexed access types"
+
+  - id: q09
+    type: predict-output
+    concept: extends-constraint
+    code: |
+      function inStockOnly<T extends { stock: number }>(list: T[]): T[] {
+        return list.filter((item) => item.stock > 0);
+      }
+      const yarn = [
+        { colour: "Mint", stock: 0 },
+        { colour: "Indigo", stock: 5 },
+        { colour: "Marigold", stock: 2 },
+      ];
+      console.log(inStockOnly(yarn).map((ball) => ball.colour).join(", "));
+    answer: "Indigo, Marigold"
+    explain: "Mint has no stock, so it is filtered out. T is the yarn type, so ball.colour is still known afterwards."
+    reteach: "### The constraint keeps the full type"
+
+  - id: q10
+    type: fill-blank
+    concept: extends-constraint
+    goal: "Let T be any type, as long as it has a numeric stock field."
+    prompt: "function totalStock<T ___ { stock: number }>(list: T[]): number {"
+    answers: ["extends"]
+    explain: "A constraint is written with extends after the type parameter's name."
+    reteach: "### Syntax: extends"
+
+  - id: q11
+    type: mcq
+    concept: indexed-access
+    prompt: "valueOf<T, K extends keyof T>(obj: T, key: K): T[K]. golu.name is a string. What type does valueOf(golu, \"name\") return?"
+    choices: ["string", "unknown", "keyof T", "any"]
+    answer: 0
+    explain: "K is \"name\", so T[K] is the type of golu's name field: string."
+    reteach: "### Syntax: K extends keyof T"

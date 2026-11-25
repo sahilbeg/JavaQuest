@@ -1,0 +1,127 @@
+topic: next-11-data-and-server/topic-05-forms-with-actions
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: server-validation
+    prompt: "The order form already checks the phone number in the browser. Why must placeOrder check it again?"
+    choices: ["Browser checks can be skipped, by a script or with JavaScript off. The action is the real gate", "Browsers can't check phone numbers", "The second check makes the page faster", "Next.js deletes browser checks when it builds"]
+    answer: 0
+    explain: "Anything can reach a server action. Only checks inside it are guaranteed to run."
+    reteach: "### Check on the server, always"
+
+  - id: q02
+    type: mcq
+    concept: use-action-state
+    prompt: "What does useActionState(placeOrder, START) give back?"
+    choices: ["[state, formAction, isPending]", "[value, setValue]", "A promise of the order", "The FormData of the form"]
+    answer: 0
+    explain: "state is the last result, formAction goes on the form, and isPending is true while the action runs."
+    reteach: "### Syntax: useActionState"
+
+  - id: q03
+    type: fill-blank
+    concept: use-action-state
+    goal: "Connect the order form to its action and get back the last result and a busy flag."
+    prompt: "const [state, formAction, isPending] = ___(placeOrder, START);"
+    answers: ["useActionState"]
+    explain: "useActionState is the React hook for forms that call actions. It lives in a client component."
+    reteach: "### Syntax: useActionState"
+
+  - id: q04
+    type: mcq
+    concept: use-action-state
+    prompt: "A form uses useActionState(placeOrder, START). What arguments does placeOrder receive?"
+    choices: ["(prevState, formData)", "(formData)", "(formData, prevState)", "(event)"]
+    answer: 0
+    explain: "The previous state comes first, then the form's fields. Reading formData.get from the first argument crashes."
+    reteach: "### Syntax: useActionState"
+
+  - id: q05
+    type: predict-output
+    concept: server-validation
+    code: |
+      const phone = "98765 43210";
+      const digits = phone.replace(/\s/g, "");
+      console.log(digits, /^\d{10}$/.test(digits));
+    answer: "9876543210 true"
+    explain: "Removing the space leaves exactly 10 digits, so the pattern matches."
+    reteach: "### Checking one field"
+
+  - id: q06
+    type: predict-output
+    concept: field-errors
+    code: |
+      const errors = {};
+      const name = "   ";
+      const qty = Number("7");
+      if (name.trim() === "") errors.name = "Please enter your name.";
+      if (qty < 1 || qty > 5) errors.qty = "Choose between 1 and 5.";
+      console.log(Object.keys(errors).join(","));
+    answer: "name,qty"
+    explain: "A name of only spaces is empty once trimmed, and 7 is more than 5. Both problems are collected."
+    reteach: "### Syntax: returning field errors"
+
+  - id: q07
+    type: mcq
+    concept: field-errors
+    prompt: "Why does placeOrder return { errors, values } and not just { errors }?"
+    choices: ["So the form can refill what the customer typed, using defaultValue", "Because values must always be saved", "So the redirect knows where to go", "React refuses a state without values"]
+    answer: 0
+    explain: "Without the values, one wrong digit would wipe every field the customer filled in."
+    reteach: "### Showing the errors and keeping the values"
+
+  - id: q08
+    type: mcq
+    concept: redirect-after-success
+    prompt: "How does redirect(\"/order/order-20\") move the customer to the new page?"
+    choices: ["It throws a special error that Next.js catches and turns into a move", "It returns a URL that you must return too", "It reloads the browser with JavaScript", "It changes window.location on the server"]
+    answer: 0
+    explain: "Because it throws, nothing after it runs, and a catch around it would swallow it."
+    reteach: "### Syntax: redirect after success"
+
+  - id: q09
+    type: spot-the-bug
+    concept: redirect-after-success
+    prompt: "Orders are saved, but customers always see Something went wrong. Which line is in the wrong place?"
+    code: |
+      export async function placeOrder(prevState, formData) {
+        const details = readDetails(formData);
+        try {
+          const order = createOrder(details);
+          redirect(`/order/${order.id}`);
+        } catch {
+          return { errors: { form: "Something went wrong." } };
+        }
+      }
+    bugLine: 5
+    explain: "redirect throws, so inside try the catch swallows it. Call redirect after the try block."
+    reteach: "### Syntax: redirect after success"
+
+  - id: q10
+    type: mcq
+    concept: pending-state
+    prompt: "Customers on slow 3G tap Place order three times. Which change stops it?"
+    choices: ["<button type=\"submit\" disabled={isPending}>", "<button type=\"button\">", "<form method=\"get\">", "Removing the button"]
+    answer: 0
+    explain: "isPending is true while the action runs, so the button can't be pressed again until it's done."
+    reteach: "### The busy button"
+
+  - id: q11
+    type: mcq
+    concept: pending-state
+    prompt: "A SubmitButton component inside the form needs to know whether its form is busy, without any props. What can it use?"
+    choices: ["useFormStatus() from react-dom, which gives { pending }", "useEffect with an empty array", "document.querySelector(\"form\").busy", "A global variable"]
+    answer: 0
+    explain: "useFormStatus reads the status of the form the component sits in."
+    reteach: "### The busy button"
+
+  - id: q12
+    type: mcq
+    concept: works-without-javascript
+    prompt: "A customer on a slow phone submits the order form before the page's JavaScript has loaded. What happens?"
+    choices: ["It still works: it's a real HTML form that posts to the server action", "Nothing, the button is dead until React loads", "The browser shows an error", "The order is saved twice"]
+    answer: 0
+    explain: "This is progressive enhancement. The basic job works with plain HTML, and JavaScript adds the nicer parts."
+    reteach: "### It works before JavaScript loads"

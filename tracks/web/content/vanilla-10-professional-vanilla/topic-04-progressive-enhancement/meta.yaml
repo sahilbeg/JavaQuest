@@ -1,0 +1,24 @@
+id: vanilla-10-professional-vanilla/topic-04-progressive-enhancement
+title: "Progressive enhancement: works without JavaScript"
+order: 4
+minutes: 10
+prerequisites: [vanilla-10-professional-vanilla/topic-03-security]
+concepts: [layers, html-baseline, when-scripts-fail, feature-detection, enhancing-forms, shareable-urls]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-1004
+  from: theo
+  title: "Nobody could add to cart on the Pune–Nashik train"
+  body: >
+    Arjun here. On Saturday morning our orders dropped to zero for twenty minutes. A customer on the Pune–Nashik train sent a screenshot: the shop page was there, but Search and Add to cart did nothing.
+    On her slow connection, the HTML had arrived and the JavaScript hadn't. Our buttons only work once the script runs.
+    Make the shop page work with plain HTML first, then let the script make it nicer when it arrives.
+hints:
+  - "TODOs 1 and 2 are HTML only. The search is a <form action=\"/search\" method=\"get\"> around the labelled input (with name=\"q\") and a submit button. Each Add to cart is a <form class=\"add\" action=\"/cart\" method=\"post\"> holding <input type=\"hidden\" name=\"id\" value=\"DC-1042\"> and a submit button."
+  - "TODO 3: in the search form's submit listener, call event.preventDefault() first. Hide each .product whose data-name doesn't include the trimmed, lower-case words, count the rest for the status line, then history.replaceState(null, \"\", `?q=${encodeURIComponent(text)}`)."
+  - "TODO 4: preventDefault, disable the button, then try { const response = await fetchFn(form.getAttribute(\"action\"), { method: \"POST\", body: new FormData(form) }); if (!response.ok) throw new Error(); ... } catch { status says sorry } finally { button.disabled = false; }."
+review: true

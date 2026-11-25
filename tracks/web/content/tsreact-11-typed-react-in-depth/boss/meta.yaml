@@ -1,0 +1,23 @@
+id: tsreact-11-typed-react-in-depth/boss
+title: "INC-11: A checkout step nobody can reach"
+order: 99
+minutes: 12
+prerequisites: [tsreact-11-typed-react-in-depth/topic-10-typed-error-boundaries]
+concepts: [exhaustive-records, exhaustive-switch, step-machine, clean-extras]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: INC-11
+  from: theo
+  title: "Rakhi week, and not one gift-wrapped order"
+  body: >
+    Arjun here. Last week we added a gift step to checkout: gift wrap for ₹30 and a name stitched on for ₹50.
+    It's Rakhi week, half our orders are presents, and not one customer has chosen gift wrap. I checked: nobody
+    ever sees the step. Checkout jumps from the address straight to UPI. Please fix it before the evening rush.
+hints:
+  - "Bronze: look at ORDER in src/checkout.ts. Which step is missing? Then look at the default in stepTitle: which step falls into it?"
+  - "Silver: Back has its own table, PREVIOUS, which never heard of gift either. And look at what the giftChosen case keeps. A Record<Step, Step | null> for next and back makes TypeScript complain when a step is left out."
+  - "Gold: replace each default with const unknownStep: never = step; (or the action) so a missed case is a type error. Throw `Unknown action: ${type}` for an action nobody handles, and count the stitched name only when its trimmed text isn't empty."
+review: false

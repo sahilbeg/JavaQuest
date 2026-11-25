@@ -1,0 +1,115 @@
+topic: next-10-nextjs-fundamentals/topic-07-loading-and-error
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: loading-file
+    prompt: "The orders page awaits a slow database. Which file shows a message while it waits?"
+    choices: ["src/app/orders/loading.jsx", "src/app/orders/error.jsx", "src/app/orders/wait.jsx", "src/app/orders/not-found.jsx"]
+    answer: 0
+    explain: "A loading file in the same folder shows straight away, and the page replaces it when it's ready."
+    reteach: "### Special files in a route folder"
+
+  - id: q02
+    type: fill-blank
+    concept: loading-file
+    goal: "Make the waiting message a live region that screen readers announce politely."
+    prompt: "<p role=\"___\">Loading the shop...</p>"
+    answers: ["status"]
+    explain: "role=\"status\" makes screen readers announce the text when it appears, without moving the reader's place."
+    reteach: "### Syntax: loading.jsx"
+
+  - id: q03
+    type: mcq
+    concept: suspense-boundary
+    prompt: "What does Next.js do with a loading.jsx file behind the scenes?"
+    choices: ["Wraps the page in React's Suspense, with the loading component as the fallback", "Shows it for exactly one second on every page", "Runs it on the server instead of the page", "Uses it only when the page throws an error"]
+    answer: 0
+    explain: "Suspense shows its fallback while something inside is waiting, then swaps in the real content."
+    reteach: "### How loading works: Suspense"
+
+  - id: q04
+    type: order
+    concept: suspense-boundary
+    prompt: "A customer opens a slow page that has a loading.jsx. Put the steps in order."
+    items:
+      - "Next.js sends the layout with the loading message where the page will go"
+      - "The page keeps awaiting its data on the server"
+      - "The data arrives and the page finishes rendering"
+      - "The finished page replaces the loading message"
+    explain: "The loading message comes first, so the customer is never left with a blank screen. The page streams in when it's ready."
+    reteach: "### How loading works: Suspense"
+
+  - id: q05
+    type: mcq
+    concept: error-file
+    prompt: "What must the first line of error.jsx be?"
+    choices: ["\"use client\";", "\"use server\";", "import Error from \"next/error\";", "Nothing special"]
+    answer: 0
+    explain: "Error boundaries are a browser feature, so an error file must be a client component."
+    reteach: "### Syntax: error.jsx"
+
+  - id: q06
+    type: mcq
+    concept: error-file
+    prompt: "The catalogue fails with connect ECONNREFUSED 10.0.0.5:5432. What should the error page show the customer?"
+    choices: ["A kind sentence like We couldn't load the shop, and a Try again button", "The full error message, so they can report it", "The server's address, so they can try it directly", "Nothing at all"]
+    answer: 0
+    explain: "Raw messages frighten customers and reveal details about your servers. Keep them for the logs."
+    reteach: "### Never show the raw error"
+
+  - id: q07
+    type: spot-the-bug
+    concept: retry
+    prompt: "This error page keeps retrying by itself, without anyone pressing the button. Which line is wrong?"
+    code: |
+      "use client";
+
+      export default function ShopError({ error, retry }) {
+        return (
+          <div role="alert">
+            <h2>We couldn't load the shop.</h2>
+            <button onClick={retry()}>Try again</button>
+          </div>
+        );
+      }
+    bugLine: 7
+    explain: "retry() runs during render. Pass a function instead: onClick={() => retry()}."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: retry
+    prompt: "What does calling retry() in an error page do?"
+    choices: ["Asks Next.js to fetch and render the failed part of the page again", "Reloads the whole browser tab", "Sends the error to the developers by email", "Goes back to the previous page"]
+    answer: 0
+    explain: "If the problem was temporary, like a dropped connection, a retry may succeed and replace the error page."
+    reteach: "### Syntax: error.jsx"
+
+  - id: q09
+    type: mcq
+    concept: not-found-file
+    prompt: "A page calls notFound(). What does the customer see?"
+    choices: ["The nearest not-found.jsx, with a 404 status", "The nearest error.jsx", "The loading message forever", "An empty page"]
+    answer: 0
+    explain: "notFound() is handled by not-found files, not error files. It should offer a way back, like a link to the shop."
+    reteach: "### Syntax: not-found.jsx"
+
+  - id: q10
+    type: mcq
+    concept: error-file
+    prompt: "src/app/orders/layout.jsx throws an error. Which file catches it?"
+    choices: ["src/app/error.jsx, one folder up", "src/app/orders/error.jsx", "src/app/orders/not-found.jsx", "Nothing can catch it"]
+    answer: 0
+    explain: "An error file doesn't wrap the layout in its own folder. The error file one folder up does. The root layout needs global-error.jsx."
+    reteach: "### Where each file catches"
+
+  - id: q11
+    type: mcq
+    concept: not-found-file
+    prompt: "Which props does a not-found.jsx component get?"
+    choices: ["None", "error and retry", "params and searchParams", "children"]
+    answer: 0
+    explain: "A not-found page is a plain component with no props. It usually shows a message and a link back."
+    reteach: "### Syntax: not-found.jsx"

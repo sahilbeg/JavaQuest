@@ -1,0 +1,23 @@
+id: ts-09-typescript-in-depth/topic-05-type-guards
+title: "Type guards"
+order: 5
+minutes: 10
+prerequisites: [ts-09-typescript-in-depth/topic-04-discriminated-unions]
+concepts: [typeof-guard, instanceof-guard, in-guard, type-predicates, filtering-with-guards]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0905
+  from: maya
+  title: "Gift bundles show ₹NaN on the price list"
+  body: >
+    Meera Aunty has started selling gift bundles, like a Diwali box with Golu and a coaster set. Bundles have bundlePaise instead of paise,
+    so the price list shows ₹NaN for every bundle. The checkout's error banner also says "undefined" when the server sends a plain string.
+    Please fill in the type guards in listings.ts so the code knows what it's holding before it reads anything.
+hints:
+  - "A type guard is a check TypeScript understands: typeof for strings and numbers, instanceof for classes like Error, and in for \"does this object have this field\"."
+  - "isBundle returns \"itemIds\" in listing. Its return type, listing is Bundle, tells TypeScript what a true answer means. Then priceOf can write isBundle(listing) ? listing.bundlePaise : listing.paise, and bundlesOnly is listings.filter(isBundle)."
+  - "isPresent is value !== null && value !== undefined (0 and \"\" are present!). messageFor: if (error instanceof Error) return error.message; if (typeof error === \"string\") return error; otherwise \"Something went wrong\"."
+review: true

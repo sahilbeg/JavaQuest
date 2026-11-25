@@ -1,0 +1,24 @@
+id: ts-08-typescript-basics/topic-09-const-objects
+title: "Fixed choices: as const and literal unions"
+order: 9
+minutes: 10
+prerequisites: [ts-08-typescript-basics/topic-08-aliases-and-optional]
+concepts: [as-const, typeof-types, indexed-access, keyof, enums-vs-unions]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0809
+  from: maya
+  title: "Rakhi keychains are in the list but not the type"
+  body: >
+    Last Rakhi, Sana added a new item code to the price board, but nobody added it to the ItemCode type, so the
+    checkout refused it all week. We keep writing the same lists twice: once as values, once as types. In
+    src/catalogue.ts I've written each list once with as const and taken the types from it. Please fill in the
+    functions that use them.
+hints:
+  - "Clean the text first: text.trim().toUpperCase(). Then ITEM_CODES.find((code) => code === cleaned) ?? null."
+  - "PRICES[code] works for any ItemCode, because PRICES has a key for every code."
+  - "priceBoard is ITEM_CODES.map(...) with a template literal. codesUpTo is ITEM_CODES.filter((code) => PRICES[code] <= maxPaise)."
+review: true

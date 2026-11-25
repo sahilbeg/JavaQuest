@@ -1,0 +1,7 @@
+/* TODO 1: on :root, set --marigold to #f2a81d, --indigo to #2e3a8c and --off-white to #faf7f0. */
+:root {
+}
+
+/* TODO 2: body gets background var(--off-white) and color var(--indigo). Add a rule for a: color var(--indigo). */
+body {
+}

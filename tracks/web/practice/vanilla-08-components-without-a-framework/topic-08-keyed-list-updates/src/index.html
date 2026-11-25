@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Packing | Dhaaga &amp; Co.</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #FAF7F0; color: #2E3A8C; margin: 1rem; }
+    #queue { list-style: none; padding: 0; }
+    .order { display: flex; justify-content: space-between; gap: 1rem; padding: 0.5rem; border-bottom: 1px solid #ccd; }
+    .order.is-new { background: #fdf0d2; }
+    .status { font-weight: 600; }
+    button { font: inherit; margin: 0.25rem; }
+  </style>
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <h1>Packing at the Aundh shop</h1>
+  <button type="button" id="new-order">A new WhatsApp order</button>
+  <button type="button" id="pay-first">The first order is paid</button>
+  <button type="button" id="shipped">The first order is shipped</button>
+  <ul id="queue"></ul>
+</body>
+</html>

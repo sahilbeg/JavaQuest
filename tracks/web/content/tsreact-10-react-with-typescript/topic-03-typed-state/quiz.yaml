@@ -1,0 +1,130 @@
+topic: tsreact-10-react-with-typescript/topic-03-typed-state
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: use-state
+    prompt: "A component has let colour = \"none\"; and a button that sets colour = \"Mint\". Why does the page keep saying none?"
+    choices:
+      - "React is not told about the change, and each render starts again at let colour = \"none\"."
+      - "Strings cannot change in React."
+      - "The button needs type=\"submit\"."
+      - "The browser caches the old text."
+    answer: 0
+    explain: "Local variables last for one render, and changing them does not re-render. State fixes both."
+    reteach: "### Why a plain variable forgets"
+
+  - id: q02
+    type: fill-blank
+    concept: use-state
+    goal: "Ask React to remember a quantity that starts at 1, with a setter to change it."
+    prompt: "const [qty, setQty] = ___(1);"
+    answers: ["useState"]
+    explain: "useState returns the current value and its setter."
+    reteach: "### Syntax: useState"
+
+  - id: q03
+    type: mcq
+    concept: re-render
+    prompt: "What does calling setColour(\"Mint\") do?"
+    choices:
+      - "It stores Mint and asks React to call the component again."
+      - "It changes colour in the current render to Mint right away."
+      - "It edits the page's HTML directly, without calling the component."
+      - "It only stores Mint; the page changes on the next page load."
+    answer: 0
+    explain: "A setter stores the new value and schedules a re-render. The next render sees Mint."
+    reteach: "### What happens when you set state"
+
+  - id: q04
+    type: mcq
+    concept: re-render
+    prompt: "bag holds [\"Mint\"]. A handler runs setBag([...bag, \"Indigo\"]); then console.log(bag.length);. What is logged?"
+    choices: ["1", "2", "0", "undefined"]
+    answer: 0
+    explain: "bag is this render's snapshot. The longer array arrives in the next render."
+    reteach: "### Each render is a snapshot"
+
+  - id: q05
+    type: mcq
+    concept: state-type-inference
+    prompt: "What type does TypeScript give qty in const [qty, setQty] = useState(1);?"
+    choices: ["number", "1", "any", "unknown"]
+    answer: 0
+    explain: "useState is generic and infers its type from the starting value, widened to number."
+    reteach: "### TypeScript infers the state type"
+
+  - id: q06
+    type: spot-the-bug
+    concept: state-type-inference
+    prompt: "tsc reports Argument of type 'string' is not assignable to parameter of type 'SetStateAction<number>'. Which line?"
+    code: |
+      function Picker() {
+        const [qty, setQty] = useState(1);
+        function handleThree() {
+          setQty("3");
+        }
+        return <button type="button" onClick={handleThree}>{qty}</button>;
+      }
+    bugLine: 4
+    explain: "qty is a number, so the setter wants a number: setQty(3)."
+    reteach: "### TypeScript infers the state type"
+
+  - id: q07
+    type: mcq
+    concept: explicit-state-type
+    prompt: "Why does const [colour, setColour] = useState(null); setColour(\"Mint\"); fail to type-check?"
+    choices:
+      - "The state's type was inferred as null, so it can never hold a colour."
+      - "Setters cannot take text."
+      - "useState cannot start at null."
+      - "\"Mint\" must be written with single quotes."
+    answer: 0
+    explain: "Inference uses the starting value. Write useState<Colour | null>(null) so later colours fit."
+    reteach: "### Syntax: giving state a type"
+
+  - id: q08
+    type: fill-blank
+    concept: explicit-state-type
+    goal: "Make state that starts empty but can later hold one of the yarn colours."
+    prompt: "const [colour, setColour] = useState<___>(null);"
+    answers: ["Colour | null", "Colour|null", "null | Colour", "null|Colour"]
+    explain: "The union says: a Colour, or null for nothing chosen yet."
+    reteach: "### Syntax: giving state a type"
+
+  - id: q09
+    type: mcq
+    concept: array-state
+    prompt: "What type does useState([]) give, with no type argument?"
+    choices: ["never[]", "any[]", "string[]", "unknown[]"]
+    answer: 0
+    explain: "An empty array gives TypeScript nothing to infer from, so it becomes never[]. Write useState<Colour[]>([])."
+    reteach: "### Syntax: arrays in state"
+
+  - id: q10
+    type: spot-the-bug
+    concept: array-state
+    prompt: "Adding to the bag sometimes doesn't update the page. Which line is the bug?"
+    code: |
+      function addToBag(colour: Colour) {
+        bag.push(colour);
+        setBag(bag);
+      }
+    bugLine: 2
+    explain: "push changes the same array, so React sees no new value. Write setBag([...bag, colour])."
+    reteach: "### Syntax: arrays in state"
+
+  - id: q11
+    type: predict-output
+    concept: array-state
+    code: |
+      type Colour = "Mint" | "Indigo";
+      const bag: Colour[] = ["Mint"];
+      const next: Colour[] = [...bag, "Indigo"];
+      console.log(bag.length);
+      console.log(next.length);
+      console.log(bag === next);
+    answer: "1\n2\nfalse"
+    explain: "Spreading makes a new array. The old one keeps its single item, and the two are different arrays."
+    reteach: "### Syntax: arrays in state"

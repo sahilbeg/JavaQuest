@@ -1,0 +1,124 @@
+topic: next-11-data-and-server/topic-10-environment-and-secrets
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: process-env
+    prompt: "What is an environment variable?"
+    choices: ["A named setting given to the program from outside its code, found in process.env", "A variable declared with let at the top of a file", "A CSS custom property", "A value saved in the browser's localStorage"]
+    answer: 0
+    explain: "The same code can run with test settings on your laptop and real ones on the server."
+    reteach: "### Settings that change from place to place"
+
+  - id: q02
+    type: predict-output
+    concept: process-env
+    code: |
+      const env = { PORT: "3000" };
+      console.log(env.PORT + 1);
+      console.log(env.MISSING);
+    answer: "30001\nundefined"
+    explain: "Environment values are always text, so + joins strings. A missing one is undefined, with no error."
+    reteach: "### Settings that change from place to place"
+
+  - id: q03
+    type: fill-blank
+    concept: process-env
+    goal: "Read the UPI gateway key from the server's settings, which live outside the code."
+    prompt: "const key = process.___.UPI_GATEWAY_KEY;"
+    answers: ["env"]
+    explain: "In Node, every environment variable is a property of process.env."
+    reteach: "### Syntax: reading a variable on the server"
+
+  - id: q04
+    type: mcq
+    concept: env-files
+    prompt: "Which file holds your own secrets on your laptop, and is never committed?"
+    choices: [".env.local", ".env", "next.config.js", "package.json"]
+    answer: 0
+    explain: ".env.local is in .gitignore. .env is committed, so it only holds safe defaults."
+    reteach: "### Syntax: .env files"
+
+  - id: q05
+    type: mcq
+    concept: env-files
+    prompt: "A secret key was committed to GitHub last week. What must happen first?"
+    choices: ["Change the key with the service that issued it, straight away", "Delete the line and commit again", "Rename the file to .env.local", "Nothing, the repository is private"]
+    answer: 0
+    explain: "Git keeps every old version, so the key is still in the history. Only a new key makes the old one useless."
+    reteach: "### Syntax: .env files"
+
+  - id: q06
+    type: mcq
+    concept: next-public-prefix
+    prompt: "What happens to NEXT_PUBLIC_UPI_ID when the app is built?"
+    choices: ["Its value is written into the JavaScript files sent to the browser", "It is encrypted", "It is deleted", "It is only readable in route handlers"]
+    answer: 0
+    explain: "Browsers have no process.env, so Next.js inlines NEXT_PUBLIC_ values into client code at build time."
+    reteach: "### NEXT_PUBLIC_: values that go to the browser"
+
+  - id: q07
+    type: mcq
+    concept: next-public-prefix
+    prompt: "Which name is right for the UPI gateway's secret key?"
+    choices: ["UPI_GATEWAY_KEY", "NEXT_PUBLIC_UPI_GATEWAY_KEY", "NEXT_PUBLIC_SECRET", "NEXT_PUBLIC_UPI_KEY"]
+    answer: 0
+    explain: "Without the NEXT_PUBLIC_ prefix, the value stays on the server and never reaches a browser."
+    reteach: "### The rule for names"
+
+  - id: q08
+    type: predict-output
+    concept: next-public-prefix
+    code: |
+      const names = ["NEXT_PUBLIC_UPI_ID", "NEXT_PUBLIC_UPI_GATEWAY_KEY", "ORDERS_DB_URL", "NEXT_PUBLIC_ADMIN_PASSWORD"];
+      const leaked = names.filter((n) => n.startsWith("NEXT_PUBLIC_") && /KEY|SECRET|TOKEN|PASSWORD/.test(n));
+      console.log(leaked.join(", "));
+    answer: "NEXT_PUBLIC_UPI_GATEWAY_KEY, NEXT_PUBLIC_ADMIN_PASSWORD"
+    explain: "Both are public names that look secret. ORDERS_DB_URL isn't public, and NEXT_PUBLIC_UPI_ID looks harmless."
+    reteach: "### The rule for names"
+
+  - id: q09
+    type: mcq
+    concept: check-config-early
+    prompt: "Why check the required variables when the server starts?"
+    choices: ["To fail fast with a clear message, instead of breaking later in a confusing way", "Because Next.js deletes them after a minute", "To make the server start faster", "So customers can see the settings"]
+    answer: 0
+    explain: "A missing setting is undefined, silently. Checking at startup turns that into one clear error, before any customer meets it."
+    reteach: "### Check the settings when the server starts"
+
+  - id: q10
+    type: predict-output
+    concept: check-config-early
+    code: |
+      const env = { UPI_GATEWAY_KEY: "", ORDERS_DB_URL: "postgres://db" };
+      const missing = ["UPI_GATEWAY_KEY", "ORDERS_DB_URL"].filter((name) => !env[name]);
+      console.log(missing.length, missing[0]);
+    answer: "1 UPI_GATEWAY_KEY"
+    explain: "An empty string counts as missing, because !\"\" is true."
+    reteach: "### Check the settings when the server starts"
+
+  - id: q11
+    type: mcq
+    concept: webhook-secrets
+    prompt: "Why must the UPI webhook route check a secret on every request?"
+    choices: ["Its address is public, so anyone could send a fake \"order-17 is paid\" message", "To make the request faster", "Because route handlers can't read JSON otherwise", "Because the gateway asks for a password to read the answer"]
+    answer: 0
+    explain: "A webhook is a request like any other. Only proof of the shared secret shows it came from the gateway."
+    reteach: "### Proving a message really came from the gateway"
+
+  - id: q12
+    type: spot-the-bug
+    concept: webhook-secrets
+    prompt: "On a server where UPI_WEBHOOK_SECRET was never set, anyone can mark orders as paid. Which line is wrong?"
+    code: |
+      export async function POST(request) {
+        const secret = process.env.UPI_WEBHOOK_SECRET;
+        if (secret && request.headers.get("x-dhaaga-signature") !== secret) {
+          return Response.json({ error: "Bad signature." }, { status: 401 });
+        }
+        return Response.json({ ok: true });
+      }
+    bugLine: 3
+    explain: "secret && ... skips the whole check when there is no secret. Refuse with 500 when the secret is missing, before checking the header."
+    reteach: "### Proving a message really came from the gateway"

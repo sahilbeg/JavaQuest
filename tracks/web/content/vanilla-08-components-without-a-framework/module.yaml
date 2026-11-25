@@ -1,0 +1,6 @@
+id: vanilla-08-components-without-a-framework
+title: Components without a framework
+project: A store without a framework
+summary: Build the store from small reusable pieces with plain JavaScript, using render functions, templates, custom elements, shadow DOM, events and a small store.
+unlockAfter: web-07-tooling/boss
+mascotIntro: "Shabaash, the project has real tools now! Next, we cut the store into small pieces that look after themselves. No framework needed: the browser already knows how."

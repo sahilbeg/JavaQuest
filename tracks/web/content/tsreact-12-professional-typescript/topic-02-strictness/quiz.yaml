@@ -1,0 +1,164 @@
+topic: tsreact-12-professional-typescript/topic-02-strictness
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: strict-family
+    prompt: "What does \"strict\": true in tsconfig.json do?"
+    choices:
+      - "Turns on a whole family of checks, such as strictNullChecks and noImplicitAny"
+      - "Turns on exactly one check, strictNullChecks"
+      - "Makes the build stop on lint warnings"
+      - "Makes the JavaScript output run faster"
+    answer: 0
+    explain: "strict is a switch for a family of checks. New TypeScript versions can add more checks to the family, so strict projects get stricter as they upgrade."
+    reteach: "### What strict mode is"
+
+  - id: q02
+    type: mcq
+    concept: strict-null-checks
+    variants:
+      - prompt: "With strictNullChecks, what type does ITEMS.find(...) return, when ITEMS is Item[]?"
+        choices:
+          - "Item | undefined"
+          - "Item"
+          - "Item | null"
+          - "any"
+        answer: 0
+      - prompt: "const item = ITEMS.find((i) => i.id === id); console.log(item.name); Why does strict mode refuse the second statement?"
+        choices:
+          - "item is possibly undefined, so item.name could crash"
+          - "find can't be used on arrays in TypeScript"
+          - "console.log only accepts strings"
+          - "name is a reserved word"
+        answer: 0
+    explain: "find gives undefined when nothing matches, and with strictNullChecks that's part of its type: Item | undefined. Check for undefined first, and the type narrows to Item."
+    reteach: "### strictNullChecks: missing is its own type"
+
+  - id: q03
+    type: mcq
+    concept: no-implicit-any
+    prompt: "function lineTotal(line) { return line.paise * line.qty; } What does noImplicitAny report?"
+    choices:
+      - "Parameter 'line' implicitly has an 'any' type"
+      - "Nothing: line is inferred from how it is used"
+      - "line.paise is possibly undefined"
+      - "lineTotal has no return type"
+    answer: 0
+    explain: "TypeScript doesn't guess a parameter's type from how the body uses it. Without a type, the parameter would quietly be any, and noImplicitAny turns that into error TS7006."
+    reteach: "### noImplicitAny: no silent any"
+
+  - id: q04
+    type: predict-output
+    concept: unchecked-index
+    prompt: "The type says every lookup gives a number. What does this print?"
+    code: |
+      const stock: Record<string, number> = { Marigold: 120 };
+      const left = stock["Mint"] - 40;
+      console.log(left);
+    answer: "NaN"
+    explain: "There is no Mint key, so the lookup gives undefined, and undefined - 40 is NaN. noUncheckedIndexedAccess would make the lookup number | undefined and force a check."
+    reteach: "### Beyond strict: noUncheckedIndexedAccess"
+
+  - id: q05
+    type: predict-output
+    concept: unchecked-index
+    prompt: "What does this print?"
+    code: |
+      const PRICES: Record<string, number> = { AMI: 45000 };
+      console.log("toString" in PRICES, Object.hasOwn(PRICES, "toString"));
+    answer: "true false"
+    explain: "in also looks at keys an object inherits, and every object inherits toString. Object.hasOwn looks only at the object's own keys."
+    reteach: "### Beyond strict: noUncheckedIndexedAccess"
+
+  - id: q06
+    type: mcq
+    concept: unchecked-index
+    prompt: "Which is true about noUncheckedIndexedAccess?"
+    choices:
+      - "It isn't part of strict; it adds | undefined to lookups like PRICES[code] and lines[0]"
+      - "It is turned on by strict: true"
+      - "It stops you from using arrays"
+      - "It makes PRICES[code] always return 0 when the key is missing"
+    answer: 0
+    explain: "It's a separate option that many teams add on top of strict. It changes only the types, so the compiler makes you handle the missing case."
+    reteach: "### Beyond strict: noUncheckedIndexedAccess"
+
+  - id: q07
+    type: fill-blank
+    concept: assertions
+    goal: "Declare a check that, when it returns true, lets TypeScript treat the text as one of the five item codes."
+    prompt: "function isItemCode(text: string): text ___ ItemCode {"
+    answers: ["is"]
+    explain: "A return type like text is ItemCode makes a type predicate. After if (isItemCode(code)), code is treated as an ItemCode."
+    reteach: "### Syntax: a type predicate"
+
+  - id: q08
+    type: mcq
+    concept: assertions
+    variants:
+      - prompt: "What does PRICES[typed as ItemCode] check at run time?"
+        choices:
+          - "Nothing: as only changes what the compiler believes"
+          - "That typed is one of the five codes, throwing if not"
+          - "That typed is a string"
+          - "That PRICES has the key, returning 0 if not"
+        answer: 0
+      - prompt: "Which line is the honest way to get Golu, when he might be missing?"
+        choices:
+          - "const golu = ITEMS.find((i) => i.id === \"DC-1042\"); if (golu === undefined) return null;"
+          - "const golu = ITEMS.find((i) => i.id === \"DC-1042\")!;"
+          - "const golu = ITEMS.find((i) => i.id === \"DC-1042\") as Item;"
+          - "const golu: any = ITEMS.find((i) => i.id === \"DC-1042\");"
+        answer: 0
+    explain: "as and ! are unchecked promises to the compiler. They vanish when the code runs, so a wrong promise becomes a crash or ₹NaN. A real check handles the missing case."
+    reteach: "### as and ! switch the checks off"
+
+  - id: q09
+    type: spot-the-bug
+    concept: unknown-in-catch
+    prompt: "This fails to type-check in strict mode. Which line is the problem?"
+    code: |
+      try {
+        payByUpi();
+      } catch (error) {
+        showAlert(error.message);
+      }
+    bugLine: 4
+    explain: "The caught value is unknown, because JavaScript can throw anything. Check it first: error instanceof Error ? error.message : \"Payment failed.\""
+    reteach: "### catch gives you unknown"
+
+  - id: q10
+    type: mcq
+    concept: unknown-in-catch
+    prompt: "How is unknown different from any?"
+    choices:
+      - "Both accept any value, but unknown can't be used until you check what it is"
+      - "unknown only accepts strings"
+      - "any is safer, because it is checked at run time"
+      - "There is no difference"
+    answer: 0
+    explain: "any switches checking off. unknown keeps it on: you must narrow it with typeof, instanceof or a type predicate before using it."
+    reteach: "### catch gives you unknown"
+
+  - id: q11
+    type: mcq
+    concept: tsconfig-options
+    variants:
+      - prompt: "Which tsconfig option means \"only check the types; another tool builds the JavaScript\"?"
+        choices:
+          - "noEmit"
+          - "skipLibCheck"
+          - "target"
+          - "include"
+        answer: 0
+      - prompt: "Which tsconfig option decides which built-in types exist, such as document from the browser?"
+        choices:
+          - "lib"
+          - "target"
+          - "jsx"
+          - "moduleResolution"
+        answer: 0
+    explain: "noEmit makes tsc a checker only, which suits projects built with Vite. lib lists the built-in type sets, such as es2023 and dom."
+    reteach: "### The tsconfig options that matter"

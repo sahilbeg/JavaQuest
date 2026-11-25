@@ -1,0 +1,6 @@
+id: ts-08-typescript-basics
+title: TypeScript basics
+project: Typed prices
+summary: Add types to the JavaScript you already know, so the price calculator's mistakes show up in the editor instead of on a customer's bill.
+unlockAfter: web-07-tooling/boss
+mascotIntro: "Shabaash, you can build, test and ship a real project! Now we teach the computer to read our code before it runs. Every ticket here adds one kind of type, until every paisa in the calculator has a label."

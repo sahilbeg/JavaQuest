@@ -1,0 +1,135 @@
+topic: vanilla-09-single-page-apps/topic-05-fetching-into-the-store
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: server-data-in-store
+    variants:
+      - { prompt: "In an SPA, why does data fetched inside a screen get fetched again after Back?", choices: ["The old screen was thrown away with its data, and a new screen starts from nothing", "The browser deletes all fetched data on Back", "fetch only works once per URL", "The server asks for it again"], answer: 0 }
+      - { prompt: "Where should an SPA keep the catalogue it fetched, so every screen can use it?", choices: ["In the store, which outlives every screen", "Inside the catalogue screen's function", "In the URL", "In a CSS variable"], answer: 0 }
+    explain: "Screens come and go, but the store lives as long as the page. Data kept there survives moving between screens."
+    reteach: "### Where fetched data should live"
+
+  - id: q02
+    type: mcq
+    concept: status-slice
+    prompt: "Which items slice says a request is on its way, while keeping the items from before?"
+    choices: ["{ status: \"loading\", data: [golu, coasters], error: null }", "{ status: \"ready\", data: [], error: null }", "[golu, coasters]", "{ loading: true }"]
+    answer: 0
+    explain: "The slice holds status, data and error together. Loading with old data means the screen can keep showing the items while it refreshes."
+    reteach: "### A slice with a status"
+
+  - id: q03
+    type: predict-output
+    concept: status-slice
+    code: |
+      const before = { items: { status: "ready", data: ["DC-1042"], error: null }, route: "/items" };
+      const after = { ...before, items: { ...before.items, status: "loading" } };
+      console.log(after.items.status, after.items.data.length, after.route);
+      console.log(before.items.status);
+    answer: "loading 1 /items\nready"
+    explain: "The inner spread keeps the data, the outer one keeps the route, and the old state is left as it was."
+    reteach: "### Syntax: updating one slice"
+
+  - id: q04
+    type: mcq
+    concept: fetch-once-cache
+    prompt: "load() is called and items.status is already \"ready\". What should it do?"
+    choices: ["Return at once without fetching", "Fetch again to be safe", "Set the status to loading", "Throw an error"]
+    answer: 0
+    explain: "Ready means the data is in the store. Using it saves the customer a wait and the server a request."
+    reteach: "### Fetch once, use many times"
+
+  - id: q05
+    type: spot-the-bug
+    concept: fetch-once-cache
+    code: |
+      function load() {
+        if (store.getState().items.status !== "idle") {
+          return Promise.resolve();
+        }
+        return request();
+      }
+    bugLine: 2
+    explain: "After a failure the status is \"error\", so this never fetches again. Skip the fetch only when the status is \"ready\"."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: predict-output
+    concept: shared-request
+    code: |
+      let calls = 0;
+      let inFlight = null;
+      function load() {
+        if (inFlight === null) {
+          calls += 1;
+          inFlight = Promise.resolve("items");
+        }
+        return inFlight;
+      }
+      load();
+      load();
+      load();
+      console.log(calls);
+    answer: "1"
+    explain: "The first call starts the request and keeps its promise. The next two get the same promise, so only one request is made."
+    reteach: "### Two screens asking at once"
+
+  - id: q07
+    type: mcq
+    concept: shared-request
+    prompt: "What does it mean for a request to be in flight?"
+    choices: ["It has been sent but not answered yet", "It is being sent by plane", "It failed and is being retried", "It was cached by the browser"]
+    answer: 0
+    explain: "In flight means sent and still waiting. Callers who ask in that time should share it."
+    reteach: "### Two screens asking at once"
+
+  - id: q08
+    type: fill-blank
+    concept: shared-request
+    goal: "Forget the shared request once it settles, whether it worked or failed, so the next load can start a new one."
+    prompt: "inFlight = request().___(() => { inFlight = null; });"
+    answers: ["finally"]
+    explain: "promise.finally(callback) runs the callback after the promise settles either way."
+    reteach: "### Syntax: finally on a promise"
+
+  - id: q09
+    type: mcq
+    concept: keep-data-on-error
+    prompt: "The store has three items. A refresh fails because the connection dropped. What should the items slice become?"
+    choices: ["status \"error\", the friendly error message, and the same three items", "status \"error\" and an empty data list", "status \"ready\" with no change, hiding the error", "Nothing: let load throw the error"]
+    answer: 0
+    explain: "Keep the data the customer can still use, and record the error so the screen can offer Try again."
+    reteach: "### When it fails: keep the data, allow a retry"
+
+  - id: q10
+    type: mcq
+    concept: keep-data-on-error
+    prompt: "Why must load() never throw?"
+    choices: ["The error belongs in the store, where the screen can show it and a Try again button", "Throwing makes fetch slower", "JavaScript functions can't throw inside a store", "The server would see the error"]
+    answer: 0
+    explain: "Screens read the store. A thrown error would escape to whoever called load, and the screen would never know."
+    reteach: "### When it fails: keep the data, allow a retry"
+
+  - id: q11
+    type: spot-the-bug
+    concept: status-slice
+    code: |
+      async function request() {
+        const response = await fetch("/api/items");
+        const data = await response.json();
+        store.setState((state) => ({ ...state, items: data }));
+      }
+    bugLine: 4
+    explain: "This replaces the whole slice with the list, losing status and error. Set items to { status: \"ready\", data, error: null }."
+    reteach: "## Common mistakes"
+
+  - id: q12
+    type: mcq
+    concept: server-data-in-store
+    prompt: "The item list is loaded. The customer opens Golu's screen. How should it get Golu's name and price?"
+    choices: ["Read them from the store with a selector such as selectItem(state, \"DC-1042\")", "Fetch the whole list again", "Ask the customer", "Read them from the URL"]
+    answer: 0
+    explain: "A selector finds Golu in the data already in the store, with no new request."
+    reteach: "### Screens read with selectors"

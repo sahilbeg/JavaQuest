@@ -1,0 +1,137 @@
+topic: tsreact-10-react-with-typescript/topic-10-generic-components
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: generic-props
+    prompt: "Why make PickList generic instead of typing its options as any[]?"
+    choices:
+      - "Each use keeps its own type, so onPick gets a real GiftBox or Colour, checked by tsc."
+      - "Generic components draw faster."
+      - "any[] is not allowed in props."
+      - "Generics remove the need for keys."
+    answer: 0
+    explain: "any switches the checks off. A type parameter keeps options, onPick and renderOption in agreement."
+    reteach: "### One shape, many types"
+
+  - id: q02
+    type: fill-blank
+    concept: generic-props
+    goal: "Declare PickList with a type parameter that its props interface also uses."
+    prompt: "function PickList<T>(props: PickListProps___) {"
+    answers: ["<T>"]
+    explain: "The props interface takes the same T, so every prop agrees on one option type."
+    reteach: "### Syntax: a generic component"
+
+  - id: q03
+    type: mcq
+    concept: generic-props
+    prompt: "In a .tsx file, why might const PickList = <T>(props: PickListProps<T>) => ... fail to parse?"
+    choices:
+      - "A bare <T> at the start of an arrow function looks like a JSX tag. Write <T,> or use a function declaration."
+      - "Arrow functions can never be generic."
+      - "T is a reserved word in TSX."
+      - "Components must be classes to be generic."
+    answer: 0
+    explain: "The trailing comma, or a function declaration, tells the parser it is a type parameter."
+    reteach: "### Syntax: a generic component"
+
+  - id: q04
+    type: mcq
+    concept: type-inference
+    prompt: "BOXES is a GiftBox[]. In <PickList options={BOXES} onPick={(box) => setBox(box)} ... />, what type is box?"
+    choices: ["GiftBox", "unknown", "any", "T"]
+    answer: 0
+    explain: "tsc infers T = GiftBox from options, and onPick's parameter is a T."
+    reteach: "### TypeScript infers T from the props"
+
+  - id: q05
+    type: predict-output
+    concept: type-inference
+    code: |
+      function first<T>(options: readonly T[]): T {
+        return options[0];
+      }
+      const box = first([{ id: "box-s", label: "Small box" }]);
+      const colour = first(["Mint", "Indigo"]);
+      console.log(box.label, colour.toUpperCase());
+    answer: "Small box MINT"
+    explain: "T is inferred from each array: an object with a label, then a string."
+    reteach: "### TypeScript infers T from the props"
+
+  - id: q06
+    type: mcq
+    concept: render-props
+    prompt: "Why does PickList take renderOption instead of drawing {option} itself?"
+    choices:
+      - "PickList doesn't know what T looks like, so the caller decides what to show."
+      - "React can't draw anything inside a button."
+      - "renderOption makes the list sorted."
+      - "Render props are needed for keys."
+    answer: 0
+    explain: "A T might be an object, which React can't draw. The caller turns each option into a ReactNode."
+    reteach: "### Syntax: a render prop"
+
+  - id: q07
+    type: fill-blank
+    concept: render-props
+    goal: "Type a prop that turns one option into anything React can draw."
+    prompt: "  renderOption: (option: T) => ___;"
+    answers: ["ReactNode", "React.ReactNode"]
+    explain: "ReactNode covers text, elements, numbers and nothing."
+    reteach: "### Syntax: a render prop"
+
+  - id: q08
+    type: spot-the-bug
+    concept: render-props
+    prompt: "With gift-box objects as options, React crashes with Objects are not valid as a React child. Which line?"
+    code: |
+      {options.map((option) => (
+        <button key={getKey(option)} type="button" onClick={() => onPick(option)}>
+          {option}
+        </button>
+      ))}
+    bugLine: 3
+    explain: "An object can't be drawn. Show {renderOption(option)} instead."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: key-functions
+    prompt: "Why does PickList take getKey: (option: T) => string?"
+    choices:
+      - "It can't know which field of T is unique, so the caller says how to get a key."
+      - "React needs every key to be a function."
+      - "getKey sorts the options."
+      - "It turns objects into strings for display."
+    answer: 0
+    explain: "Keys and selection both need a stable identity, and only the caller knows what it is."
+    reteach: "### Syntax: a key function"
+
+  - id: q10
+    type: predict-output
+    concept: key-functions
+    code: |
+      interface GiftBox { id: string; label: string }
+      const getKey = (box: GiftBox): string => box.id;
+      const selected: GiftBox = { id: "box-l", label: "Large box" };
+      const option: GiftBox = { id: "box-l", label: "Large box" };
+      console.log(selected === option);
+      console.log(getKey(selected) === getKey(option));
+    answer: "false\ntrue"
+    explain: "Two separate objects are never ===, even with the same fields. Their keys match, so they are the same option."
+    reteach: "### Syntax: a key function"
+
+  - id: q11
+    type: mcq
+    concept: generic-constraints
+    prompt: "A list is declared function IdList<T extends { id: string }>(...). Which options can it take?"
+    choices:
+      - "Any objects that have an id string, like gift boxes"
+      - "Only plain strings like \"Mint\""
+      - "Anything at all"
+      - "Only numbers"
+    answer: 0
+    explain: "The constraint requires an id. Plain strings have none, which is why PickList uses getKey instead."
+    reteach: "### Syntax: a constraint instead of a key function"

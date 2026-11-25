@@ -1,0 +1,25 @@
+id: next-12-production-nextjs/topic-03-accessibility-and-seo
+title: "Accessibility and SEO"
+order: 3
+minutes: 10
+prerequisites: [next-12-production-nextjs/topic-02-performance]
+concepts: [html-lang-and-landmarks, skip-links, metadata-and-titles, generate-metadata, canonical-and-open-graph, sitemap-and-robots, route-announcer]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1203
+  from: sana
+  title: "Nobody can find us, and the tabs all look the same"
+  body: >
+    Sana here. I searched Google for "crochet elephant Pune" and dhaaga.in didn't show up at all, not even on page five.
+    Every browser tab just says Dhaaga & Co., and a Golu link on WhatsApp shows no picture.
+    Mrs. Bhosale tried the site with her screen reader and had to listen to the whole menu on every page.
+    Can you fix the frame of the site and what it tells search engines?
+hints:
+  - "Layout: <html lang=\"en-IN\"> and metadata = { metadataBase: new URL(\"https://dhaaga.in\"), title: { default: \"Dhaaga & Co.\", template: \"%s | Dhaaga & Co.\" }, description: \"...\" }. Shell: an <a href=\"#main\"> first, <nav aria-label=\"Main\"> around the links, and <main id=\"main\"> around children."
+  - "generateMetadata awaits params, gets the item, and returns { title: item.name, description: item.description, alternates: { canonical: `/items/${item.id}` }, openGraph: { ... } }. Return { title: \"Item not found\", robots: { index: false } } when there's no item."
+  - "robots.js was copied from the preview site: disallow \"/\" hides everything. sitemap.js: const items = await listItems(); return [{ url: \"https://dhaaga.in/\" }, ...items.map((item) => ({ url: `https://dhaaga.in/items/${item.id}` }))];"
+review: true

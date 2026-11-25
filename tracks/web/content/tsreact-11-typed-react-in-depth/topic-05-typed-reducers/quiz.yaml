@@ -1,0 +1,120 @@
+topic: tsreact-11-typed-react-in-depth/topic-05-typed-reducers
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: reducer-function
+    prompt: "What does a reducer do?"
+    choices: ["Takes the current state and an action, and returns the next state", "Sends requests to the server", "Renders JSX for a list", "Makes the state smaller"]
+    answer: 0
+    explain: "A reducer is a pure function: (state, action) => next state. All the rules for changes live in it."
+    reteach: "### When state changes in many ways"
+
+  - id: q02
+    type: mcq
+    concept: action-unions
+    prompt: "OrderAction is { type: \"added\"; id: string; customer: string } | { type: \"packed\"; id: string }. Which dispatch is a type error?"
+    choices: ["dispatch({ type: \"added\", id: \"order-18\" })", "dispatch({ type: \"packed\", id: \"order-17\" })", "dispatch({ type: \"added\", id: \"order-18\", customer: \"Asha Rao\" })", "None of them"]
+    answer: 0
+    explain: "An added action must carry a customer. The union lists exactly what each action needs."
+    reteach: "### Syntax: an action union"
+
+  - id: q03
+    type: mcq
+    concept: action-unions
+    prompt: "Inside case \"packed\": of switch (action.type), what is action's type?"
+    choices: ["Only the packed shape, { type: \"packed\"; id: string }", "The whole OrderAction union", "any", "never"]
+    answer: 0
+    explain: "Each case narrows the discriminated union to the one shape with that type."
+    reteach: "### Narrowing in a switch"
+
+  - id: q04
+    type: predict-output
+    concept: reducer-function
+    code: |
+      type Status = "new" | "packed" | "shipped" | "cancelled";
+      type Action = { type: "packed" } | { type: "shipped" } | { type: "cancelled" };
+      function reduce(status: Status, action: Action): Status {
+        switch (action.type) {
+          case "packed": return status === "new" ? "packed" : status;
+          case "shipped": return status === "packed" ? "shipped" : status;
+          case "cancelled": return status === "shipped" ? status : "cancelled";
+        }
+      }
+      const steps: Action[] = [{ type: "packed" }, { type: "cancelled" }, { type: "shipped" }];
+      let status: Status = "new";
+      for (const step of steps) {
+        status = reduce(status, step);
+        console.log(status);
+      }
+    answer: "packed\ncancelled\ncancelled"
+    explain: "new becomes packed. A packed order can be cancelled. A cancelled order isn't packed, so shipping leaves it cancelled."
+    reteach: "### Narrowing in a switch"
+
+  - id: q05
+    type: mcq
+    concept: use-reducer
+    prompt: "const [orders, dispatch] = useReducer(ordersReducer, start); What does dispatch({ type: \"packed\", id: \"order-17\" }) do?"
+    choices: ["React calls ordersReducer with the current orders and that action, and the result becomes the new state", "It changes start directly", "It calls the server", "It re-renders without changing state"]
+    answer: 0
+    explain: "dispatch sends the action to the reducer. Whatever the reducer returns is the next state."
+    reteach: "### Syntax: useReducer"
+
+  - id: q06
+    type: mcq
+    concept: use-reducer
+    prompt: "Where does TypeScript get the types of state and dispatch from in useReducer(ordersReducer, start)?"
+    choices: ["From the reducer's parameter and return types", "You must always write useReducer<Order[], OrderAction>", "From the JSX", "They are any"]
+    answer: 0
+    explain: "useReducer reads the state type and action type from the reducer, so dispatch only accepts its actions."
+    reteach: "### Syntax: useReducer"
+
+  - id: q07
+    type: fill-blank
+    concept: exhaustive-never
+    goal: "Declare the helper's parameter with the type that has no values, so a forgotten case can't be passed in."
+    prompt: "function assertNever(action: ___): never {"
+    answers: ["never"]
+    explain: "After every case is handled, action's type in default is never. A missing case leaves a shape that can't be passed as never."
+    reteach: "### Exhaustive checks with never"
+
+  - id: q08
+    type: mcq
+    concept: exhaustive-never
+    prompt: "Someone adds { type: \"returned\"; id: string } to OrderAction but no case for it. The default calls assertNever(action). What happens?"
+    choices: ["A type error: the returned shape is not assignable to never", "Nothing: it compiles and returned orders are ignored", "React throws when the page loads", "The returned action is handled by the cancelled case"]
+    answer: 0
+    explain: "In default, action is still the returned shape, which can't be passed where never is expected."
+    reteach: "### Exhaustive checks with never"
+
+  - id: q09
+    type: spot-the-bug
+    concept: reducer-function
+    prompt: "Pressing Pack changes nothing on the screen. Which line is wrong?"
+    code: |
+      case "packed": {
+        const next = orders.map((o) => (o.id === action.id ? { ...o, status: "packed" } : o));
+        return orders;
+      }
+    bugLine: 3
+    explain: "The new array is built but never returned. Returning the old orders means nothing changes, so React has nothing new to show. Return next."
+    reteach: "### Reducers must be pure"
+
+  - id: q10
+    type: mcq
+    concept: typed-dispatch
+    prompt: "OrderRow gets dispatch as a prop. Which type fits it?"
+    choices: ["Dispatch<OrderAction>", "Dispatch<Order[]>", "() => void", "React.ReactNode"]
+    answer: 0
+    explain: "Dispatch<OrderAction> is (action: OrderAction) => void, so the row can only send actions the reducer knows."
+    reteach: "### Typing dispatch for child components"
+
+  - id: q11
+    type: mcq
+    concept: reducer-function
+    prompt: "Shipping should also tell the courier's API. Where does the fetch go?"
+    choices: ["In the click handler, before or after dispatching the action", "Inside the shipped case of the reducer", "In the default branch", "In assertNever"]
+    answer: 0
+    explain: "Reducers must be pure. React may call them twice, which would book the courier twice."
+    reteach: "### Reducers must be pure"

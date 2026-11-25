@@ -1,0 +1,184 @@
+topic: next-12-production-nextjs/topic-04-security
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: server-only-secrets
+    variants:
+      - prompt: "A client component imports lib/payments.js, which starts with import \"server-only\". What happens?"
+        choices:
+          - "next build fails, so the secret never reaches the browser"
+          - "The secret is sent to the browser, but hidden"
+          - "The component silently gets undefined"
+          - "Nothing: the line is only a comment"
+        answer: 0
+      - prompt: "Where can process.env.UPI_SECRET be read safely?"
+        choices:
+          - "In server components, route handlers and server actions"
+          - "In any component with \"use client\""
+          - "Only in the browser"
+          - "Nowhere: Next.js deletes environment variables"
+        answer: 0
+    explain: "Environment variables without the NEXT_PUBLIC_ prefix stay on the server. import \"server-only\" turns an accidental import into a build error."
+    reteach: '### Syntax: import "server-only"'
+
+  - id: q02
+    type: mcq
+    concept: public-env-vars
+    prompt: "Which value is fine to put in a NEXT_PUBLIC_ variable?"
+    choices:
+      - "The public address of the store, https://dhaaga.in"
+      - "The UPI gateway's secret key"
+      - "The database password"
+      - "The admin token"
+    answer: 0
+    explain: "NEXT_PUBLIC_ values are written into the JavaScript every visitor downloads during next build. Only public settings belong there."
+    reteach: "### Secrets stay on the server"
+
+  - id: q03
+    type: mcq
+    concept: actions-are-public
+    variants:
+      - prompt: "Why must a server action check the session itself, even if its page already checks login?"
+        choices:
+          - "The action is a public endpoint that anyone can POST to directly, without the page"
+          - "Pages never run on the server"
+          - "Sessions expire between the page and the action"
+          - "It doesn't need to: the page's check covers it"
+        answer: 0
+      - prompt: "What can a person send to your placeOrder server action?"
+        choices:
+          - "Any fields with any values, not only the ones your form has"
+          - "Only the fields in your form, as your form fills them"
+          - "Nothing, unless they use your page"
+          - "Only numbers"
+        answer: 0
+    explain: "Next.js gives every server action an endpoint. Treat it like a public API route: check who is calling and every field it receives."
+    reteach: "### Server actions are public doors"
+
+  - id: q04
+    type: mcq
+    concept: never-trust-client-prices
+    prompt: "The Buy now form has <input type=\"hidden\" name=\"paise\" value=\"45000\">. Why is using it in the action a bug?"
+    choices:
+      - "Hidden only means not shown: a customer can change it in DevTools and pay 1 paisa"
+      - "Hidden fields are never sent"
+      - "Hidden fields are sent as numbers, not text"
+      - "It isn't a bug if the field is hidden"
+    answer: 0
+    explain: "Anything from the browser can be edited. Look the price up on the server with getItem(id) and use item.paise."
+    reteach: "### Server actions are public doors"
+
+  - id: q05
+    type: predict-output
+    concept: validate-input
+    prompt: "A form left the quantity field empty. What does this print?"
+    code: |
+      const qty = Number("");
+      console.log(qty, Number.isInteger(qty) && qty >= 1);
+    answer: "0 false"
+    explain: "Number(\"\") is 0, which is a whole number but below 1, so the check refuses it. Always check the range, not just the type."
+    reteach: "### Validating input"
+
+  - id: q06
+    type: fill-blank
+    concept: validate-input
+    goal: "Refuse a quantity like 2.5 or NaN, keeping only whole numbers before checking the range."
+    prompt: "if (!Number.___(qty) || qty < 1 || qty > 5) return { ok: false, error: \"Pick a quantity from 1 to 5\" };"
+    answers: ["isInteger"]
+    explain: "Number.isInteger is false for 2.5 and for NaN, so both are refused along with values out of range."
+    reteach: "### Validating input"
+
+  - id: q07
+    type: mcq
+    concept: access-control
+    variants:
+      - prompt: "Ravi is logged in and asks for /api/orders/order-17, which is Asha's. What should the route answer?"
+        choices:
+          - "404 Order not found, the same as for an order that doesn't exist"
+          - "403 Not your order"
+          - "200 with Asha's order"
+          - "401 Please log in"
+        answer: 0
+      - prompt: "Nobody is logged in and someone asks for /api/orders/order-17. What should the route answer?"
+        choices:
+          - "401 Please log in"
+          - "404 Order not found"
+          - "200 with the order's status only"
+          - "500 Server error"
+        answer: 0
+    explain: "Authentication first: no session gives 401. Then authorisation: someone else's order looks exactly like a missing one, so ids can't be guessed and counted."
+    reteach: "### Who may see what"
+
+  - id: q08
+    type: spot-the-bug
+    concept: access-control
+    prompt: "Any logged-in customer can read any order. Which line is missing a check?"
+    code: |
+      export async function GET(request, { params }) {
+        const { id } = await params;
+        const customerId = customerFor(sessionFromCookie(request.headers.get("cookie")));
+        if (!customerId) return Response.json({ error: "Please log in" }, { status: 401 });
+        const order = findOrder(id);
+        if (!order) return Response.json({ error: "Order not found" }, { status: 404 });
+        return Response.json({ id: order.id, status: order.status });
+      }
+    bugLine: 6
+    explain: "The route checks that someone is logged in, but never that the order is theirs. Line 6 should also refuse when order.customerId !== customerId."
+    reteach: "### Who may see what"
+
+  - id: q09
+    type: predict-output
+    concept: data-minimisation
+    prompt: "A route builds its answer from only the fields the page needs. What does this print?"
+    code: |
+      const order = { id: "order-17", status: "PACKED", phone: "98765 43210" };
+      const answer = { id: order.id, status: order.status };
+      console.log(Object.keys(answer).join(","));
+    answer: "id,status"
+    explain: "Building the answer by hand leaves the phone number out, and keeps any field added later private too."
+    reteach: "### Send only what's needed"
+
+  - id: q10
+    type: mcq
+    concept: data-minimisation
+    prompt: "The tracking page shows only an order's status. What's wrong with Response.json(order)?"
+    choices:
+      - "It also sends the phone, address and every future field to anyone watching the network tab"
+      - "Response.json can't send objects"
+      - "It makes the page static"
+      - "Nothing: the page hides the other fields"
+    answer: 0
+    explain: "Data you never send can never leak. Pick the fields the page uses."
+    reteach: "### Send only what's needed"
+
+  - id: q11
+    type: mcq
+    concept: security-headers
+    variants:
+      - prompt: "Which header can block a script smuggled into a product review from loading code from another site?"
+        choices:
+          - "Content-Security-Policy"
+          - "X-Content-Type-Options"
+          - "Referrer-Policy"
+          - "Cache-Control"
+        answer: 0
+      - prompt: "What does frame-ancestors 'none' in a Content Security Policy stop?"
+        choices:
+          - "Other sites showing your pages inside a frame, to trick customers into clicking"
+          - "Your page loading its own images"
+          - "Search engines reading the page"
+          - "Customers going back"
+        answer: 0
+    explain: "A CSP lists where scripts, styles and images may come from, and frame-ancestors controls who may frame the page. nosniff and Referrer-Policy close smaller holes."
+    reteach: "### Security headers"
+
+  - id: q12
+    type: fill-blank
+    concept: security-headers
+    goal: "Stop browsers from guessing a file's type and running a text file as a script."
+    prompt: "{ key: \"X-Content-Type-Options\", value: \"___\" }"
+    answers: ["nosniff"]
+    explain: "nosniff tells the browser to trust the Content-Type the server sends, instead of sniffing the file's contents."
+    reteach: "### Security headers"

@@ -1,0 +1,24 @@
+id: tsreact-11-typed-react-in-depth/topic-09-typed-performance
+title: "Performance with types"
+order: 9
+minutes: 10
+prerequisites: [tsreact-11-typed-react-in-depth/topic-08-typed-refs]
+concepts: [re-renders, typed-memo, stable-functions, typed-use-memo, measure-first]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1109
+  from: theo
+  title: "The order history crawls on Raju's old tablet"
+  body: >
+    Arjun here. After the Diwali rush, the order history has hundreds of rows. On the old tablet at the Aundh
+    counter, every tap on Open freezes the screen for a moment, and Raju taps twice. I profiled it: one tap
+    redraws every single row and searches the whole list again, even though nothing in the list changed.
+hints:
+  - "Wrap the row: export const OrderRow = memo(function OrderRow({ order, onOpen }: OrderRowProps) { ... }); The props type stays the same."
+  - "memo only helps when the props stay the same. handleOpen is a new function on every render, so wrap it: const handleOpen = useCallback((id: string) => setOpened(id), []);"
+  - "const shown = useMemo(() => filterOrders(orders, query), [orders, query]); TypeScript infers PastOrder[] from what the function returns."
+review: true

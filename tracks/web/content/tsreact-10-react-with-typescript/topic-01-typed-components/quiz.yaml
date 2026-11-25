@@ -1,0 +1,148 @@
+topic: tsreact-10-react-with-typescript/topic-01-typed-components
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: react-components
+    prompt: "What is a React component?"
+    choices:
+      - "A function, named with a capital letter, that returns JSX describing part of the page"
+      - "An HTML file that React loads into the page"
+      - "A CSS class that React adds to elements"
+      - "A special keyword that replaces function in React files"
+    answer: 0
+    explain: "A component is an ordinary function. It returns JSX, and its name starts with a capital letter."
+    reteach: "### Syntax: a component"
+
+  - id: q02
+    type: mcq
+    concept: react-components
+    prompt: "You wrote function itemCard() and used <itemCard />. Why does no card appear?"
+    choices:
+      - "React treats a tag with a small first letter as an HTML tag, and there is no itemCard HTML tag."
+      - "Components must be written as arrow functions."
+      - "Components cannot be used more than once."
+      - "The function must be called with itemCard() instead."
+    answer: 0
+    explain: "React tells components from HTML tags by the first letter. Rename it ItemCard."
+    reteach: "### Syntax: a component"
+
+  - id: q03
+    type: mcq
+    concept: jsx
+    prompt: "Which attribute gives a JSX element a CSS class?"
+    choices: ["className", "class", "cssClass", "styleClass"]
+    answer: 0
+    explain: "class is a keyword in JavaScript, so JSX uses className."
+    reteach: "### JSX rules"
+
+  - id: q04
+    type: spot-the-bug
+    concept: jsx
+    prompt: "This component shows nothing at all. Which line is the bug?"
+    code: |
+      export function StoreHeader() {
+        return
+          <h1>Dhaaga & Co.</h1>;
+      }
+    bugLine: 2
+    explain: "JavaScript ends a bare return at the line break, so the function returns undefined. Write return ( and close the bracket after the JSX."
+    reteach: "### JSX rules"
+
+  - id: q05
+    type: fill-blank
+    concept: typed-props
+    goal: "Type the destructured props of the item card with the interface written for it."
+    prompt: "function ItemCard({ name, paise }: ___) {"
+    answers: ["ItemCardProps"]
+    explain: "The interface goes after the destructuring braces, like any typed parameter."
+    reteach: "### Syntax: typed props"
+
+  - id: q06
+    type: mcq
+    concept: typed-props
+    prompt: "ItemCardProps needs name: string and paise: number. What happens with <ItemCard name=\"Golu the elephant\" />?"
+    choices:
+      - "tsc stops with an error saying paise is missing, before the page runs."
+      - "The card shows with a price of 0."
+      - "React fills in paise with undefined and shows a blank price, with no error."
+      - "The browser asks the customer for the price."
+    answer: 0
+    explain: "The interface is a contract. A missing required prop is a type error at that line."
+    reteach: "### TypeScript checks every use"
+
+  - id: q07
+    type: spot-the-bug
+    concept: typed-props
+    prompt: "tsc says Type 'string' is not assignable to type 'number'. Which line?"
+    code: |
+      interface ItemCardProps {
+        name: string;
+        paise: number;
+      }
+      const card = <ItemCard name="Mint keychain" paise="12000" />;
+    bugLine: 5
+    explain: "Quotes always make text. A number goes in braces: paise={12000}."
+    reteach: "### TypeScript checks every use"
+
+  - id: q08
+    type: fill-blank
+    concept: optional-props
+    goal: "Make the badge prop one that callers are allowed to leave out."
+    prompt: "  badge___: string;"
+    answers: ["?"]
+    explain: "A question mark after the name makes a property optional."
+    reteach: "### Syntax: optional props and defaults"
+
+  - id: q09
+    type: predict-output
+    concept: optional-props
+    code: |
+      interface BadgeProps {
+        text?: string;
+      }
+      function badge({ text = "Handmade" }: BadgeProps): string {
+        return `[${text}]`;
+      }
+      console.log(badge({}));
+      console.log(badge({ text: "New" }));
+      console.log(badge({ text: undefined }));
+    answer: "[Handmade]\n[New]\n[Handmade]"
+    explain: "A default value is used whenever the prop is undefined, whether it was left out or passed as undefined."
+    reteach: "### Syntax: optional props and defaults"
+
+  - id: q10
+    type: mcq
+    concept: optional-props
+    prompt: "Inside function Badge({ text = \"New\" }: BadgeProps), with text?: string in the interface, what is the type of text?"
+    choices: ["string", "string | undefined", "\"New\"", "any"]
+    answer: 0
+    explain: "The default replaces undefined, so inside the function text is always a string."
+    reteach: "### Syntax: optional props and defaults"
+
+  - id: q11
+    type: mcq
+    concept: rendering-root
+    prompt: "Why does main.tsx check if (root) before calling createRoot(root)?"
+    choices:
+      - "getElementById returns HTMLElement | null, and createRoot needs a real element."
+      - "React draws twice without the check."
+      - "The if makes the page load faster."
+      - "createRoot only accepts booleans."
+    answer: 0
+    explain: "The element might not exist. The if narrows HTMLElement | null to HTMLElement."
+    reteach: "### Putting it on the page"
+
+  - id: q12
+    type: mcq
+    concept: rendering-root
+    prompt: "What does createRoot(root).render(<StoreHeader />) do?"
+    choices:
+      - "React calls StoreHeader and creates the elements it describes inside the root element."
+      - "It downloads StoreHeader from the internet."
+      - "It replaces the whole HTML file with StoreHeader's source code."
+      - "It type-checks StoreHeader."
+    answer: 0
+    explain: "render hands React the JSX. React calls your components and creates real elements inside #root."
+    reteach: "### Putting it on the page"

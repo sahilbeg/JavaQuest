@@ -1,0 +1,25 @@
+id: next-10-nextjs-fundamentals/topic-07-loading-and-error
+title: "Loading and error pages"
+order: 7
+minutes: 10
+prerequisites: [next-10-nextjs-fundamentals/topic-06-dynamic-routes]
+concepts: [loading-file, suspense-boundary, error-file, retry, not-found-file]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1007
+  from: sam
+  title: "A blank screen while the shop loads, and a scary error when it fails"
+  body: >
+    Raju here. When the catalogue is slow, customers stare at a blank page and think the site is broken.
+    Yesterday it failed completely and showed a long message with "ECONNREFUSED" in it. Mr. Kapoor called to
+    ask if we'd been hacked! And a mistyped item address just shows a plain "404". Can the shop say something kind
+    in all three cases?
+hints:
+  - "loading.jsx and not-found.jsx are plain components: loading returns <p role=\"status\">Loading the shop...</p>, not-found returns the heading and a Link back to /items."
+  - "error.jsx must start with \"use client\";, because error pages run in the browser. It gets two props: error and retry."
+  - "Never put error.message on the page. Show the kind heading and sentence, and a <button onClick={() => retry()}>Try again</button>."
+review: true

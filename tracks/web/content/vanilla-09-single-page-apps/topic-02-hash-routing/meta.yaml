@@ -1,0 +1,24 @@
+id: vanilla-09-single-page-apps/topic-02-hash-routing
+title: "Routing with the hash"
+order: 2
+minutes: 10
+prerequisites: [vanilla-09-single-page-apps/topic-01-what-is-an-spa]
+concepts: [url-hash, hashchange-event, route-patterns, route-params, not-found-route, outlet-rendering]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0902
+  from: maya
+  title: "One page, four screens, and a router to pick them"
+  body: >
+    The new dhaaga.in has one page with an empty main element, and four screens in views.js: home, catalogue, an item and the cart.
+    Nothing decides which one to show yet. Start simple: read the part of the URL after the # sign.
+    Raju should be able to send a customer dhaaga.in/#/items/DC-1042 on WhatsApp and have Golu open straight away.
+hints:
+  - "location.hash is the text from the # onwards, such as \"#/cart\". hash.slice(1) drops the #. Split paths and patterns on \"/\" and compare them part by part."
+  - "In matchOne, a part like \":id\" matches anything that isn't empty, and saves it as params.id (the name without its colon). Any other part must be exactly equal."
+  - "render() does: const path = pathFromHash(location.hash); const match = matchRoute(routes, path); outlet.replaceChildren(match ? match.route.view(match.params) : notFound(path)). Call render() once, add it as a hashchange listener on window, and return () => window.removeEventListener(\"hashchange\", render)."
+review: true

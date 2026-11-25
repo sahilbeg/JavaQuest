@@ -1,0 +1,24 @@
+id: next-10-nextjs-fundamentals/boss
+title: "INC-10: The item page shows the wrong elephant"
+order: 99
+minutes: 12
+prerequisites: [next-10-nextjs-fundamentals/topic-10-styling-in-next]
+concepts: [params-promise, exact-match, not-found, generate-metadata]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+ticket:
+  key: INC-10
+  from: theo
+  title: "Every item page shows Rani the pink elephant"
+  body: >
+    Arjun here. Since Friday's move to Next.js, every item page shows Rani the pink elephant, whatever you tap.
+    Three customers paid for Golu on WhatsApp after seeing Rani's page, and the WhatsApp previews say Rani too.
+    Even made-up addresses like dhaaga.in/items/DC-9999 show an elephant instead of a "not found" page. The
+    weekend orders start tomorrow morning.
+hints:
+  - "Bronze: in Next.js 16, params is a Promise. What is params.id before you await it? And what does find(...) ?? items[0] give when nothing matches?"
+  - "Silver: compare ids with ===, not startsWith, and when nothing matches, call notFound() instead of falling back to items[0]."
+  - "Gold: generateMetadata uses the same lookup. Return { title: \"Item not found\" } for an unknown id. For a real item, the title is just its name, because the root layout's template already adds \" | Dhaaga & Co.\". Add openGraph with url \"/items/<id>\"."
+review: false

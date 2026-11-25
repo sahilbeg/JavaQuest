@@ -1,0 +1,129 @@
+topic: tsreact-10-react-with-typescript/topic-08-lifting-typed-state
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: lifting-state
+    prompt: "ItemList keeps the cart in its own state. Why does the header, a sibling, keep showing Cart (0)?"
+    choices:
+      - "Siblings can't read each other's state; the header only gets what its parent passes."
+      - "The header renders before ItemList, so it is always one step behind."
+      - "State only works in the top component."
+      - "The header needs its own useState for the same cart."
+    answer: 0
+    explain: "Data flows down from parents. Lift the cart into the shared parent and pass it to both."
+    reteach: "### Two components, one fact"
+
+  - id: q02
+    type: mcq
+    concept: lifting-state
+    prompt: "The header, ItemList and CartSummary all sit inside ShopPage. Where should the cart state live?"
+    choices: ["In ShopPage", "In ItemList", "In CartSummary", "In each of the three, kept in step"]
+    answer: 0
+    explain: "Put state in the closest parent that holds every component needing it."
+    reteach: "### Syntax: lifting state up"
+
+  - id: q03
+    type: mcq
+    concept: single-source-of-truth
+    prompt: "What does a single source of truth give you?"
+    choices:
+      - "Every part of the page reads the same data, so they can never disagree."
+      - "Faster loading, because there is only one component."
+      - "Data that never changes."
+      - "A copy of the data in every component."
+    answer: 0
+    explain: "One place holds the cart. Everything else reads it from there through props."
+    reteach: "### Syntax: lifting state up"
+
+  - id: q04
+    type: spot-the-bug
+    concept: single-source-of-truth
+    prompt: "CartSummary shows the first cart it got and never updates. Which line is the bug?"
+    code: |
+      function CartSummary({ lines }: CartSummaryProps) {
+        const [shown, setShown] = useState(lines);
+        return <p className="cart-count">{shown.length} lines</p>;
+      }
+    bugLine: 2
+    explain: "useState uses its argument only once, so later props are ignored. Use the lines prop directly."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: fill-blank
+    concept: typed-callbacks
+    goal: "Type a prop that the item list calls with the chosen item, returning nothing useful."
+    prompt: "  onAdd: (item: Item) => ___;"
+    answers: ["void"]
+    explain: "void says the parent's function returns nothing the child will use."
+    reteach: "### Syntax: typed callback props"
+
+  - id: q06
+    type: mcq
+    concept: typed-callbacks
+    prompt: "ItemListProps has onAdd: (item: Item) => void. Inside ItemList, which call type-checks?"
+    choices: ["onAdd(item)", "onAdd(item.id)", "onAdd()", "onAdd(item, 1)"]
+    answer: 0
+    explain: "onAdd takes exactly one Item."
+    reteach: "### Syntax: typed callback props"
+
+  - id: q07
+    type: mcq
+    concept: typed-callbacks
+    prompt: "Who decides what happens when a child calls its onRemove prop?"
+    choices: ["The parent that passed onRemove", "The child", "React itself", "The browser"]
+    answer: 0
+    explain: "The child only reports what happened. The parent's function holds the rules."
+    reteach: "### Syntax: typed callback props"
+
+  - id: q08
+    type: predict-output
+    concept: updating-objects-in-arrays
+    code: |
+      interface Line { id: string; qty: number }
+      const cart: Line[] = [{ id: "DC-1042", qty: 1 }, { id: "DC-1043", qty: 2 }];
+      const next = cart.map((line) => (line.id === "DC-1043" ? { ...line, qty: line.qty + 1 } : line));
+      console.log(next[1].qty, cart[1].qty);
+      console.log(next[0] === cart[0], next[1] === cart[1]);
+    answer: "3 2\ntrue false"
+    explain: "Only the matching line becomes a new object. The others are reused, and the old cart is untouched."
+    reteach: "### Syntax: updating one object in an array"
+
+  - id: q09
+    type: spot-the-bug
+    concept: updating-objects-in-arrays
+    prompt: "Pressing Add again on Golu doesn't always change the quantity shown. Which line is the bug?"
+    code: |
+      function add(item: Item) {
+        const line = cart.find((l) => l.item.id === item.id);
+        if (line) {
+          line.qty += 1;
+          setCart(cart);
+        }
+      }
+    bugLine: 4
+    explain: "It changes the existing object and passes the same array, so React may see nothing new. Build a new array with map."
+    reteach: "### Syntax: updating one object in an array"
+
+  - id: q10
+    type: fill-blank
+    concept: updating-objects-in-arrays
+    goal: "Keep every cart line except the one whose item has this id."
+    prompt: "setCart(cart.___((line) => line.item.id !== id));"
+    answers: ["filter"]
+    explain: "filter makes a new array with the lines for which the test is true."
+    reteach: "### Syntax: updating one object in an array"
+
+  - id: q11
+    type: mcq
+    concept: setter-types
+    prompt: "What is the type of setCart from useState<CartLine[]>([])?"
+    choices:
+      - "Dispatch<SetStateAction<CartLine[]>>"
+      - "(cart: CartLine) => void"
+      - "CartLine[]"
+      - "() => CartLine[]"
+    answer: 0
+    explain: "A setter takes a new value, or a function from the old value to a new one."
+    reteach: "### Syntax: passing a setter down"

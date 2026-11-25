@@ -1,0 +1,134 @@
+topic: ts-08-typescript-basics/topic-03-typed-functions
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: parameter-types
+    prompt: "lineTotal(paise: number, qty: number) is called as lineTotal(\"15000\", 2). What does tsc report?"
+    choices: ["Argument of type 'string' is not assignable to parameter of type 'number'", "Expected 2 arguments, but got 1", "Nothing: \"15000\" looks like a number", "Type 'number' is not assignable to type 'string'"]
+    answer: 0
+    explain: "The first argument is text, and the paise parameter is typed number."
+    reteach: "### Syntax: typed parameters"
+
+  - id: q02
+    type: predict-output
+    concept: default-parameters
+    code: |
+      function splitBill(totalPaise: number, people = 2): number {
+        return Math.floor(totalPaise / people);
+      }
+      console.log(splitBill(45000));
+      console.log(splitBill(45000, 4));
+    answer: "22500\n11250"
+    explain: "The first call leaves people out, so the default 2 is used. The second passes 4."
+    reteach: "### Syntax: default values"
+
+  - id: q03
+    type: predict-output
+    concept: optional-parameters
+    code: |
+      function withWrap(paise: number, giftWrap?: boolean): number {
+        return giftWrap ? paise + 3000 : paise;
+      }
+      console.log(withWrap(12000));
+      console.log(withWrap(12000, true));
+    answer: "12000\n15000"
+    explain: "Left out, giftWrap is undefined, which is falsy. Passed as true, it adds the ₹30 wrap."
+    reteach: "### Syntax: optional parameters"
+
+  - id: q04
+    type: fill-blank
+    concept: optional-parameters
+    goal: "Let callers leave out the name to stitch on, so this parameter may be missing."
+    prompt: "function stitchedPrice(paise: number, name___: string): number {"
+    answers: ["?"]
+    explain: "A ? after a parameter's name makes it optional. When it's left out, it's undefined."
+    reteach: "### Syntax: optional parameters"
+
+  - id: q05
+    type: fill-blank
+    concept: return-types
+    goal: "Promise that this function gives nothing back, because it only prints the total."
+    prompt: "function logTotal(paise: number): ___ {"
+    answers: ["void"]
+    explain: "void is the return type of a function that only does something, like printing."
+    reteach: "### Syntax: void"
+
+  - id: q06
+    type: mcq
+    concept: return-types
+    prompt: "deliveryFee(subtotal: number): number returns 0 inside an if, and has no return after it. What does tsc say?"
+    choices: ["Function lacks ending return statement and return type does not include 'undefined'", "Nothing, because the if usually runs", "Expected 1 arguments, but got 0", "Type 'string' is not assignable to type 'number'"]
+    answer: 0
+    explain: "When the if doesn't run, the function would give back undefined, which breaks its promise to return a number."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: spot-the-bug
+    concept: parameter-types
+    code: |
+      function withExtras(paise: number, giftWrap?: boolean): number {
+        return giftWrap ? paise + 3000 : paise;
+      }
+      const booties = withExtras(35000, true);
+      const bag = withExtras(true, 89900);
+    bugLine: 5
+    explain: "The arguments are swapped. paise must be a number, so tsc reports: Argument of type 'boolean' is not assignable to parameter of type 'number'."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: predict-output
+    concept: rest-parameters
+    code: |
+      function sumAll(...amounts: number[]): number {
+        let sum = 0;
+        for (const amount of amounts) {
+          sum += amount;
+        }
+        return sum;
+      }
+      console.log(sumAll(15000, 12000));
+      console.log(sumAll());
+    answer: "27000\n0"
+    explain: "...amounts collects the arguments into an array. With none, the array is empty and the sum stays 0."
+    reteach: "### Syntax: rest parameters"
+
+  - id: q09
+    type: mcq
+    concept: function-types
+    prompt: "Which type fits the function (paise: number) => Math.floor(paise / 10)?"
+    choices: ["(paise: number) => number", "(paise: number) => string", "(paise: number) => void", "number"]
+    answer: 0
+    explain: "It takes a number and gives back a number, so its type is (paise: number) => number."
+    reteach: "### Syntax: function types"
+
+  - id: q10
+    type: predict-output
+    concept: function-types
+    code: |
+      function applyOffer(paise: number, offer: (paise: number) => number): number {
+        return paise - offer(paise);
+      }
+      console.log(applyOffer(150000, (p) => p / 10));
+    answer: "135000"
+    explain: "offer is called with 150000 and gives back 15000. 150000 minus 15000 is 135000."
+    reteach: "### Syntax: function types"
+
+  - id: q11
+    type: mcq
+    concept: optional-parameters
+    prompt: "Why does tsc reject return name.toUpperCase(); when the parameter is name?: string?"
+    choices: ["name might be undefined, because callers may leave it out", "Strings can't be upper-cased in TypeScript", "Optional parameters can't be used inside the function", "toUpperCase needs an argument"]
+    answer: 0
+    explain: "An optional parameter is undefined when it's left out. Check it first: name ? name.toUpperCase() : \"\"."
+    reteach: "## Common mistakes"
+
+  - id: q12
+    type: mcq
+    concept: default-parameters
+    prompt: "In function splitBill(totalPaise: number, people = 2), what type does people have?"
+    choices: ["number, inferred from the default 2", "any, because it has no annotation", "2, and no other value is allowed", "undefined"]
+    answer: 0
+    explain: "A default value gives the parameter its type, so people is a number and callers may pass 3 or 4."
+    reteach: "### Syntax: default values"

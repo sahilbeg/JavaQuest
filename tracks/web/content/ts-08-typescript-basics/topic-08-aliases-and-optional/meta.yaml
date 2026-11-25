@@ -1,0 +1,23 @@
+id: ts-08-typescript-basics/topic-08-aliases-and-optional
+title: "Type aliases and optional values"
+order: 8
+minutes: 10
+prerequisites: [ts-08-typescript-basics/topic-07-narrowing]
+concepts: [type-aliases, type-vs-interface, optional-properties, optional-chaining, nullish-coalescing]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0808
+  from: sam
+  title: "A cancelled line came back as one keychain"
+  body: >
+    Raju here. Mrs. Deshpande cancelled the keychain on her order, so I set its quantity to 0. The order system
+    still charged her for one. The same code crashes when a customer has no address, because they collect from
+    the stall. Kavya has named the order types in src/orders.ts. Can you make it handle the missing bits properly?
+hints:
+  - "An optional property you didn't get is undefined, which is falsy. line.giftWrap ? GIFT_WRAP : 0 works for true, false and missing."
+  - "customer.address?.city gives undefined instead of crashing when there's no address. Add ?? \"Pickup at the stall\" for the fallback."
+  - "qty ?? 1 only uses 1 when qty is undefined or null. qty || 1 would turn 0 into 1, which is the bug in the ticket."
+review: true

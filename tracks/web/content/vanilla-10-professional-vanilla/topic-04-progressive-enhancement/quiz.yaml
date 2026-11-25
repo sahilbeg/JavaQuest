@@ -1,0 +1,157 @@
+topic: vanilla-10-professional-vanilla/topic-04-progressive-enhancement
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: layers
+    prompt: "The stylesheet fails to load on a customer's phone. In a progressively enhanced shop page, what still works?"
+    choices:
+      - "Every link and form: the page looks plain but the customer can still search and order"
+      - "Nothing, because the page needs CSS to show buttons"
+      - "Only the links, not the forms"
+      - "Only what the JavaScript draws"
+    answer: 0
+    explain: "Each layer improves the one below. HTML does the work, CSS makes it look good, so losing CSS only loses the looks."
+    reteach: "### What progressive enhancement means"
+
+  - id: q02
+    type: mcq
+    concept: when-scripts-fail
+    prompt: "On slow data, a customer taps Add to cart before main.js has arrived. The button is inside <form action=\"/cart\" method=\"post\">. What happens?"
+    choices:
+      - "The browser posts the form to /cart, and the page reloads with the item in the cart"
+      - "Nothing, until the script arrives"
+      - "The browser waits for main.js, then adds the item"
+      - "The tap is saved and replayed later"
+    answer: 0
+    explain: "A real form works without any script: the browser sends it, and the server answers with a new page. The script only makes it smoother later."
+    reteach: "### When the script doesn't run"
+
+  - id: q03
+    type: fill-blank
+    concept: html-baseline
+    goal: "Send the search words in the address, so the results page can be bookmarked and shared."
+    prompt: "<form action=\"/search\" method=\"___\">"
+    answers: ["get", "GET"]
+    explain: "method=\"get\" puts the fields in the address, like /search?q=golu. Use it for things that only read."
+    reteach: "### Syntax: a form that works without JavaScript"
+
+  - id: q04
+    type: mcq
+    concept: html-baseline
+    prompt: "A form has <input id=\"phone\" type=\"tel\"> with no name attribute. What does the browser send for it?"
+    choices:
+      - "Nothing: fields without a name are not sent"
+      - "phone=98765 43210, using its id"
+      - "tel=98765 43210, using its type"
+      - "An error, and the form doesn't submit"
+    answer: 0
+    explain: "Forms send each field under its name. With no name, the field is left out, and the server never sees the number."
+    reteach: "### Syntax: a form that works without JavaScript"
+
+  - id: q05
+    type: spot-the-bug
+    concept: html-baseline
+    prompt: "Without JavaScript, the server gets this form but doesn't know which item to add. Which line is wrong?"
+    code: |
+      <form class="add" action="/cart" method="post">
+        <input type="hidden" value="DC-1042">
+        <button type="submit">Add to cart</button>
+      </form>
+    bugLine: 2
+    explain: "The hidden input has no name, so it isn't sent. Write <input type=\"hidden\" name=\"id\" value=\"DC-1042\">."
+    reteach: "### Syntax: a form that works without JavaScript"
+
+  - id: q06
+    type: mcq
+    concept: feature-detection
+    prompt: "Which line is a good way to decide whether to lazy-load photos?"
+    choices:
+      - "if (\"IntersectionObserver\" in window)"
+      - "if (navigator.userAgent.includes(\"Chrome\"))"
+      - "if (window.innerWidth > 600)"
+      - "if (location.hostname === \"dhaaga.in\")"
+    answer: 0
+    explain: "Feature detection checks for the feature itself. Guessing from the browser's name breaks whenever browsers change."
+    reteach: "### Syntax: feature detection"
+
+  - id: q07
+    type: mcq
+    concept: feature-detection
+    prompt: "enhance() finds that the browser has no fetch. What should it do?"
+    choices:
+      - "Return without adding listeners, so the forms keep working with normal page loads"
+      - "Disable every form on the page"
+      - "Show a message asking the customer to change browsers"
+      - "Add the listeners anyway and hope"
+    answer: 0
+    explain: "The plain HTML already works. Without the feature, simply don't enhance: the customer gets reloads, not a broken page."
+    reteach: "### Syntax: feature detection"
+
+  - id: q08
+    type: spot-the-bug
+    concept: enhancing-forms
+    prompt: "This enhanced Add to cart still reloads the page. Which line is the problem?"
+    code: |
+      form.addEventListener("submit", async (event) => {
+        const button = form.querySelector("button");
+        button.disabled = true;
+        const response = await fetch(form.action, { method: "POST", body: new FormData(form) });
+        event.preventDefault();
+        button.disabled = false;
+      });
+    bugLine: 5
+    explain: "After the await, the event has finished and the browser is already submitting. preventDefault must be the first thing the listener does."
+    reteach: "### Enhancing a form"
+
+  - id: q09
+    type: mcq
+    concept: enhancing-forms
+    prompt: "Why listen for the form's submit event rather than the button's click?"
+    choices:
+      - "submit also fires when the customer presses Enter in a field"
+      - "click events don't work on buttons inside forms"
+      - "submit fires before the page loads"
+      - "submit can't be cancelled, so it's safer"
+    answer: 0
+    explain: "A form can be sent by a click, a tap, or Enter in a field. The submit event catches all of them."
+    reteach: "### Enhancing a form"
+
+  - id: q10
+    type: mcq
+    concept: enhancing-forms
+    prompt: "Why disable the Add to cart button while the request is on its way?"
+    choices:
+      - "So an impatient double-tap doesn't send the order twice"
+      - "So the button looks nicer"
+      - "Because fetch fails if the button is enabled"
+      - "So screen readers stop reading the page"
+    answer: 0
+    explain: "Without it, two quick taps send two requests and add two items. Re-enable it in finally, whether the request worked or not."
+    reteach: "### Enhancing a form"
+
+  - id: q11
+    type: predict-output
+    concept: shareable-urls
+    prompt: "What does this print?"
+    code: |
+      const params = new URLSearchParams("?q=baby+booties&colour=Mint");
+      params.set("q", "tote bag");
+      console.log(params.toString());
+    answer: "q=tote+bag&colour=Mint"
+    explain: "set replaces the value of q where it is, and toString writes the space as +, like a form does."
+    reteach: "### Keeping the address in step"
+
+  - id: q12
+    type: mcq
+    concept: shareable-urls
+    prompt: "The enhanced search filters in place. Why should it also call history.replaceState(null, \"\", \"?q=golu\")?"
+    choices:
+      - "So a refresh or a shared link shows the same search, like the plain form's address did"
+      - "Because filtering doesn't work without it"
+      - "So the Back button has one step per letter typed"
+      - "To send the search to the server"
+    answer: 0
+    explain: "The plain form put the search in the address. Keeping the address in step means the enhanced page is just as shareable, and replaceState adds no extra Back steps."
+    reteach: "### Keeping the address in step"

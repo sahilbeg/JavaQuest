@@ -1,0 +1,148 @@
+topic: vanilla-10-professional-vanilla/topic-05-seo-and-sharing
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: title-and-description
+    prompt: "Where does a page's <title> show up?"
+    choices:
+      - "As the blue link in search results, and as the name of the browser tab"
+      - "As the biggest heading on the page"
+      - "Only in the page's source, never to customers"
+      - "As the picture in a WhatsApp preview"
+    answer: 0
+    explain: "The title names the page for search results and tabs. The visible heading on the page is the <h1>, which is a different element."
+    reteach: "### Syntax: title and meta description"
+
+  - id: q02
+    type: mcq
+    concept: title-and-description
+    prompt: "What does a good meta description mainly change?"
+    choices:
+      - "How many people click the result, because it is often the text under the link"
+      - "The page's position in the results"
+      - "How fast the page loads"
+      - "The text of the browser tab"
+    answer: 0
+    explain: "Search engines often show the description under the title. It doesn't push the page up, but a clear one makes people choose it."
+    reteach: "### Syntax: title and meta description"
+
+  - id: q03
+    type: mcq
+    concept: meaningful-urls
+    prompt: "Why is https://dhaaga.in/#/products/DC-1042 a weak address for Golu's page?"
+    choices:
+      - "The part after # never reaches the server, so crawlers see every product as the home page"
+      - "Addresses can't contain the letters DC"
+      - "The # makes the page load slower"
+      - "Browsers can't bookmark addresses with #"
+    answer: 0
+    explain: "The hash stays in the browser. Real paths like /products/DC-1042, with History API routing, give each product its own page to crawlers."
+    reteach: "### Meaningful URLs"
+
+  - id: q04
+    type: fill-blank
+    concept: meaningful-urls
+    goal: "Tell search engines that this address is the one main address of the page, so copies with ?ref= don't compete."
+    prompt: "<link rel=\"___\" href=\"https://dhaaga.in/products/DC-1042\">"
+    answers: ["canonical"]
+    explain: "rel=\"canonical\" names the main address. Copies such as ?ref=whatsapp then count as the same page."
+    reteach: "### Meaningful URLs"
+
+  - id: q05
+    type: mcq
+    concept: link-previews
+    prompt: "Golu's WhatsApp preview shows his name but no picture. The page has <meta property=\"og:image\" content=\"/img/DC-1042-1200.jpg\">. What's wrong?"
+    choices:
+      - "The image address must be a full https:// address"
+      - "og:image only works for PNG files"
+      - "The picture is too small to be shown"
+      - "WhatsApp never shows pictures"
+    answer: 0
+    explain: "Preview bots fetch the image from their own servers, so a path means nothing to them. Use https://dhaaga.in/img/DC-1042-1200.jpg."
+    reteach: "### Syntax: Open Graph tags"
+
+  - id: q06
+    type: fill-blank
+    concept: link-previews
+    goal: "Give WhatsApp the picture to show on Golu's link preview card."
+    prompt: "<meta property=\"___\" content=\"https://dhaaga.in/img/DC-1042-1200.jpg\">"
+    answers: ["og:image"]
+    explain: "og:image is the Open Graph tag for the preview picture, next to og:title, og:description and og:url."
+    reteach: "### Syntax: Open Graph tags"
+
+  - id: q07
+    type: mcq
+    concept: rendering-for-crawlers
+    prompt: "Golu's page sends <div id=\"app\"></div>, and main.js adds his name, photo and og tags. What does WhatsApp's preview bot see?"
+    choices:
+      - "No og tags at all, because it doesn't run JavaScript, so the preview is blank"
+      - "Everything, because it runs main.js like a browser"
+      - "Golu's name but not his photo"
+      - "An error message from main.js"
+    answer: 0
+    explain: "Preview bots read the HTML the server sends and don't run scripts. Tags added by JavaScript never reach them."
+    reteach: "### Pages drawn by JavaScript"
+
+  - id: q08
+    type: mcq
+    concept: rendering-for-crawlers
+    prompt: "What does prerendering the product pages mean for a static site?"
+    choices:
+      - "Building a real HTML file for each product at build time, with its content and tags already inside"
+      - "Loading main.js before the HTML"
+      - "Showing a loading spinner while the products download"
+      - "Asking Google to run your JavaScript faster"
+    answer: 0
+    explain: "A build script fills a template for every product and saves the files. Crawlers and preview bots read full pages, and the script enhances them for customers."
+    reteach: "### Pages drawn by JavaScript"
+
+  - id: q09
+    type: mcq
+    concept: sitemaps-and-robots
+    prompt: "Can robots.txt keep the admin page /admin/orders private?"
+    choices:
+      - "No: it's only a polite request to crawlers, and anyone can still open the address"
+      - "Yes: browsers refuse to open pages listed in robots.txt"
+      - "Yes: the server deletes pages listed in it"
+      - "Only if the page has no links to it"
+    answer: 0
+    explain: "robots.txt asks well-behaved crawlers to skip pages. Private pages need real protection, like signing in."
+    reteach: "### robots.txt and sitemap.xml"
+
+  - id: q10
+    type: predict-output
+    concept: sitemaps-and-robots
+    prompt: "A build script makes sitemap lines. What does it print?"
+    code: |
+      const ids = ["DC-1042", "DC-1301"];
+      const lines = ids.map((id) => `<loc>https://dhaaga.in/products/${id}</loc>`);
+      console.log(lines.length + " " + lines[1]);
+    answer: "2 <loc>https://dhaaga.in/products/DC-1301</loc>"
+    explain: "map makes one line per id, so there are 2. The second line holds DC-1301's address."
+    reteach: "### robots.txt and sitemap.xml"
+
+  - id: q11
+    type: mcq
+    concept: structured-data
+    prompt: "What is a <script type=\"application/ld+json\"> block on a product page for?"
+    choices:
+      - "Telling search engines, in schema.org terms, that the page is a product with a price"
+      - "Running code when the page loads"
+      - "Drawing the WhatsApp preview picture"
+      - "Hiding the price from customers"
+    answer: 0
+    explain: "Browsers don't run JSON-LD. Search engines read it, and may show the price and stock under the link."
+    reteach: "### Structured data"
+
+  - id: q12
+    type: predict-output
+    concept: structured-data
+    prompt: "A build script writes the offer for Golu's JSON-LD. What does it print?"
+    code: |
+      const offer = { price: (45000 / 100).toFixed(2), priceCurrency: "INR" };
+      console.log(JSON.stringify(offer));
+    answer: '{"price":"450.00","priceCurrency":"INR"}'
+    explain: "45000 paise is 450, and toFixed(2) makes the text \"450.00\". JSON.stringify writes the object with no spaces."
+    reteach: "### Structured data"

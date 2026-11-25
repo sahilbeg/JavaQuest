@@ -1,0 +1,22 @@
+id: next-12-production-nextjs/topic-05-deploying-next
+title: "Deploying Next.js"
+order: 5
+minutes: 10
+prerequisites: [next-12-production-nextjs/topic-04-security]
+concepts: [next-build-and-start, deployment-options, static-export-limits, standalone-docker, runtime-env, caching-in-production, version-skew-and-rollback]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: NXT-1205
+  from: maya
+  title: "Where does the Next.js store run on Friday?"
+  body: >
+    The old React store was just files on a static host. The Next.js one has server actions, a stock API and cookies, so it needs somewhere that runs a server.
+    Before Friday I want to choose between a platform and our own Docker container, and know how we roll back if checkout breaks at 10:05.
+    Read up on how Next.js gets deployed so we can decide together.
+hints:
+  - "next build makes a .next folder with server code and hashed static files. next start runs it as a Node.js server, which supports every feature."
+  - "A static export (output: \"export\") is only files, so anything that needs a request at runtime is lost: server actions, cookies, proxy and route handlers that read the request."
+  - "NEXT_PUBLIC_ values are fixed at build time; other variables can be read at runtime. With several servers, set a deploymentId and one shared Server Actions key, and keep old versions for a one-click rollback."
+review: true

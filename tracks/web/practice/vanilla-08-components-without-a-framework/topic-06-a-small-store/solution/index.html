@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cart | Dhaaga &amp; Co.</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #FAF7F0; color: #2E3A8C; margin: 1rem; }
+    header { display: flex; justify-content: space-between; align-items: center; }
+    cart-count { background: #F2A81D; border-radius: 999px; padding: 0.25rem 0.75rem; }
+    button { font: inherit; margin: 0.25rem; }
+  </style>
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Dhaaga &amp; Co.</h1>
+    <span id="badge-spot"></span>
+  </header>
+  <button type="button" data-add="DC-1042">Add Golu the elephant</button>
+  <button type="button" data-add="DC-1001">Add Marigold coaster set</button>
+  <button type="button" id="toggle-badge">Hide or show the header badge</button>
+  <p>Drawer: <span id="drawer-spot"></span></p>
+</body>
+</html>

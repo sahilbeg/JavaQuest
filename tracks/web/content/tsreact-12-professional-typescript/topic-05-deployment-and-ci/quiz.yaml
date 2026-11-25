@@ -1,0 +1,159 @@
+topic: tsreact-12-professional-typescript/topic-05-deployment-and-ci
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: build-strips-types
+    variants:
+      - prompt: "A file has a type error. What does vite build do with it?"
+        choices:
+          - "It strips the types and builds it anyway; Vite doesn't type-check"
+          - "It stops with the type error"
+          - "It fixes the type error"
+          - "It skips that file"
+        answer: 0
+      - prompt: "Which tool in a Vite project actually checks that the types fit together?"
+        choices:
+          - "tsc"
+          - "esbuild"
+          - "the browser"
+          - "npm ci"
+        answer: 0
+    explain: "Vite hands each file to esbuild, which strips types one file at a time, very fast, without checking them. Only tsc reads the whole project and checks types."
+    reteach: "### The build doesn't check types"
+
+  - id: q02
+    type: predict-output
+    concept: build-strips-types
+    prompt: "Node strips types and runs this, like a build would. What does it print?"
+    code: |
+      function withGiftWrap(paise: number): number {
+        return paise + 3000;
+      }
+      const fromForm = "12000" as unknown as number;
+      console.log(withGiftWrap(fromForm));
+    answer: "120003000"
+    explain: "The cast hides that fromForm is really text, and nothing checks types at run time. Text + 3000 joins them: \"120003000\"."
+    reteach: "### The build doesn't check types"
+
+  - id: q03
+    type: fill-blank
+    concept: typecheck-script
+    goal: "Check every file in the project for type errors without writing any JavaScript output."
+    prompt: "\"typecheck\": \"tsc ___\""
+    answers: ["--noEmit"]
+    explain: "tsc --noEmit only checks. Vite does the building, so tsc doesn't need to write files."
+    reteach: "### The build doesn't check types"
+
+  - id: q04
+    type: mcq
+    concept: typecheck-script
+    prompt: "Why write import type { CartLine } from \"./types.ts\" in a Vite project?"
+    choices:
+      - "A one-file-at-a-time tool can then remove the line safely, because it knows CartLine is only a type"
+      - "It makes CartLine a value"
+      - "It downloads the types from npm"
+      - "It runs the type check"
+    answer: 0
+    explain: "esbuild sees one file at a time, so it can't tell types from values. import type removes all doubt. isolatedModules or verbatimModuleSyntax makes tsc insist on it."
+    reteach: "### Syntax: isolatedModules and import type"
+
+  - id: q05
+    type: mcq
+    concept: ci-pipeline
+    prompt: "Which order of CI steps is best for a typed frontend?"
+    choices:
+      - "npm ci, lint, type check, tests, build"
+      - "build, tests, type check, npm ci, lint"
+      - "tests, build, then npm ci"
+      - "build only: if it builds, it works"
+    answer: 0
+    explain: "Install first, then the cheap fast checks, so a mistake fails in seconds. The slow build comes last, only when everything before it passed."
+    reteach: "### The CI pipeline"
+
+  - id: q06
+    type: mcq
+    concept: ci-pipeline
+    prompt: "A pipeline's type check fails. What should happen next?"
+    choices:
+      - "The pipeline stops, the pull request shows red, and it can't merge"
+      - "The pipeline carries on and deploys, then reports the error"
+      - "The type check is retried until it passes"
+      - "The build fixes the error"
+    answer: 0
+    explain: "Each step is a gate. A failure stops the pipeline, and a branch rule on main keeps red pull requests from merging."
+    reteach: "### The CI pipeline"
+
+  - id: q07
+    type: mcq
+    concept: lockfile-installs
+    prompt: "Why use npm ci instead of npm install in CI?"
+    choices:
+      - "It installs exactly the versions in the lockfile, so CI checks with the same TypeScript and types as your laptop"
+      - "It installs the newest version of every package"
+      - "It skips installing TypeScript"
+      - "It is the only command that works on Linux"
+    answer: 0
+    explain: "npm ci follows package-lock.json exactly and fails if it disagrees with package.json. A different TypeScript or @types version could find, or miss, different errors."
+    reteach: "### npm ci and the lockfile"
+
+  - id: q08
+    type: mcq
+    concept: typed-env-vars
+    variants:
+      - prompt: "Where do you give import.meta.env.VITE_API_URL a type in a Vite project?"
+        choices:
+          - "In an ImportMetaEnv interface in src/vite-env.d.ts"
+          - "In package.json"
+          - "In the .env file, after the value"
+          - "Nowhere: it can't be typed"
+        answer: 0
+      - prompt: "VITE_UPI_PAYEE is typed as a readonly string. What does that NOT prove?"
+        choices:
+          - "That the value was really set for this deploy"
+          - "That the name is spelt right where you use it"
+          - "That it is text, not a number"
+          - "That you can't assign to it"
+        answer: 0
+    explain: "A .d.ts declaration types the environment, so a typo is a type error. But the type is a promise about the shape; check once at start-up that the value really exists."
+    reteach: "### Typing environment variables"
+
+  - id: q09
+    type: mcq
+    concept: typed-env-vars
+    prompt: "Which value is safe to put in a VITE_ variable?"
+    choices:
+      - "The public address of the stock API"
+      - "The UPI gateway's secret key"
+      - "The database password"
+      - "An admin login token"
+    answer: 0
+    explain: "Every VITE_ value is built into the JavaScript customers download, so it's public. Secrets stay on a server."
+    reteach: "### Typing environment variables"
+
+  - id: q10
+    type: mcq
+    concept: deploy-and-rollback
+    prompt: "A deploy shows wrong prices to customers. What is the best first move?"
+    choices:
+      - "Roll back to the previous build, then fix forward with a reviewed pull request"
+      - "Push quick fixes straight to main until one works"
+      - "Turn off the type check so a fix can ship faster"
+      - "Wait for customers to report more details"
+    answer: 0
+    explain: "A frontend deploy is a folder of files, so serving the last good build takes seconds. Then fix calmly, through the normal pipeline."
+    reteach: "### Deploying, and rolling back"
+
+  - id: q11
+    type: mcq
+    concept: deploy-and-rollback
+    prompt: "What do source maps do for a deployed TypeScript app?"
+    choices:
+      - "They let error reports point at your .tsx lines instead of the minified JavaScript"
+      - "They type-check the app in the browser"
+      - "They make the download smaller"
+      - "They hide the code from customers"
+    answer: 0
+    explain: "The browser runs minified JavaScript. A source map links it back to your source files, so a crash report names the real file and line."
+    reteach: "### Deploying, and rolling back"

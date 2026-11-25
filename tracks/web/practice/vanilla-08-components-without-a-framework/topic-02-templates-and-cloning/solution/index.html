@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catalogue | Dhaaga &amp; Co.</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #FAF7F0; color: #2E3A8C; margin: 1rem; }
+    #catalogue { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+    .product { background: #fff; border: 2px solid #2E3A8C; border-radius: 12px; padding: 1rem; }
+    .photo { width: 100%; aspect-ratio: 1; background: #F2A81D; border-radius: 8px; }
+    .add { background: #F2A81D; border: 0; border-radius: 8px; padding: 0.5rem 1rem; font: inherit; }
+  </style>
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <h1>Dhaaga &amp; Co.</h1>
+
+  <template id="product-card">
+    <li class="product">
+      <img class="photo" alt="">
+      <h3 class="name"></h3>
+      <p class="price"></p>
+      <button class="add" type="button">Add to cart</button>
+    </li>
+  </template>
+
+  <ul id="catalogue"></ul>
+</body>
+</html>

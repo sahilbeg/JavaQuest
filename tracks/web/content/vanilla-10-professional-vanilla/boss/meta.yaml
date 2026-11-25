@@ -1,0 +1,23 @@
+id: vanilla-10-professional-vanilla/boss
+title: "INC-10: The mock interview loop, no framework allowed"
+order: 99
+minutes: 15
+prerequisites: [vanilla-10-professional-vanilla/topic-08-interviews]
+concepts: [promise-edge-cases, result-order, radio-group-pattern, roving-tabindex, request-sharing, cache-failures-and-expiry]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: INC-10
+  from: theo
+  title: "The mock interview loop, no framework allowed"
+  body: >
+    I'm running your mock loop today, and I'm playing the interviewer. No framework allowed: plain JavaScript and the DOM.
+    Here are a previous candidate's answers to three rounds: a promise helper, a star rating and a stock cache.
+    Each one worked the one time they tried it, and each one failed the round. Fix them the way I'd want to see in a real loop. Edge cases first.
+hints:
+  - "Bronze: try promiseAll by hand on [], on three promises that answer in reverse order, on [45000], and on one that rejects. Keep results = new Array(values.length) and a count of answers left; wrap each value in Promise.resolve(value).then(result => ..., reject)."
+  - "Silver: root.setAttribute(\"role\", \"radiogroup\") and aria-label; each star role=\"radio\" with its LABELS text. In render: aria-checked String(number === rating), and tabIndex 0 on the chosen star (the first when rating is 0). In keydown, read the focused star's data-value, work out next with wrapping, then preventDefault, choose(next) and stars[next - 1].focus()."
+  - "Gold: store const fresh = { promise, at: now() } and return entry.promise only while now() - entry.at < maxAgeMs. Then promise.catch(() => { if (cache.get(url) === fresh) cache.delete(url); })."
+review: false

@@ -1,0 +1,23 @@
+id: tsreact-12-professional-typescript/boss
+title: "INC-12: The mock TypeScript interview loop"
+order: 99
+minutes: 15
+prerequisites: [tsreact-12-professional-typescript/topic-08-interviews]
+concepts: [immutable-updates, readonly-parameters, validated-storage, effect-on-key-change, typed-generic-api, copy-on-write]
+practice:
+  kind: code
+  runner: vitest
+ticket:
+  key: INC-12
+  from: theo
+  title: "The mock TypeScript interview loop"
+  body: >
+    I'm running your mock TypeScript loop today, and I'm playing the interviewer.
+    Here are a previous candidate's answers to three rounds: a TypeScript function, a typed React hook and a typed event bus.
+    Every one type-checks, and every one failed the round. "It compiles" isn't the bar.
+    Fix them the way I'd want to see in a real loop. Edge cases first.
+hints:
+  - "Bronze: try mergeCarts by hand with 4 + 3 Golus, an old price, and a qty of 0. Use a Map from id to line: loop over [...saved, ...current], skip qty <= 0, and set { ...line, qty: Math.min(MAX_QTY, (before?.qty ?? 0) + line.qty) }."
+  - "Silver: const parsed: unknown = JSON.parse(stored); return isValid(parsed) ? parsed : initial; inside a try. In save, call localStorage.setItem(key, JSON.stringify(next)) too. Move the reading into a small helper, readStored(key, initial, isValid), and call it again in useEffect(() => setValue(readStored(key, initial, isValid)), [key])."
+  - "Gold: wrap each handler in a new arrow function, the entry, and unsubscribe with filter((h) => h !== entry). Replace the list instead of pushing into it, so emit's loop keeps its own copy. once: const off = on(type, (payload) => { off(); handler(payload); }); return off;"
+review: false

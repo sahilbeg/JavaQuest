@@ -1,0 +1,131 @@
+topic: vanilla-09-single-page-apps/topic-08-dynamic-import
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: bundle-size
+    variants:
+      - { prompt: "routes.js has import checkoutView from \"./checkout.js\" at the top. Who downloads the checkout's code?", choices: ["Every visitor, with the first download", "Only customers who open the checkout", "Only customers on Wi-Fi", "Nobody, until the server sends it"], answer: 0 }
+      - { prompt: "What is a bundle?", choices: ["The JavaScript file a build tool makes by joining your modules together", "A box of crochet items", "A group of HTTP requests", "A folder of images"], answer: 0 }
+    explain: "A static import makes the module part of the bundle, which every visitor must download before the app starts."
+    reteach: "### One big download"
+
+  - id: q02
+    type: mcq
+    concept: dynamic-import
+    prompt: "What does import(\"./checkout.js\") give back?"
+    choices: ["A promise for the module object", "The checkout's default export directly", "The text of checkout.js", "Nothing: it only starts the download"]
+    answer: 0
+    explain: "import() returns a promise. When it is fulfilled, you get the module object with all its exports."
+    reteach: "### Syntax: dynamic import()"
+
+  - id: q03
+    type: fill-blank
+    concept: dynamic-import
+    goal: "Pick the checkout view, the module's one unnamed export, out of the loaded module object."
+    prompt: "const checkoutView = module.___;"
+    answers: ["default"]
+    explain: "A module's default export is the default property of the module object."
+    reteach: "### Syntax: dynamic import()"
+
+  - id: q04
+    type: mcq
+    concept: code-splitting
+    prompt: "Vite builds the store and finds import(\"./checkout.js\") in routes.js. What does it do?"
+    choices: ["Puts the checkout and what only it uses into a separate chunk file", "Copies the checkout into main.js twice", "Refuses to build", "Deletes checkout.js"]
+    answer: 0
+    explain: "Each dynamic import becomes the start of a separate chunk, downloaded only when that line runs."
+    reteach: "### Code splitting"
+
+  - id: q05
+    type: spot-the-bug
+    concept: code-splitting
+    code: |
+      import { catalogueView } from "./catalogue.js";
+      const routes = [
+        { path: "/items", view: catalogueView },
+        { path: "/checkout", load: import("./checkout.js") },
+      ];
+    bugLine: 4
+    explain: "import() runs as soon as the routes are written, so every visitor downloads the checkout. Use load: () => import(\"./checkout.js\")."
+    reteach: "### Lazy routes"
+
+  - id: q06
+    type: mcq
+    concept: code-splitting
+    prompt: "routes.js uses () => import(\"./checkout.js\"), but cart.js still has import { total } from \"./checkout.js\" at the top. Is the checkout split off?"
+    choices: ["No: one static import keeps it in the main bundle", "Yes: the dynamic import wins", "Yes, but only on phones", "No, and the build fails"]
+    answer: 0
+    explain: "Every static import of a module must go before it can leave the main bundle."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: predict-output
+    concept: load-once
+    code: |
+      let downloads = 0;
+      let promise = null;
+      function load() {
+        if (promise === null) {
+          downloads += 1;
+          promise = Promise.resolve("checkout code");
+        }
+        return promise;
+      }
+      load();
+      load();
+      load();
+      console.log(downloads);
+    answer: "1"
+    explain: "The first call keeps the promise. The other calls get the same one, so only one download starts."
+    reteach: "### Download once"
+
+  - id: q08
+    type: mcq
+    concept: load-once
+    prompt: "A lazy loader keeps its promise forever. The first download fails because the customer was offline. What happens on the next tap?"
+    choices: ["The same failed promise is returned, so it never tries again", "It downloads again", "The page reloads", "The browser retries by itself"]
+    answer: 0
+    explain: "A failed promise stays failed. Set the kept promise back to null in .catch, so the next tap really tries again."
+    reteach: "### Loading and failing"
+
+  - id: q09
+    type: mcq
+    concept: lazy-loading-states
+    variants:
+      - { prompt: "While the checkout chunk downloads on 3G, what should the outlet show?", choices: ["A short loading message", "Nothing at all", "The old screen, with no sign of change", "An error"], answer: 0 }
+      - { prompt: "A new deploy replaced the old chunk files, and import() fails. What should the customer see?", choices: ["A friendly message saying the page couldn't load, with a way to try again", "A blank outlet", "TypeError: Failed to fetch dynamically imported module", "The home page"], answer: 0 }
+    explain: "Downloading code takes time and can fail, like fetching data. Show a loading state and a friendly error state."
+    reteach: "### Loading and failing"
+
+  - id: q10
+    type: mcq
+    concept: code-splitting
+    prompt: "Which part of the store is worth splitting into its own chunk?"
+    choices: ["A big chart library used only on the sales report screen", "The router, used on every screen", "A 2 KB function that formats rupees", "The header and cart badge"]
+    answer: 0
+    explain: "Split big code that few screens need. Tiny or everywhere-used code costs an extra request for no saving."
+    reteach: "### What is worth splitting?"
+
+  - id: q11
+    type: predict-output
+    concept: dynamic-import
+    code: |
+      async function main() {
+        const path = await import("node:path");
+        console.log(path.extname("golu.jpg"));
+      }
+      main();
+    answer: ".jpg"
+    explain: "import() loaded Node's path module, and extname gives the file's ending, dot included."
+    reteach: "## Try it"
+
+  - id: q12
+    type: mcq
+    concept: lazy-loading-states
+    prompt: "How can the checkout feel instant without being in the first download?"
+    choices: ["Start its load() quietly in the background when the customer adds something to the cart", "Put it back in main.js", "Load it on every page twice", "Make the loading message shorter"]
+    answer: 0
+    explain: "Preloading at a likely moment means the chunk is often already there when the customer taps Checkout."
+    reteach: "### What is worth splitting?"

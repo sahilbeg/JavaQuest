@@ -1,0 +1,124 @@
+topic: next-11-data-and-server/topic-06-data-layer
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: data-access-layer
+    prompt: "What is a data access layer?"
+    choices: ["One module that alone touches the stored data, which pages, actions and route handlers call", "A layer of CSS over the data", "A copy of the database kept in the browser", "A folder of JSON files that every page reads directly"]
+    answer: 0
+    explain: "Everything that reads or writes orders goes through it, so the rules live in one place."
+    reteach: "### One module that owns the data"
+
+  - id: q02
+    type: mcq
+    concept: data-access-layer
+    prompt: "Kavya renames a column in the orders table. With a data layer, which code has to change?"
+    choices: ["Only the data layer", "Every page that shows orders", "Every server action and route handler", "The browser's cache"]
+    answer: 0
+    explain: "Only the data layer knows how rows look. Its callers get views, which stay the same."
+    reteach: "### Syntax: a data layer module"
+
+  - id: q03
+    type: mcq
+    concept: data-transfer-objects
+    prompt: "Which toOrderView is safest to hand to a page?"
+    choices: ["(row) => ({ id: row.id, customer: row.name, status: row.status })", "(row) => ({ ...row })", "(row) => row", "(row) => ({ ...row, phone: undefined })"]
+    answer: 0
+    explain: "Listing each field means new columns, like a UPI reference, never leak by accident."
+    reteach: "### Hand out only what's needed"
+
+  - id: q04
+    type: predict-output
+    concept: data-transfer-objects
+    code: |
+      const row = { id: "order-18", name: "Ravi Joshi", phone: "9876543211", upiRef: "UPI-55121" };
+      const view = { id: row.id, customer: row.name, phoneEnding: row.phone.slice(-4) };
+      console.log(Object.keys(view).join(","));
+      console.log(view.phoneEnding);
+    answer: "id,customer,phoneEnding\n3211"
+    explain: "The view has only the three fields it was built with. slice(-4) keeps the last four characters."
+    reteach: "### Hand out only what's needed"
+
+  - id: q05
+    type: spot-the-bug
+    concept: data-transfer-objects
+    prompt: "The staff screen shows orders fine, but full phone numbers and UPI references are in the page's data. Which line is wrong?"
+    code: |
+      export function toOrderView(row) {
+        return {
+          ...row,
+          total: rupees(row.totalPaise),
+        };
+      }
+    bugLine: 3
+    explain: "...row copies every field of the row. List only the fields the view needs."
+    reteach: "## Common mistakes"
+
+  - id: q06
+    type: predict-output
+    concept: server-side-prices
+    code: |
+      const PRICES = { "DC-2001": 15000 };
+      const line = { itemId: "DC-2001", qty: 2, paise: 1 };
+      const items = PRICES[line.itemId] * line.qty;
+      const delivery = items > 99900 ? 0 : 6000;
+      console.log(items + delivery);
+    answer: "36000"
+    explain: "The price comes from the server's list, so the paise field from the browser is ignored. 30000 is not above 99900, so delivery is 6000."
+    reteach: "### Never trust a price from the browser"
+
+  - id: q07
+    type: mcq
+    concept: server-side-prices
+    prompt: "The browser sends a line { itemId, qty, paise }. What should createOrder use?"
+    choices: ["itemId and qty, and look up the price itself", "All three, the browser knows the price", "Only paise", "The highest of paise and the list price"]
+    answer: 0
+    explain: "Anyone can edit a request before it's sent. Prices must come from the server's own catalogue."
+    reteach: "### Never trust a price from the browser"
+
+  - id: q08
+    type: fill-blank
+    concept: server-only-import
+    goal: "Make the build fail if a client component ever imports this data file."
+    prompt: "import \"___\";"
+    answers: ["server-only"]
+    explain: "The server-only package stops the build when the file would end up in browser code."
+    reteach: "### Syntax: keeping the data layer on the server"
+
+  - id: q09
+    type: mcq
+    concept: server-only-import
+    prompt: "What does import \"server-only\" do when the data layer runs on the server?"
+    choices: ["Nothing. It only stops builds that would put the file in the browser", "It encrypts the file", "It makes every function async", "It caches every result"]
+    answer: 0
+    explain: "It's a guard, not a feature. Its only job is to fail loudly if the file is imported by client code."
+    reteach: "### Syntax: keeping the data layer on the server"
+
+  - id: q10
+    type: mcq
+    concept: react-cache
+    prompt: "getOrderView is wrapped in cache from react. A layout and a page both call getOrderView(\"order-17\") in one request. How often is the database asked?"
+    choices: ["Once", "Twice", "Never", "Once per component, plus once for the layout"]
+    answer: 0
+    explain: "cache shares the answer for the same arguments during one request."
+    reteach: "### Reading the same order twice in one request"
+
+  - id: q11
+    type: mcq
+    concept: react-cache
+    prompt: "How long does React's cache keep getOrderView's answer?"
+    choices: ["Until the request ends", "One hour", "Until revalidateTag is called", "Forever"]
+    answer: 0
+    explain: "It's for sharing within one request, like fetch memoization. The next request reads fresh data."
+    reteach: "### Reading the same order twice in one request"
+
+  - id: q12
+    type: mcq
+    concept: data-access-layer
+    prompt: "Where is the best place to check that a customer may only see their own orders?"
+    choices: ["In the data layer, because every read passes through it", "Only in the page's JSX", "In a CSS rule that hides other orders", "In the browser, before the request is sent"]
+    answer: 0
+    explain: "A check in the data layer protects every page, action and route handler at once."
+    reteach: "### Check permissions in the data layer too"

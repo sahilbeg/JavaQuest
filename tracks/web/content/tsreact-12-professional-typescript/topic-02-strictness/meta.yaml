@@ -1,0 +1,23 @@
+id: tsreact-12-professional-typescript/topic-02-strictness
+title: "Strict mode and tsconfig in depth"
+order: 2
+minutes: 10
+prerequisites: [tsreact-12-professional-typescript/topic-01-testing-typed-components]
+concepts: [strict-family, strict-null-checks, no-implicit-any, unchecked-index, assertions, unknown-in-catch, tsconfig-options]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1202
+  from: sam
+  title: "The price checker says ₹NaN for toString"
+  body: >
+    Raju here. A college student was playing with the price checker on the stall tablet on Sunday.
+    She typed "toString" and it showed ₹NaN, and when she typed "xyz" it showed nothing at all.
+    Kavya says the code tells TypeScript "trust me" in a few places. Can you make it stop lying, before a real customer sees it?
+hints:
+  - "The in operator also looks at keys every object inherits, like toString. Object.hasOwn(PRICES, text) looks only at PRICES' own keys."
+  - "After if (isItemCode(code)), TypeScript knows code is an ItemCode, so PRICES[code] is a number. For cheapestLine, start with let cheapest: CartLine | null = null and loop."
+  - "describeError: if (error instanceof Error) return error.message; if (typeof error === \"string\") return error; return \"Something went wrong.\";"
+review: true

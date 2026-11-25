@@ -1,0 +1,165 @@
+topic: tsreact-12-professional-typescript/topic-01-testing-typed-components
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: types-and-tests
+    prompt: "Which mistake can a test catch, but the type checker can't?"
+    choices:
+      - "OrderCard shows ₹45000.00 for an order of 45000 paise"
+      - "Passing the text \"450\" where a number of paise belongs"
+      - "Rendering OrderCard without its required onTrack prop"
+      - "Writing \"shiped\" in a list typed as OrderStatus[]"
+    answer: 0
+    explain: "The wrong price is still a string, so its shape is fine. Only running the code and checking what it shows can catch it. The other three are wrong shapes, which tsc refuses."
+    reteach: "### What types prove, and what tests prove"
+
+  - id: q02
+    type: mcq
+    concept: types-and-tests
+    prompt: "A component type-checks in strict mode. What does that prove?"
+    choices:
+      - "Its values have the right shapes, but not that it shows or does the right thing"
+      - "It shows the right price for every order"
+      - "Its tests will pass"
+      - "It needs no tests"
+    answer: 0
+    explain: "Types check shapes before the code runs. Behaviour, like the right label or the right button, needs a test that runs the code."
+    reteach: "### What types prove, and what tests prove"
+
+  - id: q03
+    type: mcq
+    concept: typed-test-files
+    prompt: "A teammate adds a required prop, onTrack, to OrderCard. The project type-checks its tests. What happens to tests that don't pass onTrack?"
+    choices:
+      - "They become type errors, so the error list shows every test to update"
+      - "They pass, because tests are never type-checked"
+      - "They fail only when a customer clicks Track parcel"
+      - "TypeScript adds onTrack for them"
+    answer: 0
+    explain: "A .test.tsx file renders components with typed props. A missing required prop is error TS2741, so every test that renders OrderCard shows up at once."
+    reteach: "### Test files in TypeScript"
+
+  - id: q04
+    type: fill-blank
+    concept: fixture-builders
+    goal: "Let a test pass only some of an order's fields, by making every field of Order optional."
+    prompt: "function makeOrder(overrides: ___<Order> = {}): Order {"
+    answers: ["Partial"]
+    explain: "Partial<Order> has the same fields as Order, each one optional. The builder fills in the rest with defaults."
+    reteach: "### Syntax: a fixture builder"
+
+  - id: q05
+    type: predict-output
+    concept: fixture-builders
+    prompt: "This builder makes a new array each time. What does it print?"
+    code: |
+      type Line = { id: string; qty: number };
+      const GOLU: Line = { id: "DC-1042", qty: 1 };
+      const makeLines = (): Line[] => [GOLU];
+      const a = makeLines();
+      a[0].qty = 3;
+      const b = makeLines();
+      console.log(b[0].qty, a === b);
+    answer: "3 false"
+    explain: "The arrays are different, so a === b is false. But both hold the same GOLU object, so changing a[0] changed GOLU, and b sees qty 3. Copy it with [{ ...GOLU }]."
+    reteach: "### Fresh data for every test"
+
+  - id: q06
+    type: mcq
+    concept: fixture-builders
+    variants:
+      - prompt: "In makeOrder, why does ...overrides come last in the object?"
+        choices:
+          - "So the fields a test passes replace the defaults"
+          - "So TypeScript can check the defaults"
+          - "So the order is sorted by field name"
+          - "Spreads must always come last in an object"
+        answer: 0
+      - prompt: "Which is the best way to get a shipped order for a test?"
+        choices:
+          - "makeOrder({ status: \"shipped\" })"
+          - "{ status: \"shipped\" } as Order"
+          - "{ status: \"shipped\" } as any"
+          - "Copy the whole order literal into the test and change one word"
+        answer: 0
+    explain: "Later fields win in an object literal, so the test's overrides replace the defaults. A builder gives a complete order in one short line, without lying to the compiler with as."
+    reteach: "### Syntax: a fixture builder"
+
+  - id: q07
+    type: fill-blank
+    concept: typed-spies
+    goal: "Make a spy that fits a prop taking an order id written as text, such as order-17."
+    prompt: "const onCancel = vi.fn<(orderId: ___) => void>();"
+    answers: ["string"]
+    explain: "Give vi.fn the prop's function type. Then the spy fits onCancel exactly, and its mock.calls entries are typed [orderId: string]."
+    reteach: "### Syntax: a typed spy"
+
+  - id: q08
+    type: mcq
+    concept: typed-spies
+    prompt: "onCancel changes from (orderId: string) => void to (order: Order) => void. Which spy makes the old tests fail to compile, so you notice?"
+    choices:
+      - "vi.fn<(orderId: string) => void>()"
+      - "vi.fn()"
+      - "vi.fn() as any"
+      - "Any spy: TypeScript checks them all the same way"
+    answer: 0
+    explain: "A typed spy no longer fits the changed prop, so tsc points at every test that passes it. A plain vi.fn() accepts any arguments, so the tests compile and fail later with confusing messages."
+    reteach: "### Syntax: a typed spy"
+
+  - id: q09
+    type: mcq
+    concept: case-tables
+    prompt: "Why type the expected results as Record<OrderStatus, StatusCase>?"
+    choices:
+      - "A new status makes the table a type error until it gets a row, so no state goes untested"
+      - "Records make the tests run faster"
+      - "Vitest can only loop over Records"
+      - "It lets the table hold statuses that don't exist"
+    answer: 0
+    explain: "Record needs one key for every member of the union. Adding \"returned\" to OrderStatus makes the table fail to compile until someone writes its row."
+    reteach: "### One check per state: case tables"
+
+  - id: q10
+    type: spot-the-bug
+    concept: case-tables
+    prompt: "These checks should cover every status. Which line lets a status go untested?"
+    code: |
+      type OrderStatus = "placed" | "packed" | "shipped";
+      const STATUSES: OrderStatus[] = ["placed", "shipped"];
+      for (const status of STATUSES) {
+        it(`shows the label for ${status}`, () => {
+          render(<OrderCard order={makeOrder({ status })} onCancel={vi.fn()} onTrack={vi.fn()} />);
+        });
+      }
+    bugLine: 2
+    explain: "The list forgets \"packed\", and OrderStatus[] allows a list with members missing. A Record<OrderStatus, ...> table would be a compile error without a packed row."
+    reteach: "### One check per state: case tables"
+
+  - id: q11
+    type: mcq
+    concept: type-tests
+    prompt: "A line under // @ts-expect-error stops having a type error. What happens?"
+    choices:
+      - "The comment itself becomes an error, so the type test fails"
+      - "Nothing: the comment is ignored"
+      - "The test is skipped"
+      - "TypeScript deletes the comment"
+    answer: 0
+    explain: "@ts-expect-error says an error must be there. When it goes away, tsc reports an unused @ts-expect-error. @ts-ignore would stay silent."
+    reteach: "### Testing the types themselves"
+
+  - id: q12
+    type: spot-the-bug
+    concept: type-tests
+    prompt: "This type test should fail if status ever accepts any text. Which line stops it from ever failing?"
+    code: |
+      it("refuses a status that doesn't exist", () => {
+        // @ts-ignore
+        makeOrder({ status: "lost" });
+      });
+    bugLine: 2
+    explain: "@ts-ignore hides an error if there is one, and says nothing if there isn't, so this check can never fail. Use // @ts-expect-error."
+    reteach: "### Testing the types themselves"

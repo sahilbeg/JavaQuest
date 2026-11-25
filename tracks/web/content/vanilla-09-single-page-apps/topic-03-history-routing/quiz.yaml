@@ -1,0 +1,128 @@
+topic: vanilla-09-single-page-apps/topic-03-history-routing
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: history-api
+    prompt: "What does the History API let a page do?"
+    choices: ["Change the path in the address bar and add to the visited list, without loading a page", "Read every site the customer has visited", "Reload the page faster", "Send the URL's hash to the server"]
+    answer: 0
+    explain: "pushState and replaceState change the URL of this page only. A page can never read the customer's other browsing."
+    reteach: "### The History API"
+
+  - id: q02
+    type: mcq
+    concept: push-state
+    variants:
+      - { prompt: "Your code calls history.pushState(null, \"\", \"/cart\"). What happens on screen?", choices: ["Only the address bar changes, until your code draws the cart", "The cart appears by itself", "The page reloads at /cart", "popstate fires and the router draws the cart"], answer: 0 }
+      - { prompt: "Which event does history.pushState fire?", choices: ["None", "popstate", "hashchange", "load"], answer: 0 }
+    explain: "pushState changes the URL and adds an entry, but fires no event. Call render() yourself straight after it."
+    reteach: "### Syntax: history.pushState"
+
+  - id: q03
+    type: fill-blank
+    concept: push-state
+    goal: "Add a new entry for Golu's page to the visited list, so Back can return here, without loading anything."
+    prompt: "history.___(null, \"\", \"/items/DC-1042\");"
+    answers: ["pushState"]
+    explain: "pushState adds a new history entry with the given URL."
+    reteach: "### Syntax: history.pushState"
+
+  - id: q04
+    type: mcq
+    concept: replace-state
+    prompt: "A search box updates the URL to ?q=golu on every letter typed. Which call keeps Back from stepping through every letter?"
+    choices: ["history.replaceState", "history.pushState", "location.reload", "history.back"]
+    answer: 0
+    explain: "replaceState changes the current entry instead of adding a new one, so Back skips straight past the search."
+    reteach: "### Syntax: history.replaceState"
+
+  - id: q05
+    type: mcq
+    concept: popstate-event
+    variants:
+      - { prompt: "When does the browser fire popstate?", choices: ["When the customer presses Back or Forward", "Every time pushState is called", "When a link to another site is tapped", "When the page first loads"], answer: 0 }
+      - { prompt: "popstate fires after Back. What should your router do?", choices: ["Read location.pathname and draw that screen", "Call pushState with the old path", "Reload the page", "Call history.back() again"], answer: 0 }
+    explain: "By the time popstate fires, the address already holds the new path. The router only needs to draw it."
+    reteach: "### Syntax: the popstate event"
+
+  - id: q06
+    type: spot-the-bug
+    concept: popstate-event
+    code: |
+      function navigate(path) {
+        history.pushState(null, "", path);
+        render();
+      }
+      window.addEventListener("popstate", () => {
+        navigate(location.pathname);
+      });
+    bugLine: 6
+    explain: "Back must only redraw. Calling navigate pushes a new entry on every Back, which breaks Forward. Call render() instead."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: predict-output
+    concept: push-state
+    code: |
+      const entries = ["/"];
+      let current = 0;
+      function push(path) {
+        entries.length = current + 1;
+        entries.push(path);
+        current = entries.length - 1;
+      }
+      push("/items");
+      push("/cart");
+      current -= 1;
+      push("/items/DC-1042");
+      console.log(entries.join(" > "));
+    answer: "/ > /items > /items/DC-1042"
+    explain: "After one Back, current points at /items. The next push cuts off /cart, the entry ahead, then adds Golu."
+    reteach: "### The visited list in code"
+
+  - id: q08
+    type: mcq
+    concept: link-interception
+    prompt: "In the click listener, why call event.preventDefault() before navigate?"
+    choices: ["To stop the browser loading the whole page from the server", "To stop other listeners hearing the click", "To make pushState fire popstate", "To open the link in a new tab"]
+    answer: 0
+    explain: "Without it, the screen swaps and then the browser loads a fresh page anyway, resetting the app."
+    reteach: "### Catching link taps"
+
+  - id: q09
+    type: mcq
+    concept: link-interception
+    variants:
+      - { prompt: "A customer Ctrl-clicks the Cart link to open it in a new tab. What should the router do?", choices: ["Nothing: return early and let the browser open the tab", "Draw the cart in this tab", "Call preventDefault and do nothing", "Reload the page"], answer: 0 }
+      - { prompt: "Which link should the router's click listener leave alone?", choices: ["<a href=\"https://wa.me/919876543210\">WhatsApp us</a>", "<a href=\"/cart\" data-link>Cart</a>", "<a href=\"/items\" data-link>Catalogue</a>", "<a href=\"/\" data-link>Home</a>"], answer: 0 }
+    explain: "Only app links marked data-link, tapped without Ctrl, Cmd, Shift or Alt, belong to the router."
+    reteach: "### Leave some taps to the browser"
+
+  - id: q10
+    type: mcq
+    concept: link-interception
+    prompt: "The link is <a href=\"/cart\" data-link>. What does link.getAttribute(\"href\") give?"
+    choices: ["/cart", "http://dhaaga.in/cart, the full URL", "cart", "null"]
+    answer: 0
+    explain: "getAttribute gives the text exactly as written. The href property gives the full URL instead."
+    reteach: "### Catching link taps"
+
+  - id: q11
+    type: mcq
+    concept: server-fallback
+    prompt: "Taps work, but refreshing dhaaga.in/items/DC-1042 shows the server's 404 page. What is the fix?"
+    choices: ["Set the server to send index.html for every app path", "Go back to hash URLs only for Golu", "Call pushState when the page loads", "Add more routes to the router"]
+    answer: 0
+    explain: "On refresh, the server is asked for /items/DC-1042. A fallback sends index.html, and the router draws Golu."
+    reteach: "### The server must answer every path"
+
+  - id: q12
+    type: mcq
+    concept: history-api
+    prompt: "Which is a job your SPA must now do on every screen change, because no new page loads?"
+    choices: ["Set document.title for the new screen", "Ask the server for a new HTML page", "Clear localStorage", "Fire a hashchange event"]
+    answer: 0
+    explain: "A full page load set the title, scroll and focus for free. In an SPA, each screen change has to do it."
+    reteach: "### Jobs the browser no longer does"

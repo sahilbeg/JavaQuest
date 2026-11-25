@@ -1,0 +1,22 @@
+id: vanilla-09-single-page-apps/boss
+title: "INC-09: The back button shows the wrong page"
+order: 99
+minutes: 15
+prerequisites: [vanilla-09-single-page-apps/topic-10-testing-an-spa]
+concepts: [popstate-reads-the-address, no-duplicate-entries, redirects-with-replace-state, titles-on-every-route, query-in-history]
+practice:
+  kind: code
+  runner: vitest
+ticket:
+  key: INC-09
+  from: theo
+  title: "The back button shows the wrong page"
+  body: >
+    Arjun here, on the first Saturday of the Diwali sale. Raju has had eleven calls since 10:00. Customers open Golu, press Back,
+    and stay on Golu. The old "dhaaga.in/shop" banner needs two Backs to leave, the "dhaaga.in/golu" price tags open a not found page,
+    and the browser tab still says "Cart" after people leave the cart. Two customers gave up and ordered on WhatsApp instead. Please fix the router today.
+hints:
+  - "Bronze: by the time popstate fires, the browser has already changed the address. Whatever the router remembered in currentPath is the page you are leaving. Draw from location.pathname and location.search instead."
+  - "Silver: compare the target with location.pathname + location.search before pushing, and push nothing when they match. For REDIRECTS, push only the new address. When start() finds an old address, call history.replaceState(null, \"\", newAddress) first."
+  - "Gold: set document.title in the one function that draws, and call that same function from start, navigate and popstate. Build the query with new URLSearchParams(location.search), and pass it to the view."
+review: false

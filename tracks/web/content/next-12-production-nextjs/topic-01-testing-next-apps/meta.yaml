@@ -1,0 +1,25 @@
+id: next-12-production-nextjs/topic-01-testing-next-apps
+title: "Testing a Next.js app"
+order: 1
+minutes: 10
+prerequisites: [next-11-data-and-server/boss]
+concepts: [testing-server-components, params-as-promises, testing-route-handlers, testing-server-actions, mocking-next-navigation, resetting-data, end-to-end-tests]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1201
+  from: maya
+  title: "Checks for the Next.js store before we launch"
+  body: >
+    We move dhaaga.in to Next.js at the end of the month, and the stock API, Golu's page and the Buy now action have no tests.
+    Last week an upgrade broke the item page for a whole afternoon, and nothing went red.
+    Write checks for all three that would have caught it.
+    I'll throw seven broken copies at them to see which ones you catch.
+hints:
+  - "Copy the worked example. A route handler is a plain async function: give it a new Request(...) and read response.status and await response.json()."
+  - "A server component is an async function too. Call it with params: Promise.resolve({ id: \"DC-1042\" }), await the JSX it returns, and render that. For notFound, await expect(ItemPage(...), \"message\").rejects.toThrow(\"NEXT_NOT_FOUND\")."
+  - "For the action: const form = new FormData(); form.set(\"id\", \"DC-1042\"); form.set(\"qty\", \"0\"); expect(await placeOrder(form), \"message\").toEqual({ ok: false, error: \"Pick a quantity from 1 to 5\" }); then the same with qty \"2\" and the success object."
+review: true

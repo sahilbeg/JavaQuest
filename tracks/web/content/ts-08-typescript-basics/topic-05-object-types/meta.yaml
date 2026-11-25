@@ -1,0 +1,23 @@
+id: ts-08-typescript-basics/topic-05-object-types
+title: "Object types and interfaces"
+order: 5
+minutes: 10
+prerequisites: [ts-08-typescript-basics/topic-04-arrays-and-tuples]
+concepts: [object-types, interfaces, excess-property-checks, readonly-properties, extending-interfaces]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0805
+  from: maya
+  title: "Nobody knows what an item looks like"
+  body: >
+    Every file in the catalogue builds its own item objects. One says price, another paise, and a third forgot the
+    id. Sana's colour filter can't find Golu because his colours were never stored. Let's write the shape down
+    once, as an interface, in src/items.ts. Please finish Item and the functions that use it.
+hints:
+  - "Add colours: string[]; to the Item interface first. Then makeItem can return { id, name, paise, colours }."
+  - "An Amigurumi extends Item, so you can pass it to describeItem and add ` (${toy.animal})` after."
+  - "inColour is items.filter((item) => item.colours.includes(colour)). orderTotal adds line.item.paise * line.qty."
+review: true

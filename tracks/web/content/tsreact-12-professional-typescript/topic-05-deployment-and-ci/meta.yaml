@@ -1,0 +1,22 @@
+id: tsreact-12-professional-typescript/topic-05-deployment-and-ci
+title: "Type checks in CI and deployment"
+order: 5
+minutes: 9
+prerequisites: [tsreact-12-professional-typescript/topic-04-migrating-to-typescript]
+concepts: [build-strips-types, typecheck-script, ci-pipeline, lockfile-installs, typed-env-vars, deploy-and-rollback]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: TSX-1205
+  from: maya
+  title: "A type error went live, and CI was green"
+  body: >
+    On Tuesday a pull request passed CI, deployed, and the checkout showed "₹45,00,030.00" for one Golu with gift wrap.
+    My editor shows the type error on that line in red. CI never did, because our pipeline only runs vite build and the tests.
+    Please learn how the build treats types, fix the pipeline so a type error can't reach customers, and tell me how we roll back if one ever does.
+hints:
+  - "Vite and esbuild strip types from each file without checking them. Only tsc checks types, so something in CI must run it."
+  - "A typical pipeline: npm ci, then lint, tsc --noEmit, the tests, the build, and a preview deploy. The cheap, fast checks go first."
+  - "Environment variables reach the browser through import.meta.env. Type them in vite-env.d.ts, and remember every VITE_ value is public."
+review: true

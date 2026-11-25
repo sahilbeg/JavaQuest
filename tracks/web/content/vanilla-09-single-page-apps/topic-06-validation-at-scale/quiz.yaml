@@ -1,0 +1,135 @@
+topic: vanilla-09-single-page-apps/topic-06-validation-at-scale
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: validation-rules
+    variants:
+      - { prompt: "In this ticket, what does a validation rule return when the value is fine?", choices: ["null", "true", "The value itself", "An empty array"], answer: 0 }
+      - { prompt: "Why should a rule return its error message instead of false?", choices: ["So the message travels with the rule, and every form shows the same friendly words", "Because false can't be returned from a function", "So the rule runs faster", "Because the server needs the message"], answer: 0 }
+    explain: "A rule gives a message when it fails and null when it passes, so the form always has words to show."
+    reteach: "### A rule is a function"
+
+  - id: q02
+    type: predict-output
+    concept: rule-factories
+    code: |
+      function required(message) {
+        return (value) => (value.trim() === "" ? message : null);
+      }
+      const nameRule = required("Please tell us your name.");
+      console.log(nameRule("  "));
+      console.log(nameRule("Asha"));
+    answer: "Please tell us your name.\nnull"
+    explain: "Spaces trim to an empty string, so the rule gives its message. \"Asha\" passes, so it gives null."
+    reteach: "### Syntax: a rule maker"
+
+  - id: q03
+    type: mcq
+    concept: rule-factories
+    prompt: "required(\"Please give your address.\") returns a new function. How does that function know which message to give?"
+    choices: ["It is a closure: it remembers the message it was made with", "It reads the message from the page", "It asks the server", "It looks it up in localStorage"]
+    answer: 0
+    explain: "The returned rule closes over the message parameter, so each rule made by required keeps its own message."
+    reteach: "### Syntax: a rule maker"
+
+  - id: q04
+    type: mcq
+    concept: validation-schema
+    prompt: "The checkout gets a new field, a landmark near the address. With a schema, what do you change?"
+    choices: ["Add one line to the schema with the landmark's rules", "Write a new validate function", "Copy the whole form's checking code", "Change every rule factory"]
+    answer: 0
+    explain: "The schema describes the fields. validate runs any schema, so a new field is one new line."
+    reteach: "### A schema: rules for every field"
+
+  - id: q05
+    type: predict-output
+    concept: validation-schema
+    code: |
+      const rules = { name: ["r1"], phone: ["r1", "r2"], pin: ["r1", "r2"] };
+      for (const [field, list] of Object.entries(rules)) {
+        console.log(`${field}: ${list.length}`);
+      }
+    answer: "name: 1\nphone: 2\npin: 2"
+    explain: "Object.entries gives [key, value] pairs in the order the keys were written."
+    reteach: "### Syntax: Object.entries for a schema"
+
+  - id: q06
+    type: predict-output
+    concept: first-error-wins
+    code: |
+      const required = (msg) => (v) => (v === "" ? msg : null);
+      const sixDigits = (msg) => (v) => (/^\d{6}$/.test(v) ? null : msg);
+      const rules = [required("Please give your PIN code."), sixDigits("A PIN code has 6 digits.")];
+      function check(value) {
+        for (const rule of rules) {
+          const message = rule(value);
+          if (message !== null) return message;
+        }
+        return "ok";
+      }
+      console.log(check(""));
+    answer: "Please give your PIN code."
+    explain: "The empty value fails the first rule, and the first message wins. The six-digit rule never runs."
+    reteach: "### First message wins"
+
+  - id: q07
+    type: spot-the-bug
+    concept: first-error-wins
+    code: |
+      function checkField(rules, value) {
+        let message = null;
+        for (const rule of rules) {
+          message = rule(value);
+        }
+        return message;
+      }
+    bugLine: 4
+    explain: "Each rule overwrites the one before, so a passing last rule hides a real problem. Return the first message that isn't null."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: accessible-errors
+    variants:
+      - { prompt: "Which way of showing a phone error works for everyone, including screen reader users?", choices: ["Words under the field, plus aria-invalid=\"true\" and aria-describedby pointing at the words", "A red border on the field", "A red border and a shake animation", "An alert() box"], answer: 0 }
+      - { prompt: "What does aria-invalid=\"true\" on an input do?", choices: ["Tells screen readers the value in this field has a problem", "Stops the form from submitting", "Turns the border red", "Clears the field"], answer: 0 }
+    explain: "Colour alone reaches nobody who can't see it. Words, aria-invalid and aria-describedby reach everyone."
+    reteach: "### Errors everyone can use"
+
+  - id: q09
+    type: fill-blank
+    concept: accessible-errors
+    goal: "Tell screen readers that the PIN box currently holds a value with a problem."
+    prompt: "pinInput.setAttribute(\"___\", \"true\");"
+    answers: ["aria-invalid"]
+    explain: "aria-invalid=\"true\" marks the field as having an error. Set it back to \"false\" when fixed."
+    reteach: "### Errors everyone can use"
+
+  - id: q10
+    type: mcq
+    concept: focus-first-error
+    prompt: "The phone and PIN boxes both have errors, and phone comes first in the form. Where should focus go after Place order?"
+    choices: ["The phone box, the first field with an error in form order", "The PIN box", "The Place order button", "Nowhere: leave focus where it was"]
+    answer: 0
+    explain: "Focusing the first problem scrolls to it, has it read out, and puts the cursor where the customer can fix it."
+    reteach: "### Move focus to the first problem"
+
+  - id: q11
+    type: mcq
+    concept: focus-first-error
+    prompt: "When should a field show a new error message, in the friendliest set-up?"
+    choices: ["On submit, and when leaving a field the customer has already typed in", "On every keystroke, from the first letter", "Only when the server rejects the order", "As soon as the page loads"]
+    answer: 0
+    explain: "Errors on boxes the customer hasn't reached yet, or mid-word, feel like being told off. Check on submit and on leaving a field."
+    reteach: "### When to check"
+
+  - id: q12
+    type: mcq
+    concept: validation-rules
+    prompt: "The checkout checks every field in the browser. Does the server still need to check the order?"
+    choices: ["Yes: anyone can send a request without your page, so the server must check again", "No: the browser already checked", "Only for orders above ₹999", "Only on Diwali"]
+    answer: 0
+    explain: "Browser checks help the customer. Only the server's checks protect the shop."
+    reteach: "### When to check"

@@ -1,0 +1,139 @@
+topic: vanilla-08-components-without-a-framework/topic-08-keyed-list-updates
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: element-state
+    prompt: "Raju ticks Packed on order-17. The list is then redrawn with replaceChildren from the same data. Why is the tick gone?"
+    choices: ["The tick lived only in the old checkbox element, and that element was thrown away", "replaceChildren clears localStorage", "The data says the order isn't packed", "Checkboxes can't be ticked in a list"]
+    answer: 0
+    explain: "Ticks, typed text and focus are element state. A fresh element starts empty."
+    reteach: "### Elements remember things"
+
+  - id: q02
+    type: mcq
+    concept: element-state
+    prompt: "Which of these is lost when a row element is replaced by a new copy drawn from the same data?"
+    choices: ["The text a customer was typing in the row's input", "The order's id", "The order's price", "The order's status from the server"]
+    answer: 0
+    explain: "Data comes back on every redraw. Half-typed text lives only in the element, so it's lost."
+    reteach: "### Elements remember things"
+
+  - id: q03
+    type: mcq
+    concept: keys
+    prompt: "Which is the best key for a row showing an order?"
+    choices: ["The order's id, like order-17", "The row's position in the list", "A random number made on each update", "The order's status"]
+    answer: 0
+    explain: "A key must be stable and unique. The id stays the same while the order exists; positions, statuses and random numbers change."
+    reteach: "### Keys must be stable and unique"
+
+  - id: q04
+    type: mcq
+    concept: stable-keys
+    prompt: "Rows use their index as the key. order-17, at index 0, leaves the list. What happens to order-18's row?"
+    choices: ["It gets order-17's old row, with order-17's ticks", "It keeps its own row", "It disappears", "It is drawn twice"]
+    answer: 0
+    explain: "order-18 is now at index 0, so it matches the row keyed 0, which belonged to order-17."
+    reteach: "### Keys must be stable and unique"
+
+  - id: q05
+    type: predict-output
+    concept: keep-create-remove
+    prompt: "What does this print?"
+    code: |
+      const before = ["order-17", "order-18", "order-19"];
+      const after = ["order-18", "order-20"];
+      const added = after.filter((id) => !before.includes(id));
+      const removed = before.filter((id) => !after.includes(id));
+      console.log(added.length);
+      console.log(removed.join(","));
+    answer: "1\norder-17,order-19"
+    explain: "Only order-20 is new. order-17 and order-19 are in before but not in after, so their rows go."
+    reteach: "## Try it"
+
+  - id: q06
+    type: predict-output
+    concept: reconcile
+    prompt: "What does this print?"
+    code: |
+      const rows = new Map([["order-17", "row A"], ["order-18", "row B"]]);
+      let made = 0;
+      for (const id of ["order-18", "order-17", "order-19"]) {
+        if (!rows.has(id)) {
+          rows.set(id, `row ${id}`);
+          made += 1;
+        }
+      }
+      console.log(made);
+      console.log(rows.get("order-17"));
+    answer: "1\nrow A"
+    explain: "order-17 and order-18 already have rows, so only order-19 gets a new one. order-17 keeps row A."
+    reteach: "### The plan: keep, make, remove, move"
+
+  - id: q07
+    type: mcq
+    concept: reconcile
+    prompt: "reconcile takes create(item) and update(row, item). Which runs for a row that was kept?"
+    choices: ["Only update", "Only create", "Both", "Neither"]
+    answer: 0
+    explain: "create makes new rows only. update runs for every row, so kept rows show fresh data."
+    reteach: "### Syntax: reconcile"
+
+  - id: q08
+    type: spot-the-bug
+    concept: reconcile
+    prompt: "An order's status changes from new to paid, but its kept row still says new. Which line is the problem?"
+    code: |
+      reconcile(list, orders, {
+        key: (order) => order.id,
+        create: (order) => {
+          const row = document.createElement("li");
+          row.textContent = `${order.id}: ${order.status}`;
+          return row;
+        },
+        update: () => {},
+      });
+    bugLine: 5
+    explain: "The status is written only when the row is made. Kept rows never run create again. Move that line into update."
+    reteach: "## Common mistakes"
+
+  - id: q09
+    type: mcq
+    concept: moving-nodes
+    prompt: "row is already in the list at position 3. What does list.insertBefore(row, list.children[0]) do?"
+    choices: ["Moves the same row to the top", "Puts a copy at the top and keeps the original", "Throws, because row is already in the list", "Nothing"]
+    answer: 0
+    explain: "Inserting an element that's already in the page moves it. It is never copied."
+    reteach: "### Moving without remaking"
+
+  - id: q10
+    type: fill-blank
+    concept: moving-nodes
+    goal: "Move the kept row to position index, or to the end when nothing is there yet."
+    prompt: "list.___(row, list.children[index] ?? null);"
+    answers: ["insertBefore"]
+    explain: "insertBefore(node, reference) puts node just before reference, or at the end when reference is null."
+    reteach: "### Moving without remaking"
+
+  - id: q11
+    type: mcq
+    concept: keep-create-remove
+    prompt: "After the loop over the new items, the Map of old rows still holds order-17's row. What should happen to it?"
+    choices: ["Remove it: order-17 isn't in the new items", "Keep it at the end of the list", "Use it for the next new order", "Nothing: the browser removes it"]
+    answer: 0
+    explain: "Rows taken from the Map were kept. Anything left belongs to items that are gone."
+    reteach: "### The plan: keep, make, remove, move"
+
+  - id: q12
+    type: order
+    concept: reconcile
+    prompt: "Put the steps of reconcile in order."
+    items:
+      - "Put the rows already in the list into a Map by key"
+      - "For each item, take its row from the Map or create a new one"
+      - "Call update on the row and move it into its place"
+      - "Remove the rows still left in the Map"
+    explain: "Remember the old rows, walk the new items keeping or making rows, then clean up what's left."
+    reteach: "### The plan: keep, make, remove, move"

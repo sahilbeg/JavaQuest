@@ -1,0 +1,24 @@
+id: vanilla-08-components-without-a-framework/topic-07-forms-as-components
+title: "Forms as components"
+order: 7
+minutes: 10
+prerequisites: [vanilla-08-components-without-a-framework/topic-06-a-small-store]
+concepts: [form-in-light-dom, render-once, prevent-default, validation-function, accessible-errors, result-event]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0807
+  from: sam
+  title: "The custom-order form reloads the page and loses everything"
+  body: >
+    Raju here. Mrs. Kulkarni typed her phone number with a space, "98765 43210", pressed Send, and the whole page
+    reloaded with the form empty. No message, no order. Another customer typed 0 pieces and got through. Can the
+    form check itself, say what's wrong next to the box, and only send a good request?
+hints:
+  - "validateOrder is plain JavaScript: return an object with a message for each bad field. Remove spaces from the phone with replace(/\\s/g, \"\") and test it against /^\\d{10}$/; Number(qty) must be a whole number from 1 to 20."
+  - "In the submit handler, call event.preventDefault() first. Read the three values from form.elements.namedItem(name).value, validate, then for each field set or clear its error text and aria-invalid."
+  - "With errors, focus the first field that has one, in the order name, phone, qty. Without errors, dispatch order-request (bubbles: true) with the trimmed name, the phone's digits and Number(qty), then form.reset(). Guard connectedCallback with if (this.querySelector(\"form\") !== null) return."
+review: true

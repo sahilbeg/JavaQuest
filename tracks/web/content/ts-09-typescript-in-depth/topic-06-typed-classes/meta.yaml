@@ -1,0 +1,23 @@
+id: ts-09-typescript-in-depth/topic-06-typed-classes
+title: "Classes in TypeScript"
+order: 6
+minutes: 10
+prerequisites: [ts-09-typescript-in-depth/topic-05-type-guards]
+concepts: [typed-fields, access-modifiers, readonly-fields, implements, parameter-properties]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0906
+  from: maya
+  title: "The FC Road stall has -2 elephants in stock"
+  body: >
+    Kavya here. On Sunday the stall's tablet said we had -2 Golu elephants. Two pages wrote into the stock Map directly and skipped every check.
+    I've sketched a StockBook class in stockBook.ts that implements our StockStore interface and keeps its counts private.
+    Please fill in its methods, so the only way to change stock is through them.
+hints:
+  - "counts is a private Map<string, number>. Read with this.counts.get(id) ?? 0, and write with this.counts.set(id, newCount)."
+  - "receive: if (!Number.isInteger(qty) || qty <= 0) throw new Error(\"Quantity must be a whole number above 0\"); then add qty to the current count."
+  - "sell: if the current count is less than qty, return false and change nothing. Otherwise set the smaller count and return true. totalUnits loops over this.counts.values() and adds them up."
+review: true

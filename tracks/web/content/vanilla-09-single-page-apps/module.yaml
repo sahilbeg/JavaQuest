@@ -1,0 +1,6 @@
+id: vanilla-09-single-page-apps
+title: Single-page apps
+project: One page, many screens
+summary: Turn dhaaga.in into one page that swaps its screens with JavaScript, with real URLs, a shared store, data that loads once, forms that check themselves, quick updates with undo, code that loads when needed, and pages that work offline.
+unlockAfter: vanilla-08-components-without-a-framework/boss
+mascotIntro: "The components work, but every tap still reloads the whole store. Let's make dhaaga.in feel like an app: one page, many screens, and a back button that still does the right thing."

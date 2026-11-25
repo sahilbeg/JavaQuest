@@ -1,0 +1,39 @@
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #faf7f0;
+  color: #2e3a8c;
+}
+
+main {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+pre {
+  white-space: pre-wrap;
+  background: white;
+  padding: 0.75rem;
+}
+
+.star {
+  font-size: 2rem;
+  color: #c9c3b6;
+  cursor: pointer;
+  padding: 0 0.1rem;
+}
+
+.star.filled {
+  color: #f2a81d;
+}
+
+.star:focus-visible {
+  outline: 3px solid #2e3a8c;
+  outline-offset: 2px;
+}
+
+button {
+  font: inherit;
+  padding: 0.4rem 0.8rem;
+}

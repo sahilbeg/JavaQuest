@@ -1,0 +1,175 @@
+topic: next-12-production-nextjs/topic-06-observability
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: server-logs
+    variants:
+      - prompt: "You add console.log(\"qty is\", qty) inside the placeOrder server action. Where do you see it in production?"
+        choices:
+          - "In the server's logs, in the host's log viewer"
+          - "In the customer's browser console"
+          - "Nowhere: server actions can't log"
+          - "In the page's HTML"
+        answer: 0
+      - prompt: "A console.log in a client component runs on a customer's phone. Who sees it?"
+        choices:
+          - "Only that customer, if they open DevTools"
+          - "The team, in the server's logs"
+          - "Everyone who visits the site"
+          - "Search engines"
+        answer: 0
+    explain: "Server code logs to the server. Client code logs to the browser it runs in, which you never see. Browser errors need an error-tracking service."
+    reteach: "### Where console.log goes"
+
+  - id: q02
+    type: mcq
+    concept: structured-logs
+    prompt: "Which log line is easiest to search for every order slower than 1,000 ms?"
+    choices:
+      - "{\"level\":\"info\",\"msg\":\"order placed\",\"orderId\":\"order-17\",\"ms\":84}"
+      - "Order 17 went through nicely in about 84 milliseconds!"
+      - "done"
+      - "order-17"
+    answer: 0
+    explain: "A structured log has named fields, so a log viewer can filter on ms, level or orderId. A sentence has to be read by a person."
+    reteach: "### Structured logs"
+
+  - id: q03
+    type: spot-the-bug
+    concept: structured-logs
+    prompt: "This log line breaks a rule about what logs may hold. Which line is the problem?"
+    code: |
+      const entry = {
+        level: "info",
+        msg: "payment started",
+        orderId: "order-17",
+        session: request.headers.get("cookie"),
+      };
+      console.log(JSON.stringify(entry));
+    bugLine: 5
+    explain: "Never log secrets. The cookie holds the session token, so anyone reading the logs could act as the customer. Log ids and outcomes only."
+    reteach: "### Structured logs"
+
+  - id: q04
+    type: predict-output
+    concept: structured-logs
+    prompt: "A log viewer reads JSON lines like this. What does it print?"
+    code: |
+      const line = JSON.stringify({ level: "error", msg: "stock lookup timed out", ms: 5000 });
+      const entry = JSON.parse(line);
+      console.log(entry.level + " " + (entry.ms > 1000));
+    answer: "error true"
+    explain: "One JSON object per line turns back into fields, so it can be filtered by level or by time taken."
+    reteach: "### Structured logs"
+
+  - id: q05
+    type: mcq
+    concept: error-digest
+    variants:
+      - prompt: "In production, Golu's page shows \"Something went wrong\" and a digest number. Why not the real error message?"
+        choices:
+          - "Next.js hides server error messages so details like addresses or customer data don't leak"
+          - "The real message was lost"
+          - "Digests are shorter, so pages load faster"
+          - "Only development servers have error messages"
+        answer: 0
+      - prompt: "A customer sends a screenshot with digest 2417893051. What do you do with it?"
+        choices:
+          - "Search the server logs for that digest to find the real error, its time and its route"
+          - "Ask the customer what it means"
+          - "Restart the server"
+          - "Nothing: digests are random"
+        answer: 0
+    explain: "The browser gets a generic message and the digest. The server logs the real error with the same digest, so one number links them."
+    reteach: "### The digest"
+
+  - id: q06
+    type: fill-blank
+    concept: error-boundaries-in-next
+    goal: "When the Try again button is pressed, fetch and render the failed part of the page once more."
+    prompt: "<button type=\"button\" onClick={() => ___()}>Try again</button>"
+    answers: ["retry"]
+    explain: "error.js gets error and retry. retry() fetches and renders the error boundary's contents again, which often fixes a temporary problem."
+    reteach: "### error.js and retry"
+
+  - id: q07
+    type: mcq
+    concept: error-boundaries-in-next
+    prompt: "Why must error.js start with \"use client\"?"
+    choices:
+      - "It's a React error boundary with a button, and error boundaries must be client components"
+      - "So it can read the database"
+      - "So the error message is hidden"
+      - "It doesn't need to"
+    answer: 0
+    explain: "error.js wraps its folder in an error boundary in the browser, and its Try again button needs a click handler."
+    reteach: "### error.js and retry"
+
+  - id: q08
+    type: mcq
+    concept: on-request-error
+    variants:
+      - prompt: "Which export, in instrumentation.js, does Next.js call for every server error?"
+        choices:
+          - "onRequestError"
+          - "register"
+          - "generateMetadata"
+          - "GET"
+        answer: 0
+      - prompt: "onRequestError's context says routeType: \"action\". Where did the error happen?"
+        choices:
+          - "In a server action"
+          - "In the customer's browser"
+          - "During next build"
+          - "In robots.js"
+        answer: 0
+    explain: "onRequestError gets the error, the request (path, method, headers) and a context saying where it happened. It's the one place to report every server error."
+    reteach: "### Syntax: onRequestError"
+
+  - id: q09
+    type: mcq
+    concept: client-error-reporting
+    prompt: "The Add to cart button throws only on some old Android phones. How will the team find out?"
+    choices:
+      - "An error-tracking service in the browser collects the error with its stack trace and the browser it happened on"
+      - "The server's logs show it"
+      - "onRequestError reports it"
+      - "Customers always report it"
+    answer: 0
+    explain: "Client errors happen on the customer's phone. A browser error tracker, with source maps uploaded privately, makes them visible and readable."
+    reteach: "### Errors in the browser"
+
+  - id: q10
+    type: mcq
+    concept: metrics-and-alerts
+    variants:
+      - prompt: "Which alert is most useful on a sale day?"
+        choices:
+          - "Checkout failures above 2% for five minutes"
+          - "Any single error, any time"
+          - "Every deploy"
+          - "Every new log line"
+        answer: 0
+      - prompt: "No errors are logged, but orders per minute drop to zero at 11:00 on Saturday. What is this?"
+        choices:
+          - "An incident: a business metric shows customers can't order, even without errors"
+          - "A quiet morning, nothing to do"
+          - "A logging bug only"
+          - "Good news: fewer errors"
+        answer: 0
+    explain: "Alert on what customers feel, like failing checkouts or orders stopping. Too many alerts teach a team to ignore them."
+    reteach: "### Metrics and alerts"
+
+  - id: q11
+    type: predict-output
+    concept: metrics-and-alerts
+    prompt: "An error rate is failures divided by requests. What does this print?"
+    code: |
+      const requests = 2000;
+      const failures = 6;
+      console.log((failures / requests * 100).toFixed(1) + "%");
+    answer: "0.3%"
+    explain: "6 out of 2,000 is 0.003, or 0.3%. Rates like this are steadier to alert on than single errors."
+    reteach: "### Metrics and alerts"

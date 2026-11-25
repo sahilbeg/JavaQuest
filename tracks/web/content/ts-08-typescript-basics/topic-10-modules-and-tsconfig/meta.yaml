@@ -1,0 +1,23 @@
+id: ts-08-typescript-basics/topic-10-modules-and-tsconfig
+title: "Typed modules and tsconfig"
+order: 10
+minutes: 10
+prerequisites: [ts-08-typescript-basics/topic-09-const-objects]
+concepts: [exporting-types, import-type, tsconfig, strict-mode, type-check-script]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0810
+  from: maya
+  title: "The build passed with forty type errors"
+  body: >
+    I ran tsc on dhaaga.in last night and got forty errors, yet every deploy this month went out green. Vite builds
+    without checking types, and someone had switched strict off to quieten the editor. I've split the calculator
+    into typed modules. Please finish them, and set our team's compiler settings in src/config.ts.
+hints:
+  - "formatRupees is inr.format(paise / 100), and priceOf is PRICES[code]. Every import you need is already at the top of each file."
+  - "quoteLine is a template literal: `${line.code} x ${line.qty}: ${formatRupees(priceOf(line.code) * line.qty)}`."
+  - "In config.ts, strict and noEmit are true. target is \"es2022\", module is \"esnext\" and moduleResolution is \"bundler\"."
+review: true

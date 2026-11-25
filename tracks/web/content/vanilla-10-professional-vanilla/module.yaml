@@ -1,0 +1,6 @@
+id: vanilla-10-professional-vanilla
+title: Professional frontend without a framework
+project: Launch day, no framework
+summary: Ship dhaaga.in in plain JavaScript like a professional. Draw pages fast, make every control work with a keyboard and a screen reader, render customer text safely, build pages that work before the script arrives, get found and shared, deploy a static site, review code, and pass a frontend interview loop with no framework to lean on.
+unlockAfter: vanilla-09-single-page-apps/boss
+mascotIntro: "No framework, no problem. Let's make the store fast, safe and kind to every customer, then launch it."

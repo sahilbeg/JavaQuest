@@ -1,0 +1,112 @@
+topic: tsreact-11-typed-react-in-depth/topic-09-typed-performance
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: re-renders
+    prompt: "OrderHistory's state changes. By default, what does React re-render?"
+    choices: ["OrderHistory and every component inside it", "Only the component whose props changed", "Only the DOM elements that changed, without calling any component", "Nothing until the page reloads"]
+    answer: 0
+    explain: "React calls the component and, by default, all its children. It then updates only the parts of the page that changed."
+    reteach: "### Rendering again is normal"
+
+  - id: q02
+    type: mcq
+    concept: measure-first
+    prompt: "The order history feels slow. What should you do first?"
+    choices: ["Record it in the React DevTools Profiler to see what renders and how long it takes", "Wrap every component in memo", "Put useMemo around every value", "Move everything into one component"]
+    answer: 0
+    explain: "Measure first. Optimise only what the Profiler shows is slow."
+    reteach: "### Measure before you speed up"
+
+  - id: q03
+    type: mcq
+    concept: typed-memo
+    prompt: "What does memo(OrderRow) do?"
+    choices: ["Skips re-rendering OrderRow when every prop passes Object.is", "Makes OrderRow render faster every time", "Remembers OrderRow's state after it leaves the page", "Stops OrderRow from ever re-rendering"]
+    answer: 0
+    explain: "memo compares the new props with the old. If they are all the same, React reuses the last JSX."
+    reteach: "### Syntax: memo"
+
+  - id: q04
+    type: predict-output
+    concept: stable-functions
+    code: |
+      function render(): (id: string) => void {
+        return (id: string) => console.log(id);
+      }
+      const a = render();
+      const b = render();
+      console.log(Object.is(a, b));
+      console.log(Object.is(a, a));
+      console.log(Object.is("order-17", "order-17"));
+    answer: "false\ntrue\ntrue"
+    explain: "Each render makes a new function, so a and b differ. A function is the same as itself, and equal strings pass Object.is."
+    reteach: "### Why memo needs stable props"
+
+  - id: q05
+    type: mcq
+    concept: stable-functions
+    prompt: "OrderRow is wrapped in memo, but every row still renders on every tap. The parent passes onOpen={(id) => setOpened(id)}. Why?"
+    choices: ["The arrow is a new function each render, so memo sees a changed prop", "memo doesn't work with TypeScript", "setOpened changes on every render", "memo only works for class components"]
+    answer: 0
+    explain: "Keep the same function with useCallback, so the prop passes Object.is."
+    reteach: "### Why memo needs stable props"
+
+  - id: q06
+    type: fill-blank
+    concept: stable-functions
+    goal: "Keep the very same open handler between renders, so the memoized rows can be skipped."
+    prompt: "const handleOpen = ___((id: string) => setOpened(id), []);"
+    answers: ["useCallback"]
+    explain: "useCallback returns the same function until a dependency changes."
+    reteach: "### Syntax: useCallback"
+
+  - id: q07
+    type: mcq
+    concept: typed-use-memo
+    prompt: "const shown = useMemo(() => filterOrders(orders, query), [orders, query]); filterOrders returns PastOrder[]. What is shown's type?"
+    choices: ["PastOrder[], inferred from the function", "unknown, until you add <PastOrder[]>", "any", "() => PastOrder[]"]
+    answer: 0
+    explain: "useMemo takes its type from what the function returns. Writing useMemo<PastOrder[]> is allowed but not needed."
+    reteach: "### Syntax: useMemo"
+
+  - id: q08
+    type: spot-the-bug
+    concept: typed-use-memo
+    prompt: "Typing in the search box doesn't change the list. Which line is wrong?"
+    code: |
+      const [query, setQuery] = useState<string>("");
+      const shown = useMemo(() => filterOrders(orders, query), [orders]);
+      return <OrderList orders={shown} />;
+    bugLine: 2
+    explain: "query is read inside but missing from the dependency array, so the old result is reused. Use [orders, query]."
+    reteach: "### Syntax: useMemo"
+
+  - id: q09
+    type: mcq
+    concept: typed-use-memo
+    prompt: "Which of these is most worth wrapping in useMemo?"
+    choices: ["Searching hundreds of orders on every render", "Joining \"Opened \" and an order id", "Adding two numbers", "Reading a prop"]
+    answer: 0
+    explain: "useMemo has its own cost. Save it for slow work the Profiler points at."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: typed-memo
+    prompt: "export const OrderRow = memo(function OrderRow({ order, onOpen }: OrderRowProps) { ... }); What happens to the props type?"
+    choices: ["It stays OrderRowProps, so every use is checked as before", "It becomes any", "You must write it again on memo", "Props can't be typed on memo components"]
+    answer: 0
+    explain: "memo keeps the props type of the function it wraps."
+    reteach: "### Syntax: memo"
+
+  - id: q11
+    type: mcq
+    concept: re-renders
+    prompt: "What does the React Compiler do?"
+    choices: ["A build step that adds memoizing for you", "It turns TypeScript into JavaScript", "It replaces the React DevTools", "It stops all re-renders"]
+    answer: 0
+    explain: "The compiler memoizes automatically. Many projects still write memo, useMemo and useCallback by hand."
+    reteach: "### React Compiler"

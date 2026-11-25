@@ -59,7 +59,19 @@ courses:
     title: "Frontend with plain JavaScript"
     summary: "HTML, CSS and JavaScript with no framework, all the way to a fast, accessible store."
     stack: [HTML, CSS, JavaScript]
-    status: soon
+    status: ready
+    modules:
+      - { id: web-00-how-the-web-works, title: How the web works }
+      - { id: web-01-html, title: HTML }
+      - { id: web-02-css, title: CSS }
+      - { id: web-03-javascript-basics, title: JavaScript basics }
+      - { id: web-04-javascript-in-depth, title: JavaScript in depth }
+      - { id: web-05-dom-and-events, title: The DOM and events }
+      - { id: web-06-async-javascript, title: Async JavaScript }
+      - { id: web-07-tooling, title: Tooling }
+      - { id: vanilla-08-components-without-a-framework, title: Components without a framework }
+      - { id: vanilla-09-single-page-apps, title: Single-page apps }
+      - { id: vanilla-10-professional-vanilla, title: Professional frontend without a framework }
     ladder: [Frontend Intern, Junior Frontend Developer, Frontend Developer, Frontend Engineer, Senior Frontend Engineer, Staff Frontend Engineer, Frontend Architect, Principal Frontend Engineer]
 
   - id: frontend-react-ts
@@ -67,7 +79,21 @@ courses:
     title: "Frontend with TypeScript and React"
     summary: "The React course with TypeScript's types from the start."
     stack: [HTML, CSS, TypeScript, React]
-    status: soon
+    status: ready
+    modules:
+      - { id: web-00-how-the-web-works, title: How the web works }
+      - { id: web-01-html, title: HTML }
+      - { id: web-02-css, title: CSS }
+      - { id: web-03-javascript-basics, title: JavaScript basics }
+      - { id: web-04-javascript-in-depth, title: JavaScript in depth }
+      - { id: web-05-dom-and-events, title: The DOM and events }
+      - { id: web-06-async-javascript, title: Async JavaScript }
+      - { id: web-07-tooling, title: Tooling }
+      - { id: ts-08-typescript-basics, title: TypeScript basics }
+      - { id: ts-09-typescript-in-depth, title: TypeScript in depth }
+      - { id: tsreact-10-react-with-typescript, title: React with TypeScript }
+      - { id: tsreact-11-typed-react-in-depth, title: Typed React in depth }
+      - { id: tsreact-12-professional-typescript, title: Professional TypeScript }
     ladder: [Frontend Intern, Junior Frontend Developer, Frontend Developer, Frontend Engineer, Senior Frontend Engineer, Staff Frontend Engineer, Frontend Architect, Principal Frontend Engineer]
 
   - id: frontend-next
@@ -75,7 +101,21 @@ courses:
     title: "Frontend with Next.js"
     summary: "React with Next.js routing, server rendering and deployment."
     stack: [HTML, CSS, JavaScript, React, Next.js]
-    status: soon
+    status: ready
+    modules:
+      - { id: web-00-how-the-web-works, title: How the web works }
+      - { id: web-01-html, title: HTML }
+      - { id: web-02-css, title: CSS }
+      - { id: web-03-javascript-basics, title: JavaScript basics }
+      - { id: web-04-javascript-in-depth, title: JavaScript in depth }
+      - { id: web-05-dom-and-events, title: The DOM and events }
+      - { id: web-06-async-javascript, title: Async JavaScript }
+      - { id: web-07-tooling, title: Tooling }
+      - { id: react-08-react-fundamentals, title: React fundamentals }
+      - { id: react-09-react-in-depth, title: React in depth }
+      - { id: next-10-nextjs-fundamentals, title: Next.js fundamentals }
+      - { id: next-11-data-and-server, title: Data and the server }
+      - { id: next-12-production-nextjs, title: Production Next.js }
     ladder: [Frontend Intern, Junior Frontend Developer, Frontend Developer, Frontend Engineer, Senior Frontend Engineer, Staff Frontend Engineer, Frontend Architect, Principal Frontend Engineer]
 
   - id: backend-node

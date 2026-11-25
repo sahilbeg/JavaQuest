@@ -1,0 +1,22 @@
+id: vanilla-10-professional-vanilla/topic-08-interviews
+title: "Frontend interviews without a framework"
+order: 8
+minutes: 10
+prerequisites: [vanilla-10-professional-vanilla/topic-07-code-reviews]
+concepts: [interview-loop, problem-solving-method, javascript-questions, dom-questions, frontend-system-design, behavioural-answers]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: VAN-1008
+  from: maya
+  title: "We're hiring, and you're on the panel"
+  body: >
+    Dhaaga is hiring a second frontend engineer, and Meera Aunty wants you on the interview panel.
+    Our loop is plain JavaScript on purpose: no framework, just the language, the DOM and good judgement.
+    Read up on how frontend interviews work from both sides of the table. Arjun will run a mock loop for you next, so you know how it feels.
+hints:
+  - "A loop usually has a JavaScript round, a DOM or UI round, a frontend system design round and a behavioural round."
+  - "For every coding question: clarify, write examples with edge cases, plan out loud, code, then test by hand with your examples."
+  - "For behavioural questions, tell a real story with STAR: the Situation, your Task, the Actions you took, and the Result."
+review: true

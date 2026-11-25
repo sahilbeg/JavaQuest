@@ -1,0 +1,24 @@
+id: vanilla-09-single-page-apps/topic-06-validation-at-scale
+title: "Form validation at scale"
+order: 6
+minutes: 10
+prerequisites: [vanilla-09-single-page-apps/topic-05-fetching-into-the-store]
+concepts: [validation-rules, rule-factories, validation-schema, first-error-wins, accessible-errors, focus-first-error]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0906
+  from: sana
+  title: "The checkout's error messages are all over the place"
+  body: >
+    The checkout form shows "Invalid!" for a missing name, nothing at all for a short phone number, and a red box with no words for the PIN code.
+    I've written one friendly message per problem. Can the checks become small rules we reuse on every form,
+    with each message under its own box, and the cursor jumping to the first thing to fix?
+hints:
+  - "A rule maker returns a function: required(message) returns (value) => (value.trim() === \"\" ? message : null)."
+  - "In validate, loop over Object.entries(rules). For each field, run its rules in order and break at the first message that isn't null."
+  - "Loop over form.querySelectorAll(\"[name]\"): set aria-invalid, and write errors[field.name] ?? \"\" into form.querySelector(`#${field.name}-error`). For focus, [...form.querySelectorAll(\"[name]\")].find(...) gives the first field in form order."
+review: true

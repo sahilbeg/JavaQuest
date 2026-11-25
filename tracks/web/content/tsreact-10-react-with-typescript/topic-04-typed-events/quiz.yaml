@@ -1,0 +1,146 @@
+topic: tsreact-10-react-with-typescript/topic-04-typed-events
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: event-props
+    prompt: "Which line runs addToBag only when the button is clicked?"
+    choices:
+      - "<button type=\"button\" onClick={addToBag}>Add</button>"
+      - "<button type=\"button\" onClick={addToBag()}>Add</button>"
+      - "<button type=\"button\" onclick=\"addToBag()\">Add</button>"
+      - "<button type=\"button\" click={addToBag}>Add</button>"
+    answer: 0
+    explain: "Event props are camelCase and take a function. addToBag() would run it while drawing."
+    reteach: "### Syntax: an event prop"
+
+  - id: q02
+    type: spot-the-bug
+    concept: event-props
+    prompt: "tsc rejects this, and in plain JavaScript React would stop with an error about too many re-renders. Which line?"
+    code: |
+      function Counter() {
+        const [qty, setQty] = useState(1);
+        return (
+          <button type="button" onClick={setQty(qty + 1)}>
+            {qty}
+          </button>
+        );
+      }
+    bugLine: 4
+    explain: "setQty(qty + 1) runs during drawing and returns nothing, so onClick gets no function. Each run re-renders, which runs it again. Write onClick={() => setQty(qty + 1)}."
+    reteach: "## Common mistakes"
+
+  - id: q03
+    type: mcq
+    concept: event-types
+    prompt: "In <input onChange={(e) => setText(e.target.value)} />, why does e need no type annotation?"
+    choices:
+      - "TypeScript gets e's type from the onChange prop the function is passed to."
+      - "Event parameters are always any."
+      - "React adds the type at run time."
+      - "Arrow functions never need types."
+    answer: 0
+    explain: "That is contextual typing: the prop's handler type gives e the type ChangeEvent<HTMLInputElement>."
+    reteach: "### Inline handlers are typed for you"
+
+  - id: q04
+    type: mcq
+    concept: event-types
+    prompt: "A separate function handleChange(e) has no type on e. What does strict tsc say?"
+    choices:
+      - "Parameter 'e' implicitly has an 'any' type."
+      - "Nothing; it infers the type from the name handleChange."
+      - "Cannot find name 'e'."
+      - "Type 'string' is not assignable to type 'number'."
+    answer: 0
+    explain: "A separate function has no context, so you write the type: e: ChangeEvent<HTMLInputElement>."
+    reteach: "### Syntax: typing a separate handler"
+
+  - id: q05
+    type: fill-blank
+    concept: change-events
+    goal: "Type the parameter of a handler for an input box's onChange."
+    prompt: "function handleChange(e: ___) {"
+    answers: ["ChangeEvent<HTMLInputElement>", "React.ChangeEvent<HTMLInputElement>"]
+    explain: "React's ChangeEvent, with the element it is attached to in angle brackets."
+    reteach: "### The event types you will use"
+
+  - id: q06
+    type: mcq
+    concept: change-events
+    prompt: "Inside a ChangeEvent<HTMLInputElement> handler for a checkbox, what is the type of e.target.checked?"
+    choices: ["boolean", "string", "\"on\" | \"off\"", "number"]
+    answer: 0
+    explain: "e.target is the input element. Its checked property is a boolean, and value is a string."
+    reteach: "### The event types you will use"
+
+  - id: q07
+    type: fill-blank
+    concept: keyboard-events
+    goal: "Check that the key just pressed is the one that confirms an entry."
+    prompt: "if (e.key === ___) {"
+    answers: ["\"Enter\"", "'Enter'"]
+    explain: "Key names are text, and case matters: \"Enter\" with a capital E."
+    reteach: "### Syntax: keyboard events"
+
+  - id: q08
+    type: spot-the-bug
+    concept: keyboard-events
+    prompt: "Pressing Enter in the box does nothing. Which line is the bug?"
+    code: |
+      function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+        if (e.key === "enter") {
+          addTyped();
+        }
+      }
+    bugLine: 2
+    explain: "Key names are case-sensitive. The Enter key's name is \"Enter\"."
+    reteach: "### Syntax: keyboard events"
+
+  - id: q09
+    type: mcq
+    concept: keyboard-events
+    prompt: "Why import KeyboardEvent from \"react\" before typing an onKeyDown handler?"
+    choices:
+      - "Without the import, KeyboardEvent means the browser's own type, which doesn't match what React passes."
+      - "KeyboardEvent does not exist anywhere without the import."
+      - "The import makes the handler run faster."
+      - "React refuses handlers with typed parameters unless imported."
+    answer: 0
+    explain: "The browser and React both have a KeyboardEvent. React's handlers receive React's version."
+    reteach: "### The event types you will use"
+
+  - id: q10
+    type: mcq
+    concept: callback-props
+    prompt: "QuickAdd has onAdd: (code: ItemCode) => void. Inside QuickAdd, which call type-checks?"
+    choices: ["onAdd(\"AMI\")", "onAdd(\"ami\")", "onAdd(45000)", "onAdd()"]
+    answer: 0
+    explain: "onAdd needs one ItemCode. \"AMI\" is one; \"ami\" is not in the union, and the others are the wrong type or missing."
+    reteach: "### Syntax: callback props"
+
+  - id: q11
+    type: predict-output
+    concept: callback-props
+    code: |
+      type ItemCode = "CST" | "AMI";
+      interface PadProps {
+        onAdd: (code: ItemCode) => void;
+      }
+      function pad({ onAdd }: PadProps, typed: string): void {
+        const code = typed.trim().toUpperCase();
+        if (code === "CST" || code === "AMI") {
+          onAdd(code);
+        }
+      }
+      const added: ItemCode[] = [];
+      const props: PadProps = { onAdd: (code) => added.push(code) };
+      pad(props, " ami ");
+      pad(props, "xyz");
+      pad(props, "cst");
+      console.log(added.join(","));
+    answer: "AMI,CST"
+    explain: "\" ami \" becomes AMI and cst becomes CST. XYZ is not a code, so onAdd is never called for it."
+    reteach: "### Syntax: callback props"

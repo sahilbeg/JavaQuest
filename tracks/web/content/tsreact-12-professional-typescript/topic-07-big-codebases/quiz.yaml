@@ -1,0 +1,145 @@
+topic: tsreact-12-professional-typescript/topic-07-big-codebases
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: types-as-map
+    prompt: "Your first day in a 400-file typed store. What is the quickest way to learn what an order looks like?"
+    choices:
+      - "Read the Order type and the types it uses"
+      - "Open every component that shows an order"
+      - "Read the CSS"
+      - "Read the git log from the beginning"
+    answer: 0
+    explain: "The data types describe the business in a few files. Every screen works with those shapes, so learn them first."
+    reteach: "### Types are the map"
+
+  - id: q02
+    type: mcq
+    concept: editor-navigation
+    variants:
+      - prompt: "In an unfamiliar component, what is the cheapest way to see a variable's type?"
+        choices:
+          - "Hover over it in the editor"
+          - "Add console.log and run the app"
+          - "Search the whole codebase for its name"
+          - "Ask the author"
+        answer: 0
+      - prompt: "Which editor action jumps from a use of useCart to the file where it is written?"
+        choices:
+          - "Go to Definition"
+          - "Find All References"
+          - "Rename Symbol"
+          - "Format Document"
+        answer: 0
+    explain: "The language server understands the types: hovering shows a type, and Go to Definition jumps to where something is written, following aliases and barrels."
+    reteach: "### The editor knows the way"
+
+  - id: q03
+    type: predict-output
+    concept: find-references
+    prompt: "A text search counts the letters total in one line. What does it print?"
+    code: |
+      const text = "const { total } = cartTotals(lines); // total shown";
+      console.log(text.split("total").length - 1);
+    answer: "2"
+    explain: "The text appears in the variable and in the comment (cartTotals has a capital T). Neither is the total function from cart.ts, which Find All References would tell apart."
+    reteach: "### References, not text search"
+
+  - id: q04
+    type: mcq
+    concept: find-references
+    prompt: "You want to rename the function total in cart.ts to cartTotal. What is the safest way?"
+    choices:
+      - "Rename Symbol (F2) on the function"
+      - "Search and replace total with cartTotal in every file"
+      - "Rename it in cart.ts and wait for customers to report errors"
+      - "Copy the function under the new name and keep both"
+    answer: 0
+    explain: "Rename Symbol changes exactly the uses of that one function. Search and replace also changes comments and unrelated variables named total."
+    reteach: "### References, not text search"
+
+  - id: q05
+    type: mcq
+    concept: change-the-type
+    prompt: "Orders need a required slot field. What is the fastest way to find every place that must change?"
+    choices:
+      - "Add slot to the Order type and run tsc --noEmit; the errors are the list"
+      - "Search for the word order in every file"
+      - "Read every file in src/"
+      - "Make slot optional so nothing breaks"
+    answer: 0
+    explain: "Change the type first, then let the compiler list every place that builds or reads an Order in a way that no longer fits."
+    reteach: "### Change the type, follow the errors"
+
+  - id: q06
+    type: mcq
+    concept: change-the-type
+    prompt: "tsc reports no errors after adding slot to Order. What might still be missing?"
+    choices:
+      - "Screens that should show the slot but still compile without it"
+      - "Nothing: no errors means the feature is done"
+      - "The type itself"
+      - "The lockfile"
+    answer: 0
+    explain: "The compiler finds what breaks. A page that ought to show the new field, but compiles fine without it, needs you to read the feature and ask."
+    reteach: "## Worked example"
+
+  - id: q07
+    type: spot-the-bug
+    concept: change-the-type
+    prompt: "This change compiles with zero errors, but orders from the old checkout have no slot. Which line is the problem?"
+    code: |
+      export type DeliverySlot = "morning" | "evening";
+      export interface Order {
+        id: string;
+        lines: CartLine[];
+        slot?: DeliverySlot;
+      }
+    bugLine: 5
+    explain: "The ? makes slot optional, so no code that builds an Order is forced to set it. Make it required, and follow the errors."
+    reteach: "### Change the type, follow the errors"
+
+  - id: q08
+    type: mcq
+    concept: imports-and-aliases
+    prompt: "What is @/ in import { formatRupees } from \"@/lib/money\"?"
+    choices:
+      - "A path alias for a folder, set in tsconfig's paths option"
+      - "A package from npm called @"
+      - "A comment"
+      - "A way to import from another website"
+    answer: 0
+    explain: "Path aliases are short names for folders. Go to Definition follows them; if one doesn't resolve, look at paths in tsconfig.json."
+    reteach: "### Imports, aliases and barrels"
+
+  - id: q09
+    type: fill-blank
+    concept: imports-and-aliases
+    goal: "Name the file that re-exports every shared component, so one import line can fetch them all from the components folder."
+    prompt: "src/components/___.ts"
+    answers: ["index"]
+    explain: "A barrel is an index.ts that re-exports many modules, so import { Button } from \"@/components\" works."
+    reteach: "### Imports, aliases and barrels"
+
+  - id: q10
+    type: mcq
+    concept: declaration-files
+    variants:
+      - prompt: "You find a wrong type in api.generated.ts. What should you do?"
+        choices:
+          - "Fix the source it is generated from, and run the generator again"
+          - "Edit api.generated.ts by hand"
+          - "Delete the file"
+          - "Add // @ts-ignore above every use"
+        answer: 0
+      - prompt: "What is in a .d.ts file?"
+        choices:
+          - "Only types, describing code that lives somewhere else"
+          - "The compiled JavaScript"
+          - "The app's tests"
+          - "CSS for the components"
+        answer: 0
+    explain: "Declaration files hold types without code. Generated ones are rewritten by their tool, so hand edits silently disappear."
+    reteach: "### Declaration files"

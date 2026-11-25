@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gift note | Dhaaga &amp; Co.</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <main>
+    <h1>Write a gift note</h1>
+    <p id="warning" class="warning" hidden>A gift note just ran code on this page!</p>
+    <form id="note-form">
+      <label for="to">To</label>
+      <input id="to" name="to">
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="3"></textarea>
+      <label for="from">From</label>
+      <input id="from" name="from">
+    </form>
+
+    <h2>The gift card</h2>
+    <div id="card" class="card">
+      <p class="to"></p>
+      <p class="message"></p>
+      <p class="from"></p>
+    </div>
+
+    <h2>The packing slip sent to the printer</h2>
+    <pre id="slip"></pre>
+
+    <p><a id="continue" href="/">Continue shopping</a></p>
+  </main>
+</body>
+</html>

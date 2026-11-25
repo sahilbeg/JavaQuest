@@ -1,0 +1,23 @@
+id: ts-08-typescript-basics/topic-07-narrowing
+title: "Narrowing: checking before you use"
+order: 7
+minutes: 10
+prerequisites: [ts-08-typescript-basics/topic-06-unions-and-literals]
+concepts: [narrowing, typeof-narrowing, null-and-truthiness, in-narrowing, instanceof-and-arrays]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-0807
+  from: sam
+  title: "A delivery slip says Phone: undefined"
+  body: >
+    Raju here. The delivery slips come out wrong half the time. The website sends a PIN code as a number, WhatsApp
+    sends it as text with a space, and some customers give an email instead of a phone. One slip for Mrs. Rao said
+    "Phone: undefined", and another said "Note: null". Can you make src/delivery.ts check what it got first?
+hints:
+  - "typeof pin === \"number\" tells a number from text. After the if, TypeScript knows pin is a string, so pin.replaceAll(\" \", \"\") is allowed."
+  - "\"phone\" in contact tells the two contact shapes apart. Array.isArray(items) tells a list from one code, and when instanceof Date tells a Date from text."
+  - "For giftNote, return \"No note\" when message === null. Then trim it, and return \"No note\" for empty text too."
+review: true

@@ -1,0 +1,5 @@
+id: tsreact-10-react-with-typescript
+title: React with TypeScript
+project: The typed store
+summary: Build the dhaaga.in store pages in React, with TypeScript checking every prop, piece of state, event and list, so mistakes show up before customers see them.
+unlockAfter: ts-09-typescript-in-depth/boss

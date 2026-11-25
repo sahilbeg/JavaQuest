@@ -1,0 +1,116 @@
+topic: ts-08-typescript-basics/topic-08-aliases-and-optional
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: fill-blank
+    concept: type-aliases
+    goal: "Give the three payment modes one short name that every function can reuse for its parameters."
+    prompt: "___ PaymentMode = \"CASH\" | \"UPI\" | \"CARD\";"
+    answers: ["type"]
+    explain: "type gives a name to any type, here a union of three literals."
+    reteach: "### Syntax: type aliases"
+
+  - id: q02
+    type: mcq
+    concept: type-vs-interface
+    prompt: "Which of these can only be written with type, not with interface?"
+    choices: ["A name for the union \"CASH\" | \"UPI\" | \"CARD\"", "A name for an object shape with id and paise", "An object shape with a readonly id", "An object shape with an optional property"]
+    answer: 0
+    explain: "Both can describe object shapes. Only a type alias can name a union, a tuple or a primitive."
+    reteach: "### type or interface?"
+
+  - id: q03
+    type: mcq
+    concept: optional-properties
+    prompt: "OrderLine has giftWrap?: boolean. What type does line.giftWrap have when you read it?"
+    choices: ["boolean | undefined", "boolean", "undefined", "any"]
+    answer: 0
+    explain: "An optional property may be missing, and a missing property reads as undefined."
+    reteach: "### Syntax: optional properties"
+
+  - id: q04
+    type: fill-blank
+    concept: optional-properties
+    goal: "Let order lines leave out the name to stitch, because most customers don't want one."
+    prompt: "  name___: string;"
+    answers: ["?"]
+    explain: "A ? after a property's name makes it optional."
+    reteach: "### Syntax: optional properties"
+
+  - id: q05
+    type: predict-output
+    concept: optional-chaining
+    code: |
+      type Customer = { name: string; address?: { city: string } };
+      const ravi: Customer = { name: "Ravi" };
+      const asha: Customer = { name: "Asha", address: { city: "Pune" } };
+      console.log(ravi.address?.city, asha.address?.city);
+    answer: "undefined Pune"
+    explain: "Ravi has no address, so ?. stops and gives undefined instead of crashing. Asha's address exists."
+    reteach: "### Syntax: optional chaining"
+
+  - id: q06
+    type: spot-the-bug
+    concept: optional-chaining
+    code: |
+      type Customer = { name: string; address?: { city: string } };
+      function label(customer: Customer): string {
+        const name = customer.name;
+        const city = customer.address.city;
+        return name + ", " + city;
+      }
+    bugLine: 4
+    explain: "address is optional, so it might be undefined. tsc says 'customer.address' is possibly 'undefined'. Use customer.address?.city."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: predict-output
+    concept: nullish-coalescing
+    code: |
+      const qty: number | undefined = 0;
+      console.log(qty || 1, qty ?? 1);
+    answer: "1 0"
+    explain: "|| replaces every falsy value, including 0. ?? only replaces null and undefined, so the 0 is kept."
+    reteach: "### Syntax: nullish coalescing"
+
+  - id: q08
+    type: predict-output
+    concept: nullish-coalescing
+    code: |
+      type Customer = { name: string; phone?: string };
+      const meena: Customer = { name: "Meena" };
+      console.log(meena.phone ?? "no phone");
+    answer: "no phone"
+    explain: "Meena gave no phone, so phone is undefined, and ?? uses the default."
+    reteach: "### Syntax: nullish coalescing"
+
+  - id: q09
+    type: mcq
+    concept: nullish-coalescing
+    prompt: "Why is qty ?? 1 better than qty || 1 for an optional quantity?"
+    choices: ["?? keeps a quantity of 0, while || turns 0 into 1", "?? is faster", "|| doesn't work in TypeScript", "?? also turns negative numbers into 1"]
+    answer: 0
+    explain: "A cancelled line has qty 0. || treats 0 as missing because it's falsy. ?? only fills in null or undefined."
+    reteach: "### Syntax: nullish coalescing"
+
+  - id: q10
+    type: mcq
+    concept: optional-chaining
+    prompt: "What does customer.address!.city do when customer has no address?"
+    choices: ["tsc stays quiet, and the code crashes when it runs", "It gives undefined, like ?.", "tsc reports an error", "It gives an empty string"]
+    answer: 0
+    explain: "! tells TypeScript to trust you and stop checking. At run time, reading city from undefined is a TypeError."
+    reteach: "## Common mistakes"
+
+  - id: q11
+    type: predict-output
+    concept: type-aliases
+    code: |
+      type ItemCode = "CST" | "KEY";
+      type Line = [code: ItemCode, qty: number];
+      const line: Line = ["KEY", 3];
+      console.log(line[0], line[1] * 12000);
+    answer: "KEY 36000"
+    explain: "The aliases are only names for types, erased before running. The tuple holds \"KEY\" and 3."
+    reteach: "### Syntax: type aliases"

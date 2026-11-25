@@ -1,0 +1,22 @@
+id: tsreact-12-professional-typescript/topic-08-interviews
+title: "TypeScript interviews"
+order: 8
+minutes: 10
+prerequisites: [tsreact-12-professional-typescript/topic-07-big-codebases]
+concepts: [interview-loop, type-vs-interface, any-unknown-never, structural-typing, generics-questions, live-typing-method]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: TSX-1208
+  from: maya
+  title: "Get ready for the TypeScript loop"
+  body: >
+    Dhaaga is hiring two more frontend engineers for dhaaga.in, and you'll be on the interview panel soon.
+    Before that, Arjun will run a mock TypeScript loop for you, so you know how it feels from the other chair.
+    Brush up on the questions every TypeScript interview asks, and practise typing a function out loud.
+hints:
+  - "Know the classic pairs: type vs interface, any vs unknown vs never, and why { id, paise, name } fits where { id, paise } is expected."
+  - "Generic questions are about keeping the link between input and output: function first<T>(items: readonly T[]): T | undefined."
+  - "In a live round: ask questions, write the types first, try an example by hand, then code, then test the edges out loud."
+review: true

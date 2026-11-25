@@ -1,0 +1,22 @@
+id: vanilla-10-professional-vanilla/topic-05-seo-and-sharing
+title: "Search engines and sharing links"
+order: 5
+minutes: 10
+prerequisites: [vanilla-10-professional-vanilla/topic-04-progressive-enhancement]
+concepts: [title-and-description, meaningful-urls, link-previews, rendering-for-crawlers, sitemaps-and-robots, structured-data]
+practice:
+  kind: quiz
+xp: { quiz: 50, code: 0 }
+ticket:
+  key: VAN-1005
+  from: priya
+  title: "Golu's link shows a blank box on WhatsApp"
+  body: >
+    Beta, I shared Golu's page with my school WhatsApp group, and the message showed only "dhaaga.in" with an empty grey box. No photo, no name, no price.
+    And when my neighbour searched "crochet elephant Pune", she found a shop in Mumbai, not us.
+    Please read up on how Google and WhatsApp see our pages, so we can fix it before the launch.
+hints:
+  - "Search engines and link previews read the HTML your server sends. Each product page needs its own <title>, meta description and address, like /products/DC-1042."
+  - "WhatsApp's preview bot doesn't run JavaScript. It reads og:title, og:description and og:image from the HTML, and og:image must be a full https:// address."
+  - "robots.txt says what crawlers may visit, sitemap.xml lists every page you want found, and a JSON-LD Product block tells Google the name and price in a form it can show in results."
+review: true

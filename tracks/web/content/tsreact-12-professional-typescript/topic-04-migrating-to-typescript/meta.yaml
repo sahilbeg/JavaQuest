@@ -1,0 +1,23 @@
+id: tsreact-12-professional-typescript/topic-04-migrating-to-typescript
+title: "Moving a JavaScript file to TypeScript"
+order: 4
+minutes: 10
+prerequisites: [tsreact-12-professional-typescript/topic-03-typed-apis-end-to-end]
+concepts: [migration-plan, allow-js-check-js, jsdoc-types, rename-then-type, bugs-types-find, temporary-escape-hatches]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: TSX-1204
+  from: maya
+  title: "The last JavaScript file in the store"
+  body: >
+    giftOrder.js is the last JavaScript file in dhaaga.in, and it's the one that keeps biting us.
+    Last week a customer paid ₹60 less than she should have for two wrapped Golus, and the order summary said "₹NaN" for a whole afternoon.
+    I've renamed it to .ts and typed everything any, so it builds. Please finish the move, and fix whatever the types find.
+hints:
+  - "Write three interfaces from the README. Then look at each function: the editor's red lines are the bugs."
+  - "The fields are giftWrap and qty. A name counts only when stitchedName.trim() !== \"\". Extras are paid per item: (line.paise + extrasPaise(line.gift)) * line.qty."
+  - "orderSummary: const count = order.lines.reduce((sum, line) => sum + line.qty, 0); the total is the same reduce over lineTotal(line); then `${count} ${count === 1 ? \"item\" : \"items\"}, ${formatRupees(total)}`."
+review: true

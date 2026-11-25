@@ -1,0 +1,136 @@
+topic: tsreact-10-react-with-typescript/topic-09-typed-styling
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: class-names
+    prompt: "How do you give a button two classes, btn and btn--primary, in TSX?"
+    choices:
+      - "className=\"btn btn--primary\""
+      - "class=\"btn btn--primary\""
+      - "className={[\"btn\", \"btn--primary\"]}"
+      - "classes=\"btn, btn--primary\""
+    answer: 0
+    explain: "className takes one string, with the class names separated by spaces."
+    reteach: "### Syntax: className in TSX"
+
+  - id: q02
+    type: predict-output
+    concept: class-names
+    code: |
+      const extra: string | undefined = undefined;
+      const variant: string = "danger";
+      console.log(["btn", `btn--${variant}`, extra].filter(Boolean).join(" "));
+      console.log(["btn", `btn--${variant}`, extra].join(" "));
+    answer: "btn btn--danger\nbtn btn--danger "
+    explain: "filter(Boolean) drops undefined. Without it, join turns undefined into an empty string and leaves a stray space."
+    reteach: "### Building a class list"
+
+  - id: q03
+    type: mcq
+    concept: variant-unions
+    prompt: "Why type variant as \"primary\" | \"secondary\" | \"danger\" instead of string?"
+    choices:
+      - "tsc refuses any variant that isn't designed, like a typo \"primay\"."
+      - "Unions make the CSS file smaller."
+      - "Strings can't be used in className."
+      - "React only accepts unions as props."
+    answer: 0
+    explain: "A union lists the allowed values. A string accepts typos that silently break the style."
+    reteach: "### Syntax: variants as a union"
+
+  - id: q04
+    type: spot-the-bug
+    concept: variant-unions
+    prompt: "ButtonVariant is \"primary\" | \"secondary\" | \"danger\". Which line fails to type-check?"
+    code: |
+      <Button variant="primary">Pay by UPI</Button>
+      <Button variant="secondary">Keep shopping</Button>
+      <Button variant="warning">Remove</Button>
+      <Button variant="danger">Empty cart</Button>
+    bugLine: 3
+    explain: "\"warning\" is not one of the variants in the union."
+    reteach: "### Syntax: variants as a union"
+
+  - id: q05
+    type: fill-blank
+    concept: native-props
+    goal: "Give Button every prop a normal HTML button accepts, plus its own variant."
+    prompt: "type ButtonProps = ___<\"button\"> & { variant?: ButtonVariant };"
+    answers: ["ComponentPropsWithoutRef", "React.ComponentPropsWithoutRef"]
+    explain: "ComponentPropsWithoutRef<\"button\"> is the type of a plain <button>'s props."
+    reteach: "### Syntax: passing native props through"
+
+  - id: q06
+    type: mcq
+    concept: native-props
+    prompt: "In function Button({ variant = \"primary\", ...rest }: ButtonProps), what is rest?"
+    choices:
+      - "Every prop except variant, like onClick, disabled and children"
+      - "Only the children"
+      - "The CSS for the button"
+      - "An array of the props in order"
+    answer: 0
+    explain: "The rest pattern collects every property not named before it. {...rest} passes them on."
+    reteach: "### Syntax: passing native props through"
+
+  - id: q07
+    type: mcq
+    concept: native-props
+    prompt: "A Button passes {...rest} to <button> and sets its own className first. The parent passes className=\"wide\". What happens?"
+    choices:
+      - "rest's className replaces the button's own classes, so btn and its variant are lost."
+      - "Both class lists are merged automatically."
+      - "tsc refuses className on Button."
+      - "The parent's className is ignored."
+    answer: 0
+    explain: "A later prop wins. Take className out of the props and add it to your own list."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: css-properties
+    prompt: "Which style prop sets a 24-pixel-wide Marigold swatch?"
+    choices:
+      - "style={{ backgroundColor: \"#F2A81D\", width: 24 }}"
+      - "style=\"background-color: #F2A81D; width: 24px\""
+      - "style={{ \"background-color\": \"#F2A81D\", width: \"24\" }}"
+      - "style={[\"backgroundColor\", \"#F2A81D\"]}"
+    answer: 0
+    explain: "style takes an object with camelCase names. A plain number is read as pixels."
+    reteach: "### Syntax: style objects"
+
+  - id: q09
+    type: fill-blank
+    concept: css-properties
+    goal: "Type a style object so tsc checks every CSS property name in it."
+    prompt: "const style: ___ = { backgroundColor: hex, width: 24 };"
+    answers: ["CSSProperties", "React.CSSProperties"]
+    explain: "CSSProperties lists every CSS property React's style prop accepts."
+    reteach: "### Syntax: style objects"
+
+  - id: q10
+    type: mcq
+    concept: record-of-colours
+    prompt: "SWATCH_HEX is a Record<Colour, string>. A teammate adds \"Saffron\" to Colour but not to SWATCH_HEX. What happens?"
+    choices:
+      - "tsc reports that SWATCH_HEX is missing the property Saffron."
+      - "The Saffron swatch quietly shows no colour."
+      - "React picks the nearest colour."
+      - "Nothing; Records don't check their keys."
+    answer: 0
+    explain: "A Record over a union must have a key for every member."
+    reteach: "### Syntax: a Record of colours"
+
+  - id: q11
+    type: predict-output
+    concept: record-of-colours
+    code: |
+      type Colour = "Marigold" | "Indigo";
+      const HEX: Record<Colour, string> = { Marigold: "#F2A81D", Indigo: "#2E3A8C" };
+      const order: Colour[] = ["Indigo", "Marigold"];
+      console.log(order.map((c) => HEX[c]).join(" "));
+    answer: "#2E3A8C #F2A81D"
+    explain: "Each colour looks up its own hex code, in the order of the array."
+    reteach: "### Syntax: a Record of colours"

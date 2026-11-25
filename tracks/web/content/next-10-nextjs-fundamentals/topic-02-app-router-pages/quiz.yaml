@@ -1,0 +1,113 @@
+topic: next-10-nextjs-fundamentals/topic-02-app-router-pages
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: folder-routes
+    prompt: "Which file is the page for dhaaga.in/help/delivery?"
+    choices: ["src/app/help/delivery/page.jsx", "src/app/help/delivery.jsx", "src/app/help-delivery/page.jsx", "src/pages/help/delivery.html"]
+    answer: 0
+    explain: "Each folder inside app is one segment: help, then delivery. The page itself is the file called page.jsx."
+    reteach: "### Folders are addresses"
+
+  - id: q02
+    type: predict-output
+    concept: folder-routes
+    code: |
+      const file = "app/visit/hours/page.jsx";
+      const parts = file.split("/");
+      console.log(parts.length);
+      console.log("/" + parts.slice(1, -1).join("/"));
+    answer: "4\n/visit/hours"
+    explain: "The path has four parts. slice(1, -1) drops app and page.jsx, leaving the two folders that make the address."
+    reteach: "## Worked example"
+
+  - id: q03
+    type: mcq
+    concept: page-file
+    prompt: "The folder src/app/visit holds page.jsx, Hours.jsx and map.png. Which addresses exist?"
+    choices: ["Only /visit", "/visit, /visit/Hours and /visit/map.png", "/visit and /visit/Hours", "None, until you add them to a router"]
+    answer: 0
+    explain: "Only a file called page makes an address. The other files are colocated helpers that the page can import."
+    reteach: "### Only page files become pages"
+
+  - id: q04
+    type: mcq
+    concept: page-file
+    prompt: "Sana saves the About page as src/app/about.jsx. What does dhaaga.in/about show?"
+    choices: ["The 404 Not Found page", "The About page", "An error asking for a router", "The home page"]
+    answer: 0
+    explain: "Next.js looks for a folder called about holding a file called page. A file named about.jsx is not a page."
+    reteach: "## Common mistakes"
+
+  - id: q05
+    type: fill-blank
+    concept: default-export
+    goal: "Make AboutPage the component Next.js shows for this file."
+    prompt: "export ___ function AboutPage() {"
+    answers: ["default"]
+    explain: "Next.js uses the file's default export as the page. A named export doesn't count."
+    reteach: "### Syntax: a page"
+
+  - id: q06
+    type: spot-the-bug
+    concept: default-export
+    prompt: "This is src/app/visit/page.jsx, and Next.js says the page's default export is not a React component. Which line is wrong?"
+    code: |
+      export function VisitPage() {
+        return (
+          <>
+            <h1>Visit us</h1>
+            <p>FC Road stall: Saturday and Sunday, 10:00 to 20:00</p>
+          </>
+        );
+      }
+    bugLine: 1
+    explain: "The component is a named export. Write export default function VisitPage() so Next.js can find it."
+    reteach: "### Syntax: a page"
+
+  - id: q07
+    type: mcq
+    concept: default-export
+    prompt: "Does the name of a page's function change its address?"
+    choices: ["No; only the folders decide the address, and the name is just for people reading the code", "Yes; AboutPage is served at /AboutPage", "Yes; it must be called Page or nothing shows", "Only if it starts with a capital letter"]
+    answer: 0
+    explain: "Next.js finds pages by folder and file name. The function name is free to choose."
+    reteach: "### Syntax: a page"
+
+  - id: q08
+    type: mcq
+    concept: route-groups
+    prompt: "Which address shows src/app/(shop)/cart/page.jsx?"
+    choices: ["/cart", "/(shop)/cart", "/shop/cart", "None; brackets are not allowed in folder names"]
+    answer: 0
+    explain: "A folder in round brackets is a route group. It organises files but is left out of the address."
+    reteach: "### Syntax: folders that don't become segments"
+
+  - id: q09
+    type: mcq
+    concept: private-folders
+    prompt: "What does dhaaga.in/_components show, when src/app/_components/page.jsx exists?"
+    choices: ["The 404 page, because folders starting with _ are left out of routing", "The page in _components/page.jsx", "A list of the components", "An error during the build"]
+    answer: 0
+    explain: "A private folder and everything inside it is never routed, even a page.jsx. It's a home for shared components."
+    reteach: "### Syntax: folders that don't become segments"
+
+  - id: q10
+    type: fill-blank
+    concept: private-folders
+    goal: "Name a folder for shared components so Next.js never turns anything inside it into an address."
+    prompt: "src/app/___components/Header.jsx"
+    answers: ["_"]
+    explain: "A leading underscore makes a private folder, which is left out of routing."
+    reteach: "### Syntax: folders that don't become segments"
+
+  - id: q11
+    type: mcq
+    concept: page-file
+    prompt: "Why can a plain page like Visit us not use useState on its own?"
+    choices: ["Pages are server components by default: they run once on the server, where nobody can click","useState only works inside a layout", "Next.js removed useState", "Pages must be written as classes"]
+    answer: 0
+    explain: "Server components run once on the server to make HTML. State and event handlers belong to client components, which ticket 5 covers."
+    reteach: "### Pages run on the server"

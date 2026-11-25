@@ -1,0 +1,51 @@
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #faf7f0;
+  color: #2e3a8c;
+}
+
+main {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+}
+
+input {
+  font: inherit;
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 24rem;
+  box-sizing: border-box;
+}
+
+.grid {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.product {
+  border: 2px solid #f2a81d;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  background: white;
+}
+
+.product h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.price {
+  margin: 0;
+  font-weight: 700;
+}

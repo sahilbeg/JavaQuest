@@ -1,0 +1,23 @@
+id: vanilla-09-single-page-apps/topic-10-testing-an-spa
+title: "Testing a single-page app"
+order: 10
+minutes: 10
+prerequisites: [vanilla-09-single-page-apps/topic-09-offline-caching]
+concepts: [integration-tests, driving-the-url, fake-server, waiting-for-the-screen, test-isolation, testing-like-a-user]
+practice:
+  kind: code
+  runner: vitest
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0910
+  from: maya
+  title: "Our SPA tests are copy-pasted and flaky"
+  body: >
+    Every test file for the new store has its own copy of a fake fetch, a different way to change the URL,
+    and a sleep(500) to wait for the screen. Last week two tests failed only when run together, because one left the cart in localStorage.
+    Let's build one small test kit that every SPA test can share.
+hints:
+  - "visit is two lines: history.replaceState(null, \"\", path), then window.dispatchEvent(new PopStateEvent(\"popstate\")). fakeServer's fetch pushes the path onto calls before answering."
+  - "waitFor returns new Promise((resolve, reject) => { ... }). Inside, keep const started = Date.now() and an attempt() function that either resolves, rejects, or calls setTimeout(attempt, 10). Start it by calling attempt()."
+  - "textOf is element.textContent.replace(/\\s+/g, \" \").trim(). reset calls document.body.replaceChildren(), localStorage.clear() and history.replaceState(null, \"\", \"/\")."
+review: true

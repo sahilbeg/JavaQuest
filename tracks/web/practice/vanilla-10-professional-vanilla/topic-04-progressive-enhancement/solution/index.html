@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shop | Dhaaga &amp; Co.</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <header>
+    <a href="/">Dhaaga &amp; Co.</a>
+    <a id="cart-link" href="/cart">Cart (<span id="cart-count">0</span>)</a>
+  </header>
+  <main>
+    <h1>Shop</h1>
+
+    <form id="search-form" action="/search" method="get" role="search">
+      <label for="q">Search</label>
+      <input id="q" name="q" type="search">
+      <button type="submit">Search</button>
+    </form>
+    <p id="status" role="status"></p>
+
+    <ul id="products">
+      <li class="product" data-name="Golu the elephant">
+        <h2><a href="/products/DC-1042">Golu the elephant</a></h2>
+        <p>₹450.00</p>
+        <form class="add" action="/cart" method="post">
+          <input type="hidden" name="id" value="DC-1042">
+          <button type="submit">Add to cart</button>
+        </form>
+      </li>
+      <li class="product" data-name="Marigold coaster set">
+        <h2><a href="/products/DC-1101">Marigold coaster set</a></h2>
+        <p>₹150.00</p>
+        <form class="add" action="/cart" method="post">
+          <input type="hidden" name="id" value="DC-1101">
+          <button type="submit">Add to cart</button>
+        </form>
+      </li>
+      <li class="product" data-name="Mint keychain">
+        <h2><a href="/products/DC-1201">Mint keychain</a></h2>
+        <p>₹120.00</p>
+        <form class="add" action="/cart" method="post">
+          <input type="hidden" name="id" value="DC-1201">
+          <button type="submit">Add to cart</button>
+        </form>
+      </li>
+      <li class="product" data-name="Rani pink tote bag">
+        <h2><a href="/products/DC-1301">Rani pink tote bag</a></h2>
+        <p>₹899.00</p>
+        <form class="add" action="/cart" method="post">
+          <input type="hidden" name="id" value="DC-1301">
+          <button type="submit">Add to cart</button>
+        </form>
+      </li>
+    </ul>
+  </main>
+</body>
+</html>

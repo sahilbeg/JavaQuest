@@ -1,0 +1,110 @@
+topic: vanilla-08-components-without-a-framework/topic-09-styling-components
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: style-clashes
+    prompt: "Sana adds .price { color: #b00020; } for the cart's savings line, and every catalogue price turns red. Why?"
+    choices: ["CSS rules reach the whole page, and the catalogue cards also use the class price", "Red is the browser's default for prices", "The cart's CSS loads last, so it wins everywhere", "Classes only work inside shadow roots"]
+    answer: 0
+    explain: "Short, shared names like .price are used by many components, and one rule hits them all."
+    reteach: "### Why styles clash"
+
+  - id: q02
+    type: mcq
+    concept: bem-naming
+    prompt: "In BEM, which class names the price element of the product-card block?"
+    choices: ["product-card__price", "product-card--price", "price", "product-card price"]
+    answer: 0
+    explain: "Elements join the block with two underscores. Two dashes are for modifiers."
+    reteach: "### Syntax: BEM names"
+
+  - id: q03
+    type: mcq
+    concept: bem-naming
+    prompt: "Which class attribute is right for a sold-out product card?"
+    choices: ["class=\"product-card product-card--sold-out\"", "class=\"product-card--sold-out\"", "class=\"product-card__sold-out\"", "class=\"sold-out\""]
+    answer: 0
+    explain: "A modifier is added on top of the block class, so the card keeps all its normal styles."
+    reteach: "## Common mistakes"
+
+  - id: q04
+    type: predict-output
+    concept: bem-naming
+    prompt: "What does this print?"
+    code: |
+      function bem(block, element, modifiers = {}) {
+        const base = element ? `${block}__${element}` : block;
+        const extra = Object.entries(modifiers)
+          .filter(([, on]) => on)
+          .map(([name]) => `${base}--${name}`);
+        return [base, ...extra].join(" ");
+      }
+      console.log(bem("cart-line", "price", { sale: true, gift: false }));
+    answer: "cart-line__price cart-line__price--sale"
+    explain: "The base is cart-line__price. Only sale is true, so one modifier is added after it."
+    reteach: "## Try it"
+
+  - id: q05
+    type: mcq
+    concept: bem-naming
+    prompt: "Why does BEM keep each selector to a single class, like .product-card__name, instead of .product-card h3?"
+    choices: ["Every rule has the same specificity and only hits the part it names, even when the HTML changes", "Browsers can't read selectors with spaces", "It makes the CSS file smaller", "Single classes are the only ones that work with var()"]
+    answer: 0
+    explain: "Element names and chains reach things you didn't mean and break when tags change. One class is precise and flat."
+    reteach: "### Flat, one-class selectors"
+
+  - id: q06
+    type: fill-blank
+    concept: design-tokens
+    goal: "Colour the product's name with the Indigo brand token kept on :root."
+    prompt: ".product-card__name { color: ___(--dhaaga-indigo); }"
+    answers: ["var"]
+    explain: "var(--name) reads a CSS custom property, here the brand token."
+    reteach: "### Syntax: design tokens"
+
+  - id: q07
+    type: mcq
+    concept: design-tokens
+    prompt: "Sana adjusts the brand Marigold. With tokens on :root, how many lines change?"
+    choices: ["One: the --dhaaga-marigold line on :root", "One per component that uses Marigold", "Every line in the stylesheet", "None: tokens can't change"]
+    answer: 0
+    explain: "A design token is stored once. Every var(--dhaaga-marigold) follows the change."
+    reteach: "### Syntax: design tokens"
+
+  - id: q08
+    type: mcq
+    concept: custom-properties-through-shadow
+    prompt: "The gift guide sets sale-badge { --sale-badge-bg: #8FD3B6; }. Inside the badge's shadow root, :host { background: var(--sale-badge-bg, #F2A81D); }. What colour is the badge?"
+    choices: ["#8FD3B6, the Mint from the page", "#F2A81D, because pages can't reach shadow roots", "Both, striped", "No background"]
+    answer: 0
+    explain: "Custom properties inherit through the shadow boundary. The fallback is used only when nothing is set."
+    reteach: "### Custom properties reach into shadow roots"
+
+  - id: q09
+    type: mcq
+    concept: custom-properties-through-shadow
+    prompt: "A badge's shadow style is :host { background: var(--sale-badge-bg); }, and the page never sets --sale-badge-bg. What happens?"
+    choices: ["The badge has no background, because there is no fallback", "It uses Marigold anyway", "The browser throws an error", "It uses the page's body background"]
+    answer: 0
+    explain: "Without a value and without a fallback, the property is invalid and the background is left unset. Write var(--sale-badge-bg, #F2A81D)."
+    reteach: "## Common mistakes"
+
+  - id: q10
+    type: mcq
+    concept: css-parts
+    prompt: "Inside the badge's shadow root is <span part=\"label\">. Which page rule can style that span?"
+    choices: ["sale-badge::part(label) { text-transform: uppercase; }", "sale-badge span { text-transform: uppercase; }", "sale-badge .label { text-transform: uppercase; }", "#label { text-transform: uppercase; }"]
+    answer: 0
+    explain: "::part reaches exactly the elements a component marked with part. Normal selectors can't enter the shadow root."
+    reteach: "### Syntax: ::part"
+
+  - id: q11
+    type: mcq
+    concept: host-and-hidden
+    prompt: "A badge's shadow style has only :host { display: inline-block; }. The page sets badge.hidden = true. What happens?"
+    choices: ["The badge stays visible, because :host overrides the browser's hiding rule", "The badge hides", "The badge is removed from the page", "An error is thrown"]
+    answer: 0
+    explain: "The display from :host beats the browser's rule for [hidden]. Add :host([hidden]) { display: none; }."
+    reteach: "### :host and the hidden attribute"

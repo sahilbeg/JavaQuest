@@ -1,0 +1,24 @@
+id: next-11-data-and-server/topic-04-server-actions
+title: "Server actions"
+order: 4
+minutes: 10
+prerequisites: [next-11-data-and-server/topic-03-route-handlers]
+concepts: [use-server, form-action, reading-formdata, revalidate-after-change, binding-arguments, actions-are-public]
+practice:
+  kind: code
+  runner: vitest
+  preview: false
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: NXT-1104
+  from: sam
+  title: "Raju wants a Mark packed button"
+  body: >
+    Raju here. Every evening I pack the day's orders at the Aundh shop, then send Kavya a list on WhatsApp so she
+    can change them to PACKED. Last week she missed order-19, and Neha Desai got a "not packed yet" message for a
+    box that was already in the van. Can the orders page have a Mark packed button, and a Cancel button for new orders?
+hints:
+  - "A server action is an async function in a file that starts with \"use server\". When a form uses it as its action, it gets the form's FormData: formData.get(\"orderId\")."
+  - "Check before you change: getOrder(orderId) may be undefined, and only a NEW order can be packed or cancelled. Return { error: ... } instead of throwing. After a change, call revalidatePath(\"/orders\") and return { ok: true }."
+  - "cancelOrder gets the id first, because the page binds it: cancelOrder.bind(null, order.id). In the page, the Mark packed form needs <input type=\"hidden\" name=\"orderId\" value={order.id} />."
+review: true

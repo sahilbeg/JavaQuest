@@ -1,0 +1,24 @@
+id: vanilla-10-professional-vanilla/topic-03-security
+title: "Security: XSS and safe rendering"
+order: 3
+minutes: 10
+prerequisites: [vanilla-10-professional-vanilla/topic-02-accessibility-in-depth]
+concepts: [xss, text-not-html, escaping-html, dangerous-sinks, safe-redirects, content-security-policy]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-1003
+  from: maya
+  title: "A gift note that runs code"
+  body: >
+    Yesterday someone ordered a keychain with a "gift note" that was really HTML, and the packing-slip page at the Aundh shop drew a broken image and ran its script.
+    The same day Arjun found a WhatsApp message going round with a dhaaga.in sign-in link whose next= sends people to a fake site.
+    Customers type these notes and click these links, so treat every bit of it as text. Fix the gift note, the packing slip and the sign-in redirect before the Diwali gift orders start.
+hints:
+  - "Customer text must never become HTML. On the live page, put it in with textContent. In an HTML string, pass every customer value through escapeHtml first."
+  - "escapeHtml must replace & before the others, or the & in &lt; gets escaped again. Then <, >, \" and ' become &lt; &gt; &quot; and &#39;."
+  - "nextPage: read next with new URLSearchParams(search).get(\"next\"). Return it only when it starts with \"/\" and doesn't start with \"//\" or \"/\\\"; otherwise return \"/\"."
+review: true

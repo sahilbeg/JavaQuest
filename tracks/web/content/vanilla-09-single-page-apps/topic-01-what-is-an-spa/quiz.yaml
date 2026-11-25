@@ -1,0 +1,128 @@
+topic: vanilla-09-single-page-apps/topic-01-what-is-an-spa
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: multi-page-app
+    variants:
+      - { prompt: "On a multi-page site, a customer taps a link to Golu's page. What does the browser get from the server?", choices: ["A whole new HTML page, which replaces the old one", "Only Golu's data as JSON", "Nothing: JavaScript draws the page from memory", "Only the changed parts of the old page"], answer: 0 }
+      - { prompt: "On a multi-page site, what happens to the old page's JavaScript variables when the customer taps a link?", choices: ["They are thrown away with the old page", "They move to the new page", "They are saved in the URL", "They keep running in the background"], answer: 0 }
+    explain: "A multi-page app loads a brand-new HTML page for every link. The old page, and every variable in it, is thrown away."
+    reteach: "### A multi-page site: a new page for every tap"
+
+  - id: q02
+    type: mcq
+    concept: single-page-app
+    variants:
+      - { prompt: "What does a single-page app ask the server for after the first load?", choices: ["Mostly data, such as JSON", "A new HTML page for every screen", "Nothing at all, ever", "Only images"], answer: 0 }
+      - { prompt: "Which sentence describes a single-page app?", choices: ["It loads one page once, then JavaScript swaps the screens", "It has only one screen", "It never talks to a server", "It reloads the page for every tap, but faster"], answer: 0 }
+    explain: "An SPA loads its HTML and JavaScript once. After that, JavaScript changes the screen itself and fetches only the data it needs."
+    reteach: "### A single-page app: one page, many screens"
+
+  - id: q03
+    type: mcq
+    concept: single-page-app
+    prompt: "A customer types half a search, opens the cart, and comes back to the catalogue. In which kind of site is her half-typed search most likely still there?"
+    choices: ["A single-page app, because the same page and its variables stayed alive", "A multi-page site, because the server remembers it", "Neither: browsers always clear search boxes", "Both, always"]
+    answer: 0
+    explain: "An SPA never throws its page away, so whatever JavaScript is holding survives a move between screens."
+    reteach: "### What you gain"
+
+  - id: q04
+    type: mcq
+    concept: app-shell
+    variants:
+      - { prompt: "In an SPA, what is the app shell?", choices: ["The parts that stay on screen all the time, like the header, menu and cart badge", "The server that sends the JSON", "The first screen a customer sees", "A file that lists every route"], answer: 0 }
+      - { prompt: "In an SPA, what is the outlet?", choices: ["The one element where screens are swapped", "The link that leaves the site", "The server's address", "The browser's Back button"], answer: 0 }
+    explain: "The app shell is drawn once and stays. Inside it, one element, the outlet, holds whichever screen is showing."
+    reteach: "### The app shell"
+
+  - id: q05
+    type: mcq
+    concept: client-side-routing
+    prompt: "What does client-side routing mean?"
+    choices: ["Your JavaScript reads the address and picks which screen to show", "The server picks a new HTML page for every address", "The customer chooses a route on a map", "The browser draws every screen at once"]
+    answer: 0
+    explain: "With client-side routing, the code running in the browser maps each URL to a screen, without loading a new page."
+    reteach: "### Routing: the URL still matters"
+
+  - id: q06
+    type: mcq
+    concept: deep-links
+    variants:
+      - { prompt: "Raju pastes dhaaga.in/items/DC-1042 into WhatsApp. What should the customer see when she opens it?", choices: ["Golu's screen, straight away", "The home page, and then she searches for Golu", "A blank outlet until she taps something", "The page Raju was on before"], answer: 0 }
+      - { prompt: "What is a deep link?", choices: ["A URL that opens one particular screen inside an app", "A link hidden at the bottom of the page", "A link to another website", "A link that only works on the home page"], answer: 0 }
+    explain: "A deep link names one screen. The SPA must read the URL on load and show that screen at once."
+    reteach: "### Routing: the URL still matters"
+
+  - id: q07
+    type: mcq
+    concept: client-side-routing
+    prompt: "An SPA swaps the cart onto the screen but leaves the address bar on /items. What goes wrong?"
+    choices: ["Refresh, Back and shared links all show the wrong screen", "Nothing: the URL doesn't matter in an SPA", "The cart can't be drawn", "The server deletes the cart"]
+    answer: 0
+    explain: "The URL is how the browser remembers where you are. If it doesn't change, refresh and Back can't know the cart was open."
+    reteach: "## Common mistakes"
+
+  - id: q08
+    type: mcq
+    concept: spa-tradeoffs
+    variants:
+      - { prompt: "Which is a real cost of a single-page app?", choices: ["You must handle the URL, page title, focus and Back yourself", "Every tap downloads a whole page", "It can't fetch JSON", "It can't have a header"], answer: 0 }
+      - { prompt: "Why can the first load of an SPA be slower than a multi-page site's?", choices: ["All its JavaScript must arrive before the first screen shows", "It downloads every image on the site", "It reloads the page twice", "Servers send SPAs more slowly on purpose"], answer: 0 }
+    explain: "An SPA trades a heavier first load, and extra work for you, for fast moves between screens afterwards."
+    reteach: "### What it costs"
+
+  - id: q09
+    type: mcq
+    concept: spa-tradeoffs
+    prompt: "A customer refreshes dhaaga.in/items/DC-1042 in an SPA and gets a 404 from the server. What is missing?"
+    choices: ["The server should answer every app address with index.html", "The router should use a shorter URL", "The browser needs a newer version", "The customer should open the home page first"]
+    answer: 0
+    explain: "On refresh, the server is asked for /items/DC-1042. It must send the app's index.html, so the router can pick the screen."
+    reteach: "### What it costs"
+
+  - id: q10
+    type: predict-output
+    concept: client-side-routing
+    code: |
+      const routes = {
+        "/": () => "Home",
+        "/cart": () => "Cart",
+      };
+      function show(path) {
+        const view = routes[path];
+        console.log(view ? view() : "Not found");
+      }
+      show("/cart");
+      show("/Cart");
+    answer: "Cart\nNot found"
+    explain: "Keys are matched exactly, capital letters included. \"/Cart\" is not in the table, so it gets the not found screen."
+    reteach: "### A route table in plain JavaScript"
+
+  - id: q11
+    type: predict-output
+    concept: deep-links
+    code: |
+      const visited = ["/"];
+      visited.push("/items");
+      visited.push("/cart");
+      visited.pop();
+      visited.pop();
+      console.log(visited.at(-1));
+    answer: "/"
+    explain: "Two presses of Back step two places back along the visited list, to the home page."
+    reteach: "### What the back button remembers"
+
+  - id: q12
+    type: order
+    concept: client-side-routing
+    prompt: "Put the steps in order for one tap on an app link in a plain-JavaScript SPA."
+    items:
+      - "A click listener on the document catches the tap"
+      - "preventDefault stops the browser loading a new page"
+      - "history.pushState changes the address bar"
+      - "The router looks up the address and swaps the outlet"
+    explain: "Catch the tap, stop the normal page load, change the URL, then draw the screen that the URL names."
+    reteach: "## Worked example"

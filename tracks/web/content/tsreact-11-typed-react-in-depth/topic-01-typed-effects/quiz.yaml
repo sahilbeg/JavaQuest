@@ -1,0 +1,127 @@
+topic: tsreact-11-typed-react-in-depth/topic-01-typed-effects
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: mcq
+    concept: side-effects
+    variants:
+      - { prompt: "Which of these is a side effect that belongs in useEffect?", choices: ["Listening for keydown on window", "Working out total = paise * qty", "Choosing which JSX to return", "Turning 45000 paise into \"₹450.00\" for the page"], answer: 0 }
+      - { prompt: "Which of these is a side effect that belongs in useEffect?", choices: ["Filtering the items to show only Marigold ones", "Starting a timer with setTimeout", "Adding up the cart's quantities", "Picking \"Sold out\" or \"In stock\" for a badge"], answer: 1 }
+    explain: "A side effect reaches outside React: listeners, timers, servers, the tab title. Working out values from props and state is plain rendering."
+    reteach: "### Rendering must stay pure"
+
+  - id: q02
+    type: mcq
+    concept: use-effect
+    prompt: "When does React run the function you pass to useEffect?"
+    choices: ["After React has updated the page for that render", "Before React calls your component", "In the middle of rendering, before the JSX is returned", "Only when the user clicks something"]
+    answer: 0
+    explain: "React renders, puts the changes on the page, and only then runs effects."
+    reteach: "### When does an effect run?"
+
+  - id: q03
+    type: mcq
+    concept: dependency-array
+    variants:
+      - { prompt: "What does useEffect(fn, []) do?", choices: ["Runs fn once, after the first render", "Runs fn after every render", "Never runs fn", "Runs fn before every render"], answer: 0 }
+      - { prompt: "What does useEffect(fn) do, with no array at all?", choices: ["Runs fn once, after the first render", "Runs fn after every render", "Never runs fn", "Runs fn only when the props change"], answer: 1 }
+      - { prompt: "What does useEffect(fn, [open]) do?", choices: ["Runs fn only when the user clicks", "Runs fn after every render", "Runs fn after the first render, then again whenever open changes", "Runs fn once and never again"], answer: 2 }
+    explain: "No array means every render. An empty array means once. A list of values means after the first render, then whenever one of them changes."
+    reteach: "### Syntax: the three dependency arrays"
+
+  - id: q04
+    type: predict-output
+    concept: dependency-array
+    code: |
+      const before: unknown[] = ["DC-1042", 2];
+      const after: unknown[] = ["DC-1042", 2];
+      console.log(after.some((v, i) => !Object.is(v, before[i])));
+
+      const oldDeps: unknown[] = [{ qty: 2 }];
+      const newDeps: unknown[] = [{ qty: 2 }];
+      console.log(newDeps.some((v, i) => !Object.is(v, oldDeps[i])));
+    answer: "false\ntrue"
+    explain: "Equal text and numbers pass Object.is, so nothing changed. Two separate objects are never Object.is equal, even when they look the same, so React would run the effect again."
+    reteach: "### Syntax: the three dependency arrays"
+
+  - id: q05
+    type: mcq
+    concept: cleanup
+    prompt: "When does React call the cleanup function an effect returns?"
+    choices: ["Before the effect runs again, and when the component leaves the page", "Only when the browser tab is closed", "Right after the effect runs, every time", "Never: you have to call it yourself"]
+    answer: 0
+    explain: "React cleans up the old effect before running the new one, and once more when the component is unmounted."
+    reteach: "### Syntax: cleanup"
+
+  - id: q06
+    type: mcq
+    concept: use-effect
+    prompt: "Which effect function does TypeScript reject?"
+    choices: ["async () => { await loadStock(); }", "() => { document.title = \"Dhaaga & Co.\"; }", "() => { if (!open) return; return () => stop(); }", "() => () => clearTimeout(id)"]
+    answer: 0
+    explain: "An effect must return nothing or a cleanup function. An async function returns a Promise, which is neither."
+    reteach: "### An effect can't be async"
+
+  - id: q07
+    type: mcq
+    concept: use-effect
+    prompt: "In @types/react, what may an effect function return?"
+    choices: ["Nothing, or a cleanup function", "Only a Promise", "The JSX to show", "A number, the timer's id"]
+    answer: 0
+    explain: "EffectCallback is () => void | Destructor: either no value, or a function React calls to clean up."
+    reteach: "### What TypeScript expects from an effect"
+
+  - id: q08
+    type: spot-the-bug
+    concept: typed-listeners-and-timers
+    prompt: "After the quick view closes, Escape still calls onClose. Which line is wrong?"
+    code: |
+      useEffect(() => {
+        if (!open) return;
+        const handleKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+        window.addEventListener("keydown", handleKey);
+        return () => window.removeEventListener("keydown", (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); });
+      }, [open, onClose]);
+    bugLine: 5
+    explain: "The cleanup removes a brand-new function, not handleKey, so nothing is removed. Write return () => window.removeEventListener(\"keydown\", handleKey);"
+    reteach: "### Typed listeners"
+
+  - id: q09
+    type: fill-blank
+    concept: typed-listeners-and-timers
+    goal: "Give the timer's id a type that fits both the browser and Node, taken from what the timer function gives back."
+    prompt: "const id: ___ = setTimeout(remind, 5000);"
+    answers: ["ReturnType<typeof setTimeout>"]
+    explain: "ReturnType<typeof setTimeout> is a number in the browser and a Timeout object under Node's types."
+    reteach: "### Typed timer ids"
+
+  - id: q10
+    type: mcq
+    concept: typed-listeners-and-timers
+    prompt: "In window.addEventListener(\"keydown\", (e) => ...), what type does TypeScript give e?"
+    choices: ["KeyboardEvent, the browser's own event type", "any", "React's ChangeEvent<HTMLInputElement>", "string, the key that was pressed"]
+    answer: 0
+    explain: "The DOM types map each event name to its event type, so \"keydown\" gives a KeyboardEvent with key, shiftKey and the rest."
+    reteach: "### Typed listeners"
+
+  - id: q11
+    type: mcq
+    concept: cleanup
+    prompt: "In development with StrictMode, one press of Escape calls onClose twice. What is the most likely cause?"
+    choices: ["The listener effect has no cleanup, so the listener from the first run is never removed", "StrictMode makes every key press fire twice", "The dependency array has too many values", "addEventListener always adds two listeners in React"]
+    answer: 0
+    explain: "StrictMode runs each effect, cleans it up and runs it again. Without a cleanup, both listeners stay on window, so each key press reaches two of them."
+    reteach: "### Strict Mode runs effects twice in development"
+
+  - id: q12
+    type: order
+    concept: use-effect
+    prompt: "count changes from 2 to 3 in a component with useEffect(fn, [count]). Put what React does in order."
+    items:
+      - "React calls the component with count 3"
+      - "React updates the page with the new JSX"
+      - "React runs the cleanup that the last render's effect returned"
+      - "React runs the effect again, now with count 3"
+    explain: "Render first, then update the page. Then the old effect is cleaned up and the new one runs."
+    reteach: "### When does an effect run?"

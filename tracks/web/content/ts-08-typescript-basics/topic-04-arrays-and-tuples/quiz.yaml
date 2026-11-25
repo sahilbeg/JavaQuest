@@ -1,0 +1,116 @@
+topic: ts-08-typescript-basics/topic-04-arrays-and-tuples
+drawCount: 6
+passPercent: 80
+questions:
+  - id: q01
+    type: fill-blank
+    concept: array-types
+    goal: "Declare an empty list that will only ever hold item codes, which are text."
+    prompt: "const codes: ___ = [];"
+    answers: ["string[]", "Array<string>"]
+    explain: "string[] is an array of strings. Array<string> means the same thing."
+    reteach: "### Syntax: array types"
+
+  - id: q02
+    type: mcq
+    concept: array-types
+    prompt: "const prices: number[] = [15000]; then prices.push(\"12000\");. What happens?"
+    choices: ["tsc reports that a string can't be passed where a number is expected", "The text is turned into a number for you", "Nothing: arrays accept any value", "prices becomes a string[]"]
+    answer: 0
+    explain: "Every entry of a number[] must be a number, including ones you push later."
+    reteach: "### Syntax: array types"
+
+  - id: q03
+    type: predict-output
+    concept: typed-array-methods
+    code: |
+      const prices: number[] = [15000, 12000, 45000];
+      const cheap = prices.filter((p) => p < 20000);
+      console.log(cheap.length, cheap[0]);
+    answer: "2 15000"
+    explain: "filter keeps 15000 and 12000, in their order. cheap is still a number[]."
+    reteach: "### Array methods know the types"
+
+  - id: q04
+    type: mcq
+    concept: typed-array-methods
+    prompt: "prices is a number[]. What type does prices.map((p) => (p / 100).toFixed(2)) have?"
+    choices: ["string[]", "number[]", "number", "any[]"]
+    answer: 0
+    explain: "map gives back an array of whatever the callback returns, and toFixed returns a string."
+    reteach: "### Array methods know the types"
+
+  - id: q05
+    type: mcq
+    concept: readonly-arrays
+    prompt: "Which line is a type error when COLOURS is a readonly string[]?"
+    choices: ["COLOURS.push(\"Mint\");", "COLOURS.map((c) => c.toUpperCase());", "COLOURS.includes(\"Mint\");", "console.log(COLOURS[0]);"]
+    answer: 0
+    explain: "push changes the array, so it doesn't exist on a readonly array. The others only read it."
+    reteach: "### Syntax: readonly arrays"
+
+  - id: q06
+    type: mcq
+    concept: readonly-arrays
+    prompt: "cheapestFirst(list: readonly [string, number][]) needs to sort. What should it do?"
+    choices: ["Copy the list first: [...list].sort(...)", "Call list.sort(...) directly", "Remove readonly from the parameter so sort works", "Sort it with a for loop that swaps entries in list"]
+    answer: 0
+    explain: "Sorting a copy leaves the caller's list untouched, which is what readonly promises."
+    reteach: "## Common mistakes"
+
+  - id: q07
+    type: spot-the-bug
+    concept: tuples
+    code: |
+      const bag: [string, number] = ["BAG", 89900];
+      const key: [string, number] = ["KEY", 12000];
+      const ami: [string, number] = [45000, "AMI"];
+      console.log(bag[0], key[0], ami[0]);
+    bugLine: 3
+    explain: "The parts are in the wrong order. The tuple type says text first, then a number: [\"AMI\", 45000]."
+    reteach: "### Syntax: tuples"
+
+  - id: q08
+    type: mcq
+    concept: tuples
+    prompt: "What does the type [code: string, qty: number] describe?"
+    choices: ["An array of exactly two entries: a string, then a number", "An object with code and qty properties", "An array of any length, mixing strings and numbers", "A function that takes a code and a quantity"]
+    answer: 0
+    explain: "It's a tuple. The names code and qty are only labels to make it readable."
+    reteach: "### Syntax: tuples"
+
+  - id: q09
+    type: predict-output
+    concept: tuple-destructuring
+    code: |
+      const cart: [string, number][] = [["CST", 2], ["BTY", 1]];
+      let total = 0;
+      for (const [code, qty] of cart) {
+        total += qty;
+      }
+      console.log(total, cart[1][0]);
+    answer: "3 BTY"
+    explain: "The loop adds the quantities, 2 and 1. cart[1] is the second tuple, and [0] is its code."
+    reteach: "### Destructuring tuples"
+
+  - id: q10
+    type: predict-output
+    concept: tuple-destructuring
+    code: |
+      function splitRupees(paise: number): [number, number] {
+        return [Math.floor(paise / 100), paise % 100];
+      }
+      const [rupees, left] = splitRupees(89950);
+      console.log(rupees, left);
+    answer: "899 50"
+    explain: "The function returns a pair, and destructuring gives each part a name: 899 rupees and 50 paise."
+    reteach: "### Returning a tuple"
+
+  - id: q11
+    type: mcq
+    concept: array-types
+    prompt: "What type does TypeScript infer for const codes = [\"CST\", \"KEY\", \"AMI\"];?"
+    choices: ["string[]", "[string, string, string]", "any[]", "string"]
+    answer: 0
+    explain: "An array literal of strings is inferred as string[]: a list of any length. A tuple needs a type you write yourself."
+    reteach: "### Syntax: array types"

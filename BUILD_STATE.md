@@ -2,11 +2,11 @@
 
 Human-readable mirror of `build_state.json`. The JSON file wins if they disagree.
 
-- **Last updated:** 2026-11-18T19:12:42+05:30
+- **Last updated:** 2026-11-25T12:05:05+05:30
 - **Phase:** PHASE 1: build
 - **Milestone:** C09B
-- **Resume here:** Modules 09a (Platform and DevOps) and 09b (Data in depth) are committed at ui_wired, between modules 09 and 10; module 10 now unlocks after 09b. Every milestone is built. What is left needs a person: the browser read-through of modules 0 to 10 and a real VoiceOver pass. Windows support stays deferred.
-- **Next task:** Your browser read-through of modules 0 to 10 (09a and 09b included), which moves them from ui_wired to done; then a real VoiceOver pass
+- **Resume here:** All four Frontend courses (React, plain JavaScript, React + TypeScript, Next.js) are ready at ui_wired alongside the Java course. What is left: a browser read-through of the web courses (./run.sh --tester on port 3004), Phase 5 (re-theme Java modules 02+ in the Dhaaga world), Phase 6 (release guide), and the backend and full-stack courses.
+- **Next task:** Browser read-through of the Frontend courses with ./run.sh --tester; then Phase 5: re-theme the Java course from module 02 in the Dhaaga & Co. world
 
 ## Completed tasks
 
@@ -63,6 +63,8 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 - M6: fresh-clone test on macOS (one command builds and starts; grading verified end to end in the clone); run.sh checks Java 21+, reports a busy port, and switches on the commit guard in a clone; README with quick start, Java install, how you learn, progress and backups, commands, troubleshooting and limits
 - C09A/C09B: module 09a Platform and DevOps (Dockerfiles, Compose, GitHub Actions, Kubernetes manifests, Helm/Kustomize, Terraform/GitOps, config and secrets, Prometheus; INC-11 the deploy that took Spoke down, FEAT-11 one-click deploys) and module 09b Data in depth (advanced SQL, B+ tree index internals, MVCC/WAL, NoSQL modelling, Redis patterns, replication and sharding, data pipelines with Airflow concepts and a Java DAG scheduler, Postgres in production; INC-12 month-end reports, FEAT-12 rider statements data mart); content model allows module-NNa ids; 4 independent reviews (about 45 findings, one image-tag format module-wide) fixed; all checks green
 - Rename to Cadence across code, build, UI, scripts, docs and content; legacy progress folder and flag names kept working; all checks green
+- W00-W10: Frontend course (JavaScript + React), 11 web modules and 130 units in tracks/web, checked and verified; the frontend-react course is ready
+- FS: three more Frontend courses, plain JavaScript (VAN), React + TypeScript (TSX) and Next.js 16 (NXT): 11 modules and 126 units in tracks/web, each course reusing web-00 to web-07; TypeScript tickets typechecked with tsc in the Node runner; 11 independent reviews fixed; every quoted tsc and Node error checked against real runs; all checks green
 
 ## Decisions
 
@@ -136,6 +138,40 @@ Human-readable mirror of `build_state.json`. The JSON file wins if they disagree
 | module-09a-platform | Ship it everywhere | 10 | ui_wired |
 | module-09b-data | Know your data | 10 | ui_wired |
 | module-10-professional | Full-time offer | 8 | ui_wired |
+
+## Web courses
+
+| Course | Status |
+|---|---|
+| frontend-react | ready |
+| frontend-vanilla | ready |
+| frontend-react-ts | ready |
+| frontend-next | ready |
+
+| Module | Course | Units | Status |
+|---|---|---|---|
+| web-00-how-the-web-works | shared / frontend-react | 9 | ui_wired |
+| web-01-html | shared / frontend-react | 12 | ui_wired |
+| web-02-css | shared / frontend-react | 12 | ui_wired |
+| web-03-javascript-basics | shared / frontend-react | 13 | ui_wired |
+| web-04-javascript-in-depth | shared / frontend-react | 13 | ui_wired |
+| web-05-dom-and-events | shared / frontend-react | 12 | ui_wired |
+| web-06-async-javascript | shared / frontend-react | 12 | ui_wired |
+| web-07-tooling | shared / frontend-react | 12 | ui_wired |
+| react-08-react-fundamentals | shared / frontend-react | 12 | ui_wired |
+| react-09-react-in-depth | shared / frontend-react | 12 | ui_wired |
+| react-10-professional-frontend | shared / frontend-react | 11 | ui_wired |
+| vanilla-08-components-without-a-framework | frontend-vanilla | 12 | ui_wired |
+| vanilla-09-single-page-apps | frontend-vanilla | 12 | ui_wired |
+| vanilla-10-professional-vanilla | frontend-vanilla | 10 | ui_wired |
+| ts-08-typescript-basics | frontend-react-ts | 12 | ui_wired |
+| ts-09-typescript-in-depth | frontend-react-ts | 12 | ui_wired |
+| tsreact-10-react-with-typescript | frontend-react-ts | 12 | ui_wired |
+| tsreact-11-typed-react-in-depth | frontend-react-ts | 12 | ui_wired |
+| tsreact-12-professional-typescript | frontend-react-ts | 10 | ui_wired |
+| next-10-nextjs-fundamentals | frontend-next | 12 | ui_wired |
+| next-11-data-and-server | frontend-next | 12 | ui_wired |
+| next-12-production-nextjs | frontend-next | 10 | ui_wired |
 
 ## Topics past `planned`
 

@@ -1,0 +1,25 @@
+id: vanilla-08-components-without-a-framework/topic-09-styling-components
+title: "Styling components: scoping and naming"
+order: 9
+minutes: 9
+prerequisites: [vanilla-08-components-without-a-framework/topic-08-keyed-list-updates]
+concepts: [style-clashes, bem-naming, design-tokens, custom-properties-through-shadow, css-parts, host-and-hidden]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+xp: { quiz: 50, code: 100 }
+ticket:
+  key: VAN-0809
+  from: sana
+  title: "Styling the cart's .price turned the catalogue prices red"
+  body: >
+    Sana here. Last week I made .price red for the cart's savings line, and every price in the catalogue went red too.
+    Then someone styled h3 for the blog and the product names changed font. Please give the product card its own
+    names that nothing else uses, put our brand colours in one place, and let pages recolour the sale badge without
+    breaking into it.
+hints:
+  - "BEM names are block__element--modifier: the card is .product-card, its parts are .product-card__name, .product-card__price and .product-card__add, and the sold-out version adds .product-card--sold-out."
+  - "Put the brand colours on :root as --dhaaga-marigold, --dhaaga-indigo and --dhaaga-off-white, then use them with var(--dhaaga-indigo). Every other rule in style.css starts with .product-card."
+  - "In the badge's shadow style, write background: var(--sale-badge-bg, #F2A81D) so a page can set --sale-badge-bg from outside. Add :host([hidden]) { display: none; } and give the span part=\"label\"."
+review: true

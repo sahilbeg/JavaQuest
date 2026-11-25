@@ -1,0 +1,24 @@
+id: tsreact-12-professional-typescript/mini-project
+title: "CAPSTONE: Launch the dhaaga.in store in TypeScript"
+order: 100
+minutes: 15
+prerequisites: [tsreact-12-professional-typescript/topic-08-interviews]
+concepts: [shared-types, pricing-rules, typed-filters, action-union-reducer, typed-checkout, accessible-layout, end-to-end-tests]
+practice:
+  kind: code
+  runner: vitest
+  preview: true
+ticket:
+  key: CAPSTONE
+  from: priya
+  title: "dhaaga.in opens on Friday, typed from top to bottom"
+  body: >
+    Beta, this is the big one. On Friday at 10:00 I post the link on Instagram, and dhaaga.in opens to the whole of India.
+    Kavya says that this time every line is checked by TypeScript, so a price can never turn into text again. I trust her, and I trust you.
+    People must find Golu quickly, see the right price with the Diwali offer and free delivery, and pay by UPI without any confusion.
+    My friend Mrs. Bhosale will try it with her screen reader, so it must work for her too.
+hints:
+  - "Go stage by stage, and run the checks after each one. Stage 1 is one reduce for the subtotal, Math.floor(subtotal / 10) for the offer, and one condition for delivery: free when the cart is empty or subtotal - discount is above 99900."
+  - "Stage 2: useState<CategoryFilter>(\"All\"), and in the select's onChange, if (isCategoryFilter(event.target.value)) setCategory(event.target.value). Stage 3: a switch on action.type that returns new arrays with map and filter, ending in const unhandled: never = action."
+  - "Stage 4: useEffect(() => { headingRef.current?.focus(); }, [step]); Stage 5: const [lines, dispatch] = useReducer(cartReducer, EMPTY_CART); count = lines.reduce((sum, line) => sum + line.qty, 0); and render Checkout instead of the shop when view is \"checkout\"."
+review: false
