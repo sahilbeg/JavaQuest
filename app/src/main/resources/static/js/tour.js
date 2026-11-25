@@ -1,12 +1,16 @@
 // First-visit walkthroughs. Gojo spotlights one thing at a time and explains it in a bubble.
 // Each page's tour plays once (remembered in this browser); the ? button in the top bar replays it.
 
-import { h, icon } from "./dom.js";
-import { byte } from "./byte.js";
+import { h, icon, TEAM, COURSE } from "./dom.js";
+import { byte, HELPER } from "./byte.js";
+
+const java = () => COURSE.id === "java-swe";
 
 const TOURS = {
   journey: [
-    { title: "Welcome to Cadence", text: "You're the new engineering intern at Spoke, a bike-sharing startup. Every lesson is a real ticket from the team. Here's a quick tour." },
+    { title: "Welcome to Cadence", text: () => java()
+      ? "You're the new engineering intern at Spoke, a bike-sharing startup. Every lesson is a real ticket from the team. Here's a quick tour."
+      : "You're the newest member of the team at Dhaaga & Co., a crochet business in Pune. Every lesson is a real ticket from the team. Here's a quick tour." },
     { target: "#up-next", title: "Up next", text: "The one ticket to work on now. Tickets open one at a time, so each builds on the last." },
     { target: "#current-stop", title: "Course outline", text: "Your current module, with its tickets in order. Finish them all to unlock the next module." },
     { target: "#career-chip", title: "Level and streak", text: "Tickets earn XP and move you up the career ladder. A little every day keeps your streak going." },
@@ -20,7 +24,7 @@ const TOURS = {
     { target: "#lesson-progress", title: "Lesson progress", text: "Each ticket is a short sequence of cards. Jump back to any card you've already seen." },
     { target: "#lesson-card", title: "One idea per card", text: "Read, then press Next, or use the arrow keys." },
     { target: ".anim", title: "Animations", text: "Watch code run step by step, or move through it at your own pace.", optional: true },
-    { target: "#helper-fab", title: "Hints", text: "Gojo, the team's helper, has hints for this ticket. More open as you try." },
+    { target: "#helper-fab", title: "Hints", text: () => `${HELPER.name}, the team's helper, has hints for this ticket. More open as you try.` },
     { target: "#player-next", title: "Continue", text: "Move on whenever you're ready." },
   ],
   check: [
@@ -28,9 +32,9 @@ const TOURS = {
     { target: ".question", title: "Read each question", text: "If you miss one, I'll link you straight back to the card that explains it." },
   ],
   code: [
-    { target: ".vscode-guide > summary", title: "Code in VS Code", text: "Kakashi shows where this ticket's files are, step by step. Saving a file in VS Code submits it.", optional: true },
+    { target: ".vscode-guide > summary", title: "Code in VS Code", text: () => `${TEAM.theo.name.split(" ")[0]} shows where this ticket's files are, step by step. Saving a file in VS Code submits it.`, optional: true },
     { target: ".editor-frame", title: "Or fix it here", text: "Small change? Edit here and press Run checks. It runs the same checks as a save in VS Code." },
-    { target: "#run-checks", title: "Run the checks", text: "Real JUnit tests check your code. Make every check green to finish the ticket." },
+    { target: "#run-checks", title: "Run the checks", text: () => `Real ${java() ? "JUnit" : "Vitest"} tests check your code. Make every check green to finish the ticket.` },
     { target: ".checks", title: "Read the red ones", text: "Each failing check says what it expected. Start with the first red one.", mood: "encouraging" },
   ],
   notes: [
@@ -131,7 +135,7 @@ export function startTour(name) {
     const last = index === usable.length - 1;
     bubble.replaceChildren(
       h("div", { class: "tour-bubble-head" }, byte("idle", "", { size: "md" }), h("h2", { id: "tour-title" }, step.title)),
-      h("p", {}, step.text),
+      h("p", {}, typeof step.text === "function" ? step.text() : step.text),
       h("div", { class: "tour-actions" },
         h("span", { class: "tour-count" }, `${index + 1} of ${usable.length}`),
         !last && h("button", { type: "button", class: "button button-quiet", onclick: () => close() }, "Skip"),

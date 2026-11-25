@@ -110,7 +110,8 @@ public class TopicController {
     public Catalog catalog() {
         Gate.Today today = gate.today();
         Map<String, Gate.Access> access = gate.accessAll(today);
-        String frontier = access.values().stream().map(Gate.Access::frontierId).findFirst().orElse(null);
+        // Every ticket shares one frontier; it is null once the whole course is done.
+        String frontier = access.isEmpty() ? null : access.values().iterator().next().frontierId();
         ContentCatalog course = courses.catalog();
         return new Catalog(course.modules(),
                 course.topics().stream().map(t -> summary(t, access.get(t.id()).locked())).toList(),

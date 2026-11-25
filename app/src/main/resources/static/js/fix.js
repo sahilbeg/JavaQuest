@@ -1,4 +1,4 @@
-import { h, icon } from "./dom.js";
+import { h, icon, TEAM } from "./dom.js";
 import { api } from "./api.js";
 import { bus } from "./events.js";
 import { loadMonaco, editorTheme, colorize, languageFor, EDITOR_OPTIONS } from "./monaco.js";
@@ -148,7 +148,7 @@ export async function renderFix(container, topic, chat, onResult) {
     try {
       const { files, progress } = await api.solution(id);
       solutionPanel.replaceChildren(
-        h("h2", { id: "solution-title", class: "console-label" }, "Tsunade's solution"),
+        h("h2", { id: "solution-title", class: "console-label" }, `${TEAM.maya.name.split(" ")[0]}'s solution`),
         ...files.map((f) => h("div", {}, h("p", { class: "editor-file" }, f.path), h("pre", { class: "console-out solution-code" }, h("code", { "data-path": f.path }, f.content)))));
       solutionPanel.hidden = false;
       solutionPanel.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -157,7 +157,7 @@ export async function renderFix(container, topic, chat, onResult) {
         if (html) code.innerHTML = html;
       }
       chat.say(progress.testsPassed
-        ? "Here's how Tsunade wrote it. Compare it with yours: there's usually more than one good answer."
+        ? `Here's how ${TEAM.maya.name.split(" ")[0]} wrote it. Compare it with yours: there's usually more than one good answer.`
         : "Here's the solution. Read it line by line, then type it yourself instead of pasting. Typing it is how it sticks.",
         { mood: "idle" });
     } catch (error) {

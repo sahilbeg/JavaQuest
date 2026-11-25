@@ -7,7 +7,7 @@ import java.util.Locale;
 
 /**
  * An incident's checks are split into tiers by test name: Java test classes KioskBronzeTest, KioskSilverTest and
- * KioskGoldTest, or web test files CartBronze.test.jsx, CartSilver.test.jsx and CartGold.test.jsx.
+ * KioskGoldTest, or web test files CartBronze.test.jsx, CartSilver.test.jsx and CartGold.test.jsx (or .js, .ts, .tsx).
  */
 public final class BossTiers {
 
@@ -23,7 +23,7 @@ public final class BossTiers {
         }
 
         boolean owns(String className) {
-            return className.endsWith(classSuffix()) || className.matches(".*" + word() + "\\.test\\.jsx?$");
+            return className.endsWith(classSuffix()) || className.matches(".*" + word() + "\\.test\\.(js|jsx|ts|tsx)$");
         }
     }
 

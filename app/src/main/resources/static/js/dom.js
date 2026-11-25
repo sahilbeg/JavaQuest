@@ -49,8 +49,12 @@ const CASTS = {
 /** The team the learner sees. It follows the course: setCast switches it in place, so every import sees the change. */
 export const TEAM = { ...CASTS.spoke };
 
+/** The course on screen, for text that differs between the Java course and the web courses. */
+export const COURSE = { id: "java-swe" };
+
 export function setCast(courseId) {
   const cast = courseId === "java-swe" ? CASTS.spoke : CASTS.dhaaga;
+  COURSE.id = courseId;
   Object.assign(TEAM, cast);
 }
 

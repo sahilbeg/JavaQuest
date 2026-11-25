@@ -35,6 +35,8 @@ function renderTopbar(summary) {
 }
 
 function celebrate(before, after) {
+  // Switching course changes the XP, level and ladder shown, but nothing was earned: no celebration.
+  if (before.level.courseId !== after.level.courseId) return;
   const gained = after.level.xp - before.level.xp;
   if (gained > 0) {
     xpFloat(gained);
@@ -76,11 +78,14 @@ function launched() {
 }
 
 function promotion(level) {
+  // The promotion comes from the course's lead: Tsunade at Spoke, Kavya at Dhaaga & Co.
+  const lead = TEAM.maya?.name ?? "Your lead";
+  const thanks = lead === "Tsunade" ? "Thanks, Lady Tsunade" : `Thanks, ${lead.split(" ")[0]}`;
   const dialog = h("dialog", { class: "promotion", "aria-labelledby": "promotion-title" },
     byte("idle", "", { size: "lg" }),
     h("h2", { id: "promotion-title" }, `You're now a ${level.title}!`),
-    h("p", {}, `Tsunade: "Your work has been great. Congratulations on the promotion. On to the next ticket!"`),
-    h("form", { method: "dialog" }, h("button", { class: "button button-primary button-big", autofocus: true }, "Thanks, Lady Tsunade")));
+    h("p", {}, `${lead}: "Your work has been great. Congratulations on the promotion. On to the next ticket!"`),
+    h("form", { method: "dialog" }, h("button", { class: "button button-primary button-big", autofocus: true }, thanks)));
   if (!reducedMotion()) dialog.classList.add("promotion-animate");
   document.body.append(dialog);
   dialog.addEventListener("close", () => dialog.remove());

@@ -10,7 +10,8 @@ const pct = (fraction) => `${Math.round(fraction * 100)}%`;
 
 let railEl = null;
 let real = null;
-let picking = false;
+// Until the first page knows whether a course is chosen, draw nothing: a new learner goes to the picker first.
+let picking = true;
 
 /** Draws the ladder into the rail, keeps it current, and explains each part on hover. */
 export function mountLadder(rail) {
