@@ -62,7 +62,6 @@ async function route({ keepFocus = false } = {}) {
     const [catalog] = await Promise.all([api.catalog(), picturesReady]);
     document.getElementById("author-banner").hidden = !catalog.authorMode;
     setCast(catalog.course.id);
-    setPicking(current.name === "start");
     setHelper(catalog.course.id);
     // A new learner picks a course first; every other page waits until they have.
     if (!catalog.course.chosen && current.name !== "start") {
@@ -70,6 +69,7 @@ async function route({ keepFocus = false } = {}) {
       lastRoute = "";
       return route();
     }
+    setPicking(current.name === "start");
     document.title = { start: "Choose your path · Cadence", journey: "Your journey · Cadence", career: "Career · Cadence", review: "Review · Cadence", notes: "Notes · Cadence", offer: "Your offer · Cadence" }[current.name] ?? "Cadence";
     setPageTour(current.name === "ticket" ? "lesson" : current.name);
     cleanup = current.name === "start" ? await renderStart(view, catalog, navigate)

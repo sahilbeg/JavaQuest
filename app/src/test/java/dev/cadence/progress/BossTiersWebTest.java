@@ -17,4 +17,13 @@ class BossTiersWebTest {
                 new TestCaseResult("test/CartGold.test.jsx", "survives a refresh", false, "nope"));
         assertEquals(EnumSet.of(BossTiers.Tier.BRONZE, BossTiers.Tier.SILVER), BossTiers.passed(tests));
     }
+
+    @Test
+    void typeScriptTestFilesNameTheirTierToo() {
+        var tests = List.of(
+                new TestCaseResult("test/RefundBronze.test.ts", "refunds in paise", true, ""),
+                new TestCaseResult("test/CheckoutSilver.test.tsx", "keeps the gift step", true, ""),
+                new TestCaseResult("test/CheckoutGold.test.tsx", "never reaches an unknown step", true, ""));
+        assertEquals(EnumSet.allOf(BossTiers.Tier.class), BossTiers.passed(tests));
+    }
 }

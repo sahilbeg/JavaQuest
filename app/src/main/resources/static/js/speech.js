@@ -1,5 +1,6 @@
 import { h, icon, toast } from "./dom.js";
 import { api } from "./api.js";
+import { HELPER } from "./byte.js";
 
 /*
  * Read aloud, with the browser's own speech (Web Speech API): nothing is downloaded or sent anywhere.
@@ -15,7 +16,7 @@ const VOICE_KEY = "jq-voice";
 const RATE_KEY = "jq-rate";
 const MIN_RATE = 0.5;
 const MAX_RATE = 2;
-const SAMPLE = "Yo, I'm Gojo. This is how I sound when I read your lessons.";
+const sample = () => `${HELPER.name === "Gojo" ? "Yo" : "Hi"}, I'm ${HELPER.name}. This is how I sound when I read your lessons.`;
 /** macOS and Chrome ship joke voices (bells, whispers, robots); they make poor teachers. */
 const NOVELTY = /^(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Deranged|Hysterical|Pipe Organ)\b/i;
 /** Reading these elements, in page order, covers the text of a card. */
@@ -296,7 +297,7 @@ function toggleVoicePanel(anchor) {
   const sample = h("button", { type: "button", class: "button", onclick: async () => {
     stopSpeaking();
     await voicesReady();
-    const utterance = new SpeechSynthesisUtterance(SAMPLE);
+    const utterance = new SpeechSynthesisUtterance(sample());
     const voice = chosenVoice();
     if (voice) {
       utterance.voice = voice;

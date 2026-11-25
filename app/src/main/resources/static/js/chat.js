@@ -1,5 +1,5 @@
 import { h, icon } from "./dom.js";
-import { byte } from "./byte.js";
+import { byte, HELPER } from "./byte.js";
 import { api } from "./api.js";
 
 /**
@@ -8,7 +8,7 @@ import { api } from "./api.js";
  * puts a dot on the button.
  */
 export function createHelper(topic) {
-  const log = h("div", { class: "chat-log", role: "log", "aria-live": "polite", "aria-label": "Messages from Gojo" });
+  const log = h("div", { class: "chat-log", role: "log", "aria-live": "polite", "aria-label": `Messages from ${HELPER.name}` });
   let used = 0;
 
   const hintButton = h("button", { type: "button", class: "button", onclick: askHint });
@@ -18,13 +18,13 @@ export function createHelper(topic) {
     hintButton.disabled = used >= topic.hintCount;
   };
 
-  const fab = h("button", { type: "button", class: "helper-fab", id: "helper-fab", "aria-label": "Chat with Gojo",
+  const fab = h("button", { type: "button", class: "helper-fab", id: "helper-fab", "aria-label": `Chat with ${HELPER.name}`,
     "aria-expanded": "false", "aria-controls": "helper", onclick: () => (drawer.classList.contains("is-open") ? close() : open()) },
     byte("idle", "", { size: "md" }));
   const closeButton = h("button", { type: "button", class: "icon-button", "aria-label": "Close the chat", onclick: () => close() }, icon("x"));
-  const drawer = h("aside", { class: "helper", id: "helper", "aria-label": "Chat with Gojo", tabindex: "-1" },
+  const drawer = h("aside", { class: "helper", id: "helper", "aria-label": `Chat with ${HELPER.name}`, tabindex: "-1" },
     h("div", { class: "chat-head" }, byte("idle", "", { size: "sm" }),
-      h("div", {}, h("h2", {}, "Satoru Gojo"), h("p", {}, "Your helper. Ask for a hint any time.")), closeButton),
+      h("div", {}, h("h2", {}, HELPER.fullName), h("p", {}, "Your helper. Ask for a hint any time.")), closeButton),
     log,
     h("div", { class: "chat-actions" }, hintButton));
 
@@ -52,7 +52,7 @@ export function createHelper(topic) {
     const paragraphs = Array.isArray(text) ? text : [text];
     const message = h("div", { class: `message ${kind ? `message-${kind}` : ""}`, "data-new": fresh || null },
       byte(mood, ""),
-      h("div", { class: "message-who" }, h("strong", {}, "Gojo"), kind === "hint" ? "hint" : ""),
+      h("div", { class: "message-who" }, h("strong", {}, HELPER.name), kind === "hint" ? "hint" : ""),
       h("div", { class: "message-text" }, paragraphs.map((p) => h("p", {}, p))));
     log.append(message);
     log.scrollTop = log.scrollHeight;
