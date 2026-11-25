@@ -50,6 +50,13 @@ class CourseLibraryTest {
     }
 
     @Test
+    void theFrontendStacksAreListedInTheOrderTheyAreBestStudied() throws Exception {
+        var frontend = CourseLibrary.load(REPO).courses().stream()
+                .filter(c -> c.objective().equals("frontend")).map(CourseLibrary.Course::id).toList();
+        assertEquals(java.util.List.of("frontend-vanilla", "frontend-react", "frontend-react-ts", "frontend-next"), frontend);
+    }
+
+    @Test
     void everyTopicCanBeFoundInTheLibrary() throws Exception {
         var library = CourseLibrary.load(REPO);
         assertTrue(library.library().topic("module-01-basics/topic-04-console-io").isPresent());
