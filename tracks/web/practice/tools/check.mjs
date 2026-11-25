@@ -5,7 +5,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { join, relative, extname } from "node:path";
 
 const root = process.argv[2];
-const LOADERS = { ".js": "jsx", ".jsx": "jsx", ".mjs": "js" };
+const LOADERS = { ".js": "jsx", ".jsx": "jsx", ".mjs": "js", ".ts": "ts", ".tsx": "tsx" };
 
 async function files(dir) {
   const out = [];

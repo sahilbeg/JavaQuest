@@ -15,7 +15,9 @@ await rm(out, { recursive: true, force: true });
 await mkdir(out, { recursive: true });
 await cp(src, out, { recursive: true });
 
-const entry = (await exists(join(src, "main.jsx"))) ? "main.jsx" : (await exists(join(src, "main.js"))) ? "main.js" : null;
+const ENTRIES = ["main.tsx", "main.ts", "main.jsx", "main.js"];
+let entry = null;
+for (const name of ENTRIES) if (!entry && (await exists(join(src, name)))) entry = name;
 if (entry) {
   await rm(join(out, entry), { force: true });
   const result = await build({
@@ -24,7 +26,7 @@ if (entry) {
     outfile: join(out, "main.js"),
     format: "esm",
     jsx: "automatic",
-    loader: { ".js": "jsx" },
+    loader: { ".js": "jsx", ".ts": "ts", ".tsx": "tsx" },
     nodePaths: [join(workspace, "node_modules")],
     define: { "process.env.NODE_ENV": '"development"' },
     logLevel: "silent",

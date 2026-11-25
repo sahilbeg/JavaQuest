@@ -25,7 +25,7 @@ export function loadMonaco() {
 /** The editor language for a file: Java, JavaScript (also JSX), CSS or HTML. */
 export function languageFor(path = "") {
   const ext = path.split(".").pop().toLowerCase();
-  return { java: "java", js: "javascript", jsx: "javascript", mjs: "javascript", css: "css", html: "html" }[ext] ?? "plaintext";
+  return { java: "java", js: "javascript", jsx: "javascript", mjs: "javascript", ts: "typescript", tsx: "typescript", css: "css", html: "html" }[ext] ?? "plaintext";
 }
 
 /** Colours Java source as HTML. Waits for Monaco to load the Java tokenizer, which happens lazily. */

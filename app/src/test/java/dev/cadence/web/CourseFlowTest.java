@@ -38,12 +38,12 @@ class CourseFlowTest {
                 .andExpect(jsonPath("$.chosen").value(false))
                 .andExpect(jsonPath("$.objectives.length()").value(4))
                 .andExpect(jsonPath("$.courses[?(@.id == 'frontend-react')].status").value(Matchers.contains("ready")))
-                .andExpect(jsonPath("$.courses[?(@.id == 'frontend-vanilla')].status").value(Matchers.contains("soon")))
+                .andExpect(jsonPath("$.courses[?(@.id == 'backend-node')].status").value(Matchers.contains("soon")))
                 .andExpect(jsonPath("$.courses[?(@.id == 'frontend-react')].path.length()").value(Matchers.contains(11)))
                 .andExpect(jsonPath("$.courses[?(@.id == 'java-swe')].canStart").value(Matchers.contains(true)));
 
         mvc.perform(put("/api/courses/active").header(LocalOnlyFilter.WRITE_HEADER, "1")
-                        .contentType(MediaType.APPLICATION_JSON).content("{\"courseId\": \"frontend-vanilla\"}"))
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"courseId\": \"backend-node\"}"))
                 .andExpect(status().isBadRequest());
 
         mvc.perform(put("/api/courses/active").header(LocalOnlyFilter.WRITE_HEADER, "1")

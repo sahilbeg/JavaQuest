@@ -37,7 +37,7 @@ public class QuickReference {
     public record Mistake(String titleHtml, String code, String fixHtml) {}
 
     /** The code blocks a Syntax box or a mistake can show: Java, and the web courses' JavaScript, JSX, HTML and CSS. */
-    private static final java.util.Set<String> CODE_LANGUAGES = java.util.Set.of("java", "js", "jsx", "html", "css");
+    private static final java.util.Set<String> CODE_LANGUAGES = java.util.Set.of("java", "js", "jsx", "ts", "tsx", "html", "css");
 
     private final Parser parser;
     private final HtmlRenderer renderer;

@@ -100,6 +100,10 @@ public class PracticeService {
     public ProgramRun runSnippet(String code, String language) throws IOException, InterruptedException {
         parallelRuns.acquire();
         try {
+            if ("ts".equals(language)) {
+                var node = runners.node().orElseThrow(() -> new IllegalStateException("The web tools aren't installed yet."));
+                return new ProgramRun(node.runTypeScriptSnippet(code, ""));
+            }
             return new ProgramRun(runners.forLanguage(language).runSnippet(code, ""));
         } finally {
             parallelRuns.release();

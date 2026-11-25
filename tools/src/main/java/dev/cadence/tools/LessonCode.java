@@ -9,16 +9,20 @@ public final class LessonCode {
 
     public record Block(int line, String info, String code) {
         public boolean runnable() {
-            return info.equals("java run") || info.equals("js run") || expectsCrash();
+            return info.equals("java run") || info.equals("js run") || info.equals("ts run") || expectsCrash();
         }
 
         /** A `java run crash` or `js run crash` block shows an error on purpose, so it must end with one. */
         public boolean expectsCrash() {
-            return info.equals("java run crash") || info.equals("js run crash");
+            return info.equals("java run crash") || info.equals("js run crash") || info.equals("ts run crash");
         }
 
         public boolean javaScript() {
-            return info.startsWith("js");
+            return info.startsWith("js") || info.startsWith("ts");
+        }
+
+        public boolean typeScript() {
+            return info.startsWith("ts");
         }
     }
 
@@ -47,7 +51,7 @@ public final class LessonCode {
         var matcher = FENCE.matcher(markdown);
         while (matcher.find()) {
             String info = matcher.group(1).strip();
-            if (info.equals("js") || info.equals("js run") || info.equals("js run crash")) {
+            if (info.matches("(js|ts)( run( crash)?)?")) {
                 int line = (int) markdown.substring(0, matcher.start()).lines().count() + 1;
                 blocks.add(new Block(line, info, matcher.group(2)));
             }

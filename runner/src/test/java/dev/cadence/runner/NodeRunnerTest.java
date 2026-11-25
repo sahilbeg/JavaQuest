@@ -108,4 +108,41 @@ class NodeRunnerTest {
         var result = runner.runSnippet("console.log([1, 2, 3].map((n) => n * 2).join(\" \"));", "");
         assertEquals("2 4 6", result.output().strip());
     }
+
+    @Test
+    void aTypeErrorInATypeScriptTicketIsAnErrorWithItsLine() throws Exception {
+        Files.createDirectories(dir.resolve("src"));
+        Files.createDirectories(dir.resolve("test"));
+        Files.writeString(dir.resolve("src/cart.ts"), "export function total(paise: number, qty: number): number {\n  return paise * qty;\n}\nexport const label: string = 5;\n");
+        Files.writeString(dir.resolve("test/cart.test.ts"), """
+                import { it, expect } from "vitest";
+                import { total } from "../src/cart.ts";
+                it("multiplies", () => { expect(total(15000, 2), "two sets").toBe(30000); });
+                """);
+        var result = runner.run(dir.resolve("src"), dir.resolve("test"), runner.limits());
+        assertEquals(TestRunResult.Outcome.COMPILE_ERROR, result.outcome(), result::output);
+        assertEquals("cart.ts", result.compileErrors().getFirst().file());
+        assertEquals(4, result.compileErrors().getFirst().line());
+        assertTrue(result.compileErrors().getFirst().message().startsWith("TS2322"), result.compileErrors().getFirst().message());
+    }
+
+    @Test
+    void aWellTypedTypeScriptTicketRunsItsChecks() throws Exception {
+        Files.createDirectories(dir.resolve("src"));
+        Files.createDirectories(dir.resolve("test"));
+        Files.writeString(dir.resolve("src/cart.ts"), "export function total(paise: number, qty: number): number {\n  return paise * qty;\n}\n");
+        Files.writeString(dir.resolve("test/cart.test.ts"), """
+                import { it, expect } from "vitest";
+                import { total } from "../src/cart.ts";
+                it("multiplies paise by quantity", () => { expect(total(15000, 2), "two sets").toBe(30000); });
+                """);
+        var result = runner.run(dir.resolve("src"), dir.resolve("test"), runner.limits());
+        assertEquals(TestRunResult.Outcome.PASSED, result.outcome(), result::output);
+    }
+
+    @Test
+    void aTypeScriptSnippetRuns() throws Exception {
+        var result = runner.runTypeScriptSnippet("const prices: number[] = [15000, 12000];\nconsole.log(prices.reduce((a: number, b: number) => a + b, 0));", "");
+        assertEquals("27000", result.output().strip(), result.output());
+    }
 }

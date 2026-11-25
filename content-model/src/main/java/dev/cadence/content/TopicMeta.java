@@ -86,8 +86,8 @@ public record TopicMeta(
 
     public record Ticket(String key, Teammate from, String title, String body) {
         public Ticket {
-            require(key != null && key.matches("(SPK|DHG|WEB)-\\d{4}|INC-\\d{2}|FEAT-\\d{2}|CAPSTONE"),
-                    "ticket.key must look like SPK-0105 (Spoke), DHG-0201 (Dhaaga, Java), WEB-0304 (web), INC-01, FEAT-01 or CAPSTONE, got: " + key);
+            require(key != null && key.matches("[A-Z]{3}-\\d{4}|INC-\\d{2}|FEAT-\\d{2}|CAPSTONE"),
+                    "ticket.key must look like WEB-0304 (three capital letters, then module and topic numbers), INC-01, FEAT-01 or CAPSTONE, got: " + key);
             require(from != null, "ticket.from is required");
             require(title != null && !title.isBlank(), "ticket.title is required");
             require(body != null && !body.isBlank(), "ticket.body is required");

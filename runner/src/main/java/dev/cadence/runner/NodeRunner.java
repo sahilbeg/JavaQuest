@@ -30,6 +30,9 @@ import java.util.stream.Stream;
  */
 public final class NodeRunner implements CodeRunner {
 
+    /** tsc's plain output: src/cart.ts(4,14): error TS2322: Type 'string' is not assignable to type 'number'. */
+    private static final Pattern TS_ERROR = Pattern.compile("(?m)^(.+?)\\((\\d+),\\d+\\): error (TS\\d+): (.+)$");
+
     private static final Pattern ERROR_LINE = Pattern.compile("\\{\"file\":\"((?:[^\"\\\\]|\\\\.)*)\",\"line\":(\\d+),\"message\":\"((?:[^\"\\\\]|\\\\.)*)\"\\}");
 
     private final Path node;
@@ -70,6 +73,9 @@ public final class NodeRunner implements CodeRunner {
             copyTree(mainSources, work.resolve("src"));
             copyTree(testSources, work.resolve("test"));
             List<CompileError> errors = syntaxErrors(work.resolve("src"), limits);
+            if (errors.isEmpty()) {
+                errors = typeErrors(work, limits);
+            }
             if (!errors.isEmpty()) {
                 return new TestRunResult(Outcome.COMPILE_ERROR, List.of(), errors, "", elapsedSince(started));
             }
@@ -78,7 +84,7 @@ public final class NodeRunner implements CodeRunner {
                       test: {
                         root: import.meta.dirname,
                         environment: "jsdom",
-                        include: ["test/**/*.test.{js,jsx}"],
+                        include: ["test/**/*.test.{js,jsx,ts,tsx}"],
                         reporters: ["junit"],
                         outputFile: "report.xml",
                         testTimeout: %d,
@@ -129,6 +135,50 @@ public final class NodeRunner implements CodeRunner {
         }
     }
 
+    /**
+     * A TypeScript ticket (any .ts or .tsx in src/) is type-checked with tsc, strict, before its checks run, so a type
+     * error shows like a Java compile error, with its file and line. JavaScript tickets skip this.
+     */
+    private List<CompileError> typeErrors(Path work, RunLimits limits) throws IOException, InterruptedException {
+        boolean typeScript;
+        try (Stream<Path> files = Files.walk(work.resolve("src"))) {
+            typeScript = files.anyMatch(f -> f.toString().endsWith(".ts") || f.toString().endsWith(".tsx"));
+        }
+        if (!typeScript) {
+            return List.of();
+        }
+        Files.writeString(work.resolve("tsconfig.json"), """
+                {
+                  "compilerOptions": {
+                    "strict": true, "noEmit": true, "target": "es2022", "module": "esnext", "moduleResolution": "bundler",
+                    "jsx": "react-jsx", "skipLibCheck": true, "allowJs": false, "allowImportingTsExtensions": true, "types": [], "lib": ["es2023", "dom", "dom.iterable"]
+                  },
+                  "include": ["src/**/*"]
+                }
+                """);
+        Finished check = spawn(List.of(node.toString(), workspace.resolve("node_modules/typescript/bin/tsc").toString(),
+                "-p", work.resolve("tsconfig.json").toString(), "--pretty", "false"), work, limits, "");
+        var errors = new ArrayList<CompileError>();
+        Matcher m = TS_ERROR.matcher(check.output());
+        while (m.find()) {
+            String file = m.group(1).replace('\\', '/');
+            file = file.startsWith("src/") ? file.substring(4) : file;
+            errors.add(new CompileError(file, Long.parseLong(m.group(2)), m.group(3) + ": " + m.group(4)));
+        }
+        return errors;
+    }
+
+    /** Runs a TypeScript lesson snippet: Node strips the types and runs it. */
+    public ProgramResult runTypeScriptSnippet(String code, String input) throws IOException, InterruptedException {
+        Path dir = Files.createTempDirectory("cadence-ts-snippet-");
+        try {
+            Files.writeString(dir.resolve("main.ts"), code);
+            return runMain(dir, "main.ts", limits, input);
+        } finally {
+            deleteRecursively(dir);
+        }
+    }
+
     @Override
     public ProgramResult runSnippet(String code, String input) throws IOException, InterruptedException {
         Path dir = Files.createTempDirectory("cadence-js-snippet-");
@@ -142,10 +192,15 @@ public final class NodeRunner implements CodeRunner {
 
     /** The syntax errors in a piece of JavaScript (or JSX), without running it: for checking lesson code. */
     public List<CompileError> check(String code) throws IOException, InterruptedException {
+        return check(code, "main.js");
+    }
+
+    /** Syntax errors in lesson code; {@code fileName} main.ts checks TypeScript syntax. */
+    public List<CompileError> check(String code, String fileName) throws IOException, InterruptedException {
         Path work = newWorkDir();
         try {
             Files.createDirectories(work.resolve("src"));
-            Files.writeString(work.resolve("src/main.js"), code);
+            Files.writeString(work.resolve("src").resolve(fileName), code);
             return syntaxErrors(work.resolve("src"), limits);
         } finally {
             deleteRecursively(work);
