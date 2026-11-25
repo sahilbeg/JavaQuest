@@ -35,8 +35,6 @@ git clone https://github.com/<your-github-name>/JavaQuest.git ~/Cadence && ~/Cad
 
 That one command downloads Cadence into `~/Cadence`, checks your laptop, builds the app, starts it, and opens **http://localhost:2026**. The first start downloads about 400 MB of tools and libraries and builds the app, so it takes a few minutes. Later starts take seconds: run `~/Cadence/run.sh`. Leave the terminal open while you learn, and press `Ctrl+C` to stop.
 
-The repository is private for now, so GitHub asks you to sign in. Ask its owner for access first.
-
 ### What you need, and what `run.sh` checks
 
 | Check | If something is wrong |
