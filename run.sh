@@ -4,14 +4,16 @@
 #
 #   ./run.sh               learn: http://localhost:2026, your progress in ~/.cadence (backed up daily);
 #                          an existing ~/.javaquest from before the rename is used as it is
+#   ./run.sh --help        show this help
 #   ./run.sh --check       only check this laptop (Java, Node, port, disk, internet) and say what to fix
 #   ./run.sh --no-browser  start without opening the browser
 #   ./run.sh --author      build and review content: every ticket open, http://localhost:2027,
-#                          a separate progress database in ~/.cadence-author (or an existing ~/.javaquest-author),
-#                          so your learning is untouched
+#                          a separate progress database in ~/.cadence-author (or an existing ~/.javaquest-author)
+#                          and its own copy of the ticket code, so your learning is untouched
 #   ./run.sh --unlock-all  every ticket open, but with YOUR progress database (author mode on 2026)
-#   ./run.sh --tester      a tester: every ticket of every course open, http://localhost:3004, its own progress in
-#                          ~/.cadence-tester, so test runs never touch a learner's progress
+#   ./run.sh --tester      test your changes before a pull request: every ticket of every course open,
+#                          http://localhost:3004, its own progress in ~/.cadence-tester and its own copy of the ticket
+#                          code in ~/.cadence-tester/code, so test runs never touch your learning or your code
 #
 # Any other arguments go to Spring, for example --server.port=2030. The old --javaquest.* names still work.
 set -euo pipefail
@@ -36,6 +38,7 @@ PORT="2026"
 # use the new folder when it exists, else the old one when it exists, else start the new one.
 progress_dir() { if [[ -d "$HOME/$1" ]]; then echo "$HOME/$1"; elif [[ -d "$HOME/$2" ]]; then echo "$HOME/$2"; else echo "$HOME/$1"; fi; }
 DATA_DIR="$(progress_dir .cadence .javaquest)"
+CODE_DIR=""
 CHECK_ONLY=false
 OPEN_BROWSER=true
 ARGS=()
@@ -58,14 +61,20 @@ for arg in "$@"; do
       MODE="unlock-all"
       ARGS+=("--cadence.unlock-all=true")
       ;;
+    --help|-h) awk 'NR > 1 && /^#/ { sub(/^# ?/, ""); print; next } NR > 1 { exit }' "${BASH_SOURCE[0]}"; exit 0 ;;
     --check) CHECK_ONLY=true ;;
     --no-browser) OPEN_BROWSER=false ;;
     --server.port=*) PORT="${arg#--server.port=}" ;;
     --cadence.data-dir=*) DATA_DIR="${arg#--cadence.data-dir=}" ;;
+    --cadence.code-dir=*) CODE_DIR="${arg#--cadence.code-dir=}" ;;
     *) ARGS+=("$arg") ;;
   esac
 done
 URL="http://localhost:$PORT"
+# The tester and the author write ticket code in their own folder, copied from each skeleton, never in the
+# repository's practice/*/src (where a learner's own code lives). Tests, skeletons and lessons still come from here.
+if [[ -z "$CODE_DIR" && ( "$MODE" == "author" || "$MODE" == "tester" ) ]]; then CODE_DIR="$DATA_DIR/code"; fi
+if [[ -n "$CODE_DIR" ]]; then ARGS+=("--cadence.code-dir=$CODE_DIR"); fi
 # A browser opens only for a person at a terminal on a Mac, never for a script or a background start.
 if ! interactive || ! command -v open >/dev/null 2>&1; then OPEN_BROWSER=false; fi
 
@@ -222,8 +231,8 @@ RUN_JAR="$ROOT/app/target/cadence-running-$PORT.jar"
 cp "$JAR" "$RUN_JAR"
 
 case "$MODE" in
-  author) echo "Author mode: every ticket is open, with a separate progress database ($DATA_DIR)." ;;
-  tester) echo "Tester mode: every ticket of every course is open, with the tester's own progress database ($DATA_DIR)." ;;
+  author) echo "Author mode: every ticket is open, with a separate progress database and code ($DATA_DIR)." ;;
+  tester) echo "Tester mode: every ticket of every course is open, with the tester's own progress and code ($DATA_DIR)." ;;
   unlock-all) echo "Every ticket is open, using your own progress database. Use --author to keep your learning untouched." ;;
 esac
 if [[ "$OPEN_BROWSER" == true ]]; then WHEN=" It opens in your browser when it's ready."; else WHEN=""; fi

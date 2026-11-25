@@ -102,6 +102,15 @@ public final class CourseLibrary {
 
     /** Reads courses.yaml and every pool it names. A pool whose content folder doesn't exist yet is empty. */
     public static CourseLibrary load(Path root) throws IOException {
+        return load(root, null);
+    }
+
+    /**
+     * @param codeDir where the code tickets keep their code, one folder per pool (codeDir/&lt;pool&gt;/&lt;topic id&gt;/src),
+     *                or null for the repository's own src/ folders. Tester and author modes use their own folder, so
+     *                their runs never touch the code a learner writes in this copy of the repository.
+     */
+    public static CourseLibrary load(Path root, Path codeDir) throws IOException {
         Path file = root.resolve("courses.yaml");
         File spec;
         if (!Files.isRegularFile(file)) {
@@ -117,7 +126,8 @@ public final class CourseLibrary {
         var pools = new LinkedHashMap<String, ContentCatalog>();
         for (Pool pool : spec.pools()) {
             Path content = root.resolve(pool.content());
-            pools.put(pool.id(), Files.isDirectory(content) ? ContentCatalog.load(content, root.resolve(pool.practice())) : ContentCatalog.empty());
+            ContentCatalog loaded = Files.isDirectory(content) ? ContentCatalog.load(content, root.resolve(pool.practice())) : ContentCatalog.empty();
+            pools.put(pool.id(), codeDir == null ? loaded : loaded.withCodeIn(codeDir.resolve(pool.id())));
         }
         ContentCatalog library = ContentCatalog.merge(new ArrayList<>(pools.values()));
         var objectiveIds = spec.objectives().stream().map(Objective::id).toList();

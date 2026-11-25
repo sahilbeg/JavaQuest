@@ -49,7 +49,7 @@ public class PracticeWatcher implements SmartLifecycle {
         this.practice = practice;
         this.gate = gate;
         this.practiceRoot = properties.practiceDir().toAbsolutePath().normalize();
-        this.poolRoots = library.pools().stream().map(p -> properties.root().resolve(p.practice()).toAbsolutePath().normalize())
+        this.poolRoots = library.pools().stream().map(p -> properties.codeRoot(p).toAbsolutePath().normalize())
                 .filter(java.nio.file.Files::isDirectory).distinct().toList();
     }
 

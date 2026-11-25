@@ -137,6 +137,39 @@ public final class ContentCatalog {
         return new ContentCatalog(modules, topics);
     }
 
+    /**
+     * A copy whose code tickets keep their code under {@code codeDir}/&lt;topic id&gt;/src instead of the repository's
+     * src/ folders. A ticket's folder starts as a copy of its skeleton the first time it is needed.
+     */
+    public ContentCatalog withCodeIn(Path codeDir) throws IOException {
+        var topics = new LinkedHashMap<String, Topic>();
+        for (Topic topic : orderedTopics) {
+            if (topic.meta() == null || topic.meta().practice().kind() != TopicMeta.PracticeKind.CODE) {
+                topics.put(topic.id(), topic);
+                continue;
+            }
+            Path sources = codeDir.resolve(topic.id()).resolve("src");
+            if (!Files.isDirectory(sources) && Files.isDirectory(topic.practiceSkeleton())) {
+                copyTree(topic.practiceSkeleton(), sources);
+            }
+            topics.put(topic.id(), topic.withSources(sources));
+        }
+        return new ContentCatalog(modules, topics);
+    }
+
+    private static void copyTree(Path from, Path to) throws IOException {
+        try (Stream<Path> files = Files.walk(from)) {
+            for (Path file : files.toList()) {
+                Path target = to.resolve(from.relativize(file).toString());
+                if (Files.isDirectory(file)) {
+                    Files.createDirectories(target);
+                } else {
+                    Files.copy(file, target);
+                }
+            }
+        }
+    }
+
     public static ContentCatalog empty() {
         return new ContentCatalog(List.of(), new LinkedHashMap<>());
     }
