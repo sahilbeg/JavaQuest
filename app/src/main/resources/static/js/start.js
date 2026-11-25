@@ -51,7 +51,10 @@ export async function renderStart(view, catalog, navigate) {
 
       state.goal && h("section", { class: "start-step", "aria-labelledby": "stack-title" },
         h("h2", { id: "stack-title", class: "start-step-title", tabindex: "-1" }, h("span", { class: "start-num" }, "2"), "Choose your stack"),
-        h("div", { class: "start-grid start-grid-wide", role: "radiogroup", "aria-labelledby": "stack-title" }, forGoal.map((c) => choiceCard({
+        // courses.yaml lists each goal's stacks in the order they are best studied.
+        forGoal.length > 1 && h("p", { id: "stack-order", class: "muted start-step-hint" },
+          "In the order most people learn them. Each one builds on the one before, but every path starts from the basics, so you can begin with any of them."),
+        h("div", { class: "start-grid start-grid-wide", role: "radiogroup", "aria-labelledby": "stack-title", "aria-describedby": forGoal.length > 1 ? "stack-order" : null }, forGoal.map((c) => choiceCard({
           selected: state.course === c.id,
           title: c.title,
           body: c.summary,

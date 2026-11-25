@@ -1,6 +1,7 @@
 # Every course a learner can pick. See content-model/.../CourseLibrary.java.
 # A pool is a content folder. A course is either a whole pool (the Java course) or a list of modules from pools.
 # Planned modules are listed before they are written, so the learner sees the whole path.
+# Courses appear on the picker in this order, so list each goal's stacks in the order they are best studied.
 
 pools:
   - id: java
@@ -34,30 +35,10 @@ courses:
     pool: java
     ladder: [Intern, Junior Developer, Developer, Software Engineer, Senior Engineer, Staff Engineer, Architect, Principal Engineer]
 
-  - id: frontend-react
-    objective: frontend
-    title: "Frontend with JavaScript and React"
-    summary: "HTML, CSS and JavaScript, then React, until you launch Dhaaga's online store."
-    stack: [HTML, CSS, JavaScript, React]
-    status: ready
-    modules:
-      - { id: web-00-how-the-web-works, title: How the web works }
-      - { id: web-01-html, title: HTML }
-      - { id: web-02-css, title: CSS }
-      - { id: web-03-javascript-basics, title: JavaScript basics }
-      - { id: web-04-javascript-in-depth, title: JavaScript in depth }
-      - { id: web-05-dom-and-events, title: The DOM and events }
-      - { id: web-06-async-javascript, title: Async JavaScript }
-      - { id: web-07-tooling, title: Tooling }
-      - { id: react-08-react-fundamentals, title: React fundamentals }
-      - { id: react-09-react-in-depth, title: React in depth }
-      - { id: react-10-professional-frontend, title: Professional frontend }
-    ladder: [Frontend Intern, Junior Frontend Developer, Frontend Developer, Frontend Engineer, Senior Frontend Engineer, Staff Frontend Engineer, Frontend Architect, Principal Frontend Engineer]
-
   - id: frontend-vanilla
     objective: frontend
     title: "Frontend with plain JavaScript"
-    summary: "HTML, CSS and JavaScript with no framework, all the way to a fast, accessible store."
+    summary: "Start here. HTML, CSS and JavaScript with no framework, all the way to a fast, accessible store."
     stack: [HTML, CSS, JavaScript]
     status: ready
     modules:
@@ -74,10 +55,30 @@ courses:
       - { id: vanilla-10-professional-vanilla, title: Professional frontend without a framework }
     ladder: [Frontend Intern, Junior Frontend Developer, Frontend Developer, Frontend Engineer, Senior Frontend Engineer, Staff Frontend Engineer, Frontend Architect, Principal Frontend Engineer]
 
+  - id: frontend-react
+    objective: frontend
+    title: "Frontend with JavaScript and React"
+    summary: "Next step: the same web basics, then React, until you launch Dhaaga's online store."
+    stack: [HTML, CSS, JavaScript, React]
+    status: ready
+    modules:
+      - { id: web-00-how-the-web-works, title: How the web works }
+      - { id: web-01-html, title: HTML }
+      - { id: web-02-css, title: CSS }
+      - { id: web-03-javascript-basics, title: JavaScript basics }
+      - { id: web-04-javascript-in-depth, title: JavaScript in depth }
+      - { id: web-05-dom-and-events, title: The DOM and events }
+      - { id: web-06-async-javascript, title: Async JavaScript }
+      - { id: web-07-tooling, title: Tooling }
+      - { id: react-08-react-fundamentals, title: React fundamentals }
+      - { id: react-09-react-in-depth, title: React in depth }
+      - { id: react-10-professional-frontend, title: Professional frontend }
+    ladder: [Frontend Intern, Junior Frontend Developer, Frontend Developer, Frontend Engineer, Senior Frontend Engineer, Staff Frontend Engineer, Frontend Architect, Principal Frontend Engineer]
+
   - id: frontend-react-ts
     objective: frontend
     title: "Frontend with TypeScript and React"
-    summary: "The React course with TypeScript's types from the start."
+    summary: "After React: the React course with TypeScript's types from the start."
     stack: [HTML, CSS, TypeScript, React]
     status: ready
     modules:
@@ -99,7 +100,7 @@ courses:
   - id: frontend-next
     objective: frontend
     title: "Frontend with Next.js"
-    summary: "React with Next.js routing, server rendering and deployment."
+    summary: "After React: React with Next.js routing, server rendering and deployment."
     stack: [HTML, CSS, JavaScript, React, Next.js]
     status: ready
     modules:

@@ -1088,6 +1088,7 @@ body.ladder-off { --rail: 0px; }
 .start { max-width: 1100px; margin: 0 auto; padding: var(--space-7) var(--space-6) var(--space-8); }
 .start-step { margin-top: var(--space-6); animation: rise 0.3s var(--ease); }
 .start-step-title { display: flex; align-items: center; gap: var(--space-3); margin: 0 0 var(--space-4); font-size: 1.05rem; outline: none; }
+.start-step-hint { margin: calc(-1 * var(--space-2)) 0 var(--space-4); max-width: 72ch; font-size: 0.9rem; }
 .start-num { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 999px; background: var(--accent-wash); color: var(--accent-strong); font-family: var(--mono); font-size: 0.75rem; }
 .start-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--space-3); }
 .start-grid-wide { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
